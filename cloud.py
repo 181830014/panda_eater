@@ -2,7 +2,7 @@ from wordcloud import WordCloud
 
 
 if __name__ == '__main__':
-    f = open('D:\\assignment\\software_need\\data.txt', 'r', encoding='gb18030')
+    f = open('data.txt', 'r', encoding='gb18030')
     plain_text = f.read()
     text = ''
     for line in plain_text.splitlines():

@@ -1,9 +1,8 @@
 # -*- coding:UTF-8 -*-
 import requests
 import re
-from bs4 import BeautifulSoup
 
-def solve2(mystr):
+def html2plaintext(mystr):
     result = ''
     match = 0
     for s in mystr:
@@ -17,64 +16,62 @@ def solve2(mystr):
             result += s
     return result
 
+def html2numstr(mystr):
+    ret = ''
+    for digit in mystr:
+        if '0' <= digit <= '9':
+            ret += digit
+    return ret
 
 if __name__ == '__main__':
-    str1 = 'https://stackoverflow.com/questions/tagged/ide?tab=votes&page='
-    str3 = '&pagesize=50'
+    url_h = 'https://stackoverflow.com/questions/tagged/ide?tab=votes&page='
+    url_t = '&pagesize=50'
     for index in range(1, 201):
-        file_name = 'data' + str(index) + '.txt'
-        f = open(file_name, 'w', encoding='utf-8')
+        file_path = './results/data' + str(index) + '.txt'
+        f = open(file_path, 'w', encoding='utf-8')
         print(index)
-        str2 = str(index)
-        target = str1 + str2 + str3
-        mainpage = requests.get(url=target).text
-        # soup = BeautifulSoup(page, "html.parser")
-        # answers = soup.find_all('div', class_="status answered")
-        # print(soup)
-        votes_num = re.findall('<span class="vote-count-post(.*?)</strong></span>', mainpage, re.S)
-        answers_num = re.findall('class="status answered(.*?)</strong>answer', mainpage, re.S)
-        questions = re.findall('class="question-hyperlink">(.*?)</a>', mainpage, re.S)
-        subpages_address = re.findall('<div class="summary">\r\n        <h3><a href="(.*?)" class="question-hyperlink">',\
-                                      mainpage, re.S)
-        # print(subpages_address)
-        size = len(answers_num)
-        for i in range(0, size):
-            temp = ''
-            for s in answers_num[i]:
-                if '0' <= s <= '9':
-                    temp += s
-            answers_num[i] = temp
-            temp = ''
-            for s in votes_num[i]:
-                if '0' <= s <= '9':
-                    temp += s
-            votes_num[i] = temp
-        for i in range(0, size):        # 遍历问题
-            if '[closed]' in questions[i]:
+        url_m = str(index)
+        target = url_h + url_m + url_t
+        mainpage = requests.get(target).text
+
+        votes_pattern = '<span class="vote-count-post(.*?)</strong></span>'
+        answers_pattern = 'class="status answered(.*?)</strong>answer'
+        questions_pattern = 'class="question-hyperlink">(.*?)</a>'
+        suburl_pattern = '<div class="summary">\r\n        <h3><a href="(.*?)" class="question-hyperlink">'
+        description_pattern = '<div class="postcell post-layout--right">(.*?)<div class="mt24 mb12">'
+        anscell_pattern = '<div class="answercell post-layout--right">(.*?)<div class="mt24">'
+        ansvote_pattern = '"upvoteCount" data-value="(.*?)"'
+
+        votes = re.findall(votes_pattern, mainpage, re.S)
+        answers = re.findall(answers_pattern, mainpage, re.S)
+        questions = re.findall(questions_pattern, mainpage, re.S)
+        suburls = re.findall(suburl_pattern, mainpage, re.S)
+        print(suburls)
+        for (answer, vote, question, suburl) in zip(answers, votes, questions,suburls):
+            answer = html2numstr(answer)
+            vote = html2numstr(vote)
+            if '[closed]' in question:
                 continue
-            if int(votes_num[i]) == 0 or int(answers_num[i]) == 0:
+            if int(vote) == 0 or int(answer) == 0:
                 continue
-            target = 'https://stackoverflow.com/' + subpages_address[i]
-            print(target)
-            subpage = requests.get(url=target).text
-            # print(subpage)
-            description = re.findall('<div class="postcell post-layout--right">(.*?)<div class="mt24 mb12">',\
-                                     subpage, re.S)
-            answers = re.findall('<div class="answercell post-layout--right">(.*?)<div class="mt24">',\
-                                 subpage, re.S)
-            ans_votes = re.findall('"upvoteCount" data-value="(.*?)"', subpage, re.S)
-            ans_size = len(answers)
-            for j in range(0, ans_size):
-                answers[j] = solve2(answers[j])
-            description[0] = solve2(description[0])
-            f.write('Title: ' + questions[i] + '\n')
-            f.write('Description: ' + description[0] + '\n')
-            for j in range(0, ans_size):
+            target = 'https://stackoverflow.com/' + suburl
+            subpage = requests.get(target).text
+
+            descriptions = re.findall(description_pattern, subpage, re.S)
+            anscells = re.findall(anscell_pattern , subpage, re.S)
+            ansvotes = re.findall(ansvote_pattern, subpage, re.S)
+
+            anscells = [html2plaintext(ans) for ans in anscells]
+            descriptions[0] = html2plaintext(descriptions[0])
+            f.write('Title: ' + question + '\n')
+            f.write('Description: ' + descriptions[0] + '\n')
+            for i in range(0, len(anscells)):
                 # if int(ans_votes[j]) < 5:
                 #     continue
-                f.write('Answer ' + str(j + 1) + ': \n')
-                f.write(answers[j])
+                f.write('Answer ' + str(i + 1) + ': \n')
+                f.write(anscells[i])
                 f.write('\n')
+
         f.close()
 
 
