@@ -1,4 +1,5 @@
 # -*- coding:UTF-8 -*-
+import time
 import requests
 import re
 
@@ -23,16 +24,29 @@ def html2numstr(mystr):
             ret += digit
     return ret
 
+def gethtml(url):
+    i = 0
+    while i < 3:
+        try:
+            html = requests.get(url, timeout=2).text
+            return html
+        except requests.exceptions.RequestException:
+            i += 1
+    return None
+
 if __name__ == '__main__':
     url_h = 'https://stackoverflow.com/questions/tagged/ide?tab=votes&page='
     url_t = '&pagesize=50'
-    for index in range(1, 201):
+    for index in range(1, 121):
         file_path = './results/data' + str(index) + '.txt'
         f = open(file_path, 'w', encoding='utf-8')
         print(index)
         url_m = str(index)
         target = url_h + url_m + url_t
+        st = time.time()
         mainpage = requests.get(target).text
+        print(target)
+        print("time : {}".format(time.time() - st))
 
         votes_pattern = '<span class="vote-count-post(.*?)</strong></span>'
         answers_pattern = 'class="status answered(.*?)</strong>answer'
@@ -46,8 +60,8 @@ if __name__ == '__main__':
         answers = re.findall(answers_pattern, mainpage, re.S)
         questions = re.findall(questions_pattern, mainpage, re.S)
         suburls = re.findall(suburl_pattern, mainpage, re.S)
-        print(suburls)
-        for (answer, vote, question, suburl) in zip(answers, votes, questions,suburls):
+        # print(len(answers), len(votes), len(questions), len(suburls))
+        for (answer, vote, question, suburl) in zip(answers, votes, questions, suburls):
             answer = html2numstr(answer)
             vote = html2numstr(vote)
             if '[closed]' in question:
@@ -55,11 +69,22 @@ if __name__ == '__main__':
             if int(vote) == 0 or int(answer) == 0:
                 continue
             target = 'https://stackoverflow.com/' + suburl
-            subpage = requests.get(target).text
+            # st = time.time()
+            subpage = gethtml(target)
+            # print('suburl = ', target)
+            if subpage is None:
+                continue
+            # print("time : {}".format(time.time() - st))
 
             descriptions = re.findall(description_pattern, subpage, re.S)
             anscells = re.findall(anscell_pattern , subpage, re.S)
             ansvotes = re.findall(ansvote_pattern, subpage, re.S)
+
+            # assert(len(descriptions) > 0)
+            # if len(descriptions)  == 0:
+            #     ff = open('html.txt', 'w', encoding='utf-8')
+            #     ff.write(subpage)
+            #     exit(0)
 
             anscells = [html2plaintext(ans) for ans in anscells]
             descriptions[0] = html2plaintext(descriptions[0])
