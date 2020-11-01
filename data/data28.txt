@@ -1,0 +1,2839 @@
+Title: IntelliJ too many files open error
+Description: 
+    
+    
+                    
+In IntelliJ IDEA 13.1.5 on Ubuntu 14.04 LTS I see an occasional error in large projects that says "too many files open". Interestingly, this refuses to go away and freezes the IDE completely.
+I've tried the following things to fix it.
+
+1) Modify my /etc/sysctl.conf to have this line as shown in this article here. Made the error less frequent:
+
+fs.inotify.max_user_watches = 524288    
+fs.file-max = 380180 
+
+
+2) Raise the ulimit -n setting on the IntelliJ process to 64k. I don't notice any difference in performance with this, but the article that I mentioned above claims that it will help.
+
+3) Add this to my idea64.vmoptions file (helps with speed of indexing, but not with this problem)
+
+-Xms128m
+-Xmx8192m
+-XX:MaxPermSize=1024m
+
+
+Has anyone else seen this error and do you have any other suggestions of what I can do to fix it?
+
+I've considering asking IntelliJ support, but I've found I need to go back and forth with them a few times before I get a helpful answer. Any advice from the community on this would be appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+I spoke to IntelliJ support. They suggested that part 2 that I mentioned was not taking effect. I tried these steps:
+
+1) sudo vi /etc/security/limits.conf and add these lines (take a backup too):
+
+*       soft    nofile  380180
+*       hard    nofile  380180
+
+
+2) sudo vi /etc/pam.d/common-session add this line (take a backup too):
+
+session required pam_limits.so
+
+
+3) sudo vi /etc/pam.d/common-session-noninteractive add this line (take a backup too):
+
+session required pam_limits.so
+
+
+4) Reboot your machine
+
+5) Confirm this took effect by running this command, you should see this result
+
+~$ ulimit -n
+380180
+
+
+I reopened my large project after that and I haven't seen the "too many files open" message since then.
+    
+    
+Title: Jade Syntax Highlighting in Visual Studio 2013
+Description: 
+    
+    
+                    
+I wonder if there is an option I missed in Visual Studio 2013 to get the Jade syntax highlighting to work?  
+
+There is a pretty good integration of Node.js, Express and Jade in Visual Studio 2013, but it seems it lacks a proper syntax highlighting.
+In that WebMatrix Tool of Microsoft the Jade syntax works pretty well and I dont't get because of what that features is missing in VS 2013. Maybe I made a mistake at some point of installation, project creating, missed an option or something like that.
+    
+
+        
+Answer 1: 
+
+    
+    
+In the new NTVS beta version I found this today and it works great:
+
+NTVS supports the following:
+
+...  
+Jade syntax highlighting -- New for Beta  
+...
+
+
+For a download and more information see the Node.js Tools for Visual Studio project site on CodePlex.
+    
+    
+Answer 2: 
+
+    
+    
+I looked into it a couple of months ago and didn't find any resources for handling Jade better in Visual Studio at the time and there may not currently be any solution short of writing the tools you need yourself.
+
+With that said, I did ask one of the developers behind a popular build extension for using languages like LESS or CoffeeScript in Visual Studio if he's considered adding Jade support and his answer was that they're working on it. I unfortunately have no idea what the timeline would be.
+
+Sorry I don't have a better answer for you, I'm hoping for a solution as well. In the meantime I found a combination of Visual Studio, Sublime Text and Prepros works well enough for now.
+    
+    
+Title: Can Notepad++ be configured to recognize compiler error messages and jump to the respective location?
+Description: 
+    
+    
+                    
+I am building some fairly large code on a machine without an IDE, but with Notepad++.
+
+The compilation results are redirected to a file and sometimes, there are error messages, which satisfy a well defined regex.
+
+I wonder if NPP has a plugin, which would parse the log file, recognize the error/warning messagess and let me navigate between the respective error/warning locations.
+
+EDIT
+
+Here is a typical example of the output (produced by make running MSVC cl.exe compiler):
+
+/cygdrive/c/vs2010/VC/Bin/cl   -Zi -nologo -MD /D _STATIC_CPPLIB  -FdC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/obj/Win32SurfaceData.pdb -FmC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/obj/Win32SurfaceData.map -W3 -DD3D_OVERLOADS  -DUNICODE -D_UNICODE  -DWIN32 -DIAL -D_LITTLE_ENDIAN -DWIN32 -D_X86_ -Dx86  -DWIN32_LEAN_AND_MEAN -I. -IC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/CClassHeaders -I../../../src/windows/javavm/export -I../../../src/share/javavm/export -I../../../src/share/javavm/include -I../../../src/windows/javavm/include -I../../../src/share/native/common -I../../../src/windows/native/common -I../../../src/share/native/sun/awt -I../../../src/windows/native/sun/awt -IC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/CClassHeaders/../../java/jvm -IC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/obj -I../../../src/share/native/common -I../../../src/windows/native/sun/windows -IC:/PROGRA~2/MICROS~1/Include -I../../../src/share/native/sun/awt/image/cvutils -I../../../src/share/native/sun/awt/image -I../../../src/share/native/sun/java2d/loops -I../../../src/share/native/sun/java2d -I../../../src/windows/native/sun/java2d -I../../../src/share/native/sun/java2d/opengl -I../../../src/windows/native/sun/java2d/d3d -I../../../src/windows/native/sun/java2d/opengl -I../../../src/windows/native/sun/java2d/windows -I../../../src/share/native/sun/font -I../../../src/share/native/sun/java2d/pipe -I../../../src/share/native/sun/dc/path -I../../../src/share/native/sun/dc/doe -I../../../src/share/native/sun/awt/debug -I../../../src/windows/native/sun/awt  -I../../../src/share/native/sun/awt/medialib   -DINTERNAL_BUILD  -c -FoC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/obj/Win32SurfaceData.obj  ../../../src/windows/native/sun/awt/../java2d/windows/Win32SurfaceData.cpp
+Win32SurfaceData.cpp
+../../../src/windows/native/sun/awt/../java2d/windows/Win32SurfaceData.cpp(478) : warning C4530: C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+/cygdrive/c/vs2010/VC/Bin/cl   -Zi -nologo -MD /D _STATIC_CPPLIB  -FdC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/obj/WinBackBufferSurfaceData.pdb -FmC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/obj/WinBackBufferSurfaceData.map -W3 -DD3D_OVERLOADS  -DUNICODE -D_UNICODE  -DWIN32 -DIAL -D_LITTLE_ENDIAN -DWIN32 -D_X86_ -Dx86  -DWIN32_LEAN_AND_MEAN -I. -IC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/CClassHeaders -I../../../src/windows/javavm/export -I../../../src/share/javavm/export -I../../../src/share/javavm/include -I../../../src/windows/javavm/include -I../../../src/share/native/common -I../../../src/windows/native/common -I../../../src/share/native/sun/awt -I../../../src/windows/native/sun/awt -IC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/CClassHeaders/../../java/jvm -IC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/obj -I../../../src/share/native/common -I../../../src/windows/native/sun/windows -IC:/PROGRA~2/MICROS~1/Include -I../../../src/share/native/sun/awt/image/cvutils -I../../../src/share/native/sun/awt/image -I../../../src/share/native/sun/java2d/loops -I../../../src/share/native/sun/java2d -I../../../src/windows/native/sun/java2d -I../../../src/share/native/sun/java2d/opengl -I../../../src/windows/native/sun/java2d/d3d -I../../../src/windows/native/sun/java2d/opengl -I../../../src/windows/native/sun/java2d/windows -I../../../src/share/native/sun/font -I../../../src/share/native/sun/java2d/pipe -I../../../src/share/native/sun/dc/path -I../../../src/share/native/sun/dc/doe -I../../../src/share/native/sun/awt/debug -I../../../src/windows/native/sun/awt  -I../../../src/share/native/sun/awt/medialib   -DINTERNAL_BUILD  -c -FoC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/obj/WinBackBufferSurfaceData.obj  ../../../src/windows/native/sun/awt/../java2d/windows/WinBackBufferSurfaceData.cpp
+WinBackBufferSurfaceData.cpp
+/cygdrive/c/vs2010/VC/Bin/cl   -Zi -nologo -MD /D _STATIC_CPPLIB  -FdC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/obj/WBufferStrategy.pdb -FmC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/obj/WBufferStrategy.map -W3 -DD3D_OVERLOADS  -DUNICODE -D_UNICODE  -DWIN32 -DIAL -D_LITTLE_ENDIAN -DWIN32 -D_X86_ -Dx86  -DWIN32_LEAN_AND_MEAN -I. -IC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/CClassHeaders -I../../../src/windows/javavm/export -I../../../src/share/javavm/export -I../../../src/share/javavm/include -I../../../src/windows/javavm/include -I../../../src/share/native/common -I../../../src/windows/native/common -I../../../src/share/native/sun/awt -I../../../src/windows/native/sun/awt -IC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/CClassHeaders/../../java/jvm -IC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/obj -I../../../src/share/native/common -I../../../src/windows/native/sun/windows -IC:/PROGRA~2/MICROS~1/Include -I../../../src/share/native/sun/awt/image/cvutils -I../../../src/share/native/sun/awt/image -I../../../src/share/native/sun/java2d/loops -I../../../src/share/native/sun/java2d -I../../../src/windows/native/sun/java2d -I../../../src/share/native/sun/java2d/opengl -I../../../src/windows/native/sun/java2d/d3d -I../../../src/windows/native/sun/java2d/opengl -I../../../src/windows/native/sun/java2d/windows -I../../../src/share/native/sun/font -I../../../src/share/native/sun/java2d/pipe -I../../../src/share/native/sun/dc/path -I../../../src/share/native/sun/dc/doe -I../../../src/share/native/sun/awt/debug -I../../../src/windows/native/sun/awt  -I../../../src/share/native/sun/awt/medialib   -DINTERNAL_BUILD  -c -FoC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/obj/WBufferStrategy.obj  ../../../src/windows/native/sun/windows/WBufferStrategy.cpp
+WBufferStrategy.cpp
+/cygdrive/c/vs2010/VC/Bin/cl   -Zi -nologo -MD /D _STATIC_CPPLIB  -FdC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/obj/WPrinterJob.pdb -FmC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/obj/WPrinterJob.map -W3 -DD3D_OVERLOADS  -DUNICODE -D_UNICODE  -DWIN32 -DIAL -D_LITTLE_ENDIAN -DWIN32 -D_X86_ -Dx86  -DWIN32_LEAN_AND_MEAN -I. -IC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/CClassHeaders -I../../../src/windows/javavm/export -I../../../src/share/javavm/export -I../../../src/share/javavm/include -I../../../src/windows/javavm/include -I../../../src/share/native/common -I../../../src/windows/native/common -I../../../src/share/native/sun/awt -I../../../src/windows/native/sun/awt -IC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/CClassHeaders/../../java/jvm -IC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/obj -I../../../src/share/native/common -I../../../src/windows/native/sun/windows -IC:/PROGRA~2/MICROS~1/Include -I../../../src/share/native/sun/awt/image/cvutils -I../../../src/share/native/sun/awt/image -I../../../src/share/native/sun/java2d/loops -I../../../src/share/native/sun/java2d -I../../../src/windows/native/sun/java2d -I../../../src/share/native/sun/java2d/opengl -I../../../src/windows/native/sun/java2d/d3d -I../../../src/windows/native/sun/java2d/opengl -I../../../src/windows/native/sun/java2d/windows -I../../../src/share/native/sun/font -I../../../src/share/native/sun/java2d/pipe -I../../../src/share/native/sun/dc/path -I../../../src/share/native/sun/dc/doe -I../../../src/share/native/sun/awt/debug -I../../../src/windows/native/sun/awt  -I../../../src/share/native/sun/awt/medialib   -DINTERNAL_BUILD  -c -FoC:/openjdk/OUTPUT~1/tmp/sun/sun.awt/awt/obj/WPrinterJob.obj  ../../../src/windows/native/sun/windows/WPrinterJob.cpp
+WPrinterJob.cpp
+../../../src/windows/native/sun/windows/WPrinterJob.cpp(74) : warning C4530: C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+../../../src/windows/native/sun/windows/WPrinterJob.cpp(117) : error C2664: 'JNIEnv_::NewString' : cannot convert parameter 1 from 'LPWSTR' to 'const jchar *'
+        Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+../../../src/windows/native/sun/windows/WPrinterJob.cpp(142) : error C2664: 'JNIEnv_::NewString' : cannot convert parameter 1 from 'LPTSTR' to 'const jchar *'
+        Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Since you have all the output saved in a log file, what DeusAphor suggests is what I would also do.
+
+Another option would be to let the compiler output direct itself normally into NppExec's console and then set NppExec to open the offended source file and jump to the line dictated by the compiler.
+
+This can achieved by first noticing the pattern of the error messages emit by you compiler, and then open the dialog box: Plugins-
+Answer 2: 
+
+    
+    
+Alright, so what I would do is use "Find in Files"
+...
+
+Given your current example I just put the text to find as "error"; If you wanted to include warnings; enable regex and search "error|warning"
+
+Directory is of course the directory to search in.. 
+
+Using a filter you can tell it to only look at files with X name.
+Example : "compiler-output3844.txt" you would use "compiler-output*.txt"
+
+This will give you something like so... 
+
+
+    
+    
+Title: How to run external tool on current file in IntelliJ IDEA
+Description: 
+    
+    
+                    
+I need to upload currently edited JSPs to server - via scp. I have pscp on my path on my windows machine. 
+
+How do I setup inteliij idea to do this with one click for currently opened file?
+
+(I would be able to set this up in eclipse - via 'run tool' and parameter placeholders)
+    
+
+        
+Answer 1: 
+
+    
+    
+In IntelliJ IDEA this feature is called External Tools. There are various variables that you can pass to the process, including the current file name.
+    
+    
+Title: What&#39;s the difference between &ldquo;toggle line breakpoint&rdquo; and &ldquo;toggle breakpoint&rdquo; in Eclipse?
+Description: 
+    
+    
+                    
+I just cannot understand the two options under the Run button of the menu in Eclipse. Doesn't the usually breakpoint refer to a line? I realize that there could be this case:
+
+if (x &gt;= 0 &amp;&amp; x &lt; 4 &amp;&amp; y &gt;= 0 
+    &amp;&amp; y &lt; 4)
+source ^= 1 &lt;&lt; (x * 4 + y);
+
+
+However when toggle line breakpoint of the 2nd line to set a breakpoint, it can also be unset by toggle breakpoint.So what's their difference on earth and how to distinguish them with the symbols?
+    
+
+        
+Answer 1: 
+
+    
+    
+toggle line breakpoint only act on the line breakpoint. the other act on any breakpoint. Here ( http://eclipse-tips.com/tips/29-types-of-breakpoints-in-eclipse ) you can see the list of possible breakpoints in eclipse.
+    
+    
+Answer 2: 
+
+    
+    
+In eclipse you can have 5 types of break points:
+
+
+the one you are used to: the ordinary line breakpoint
+a conditional breakpoint in which you stop on a line, but only when a certain condition is met
+method breakpoint that is triggered when you enter in a method
+an exception breakpoint, that stops on any line that throws a certain exception.
+(as per the comments I have forgotten about those) watchpoints: using them you will break whenever a certain field is accessed or modified. They can be configured from the outline view.
+
+
+The second option is also put on a certain line, but as long as it needs to be configured it might be considered as something more special. The symbols of the first two breakpoints are different. The third has special symbol too. The fourth one has no symbol (it does not belong to any specific place).
+
+This comes as explanation fighting off your words Doesn't the usually breakpoint refer to a line.
+
+Also you can see the difference between the two if you have such code:
+
+void func() {
+    int a = 16;
+}
+
+
+Try doing toggle breakpoint and toggle line breakpoint on the line void func(). Do you see the difference? Toggle breakpoint actually chooses the suitable option between toggle line breakpoint and toggle method breakpoint.
+    
+    
+Title: Why are my .js files launching in gedit from eclipse?
+Description: 
+    
+    
+                    
+From the explorer view in Eclipse, whenever I try to open a .js file, it launches in gedit instead? When I try 'right click 
+Answer 1: 
+
+    
+    
+Go to the general preferences of eclipse and search for "file associations". There, ensure that "JavaScript Editor" is set for *.js. After that eclipse should open the js files with this editor and bring code highlighting and stuff like that. Be aware, that those files you opened with 'right click 
+Title: Multi-programmer programming IDE or plugin
+Description: 
+    
+    
+                    
+Are there any plugins/addons/website services which support good multi-programmer programming?
+
+Just like Google Documents supports having people concurrently edit a document, is there any such similar features for IDEs? If so, Java and C# would be handier.
+
+This feature would be useful for me to help others debug their code and help them see where they're going wrong, without actually having to be there with them.
+
+I imagine this could also be useful for "pair programming" while at different locations (reduced usefulness I know, but still)
+
+Thank you
+    
+
+        
+Answer 1: 
+
+    
+    
+XPairtise is designed to assist with pair programming within Eclipse.  
+
+
+  This feature would be useful for me to help others debug their code and help them see where they're going wrong, without actually having to be there with them.
+
+
+Often, desktop sharing (like GotoMeeting and similar) are easier for this, if this is your main goal.
+    
+    
+Answer 2: 
+
+    
+    
+I haven't heard any buzz about it in awhile, but the Eclipse Docshare plugin is designed to do exactly this, in fact its underlying technology - Cola - has a description directly addressing your idea of remote pair programming. Video of the plugin in action.
+    
+    
+Answer 3: 
+
+    
+    
+Currently there is http://www.wave-vs.net/, I haven't used it but it seems exactly what you want.  Hopefully in the future more open-source variants of this will be developed for the Wave protocol allowing use with other languages.
+    
+    
+Title: How to write Xcode plugins?
+Description: 
+    
+    
+                    
+Where can I find resource on how to write Xcode plugins? I don't want to write macros and project templates, but plugins that extend the IDE functionality like the ones that can be developed for Visual Studio - capable of displaying in their own window and accessing Xcode project data.
+    
+
+        
+Answer 1: 
+
+    
+    
+See following:
+http://maxao.free.fr/xcode-plugin-interface/
+    
+    
+Answer 2: 
+
+    
+    
+Xcode does not have a public plug-in API.
+    
+    
+Answer 3: 
+
+    
+    
+maybe more up-to-date: https://github.com/phausler/XcodeAPI
+
+found via Regexident's answer on Xcode 4 plugin development
+    
+    
+Answer 4: 
+
+    
+    
+You can install Alcatraz
+
+And then open XCode -
+Title: In PuTTY, Emacs key combination has no effect
+Description: 
+    
+    
+                    
+Please try to forgive this slightly off-programming-topic question. At least I'm getting this problem when porting my C++ code to Linux. The problem I'm having is very basic: some key combinations are not recognized by emacs.  One result of that is that I can't 'undo' edits in Emacs.
+
+I'm running Putty.exe from Windows to my Ubuntu machine. The Putty character set (Window -
+Answer 1: 
+
+    
+    
+Try with just Ctrl and "-". I do not use emacs, but I use that key for screen(1) since it is not used for anything else (and the default of Ctrl-a is not so useful). On windows (with my Norwegian keyboard) the keypress to trigger it is just Ctrl-. In konsole windows in KDE Ctrl- will decrease font size, so there I have to fall back to Ctrl Shift - (it used to be just Ctrl- there as well some years ago).
+    
+    
+Answer 2: 
+
+    
+    
+When I'm editing with Swedish keyboard settings I have gotten used to undo with C-x u for reasons I can't remember anymore.
+    
+    
+Title: Is there a way to display user form in IDE instead of host app?
+Description: 
+    
+    
+                    
+I created a userform in an *.xlam add-in and created a new commandbar and button in the IDE, but when I click the button, the user form is opened in Excel, and focus is forced away from the IDE. Is there a way to open the user form in the IDE instead of the host application without resorting to a .Net COM Add-in?
+
+Here is the code that creates the commandbar and button and handles the button click event.
+
+Option Explicit
+
+Public WithEvents cmdBarEvents As VBIDE.CommandBarEvents
+
+Private Sub Class_Initialize()
+    CreateCommandBar
+End Sub
+
+Private Sub Class_Terminate()
+    Application.VBE.CommandBars("VBIDE").Delete
+End Sub
+
+Private Sub CreateCommandBar()
+
+    Dim bar As CommandBar
+    Set bar = Application.VBE.CommandBars.Add("VBIDE", MsoBarPosition.msoBarFloating, False, True)
+    bar.Visible = True
+
+    Dim btn As CommandBarButton
+    Set btn = bar.Controls.Add(msoControlButton, , , , True)
+    btn.Caption = "Show Form"
+    btn.OnAction = "ShowForm"
+    btn.FaceId = 59
+
+    Set cmdBarEvents = Application.VBE.Events.CommandBarEvents(btn)
+
+End Sub
+
+Private Sub cmdBarEvents_Click(ByVal CommandBarControl As Object, handled As Boolean, CancelDefault As Boolean)
+
+    CallByName Me, CommandBarControl.OnAction, VbMethod
+
+End Sub
+
+Public Sub ShowForm()
+    Dim frm As New UserForm1
+    frm.Show
+End Sub
+
+
+P.S. You may need this line of code to remove the commandbar...
+
+Application.VBE.CommandBars("VBIDE").Delete
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Here is an alternative. 
+
+Put a button on your user form. For demonstration purpose, I am using this
+
+
+
+Next put this code in the userform
+
+Private Sub CommandButton1_Click()
+    Unload Me
+    Application.Visible = True
+End Sub
+
+
+Next paste this on top of your class module
+
+Private Declare Function FindWindow Lib "user32" Alias "FindWindowA" _
+(ByVal lpClassName As String, ByVal lpWindowName As String) As Long
+Dim Ret As Long, ChildRet As Long
+
+Private Declare Function SetWindowPos Lib "user32" (ByVal hwnd As Long, _
+ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, _
+ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long) As Long
+
+Private Const HWND_TOPMOST = -1
+Private Const SWP_NOACTIVATE = &amp;H10
+Private Const SWP_SHOWWINDOW = &amp;H40
+
+
+Finally change your Sub ShowForm() to this
+
+Public Sub ShowForm()
+    Dim frm As New UserForm1
+    Dim Ret As Long
+
+    frm.Show vbModeless
+
+    Application.Visible = False
+
+    Ret = FindWindow("ThunderDFrame", frm.Caption)
+
+    SetWindowPos Ret, HWND_TOPMOST, 100, 100, 250, 200, _
+    SWP_NOACTIVATE Or SWP_SHOWWINDOW
+End Sub
+
+
+This is what you get
+
+
+
+EDIT
+
+More thoughts. To prevent the user from creating more userforms when the user clicks on smiley, change the Sub ShowForm() to the below. (Alternative would be to disable the smiley and re enable it when the form unload?)
+
+Public Sub ShowForm()
+    Dim frm As New UserForm1
+    Dim Ret As Long
+    Dim formCaption As String
+
+    '~~&gt; Set Userform Caption
+    formCaption = "Blah Blah"
+
+    On Error Resume Next
+    Ret = FindWindow("ThunderDFrame", formCaption)
+    On Error GoTo 0
+
+    '~~&gt; If already there in an instance then exit sub
+    If Ret &lt;&gt; 0 Then Exit Sub
+
+    frm.Show vbModeless
+    frm.Caption = formCaption
+
+    Application.Visible = False
+
+    Ret = FindWindow("ThunderDFrame", frm.Caption)
+
+    SetWindowPos Ret, HWND_TOPMOST, 100, 100, 250, 200, _
+    SWP_NOACTIVATE Or SWP_SHOWWINDOW
+End Sub
+
+    
+    
+Title: IntelliJ IDEA Terminal brings his own colors from System?
+Description: 
+    
+    
+                    
+I configure my IDE to use the installed Git-Bash. Unfortunately both Terminals (Default the Windows CMD and the git-bash sh.exe) have that blue line-background-color.
+I've already changed the colors in the system native terminal windows.
+Also I tried to change the colors under (IntelliJ) Settings --
+Answer 1: 
+
+    
+    
+It probably happened because you had customised your cmd.exe default colors. Resetting them back to default white text on black background fixed it for me under Idea too.
+
+For immediate effect, you can try using color 07 command in terminal to set it to white text on black.
+    
+    
+Answer 2: 
+
+    
+    
+None of the other answers quite worked for me.
+
+What did work is this:
+
+(in Settings -
+Answer 3: 
+
+    
+    
+For me resetting cmd-prompt to default colors did not work in IntelliJ 15. It still had the old cmd-prompt colors from the time when I installed IntelliJ.
+
+In this case you can go to File -
+Answer 4: 
+
+    
+    
+You can set the global selection color at: IDE Settings -
+Title: How to jump to source code of a method in Sublime Text with key binding?
+Description: 
+    
+    
+                    
+In Sublime Text editor, you can type COMMAND+P to search for other files based on file names
+(fuzzy match greatly speeds up this process).
+
+For example, if you see the following code in one source file (example in Ruby):
+
+u = User.new
+u.send_email
+
+
+and you want to see the definition of User class, you can type COMMAND+P and enter "User" to see a list of candidate files (whose names contain "user") you can open to view.
+
+Is it possible to jump to the source code of User class without typing "User"?
+
+As you navigate in the source code, your cursor is on User.new or u.send_email,
+it would be much faster if you can use some key-binding to jump to the file that contains the definition of either User class or the send_email method.
+
+Is this supported by Sublime Text or any of its wonderful plugins?
+
+Thank you.
+    
+
+        
+Answer 1: 
+
+    
+    
+A great way to do this is to install CTags.  
+
+Then you simply put your cursor over the class or method of interest:
+
+
+
+Then press ctrl+t, ctrl+t and it will jump to the location of that class or method's definition:
+
+ 
+    
+    
+Answer 2: 
+
+    
+    
+You can use:
+
+-Bookmarks: CTR + F2 to add, and F2 to go next bookmark
+
+-Go to a method with CTRL +R in the active tab.
+
+-'Jump to Symbol Definition' with a context menu with SublimeCodeIntel.
+
+-You can try with Find Function Definition, but it isn't entirely effective.
+    
+    
+Title: Can&#39;t import fl.controls in Flash IDE
+Description: 
+    
+    
+                    
+I'm coding in the Adobe Flash CS5 IDE. I swear fl.controls used to be importable, but now it's just not there. I may have removed the package from wherever it was when trying to use it in Flash Builder. Anyone know how I can get it back?
+    
+
+        
+Answer 1: 
+
+    
+    
+Add a control for Flash linkage.
+
+
+
+fl.controls package will then be available.
+
+
+
+Flash controls package is part of Flash Pro and can be added by SWC or via code:
+
+Adding by SWC:
+
+Windows:
+C:\Program Files (x86)\Adobe\Adobe Flash CS5.5\Common\Configuration\ActionScript 3.0\libs\flash.swc
+
+Mac OS X:
+/Applications/Adobe Flash CS5.5/Common/Configuration/ActionScript 3.0/libs/flash.swc
+
+Adding by source folder:
+
+Windows:
+C:\Program Files (x86)\Adobe\Adobe Flash CS5.5\Common\Configuration\Component Source\ActionScript 3.0\User Interface
+
+Mac OS X:
+/Applications/Adobe Flash CS5.5/Common/Configuration/Component Source/ActionScript 3.0/User Interface
+    
+    
+Title: How to make the eclipse IDE to build faster
+Description: 
+    
+    
+                    
+I am using Eclipse for development. However, it's is taking too much time to build. 
+It hangs when the percentage of build gets to 78. It shows "refreshing workspace" several times. That eats up lots of time. 
+
+How can I make Eclipse faster?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Increase the start-up memory as mentioned by thamaria 
+Disable spell check of eclipse
+Disable the plugins which you never use it (myln etc)
+Disable auto build. 
+
+
+This link might help you 
+
+http://pakkatechies.blogspot.com/2011/07/making-eclipse-ide-faster.html
+    
+    
+Answer 2: 
+
+    
+    
+There are many possibilities to tune Eclipse.
+
+First, when Eclipse is hanging up you should start Eclipse with some arguments and give it more memory. Use: eclipse -vmargs -Xms256m -Xmx1024m or even more.
+
+EDIT: "eclipse -vmargs -Xms256m -Xmx1024m" is the commandline command with which you can start Eclipse (well, depending on your OS). For that you either need to have eclipse in your environement path or you will have to use an absolute path to your eclipse executable file. Under Windows systems you may use for example "C:\Programme\eclipse\eclipse.exe -vmargs -Xms256m -Xmx1024m". You could f.e. create a short-cut with this command.
+
+Second: If possible you can use several workspaces for your eclipse projects if they are not connected to each other. When using other projects than the ones located in your actual workspace switch the workspace to the one you desire. That way eclipse does not need to load all contents at startup and will therefor start much faster.
+
+Third: You can disable the "build workspace" Option.  Go to "project" --strong/strong/p/div
+Title: Java - Eclipse: Externalize Strings?
+Description: 
+    
+    
+                    
+It looks like the "Externalize Strings" feature takes everything, makes a Messages class, and a .txt file in which to store the Strings themselves. This is interesting, but I've got another way to store constants:
+
+public final class Constants {
+    //for parsing commands
+    public static final String REGEX_COMMAND = "(\\w*) *= *\"(.*)\""; //Regex for a command from a data file
+    //etc
+}
+
+
+Is there any way to get Eclipse to automatically move Strings and other values to here for me?
+    
+
+        
+Answer 1: 
+
+    
+    
+Select a literal, right click, Refactor -/p/div
+Answer 2: 
+
+    
+    
+There is no way to move the strings automatically. 
+If you need to move several String constants by hand, the most convenient way to do that is through drag and drop: select the strings you want, and drag them to your Constants class.
+    
+    
+Title: PHPStorm deletes line if Backspace is pressed on the default indentation level
+Description: 
+    
+    
+                    
+After upgrading from 7.x to 8.x I noticed an annoying new "feature". When on an empty line (after pressing enter), then pressing backspace (which used to get rid of the indentation character right in front of the caret) the line is erased and the caret jumps back to the end of the line above.
+
+Given the following code snippet and caret placement:
+
+
+  
+
+
+pressing Backspace does this:
+
+
+  
+
+
+How do I turn this off?
+    
+
+        
+Answer 1: 
+
+    
+    
+As of PhpStorm 9+, this setting is located in it's own section under Editor &gt; General &gt; Smart Keys &gt; Backspace. Setting the Unindent drop-down to Disabled will give you the behaviour you would expect.
+
+
+
+
+
+The solution is to disable "Backspace smart indent" by going to File &gt; Settings (or pressing CtrlAltS) then
+
+
+navigating to IDE Settings &gt; Editor &gt; Smart Keys
+searching for Backspace smart indent
+
+
+and removing the tick from check box next to said option.
+
+
+    
+    
+Title: Javascript plugin for Eclipse?
+Description: 
+    
+    
+                    
+I am very happy with Eclipse and don't want to change my IDE, but find the pre-bundled Eclipse plugin for JavaScript too difficult to work with.
+
+Too many of the features that I got used to developing Java (not JavaScript) in Eclipse seem to be missing or incomplete, such as an intelligent code analysis, smart refactorings, a truly language-related (not full-text) reference search, class inheritance trees, etc.
+
+Any suggestions for alternative Eclipse plugins for JavaScript development?
+
+Admittedly, it is a lot more difficult to analyze JavaScript code (compared to Java) not only for a plugin but also for any human programmer, because JavaScript comes with fewer structural elements, and because there are so many different ways to do common things like inheritance or modularization. But there's got to be something, right?
+    
+
+        
+Answer 1: 
+
+    
+    
+As Nodeclipse lead, I am always looking for what is available in Eclipse ecosystem.
+
+JavaScript support is Eclipse JSDT project.
+It gives Editor, and JSDoc support.
+
+For ES5 support, JSDT validation is to be disabled and JSHint-Eclipse used.
+
+Also there is new Tern-IDE plugins, that gives hints and go to definition by using Tern.js.
+The same author leads AngularJS plugin
+
+
+
+All mention plugins can be got via Enide Studio 2014 (installed as plugins or downloaded as stand-alone product).
+Nodeclipse site has even more links,
+and I am inviting to collaborate on the JavaScript tools on GitHub
+
+There are also JSON Editor and Json Tools.
+
+Unfortunately VJET is no longer continued as there is no backing company now.
+
+All effort are community driven. The simplest contribution is reporting bug or taking own issue to research and share.
+
+
+  Any suggestions for alternative Eclipse plugins for JavaScript development?
+
+
+No alternative plugins, just get more of them.
+    
+    
+Answer 2: 
+
+    
+    
+The VJET plugin seems to provide better JavaScript support, although I haven't tested it very extensively.
+http://eclipse.org/vjet/
+
+For necessary code hygiene I recommend to use JSHint (a sane version of JSLint).
+http://marketplace.eclipse.org/content/jshint-eclipse
+
+Both are installable through the built-in Eclipse Marketplace.
+
+The popular Aptana IDE, which is based on Eclipse, is also available as plugin, but I haven't tested it as plugin.
+http://www.aptana.com/products/studio3/download
+
+My personal opinion: Eclipse has outdated syntax validators (no ECMAScript 5 support) and non of the plugins can fix that. The problem is known for years (Bug Report), but nothing is done about it. Code completion seems to be a lot better in the WebStorm IDE or Sublime Text with certain plugins. Right now, I'm quite happy using Eclipse for my backend Java stuff and WebStorm for the frontend code for the same project.
+    
+    
+Answer 3: 
+
+    
+    
+A. In the Eclipse world...in my opinion... the best JavaScript support is currently given by Eclipse Orion, a web based variant of Eclipse:
+https://orionhub.org
+
+Orion applies tern.js to get JavaScript features like highlighting and completion:
+
+Eclipse orion code completion
+
+The JavaScript library tern.js seems to be up to date:
+
+https://github.com/ternjs/tern
+
+And it is applied by several Source Code Editor plugins:
+
+https://ternjs.net/#plugins
+
+B. On the other hand, all JavaScript plugins for Eclipse seem to be outdated.
+
+See for example
+http://www.eclipse.org/webtools/development/news/main.php (last updated 2016)  
+
+The Eclipse Plugin for tern.js seems to be out of date, too:
+
+https://marketplace.eclipse.org/content/tern-eclipse-ide
+
+I was not able to install it on the current Eclipse version Photon.
+
+Also see https://github.com/angelozerr/tern.java/issues/463
+
+C. If you are open for a commercial JavaScript editor, try to use WebStorm, als already suggested by Tilman. 
+
+If there is a good Eclipse based JavaScript solution, that I am not aware of and that is able to compete with the features of WebStorm, please let me know. 
+    
+    
+Title: Webstorm crashes and all my settings gone
+Description: 
+    
+    
+                    
+I was working with my webstorm 7.0.3 which used for editing the javascript code. All of the sudden something went wrong with my system and everything froze! Had to cold reboot the system and when restarted the webstorm i saw these error messages stating that none of my settings that I spent hours to create ( and of course saved) can be restored!
+
+This is has may be a serious bug in websotrm which may cause lack of reliability of this product 
+
+
+
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+There is a hidden folder .idea inside the webstorm working directory. Remove that folder and try again.
+    
+    
+Answer 2: 
+
+    
+    
+maybe late, but this just happened to me on PhpStorm2018.3 upgrade.
+
+one can just reclaim ownership on files inside .idea directory and change the read-only attribute on all files inside .idea.
+
+for linux:
+
+sudo chown -R user:group .idea inside a project dir (root dir where .idea resides)
+
+and then
+
+chmod +r -R .idea also inside a root dir of the project
+    
+    
+Title: Eclipse 3.7 cannot resolve Types in C++ Editor
+Description: 
+    
+    
+                    
+I recently changed from Eclipse 3.6 to Eclipse 3.7 , which I am using  for C++ development in Ubuntu 11.04 . 
+
+With Version 3.6 I had no big troubles, except that I always had some issues with the indexer.
+Now with Version 3.7 it begins marking unresolved Types as Errors. Since the indexer seems to dislike me even more, my Eclipse apparently doesn't know types like uint16_t or size_t.
+
+In contrary to the displayed errors in the code editor, my compiler has no problems with compiling the code and resolving all symbols and types, so this seems to be a problem of the IDE itself. 
+
+Are there any ways to avoid this behavior, because all the red underlines make my code more and more unreadable...?
+
+Update:
+
+Okay with some research and the answer from Dennis I found out that I need to add some paths to
+Project Properties/ C/C++ General/ Paths and Symbols 
+
+Since I am  building for a PowerPC instead of a I32 target, I can not just add /usr/include .
+Instead I needed to add
+
+/usr/powerpc-linux-gnu/libc/usr/include 
+
+for all the standard headers (like stdint.h).
+Also I needed:
+
+/usr/lib/gcc/powerpc-linux-gnu/4.5.1/include 
+
+for the stdarg.h. 
+
+Now almost all the errors are gone. The only function which still troubles me is printf from the header stdio.h.  I looked it up and the header file itself lies within the included paths. Still I get an Error which says Function printf could not be resolved. I want to note again, that these are just errors displayed by Eclipse - The compiling itself works fine.
+
+So this actually throws up 3 questions:
+
+
+In the project properties the Paths and Symbols section coheres with the include Paths out of the C++ Build/Settings/C++ Includes section. This means adding/deleting a path in one of those sections directly affects the entry of the others. Since the C++ Includes directly coheres with the Compiler I wonder why the compiler can compile correcty ( and finds the headers ) even if they arent passed to him as a path? Is there some kind of standard path GCC uses, which I don't know about?
+Why doesn't he find printf in eclipse? The headerfile stdio.h is included and it also contains the declaration of printf - so why does the Eclipse Code Editor tell me that it can't resolve it?
+Why are the header files divided so much? I am aware that I need other header files if I am building for another traget (e.g. PowerPC) - But why does the GNU GCC separate those headers in different dirs? 
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The red underlines for common types are usually caused by not having your standard library in your include path. Look at your includes for your project... they are in the project properties. Ensure that your C++ includes have an entry that matches the C++ standard libs folders for the compiler you are using.
+    
+    
+Answer 2: 
+
+    
+    
+After hitting this problem and a search revealing two stack overflow questions hitting the same problem, I figured I would submit how I fixed it after it annoyed me enough to actually investigate.
+
+I'm running Fedora and annoyingly, it has a stddef.h file in /usr/include/linux.... which is actually empty. So even though I had the compiler's stddef.h in the include path, the indexer was actually parsing this other empty file. So what needed done was:
+
+Prefix your paths and symbols list with the compiler specific include path (in my case it was /usr/lib/gcc/x86_64-redhat-linux/4.7.2/include/) to avoid the other empty stddef.h from being parsed.
+    
+    
+Answer 3: 
+
+    
+    
+I'm using Eclipse (Mars.1 Release 4.5.1, Build id: 20150924-1200) with an ARM compiler (arm-none-eabi, 4.4.1).
+I had exactly the same problem as you.
+My former path was:
+
+
+D:\test\CodeSourcery\Sourcery G++ Lite\lib\gcc\arm-none-eabi\4.4.1\include
+
+
+
+Then i discovered another include directory (postfix: 'fixed') at the compiler directories:
+
+
+D:\test\CodeSourcery\Sourcery G++ Lite\lib\gcc\arm-none-eabi\4.4.1\include-fixed
+
+
+
+This fixed all my errors concerining type-misdetection (e. g. uint16_t).
+    
+    
+Title: Android development with notepad-like editor and command line
+Description: 
+    
+    
+                    
+I have a problem with Eclipse. It is very slow for me. My PC is an old PC and I'm not comfort with the performance. Is there any lightweight alternative to Eclipse (Available for Windows and Linux)? I want SPEED!
+
+My ideal is to write my code in an editor like Notepad and supplement with the command line! How can I compile my code in this environment? How do I update my R.java file or build my project's configuration?
+    
+
+        
+Answer 1: 
+
+    
+    
+The documentation provides very nice instructions about using the command line tool. The building is performed with the aid of Ant tool. You could also use a more advanced editor than notepad (Notepad++ for example).
+
+However, if you have a slow machine, you would suffer during development anyway. You should also forget about using the emulator for debugging. The emulator would take ages to load.
+    
+    
+Answer 2: 
+
+    
+    
+see the link managing project through command line
+
+It provides a brief description about how to develop android app without any IDE
+    
+    
+Answer 3: 
+
+    
+    
+If you want speed, you should buy a faster computer.
+
+It seems that you are a beginner -/p/div
+Answer 4: 
+
+    
+    
+well, nothing holds you back to use notepad and manually compiling with javac:
+
+http://docs.oracle.com/javase/1.4.2/docs/tooldocs/windows/javac.html
+
+Like kgiannakakis pointed out; you'll also need the Android SDK:
+
+http://developer.android.com/sdk/index.html
+    
+    
+Title: Find missing braces in large PHP file?
+Description: 
+    
+    
+                    
+I'm debugging a client's 3500-line PHP file. Including this file causes a PHP Parse error:  syntax error, unexpected $end in ... error, so I'm assuming there's a missing brace somewhere. Is there a simple tool or method for missing brace discovery, either online or in the Komodo IDE I'm using?
+    
+
+        
+Answer 1: 
+
+    
+    
+Use consistent and clean tabbing. I've found that makes it very hard to miss a closing brace.
+
+Other than that, you've kinda dug your own grave here. What are you coding that results in a 3500-line PHP file?
+
+EDIT: Try dumping your code into Notepad++. I'm fairly sure that will highlight the associated closing brace if you click on the opening one, but with larger files, I've gotten somewhat unreliable performance with this.
+    
+    
+Answer 2: 
+
+    
+    
+another option (similar to notepad++) is to use Dreamweaver to find the associated closing tag. 
+See this link: How do I make Dreamweaver to show me closing tags?
+
+in dreamweaver: 
+To select matching opening and closing curly braces, brackets, or parentheses, click inside the opening or closing symbol, and click the Balance Braces button on the Coding toolbar (it's immediately below Select Parent Tag). Alternatively, use the keyboard shortcut, Ctrl+'/Cmd+'.
+    
+    
+Answer 3: 
+
+    
+    
+Komodo Edit has a nice feature that highlights what's inside braces
+
+Ctrl+Alt+]
+    
+    
+Answer 4: 
+
+    
+    
+I'm just working on a related problem (find missing array square bracket in JSON-object). So I hope to be able to help.         
+
+     $pos=0;
+     $braceCount=0;
+while( preg_match('~\{|\}~S', $source, $out, PREG_OFFSET_CAPTURE, $pos) ){
+     if($out[0][0] === '{'){
+       $braceCount++;
+       if( $braceCount === 1 )$startPos=$out[0][1];
+     }
+     elseif( $out[0][0] === '}' ){
+       $braceCount--;
+       if( $braceCount === 0 ){
+         //echo 'Up to that position:'.$out[0][1].' every thing seems to be ok?&lt;br&gt;';
+         echo substr($source,$startPos,($out[0][1]+1-$startPos)).'&lt;br&gt;';
+       } 
+       elseif( $braceCount &lt; 0 ){
+         echo 'To many closing brace right before '.($out[0][1]+1).'&lt;br&gt;';
+         exit;
+       }
+     }
+     $pos = $out[0][1]+1;
+}
+if( $braceCount &gt; 0 ) echo 'Closing brace is missing somewhere.'; 
+
+
+This echo the source until there is a miss match and an error for curly braces. 
+    
+    
+Answer 5: 
+
+    
+    
+What text editor are you using? I will recommend you to use Eclipse and it will be much easier to detect it :) or also you can public your code and may we can help in that way :)
+    
+    
+Answer 6: 
+
+    
+    
+Use NetBeans IDE for PHP.
+http://netbeans.org/features/php/
+
+Will check your syntax and highlight issues amongst the many other nice features it has.  And it's free.
+    
+    
+Answer 7: 
+
+    
+    
+We really appreciate how smart everybody is! Sometimes its better to stick to the tool the person is using and exactly what they are asking about. I don't know if you have found your answer but here is what I use.
+
+
+Put your cursor on the opening Brace then - 
+On Mac:
+[Command]'
+
+
+or Edit Menu /pp/p/div
+Title: linker script generator
+Description: 
+    
+    
+                    
+I recently spent many hours trying to fix a problematic ld script.
+Once I had drawn (on paper) all the different sections I could figure out the problem.
+
+So I started searching for some sort of LD script generator, but could not find any!
+Does anybody know if such a tool exist?
+Something that can import/export ld scripts or map-file/elf-file and show the different objects/sections and the addresses?
+
+I know there are some IDEs out there where you do not need to worry about LD-scripts but I am using eclipse and it does not even offer syntax highlighting!
+    
+
+        
+Answer 1: 
+
+    
+    
+To my knowledge, there are no non-proprietary tools for this purpose.
+    
+    
+Answer 2: 
+
+    
+    
+I don't know of any WYSIWYG editors for LD scripts but I may be able to help you graphically debug these types of problems.
+
+I assume that this was a run-time problem and not a compile time problem.  If that is the case then you can use the map output from the linker to get an idea of what is going on.
+
+gcc -Wl,-Map=main.map main.c
+
+
+The map file can then be parsed with grep or you can use a graphical viewer for the file to debug problems with sections and symbols.  
+
+You can also use nm to get similar results from a linked executable:
+
+nm -S --size-sort a.out 
+
+    
+    
+Answer 3: 
+
+    
+    
+Apache freemarker tool is used by NXP for the linker script generator integrated into the NXP (Eclipse based) IDE MCUXpresso
+    
+    
+Title: Are there any tools in IDEs to automatically fix comment formatting?
+Description: 
+    
+    
+                    
+/* Suppose I have a multi-line comment with hard line-breaks
+ * that are roughly uniform on the right side of the text,
+ * and I want to add text to a line in order to make the
+ * comment a bit more descriptive.
+ */
+
+
+Now, most unfortunately, I need to add text to one of the top lines.
+
+/* Suppose I have a multi-line comment with hard line-breaks (here is some added text for happy fun time)
+ * that are roughly uniform on the right side of the text,
+ * and I want to add text to a line in order to make the
+ * comment a bit more descriptive.
+ */
+
+
+It takes O(n) time (n being the number of lines) to fix each line so that they roughly line up again. The computer should do this, not me.
+
+Are there tools to deal with this in our IDEs? What are they called?
+    
+
+        
+Answer 1: 
+
+    
+    
+emacs supports the command fill-paragraph which is typically mapped to meta-q.   
+
+Output from fill-paragraph on your second paragraph of text:
+
+/* Suppose I have a multi-line comment with hard line-breaks (here is
+ * some added text for happy fun time) that are roughly uniform on the
+ * right side of the text, and I want to add text to a line in order
+ * to make the comment a bit more descriptive.
+ */
+
+    
+    
+Answer 2: 
+
+    
+    
+Eclipse has this built in (at least, I think it's what you want).  When you type a comment, you then type Ctrl+Shift+F and it will format either all your code, or just the section of code that you have highlighted.
+
+I just tested it now and it aligned all my comments for me.
+    
+    
+Title: How to Make Eclipse More Like Emacs
+Description: 
+    
+    
+                    
+I am very familiar with emacs--and I realize that there is nothing that it cannot do--but there are some things that it does not do well or efficiently.  So, being between projects I am open to  the idea of switching to a full-featured IDE such as Eclipse.
+
+With muscle-memory being what it is, I would like to make Eclipse as emacs-like as possible.  I have already discovered the excellent Emacs+ plugin which gets me about halfway there.  However, I am still missing the following features of emacs which I routinely rely upon:
+
+
+shell:  It's not just a shell, it's also a buffer.
+occur:  Search-/p/lilip/p/li/ulp/pp/p/div
+Answer 1: 
+
+    
+    
+
+For the shell you have WickedShell
+
+
+
+
+
+Ctrl+F is enough to trigger a Search within the current file. (does not create a new buffer with matched lines)
+Only Mark Occurrences is about highlighting occurrences, but that is not as advanced as the Emacs function.
+
+
+
+
+
+Formatter options can emulate "align-regex" function, as described here.
+
+
+
+  Preferences -&gt; Java -&gt; Code Style -&gt; Formatter.
+  Click 'Edit' on the profile (you may need to make a new one since you can't edit the default).
+  
+  In the indentation section select 'Align fields with columns'.
+  
+  Then, in your code Ctrl+Shift+F will run that formatter.
+
+    
+    
+Answer 2: 
+
+    
+    
+I can confirm Brian's suggestion (Emacs key-bindings).  What I do to resolve this dilemma is to use both Emacs and Eclipse simultaneously.  They are both very good at reporting external changes to files so there is minimal chance of tromping on edits (but it can happen).  More to the point, you can leverage the strengths of both tools without having to give up either one.  The combination of using both tools and Eclipse having Emacs key-bindings makes this quite satisfactory for me.
+    
+    
+Answer 3: 
+
+    
+    
+IIRC (It's been a while since I've used eclipse) eclipse has a "use Emacs key-bindings" mode. I believe that there's also the option to tell eclipse to use emacs as its own editor... 
+    
+    
+Title: Eclipse fails to open .vue files in Web Page Editor
+Description: 
+    
+    
+                    
+I would like to open .vue files as regular HTML files in Eclipse. I tried to to right click a .vue file and then Open WithWeb Page Editor. I've also linked .vue in the preferences as a new file association to the Web Page Editor.
+
+Doing exactly the above steps leads to the following error after opening the file. It also throws a NullPointerException:
+
+
+  Failed to create the part's controls
+
+
+Is this a bug in Eclipse or am I doing something wrong?
+
+
+
+My Eclipse version is:
+
+Eclipse Java EE IDE for Web Developers.
+
+Version: Neon.3 Release (4.6.3)
+Build id: 20170314-1500
+
+
+
+
+I've seen in the Error Log, that the following message appears, after opening a .vue file in the Web Page Editor:
+
+eclipse.buildId=4.6.3.M20170301-0400
+java.version=1.8.0_92
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=de_CH
+Framework arguments:  -product org.eclipse.epp.package.jee.product -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.jee.product -data file:/C:/Users/sebsc/eclipse-workspace/ -product org.eclipse.epp.package.jee.product
+
+org.eclipse.jst.pagedesigner
+Error
+Wed Mar 29 19:27:35 CEST 2017
+Unable to display palette for App.vue.  Unknown content type for file.
+
+
+
+
+Here is the stack trace of the NullPointerException:
+
+java.lang.NullPointerException
+    at org.eclipse.wst.sse.ui.StructuredTextEditor.createModelDependentFields(StructuredTextEditor.java:1503)
+    at org.eclipse.wst.sse.ui.StructuredTextEditor.update(StructuredTextEditor.java:3156)
+    at org.eclipse.jst.pagedesigner.editors.HTMLEditor.sash_createAndAddDesignSourcePage(HTMLEditor.java:297)
+    at org.eclipse.jst.pagedesigner.editors.HTMLEditor.createPages(HTMLEditor.java:458)
+    at org.eclipse.ui.part.MultiPageEditorPart.createPartControl(MultiPageEditorPart.java:363)
+    at org.eclipse.ui.internal.e4.compatibility.CompatibilityPart.createPartControl(CompatibilityPart.java:150)
+    at org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor.createPartControl(CompatibilityEditor.java:99)
+    at org.eclipse.ui.internal.e4.compatibility.CompatibilityPart.create(CompatibilityPart.java:340)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:498)
+    at org.eclipse.e4.core.internal.di.MethodRequestor.execute(MethodRequestor.java:55)
+    at org.eclipse.e4.core.internal.di.InjectorImpl.processAnnotated(InjectorImpl.java:966)
+    at org.eclipse.e4.core.internal.di.InjectorImpl.processAnnotated(InjectorImpl.java:931)
+    at org.eclipse.e4.core.internal.di.InjectorImpl.inject(InjectorImpl.java:151)
+    at org.eclipse.e4.core.internal.di.InjectorImpl.internalMake(InjectorImpl.java:375)
+    at org.eclipse.e4.core.internal.di.InjectorImpl.make(InjectorImpl.java:294)
+    at org.eclipse.e4.core.contexts.ContextInjectionFactory.make(ContextInjectionFactory.java:162)
+    at org.eclipse.e4.ui.internal.workbench.ReflectionContributionFactory.createFromBundle(ReflectionContributionFactory.java:105)
+    at org.eclipse.e4.ui.internal.workbench.ReflectionContributionFactory.doCreate(ReflectionContributionFactory.java:74)
+    at org.eclipse.e4.ui.internal.workbench.ReflectionContributionFactory.create(ReflectionContributionFactory.java:56)
+    at org.eclipse.e4.ui.workbench.renderers.swt.ContributedPartRenderer.createWidget(ContributedPartRenderer.java:129)
+    at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createWidget(PartRenderingEngine.java:975)
+    at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:651)
+    at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:757)
+    at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.access$0(PartRenderingEngine.java:728)
+    at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$2.run(PartRenderingEngine.java:722)
+    at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+    at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createGui(PartRenderingEngine.java:706)
+    at org.eclipse.e4.ui.workbench.renderers.swt.StackRenderer.showTab(StackRenderer.java:1317)
+    at org.eclipse.e4.ui.workbench.renderers.swt.LazyStackRenderer$1.handleEvent(LazyStackRenderer.java:72)
+    at org.eclipse.e4.ui.services.internal.events.UIEventHandler$1.run(UIEventHandler.java:40)
+    at org.eclipse.swt.widgets.Synchronizer.syncExec(Synchronizer.java:233)
+    at org.eclipse.ui.internal.UISynchronizer.syncExec(UISynchronizer.java:145)
+    at org.eclipse.swt.widgets.Display.syncExec(Display.java:4821)
+    at org.eclipse.e4.ui.internal.workbench.swt.E4Application$1.syncExec(E4Application.java:211)
+    at org.eclipse.e4.ui.services.internal.events.UIEventHandler.handleEvent(UIEventHandler.java:36)
+    at org.eclipse.equinox.internal.event.EventHandlerWrapper.handleEvent(EventHandlerWrapper.java:201)
+    at org.eclipse.equinox.internal.event.EventHandlerTracker.dispatchEvent(EventHandlerTracker.java:197)
+    at org.eclipse.equinox.internal.event.EventHandlerTracker.dispatchEvent(EventHandlerTracker.java:1)
+    at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:230)
+    at org.eclipse.osgi.framework.eventmgr.ListenerQueue.dispatchEventSynchronous(ListenerQueue.java:148)
+    at org.eclipse.equinox.internal.event.EventAdminImpl.dispatchEvent(EventAdminImpl.java:135)
+    at org.eclipse.equinox.internal.event.EventAdminImpl.sendEvent(EventAdminImpl.java:78)
+    at org.eclipse.equinox.internal.event.EventComponent.sendEvent(EventComponent.java:39)
+    at org.eclipse.e4.ui.services.internal.events.EventBroker.send(EventBroker.java:94)
+    at org.eclipse.e4.ui.internal.workbench.UIEventPublisher.notifyChanged(UIEventPublisher.java:60)
+    at org.eclipse.emf.common.notify.impl.BasicNotifierImpl.eNotify(BasicNotifierImpl.java:374)
+    at org.eclipse.e4.ui.model.application.ui.impl.ElementContainerImpl.setSelectedElement(ElementContainerImpl.java:173)
+    at org.eclipse.e4.ui.internal.workbench.ModelServiceImpl.showElementInWindow(ModelServiceImpl.java:617)
+    at org.eclipse.e4.ui.internal.workbench.ModelServiceImpl.bringToTop(ModelServiceImpl.java:581)
+    at org.eclipse.e4.ui.internal.workbench.PartServiceImpl.delegateBringToTop(PartServiceImpl.java:770)
+    at org.eclipse.e4.ui.internal.workbench.PartServiceImpl.bringToTop(PartServiceImpl.java:401)
+    at org.eclipse.e4.ui.internal.workbench.PartServiceImpl.showPart(PartServiceImpl.java:1214)
+    at org.eclipse.ui.internal.WorkbenchPage.busyOpenEditor(WorkbenchPage.java:3261)
+    at org.eclipse.ui.internal.WorkbenchPage.access$25(WorkbenchPage.java:3176)
+    at org.eclipse.ui.internal.WorkbenchPage$10.run(WorkbenchPage.java:3158)
+    at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:70)
+    at org.eclipse.ui.internal.WorkbenchPage.openEditor(WorkbenchPage.java:3153)
+    at org.eclipse.ui.internal.WorkbenchPage.openEditor(WorkbenchPage.java:3117)
+    at org.eclipse.ui.actions.OpenWithMenu.openEditor(OpenWithMenu.java:324)
+    at org.eclipse.ui.actions.OpenWithMenu.lambda$0(OpenWithMenu.java:180)
+    at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:84)
+    at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4418)
+    at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1079)
+    at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4236)
+    at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3824)
+    at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:1121)
+    at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:336)
+    at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1022)
+    at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:150)
+    at org.eclipse.ui.internal.Workbench$5.run(Workbench.java:693)
+    at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:336)
+    at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:610)
+    at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:148)
+    at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:138)
+    at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+    at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:134)
+    at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+    at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:388)
+    at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:243)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:498)
+    at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:673)
+    at org.eclipse.equinox.launcher.Main.basicRun(Main.java:610)
+    at org.eclipse.equinox.launcher.Main.run(Main.java:1519)
+
+
+
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I found out what the problem is. The Error Log view showed more detailed information about the problem.
+
+The HTML/Web Page Editor requires a file extension to have a valid content type. Because .vue files do not have a predefined content type, the editor just crashes.
+
+As a workaround, you can simply add *.vue to the HTML content type. You can find this setting in Preferences → General → Content Types. Then add *.vue to HTML under Text.
+
+
+
+You probably also want to set the default editor for .vue files to the HTML/Web Page Editor. You can do this in Preferences → General → Editors → File Associations
+
+Sorry, that I cannot give out the bounty to anybody =)
+    
+    
+Answer 2: 
+
+    
+    
+You can find the window --
+Title: Invalid ImageList Index error [Delphi]
+Description: 
+    
+    
+                    
+This window appear all the time when I change Delphi's tab 'Code' to 'Design'. How can I fix this problem?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I've encountered this exact issue before using Delphi XE8. I found no solution other than restarting the IDE when it happens.
+
+In particular, this happened whenever I would switch between Local Desktop and Remote Desktop. For example, I would start the IDE from locally at the computer itself. Then, I would go to another computer, and open Windows Remote Desktop to that computer, into the same desktop session, and when I went to use the IDE, it would give me the same Invalid ImageList Index error repeatedly.
+
+Since then, I've been using Delphi 10 Seattle, as well as not using Remote Desktop. So I can't say whether this has been fixed yet in later Delphi versions. But if I recall, past attempts to use Delphi 10 Seattle via Remote Desktop have been successful. 
+    
+    
+Answer 2: 
+
+    
+    
+i think i found the problem.
+if look carefully on the error details.
+the firs row show calling delete on custom image list...
+so i find out if i delete FMX.ListBox from uses, it will solve my problem.
+and it worked. so i think the problem is a bug on Firemonkey ListBox unit.
+    
+    
+Title: JetBrains IDEs scrolling on touchscreen
+Description: 
+    
+    
+                    
+I'm having a problem scrolling in all the JetBrains IDEs (PyCharm, PhpStorm) using touch screen. I have a Dell XPS 15 with a touchscreen.
+
+When I try to scroll it just selects code. I have tried in regular Notepad and Notepad++ and there works as expected.
+
+Has anyone else experienced it? Is there any solution to this? It would be really great to scroll through the code using touchscreen.
+    
+
+        
+Answer 1: 
+
+    
+    
+I have found temporary solution by installing plugin Code glance (https://plugins.jetbrains.com/plugin/7275). The plugin provides a sidebar with code map, which is similar to the one from Sublime. In the sidebar it is possible to navigate through code. It is not ideal but it's better than nothing.
+    
+    
+Answer 2: 
+
+    
+    
+Yes, I was having the same problem. And luckily I got a gesture to scroll using two fingers:
+
+Scroll up: Tap and hold using one finger and swipe away[from close to distant of the first finger] using another finger. Swiping away from each other also works.
+
+Scroll Down: Tap and hold using one finger and swipe in[from distant to close of the first finger] using another finger. Swiping close to each other also works.
+
+
+    
+    
+Title: VS2013 with ReSharper 8.2 not recognizing Code Contracts?
+Description: 
+    
+    
+                    
+I have the following software:
+
+
+Visual Studio 2013 Update 2
+Code Contracts (1.6.60617.15)
+ReSharper C# edition (8.2.0.2160)
+ReSharper Code Contracts (1.0.0.0)
+
+
+When I open a method with code contracts, ReSharper is confused about the contract:
+
+
+
+It is warning me that chapter can be null, even though the contract requires it not to be. Also:
+
+
+
+The contract invariant method is flagged as never used. Technically correct, but it should not tell me that because the method is used by the code contract rewriter to get information about each invariant. How do I go about teaching ReSharper about code contracts to correct these two issues?
+    
+
+        
+Answer 1: 
+
+    
+    
+To get this working for Portable Class Library, please do the following:
+
+
+Create a new folder ExternalAnnotations in C:\Program Files (x86)\JetBrains\ReSharper\v8.2\Bin\ directory;
+Put System.Diagnostics.Contracts.xml there with the following content:
+
+&lt;assembly name="System.Diagnostics.Contracts"&gt;
+&lt;member name="M:System.Diagnostics.Contracts.Contract.Assume(System.Boolean)"&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)"&gt;
+        &lt;argument&gt;condition:false=&amp;gt;halt&lt;/argument&gt;
+    &lt;/attribute&gt;
+&lt;/member&gt;
+&lt;member name="M:System.Diagnostics.Contracts.Contract.Assume(System.Boolean,System.String)"&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)"&gt;
+        &lt;argument&gt;condition:false=&amp;gt;halt&lt;/argument&gt;
+    &lt;/attribute&gt;
+&lt;/member&gt;
+&lt;member name="M:System.Diagnostics.Contracts.Contract.Assert(System.Boolean)"&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.AssertionMethodAttribute.#ctor"/&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)"&gt;
+        &lt;argument&gt;condition:false=&amp;gt;halt&lt;/argument&gt;
+    &lt;/attribute&gt;
+&lt;/member&gt;
+&lt;member name="M:System.Diagnostics.Contracts.Contract.Assert(System.Boolean,System.String)"&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.AssertionMethodAttribute.#ctor"/&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)"&gt;
+        &lt;argument&gt;condition:false=&amp;gt;halt&lt;/argument&gt;
+    &lt;/attribute&gt;
+&lt;/member&gt;
+&lt;member name="M:System.Diagnostics.Contracts.Contract.Requires(System.Boolean)"&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)"&gt;
+        &lt;argument&gt;condition:false=&amp;gt;halt&lt;/argument&gt;
+    &lt;/attribute&gt;
+&lt;/member&gt;
+&lt;member name="M:System.Diagnostics.Contracts.Contract.Requires(System.Boolean,System.String)"&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)"&gt;
+        &lt;argument&gt;condition:false=&amp;gt;halt&lt;/argument&gt;
+    &lt;/attribute&gt;
+&lt;/member&gt;
+&lt;member name="M:System.Diagnostics.Contracts.Contract.Requires``1(System.Boolean)"&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)"&gt;
+        &lt;argument&gt;condition:false=&amp;gt;halt&lt;/argument&gt;
+    &lt;/attribute&gt;
+&lt;/member&gt;
+&lt;member name="M:System.Diagnostics.Contracts.Contract.Requires``1(System.Boolean,System.String)"&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)"&gt;
+        &lt;argument&gt;condition:false=&amp;gt;halt&lt;/argument&gt;
+    &lt;/attribute&gt;
+&lt;/member&gt;
+&lt;member name="M:System.Diagnostics.Contracts.Contract.Invariant(System.Boolean)"&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.AssertionMethodAttribute.#ctor"/&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)"&gt;
+        &lt;argument&gt;condition:false=&amp;gt;halt&lt;/argument&gt;
+    &lt;/attribute&gt;
+&lt;/member&gt;
+&lt;member name="M:System.Diagnostics.Contracts.Contract.Invariant(System.Boolean,System.String)"&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.AssertionMethodAttribute.#ctor"/&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)"&gt;
+        &lt;argument&gt;condition:false=&amp;gt;halt&lt;/argument&gt;
+    &lt;/attribute&gt;
+&lt;/member&gt;
+&lt;member name="M:System.Diagnostics.Contracts.Contract.ReportFailure(System.Diagnostics.Contracts.ContractFailureKind,System.String,System.String,System.Exception)"&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.AssertionMethodAttribute.#ctor"/&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)"&gt;
+        &lt;argument&gt;=&amp;gt;halt&lt;/argument&gt;
+    &lt;/attribute&gt;
+&lt;/member&gt;
+&lt;member name="T:System.Diagnostics.Contracts.ContractInvariantMethodAttribute"&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor" /&gt;
+&lt;/member&gt;
+&lt;member name="T:System.Diagnostics.Contracts.ContractClassForAttribute"&gt;
+    &lt;attribute ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor" /&gt;
+&lt;/member&gt;
+&lt;/assembly&gt;
+
+Close all Visual Studio instances (just to give ReSharper a chance to reload annotations), reopen Visual Studio and load needed solution;
+There is a chance you will need to clean ReSharper caches (ReSharper | Options | Environment | General | Clear Caches);
+
+
+Also I filed a new ticket about supporting such case in ReSharper ExternalAnnotations extension by default. 
+    
+    
+Answer 2: 
+
+    
+    
+I have since contracted JetBrains via e-mail support, and came to a sudden realization. I was working in a Portable Class Library solution.  I will attach the e-mail correspondence from my side to this answer and will update this answer with follow-up responses (If any) for those who might have a similar problem at this moment.
+
+
+  Thank you for your quick reply. I have now installed 8.2.1000.4556 and
+  updated the ExternalAnnotations extension to 8.2.1001. The
+  aforementioned "ReSharper Code Contracts 1.0.0" plugin is actually
+  called "ReSharper.ContractExtensions 0.7.51" on the plugin page. I am
+  using .NET 4.5, and I did not define compilation symbols nor did I
+  reference any Code Contracts related library.
+  
+  However, I seem to have neglected to mention that I was working in a
+  Portable Class Library project. Since I did not think about this
+  possibility at all, I created a test project to test my ReSharper
+  installation with. I used a regular project and a Portable Class
+  Library project. The result may not be surprising for you: everything
+  works as intended in the regular project, but Code Contracts are not
+  recognized in the Portable Class Library.
+  
+  It is therefore easy to conclude that there is no support yet for
+  Portable Class Libraries, or this is merely something that has not
+  been tested. I have attached the test project to this e-mail. If you
+  open the "Class1.cs" file in the "ClassLibrary1" project from VS2013
+  Update 2 with ReSharper 8.2.1, you should see the same warnings as I
+  do.
+  
+  I hope you will consider adding support for these project types. I can
+  only imagine it is something little going wrong in a support
+  detection, but alas, I do not know your code base nor should I try to
+  guess. I can only hope you will consider this feature.
+
+    
+    
+Title: Increase the font size on Sublime Text 2 status bar?
+Description: 
+    
+    
+                    
+Is it possible to increase the font size on the Sublime Text status bar?  I did some searching and didn't find much at all on the subject.  I sometimes miss important information displayed in the status bar simply because its so small I don't notice it.  
+    
+
+        
+Answer 1: 
+
+    
+    
+As far as I know you should modify theme settings for that. Please take a look at this answer (at the bottom of the page) Customize interface fonts
+    
+    
+Answer 2: 
+
+    
+    
+Try this it will work for sure in Sublime Text 3 .
+navigate to Preferences -/pp/p/div
+Title: How do I set the scala sdk using gradle in Idea module?
+Description: 
+    
+    
+                    
+My build.gradle file
+
+idea {
+    project {
+        vcs {
+            vcs = 'Git'
+        }
+
+        jdkName = '1.8'
+        languageLevel = '1.8'
+    }
+}
+
+
+I would also like to set the scala SDK in the module using gradle. 
+Right now, I end up having to manually set it from Project Structure in the Idea UI.
+Ideally, I would prefer to set it in my build.gradle file such that when I run
+
+
+  gradle idea
+
+
+the scala SDK is automatically set for this module
+    
+
+        
+Answer 1: 
+
+    
+    
+To have a project with scala module in Intellij using gradle, 
+
+
+Create a new IDEA based scala project
+
+Give appropriate project name and proceed. 
+Next, check if you've gradle in your local environment. 
+(Install gradle using $sudo apt install gradle and then use command $which gradle to find location of gradle)
+Open your terminal and navigate to your project directory. Execute command $gradle init --type scala-library 
+This will make your project gradle based and you'll see associated gradle files in Intellij. 
+Restart Intellij and navigate to View &gt; Tool Windows &gt; Gradle to see Gradle tab.
+
+    
+    
+Answer 2: 
+
+    
+    
+From the Gradle documentation for the Scala plugin, you must add the Scala library dependency to the compile class path.  For example:
+
+compile "org.scala-lang:scala-library:2.12.4"
+compile "org.scala-lang:scala-reflect:2.12.4"
+
+
+For integration with IntelliJ IDEA, you can apply the idea plugin:
+
+apply plugin: 'idea'
+
+
+Adding the Scala library to the compile class path is required even if your source is in test code only.  After this, IntelliJ will automatically set up the Scala SDK for you.
+    
+    
+Title: How to make ide in Android like AIDE to compile android project in android phone itself
+Description: 
+    
+    
+                    
+As i know there is a Software (AIDE) in android that can compile android projects to APK in android phone.
+my question is how this works ? is it posible to make DEX file in android device and pack it in APK ?
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, you can create a basic level Java/Xml Android App using AIDE.
+
+Step:1: Prerequisites
+
+
+  Install AIDE from Google Play on your Android device (all Android versions from 2.2 are supported) and start it. AIDE comes bundled with a mobile version of the Android SDK, so there is no need to install anything else.
+
+
+Step:2: Creating the App Project
+
+
+  "When you start AIDE for the first time in expert mode you will see the "Create new Project" dialog. If you have already opened a project the dialog will not show, but you can invoke it from AIDE's integrated file browser by choosing "Create new Project here...". In the create app dialog you first choose the type of project you want to create. For your first app choose "Android App / Hello World" here. A dialog will popup where you can define the basic information about your new app: First, choose a name for your app. Second, choose a package name of your app. Your package name must be unique across all packages installed on the Android system. For this reason, it's generally best if you use a name that begins with the reverse domain name of your organization or publisher entity. Finally, tap "Create" to make AIDE generate your new app project. An app project contains all the files that comprise the source code for your Android app. AIDE will generate these files on your SD card. AIDE will also open two important files of your new app for editing: main.xml and MainActivity.java. By default, AIDE will create a Git repository for your new project. This behavior can be turned off in the settings. See the tutorial about Using the Git version control system for more info.
+
+
+
+
+Step:3: Running the App Project
+
+
+  Running an app project with AIDE is easy. Just select "Run" from the menu. In order to run your app, AIDE will first build an Android application package file (APK) for your app. An APK file is used to distribute and install application software onto the Android operating system. The APK file contains all of your program's code, resources, assets, certificates, and manifest file. You will see a popup showing the progress of the build.
+
+
+
+
+Finally, you can run!
+
+
+
+For more details: 
+Create a Simple app using AIDE. AIDE tutorial
+
+Develop Android apps from within Android using AIDE (video)
+    
+    
+Title: gocode autocomplete doesn&#39;t work
+Description: 
+    
+    
+                    
+I want to use autocompletion, but can't get gocode (https://github.com/nsf/gocode) working.
+
+The editor of my choice is Brackets (using https://github.com/David5i6/Brackets-Go-IDE). But I can't get it working with vim+vundle or komodo either.
+
+
+The GOPATH wasn't set by the GO installation
+I set the GOPATH and PATH just like the instruction specified and can work on go projects just fine.
+
+
+My folder structure:
+
+~/Documents/goDev/bin/
+                      test
+                      gocode
+                 /src/
+                     github/
+                            jonas/
+                                  test/
+                                       test.go
+                             nfs/
+                                  gocode/
+                                       ...
+
+
+From my .profile:
+
+export GOPATH=/Users/jonas/Documents/goDev
+export PATH=$PATH:/usr/local/bin:/usr/local/go/bin/:/Users/jonas/Documents/goDev/bin
+
+
+With go env i get:
+
+...
+GOPATH="/Users/jonas/Documents/goDev"
+...
+GOROOT="/usr/local/go"
+GOTOOLDIR="/usr/local/go/pkg/tool/darwin_amd64"
+...
+
+
+Is there something I did wrong with my setup? Or have I maybe missed something else?
+
+Thanks in advance
+    
+
+        
+Answer 1: 
+
+    
+    
+Add the following to your .profile and log out and back in:
+
+export GOROOT=/usr/local/go
+
+
+This got gocode working for me with LiteIDE.
+    
+    
+Answer 2: 
+
+    
+    
+Often gocode is working correctly, but the editor does not find gocode.
+
+Test if gocode is working correctly:
+
+Terminal 1 
+
+
+gocode close 
+gocode -s -debug
+
+
+
+Terminal 2:
+
+
+cd "yourworkspace"
+gocode -f=json --in=YOURGOFILE.go autocomplete 146
+
+
+See results in Terminal 1.
+
+
+
+If gocode seems to be working:
+
+
+gocode close
+start Brackets, open a Go file. It should start gocode in the background.
+Check if gocode is running: "ps |grep gocode"
+If not - check if Brackets can find the gocode executable. Path var, or add full path to Brackets config.
+
+    
+    
+Title: Visual Studio 2012 adding _1 to click event handler
+Description: 
+    
+    
+                    
+Visual Studio 2012 is adding _1 to any click event handler I create in XAML
+
+ie: I create a new WPF solution, drop a button, in XAML give button a Name, type 'click' and intellisense brings up  'New Event Handler', I click it, it creates event BUT its named btn_test_click_1
+
+In VS2010 we don't get _1, how can I stop this happening its driving me mad?
+
+UPDATE
+I can confirm this has been fixed with VS2012 Update 2
+    
+
+        
+Answer 1: 
+
+    
+    
+I can confirm this has been fixed with VS2012 Update 2
+    
+    
+Answer 2: 
+
+    
+    
+It only does that when the IDE see that an existing event handler by the same name has been created.  Make sure you delete the event handle info from the code file then go to the aspx file and remove any event handle connections on the control.  Then save the file.
+    
+    
+Answer 3: 
+
+    
+    
+You can remove the _1 manually and as you say you only have one event handler, so there shouldn't be any other code logic that would run on your event.
+    
+    
+Title: Any Web &amp; Java IDE&#39;s for the ARM architecture on Linux?
+Description: 
+    
+    
+                    
+I am currently running Debian Linux on an ARMv7 microprocessor (aka my android phone. ;))
+it really runs great, without a single issue. With surprisingly a great deal amount of application support compiled for arm, as compared to many other arm based linux distros. 
+
+I would love to use it for some Web Development, as well as Java programming and compiling, but I am having a bit of trouble trying to find any IDE's that are either architecturally independent or compiled for the ARM processor.. 
+
+One I am really curious about is, IntelliJ IDEA. But I cant figure out if it is architecturally independent or just x86 support only. 
+
+I also believe Netbeans is ready and compiled for NetBeans, but I am not a big user of it so I would prefer to use one of the ones I use more often. but if it comes to it, and it does support arm, I will definitely use it. 
+
+So what do you folks know of? Are there any programs that are compiled for arm that will suit this purpose for me? or am I stuck with Vim or something? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Well it never hurts to try :)
+
+Have you downloaded the JRE for ARM from http://www.oracle.com/technetwork/java/embedded/downloads/javase/index.html? Get that and download IntelliJ 11 Community Edition for linux and give it a go.
+    
+    
+Answer 2: 
+
+    
+    
+On the Samsung Chromebook Arm, Eclipse works when running Crouton and Ubuntu. At the command line, enter:
+
+sudo apt-get install eclipse 
+
+
+Ubuntu will automatically install Java JDK 6 for arm. Replacing it with Oracle Java JDK 8 for Arm will improve performance
+
+Alternatively, when using Chroagh and Arch Linux, Intellij Idea works. At the command line, enter:
+
+cd /usr/lib
+sudo ln -s libgif.so libgif.so.4
+pacman -S intellij-idea-community-edition
+
+
+Intellij Idea install with Open-JDK7 for ARM, but you can replace it with Oracle JDK8 for ARM.
+
+Lastly, I have had no luck installing Android-Studio or the Android SDK for Eclipse on either Ubuntu or Arch. Still searching for this solution. 
+    
+    
+Answer 3: 
+
+    
+    
+It is still a bit early for ARM desktop-class hardware to use for development even if the hw is now strong enough.
+
+I have managed to run some bigger Swing applications on my XE303C Chromebook under Ubuntu 12.04 (OpenJDK7 and now Oracle JDK( for ARM/Linux 8 EA) but I haven't had much success with Java IDEs.
+
+Netbeans 7.3 fails to start on both JREs after the splashscreen.
+
+Eclipse is in the repos though, so it may work. (I am a Netbeans guy so I haven't tried)  
+    
+    
+Title: Designer friendly JSP/Servlet web development in both Windows and Linux (Ubuntu, et. al.)
+Description: 
+    
+    
+                    
+I'm a front-end developer for my college JSP project and so far I was using Sublime Text 2 for writing markup and my CSS/Less and ran the project directly from Apache Tomcat configured manually where I placed my project directory in webapps folder, but later, the project required to use Servlets (obviously) and I realized the need of IDE, while my colleagues at the development part are now insisting to use IDE.
+
+We have ported the entire project to NetBeans 7.1.1 and so far, project works fine and NetBeans takes care of all the hassle of creating/managing Servlets and its web.xml configurations, but I mainly deal with the markup and Less, which is real tedious here. Following are the issues I face:
+
+
+Less file is not syntax-highlighted at all. (although I referred this way of adding Syntax highlight to .less files).
+Every time I make a change to markup or CSS, I need to hit F5 and wait till a new tab launches in browser to reflect the changes. (Refreshing page in the browser doesn't work as it used to work in my older way of JSP development). Imagine 10 tabs for 10 changes if I don't close the tab after I see.
+I've used jQuery a lot, and it really annoys me to see warnings in my .js files (I know NetBeans might be pointing to correct issues, but I simply don't want it to be "over-smart" with my code).
+A Web designer would know how frequent it is to "save-changes-to-css-and-refresh-page-in-browser". And the IDE just slows down this whole process.
+
+
+I know the obvious advantages of using IDE, but is there any fix for above issues?
+
+Also, I tried porting my project to Eclipse (and it just went crazy on minified jQuery files), before turning to NetBeans, but it just refused to use relative paths for my .js,.css and .less in &lt;script&gt; and &lt;alt&gt; tags, even though all the files and folders existed within Web-Content directory. And all I got was 404 errors for my scripts and stylesheets, in spite the fact that I could access those files my manually visiting to URL. As follows:
+
+&lt;link rel="stylesheet/less" href="less/styles.less" media="all" /&gt;
+&lt;!-- Above line doesn't include the file and I get 404 error --&gt;
+
+
+but
+
+Visiting to localhost:8080/MyProject/less/styles.less 
+   shows me its content in the browser.
+
+
+Also, I tried to work with Servlets without using IDE (my Java code is simple such that I don't feel any need of IntelliSense-like editing) and refered this link, and ya it works if I do it in the same way as explained, but I don't get why I need to specify servlet-api.jar of apache-tomcat\lib in classpath at the time of compilation inspite the fact that I have path to Apache's lib folder already added to CLASSPATH variable in Windows.
+
+I know there are too many questions within this single question that it is likely to be "moderated-out" by SO moderators but my all questions hint to a single problem of having to develop JSP/Servlets and designing the pages without using IDE, and just fairly capable text-editor AKA Sublime Text.
+
+Please suggest me a firm solution.
+    
+
+        
+Answer 1: 
+
+    
+    
+I believe you will ultimately gain from using an IDE for Java web application development (e.g. NetBeans) in the long run although changing to new tools is never easy.
+
+NetBeans is a good text editor for HTML, JavaScript and CSS.  It provides syntax highlighting, formating, code completion, inline documentation, previews for CSS colors/effects and validation.
+
+NetBeans can easily be configured to deploy to a Tomcat instance running on your machine.  After which time any editing of HTML, JSPs and CSS within NetBeans is usually automatically reflected in your running application (requiring only an F5 page refresh).
+
+There are situations when CSS changes will not be automatically reflected in the running application.
+
+
+if you are minifying the CSS during your build process, so your browser is loading a minified version of your CSS (e.g. using the YUI compressor, best to leave using this until after you have finished the CSS development).
+if you are using some kind of CSS file caching filters.  e.g. you are explicitly setting an expiry header for the CSS file and thus causing the browser to cache the CSS for a period of time.
+You can edit your JS/CSS in an external editor, NetBeans does a pretty good job of detecting changes made by external editors but sometimes it doesn't detect these unless the most recent change has been made inside the NetBeans editor itself.
+
+
+Since you are not experiencing instant update I would assume this is an issue with your usage of LESS rather than due to NetBeans itself.
+
+I've not used LESS myself but found a solution at Quick tip: LESS.js in development and watch mode, apparently if you are running less.js in a HTML5 browser local storage will be used to cache the generated CSS.   This is a good feature for normal usage but not something you want when you are developing your CSS as you will not immediately see the results of your CSS changes.  The solution is to use LESS's watch and development modes.  Watch mode enables your CSS to be refreshed automatically (no need to hit F5) and development mode will prevent the CSS from being cached. 
+
+You can enable watch mode by adding the following JavaScript after your less stylesheets and less.js script is loaded.
+
+&lt;script type="text/javascript"&gt;
+     less.env = "development";
+     less.watch();
+&lt;/script&gt;
+
+
+If you think NetBeans is being too smart about your JavaScript you should see what JSLint would make of it!  It can be a little soul destroying to run too many quality tools against your code, that said I always use the Firefox HTML Validator extension (I live to see the green ticks!).  The NetBeans warnings may look a little scary but it is only trying to keep you standards compliant to help you avoid problems further down the line.
+
+I was a little concerned when I saw your phrase "ported the entire project to NetBeans 7.1.1", personally I would advise that your project should be built using a build tool that was IDE agnostic (such as Ant or Maven).  NetBeans has very good support for both of these tools, I'm a big Maven fan myself.  Using these build tools would mean you could avoid using an IDE and build your instance of the application using the command line instead. 
+
+Incidentally, I would hope you are using a version control system such as Git or Subversion to share project file changes, IDEs also make it easy to work with version control systems. 
+
+In relation to your other question.  Apache and Apache Tomcat are two different types of server software.  Often Apache server is installed in front of a Tomcat server.  When compiling a Servlet your Java compiler will need access to a copy of servlet-api.jar.  Tomcat's lib directory contains Java library files (e.g. servlet-api.jar), the Apache's lib directory will contain compiled C libraries used by the Apache native executables rather than Java library files (these are different types of library for different purposes).
+    
+    
+Title: How can I find all synchronized on the same monitor in Java with Eclipse?
+Description: 
+    
+    
+                    
+With Eclipse it is possible to find all references of a method, member or class. Is it also possible to find all references to the monitor of a synchronized?
+
+If this is not possible with Eclipse then is it possible with another Java IDE?
+
+My problem is that the monitor object hat many references. A search for all references will return to many results. I will only see where are synchronized with this object.
+
+EDIT: I add a sample what i means:
+
+public class LockClass{
+  public synchronized void add(Object any){
+  }
+}
+
+public class AnyOther{
+  private LockClass lock;
+
+  public AnyOther(LockClass lock){
+    this.lock = lock;
+  }
+
+  public void doSomethings(){
+    synchronized(lock){
+      //...
+    }
+}
+
+
+Now I want search all synchronized which use the LockClass as monitor. This is a static analyses. In my sample I want find:
+
+
+LockClass.add
+AnyOther.doSomethigs
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Let's get some terms straight:
+
+
+The monitor of a synchronized block is in fact the monitor on an object
+References to the monitor of a synchronized is ambigous: do you want all places in the code where this monitor is referenced or all fields/local variables which points to the monitor?
+
+
+Where in the code the monitor is referenced?
+
+Suraj already describe how to do this: Search &gt; References &gt; Workspace.... You can also filter those references to only read access, write access, implementators, etc. Such references are found through static code analysis, so no need to run the application. This, however, will not automatically detect the cases where a reference to an object is assigned to a field, which is then assigned to another variable. This only detects reference to this particular reference to the object.
+
+Which variables points the monitor?
+
+This will handle the case when several fields/local variables reference the object. To do this, the application must be running. You need to put breakpoint in a proper place, where the monitor is visible (the easiest way is somewhere around a synchronized block, which use the monitor in question). The Variables view will show all variables available in the current scope. You can get all references to an object by selecting an reference to the object in the Variables view, bringing the context menu and selecting All References.... This will show you all fields/local variables, which reference the object.
+    
+    
+Answer 2: 
+
+    
+    
+To find references: Select your element-&gt;rt-click menu-&gt;References-&gt;workspace
+
+Its not possible to find all possible synchronized blocks on the same object, because the actual object pointed by a reference would depend at runtime.
+    
+    
+Answer 3: 
+
+    
+    
+Eclipse will not be able to find references to a certain object. It can only find references to a certain symbol, e.g. a variable, a class, a method a.s.o. A monitor can be this or the value of a variable o -- both pointing to the same object at run-time. However, Eclipse has no way to extract run-time information like that.
+    
+    
+Title: Howto ignore specific undefined variables in Pydev Eclipse
+Description: 
+    
+    
+                    
+I'm writing a crossplatform python script on windows using Eclipse with the Pydev plugin. The script makes use of the os.symlink() and os.readlink() methods if the current platform isn't NT.
+Since the os.symlink() and os.readlink() methods aren't available on the Windows platform Pydev flags them as undefined variables--like so:
+
+Question:
+Is there a way to ignore specific undefined variable name errors without modifying my source file?
+edit: I found a way to ignore undefined variable errors from this answer on stackoverflow.
+I'll leave the question open in case there is a way to solve this using project file or Pydev setting.
+    
+
+        
+Answer 1: 
+
+    
+    
+I suspect pydev may have better, specific solutions, but what about just putting some code at the start of your program, such as:
+
+if not hasattr(os, 'symlink'): os.symlink = None
+
+
+Yeah, it's a hack, but, unless pydev does have specialized solutions (unfortunately I don't know of any, but then I'm no pydev expert;-), may be better than nothing...
+    
+    
+Answer 2: 
+
+    
+    
+I use pydev + pylint.  
+
+With pylint you can add which messages to ignore in the Preferences
+Answer 3: 
+
+    
+    
+I noticed PyDev doesn't recognize ZeroMQ constants so I struggled with the same problem. 
+
+I found PyDev has a settings option in Preferences &gt;  PyDev &gt; Code Editor &gt; Code Analysis : Undefined-tab. Just write symlink and readlink there (comma separated) to remove the errors.
+
+Still not optimal, but good enough for now.
+    
+    
+Title: Wireless programming with the Arduino XBee Shield and XBee Explorer
+Description: 
+    
+    
+                    
+I am trying to enable wireless programming of an Arduino via the XBee Shield and an XBee Explorer. I've seen two tutorials online, XBee radios and Wireless Bootloading for ATmega168/ATmega328 that show you how do it. 
+
+However, both tutorials talk about using components to connect the receiver XBee to the Arduino. Well the XBee Shield handles the communication between the receiver XBee and the Arduino, so the extra components aren't necessary (or are they). They talk about using a capacitor or transistor to be able to wirelessly reset the Arduino. Is this already possible with the XBee Shield, or is there some modification I can make to it to make it possible?
+
+How can I use the existing Arduino IDE to program my Arduino wirelessly?
+    
+
+        
+Answer 1: 
+
+    
+    
+You are correct in the fact that the extra components are needed to reset the Arduino wirelessly and you do need them even if you are using the Xbee shield. I'll assume that one of the tutorials that you were reading was this one. What you are going to want to do is read over the tutorial and build the transistor/capacitor/resistor circuit into a little ball (similar to this) or on a piece of prototyping board with the three signal wires coming out. You need to solder the "Reset signal from XBee" to the D3 pin on the shield which should be labeled (or it can be found on the Datasheet). Then you will have to figure out a way to connect the reset to the reset pin on your Arduino, and the ground to either device (because they should be connected by the shield). This can be as simple as sticking the wire into the sockets on the Arduino. After you do this and setup the environment as per the previously mentioned tutorial, you should be good to go!
+
+If you do have any questions, feel free to ask, I should be able to help.
+    
+    
+Title: how to repackage eclipse for my team
+Description: 
+    
+    
+                    
+I'd like to set up eclipse with a bunch of plugins and DB connection configurations, etc and re-zip it up so my team-mates and new starters can all be working on the same platform easily.
+
+It seems that installing plugins is fine, but when I add in custom jars (e.g. ivy2, ojdbc, etc) they all save with  full, absolute paths which probably dont exist on others machines (particularly  if they unzip in a different location to me).
+
+Anyway, I'm hoping that this idea is not silly and am working if this sort of process is documented somewhere or if anyone has any tips in general.
+
+Thanks,
+    
+
+        
+Answer 1: 
+
+    
+    
+I would recommend against requiring all developers to place eclipse in the same location. There are times when some developers may want to try an alternate version of eclipse to explore a technology that requires a different set of plugins or a different eclipse base version.
+
+Let developers install eclipse where they would like.
+
+However, for jars that you need to run plugins (external dependencies that you need to configure for proper plugin usage):
+
+Hardwire a directory for those jars (as opposed to the entire eclipse dir), like c:\eclipse-helpers or something.
+
+
+
+To deal with third-party library dependencies (in the code you're developing), you have a few good choices:
+
+
+Create project(s) to hold the third-party libs and check them into your source version control system (which you are using, right?). You can then add the libs to the build path(s) of the project(s) - make sure you mark them for export in the "order and export" tab of the build path page. You can then simply add these third-party projects as project dependencies.
+Reference the third-party jars as CLASSPATH variables when adding them to the build path of your projects. This allows other developers to store the dependencies in different locations. Perhaps define a CLASSPATH variable (in eclipse's Window-
+Answer 2: 
+
+    
+    
+Although not exactly in line with the direction of the question, you could use Yoxos OnDemand.  It allows you to "roll-your-own" Eclipse distro and download it as a zip.  They add in their own perspective where you can add more plugins (direct from their repo), or update the plugins that you have.  
+
+Although I've never used the feature, you can make make your own stacks and name them, allowing anyone to go to the site later and download it (with the most up-to-date versions of the plugins).  Also, dependencies for plugins are resolved automatically if need be.
+    
+    
+Answer 3: 
+
+    
+    
+In eclipse - in many places it's possible to use workspace relative paths or system environment infos to reference external files, too.
+Another option could be to place your jars into a workspace project so that every team member can check it out from cvs/subversion/whatever and start working. Working like this ensures a reproducible environment for server builds or for desktops even after years.
+
+Talking about Yoxos...
+it provides "Workspace Provisioning" as well. This means you can attach Eclipse Preferences, checkstyle configurations and Mylyn setups additionally to your list of needed tools/plugins for your IDE to your yoxos profile.
+This means your team could share a profile and would be able to start working with the same setup regardless of their OS or whatever. (Its possible to use multiple profiles at once, too.)
+    
+    
+Answer 4: 
+
+    
+    
+We did a similar thing with our development environment (it needed both Eclipse and our own plug-in which, in the early stages, had to run in a known location).
+
+We just put it in c:\eclipse_&lt;projName&gt; and made that a requirement for the team. That's probably the easiest solution for you.
+
+It's your team, you can dictate this as a requirement. Unless your team members are absolute idiots, they'll work with you.
+    
+    
+Answer 5: 
+
+    
+    
+I found Yoxos really good and it does very good work in determining dependencies.
+Its really a good tool and worth giving a look.
+    
+    
+Answer 6: 
+
+    
+    
+I just started using git to manage my eclipse install.  I did a write-up.  The approach might work for you, and it's probably worth looking at.
+    
+    
+Answer 7: 
+
+    
+    
+If developers all don't have the same paths on their machine, instead of adding independent JAR files you could create what Eclipse calls a "library" and include a bunch of jars in that.  Then another developer just has to change the location of the library and it'll pick up all the jars in there.
+    
+    
+Title: How to invert console history order in pycharm for copy pasting?
+Description: 
+    
+    
+                    
+In Pycharm, the console history has entries from newest (top) to oldest (bottom). Which is fine in a way, but it's horrible for copy pasting several lines of code from history.
+What happens is that you get your code flow upside down when copying from history. Basically, you have to copy+paste one line at a time, at the cost of opening the history and scrolling to the desired line every single time.
+
+It doesn't matter if you Ctrl select your lines in the order you want them to be re-entered. The console history pop-up will sort them according to the order shown (i.e., newest on top, oldest in the bottom).
+
+Example:
+Say you ran the following two lines on console
+
+import pandas as pd
+df = pd.read_csv('path_to_file')
+
+
+When you look it up on history, this is what you'll see:
+
+1 df = pd.read_csv('path_to_file')
+2 import pandas as pd
+
+
+So, if you select those two lines to paste it in the console or in your script, they'll be in the incorrect order, breaking down code flow. 
+
+I have searched for a way to either:
+(1) invert how console history is displayed (i.e., oldest (top) to newest (bottom)).
+(2) preserve selecting order (i.e, ignore position on history, order by Ctrl+click, so that in the example above I could select line #2 first, line #1 second and this order would be preserved for pasting).
+
+Applications:
+
+a) Rerun previously entered code slices in console;
+
+b) copy from console history to script file.
+
+Thanks in advance. Cheers!
+    
+
+        
+Answer 1: 
+
+    
+    
+Another option is that if you have ipython installed, then your python console will by default use ipython. And you could use the %history magic command of ipython to print out your history for copy.
+
+c.f. http://ipython.readthedocs.io/en/stable/interactive/magics.html#magic-history
+    
+    
+Answer 2: 
+
+    
+    
+just write a short code to reverse it:
+
+#triple string quotes over multiple lines
+code= """
+df = pd.read_csv('path_to_file')
+import pandas as pd
+""" #end of multiline quote
+
+split_by_line = code.split("\n")
+
+split_by_line.reverse()
+
+print("\n".join(split_by_line))
+
+
+note: I have never worked with pycharm so this maay not work properly for blocks (if, for etc)
+    
+    
+Title: How to open .pas file from another app in already open Delphi IDE and position to line#
+Description: 
+    
+    
+                    
+Assuming I have the Delphi IDE open, how can I open a .pas file selected in another app and open it in the Delphi IDE, as well as positioning it to a specific line number?
+
+I've seen some editing tools do this. 
+
+I'm not sure if it's just an option to a normal file open (eg., using default file association), or a command-line option, or you need DDE or COM or something entirely different.
+
+Note that I don't want to close the project and reopen a new or fake project. 
+
+Also, I don't want the file added to the project. I just want to open it. 
+
+For example, When you &lt;ctrl&gt;-click on a varible or type, the IDE will open the file containing that symbol and go to the line where that symbol is declared. That's all I want to do -- but from an external app. (I'm not looking for a symbol, just a line.) 
+
+I'm using Delphi XE5 at the moment, so I'm interested in newer Delphi versions, not pre-XE2 or so.
+
+(Part of the question is, how do I ensure that if the IDE is already open, the the file is opened in anew tab inside of the current IDE rather than in another instance of the IDE?)
+    
+
+        
+Answer 1: 
+
+    
+    
+The code below (for D7) shows how this can be done by way of an IDE add-in .Dpk compiled
+into a Bpl.  It started as just a "proof of concept", but it does actually work.
+
+It comprises a "sender" application which uses WM_COPYDATA to send the FileName, LineNo &amp; Column to a receiver hosted in the .Bpl file.
+
+The sender sends the receiver a string like
+
+Filename=d:\aaad7\ota\dskfilesu.pas
+Line=8
+Col=12
+Comment=(* some comment or other*)
+
+
+The Comment line is optional.
+
+In the .Bpl, the receiver uses OTA services to open the requested file and positions the editor caret, then inserts the comment, if any. 
+
+The trickiest thing was to find out how to handle one particular complication, the case where the named file to be opened is one with an associated form.  If so, in D7 (and, I assume, other IDE versions with the floating designer option enabled) when the IDE 
+opens the .Pas file, it also opens the .Dfm, and left to its own devices, that would leave the form editor in front of the code editor.  Calling the IOTASourceEditor.Show for the .Pas file at least puts the IDE code editor in front of the .Dfm form, but that didn't satisfy me, because by now my curiosity was piqued - how do you get a form the IDE is displaying off the screen?  
+
+I spent a lot of time exploring various blind alleys, because the OTA + NTA services don't seem to provide any way to explicitly close an IOTAEditor or any of its descendants.  In the end it turned out that the thing to do is simply get a reference to the form and just send it a WM_CLOSE(!) - see comments in the code.
+
+Fwiw, being a novice at OTA, at first (before I found out how IOTAModules work) I found that far and away the most difficult part of this was discovering how to get hold of the IEditView interface needed to set the editor caret position, but as usual with these interfacey things, once you get the "magic spell" exactly right, it all works.
+
+Good luck!  And thanks for the fascinating challenge!
+
+unit Receiveru;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ExtCtrls, ToolsAPI;
+
+type
+  TOTAEditPosnForm = class(TForm)
+    Memo1: TMemo;
+  private
+    FEdLine: Integer;
+    FEdCol: Integer;
+    FEditorFileName: String;
+    FEditorInsert: String;
+    procedure WMCopyData(var Msg : TWMCopyData); message WM_COPYDATA;
+    procedure HandleCopyDataString(CopyDataStruct : PCopyDataStruct);
+    procedure OpenInIDEEditor;
+    property EditorFileName : String read FEditorFileName write FEditorFileName;
+    property EdLine : Integer read FEdLine write FEdLine;
+    property EdCol : Integer read FEdCol write FEdCol;
+    property EditorInsert : String read FEditorInsert write FEditorInsert;
+  end;
+
+var
+  OTAEditPosnForm: TOTAEditPosnForm;
+
+procedure Register;
+
+implementation
+
+{$R *.dfm}
+
+procedure MonitorFiles;
+begin
+  OTAEditPosnForm := TOTAEditPosnForm.Create(Nil);
+  OTAEditPosnForm.Show;
+end;
+
+procedure Register;
+begin
+  MonitorFiles;
+end;
+
+procedure TOTAEditPosnForm.OpenInIDEEditor;
+var
+  IServices : IOTAServices;
+  IActionServices : IOTAActionServices;
+  IModuleServices : IOTAModuleServices;
+  IEditorServices : IOTAEditorServices60;
+  IModule : IOTAModule;
+  i : Integer;
+  IEditor : IOTAEditor;
+  ISourceEditor : IOTASourceEditor;
+  IFormEditor : IOTAFormEditor;
+  IComponent : IOTAComponent;
+  INTAComp : INTAComponent;
+  AForm : TForm;
+  IEditView : IOTAEditView;
+  CursorPos : TOTAEditPos;
+  IEditWriter : IOTAEditWriter;
+  CharPos : TOTACharPos;
+  InsertPos : Longint;
+  FileName : String;
+begin
+  IServices := BorlandIDEServices as IOTAServices;
+  Assert(Assigned(IServices), 'IOTAServices not available');
+
+  IServices.QueryInterface(IOTAACtionServices, IActionServices);
+  if IActionServices &lt;&gt; Nil then begin
+
+    IServices.QueryInterface(IOTAModuleServices, IModuleServices);
+    Assert(IModuleServices &lt;&gt; Nil);
+
+    //  Close all files open in the IDE
+    IModuleServices.CloseAll;
+
+    if IActionServices.OpenFile(EditorFileName) then begin
+
+      //  At this point, if the named file has an associated .DFM and
+      //  we stopped here, the form designer would be in front of the
+      //  code editor.
+
+      IModule := IModuleServices.Modules[0];
+      //  IModule is the one holding our .Pas file and its .Dfm, if any
+      //  So, iterate the IModule's editors until we find the one
+      //  for the .Pas file and then call .Show on it.  This will
+      //  bring the code editor in front of the form editor.
+
+      ISourceEditor := Nil;
+
+      for i := 0 to IModule.ModuleFileCount - 1 do begin
+        IEditor := IModule.ModuleFileEditors[i];
+        FileName := IEditor.FileName;
+        Memo1.Lines.Add(Format('%d %s', [i, FileName]));
+        if CompareText(ExtractFileExt(IEditor.FileName), '.Pas') = 0 then begin
+          if ISourceEditor = Nil then begin
+            IEditor.QueryInterface(IOTASourceEditor, ISourceEditor);
+            IEditor.Show;
+          end
+        end
+        else begin
+          // Maybe the editor is a Form Editor.  If it is
+          // close the form (the counterpart to the .Pas, that is}
+          IEditor.QueryInterface(IOTAFormEditor, IFormEditor);
+          if IFormEditor &lt;&gt; Nil then begin
+            IComponent := IFormEditor.GetRootComponent;
+            IComponent.QueryInterface(INTAComponent, INTAComp);
+            AForm := TForm(INTAComp.GetComponent);
+            //AForm.Close; &lt; this does NOT close the on-screen form
+            // IActionServices.CloseFile(IEditor.FileName); &lt;- neither does this
+            SendMessage(AForm.Handle, WM_Close, 0, 0);  // But this does !
+          end;
+        end;
+      end;
+
+      //  Next, place the editor caret where we want it ...
+      IServices.QueryInterface(IOTAEditorServices, IEditorServices);
+      Assert(IEditorServices &lt;&gt; Nil);
+
+      IEditView := IEditorServices.TopView;
+      Assert(IEditView &lt;&gt; Nil);
+      CursorPos.Line := edLine;
+      CursorPos.Col := edCol;
+      IEditView.SetCursorPos(CursorPos);
+      //  and scroll the IEditView to the caret
+      IEditView.MoveViewToCursor;
+
+      //  Finally, insert the comment, if any
+      if EditorInsert &lt;&gt; '' then begin
+        Assert(ISourceEditor &lt;&gt; Nil);
+        IEditView.ConvertPos(True, CursorPos, CharPos);
+        InsertPos := IEditView.CharPosToPos(CharPos);
+        IEditWriter := ISourceEditor.CreateUndoableWriter;
+        Assert(IEditWriter &lt;&gt; Nil, 'IEditWriter');
+        IEditWriter.CopyTo(InsertPos);
+        IEditWriter.Insert(PChar(EditorInsert));
+        IEditWriter := Nil;
+      end;
+    end;
+  end;
+end;
+
+procedure TOTAEditPosnForm.HandleCopyDataString(
+  CopyDataStruct: PCopyDataStruct);
+begin
+  Memo1.Lines.Text := PChar(CopyDataStruct.lpData);
+
+  EditorFileName := Memo1.Lines.Values['FileName'];
+  edLine := StrToInt(Memo1.Lines.Values['Line']);
+  edCol := StrToInt(Memo1.Lines.Values['Col']);
+  EditorInsert := Trim(Memo1.Lines.Values['Comment']);
+  if EditorFileName &lt;&gt; '' then
+    OpenInIDEEditor;
+end;
+
+procedure TOTAEditPosnForm.WMCopyData(var Msg: TWMCopyData);
+begin
+  HandleCopyDataString(Msg.CopyDataStruct);
+  msg.Result := Length(Memo1.Lines.Text);
+end;
+
+initialization
+
+finalization
+  if Assigned(OTAEditPosnForm) then begin
+    OTAEditPosnForm.Close;
+    FreeAndNil(OTAEditPosnForm);
+  end;
+end.
+
+
+Code for sender:
+
+procedure TSenderMainForm.btnSendClick(Sender: TObject);
+begin
+  SendMemo;
+end;
+
+procedure TSenderMainForm.SendData(
+  CopyDataStruct: TCopyDataStruct);
+var
+  HReceiver : THandle;
+  Res : integer;
+begin
+  HReceiver := FindWindow(PChar('TOTAEditPosnForm'),PChar('OTAEditPosnForm'));
+  if HReceiver = 0 then begin
+    Caption := 'CopyData Receiver NOT found!';
+  end
+  else begin
+    Res := SendMessage(HReceiver, WM_COPYDATA, Integer(Handle), Integer(@CopyDataStruct));
+    if Res &gt; 0 then
+      Caption := Format('Received %d characters', [Res]);
+  end;
+end;
+
+procedure TSenderMainForm.SendMemo;
+var
+  MS : TMemoryStream;
+  CopyDataStruct : TCopyDataStruct;
+  S : String;
+begin
+  MS := TMemoryStream.Create;
+  try
+    S := Memo1.Lines.Text + #0;
+    MS.Write(S[1], Length(S));
+    CopyDataStruct.dwData := 1;
+    CopyDataStruct.cbData := MS.Size;
+    CopyDataStruct.lpData := MS.Memory;
+    SendData(CopyDataStruct);
+  finally
+    MS.Free;
+  end;
+end;
+
+    
+    
+Title: Visual Studio Remote Compile and Run
+Description: 
+    
+    
+                    
+I am trying to figure out if it is possible to use Visual Studio 2012 as a full linux development suite. I know this is not the regular question here but work with me. What i have so far is the ability to use Visual Studio as a text editor to edit inside a virtual machine of Linux running on my computer. 
+
+The way that I have done this is to set up a permanent ssh portal that acts as as a hard drive in my windows. I have done this using a program called WebDrive:
+
+
+
+So that is cool, it means I have the ability to fully view my Linux c++ project from Visual Studio. This provides all of the cool c++ editing things that i like about visual studio. 
+
+So where to from here?
+
+Basically what I have now is a heavy glorified text editor. 
+
+What I would like to do is get the whole 'shabam' working. 
+
+I would like to be able to compile and run code from visual studio remotely on a server address. Is it possible? The code is built with cmake and g++ compiler? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Your best bet would be http://www.wingdb.com/. WinGDB allows working within VS studio and compiling on a remote Linux machine directly. Full step through debugging within VS is supported. For DLLs you can attach to remote process running on your Linux build server within VS. Great solution for working within the kinder VS dev environment but still having the full power of the Linux dev stack. Auto-generation of makefiles via VS project files too. Hope this helps. 
+    
+    
+Title: How to compile a Win32 program from the command line with Delphi
+Description: 
+    
+    
+                    
+as the title says, I'm trying to compile a Win32 program without the aid of an IDE, just so I can learn.  I'm using Borland Studio 2006, and my first thought was to take some files generated from a Forms application from the IDE and compile the project file... that gave me errors about expecting unit and finding object instead.  I know that's from the dfm file which holds all the settings for a form, but I don't get how the IDE deals with that file, can anyone help me understand the system better? :)
+    
+
+        
+Answer 1: 
+
+    
+    
+If I have understood correctly, you need to grasp the structure of a Delphi project and how Forms and units work together. You cannot just cherry-pick some files and expect to be able to feed them to the compiler.  
+
+You also have to set the path to the library/components/used files so that the compiler can find everything it needs, starting with the project dpr.  
+
+I would recommend that you try first to run your project from the IDE, then once it runs, you can try it from the command line.
+    
+    
+Answer 2: 
+
+    
+    
+I found out all I needed to do is compile the top level unit into a dcu, and then the project will compile :)  If anyone else is trying to do the same thing, there's some great info at the bottom of this page
+
+http://www.codexterity.com/raw-delphi/index.htm
+    
+    
+Answer 3: 
+
+    
+    
+WANT automates the process of building, testing, and packaging applications and libraries much like Jakarta Ant does
+    
+    
+Answer 4: 
+
+    
+    
+You wrote in question that you are using BDS 2006. If you want to learn more recent build process in Delphi I suggest you to upgrade at least to Delphi 2007 which introduced MS Build usage.
+
+Of course MS Build acts like "wrapper" so this is not must have but nice have :-)
+    
+    
+Title: Visual Studio Macros Editor
+Description: 
+    
+    
+                    
+Is there a way to change the macro editor from this default one:
+
+
+
+It feels like such a downgrade from Visual Studio 2010. Can I configure Office to use that instead?
+    
+
+        
+Answer 1: 
+
+    
+    
+no there is no way to my knowledge, VS.NET does not support VBA.
+
+what you can do if you are creating a new word or excel file is create a managed office solution, having installed the VSTO 2010 (Visual Studio Tools for Office) you are able to create managed documents which are handled inside VS 2010 and the automation language is not VBA anymore but C# or VB.NET instead.
+
+this is a viable solution for new files, for legacy files either you convert them if they are small or you keep old VBA code and old VBA editor as in your picture.
+
+Mark I wish MS made a tool to convert from the old format to the new one! :(
+    
+    
+Answer 2: 
+
+    
+    
+There are things you can do to improve it:
+
+
+Tools 
+Title: Differences between Visual Studio 2010 RC and RTM
+Description: 
+    
+    
+                    
+I have been using the RC version of VS2010 for a while now. I wanted to know if anyone has a summary of what changed between the RC version and RTM?
+
+I just loaded the RTM and noticed some small things different. I searched around but can't find anything around about it. 
+
+If there is nothing out there that lists these differences, can we start listing them here as you find them?
+    
+
+        
+Answer 1: 
+
+    
+    
+"No Intellisense with VS 2010 RC (and how to fix it)" is a blog post by Scott Gutherie about a couple of things that are different between RC and RTM.  "Visual Studio 2010 Released" by Scott Hanselmann has a reference to a change between RC and RTM as well.
+
+
+
+To be more specific in each:
+
+First one references a blog post noting:
+
+
+  Why were the default options for
+  Intellisense turned off when I did a
+  fresh install of Visual Studio 2010
+  RC1?
+
+
+The second one wasn't the right link, so I did change it, here's the key quote:
+
+
+  A little confusion about this in the
+  comments. Folks feel very strongly
+  about this stuff, understandably. Just
+  like color blindness, some people are
+  sensitive to this stuff and others
+  "can't see it." One person in the
+  blogs didn't like go for
+  "indiscernible" and showed a
+  screenshot. Here's the deal. If you
+  are running VS2010 RC, you don't have
+  this fix. This will be in the RTM.
+  Here's a 100% screenshot, followed by
+  the zoomed in version. The takeaway is
+  this. If you didn't like the rendering
+  before, you will now. This is/was some
+  subtle stuff, but it's indiscernible
+  in the RTM, so be happy! I took the
+  screenshot from a daily build, not the
+  actual RTM, which hasn't happened yet.
+
+
+These aren't the only changes probably, but these were references to what I could easily find about it so I'm trying to give a useful answer here.
+    
+    
+Title: JavaScript syntax check in eclipse
+Description: 
+    
+    
+                    
+I am developing a RIA application with JavaScript in Eclipse. How can I enable JavaScript syntax check in eclipse?
+    
+
+        
+Answer 1: 
+
+    
+    
+Both the Web Tools Platform (WTP) and Aptana offer a quite good JavaScript editor with syntax checking. I use the later myself.
+    
+    
+Answer 2: 
+
+    
+    
+Have you looked at JSEclipse or JavaScript Editor PlugIn for Eclipse?
+If you are developing using ExtJS you can get even intellisense along with syntax check using spket.
+    
+    

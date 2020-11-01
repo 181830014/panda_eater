@@ -1,0 +1,3969 @@
+Title: How to disable gradle &#39;offline mode&#39; in android studio? [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        No cached version of gradle
+                            
+                                (15 answers)
+                            
+                    
+                Closed 2 years ago.
+        
+
+
+    
+
+I am new to android studio IDE development. Every time when I imported a sample project that developed in the android studio, I am getting this error..
+
+
+  No cached version of com.android.tools.build:gradle:1.1.0 available
+  for offline mode. Disable Gradle 'offline mode' and sync project.
+
+
+How can I solve this problem.
+    
+
+        
+Answer 1: 
+
+    
+    
+On Windows:-
+Go to File -&gt; Settings.
+And open the 'Build,Execution,Deployment'.  Then open the
+Build Tools -&gt; Gradle
+Then uncheck   -&gt; Offline work on the right.
+Click the OK button.
+Then Rebuild the Project.
+On Mac OS:-
+go to Android Studio -&gt; Preferences, and the rest is the same.
+OR follow steps given in the image
+[
+
+    
+    
+Answer 2: 
+
+    
+    
+Gradle is in offline mode, which means that it won't go to the network to resolve dependencies.
+
+Go to Preferences /p/div
+Answer 3: 
+
+    
+    
+Edit. As noted in the comments, this is no longer working with the latest Android Studio releases. 
+
+The latest Android studio seems to only reference to "Offline mode" via the keymap, but toggling this does not seem to change anything anymore. 
+
+
+
+In Android Studio open the settings and search for offline it will find the Gradle category which contains Offline work. You can disable it there.
+
+
+    
+    
+Answer 4: 
+
+    
+    
+@mikepenz has the right one.
+
+You could just hit SHIFT+COMMAND+A (if you're using OSX and 1.4 android studio) and enter OFFLINE in the search box.
+
+Then you'll see what mike have shown you.
+
+Just deselect offline.
+    
+    
+Answer 5: 
+
+    
+    
+Offline mode could be set in Android Studio and in your project.
+To verify that gradle won't build your project in offline mode:
+
+
+Disable gradle offline mode in Android Studio gradle settings.
+Verify that your project's gradle.settings won't contain: startParameter.offline=true
+
+    
+    
+Title: Multiline Find &amp; Replace in Visual Studio
+Description: 
+    
+    
+                    
+Can it be done? We're using VS2005 and VS2008 and VS2010.
+
+I don't mean regular expressions - which have their place - but plain old text find &amp; replace. I know we can do it (at a pinch) with regular expressions using the \n tag but prefer not to get tangled up in regex escape characters, plus there's a readability issue.
+
+If it can't be done what plain and simple (free) alternative are people using? That doesn't involve knocking up our own macro.
+    
+
+        
+Answer 1: 
+
+    
+    
+I finally found it.. 
+
+No need to download and load any external macro.
+
+Its working in Visual Studio 2008 with in-built macro at least. :)
+
+Steps :
+1) Select text you want to find.
+2) Press "Alt+F8" or open "Tools -
+Answer 2: 
+
+    
+    
+This works today in Visual Studio 2012:
+
+fooPatternToStart.*(.*\n)+?.*barPatternToEnd
+
+
+See how the (.*\n)+? part does the match across multiple lines, non-greedy.
+fooPatternToStart is some regex pattern on your start line, while barPatternToEnd is your pattern to find on another line below, possibly many lines below...
+
+Example found here.
+
+Simple and effective :)
+
+Note: before VS2012, the pattern that worked was: fooPatternToStart.(.\n)+@.*barPatternToEnd
+    
+    
+Answer 3: 
+
+    
+    
+You might want to take a look at this blog entry:
+
+Multiline Search and Replace in Visual Studio
+
+Provides macro code to escape your search and show the VS find and replace dialog.
+    
+    
+Answer 4: 
+
+    
+    
+You can search for multiline expressions by clicking on the "Use Regular Expressions" checkbox in the "Find and Replace" dialog. Line breaks are then indicated by \n.
+
+
+    
+    
+Answer 5: 
+
+    
+    
+I use this:
+Visual Studio Gallery Multiline Search and Replace
+    
+    
+Answer 6: 
+
+    
+    
+Its provided by microsoft only. Please check https://visualstudiogallery.msdn.microsoft.com/699CE302-B0D4-4083-BE0E-1682E873CEBF.
+
+It uses regular expression only. But for those who don't know regex better to use it. 
+    
+    
+Answer 7: 
+
+    
+    
+You could also open the files with UltraEdit which fully supports MultiLine replace. 
+You can use the trial version if you only intend to use it once. 
+    
+    
+Answer 8: 
+
+    
+    
+Regarding the comment of Andrew Corkery Aug 19 '11 at 9:52 above:
+If you like to specify a multi-line replacement string as well, edit the macro code and set the replacement text as shown below.
+This will allow you to "fine-tune" your replacement with just the small modifications needed.
+
+ Sub FindLine()
+    Dim textSelection As TextSelection
+
+    textSelection = DTE.ActiveDocument.Selection
+    textSelection.CharLeft(True)
+    DTE.ExecuteCommand("Edit.Find")
+    DTE.Find.FindWhat = textSelection.Text
+
+    'also preset replacement text with current selection
+    DTE.Find.ReplaceWith = textSelection.Text
+End Sub
+
+    
+    
+Answer 9: 
+
+    
+    
+The latest version (as of this posting) of Notepad++ does multi-line find/replace. I don't know if this was true back when this was asked. But with no macro support in Visual Studio anymore, this is relevant now.
+    
+    
+Title: Eclipse save automatically
+Description: 
+    
+    
+                    
+I would like Eclipse to automatically save every time I edit a file, in much the same way that it builds automatically. Because I've been using IntelliJ for the last year (which saves automatically by default), I keep having the following problem:
+
+
+Make some changes in Eclipse
+Forget to press save
+Run the build, unit tests, and notice some strange behaviour
+(Some time later....) realize that the unexpected behaviour occurred because I forgot to save the changes
+
+
+Is there any way I can make Eclipse save automatically?
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse Neon (4.6)
+
+Window strong/strong/ppa href="https://i.stack.imgur.com/JgS8z.png"img src="https://i.stack.imgur.com/JgS8z.png" alt="Window Preferences"/a/ppstrong/strong
+Answer 2: 
+
+    
+    
+You can go here and check the box Save automatically before build
+
+Windows 
+Answer 3: 
+
+    
+    
+You can do it with the saveDirtyEditor plugin as referenced in this question/answer. There is no non-plugin way of doing it.
+    
+    
+Answer 4: 
+
+    
+    
+First, try Window -
+Answer 5: 
+
+    
+    
+I wrote an Eclipse plugin for this called smartsave. It's available in the Eclipse Market Place.
+
+It saves your files at a specified interval and you can even tune it to prevent saving if errors, or warnings, are present in the preferences dialog.
+    
+    
+Answer 6: 
+
+    
+    
+In Helios this can be done by going to preferences and setting:
+
+
+  Run/Debug 
+Answer 7: 
+
+    
+    
+For Eclipse Mars 2, the settings are below Window 
+Answer 8: 
+
+    
+    
+You could go to Windows &gt; Preferences &gt; Autosave and set the auto intervals to 1.
+    
+    
+Title: How to return void in JsDoc?
+Description: 
+    
+    
+                    
+Is there a specified way to declare a method or a function to return void in JsDoc? Currently I am in the belief that void is the default return value, and other return values must be specifically provided:
+
+/**
+ * @return {Integer} The identifier for ...
+ */
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't believe you have to choose from a set of types in JsDoc... you can use any type name you wish (the curly braces indicate it's a type), so you can simply do:
+
+@return {Void}
+
+
+Although, this is probably more correct for JavaScript:
+
+@return {undefined}
+
+    
+    
+Answer 2: 
+
+    
+    
+Closure Compiler
+According to the documentation of Google's Closure Compiler if nothing is being returned, the @return annotation should be omitted.
+
+If there is no return value, do not use a @return tag.
+
+Source: https://developers.google.com/closure/compiler/docs/js-for-compiler#tags
+jsdoc-toolkit
+However further documentation also states that the returnType and returnDescription are optional parameters.
+
+returnType - Optional: the type of the return value.
+returnDescription - Optional: any additional description.
+
+Source: https://code.google.com/p/jsdoc-toolkit/wiki/TagReturns
+Summary
+You could either leave out the return annotation or include it without any parameters.
+    
+    
+Answer 3: 
+
+    
+    
+Looking at the ESlint docs they use
+@returns {void}
+
+Source: http://eslint.org/docs/rules/valid-jsdoc
+
+Since I need to provide an @returns for each function to pass tests in order to push code for certain projects this is required in my case. 
+    
+    
+Answer 4: 
+
+    
+    
+If you need to say out loud that nothing is returned, you can say that in the free-form description. This is useful to clarify situations where a user might expect something to be returned. Of course proper naming of the function and the parameters should alone make the expected return type apparent, but it might not always be possible.
+
+/**
+ * This is a funny function. Returns nothing.
+ * @param {string} a joke.
+ */
+var funny = function (joke) {
+  console.log(joke);
+};
+
+    
+    
+Title: QtCreator: No valid kits found
+Description: 
+    
+    
+                    
+Installed just the IDE on Windows 7.  I want to create a Plain C++ Project (Non-QT Project); however I get an error: No valid kits found.  When I click on Options-em/em/pp/p/div
+Answer 1: 
+
+    
+    
+Though OP is asking about Windows, this error also occurs on Ubuntu Linux and Google lists this result first when you search for the error"QtCreator: No valid kits found".  
+
+On Ubuntu this is solved by running:
+
+For Qt5:
+
+sudo apt-get install qt5-default
+
+
+For Qt4:
+
+sudo apt-get install qt4-dev-tools libqt4-dev libqt4-core libqt4-gui
+
+
+This question is answered here and here, though those entries are less SEO-friendly...
+    
+    
+Answer 2: 
+
+    
+    
+Found the issue.  Qt Creator wants you to use a compiler listed under one of their Qt libraries. Use the Maintenance Tool to install this.
+
+To do so:
+
+
+  Go to Tools -
+Answer 3: 
+
+    
+    
+No valid Kits found. 
+The problem occur because qt-creator don't know the versions of your qt, 
+your compiler, or your debugger. 
+For this let's solve the Qt versions. It may normally solve the other ;).
+
+You try to create a new project, run select a kit and then there is no kit available in the list. 
+
+Follow the steps:
+
+
+execute in your terminal the command: sudo apt-get install qt5-default 
+to install qt version 5. 
+Verify the version of your Qt and the location of your qmake file. Do this by executing in your terminal the command qmake --version.
+You may have a result similar to this line. 
+QMake version 3.1
+Using Qt version 5.9.5 in /usr/lib/x86_64-linux-gnu. What's important here is the location /usr/lib/x86_64-linux-gnu.
+Open your Qt-creator. 
+Go to "Tools
+Answer 4: 
+
+    
+    
+In my case the issue was that my default kit's Qt version was None.
+
+Go to Tools -&gt; Options... -&gt; Build &amp; Run -&gt; Kits tab, click on the kit you want to make as default and you'll see a list of fields beneath, one of which is Qt version. If it's None, change it to one of the versions available to you in the Qt versions tab which is just next to the Kits tab.
+    
+    
+Answer 5: 
+
+    
+    
+For QT 5.* if you face error at Kits, like No Valid Kits Found, go to Options-
+Answer 6: 
+
+    
+    
+I had a similar problems after installing Qt in Windows.
+This could be because only the Qt creator was installed and not any of the Qt libraries during initial installation. When installing from scratch use the online installer and select the following to install:
+
+For starting, select at least one version of Qt libs (ex Qt 5.15.1) and the c++ compiler of choice (ex MinGW 8.1.0 64-bit).
+
+Select Developer and Designer Tools. I kept the selected defaults.
+
+
+Note: The choice of the Qt libs and Tools can also be changed post initial installation using MaintenanceTool.exe under Qt installation dir C:\Qt. See here.
+    
+    
+Answer 7: 
+
+    
+    
+Another way to solve this issue (I did it on Ubuntu 16.04 but it might also work for windows and other Ubuntu versions):
+
+While going through the installation steps, when you reach the step where you choose which packages to install via check boxes, instead of just pressing next with the default "Tools" checkbox selected also check the box for the version of QT you would like in addition to the "Tools" box. I usually check the first box which is the latest version of QT.
+
+After doing this you should not see the "no valid kits found" issue described in this thread.
+
+Happy Coding.
+    
+    
+Title: ropemacs USAGE tutorial
+Description: 
+    
+    
+                    
+There are many sites with instructions on installing ropemacs, but so far I couldn't find any with instructions on how to use it after it's already installed. I have it installed, or at least it seems so, Emacs has "Rope" menu in it's top menu bar. Now what? So far I could use only "Show documentation" (C-c d by default). An attempt to use code assist (which is auto-complete, I presume?) only causes Emacs to ask about "Rope project root folder" (what's that?) in the minibuffer and then showing nothing.
+
+So, once ropemacs is installed, what are the steps to see it in action on some simple python scripts? Something like "if you have this script in your emacs and put the blinking square here and press this, it does that" would be an answer.
+
+(I've been thinking if I should ask this or not for some time, because nobody else seems to have the same problem)
+    
+
+        
+Answer 1: 
+
+    
+    
+Well, you first need to select your project root folder. Quite simply, this is the folder at the top level of your project, or the current folder if you're dealing with a single file. Once you've selected the root folder, then other options will work, such as code assist, showing documentation, jumping to other symbols, etc.
+
+For full benefit of ropemacs, I suggest getting autocomplete.el, putting it in ~/.emacs.d, and then adding this to your .emacs
+
+(add-to-list 'load-path "~/.emacs.d/")
+(add-to-list 'load-path "~/.emacs.d/auto-complete-1.2")
+(autoload 'python-mode "python-mode" "Python Mode." t)
+(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+(add-to-list 'interpreter-mode-alist '("python" . python-mode))
+(require 'python-mode)
+(autoload 'pymacs-apply "pymacs")
+(autoload 'pymacs-call "pymacs")
+(autoload 'pymacs-eval "pymacs" nil t)
+(autoload 'pymacs-exec "pymacs" nil t)
+(autoload 'pymacs-load "pymacs" nil t)
+(pymacs-load "ropemacs" "rope-")
+(setq ropemacs-enable-autoimport t)
+
+(require 'auto-complete)
+(global-auto-complete-mode t)
+
+
+This assumes you install autocomplete in ~/.emacs.d/auto-complete-1.2. After you do this, you will get autocomplete automatically after typing a few characters of a word or symbol.
+
+You can modify your ROOT/.ropeproject/config.py file to add more directories to the rope lookup path, in order to provide better autocomplete.
+
+EDIT: Two of the most important functions for me are looking up documentation and jumping directly to a function definition. This is dependent on setting the rope lookup path correctly for your project as mentioned above.
+
+Documentation: Put the cursor over a symbol (function name, class name, etc), and do:
+
+C-c d
+
+
+This will show you the docstring for the symbol in question.
+
+Jumping to definition:Put the cursor over a symbol (function name, class name, etc), and do:
+
+C-c g
+
+
+This will immediately open the file where the symbol resides and jump to the beginning of the definition. This is great for times when the documentation is sparse and you want to see the actual code. Also, it's really nice for navigating around inside your own code.
+
+Find occurrences:
+
+C-c f
+
+
+Smart search in your entire project for the symbol at the cursor.
+
+Code assist:
+
+M-/
+
+
+Just type the first characters of a function, class, etc, and this will show a list of possible completions. Note that due to python's nature, it will not always be a complete list.
+
+Refactorings:
+There are quite a few options under Rope-/ppstrong/strong/pprecode/code/prepcode/code/p/div
+Answer 2: 
+
+    
+    
+The best usage information I've found is a readme in the ropemacs source, here:
+
+https://github.com/python-rope/ropemacs
+    
+    
+Answer 3: 
+
+    
+    
+You can set the root folder with rope-open-project . Once you've set the root project a .ropeproject dir will be created. 
+
+Inside it, a config.py file has hooks where you can run (python) code once the project is set. The project_opened(project): function is a good place to run code. I usually activate the virtual environment imp.load_source('/path-to-env/activate_this.py') , so that I can get source coverage for other libs in the virtual env.
+    
+    
+Answer 4: 
+
+    
+    
+For general usage of the rope library that ropemacs depends on, then check out:
+
+
+  Rope Overview
+
+
+It describes in some detail what each of the refactorings does such as extract method.  Note that according to the author this doc is a bit outdated. However, it should provide enough of an intro to ropes' features to get started.
+
+To execute the ropemacs commands in Emacs, you can try one or more of the following:
+
+
+Use the 'Keybinding' section in the
+README docs link from
+freyley's answer as a guide to learn the
+the mappings. 
+If you can't remember the keybindings, then execute M-x rope-&lt;specific command name&gt; and fill in the
+related refactoring name. For
+example, extract method   would be
+M-x rope-extract-method.
+Select in Emacs &lt;menu-bar&gt; -&gt; Rope.  For example, for extract method then select &lt;menu-bar&gt; -&gt; Rope -&gt; Refactorings -&gt; Extract Method.  It will also show you the associated keybindings (e.g. C-c r m)
+
+    
+    
+Title: Is there a keyboard shortcut in Eclipse to fold the current method/block?
+Description: 
+    
+    
+                    
+Hey, question says it all.
+I have folding turned on in Eclipse (v3.4), and rather than having to click the little +/- in the page gutter, I'm wondering if there's a keyboard shortcut to just "fold the current method".  A quick look at the menus and what-not in eclipse doesn't show a menu item for it, so maybe you just can't do it.
+
+Anyone?
+    
+
+        
+Answer 1: 
+
+    
+    
+By default they're bound to Ctrl + Numpad_Minus and Ctrl + Numpad_Plus, but you can rebind them. 
+    
+    
+Answer 2: 
+
+    
+    
+To expand on petrilli's answer:
+
+
+Ctrl + Numpad_Multiply can also be used to expand all
+Ctrl + Shift + Numpad_Divide is bound to collapse all
+Ctrl + Numpad_Divide toggles folding on and off
+
+
+And yes, they can all be rebound, if you know what text to filter on in Windows | Preferences | General | Keys.
+
+"Folding", "Expand", "Collapse" are keywords that should get you all of the relevant commands.
+    
+    
+Answer 3: 
+
+    
+    
+If you are using eclipse-pydev then the default keybinds are 
+
+ctrl + 9 : collapse all one level
+
+ctrl + 0 : expand all one level
+
+ctrl + -_ : collapse current location
+
+ctrl + =+ : expand current
+    
+    
+Title: How to make Webstorm &ldquo;Reformatting Source Code&rdquo; to change double quotes to single quotes?
+Description: 
+    
+    
+                    
+When I push cmd + alt + l Webstorm doing some reformating to beautify my JavaScript sources. Ho to make Webstorm automatically change double quotes to single quotes in my sources?
+    
+
+        
+Answer 1: 
+
+    
+    
+In Webstorm 2017.1, do the following:
+
+
+Go to File -/lili
+Answer 2: 
+
+    
+    
+there is no way to change this on auto-formatting in WebStorm 11; you can only use intentions here (hit Alt+Enter on quoted string, choose 'Replace double-quoted string with single-quoted string'.
+Note that in WebStorm 12 -2016.x  it's possible to control the auto-generated quotes style (used for auto-imports, etc.) - Settings | Editor | Code Style | JavaScript | Other, Generated code/Quote marks.
+
+Since 2017.1.*, it is Settings | Editor | Code Style | JavaScript | Punctuation, Use &lt;quote style&gt; quotes in &lt;new code/always&gt;
+    
+    
+Answer 3: 
+
+    
+    
+This looks to be fixed with the 2016.2 release - there's now an option in the Editor --/em/ppa href="https://blog.jetbrains.com/webstorm/2016/07/webstorm-2016-2-drag-files-into-html-and-quotes-style/" rel="noreferrer"/a/p/div
+Answer 4: 
+
+    
+    
+Please see the answer of https://stackoverflow.com/a/42909782/2000468. 
+
+this answer is for an older version。
+
+see the picture that let you set it quickly.
+
+
+    
+    
+Title: Highlighting modified lines in Eclipse
+Description: 
+    
+    
+                    
+In netbeans, if I open a file which is under version control the lines which are modified are highlighted in the left. (green for new lines and blue for modified lines)
+
+Is it possible to get a similar effect in Eclipse?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Open the Preferences window
+Search for "diff"
+Select Quick Diff
+Change the "Use this reference source" to a SCM provider (like CVS, SVN or Git)
+
+
+By default, it compares to the latest version on disk, which, if you've saved the file, is no diff at all. You have to activate the comparison against a SCM repo. I'm not sure what happens if you more than one type of SCM since this is only a single selection.
+    
+    
+Answer 2: 
+
+    
+    
+With Subversive, you can do Team /p/div
+Answer 3: 
+
+    
+    
+Right-click on the file code/code
+Answer 4: 
+
+    
+    
+EGit plugin's Quick Diff does exactly the same as netbans modified lines feature.
+
+http://wiki.eclipse.org/EGit/User_Guide/State
+    
+    
+Answer 5: 
+
+    
+    
+In Eclipse by using its Quick Diff feature. This is easy to do:
+
+
+Go to Window -
+Answer 6: 
+
+    
+    
+There are at least two things you must do to get revision-based change highlighting (i.e., ones that do not disappear when the file is saved) to show up in Eclipse's "overview ruler" when using Git:
+
+
+Prior to import, make sure that Preferences code/code
+Answer 7: 
+
+    
+    
+For Eclipse Version: 2019-03 (4.11.0) Go to
+
+
+Select 'window'
+Select 'Preferences'
+Go to General -
+Answer 8: 
+
+    
+    
+In eclipse too you will get the line highlighted which is changed util you save the file. 
+and highlight is nothing but the change in color at the left panel of the editor before the start of that changed line.
+    
+    
+Title: Eclipse: Frustration with Java 1.7 (unbound library)
+Description: 
+    
+    
+                    
+I'm having trouble with a brand new project in a brand new installation of Eclipse. Repro steps:
+
+
+Download this version of Eclipse: http://www.eclipse.org/downloads/packages/eclipse-ide-java-developers/heliosr
+Unzip to c:\program files\eclipse java
+Launch Eclipse; choose a workspace
+File strong/strong
+Answer 1: 
+
+    
+    
+1) Find out where java is installed on your drive, open a cmd prompt, go to that location and run ".\java -version" to find out the exact version. Or, quite simply, check the add/remove module in the control panel.
+
+2) After you actually install jdk 7, you need to tell Eclipse about it. Window -
+Answer 2: 
+
+    
+    
+To set JDK you can watch this video : how to set JDK
+. Then when you'll have JDK:
+
+
+Right click on build path and select "Build Path"
+Choose "Configure Build Path"
+Click on "JRE System Library [JavaSE-1.7] (unbound)"
+Edit it
+Choose "Alternate JRE"
+Click on "Installed JREs.." button
+Press Add
+Choose to add "Standard VM"
+Choose JRE Home directory - usually it is locates in "C:\Program Files\Java\jre7" directory
+Press "Finish"
+Re-check newly appeared "Jre7": Verify that now when you edit "JRE System Library [JavaSE-1.7]" "Alternate JRE" is chosen for jre7.  
+
+    
+    
+Answer 3: 
+
+    
+    
+1)Go to configure build path . 
+2)Remove unbound JRE library .
+3)Add library --/pp/p/div
+Answer 4: 
+
+    
+    
+Have you actually downloaded and installed one of the milestone builds from https://jdk7.dev.java.net/ ?
+
+You can have a play with the features, though it's not stable so you shouldn't be releasing software against them.
+    
+    
+Answer 5: 
+
+    
+    
+Most of the time after the installation of Eclipse eclipse.ini is changed.
+If you change the jdk in eclipse.ini then eclipse will use this jdk by default.
+
+Let's say you install a new version of Eclipse and you have forgotten to change the eclipse.ini related to the jdk. Then Eclipse finds a jdk for you.
+Let's say it is java 1.6 that was automatically discovered (you did nothing).
+
+If you use maven (M2E) and you reference a 1.7 jdk then you will see the frustrating message.
+But normally it is not displayed because you configure the correct jdk in eclipse.ini.
+
+That was my case. I made reference into the pom to a jdk that was not configured into Eclipse.
+
+In the screenshot you can see that 1.7 is configured and seen by Eclipse. In this case, you should make reference into the pom to a jre that is compatible with 1.7! If not -/ppa href="https://i.stack.imgur.com/l65gM.png" rel="nofollow noreferrer"img src="https://i.stack.imgur.com/l65gM.png" alt="jdk 1.7 configured in eclipse.ini and retrieved in installed jre"/a/p/div
+Answer 6: 
+
+    
+    
+Cause : This is common scenario when we import new project with different lib and JAR path. 
+
+I faced this issue and got resolved using exact following steps:
+
+
+Project strong/strong/lilistrong/strong
+Answer 7: 
+
+    
+    
+Updated eclipse.ini file with key value property
+-Dosgi.requiredJavaVersion=1.7 (or) 1.8 whichever applicable. 
+- it works for me. 
+    
+    
+Answer 8: 
+
+    
+    
+Updated eclipse.ini file with key-value property 
+
+-Dosgi.requiredJavaVersion=1.5 
+
+
+to 
+
+-Dosgi.requiredJavaVersion=1.8
+
+
+because, that is my JAVA version. 
+
+Also, selected JRE 1.8 as my project library
+    
+    
+Title: Tools to support live coding as in Bret Victor&#39;s &ldquo;Inventing on Principle&rdquo; talk
+Description: 
+    
+    
+                    
+I've watched an already well known video where Bret Victor, former Apple UI designer shows amazing demos with immediate updates of running code after changing literally one symbol in source code. 
+
+To make my question clear to those who haven't seen or don't have time to watch the video: I want to use a tool like that to write my own software. Is the tool he was demonstrating available, or are there other similar tools? 
+
+It doesn't matter which languages/environments, I just want to have my code running and then change a line in source and immediately see the results updated without restarting it.
+
+The video is also available on YouTube, and the key points are:
+
+
+03:30 - 05:30 - Live coding a graphical algorithm (space)
+11:00 - 14:30 - Live coding some game code (space &amp; time)
+17:30 - 21:30 - Live coding local variables (state)
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Who does it
+
+You will find a lot interesting things in the React and ELM communities, and in frontend functional programming communities in general.
+
+Some recent full-stack platforms that are somehow trying to provide a development environment of this kind are:
+
+Eve:
+
+A Andreessen Horowitz / Y-Combinator startup, 2.3 million funded, from Chris Granger, an influent Clojure programmer who already built LightTables. 
+
+Technologies: Rust (backend), TypeScript (frontend) with a home-made implementation of React concepts (what they call "microReact")
+
+Unison:
+
+Not a company (yet?) but supported by a Patreon campaign, from Paul Chiusano (author of famous book "FP in Scala"). 
+
+Technologies:  Haskell (backend), ELM (frontend).
+
+
+
+Note: you can see that the guys behind these tools are experienced functional programmers. Check "how it works" section.
+
+
+
+How it works -/h1p/pp/pp/pulli/lili/lili/li/ulp/ppa href="http://debug.elm-lang.org/" rel="noreferrer"/a/pblockquotep/p/blockquotepstrong/strong/ppa href="https://www.youtube.com/watch?v=DMtwq3QtddY" rel="noreferrer"/aa href="https://www.youtube.com/watch?v=xsSnOQynTHs" rel="noreferrer"/a/ppa href="https://www.youtube.com/watch?v=zxN8FYYBcrI" rel="noreferrer"/a/phrp/ppa href="http://www.confluent.io/blog/2015/03/04/turning-the-database-inside-out-with-apache-samza/" rel="noreferrer"/a/phrpstrong/strong/pp/pp/pp/pp/pp/p/div
+Answer 2: 
+
+    
+    
+Chris Granger is building something called Light Table that looks like a promising move in this direction.  Initially it only support Clojure, but he is promising to support other languages in the future.
+
+
+http://www.chris-granger.com/2012/04/12/light-table---a-new-ide-concept/
+http://app.kodowa.com/playground
+
+    
+    
+Answer 3: 
+
+    
+    
+I believe the following allow changing a line in source (and seeing the immediate effects):
+
+
+Codea Air Code: Code on your browser (in Lua), see the output on a wifi-connected iPad.
+Water by Gabriel Florit.  HTML, CSS, runs in a browser.
+Live Scratchpad by Neonux.  Mozilla extension.
+Swift Interactive Playgrounds: comes with Xcode 6, for coding in the Swift programming language.
+JS Bin: HTML, CSS, Javascript, runs in a browser.
+Light Table: example on Youtube.
+Atom: with preview html plugin.
+
+
+Note: I have experience only with 1, 5-7.  For many of these, I don't think you can put your cursor on a certain part of the code and have the relevant portions of the image highlighted.
+
+Edit: added items no. 4 (2014.10.27), 5 (2014.10.31), and 6-7 (2015.03.12).
+
+Edit 2 (2015.06.25): from http://sixrevisions.com/tools/code-demo-sites/ (most of these are HTML/CSS/Javascript).
+
+
+Codepen
+Liveweave
+dabblet
+jsfiddle
+kodtest
+Plunker
+CSSDeck
+Reloado
+ideone
+JQ.VER.SION
+SQL Fiddle
+
+    
+    
+Answer 4: 
+
+    
+    
+I've built a plug-in for Emacs, PyCharm, and Eclipse called Live Coding in Python that covers two of the three features you asked about. It instantly updates the result of a turtle graphics algorithm while you type the code.
+
+
+
+It also displays the state of local variables next to each assignment. Here's an example display of a binary search algorithm:
+
+def search(n, a):              | n = 3 a = [1, 2, 4] 
+    low = 0                    | low = 0 
+    high = len(a) - 1          | high = 2 
+    while low &lt;= high:         |         | 
+        mid = (low + high) / 2 | mid = 1 | mid = 2 
+        v = a[mid]             | v = 2   | v = 4 
+        if n == v:             |         | 
+            return mid         |         | 
+        if n &lt; v:              |         | 
+            high = mid - 1     |         | high = 1 
+        else:                  |         | 
+            low = mid + 1      | low = 2 | 
+    return -1                  | return -1 
+                               | 
+i = search(3, [1, 2, 4])       | i = -1 
+
+    
+    
+Answer 5: 
+
+    
+    
+The IPython Notebook is step in that direction. Although, it is more geared towards Interactive Exploratory Analysis for scientific problem, I find it to be very interactive and fun to develop with.
+
+
+http://ipython.org/
+
+
+I also just discovered Live Code. After some experimentation I found, it does not encompass all the principles of Bret Victor philosophy. It has a straight forward syntax but the UI doesn't make for interactive development. They still have some way to go.
+
+
+http://livecode.com/
+
+
+Then there is also R. Since the new developments with Shiny and knitr some interesting innovations are taking place which is line with Bret's philosophy. 
+
+
+rNotebook
+Live demo
+
+    
+    
+Answer 6: 
+
+    
+    
+There's COLT — a live coding tool for Flash (ActionScript3). It allows methods updates, adding new fields/methods/classes, updating embedded assets, etc at runtime while preserving the application state, just like in Bret Victor's video. There are some demo videos of it in action, with this being the most impressive one so far.
+
+It doesn't force you into any new IDE, it's a separate tool which sends the incremental updates to the running app when you hit 'save' in your IDE.
+
+JavaScript support is also announced.
+    
+    
+Answer 7: 
+
+    
+    
+Code orchestra guys recently released their livecoding tool called C.O.L.T. It supports JavaScript and ActionScript and looks very promising. Highly recommended to try it out.
+    
+    
+Answer 8: 
+
+    
+    
+Haskell for Mac may have a limited audience since it’s (a) platform-specific — as you may have guessed from the name — and (b) commercial software ($20 at present).  But it’s very explicitly based on Brett Victor’s ideas, as discussed in an early blog post.
+
+It certainly deserves to be added to any exhaustive list of programming environments that implement “Learnable Programming”.
+    
+    
+Answer 9: 
+
+    
+    
+These days for frontend development a lot of the tools offer something called "hot-reloading", basically making your changes in code immediately visible in the browser/mobile emulator. This is independent of the IDE/editor. 
+    
+    
+Title: Enabling tabs in xcode? Or lessening the pain of not having them?
+Description: 
+    
+    
+                    
+I am currently using xcode and I find it's lack of tabs quite disturbing.
+
+I currently use command-shift-d to search through all the files, or ctrl-1 to open the history of files that were recently opened.
+
+It works but I find it less effective than just tabbing through the few files i am currently working on.
+
+Is there any way, third party or not, to enable some sort of tabbed organization?
+If not, is there any other way to quickly navigate through a subset of files?
+    
+
+        
+Answer 1: 
+
+    
+    
+XCode 4 now supports tabs. You can enable by selecting "View / Show Tab Bar" menu.
+    
+    
+Answer 2: 
+
+    
+    
+Not really, but one alternative is View /pp/pulli/lili/lili/lili/li/ulp/p/div
+Answer 3: 
+
+    
+    
+First of all, you can use Textmate (which I believe has Xcode integration).  Otherwise:
+
+Window (Menu) -/pp/pp/pp/p/div
+Answer 4: 
+
+    
+    
+The Xcode source code editor allows you to choose the file from a list. It's two clicks instead of one (as it would be with tabbing), but it's better than nothing.
+
+In addition, you can simply Alt-Tab through your open source code windows. This is not slower than tabbing, and has the same effect since the source code windows are usually placed exactly one in front of another.
+    
+    
+Answer 5: 
+
+    
+    
+You'll definitely want to read through this. (XCode Tips and Tricks you wish you know about two years ago - SO)
+    
+    
+Answer 6: 
+
+    
+    
+You can navigate between files using "Recent Files"
+
+Write simple applescript:
+
+tell application "Xcode"
+    tell application "System Events"
+        keystroke "1" using {control down} -- open "Related Files"
+        key code 125 -- choose "Recent Files" ("keystroke down" doesn't work)
+        keystroke return -- enter to "Recent Files"
+        key code 125 -- choose previous file
+    end tell
+end tell
+
+
+And bind it to some shortcut using for example FastScripts(free up to 10 bindings)
+
+I have this script on "Control" + "`". (XCode 4)
+
+Hope this will help
+    
+    
+Answer 7: 
+
+    
+    
+You may also try an Xcode plugin I've just released - it's called Code Pilot and solves a lot of issues of Xcode's navigation, making it more TextMate/Eclipse-like.
+
+Check it out here: http://macoscope.net/en/mac/codepilot/
+
+I hope this helps!
+    
+    
+Answer 8: 
+
+    
+    
+It is simple with XCode 7.2
+
+GoTo View
+Title: Best C++ IDE or Editor for Windows
+Description: 
+    
+    
+                        
+            
+        
+            
+                    
+                        
+                    
+                
+                    
+                        Locked. This question and its answers are locked because the question is off-topic but has historical significance. It is not currently accepting new answers or interactions.
+                        
+                    
+                
+            
+        
+
+
+    
+
+What is the best C++ IDE or editor for using on Windows? I use Notepad++, but am missing IntelliSense from Visual Studio.
+    
+
+        
+Answer 1: 
+
+    
+    
+I've found the latest release of NetBeans, which includes C/C++ support, to be excellent.
+
+http://www.netbeans.org/features/cpp/index.html
+    
+    
+Answer 2: 
+
+    
+    
+Um, that's because Visual Studio is the best IDE.  Come back to the darkside.
+    
+    
+Answer 3: 
+
+    
+    
+I personally like Visual Studio combined with a third party add-in such as Visual Assist (http://www.wholetomato.com/). I've tried a few of the others and always ended up back with Visual Studio. Plus, Visual Studio is a widely used product in development industries, so having experience using it can only be a plus.
+    
+    
+Answer 4: 
+
+    
+    
+The Eclipse CDT works well for me. It supports MinGW and Cygwin as targets. It also integrates well with CVS and Subversion.
+
+The latest build, Ganymede, is available here.
+    
+    
+Answer 5: 
+
+    
+    
+There are the free "Express" versions of Visual Studio.  Given that you like Visual Studio and that the "Express" editions are free, there is no reason to use any other editor.
+    
+    
+Answer 6: 
+
+    
+    
+I vote for Visual Studio, but it seems that C++ is treated like second class citizen (not the compiler and stuff but IDE support) compared to .NET languages like C#, but hopefully MS will do something about it by the next version of Visual Studio (new standard is coming and they promised that 10 should be new 6).
+    
+    
+Answer 7: 
+
+    
+    
+VIsual studio is by far the best IDE but you can also take a look at Code::Blocks
+    
+    
+Answer 8: 
+
+    
+    
+I prefer to use Microsoft Visual C++ express on windows.  Though the 2008 ide is fine, the 2005 express has better support for many of the open projects which you might want to participate in.  It's a pain to compile Firefox or a half life 2 mod on 2008.  Also as a general tip when looking for software, I like to search wikipedia for "comparison of "  In this case you would search comparison of Integrated Development Environments.
+
+Hope that was helpful.
+    
+    
+Answer 9: 
+
+    
+    
+If you are interested in doing Qt development, then Qt Creator works fine and is free.
+    
+    
+Answer 10: 
+
+    
+    
+I think the debugger in Visual Studio (Express) is the killer thing that prevents me from using another IDE.
+    
+    
+Answer 11: 
+
+    
+    
+Visual Studio + Visual Assist X (http://www.wholetomato.com/)
+    
+    
+Answer 12: 
+
+    
+    
+There are some features in an IDE that are so transformative that you don't know how you lived without them.  Integrated help was one.  IntelliSense-like functionality was another.  VS 6.0's Debug and Continue was absolutely killer.  Visual Studio kicked butt for quite a while.  Not bad, given the awful NeXTstep rip-off it all started as.  (Or is it that memories of NeXTstep has faded until VS seems okay?)
+
+Sure, there are much better EDITORS that VS, but as a complete package for Win32 development nothing seems to come close.
+
+There are free Express editions now, but they seem pretty crippled.
+
+I am quite enjoying Eclipse under Linux (and derivatives of it on Windows used in some FPGA vendor toolchains).  I -really- don't like the lack of integrated MSDN-style help, though.
+
+I think it's basically down to those two choices.
+    
+    
+Answer 13: 
+
+    
+    
+Emacs.  Xemacs works fine under Windows.  For using it as an IDE, I recommend running it under Cygwin.
+    
+    
+Answer 14: 
+
+    
+    
+The Zeus editor has support for C/C++ and it also has a form of intellisensing.
+
+It does its intellisensing using the tags information produced by ctags:
+
+alt text http://www.zeusedit.com/images/_lookmain.jpg
+    
+    
+Answer 15: 
+
+    
+    
+Visual studio is the most up to date and probably "best" free ide. Dev C++ is a little dated, and mingw doesn't compile most of boost, (except regex). Most of the other compilers are dated and fading, like mars and borland. But you can use whatever you like!
+    
+    
+Answer 16: 
+
+    
+    
+One that hasn't been mentioned is CodeLite, a powerful open-source, cross platform IDE. It has code completion amongst other features.
+    
+    
+Answer 17: 
+
+    
+    
+I will quote myself from this question:
+https://stackoverflow.com/questions/780837/what-is-a-good-linux-ide-for-code-completion/917854#917854
+
+
+  Someone already said this before me,
+  but QtCreator is really good for Qt4
+  development.
+  
+  Not only it has a really good code
+  completion support. It also knows a
+  little more about the code and what to
+  complete then I thought I needed. For
+  example it knows about slots/signals.
+  This means that connecting
+  slots/signals via code is much easier
+  then before.
+  
+  The code editing is really nice. I
+  remember that when refactoring code,
+  (a few variables starting with
+  underscore) it remembered the cursor
+  position between lines and this made
+  the refactoring much easier. The code
+  indentation is smart enough to not get
+  in my way (KDevelop was configurable,
+  but QtCreator learns how I code. At
+  least it feels like it does).
+  
+  Then there are the cool key
+  combinations. Most of the
+  functionality of the IDE can be
+  accessed using shortcuts. The
+  "control+k" thingie is a nice thing,
+  which some command line users would
+  like, but I am more GUI oriented. I
+  don't use it.
+  
+  What I really like, is the split
+  window command. Yes, KDevelop3 does
+  it, but not as nice as QtCreator. My
+  favorite is control+e,3 which I use to
+  display the header and implementations
+  of my classes. Once again, the
+  navigation here is the best I have
+  seen (control+e,o).
+  
+  It also has a nice SCM integration. I
+  usually use SVN, and quite frankly
+  it's not as good as I need: no
+  shortcut to diff the project, no diff
+  to commit the whole project, no option
+  to commit several files.
+  
+  I also don't like the "total
+  integration of external tools". I
+  still like the external QtAssistant -
+  control+tab is easier to read large
+  articles. But.... when you define a
+  QString s, and 3 lines bellow you want
+  to read the interface of QString, you
+  put your cursor on "s" and press F1 -
+  the assistant comes as a sidebar with
+  QString's documentation. A huge
+  advantage.
+  
+  Want to follow a definition? F2 to the
+  help. F4? Changes
+  header/implementation (yes, eclipse
+  does this better...).
+  
+  The debugger is good. It's not as good
+  as VisualStudio but ... it has support
+  for Qt4 internals (you can see the
+  value of QString and QList!).
+  
+  I can continue... but IMHO you will
+  need to give it a second and third
+  try. It really is a good product. Not
+  as flexible as Eclipse (hi
+  ryansstack), but it's a really small,
+  fast and young project. I stopped
+  developing QDevelop because I really
+  found what I was looking for.
+  
+  ps: yes, I mean stopped developing
+  QDevelop. I was in the development
+  team.
+
+
+My response is for Qt4 development only. Be warned.
+    
+    
+Answer 18: 
+
+    
+    
+SlickEdit is very cool, and does support something like intellisense. At my current company I now use Visual Studio, and I've mostly gotten used to it - but there are still some SlickEdit features I miss. 
+    
+    
+Answer 19: 
+
+    
+    
+As a complete all-in one package, Visual Studio 2008 is the best IDE for C++ development with Windows
+    
+    
+Answer 20: 
+
+    
+    
+Visual studio is great, but there are few tricks you can enhance it with. SonicFileFinder is one - helps you to search source files by partial match. You can map solution-tree to Alt+1, partial filename search to alt+2, and properties-window to alt+3. These are the three most used windows. 
+
+Another great tool that is ofter misunderstood is ctrl+shift+F shortcut for searching file contents. People dont use because it's so slow, but my advice is - deal with it. Searching  the whole solution (or even all files in project folder) is only slow the first time you use it. Consequitive searches are as fast as jump-to-definition-feature.
+    
+    
+Answer 21: 
+
+    
+    
+I've tried SlickEdit, Notepad++, emacs, jEdit and Visual Studio. VS wins hands-down for Best Windows IDE. 
+
+jEdit is probably the best GUI cross-platform editor/almost-IDE, and emacs is probably the best terminal cross-platform editor/almost-IDE. The advantage with using these is that when you jump to a Mac or Linux box, you know how they work. 
+
+I tried Eclipse, but it ran like a no-legged dog it was so slow, so I didn't use it much. Maybe tech is better now, but eh.
+    
+    
+Answer 22: 
+
+    
+    
+With Intellisense, code folding, edit and continue, and a whole host of other features, Visual Studio is certainly the best IDE.  However, for simple code editing, I often use UltraEdit.  It has some great features not found in Visual Studio.  One surprisingly useful feature is being able to select a column in the editor.  You can find and replace within the column (useful for tabs vs. spaces wars...) delete the column, etc...
+    
+    
+Answer 23: 
+
+    
+    
+How about CodeBlocks, i find it so fine with me, especially the new 10.05 version.
+    
+    
+Answer 24: 
+
+    
+    
+I would recommend C++Builder, from Embarcadero, for C++ work and there is also a free version available.  If you prefer Visual Studio, download one of free express editions.
+    
+    
+Answer 25: 
+
+    
+    
+Here's another vote for Visual Studio.  The debugger and Intellisense are definitely it's hallmarks.  While other IDE's offer code-completion, I've often found them to be somewhat sluggish in this area for some reason (sluggish being a reference to the speed at which code-completion occurs and offers selections).  
+
+Other than VS, NetBeans is a good polished IDE and is updated on a very regular cycle.
+    
+    
+Answer 26: 
+
+    
+    
+I think it's largely a matter of taste, but I would recommend begginers to stick to a pure editor (vi, emacs...) instead of a full fledged IDE so they can figure out the whole toolchain that modern IDEs hide.
+
+Just for the record, my weapon of choice is Emacs.
+    
+    
+Answer 27: 
+
+    
+    
+personally i dont like microsoft......I hate to admit that visual studio is the best IDE i ever use.....Netbeans is gud but drasticaly slow....other free IDEs are useless..
+so people try to stick with VS....
+    
+    
+Answer 28: 
+
+    
+    
+M$ VS2008 is a better IDE for this.
+    
+    
+Answer 29: 
+
+    
+    
+The question says specifically IDE so I am guessing thats what you want. In that case, the main options are Visual Studio and Eclipse CDT as stated above. Of those, I personally prefer Eclipse. However, don't necessarily limit yourself to an IDE. I prefer to use vim as my editor and WinDbg as my debugger. For compilation, your project will probably dictate this. I currently use NMAke on the command line.
+    
+    
+Answer 30: 
+
+    
+    
+Use Visual Studio 2010. You can get the full version free with DreamSpark
+    
+    
+Title: Changing the code font size in WebStorm IDE
+Description: 
+    
+    
+                    
+I can't seem to find a way to change the code font size in WebStorm. I change the font size in options and it changes the menu and toolbar font size but not the actual code. Any ideas?
+    
+
+        
+Answer 1: 
+
+    
+    
+Settings (Preferences on Mac) | Editor | Colors &amp; Fonts | Font, Size:
+
+Before you can change this setting you must click "Save As..." and save the scheme under a custom name.
+
+
+    
+    
+Answer 2: 
+
+    
+    
+If you came here because you already found that screen, but the text box was locked...
+
+This is because you cannot modify the current theme.
+
+Click "Save As..." to save a copy of your current theme, now you should be able to edit whatever you want.
+    
+    
+Answer 3: 
+
+    
+    
+There is also an option to enable mouse wheel zooming, like in browsers:
+
+File 
+Answer 4: 
+
+    
+    
+If you are a new WebStorm 10.0.4 user,
+
+File 
+Answer 5: 
+
+    
+    
+The answer that discusses how to dynamically change the font size via the mouse wheel is partially correct, but leaves out a crucial step:
+
+
+File
+Settings
+Editor
+General (this is the crucial step missing from the previous answer)
+Set the "Change font size (Zoom) with Ctrl+M
+
+
+The previous answer was missing the crucial step 4, which, when omitted, leaves you wondering where the magic checkbox control is located.
+    
+    
+Title: Where is the *goto line* command in Xcode4?
+Description: 
+    
+    
+                    
+I couldn't find the goto line command in Xcode4. Where is it...?
+    
+
+        
+Answer 1: 
+
+    
+    
+Either Navigate -&gt; Jump in "&lt;mycurrentfile&gt;"... or ⌘ + L
+    
+    
+Title: Error when calling 3rd party executable from Powershell when using an IDE
+Description: 
+    
+    
+                    
+I have a PowerShell script that uses du.exe (Disk Usage originally from Sysinternals) to calculate the size of directories.
+
+If I run du c:\Backup in the console, it works as expected, but the same line of code run in ISE or PowerGui gives the expected result plus the error 
+
++ du &lt;&lt;&lt;&lt;  c:\backup
++ CategoryInfo          : NotSpecified: (:String) [], RemoteException
++ FullyQualifiedErrorId : NativeCommandError
+
+
+Why is that? How do I avoid this error? I tried invoke-expression, using &amp;, but no go.
+
+Thanks for the help.
+    
+
+        
+Answer 1: 
+
+    
+    
+To avoid this you can redirect stderr to null e.g.:
+
+du 2&gt; $null
+
+
+Essentially the console host and ISE (as well as remoting) treat the stderr stream differently.  On the console host it was important for PowerShell to support applications like edit.com to work along with other applications that write colored output and errors to the screen.  If the I/O stream is not redirected on console host, PowerShell gives the native EXE a console handle to write to directly.  This bypasses PowerShell so PowerShell can't see that there are errors written so it can't report the error via $error or by writing to PowerShell's stderr stream.
+
+ISE and remoting don't need to support this scenario so they do see the errors on stderr and subsequently write the error and update $error.
+    
+    
+Answer 2: 
+
+    
+    
+I've recently been facing the same issues, but I would like to get the stderr output directed to stdout. You would think that the following would work:
+    &amp; du 2&gt;&amp;1
+
+But PowerShell will interpret the redirection and process it after 'du' is completed. The work-around I found is to invoke it using cmd.exe /c:
+    &amp; cmd /c 'du 2&gt;&amp;1'
+
+    
+    
+Answer 3: 
+
+    
+    
+Another way to suppress the NativeCommandError output is to convert the objects in the pipeline to strings as outlined at the bottom of this answer:
+
+du c:\Backup 2&gt;&amp;1 | %{ "$_" }
+
+    
+    
+Answer 4: 
+
+    
+    
+Previous FIX will redirect errors but you could lose a real error if by example your user name or password is not good or if using integrated authentication, you do not have access.
+
+So here is a way to implement the error handling and bypass the specific error (that is not one) raised by psexec.
+
+
+
+try {
+    whoami # powershell commands
+}
+catch [System.Management.Automation.RemoteException] {
+    if ($_.TargetObject -like "Connecting to *" -and $_.CategoryInfo.Category -eq "NotSpecified" -and $_.FullyQualifiedErrorId -eq "NativeCommandError" -and $_.InvocationInfo.MyCommand.Name -like "psexec*.exe") {
+        $error.Remove[$Error[0]]
+    }
+    else {
+        Throw
+    }
+}        
+catch {
+    throw
+}
+
+
+
+    
+    
+Title: How to quickly implement/override methods in Eclipse?
+Description: 
+    
+    
+                    
+If I want to override some methods I currently right-click on the class name, select "Source" -/pp/p/div
+Answer 1: 
+
+    
+    
+Press CTRL-3, type "override", press enter :)
+
+simple as that.
+    
+    
+Answer 2: 
+
+    
+    
+Type the first few letters of the method name in the class (outside of methods) and press Ctrl-Space. This should list methods of your super classes. Select the correct one and press enter.
+    
+    
+Answer 3: 
+
+    
+    
+If you are on windows, how about just:  ALT  kbd/kbd
+Answer 4: 
+
+    
+    
+You can define your own:  
+
+Window -
+Answer 5: 
+
+    
+    
+Press Alt+Shift+S+V to quickly implement/override methods in Eclipse.
+    
+    
+Answer 6: 
+
+    
+    
+BTW for Android Studio in Mac, the default is Ctrl + O
+    
+    
+Answer 7: 
+
+    
+    
+Ways to Override/Implement methods - 
+
+1) Press Alt + Shift + S + V 
+2) Right click -
+Answer 8: 
+
+    
+    
+Press CTRL+O command twice to get 
+
+
+  list of methods that can be overridden.
+
+
+If you press the command once then you will get
+
+
+  the list of the super class methods overridden by you.
+
+    
+    
+Answer 9: 
+
+    
+    
+shortcut add  override/implement methods eclipse indigo
+
+    
+    
+Answer 10: 
+
+    
+    
+
+To override unimplemented method Press
+
+ALT+SHIFT+S+V
+
+(OR)
+ALT+S+V
+
+
+With in the method body, Just press ctrl+space (Or) CTRL+O (2-times) it will display list of methods
+
+CTRL+SPACE   (or)  CTRL+O (&quot;O&quot;-Twice)
+
+
+    
+    
+Title: Python and Intellisense
+Description: 
+    
+    
+                    
+Is there an equivalent to 'intellisense' for Python?
+
+Perhaps i shouldn't admit it but I find having intellisense really speeds up the 'discovery phase' of learning a new language.  For instance switching from VB.net to C# was a breeze due to snippets and intellisense helping me along.
+    
+
+        
+Answer 1: 
+
+    
+    
+This blog entry explains setting Vim up as a Python IDE, he covers Intellisense-like functionality:
+
+
+(source: dispatched.ch)  
+
+This is standard in Vim 7. There are a number of other very useful plugins for python development in Vim, such as Pyflakes which checks code on the fly and Python_fn.vim which provides functionality for manipulating python indentation &amp; code blocks.
+    
+    
+Answer 2: 
+
+    
+    
+Have a look at python tools for visual studio, they provide code completion (a.k.a  intellisense), debugging etc ...
+
+Below is a screenshot of the interactive shell for python showing code completion.
+
+
+    
+    
+Answer 3: 
+
+    
+    
+The PyDev environment for Eclipse has intellisense-like functionality for Python. Keeping an interactive console open, along with the help(item) function is very helpful.
+    
+    
+Answer 4: 
+
+    
+    
+The dynamic nature of the language tends to make autocomplete type analysis difficult, so the quality of the various completion facilities menitoned above varies wildly.
+
+While it's not exactly what you asked for, the ipython shell is very good for exploratory work. When I'm working with a new module, I tend to pull it into ipython and poke at it. Having tried most of the solutions mentioned above (though it's been years since Wing), ipython's completion facilities are consistently more reliable. The two main tools for exploration are tab complete and appending a question mark to the module/function name to get the help text, e.g.:
+
+In [1]: import sqlalchemy
+
+In [2]: sqlalchemy.s #tab completion
+sqlalchemy.schema    sqlalchemy.select    sqlalchemy.sql       sqlalchemy.subquery
+
+In [2]: sqlalchemy.select? #Shows docstring
+
+In [3]: sqlalchemy.select?? #Shows method source
+
+In [4]: edit sqlalchemy.select #opens the source in an editor
+
+    
+    
+Answer 5: 
+
+    
+    
+The IDLE editor that comes with Python has an intellisense feature that auto-discovers imported modules, functions, classes and attributes.
+    
+    
+Answer 6: 
+
+    
+    
+I strongly recommend PyDev. In Pydev you can put the module you are using in the Forced Buildins, mostly the code-completion will work better than in other IDEs like KOMODO EDIT.
+
+Also I think IPython is very helpful. Since it is 'run-time' in IPython, the code-completion in IPython won't miss anything.
+    
+    
+Answer 7: 
+
+    
+    
+PyCharm is the best Python IDE with IntelliSense support.
+    
+    
+Answer 8: 
+
+    
+    
+I'd recommend Komodo Edit.  However, I should point something out:  you're not going to get anything quite as good as what you're used to with Visual Studio's C# intellisense.  Python's dynamic nature can make it difficult to do these kinds of features.
+    
+    
+Answer 9: 
+
+    
+    
+Wingware for example implements auto-completion, see http://wingware.com/doc/edit/auto-completion .
+    
+    
+Answer 10: 
+
+    
+    
+ctags + vim works ok, too, although it is not as powerful as intellisense. Using this with ipython, you can get online help, automatic name completion, etc... But that's obviously command-line oriented.
+
+Eclipse + pydev can do it as well, but I have no experience with it: http://pydev.sourceforge.net/
+    
+    
+Answer 11: 
+
+    
+    
+Well, I think the most dynamic way to learn Python is to use iPython.
+
+You got autocompletion when using tab, dynamic behaviour because it's a shell and you can get the full documentation of any object / method typing :
+
+object.method ?
+
+
+When developping, I agree that PyDev is cool. But it's heavy, so while learning, a text editor + iPython is really nice.
+    
+    
+Answer 12: 
+
+    
+    
+Pyscripter has the best intellisense i have meet :)
+    
+    
+Answer 13: 
+
+    
+    
+For emacs and VI there's also https://github.com/tkf/emacs-jedi.
+    
+    
+Answer 14: 
+
+    
+    
+I would recommend jedi-vim, it's perfect to me, try it and you won't regret.
+    
+    
+Answer 15: 
+
+    
+    
+IronPython is the way to go. Visual Studio has the best intellisense support and you can utilize that using IronPython
+    
+    
+Answer 16: 
+
+    
+    
+Try visual Studio Code. It has very powerful Python and Django support and thousands of plugins for other languages used in a Python project such as CSS, HTML and Django templates. 
+
+Best of all, it is free:
+https://code.visualstudio.com
+    
+    
+Title: Is it possible to use arrow keys alone to expand tree node in package explorer in Eclipse on Linux?
+Description: 
+    
+    
+                    
+When using Eclipse I browse through the package explorer tree using the keyboard arrows a lot. 
+
+In Windows I can expand a collapsed node by pressing the &rarr; key. In Linux I need to press Shift + &rarr;. Is there a way to reconfigure this so that Shift is not required?
+    
+
+        
+Answer 1: 
+
+    
+    
+My version for GTK3 that behaves in more natural way.
+Add the following to ~/.config/gtk-3.0/gtk.css:
+
+@binding-set MyTreeViewBinding
+{
+    bind "Left"     { "select-cursor-parent" ()
+                      "expand-collapse-cursor-row" (0,0,0) };
+    bind "Right"    { "expand-collapse-cursor-row" (0,1,0) };
+}
+
+GtkTreeView
+{
+    gtk-key-bindings: MyTreeViewBinding;
+}
+
+    
+    
+Answer 2: 
+
+    
+    
+Put this into your ~/.gtkrc-2.0 and you should be good to go.  The Left and Right lines make the requested change, the rest are just my personal additions to make the tree-view act more vim-like.  Hope that helps!
+
+binding "gtk-binding-tree-view" {
+    bind "j"        { "move-cursor" (display-lines, 1) }
+    bind "k"        { "move-cursor" (display-lines, -1) }
+    bind "h"        { "expand-collapse-cursor-row" (1,0,0) }
+    bind "l"        { "expand-collapse-cursor-row" (1,1,0) }
+    bind "o"        { "move-cursor" (pages, 1) }
+    bind "u"        { "move-cursor" (pages, -1) }
+    bind "g"        { "move-cursor" (buffer-ends, -1) }
+    bind "y"        { "move-cursor" (buffer-ends, 1) }
+    bind "p"        { "select-cursor-parent" () }
+    bind "Left"     { "expand-collapse-cursor-row" (0,0,0) }
+    bind "Right"    { "expand-collapse-cursor-row" (0,1,0) }
+    bind "semicolon" { "expand-collapse-cursor-row" (0,1,1) }
+    bind "slash"    { "start-interactive-search" () }
+}
+class "GtkTreeView" binding "gtk-binding-tree-view"
+
+
+then restart your Eclipse to apply new bindings
+    
+    
+Answer 3: 
+
+    
+    
+If anyone is wondering how to do this with GTK3 - simply open ~/.config/gtk-3.0/gtk.css and add the following:
+
+@binding-set MyTreeViewBinding
+{
+    bind "Left"     { "expand-collapse-cursor-row" (0,0,0) };
+    bind "Right"    { "expand-collapse-cursor-row" (0,1,0) };
+}
+
+GtkTreeView
+{
+  gtk-key-bindings: MyTreeViewBinding;
+}
+
+    
+    
+Answer 4: 
+
+    
+    
+The answer provided by Andrew is correct. Please note that in newer versions of Ubuntu there is no ~/.gtkrc-2.0 file, so you can either create it or you can edit the gtkrc of your current theme, which is stored in
+
+/usr/share/themes/your_theme/gtk-2.0/gtkrc
+    
+    
+Answer 5: 
+
+    
+    
+I tried to use the answer from @Andrew Lazarev. However due to a non backward compatible change on GTK3.20 (https://bugzilla.gnome.org/show_bug.cgi?id=766166) the bindings have to be slightly adapted:
+
+@binding-set MyTreeViewBinding
+{
+   bind "Left"     { "select-cursor-parent" ()
+                  "expand-collapse-cursor-row" (0,0,0) };
+   bind "Right"    { "expand-collapse-cursor-row" (0,1,0) };
+}
+
+treeview
+{
+   -gtk-key-bindings: MyTreeViewBinding;
+}
+
+
+Note the - before gtk-key-bindings and the GtkTreeView renamed to treeview.
+    
+    
+Answer 6: 
+
+    
+    
+The navigation of Tree widget is controlled by underlaying widget toolkit - GTK. SWT/Eclipse has no control over it.
+If any such configuration is required for changing the short-cut, then it has to be made from the GTK side itself.
+    
+    
+Title: hide WebStorm toolbar showing browser icons
+Description: 
+    
+    
+                    
+How do I hide the toolbar that shows browser icons floating above my code?
+
+I'm using WebStorm 64 bit, version 10.0.4, on Windows 8.1 x64.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Settings/Preferences
+Tools | Web Browsers
+Uncheck Show browser popup in the editor option (bottom part of the screen)
+
+
+
+
+
+
+Another possible solution: just disable all browsers in that list.
+    
+    
+Title: How to jump to next break point in IntelliJ?
+Description: 
+    
+    
+                    
+How can I jump to the next breakpoint in IntelliJ, as I can in Visual Studio by pressing F5? 
+    
+
+        
+Answer 1: 
+
+    
+    
+While in debug mode, and between two breakpoints, hit the F9 key.
+    
+    
+Answer 2: 
+
+    
+    
+AFAIK, there is no direct F5 like in Visual Studio to jump to the next breakpoint without cursor pointing. The closest is the ALT+F9 that jumps to the cursor.
+
+For quick reference, the most used debugging keyboard shortcuts are:
+
+
+F8 Step over 
+F7 Step into 
+Shift + F7 Smart step into 
+Shift + F8 Step out 
+Alt + F9 Run to cursor 
+Alt + F8 Evaluate expression 
+F9 (Mac: Cmd + ALT + R) Resume program 
+Ctrl + F8 (Mac: Cmd + F8) Toggle breakpoint 
+Ctrl + Shift + F8 (Mac: Cmd + Shift + F8) View breakpoints
+
+
+To note that there are some keyboard shortcut differences between Mac and Win/Linux. Full references to PDF cheatsheets below.
+
+
+Mac keymap: https://www.jetbrains.com/idea/docs/IntelliJIDEA_ReferenceCard_Mac.pdf
+Win/Linux keymap: https://www.jetbrains.com/idea/docs/IntelliJIDEA_ReferenceCard.pdf
+
+    
+    
+Title: IDE&#39;s for C# development on Linux?
+Description: 
+    
+    
+                    
+What are my options?  I tried MonoDevelop over a year ago but it was extremely buggy.  Is the latest version a stable development environment?
+    
+
+        
+Answer 1: 
+
+    
+    
+MonoDevelop 2.0 has been released, it now has a decent GUI Debugger, code completion, Intellisense C# 3.0 support (including linq), and a decent GTK# Visual Designer.
+
+In short, since the 2.0 release I have started using Mono Develop again and am very happy with it so far.
+
+Check out the MonoDevelop website for more info.
+    
+    
+Answer 2: 
+
+    
+    
+Microsoft has released Visual Studio Code for Linux, which has good C# support, naturally.
+    
+    
+Answer 3: 
+
+    
+    
+Monodevelop
+There are 2 versions around:
+
+
+1.0: the currently stable version. It is indeed stable, but somewhat limited in its capabilities. It's very good for smallish projects. I got it via the ubuntu hardy repos.
+2.0RC (aka 1.9.x) you can get it via SVN and compiling. The process is quite straightforward, and you can run it without installing (via make run). It's somewhat less stable than 1.0, but it depends on which build you get (it's a development snapshot). Regarding capabilities, it is great. It has refactoring, profiling, tons of plugins, etc. 
+
+    
+    
+Answer 4: 
+
+    
+    
+I would recommend X-develop from Omnicore. It is a very good IDE, but is only free to use for 30 days.
+    
+    
+Answer 5: 
+
+    
+    
+There is a C# binding for Eclipse, though I haven't tried it personally, so I can't vouch for it.  I use MonoDevelop, which isn't perfect, but works reasonably well for the most part.  The version included in Ubuntu 8.04 (Hardy Heron) is much more stable than the Gutsy Gibbon version. 
+    
+    
+Answer 6: 
+
+    
+    
+I've been using JetBrains Rider for quite a while and I quite like it.
+
+It has all the ReSharper goodness and is a joy to use on OS/X or Linux. Beware that it is still in Early Access Program, so it has a few rough edges there and there, but most of the times it works well enough for day-to-day usage.
+
+You can get it here:
+https://www.jetbrains.com/rider/download/
+
+P.S. I mostly use it for .NET Core development needs, but have used it for traditional .NET coding as well.
+    
+    
+Answer 7: 
+
+    
+    
+I used MonoDevelop a while ago, and it was fine. It's not anywhere near as good as Eclipse or NetBeans are for Java development, but those are really in a class of their own. And I think the only real alternative is using emacs or vim...
+
+It's fairly polished. Stability really wasn't an issue. Simple code-completion is there, as is jumping to to declaration, super-class and the extremely useful find references. Debugging isn't there, though, which is a fairly glaring omission. I actually spent a couple of minutes trying to set up a breakpoint until it dawned on me that there isn't even a way to "Debug..." instead of "Run..."
+    
+    
+Answer 8: 
+
+    
+    
+Have you looked at SlickEdit?  I thought it was pretty good several years ago when I was developing C++ apps on Linux.  It says it supports C#, but I cannot comment as to how well.  I was happy to use it for my C++ development, though.
+    
+    
+Answer 9: 
+
+    
+    
+
+  Is the latest version stable a stable development environment?
+
+
+Probably ... it hit 1.0 this past spring.
+    
+    
+Title: How to search all open files in Eclipse?
+Description: 
+    
+    
+                    
+Simple question: how do I search all the files currently open in Eclipse? Note: I don't wanna search all the files I have in that workspace, just the ones open in tabs. Is there an easy way to do this?
+    
+
+        
+Answer 1: 
+
+    
+    
+Closest way is selecting several resources in Navigator or Package Explorer view, then press Ctrl+H and choose 'Selected Resources' radio button. It will limit search only to selected files.
+    
+    
+Answer 2: 
+
+    
+    
+CTRL+E on Windows or Linux, and Command+E on OSX.
+    
+    
+Answer 3: 
+
+    
+    
+There's no way to do that at the moment.
+
+The easiest solution would be to select your files manually (holding CTRL + click on file) and to specify "selected resources" as your search scope.
+    
+    
+Answer 4: 
+
+    
+    
+This may come too late for the original poster, but just in case somebody else needs to find out an answer, I had the same problem and found my solution by installing a plug-in named Instasearch. You can get it by going to Help/Eclipse Marketplace and searching for Instasearch.
+
+You can find more about this plug-in in the following address.
+
+http://marketplace.eclipse.org/content/instasearch
+    
+    
+Answer 5: 
+
+    
+    
+Spring produces a stand-alone Eclipse plugin (no dependencies on Spring) called Quick Search
+
+http://marketplace.eclipse.org/content/quick-search-eclipse
+
+For efficiency, it searches your open files first. So while it isn't purely restricting to opened files as you requested, you can still get a similar effect in practice by just clicking the first results that come up.
+    
+    
+Answer 6: 
+
+    
+    
+The currently opened files simply aren't considered special in eclipse - you have far more advanced methods of organizing your files: projects and working sets.
+
+Working sets allow you to define sets of files, which can be used as constraints for many operations. You have to define them explicitly, but then they don't change just because you've closed a file.
+    
+    
+Answer 7: 
+
+    
+    
+There is no find-in-open-files command in Eclipse, no.
+
+I think that the main reason find-in-open-files is not implemented in Eclipse is probably because the set of open files is for many users rather insignificant. (In fact, I don't know (or care) which files I have open. (I even have Eclipse set to automatically close editors/files when they become too many). If I want to navigate to a file, I open it. Limiting a search to the files I currently have open would be completely pointless for me.)
+    
+    
+Title: How to uninstall plugins in Eclipse 3.4.X or higher
+Description: 
+    
+    
+                    
+The GUI for managing plugins in Eclipse got a bit of an overhaul in version 3.4.0. 
+This GUI is accessed via the "Software Updates..." option in the Help menu. 
+This displays the following dialog:
+
+alt text http://www.iol.ie/~murtaghd/img/eclipse-2.jpg
+Notice that the option to remove the selected plugin (Mylyn) is greyed out. In fact, this is true of virtually every installed plugin. I know that the Mylyn plugins are optional, so why amn't I provided with an option to remove them?
+
+Thanks,
+Don
+    
+
+        
+Answer 1: 
+
+    
+    
+The following text is quoted from the Eclipse help docs:
+
+The Uninstall wizard allows you to review and uninstall items in your configuration. This wizard is shown when you select items and press Uninstall... from the Installed Software page. To uninstall software from your system: 
+
+
+Click Help /em/p/lilipem/em/p/lilip/ppem/em/p/li/olpem/em/ppem/emem/em/pol start="5"liem/em/li/olpem/em/p/div
+Answer 2: 
+
+    
+    
+And just to update it for Helios - Eclipse 3.6
+
+Help-&gt;Install New Software at the bottom of dialog there is link What is already installed once you click on that you will get list of installed plugins and Uninstal... button
+    
+    
+Answer 3: 
+
+    
+    
+eclipse 3.5(Galieo)
+   Help
+Answer 4: 
+
+    
+    
+There are distributions of Eclipse that come packaged with certain plugins that can't be mix-and-matched. That is the case with Mylyn, that went from a student's thesis project to an integral part of Eclipse. If you want to actually get rid of Mylyn, you may want to install Eclipse classic instead of the distribution you have, and then install the stuff you need. 
+
+The standard Eclipse distributions come with Myln.
+
+BTW, Eclipser 3.5 completely changes all these screens :(
+    
+    
+Answer 5: 
+
+    
+    
+If you are using Windows, make sure you are running Eclipse as administrator. Without administrator privileges, some options may be grayed-out in "Installed Software".
+    
+    
+Answer 6: 
+
+    
+    
+In eclipse Helios (version 3.6), to uninstall a plugin:
+
+
+Go to Help-/lili/lili/lili/lili/lili/lili/li/olp/p/div
+Answer 7: 
+
+    
+    
+In Eclipse 3.6 Helios, the interface has changed again. Go to "About Eclipse", and then click the "Installation Details" button in the about box.
+    
+    
+Answer 8: 
+
+    
+    
+I'm running (a relatively fresh copy of) 3.4.1. I was able to select the same plug-in shown in your screen shot (Mylyn Bridge: Java Development) to get an enabled "Uninstall..." button. I'd suggest getting the latest updates and trying again.
+    
+    
+Answer 9: 
+
+    
+    
+It sure looks like there's no way to do this.
+
+I just had exactly this problem with a fresh download of the Eclipse Java IDE (Ganymede SR2). I didn't want Mylyn, but I didn't want "Eclipse Classic", either, because the download was twice the size, I presume because it includes source.
+
+The apparent solution was to update everything and restart Eclipse, after which the "Uninstall..." button became enabled for the Mylyn plugins. Unfortunately, this only uninstalled the most recent, updated version (3.0.11 IIRC), reverting to the un-uninstallable 3.0.5.
+    
+    
+Answer 10: 
+
+    
+    
+
+  
+    I just don't know what the hell these Eclipse developers are thinking! Removing plug-ins from Eclipse became a pain in the ass since Helios! 
+  
+
+
+I hear you pal... I just went through the whole day trying to figure out as no one seems to give an straight answer like "do this, that, done." 
+Man I'd rather be programming instead....
+
+Found, in the middle of my evening that it is possible to uninstall pretty much everything. The issue is that the damn thing is hidden in the "HELP-
+Title: How do I make my PHP IDE understand Dependency Injection Containers?
+Description: 
+    
+    
+                    
+Current situation: I have dependencies in my project that I solve by using dependency injection. I want to take the next logic step by using a dependency injection container (DIC) to ease the management of my dependencies and to lazy-load classes.
+
+I looked at Bucket, Pimple, and sfServiceContainer, ran some test and really appreciate how DIC’s work. I’d probably go for Pimple because of its simplicity and raw power. If I didn’t have this problem:
+
+Due to the abstraction that DIC’s offer, the IDE I’m using (PHPStorm) no longer understands what’s going on in my code. It doesn’t understand that $container['mailer'] or $sc-/pp/pp/p/div
+Answer 1: 
+
+    
+    
+You can define class of the variable 'manually':
+
+/** @var YourClassType $mailer */
+$mailer = $container['mailer'];
+
+
+In PhpStorm (and by standards), use two asterisks and write the data type before the name of the variable.  
+
+You can write the data type without the name of the variable (but not the name without the data type).
+    
+    
+Answer 2: 
+
+    
+    
+While you can certainly tell your IDE the type of the object pulled out of your container every time you access it, it's better to do it once. Both of the following solutions involve subclassing the container. I just started using Pimple which recommends doing this anyway.
+
+For containers that use instance members accessed with -&gt; or exposed via the magic __get method, you can tell your IDE what type they hold. This is great because it doesn't involve any additional parsing when the code is run--only the IDE is bothered by it.
+
+/**
+ * My container. It contains things. Duh.
+ *
+ * @property MyService $service
+ * @property MyDao $dao
+ */
+class MyContainer extends Container { }
+
+
+For Pimple and other containers that act as arrays you can create accessor functions for the top-level objects you'll need. While it means more parsing when the container is created, it should be done once and kept in APC. I vastly prefer a method over array access anyway since it places the easy-to-forget array key inside an auto-completed method.
+
+class MyContainer extends Pimple
+{
+    /**
+     * @return MyService
+     */
+    public function getMyService() {
+        return $this['service'];
+    }
+}
+
+
+BTW, for type-hinting inline variables with @var in NetBeans you need to use /* with one asterisk. This is not a doc-block comment and doesn't work with /** or //. Also, the name comes before the type.
+
+public function foo() {
+    /* @var $service MyService */
+    $service = $container['service'];
+    ...
+}
+
+    
+    
+Answer 3: 
+
+    
+    
+As the IDE's do not exectue the code, they do not know and need some help form you. I know this works for Eclipse and other IDEs as well: Hint the variable's type.
+
+Netbeans / Phpstorm / PDT / ZendStudio Example
+
+/* @var $mailer MailerInterface */
+$mailer = $sc-&gt;mailer
+
+
+Code complete starts to work again on $mailer.
+
+For PDT it's important that:
+
+
+The comment starts with one * only.
+First the variable name, than the hint.
+
+
+Alternative Comment Variants
+
+As it was subject to a lot of discussion, it can differ between IDEs. However most IDEs support variable hinting for inline code variables in the way above. So depending on the IDE this might be written differently but similar, like here with two asterisks in front: 
+
+/** @var $mailer MailerInterface */
+
+
+PHPDoc compatibility
+
+PHPDoc parsers can have a problem if you mimic the class var doc-comment for inline code as so:
+
+/** @var MailerInterface $mailer  */
+
+
+That documentation is normally used for class variables (@var - Document the data type of a class variable). PHPDoc is then missing the definition of the class variable after the comment which involves a burden for QA.
+
+However some IDEs will offer code completition for simple variables as well when written in PHPDoc clas-variable style. I do not know if that has side-effects for the code-completition of the current class then as a new member might get introduced that actually does not exists.
+    
+    
+Answer 4: 
+
+    
+    
+For those who came here from google.
+
+PHPStorm actually provides a way to solve this kind of problem instead of writing PHPDocs over and over again — creating and setting .phpstorm.meta.php file in a way described here gains smoothly working autocomplete and type inspections.
+    
+    
+Answer 5: 
+
+    
+    
+Pimple just introduce container builder principe. If you understand it, you don't need Pimple any more:
+
+
+class Container
+{
+    private $shared = array();
+
+    public function getService() {
+        return new Service(
+            this-
+Answer 6: 
+
+    
+    
+I know that the question is about DIC only, but there is a Silex Pimple Dumper service provider which dumps the container to a json file. The same author wrote a plugin for PHPStorm which can read that file and open the autocomplete with the service names and its type (class, string and etc). I'm using those two components and I can say that are good options for auto completion for Silex/Pimple.
+    
+    
+Title: Remove project .jars from project explorer view in Eclipse
+Description: 
+    
+    
+                    
+The list of jars just takes up too much space. Can I collapse it or hide it?
+    
+
+        
+Answer 1: 
+
+    
+    
+In the Project Explorer :
+
+
+Customize View
+Check Libraries from external
+
+
+
+
+
+Or in the Package Explorer :
+
+
+Uncheck the 'Show Referenced Libraries Node'
+Add a filter to hide "*.jar" files
+
+    
+    
+Answer 2: 
+
+    
+    
+Another solution would be using the Package Explorer view.
+    
+    
+Answer 3: 
+
+    
+    
+In Eclipse3.5, select the filter "libraries from external" in "customize view".
+    
+    
+Answer 4: 
+
+    
+    
+In Eclipse 3.7 
+
+
+open view menu (arrow down icon in right section of title) of Project Explorer 
+select Customize View menu item 
+in Available Customization window on Filters tab check Library from external and click OK
+
+    
+    
+Answer 5: 
+
+    
+    
+In Eclipse3.5
+
+
+Go to Configure Build Path. Select the Library Tab
+Remove any library jar files you want to hide
+Use Add External Jar option to add the Jar file back
+select the filter "libraries from external" in "customize view".
+
+    
+    
+Answer 6: 
+
+    
+    
+Works for eclipse 3 and 4 in the project explorer and package explorer views.
+
+Hey here is how it works:
+
+
+Drop down on the ceiling -
+Answer 7: 
+
+    
+    
+I believe that Eclipse 3.4.2 places jars under "Referenced Libraries" node which is collpasable. What version do you use?
+    
+    
+Answer 8: 
+
+    
+    
+Go the library Tab of Java Build Path, Add Variable (add a variable name and library folder location).
+
+Once the variable is added, click on extend, you will see all the jars. Select all of them (or whatever is needed) and click ok. Exit the build path dialog box by clicking ok.
+
+This will remove all the jars from your project view.
+    
+    
+Answer 9: 
+
+    
+    
+Project Explorer 
+Answer 10: 
+
+    
+    
+In Eclipse Luna:
+
+
+On the toolbar for the Project Explorer, click the Menu button 'view menu' (arrow) to open the drop-down menu of display options.
+Select Customize View...
+In the dialog box that opens, select the Filters tab and then select the checkboxes for the types of files that you want to hide.
+
+
+For hiding *.jar select Libraries from external.
+For more info check: Eclipse help
+    
+    
+Answer 11: 
+
+    
+    
+On Juno, see the "View menu" button on the left of the Project Explorer minimize button.
+Develop the menu and select the "Customize view" option.
+In the Filter tab, check the "Libraries from external" option. That's all.
+    
+    
+Answer 12: 
+
+    
+    
+For Eclipse STS,
+
+A quick work around to stop looking at your large list of jar files is to switch to Navigator view instead. For my purposes navigator works the same as project explorer. 
+I tried adding a custom filter "*.jar" in project view however custom filters is unavailable in STS. Also Customize View... -/p/div
+Title: how to move (up/down) code lines in android studio?
+Description: 
+    
+    
+                    
+In eclipse we use Alt + ↑/↓  to move line up or down.
+
+Is there any shortcut in android studio do the same?
+Or any quick way to avoid copy &amp; paste?
+    
+
+        
+Answer 1: 
+
+    
+    
+To move a line:
+
+Place the caret at the line to be moved.
+
+Do one of the following:
+
+On the main menu, choose Code | Move Line Up or Code | Move Line Down.
+
+Press Shift+Alt+Up or Shift+Alt+Down.
+    
+    
+Answer 2: 
+
+    
+    
+If you want the exact behavior of eclipse you can do this:
+
+File --
+Answer 3: 
+
+    
+    
+There are (at least) two kinds of Moving line up/down in Android Studio: The "intelligent" one and the "dumb" one. Like IngoAlbers said, the dumb one (Shift+Alt+&lt;Arrow&gt;) just moves the line.
+
+Using Ctrl+Shift+&lt;Arrow&gt; instead, makes the functionality more intelligent:
+
+
+It doesn't leave the current "context":
+
+public static void test() {
+    int i = 5;
+    Runnable theodor = new Runnable() {
+        public void run() {
+            System.out.println("Hi!");
+        }
+    };
+}
+
+
+Moving the int i = 5;line down one step, brings you this:
+
+public static void test() {
+    Runnable theodor = new Runnable() {
+        public void run() {
+            System.out.println("Hi!");
+        }
+    };
+    int i = 5;
+}
+
+It keeps methods together:
+
+public static void hello() {
+    System.out.println("Hello!");
+}
+
+public static void dinner() {
+    System.out.println("Dinner's ready!");
+}
+
+public static void sleep() {
+    System.out.println("Good night.");
+}
+
+
+Moving the line public static void sleep() { up one step moves the complete sleep() method above dinner():
+
+public static void hello() {
+    System.out.println("Hello!");
+}
+
+public static void sleep() {
+    System.out.println("Good night.");
+}
+
+public static void dinner() {
+    System.out.println("Dinner's ready!");
+}
+
+In most cases, it is just annoying. ;-)
+
+    
+    
+Title: How can I change line height / line spacing in Eclipse?
+Description: 
+    
+    
+                    
+I am using Eclipse for Java programming but lines in the editor look too close together.
+
+I want to change the amount spacing/gap between lines. Is there an option in Eclipse that I can use to do this?
+    
+
+        
+Answer 1: 
+
+    
+    
+I've cloned and installed the font from
+
+https://github.com/andreberg/Meslo-Font
+
+and made it my IDE editor font for Eclipse. Line spacing is much better now!
+    
+    
+Answer 2: 
+
+    
+    
+After trying various alternative fonts, I've took original Consolas and increased line height in font editor, installed resulting ConsolasHigh font package into system and set it as default in Eclipse editor:
+
+
+
+Check out: https://github.com/Salauyou/Consolas-High-Line
+    
+    
+Answer 3: 
+
+    
+    
+You could configure a formatter (Preferences | Java | Code Style) to inject extra empty lines. Otherwise, you might be able to find a font (Preferences | General | Appearance | Colors and Fonts) with a lot of built-in whitespace. On Windows, I like 'consolas'--it's not particularly whitespace-y but it is a nice mono-spaced, readable font.
+    
+    
+Answer 4: 
+
+    
+    
+you could put overly high characters in some comment somewhere, try "|ÄÁg$ÑĈђךןﭼژçÅẤДАБψ". As soon as Eclipse sees this in a file, it'll increase the line-separation for the whole file to properly display thos characters.
+    
+    
+Answer 5: 
+
+    
+    
+Create your own bitmap font that uses all of the rows at the top of the font.  It does work, and seems to save about up to 4 rows of pixels in a 17 point font.  I did it as follows:
+
+
+install otf2bdf
+
+go to font folder, presumably in root terminal
+Clone your favorite font (presumably a truetype font) using
+otf2bdf to the size you want it
+install fontforge
+edit the font so that it uses all of the rows above the line for the
+capital letters
+
+typically there are about 3 lines of pixels that are left blank and
+that is why there  is so much space
+between rows
+should you wish you can also uses some of the rows below the line but I
+think these are typically used for
+lower case letters like y which drop
+below the line (not so important when
+programming)
+
+install the font by:
+
+saving it into one of the font folders such as
+/usr/local/share/fonts
+updating the font chache In a root terminal with fc-cache -f -v
+
+use the new font
+
+
+    
+    
+Answer 6: 
+
+    
+    
+With respect to my response above, I can now provide more detail as to how to create the font, along with suggestions for creating a nicer font (starting with a truetype font):  
+
+
+Pick a truetype font you wish to use (I used an arial font)  
+Downloaded and install fontforge  
+Start fontforge and open the font file;      I used a root terminal so that I could be sure to save the file in protected font folder  
+Select all the characters (Edit/Select/Select All)  
+Element Font Info PS Names  
+Specify names - I called it ArialMTVerticallyTighter; make sure you change all of the names on this tab or it may use the new font instead of the old font where you don't want it to
+
+Element transformations transform   
+origin glyph origin  
+scale uniformly 120 %
+(more will be too big, use less if you want more spacing between lines)  
+
+Element General 1792 256 2048 Scale -142 150  
+OS/2 Metrics
+
+Turn off is offset all over tab and t  
+Turn on really use typo metrics  
+1792 512 1792 -512 0 1792 -512 0  
+
+File Generate Fonts - true type - into font folder - use new font name  
+File save (in case you screwed up so you can go back) to new name  
+Open new font file (in nautilus) with font viewer (by double clicking)  
+Install it  
+Start Eclipse  
+Set it as font in eclipse
+(window
+Answer 7: 
+
+    
+    
+On linux with gtk you can also play with a .gtkrc file.  See here and here as examples.
+
+Of course this doesn't help anything on windows :)
+    
+    
+Title: Folders missing in project pane in Webstorm
+Description: 
+    
+    
+                    
+I've built a project in WebStorm and then submitted the project to GitHub.
+
+When I rebooted the computer and relaunched WebStorm (and the project), all I can see in the project pane is the root files, and none of the folders (yes the folders are there)
+
+See the image below for reference.
+
+Does anyone know how I can get those folders to re-appear in the project pane of Webstorm?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+It can be caused by the corrupted .idea/modules.xml project file. You can either try to fix it manually (restore from Local History, version control or backup) or create the new project from scratch.
+
+Check this issue for the hints/workarounds.
+    
+    
+Answer 2: 
+
+    
+    
+It happens sometimes in WebStorm 9.
+The easiest way to fix it for me:
+
+
+close WebStorm;
+in project's folder remove .idea/ (hidden directory);
+open your project, enjoy:)
+
+    
+    
+Answer 3: 
+
+    
+    
+Find the .idea/modules.xml in your project root
+make sure that these lines are correct :
+
+&lt;modules&gt;
+  &lt;module fileurl="file://$PROJECT_DIR$/.idea/NameOfYourProject.iml" filepath="$PROJECT_DIR$/.idea/NameOfYourProject.iml" /&gt;
+&lt;/modules&gt;
+
+
+Replace NameOfYourProject.iml with the name of your project.
+
+Then, make sure that the file .idea/NameOfYourProject.iml exists, if not , create it and put this in it :
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;module type="WEB_MODULE" version="4"&gt;
+  &lt;component name="NewModuleRootManager"&gt;
+    &lt;content url="file://$MODULE_DIR$" /&gt;
+    &lt;orderEntry type="inheritedJdk" /&gt;
+    &lt;orderEntry type="sourceFolder" forTests="false" /&gt;
+    &lt;orderEntry type="module-library"&gt;
+      &lt;library name="PHP"&gt;
+        &lt;CLASSES&gt;
+          &lt;root url="file://$MODULE_DIR$/../../php/PEAR" /&gt;
+        &lt;/CLASSES&gt;
+        &lt;SOURCES /&gt;
+      &lt;/library&gt;
+    &lt;/orderEntry&gt;
+  &lt;/component&gt;
+&lt;/module&gt;
+
+    
+    
+Answer 4: 
+
+    
+    
+I ran into the same issue and resolved it by invalidating the cache. 
+The option is under File /pp/p/div
+Answer 5: 
+
+    
+    
+You do not need to delete whole .idea folder and reconfigure your whole project, just 
+
+
+delete the .idea/modules.xml
+restart the IDE and your folders are there again!
+
+    
+    
+Answer 6: 
+
+    
+    
+I see this from time to time. I use Git, and I have my .gitignore file set up as recommended, specifically:
+
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/*.iml
+
+
+I sometimes see this after cloning the repository, and when trying to figure out why, I came across this post and read the accepted answer.
+
+I deleted the modules.xml file and reopened WebStorm (2016.2.4), and it was resolved. I looked at the new modules.xml and found that its contents were exactly the same as before, but my &lt;projectName&gt;.iml file was bigger.
+
+So it seems to be a corruption in the .iml file, not modules.xml. I assume that deleting modules.xml triggers a rebuild of the .iml file. Not sure if this helps anyone with anything, but thought I would offer the extra insight.
+    
+    
+Answer 7: 
+
+    
+    
+floor 36  solve my problem. in WebStrorm 11
+
+It happens sometimes in WebStorm 9. The easiest way to fix it for me:
+
+
+close WebStorm;
+in project's folder remove .idea/ (hidden directory);
+open your project, enjoy:)
+
+    
+    
+Answer 8: 
+
+    
+    
+Try deleting workspace.xml and watchertask.xml then just restart the IDE. You must see your full source code in all folders there.
+    
+    
+Answer 9: 
+
+    
+    
+Finally I found the culprit, it was Team Foundation Server - Version Control Integration plugin from https://plugins.jetbrains.com/plugin/7961-team-foundation-server--version-control-integration/
+
+I looked at the system/log/idea.log file and found that this plugin was producing Null exception whenever I open a new folder as a new project and breaks the content root auto detection by the IDE, and after I uninstalled this plugin, all folders show up as it should.
+
+You might have this issue because of a culprit plugin, and disabling those which you have just installed recently just before  this issue occurs, will resolve the issue. Check the log file and search for ERROR.
+
+If it is found to be an important plugin you are actively using which you are not willing to disable, then a temporary fix is to open Settings-&gt;Directories and click Add content root button to add the root folder of your project, click Ok now folders will show up and indexing will begin, and of course you have to do this everytime you open a new folder as new project.
+    
+    
+Title: Can I disable the Dashboard window when SpringSource Tool Suite starts up?
+Description: 
+    
+    
+                    
+There apparently used to be a toggle switch on the Dashboard itself, but that's gone, and I can't find anything in the Preferences.  I'm using version 2.5.2.
+
+I know it's really not a big deal, but closing that window over and over is starting to make Jack a dull boy, if you catch my drift.
+    
+
+        
+Answer 1: 
+
+    
+    
+From the menu select Window / Preferences.  Look under Spring / Dashboard.  Uncheck 'Show Dashboard on Startup'
+
+(On newer versions of the spring plugin, it is under SpringSource / Dashboard)
+    
+    
+Answer 2: 
+
+    
+    
+go to Windows----
+Answer 3: 
+
+    
+    
+STS 3.7.1 (Eclipse Mars) has no options to disable dashboard on startup.
+
+However, if you go to Windows-
+Answer 4: 
+
+    
+    
+I have a MAC, using spring tool suit latest version 3.4.0.RELEASE. By clicking the menu Spring Tool Suite / Preferences, then SpringSource / Dashboard, uncheck Show Dashboard On Startup  works for me. 
+    
+    
+Title: Getting a lightweight installation of Java Eclipse
+Description: 
+    
+    
+                    
+Having dealt with yet another stupid eclipse problem, I want to try to get the lightest, most minimal Eclipse installation as possible.
+
+To be clear, I use eclipse for two things:
+
+
+Editing Java
+Debugging Java
+
+
+Everything else I do through Emacs/Zsh (editing JSP/XML/JS, file management, SVN check-in, etc). I have not found any aspect of working in Eclipse to do these tasks to be efficient or even reliable, so I do not want plug-ins that relate to it.
+
+From the eclipse.org site, this is the lightest install of eclipse that they have, and I don't want any of those things (Bugzilla, Mylyn, CVS xml_ui), and have actually had problems with each of them even though I do not use them.
+
+So what is the minimal build I can get that will:
+
+
+Ignore SVN metadata
+Includes the full-featured editor (intellisense and type-finding)
+Includes the full-featured debugger (standard Eclipse/JDK)
+
+
+Does not have any extra plug-ins, platforms, or "integrations" with other platforms, specifically, I don't want to deal with plug-ins relating to:
+
+Maven, JSP Validation, Javascript editing or validation, CVS or SVN, Mylyn, Spring or Hibernate "natures", app servers like a bundled Tomcat/GlassFish/etc, J2EE tools, or anything of the like.
+
+I do primarily Spring/Hibernate/web-mvc apps, and have never dealt with an Eclipse plug-in that handles any of it gracefully, I can work effectively with my own toolset, but Eclipse extensions do nothing but get in the way.
+
+I have worked with plain eclipse up to Ganymede, MyEclipse (up to 7.5), and the latest version of Spring-SourceTools, and find that they are all saddled with buggy useless plug-ins (though the combination is always different). 
+
+Switching to NetBeans/Intellij is not an option, and my teammates work with SVN-controlled .class/.project files, so it pretty much has to be Eclipse.
+
+Does anyone have any good advice on how I can save a few grey hairs?
+    
+
+        
+Answer 1: 
+
+    
+    
+The "Eclipse IDE for Java Developers" version isn't the smallest one! Look for "Eclipse Classic" - it doesn't contain most of the things you mentioned. It's larger in download size only, because it comes with source code.
+
+See this comparison: http://www.eclipse.org/downloads/compare.php
+    
+    
+Answer 2: 
+
+    
+    
+You can download the empty Eclipse platform and then manually install the JDT tools.
+
+
+Go to the The Eclipse Project Downloads page. 
+Choose the bundle you want, probably Latest Release.
+On the download page of the chosen bundle:
+
+
+Download Platform Runtime Binary
+Download JDT Runtime Binary
+
+Extract the Platform Runtime Binary archive file and run it (for example, by double clicking on eclipse.exe).
+Install the JDT binary:
+
+
+Click Help &rarr; Install New Software &rarr;  Add... &rarr; Archive. 
+Choose the JDT zip file you downloaded.
+Uncheck Group Items by category.
+Select the Eclipse Java Development Tools.
+Click next to install and restart Eclipse when prompted.
+
+
+
+
+
+JDT from the Eclipse update site
+
+You can also install JDT from the Eclipse update site, instead of downloading the binary.
+
+To do this, do this following:
+
+
+Skip downloading the JDT Runtime Binary, only download, extract and run the Platform Runtime Binary.
+Go to the Install New Software, but instead of Archive chose the Eclipse download site.
+Search and install Eclipse Java Development Tools.
+
+    
+    
+Answer 3: 
+
+    
+    
+You can use a thirdparty distribution builder like Yoxos and download just what you want.
+    
+    
+Answer 4: 
+
+    
+    
+A bit late to this party, but I asked myself the same question for a while, and while now I'm back to a more fully-fledged Eclipse installation, I used to to the following to streamline it a bit. Hope it helps.
+
+What I Needed
+
+Functionalities:
+
+
+Java Support
+Java + Java EE (XML) + Debug Perspectives
+
+
+Pretty much it. There's a lot of other things I like to use in Eclipse, but I needed to keep it down to the skinniest possible because I was in a 3GB environment where I also needed to run other servers in parallel, so I couldn't afford much.
+
+Resulting Perspectives:
+
+
+Lightweight Java
+Lightweight Browser (fairly tweaked for code reviews and code inspection - that one was actually heavier than the others)
+Lightweight Debug
+
+
+What I Did
+
+
+Install Eclipse Java EE (install classic if not caring about the Java EE/XML bits)
+disable hungry views
+
+disable outline (when you need one, just do CTRL+O)
+disable call and type hierarchies
+
+disable decorators
+disable menu entries (right-
+disable toolbar items
+
+even better: hide the toolbar
+
+disable hovers and actions associated with that
+disable spell-checking
+disable XML validation
+disable Mylyn
+disable non-needed search forms in CTRL+H dialog (I usually actually only use the "File Search" mode, sometimes the "Java" one)
+disable usage reporting
+disable unnecessary plugins or features
+disables perspectives and plugins loaded automatically on startup
+restrict internal limits:
+
+some views have a scope (enclosing class, project, working set, workspace...)
+some views and UI elements have boundaries (console/loggers, highlighters, markers...)
+
+tweak the eclipse.ini to:
+
+-clean the workspace (slower, but I tend to prefer to do that)
+use G1GC
+reduce memory usage (I noticed that I can perfectly live with -xss128k and -xmx384 with G1, for instance. YMMV, of course, as always with JVM tuning.)
+use a server VM (and point directly to the VM's DLL)
+
+
+
+Also disable views you don't need in the "Debug" and "Code Browsing" perspectives.
+
+Sorry, I had actually saved all of these as a set of 3 lightweight perspectives to re-import everytime on my new project, but I cannot get my hands on them at the moment. If I ever find then, I'll add a link to them here.
+    
+    
+Answer 5: 
+
+    
+    
+Instead of going for a ready package from Eclipse Downloads, from the same page go for the Eclipse Installer. Currently available for Mac, Windows &amp; the beloved Linux. Launch the Installer which should update (or not if you are lucky enough :) ). Select "Eclipse Platform" which is the absolute minimum from this IDE, set your other installation preferences and install. 
+
+After the download/installation process, I'd suggest your head to Help-/p/div
+Answer 6: 
+
+    
+    
+Get as minimal an installation as you can, and then remove whatever is left that you don't want.
+
+Longer answer:
+
+I played around a bit.  Here's how I experimented:
+
+
+Extract a clean eclipse*.zip to two different directories; call it eclipse and eclipse-bak.  We'll only modify eclipse.
+Before starting it the first time, remove some of the features from the features folder.  I got rid of org.eclipse.cvs, org.eclipse.epp.\*, ...mylyn\*, ...wst\*.
+Start up Eclipse to a workspace.  Create in that workspace a Java project, debugging configuration, etc.  Stuff that you would want to do and that will complain if we remove the wrong thing.  Open up the Error Log view.
+Close Eclipse.  Remove something (or a group of things) from the plugins folder.
+Open Eclipse.  Check the error log to see if something you care about couldn't load.  If it did, add those things back from eclipse-bak/plugins.  If not, close Eclipse and return to step 4 for a new set of plugins.
+
+
+Using this I got my configuration to still be able to edit and debug Java files, but including only these plugins:
+
+com.ibm.icu*
+org.apache.*
+org.eclipse.compare*
+org.eclipse.core*
+org.eclipse.debug*
+org.eclipse.draw2d*
+org.eclipse.ecf*
+org.eclipse.epp.package.java*
+org.eclipse.equinox*
+org.eclipse.help*
+org.eclipse.jdt*
+org.eclipse.jface*
+org.eclipse.ltk*
+org.eclipse.osgi*
+org.eclipse.platform*
+org.eclipse.rcp*
+org.eclipse.search*
+org.eclipse.team.core
+org.eclipse.team.ui
+org.eclipse.text
+org.eclipse.ui*
+org.eclipse.update*
+org.hamcrest*
+org.sat4j*
+
+
+Most of that is core stuff, but you might be able to trim it down further.  Notably gone are Mylyn, the usage collector,  EMF, CVS, WST, even JUnit (though I think you should keep JUnit).
+    
+    
+Answer 7: 
+
+    
+    
+I feel you man, when working with Eclipse, the application is constantly trying to help.
+Ignoring workspace corruptions, I spend my development time fighting all the "helpful" things Eclipse does.
+XML is not that hard to read, but it still confuses the shit out of me when I get the XML designer.
+All it does for me is add an extra manual step to click on the source tab.
+Every time a new version of eclipse comes out they redesign the front page and the distributions.
+At which time a new quest starts for finding a way to debloat Eclipse again.
+I have the same experience with extensions to Eclipse by third parties and avoid them if at all possible.
+WTP has somewhat usefull stuff, but overall I prefer a basic java eclipse.
+
+It is a good idea start with the Platform Runtime Binary and add JDT.
+Manually extracting the JDT runtime doesn't seem to work for me these days, so it it better to use the update client.
+You can use the marketplace client, but personally I have always found it rather annoying.
+An alternative is to use the director. The director can install JDT without starting the GUI.
+
+Here is a script that downloads eclipse Oxygen 4.7.3a and installs JDT unnattended:
+
+#!/bin/sh
+
+die() {
+    echo &gt;&amp;2 "$@"
+    exit 1
+}
+
+[ "$#" -eq 1 ] || die "exactly 1 argument required [INSTALL_DIR]"
+[ -e "$1" ] &amp;&amp; die "*warning* Aborting! location exists, eclipse already installed?"
+
+INSTALL_DIR="$1"
+TARBALL=eclipse-platform-4.7.3a-linux-gtk-x86_64.tar.gz
+
+mkdir -p $INSTALL_DIR
+if [ ! -f $TARBALL ]
+then
+    wget http://mirror.csclub.uwaterloo.ca/eclipse/eclipse/downloads/drops4/R-4.7.3a-201803300640/$TARBALL
+fi
+tar -v -xf "$TARBALL" -C "$INSTALL_DIR" --strip 1
+
+echo "\nUsing director to install java development tools, this may take a while..."
+$INSTALL_DIR/eclipse -noSplash -application org.eclipse.equinox.p2.director -repository http://download.eclipse.org/eclipse/updates/4.7 -installIUs org.eclipse.jdt.feature.group
+
+
+Simply call the script with one argument, the directory you want Eclipse installed.
+Running the script gives me an unpacked install of roughly 129MB, which is more than 100MB smaller than the default download (zipped).
+That is not to say you would not be able to shrink it further, but it should rid you of most of the crap.
+The executable will be cached for future executions of the script, but it will still be slow, since it needs to go online to download JDT.
+Unfortunately, I do not know of a way to cache the plugin download in a local folder.
+You could of course zip the created installation, but the script is easier to commit to git.
+
+This script will only work for new users as long as the mirror stays up and will need some updates when a new version is released.
+But I am sure most developers are savvy enough to update the script if need be.
+    
+    
+Answer 8: 
+
+    
+    
+If you only want to use Eclipse for editing / Debugging Java I would suggest using a plain Text editor. It seems an overkill to install Eclipse and not use most of its features. 
+
+A very popular choice is VIM. Also check out this SO link for tips in using VIM as a Java editor.  You can also debug Java code with a command line debugger as mentioned in this SO link.
+    
+    
+Answer 9: 
+
+    
+    
+Visual Studio Code
+
+Fast forward to 2019 and we now can use Visual Studio Code with Java plugins. They provide a plugin pack to get you started with lightweight debugger and auto complete. Other plugins include maven integration, dependency viewer and more.
+
+Visual Studio Code is a new(ish) editor/mini-ide from Microsoft which runs on Win/Max/Linux and has plugins for many languages.
+
+Tutorial for setup: https://blog.usejournal.com/visual-studio-code-for-java-the-ultimate-guide-2019-8de7d2b59902
+
+Edit 2019-06-21: MS now has a dedicated installer for Java integration with VS Code, including Spring Boot support as well. While the Intelisense is not 100%, it's vastly improved and now my go-to Java editor for testing and trying new things. Announcing the Visual Studio Code Installer for Java
+    
+    
+Title: How to exclude a folder that is producing warnings/errors in an Eclipse project?
+Description: 
+    
+    
+                    
+Okay. I'm sick of this problem.  This has to have an easy fix, I'm sure of it!! I hope SO can help me to get rid of this once and for all!
+
+
+  Question
+  
+  How do we get Eclipse to stop trying
+  to process/compile all files under a
+  particular project directory?  The
+  goal is for no errors/warnings to
+  exist in the problems view if they
+  relate to something in this folder or it's subfolders.
+
+
+Background
+
+We run Eclipse 3.6 and the m2eclipse plugin v0.10.2.20100623 manages our autobuild. For reasons beyond my control, we have the entire BlazeDS distribution in our SVN project directory under src/main/resources/blazeds.  Essentially, this directory contains a vanilla distribution of tomcat running blazeds to which all our configuration and project files are added when we deploy to our server via SCP.
+
+So, when we run deploy, this version of tomcat is copied to the server and our project is placed inside.  Tomcat and our RIA application work and everything is fine.
+
+The problem is, Eclipse tries to compile everything under src/main/resources/blazeds when running AutoBuild and this generates about 300 errors/warnings in our problem view.  So when a real error surfaces, it gets lost among the noise.
+
+The errors stem from code in /blazeds/tomcat/webapps/samples/testdrive-datapush and also the testdrive-httpservice, traderdesktop example webapps. They have dependent source code that's not on the classpath and jars that aren't included in the libraries.
+
+Failed Attempted Solutions
+
+I'm trying to push the proper solution: to remove the samples completely and also to get blazeds out of our version control.  That's not happening anytime soon.
+
+I've followed the SO answer here but it's only a very temporary solution.  I've tried adding exclusions everywhere I can think of and other members of my team have done the same.  I've removed src/main/resources as a source directory (in preferences 
+Answer 1: 
+
+    
+    
+You can use the Configure Contents... on the menu of Problems panel. There you can create a new configuration and set the scope to On Working Set:. Click on Select... and create a new working set that excludes the folders you don't want.
+    
+    
+Answer 2: 
+
+    
+    
+I encountered a similar problem and resolved it by moving the folder into my project folder. I then went to:
+
+
+Project 
+Answer 3: 
+
+    
+    
+There is an Eclipse feature request for ignoring warnings from specified source folders. There have been several patches posted to the comment thread that provide implementations of the feature. It appears that a final patch is nearing the review stage for inclusion in an upcoming release.
+
+Update 6/19/2012: Eclipse Juno 4.2M6 supports ignoring problems for a particular source folder. The feature is available on the Java Build Path dialog. See the release note.
+    
+    
+Answer 4: 
+
+    
+    
+If you really want to exclude certain classes/packages from autobuild you can just right click on them and select Build Path -/ppimg src="https://i.stack.imgur.com/NrNPo.png" alt="alt text"/p/div
+Answer 5: 
+
+    
+    
+Configure your project (Project/Properties/Java Build Path/Source) to have, instead of the top level src folder with exclusions, just a list of the folders you do want to compile.
+
+Assuming Eclipse Helios, step by step:
+
+
+Turn off autobuild (Project/Build
+Automatically).
+Start with it empty.
+Delete the errors by right clicking
+as in the link (just to be sure).
+Add genuine source folders 1 by 1
+(Project/Properties/Java Build
+Path/Source/Add Folder)
+Do an explicit build (Project/Build Project).
+
+
+If that works, you should be able to turn autobuild back on. If it doesn't, something strange is going on. Perhaps the project is not using the standard Java Builder, but something like an Ant Builder (Project/Properties/Builders).
+    
+    
+Answer 6: 
+
+    
+    
+Go to Java Build Path -
+Answer 7: 
+
+    
+    
+Since the files in the resource folder rarely change, I suggest to put them into a second project (where you can set different warning options) and then access that via a relative path (like ${basedir}/../special-tomcat).
+    
+    
+Answer 8: 
+
+    
+    
+The best approach is to use the Inclusion and Exclusion Patterns option in the Java Build Path. 
+For example if you want to exclude one project of being automatically build: 
+1- Go to its Properties-
+Title: Eclipse Junit &#39;-ea&#39; VM Option
+Description: 
+    
+    
+                    
+In eclipse preferences
+
+Windows &gt; Preferences &gt; Java &gt; Junit
+
+
+
+
+What effect does the "Add '-ea' to VM args ...." checkbox option actually have on the new junit launch config?
+    
+
+        
+Answer 1: 
+
+    
+    
+It enables the JVM to honour assertions
+    
+    
+Title: How to remove material theme (or reset to defaults) from IntelliJ / PyCharm?
+Description: 
+    
+    
+                    
+I have installed Material Theme UI and it made my IDE blackish. Later I decided to remove and and removed plugin. Unfortunately, this didn't give default colors back, some parts of IDE, for example Project pane, remained blackish.
+
+How ro recover?
+
+How to remove material theme from IntelliJ / PyCharm?
+    
+
+        
+Answer 1: 
+
+    
+    
+you can go to the Preferences-/p/div
+Answer 2: 
+
+    
+    
+You should:
+
+
+Go to Settings-&gt;Plugins and remove Material UI plugin
+Switch to Default theme in Settings-&gt;Editor-&gt;Color Scheme
+
+
+If it does not help (it happened to me) and you still have some colors/fonts from removed Material UI - looks like Material UI theme override some default colors. You should then close Intellij, go to Intellij config folder (on Windows it is C:/Users/&lt;your username&gt;/.IntellijIdeaXXXX.X/config) and remove this config folder and restart Intellij. It should show you a dialog window to import settings from previous version or use defaults (like when you install Intellij and make the first start). After that everything will be switched to default colors/fonts.
+    
+    
+Answer 3: 
+
+    
+    
+From the material-theme-jetbrains repo:
+
+
+  File Colors stuck after uninstallation The File Status Colors feature
+  is also a feature that sticks outside of the realm of the plugin as it
+  modifies the IDE itself. Therefore when uninstalling/disabling the
+  plugin the colors will stuck.
+  
+  If you want to reset to the default colors, open the Settings at
+  Version Control -/p/blockquote/div
+Answer 4: 
+
+    
+    
+None of these worked for me as an acceptable solution. So here is what I figured out:
+
+
+Go to plugins, uninstall Material UI.
+Ensure colour scheme is Default/Darcula.
+Restart Idea.
+
+
+At this point most changes were back to default, but some things like colour of current tab, error highlights, modified files etc were still not back to usual. So I followed the advice of deleting config and things returned to normal. But with this option you lose everything, even the installed plugins. And worst thing was, I was using a settings repository to sync settings, few minutes later the colours were back! So I did a diff with older config directory and then a git log revealed that these files are the culprits.
+
+Delete these 4 files from this path: .IntelliJIdea&lt;version&gt;/config/settingsRepository/repository/
+
+
+colors/_@user_Darcula.icls
+colors/_@user_Default.icls
+material_custom_theme. xml
+material_theme.xml
+
+
+Then do a git commit and git push to ensure these are synced to your repository. And finally theme was back to normal!
+    
+    
+Answer 5: 
+
+    
+    
+Tested with intellij 2018.3 go to settings-/p/div
+Answer 6: 
+
+    
+    
+Unfortunately whatever I was doing from the settings, I've couldn't get rid of that theme. So I uninstalled the program and reinstalled it again without material theme. Hope there will be better solution.
+    
+    
+Answer 7: 
+
+    
+    
+A tad brute force, but you could try and delete the theme directly.
+
+Close IntelliJ
+Go to: ..\JetBrains\themes
+Delete Material UI
+Open    IntelliJ
+    
+    
+Answer 8: 
+
+    
+    
+Press Command + , (comma) (Shortcut to preferences) and search for material. Uninstall the material in plugins section.
+    
+    
+Answer 9: 
+
+    
+    
+Another 2019 version (worked in my case):
+
+
+open the settings editor (File-&gt;Settings)
+search for Plugins page
+inside the Plugins page, search for the Material UI plugin and uninstall it
+search for Appearance &amp; Behaviour-&gt;Appearance page
+select the theme you prefer (IntelliJ or Darkula or High contrast). If your theme is already selected, chose another theme, apply the changes, than select back your preferred theme.
+close IntelliJ (or PyCharm/WebStorm/etc)
+open .IntelliJIdea&lt;version&gt;/config folder, usually it's in your home folder.
+remove the following files:
+
+
+material_theme.xml
+colors/_@user_Darcula.icls or colors/_@user_Dafault.icls (beware: you may loose custom configurations you may have done)
+
+
+
+Done.
+    
+    
+Answer 10: 
+
+    
+    
+
+Uninstall Material Theme UI plugin: Settings-/lili
+Answer 11: 
+
+    
+    
+2019 version File /p/div
+Answer 12: 
+
+    
+    
+if you have the stupid accents persisting through uninstalling the plugin, deleting config files and so on the solution is under:
+
+appearance and behavior 
+Answer 13: 
+
+    
+    
+If you are wondering how to do it in PHPStorm 2020.2 and above:
+Settings (Alt + Ctrl + S) -&gt; Plugins -&gt; Uncheck the MaterialUI.
+After unchecking, you would then be able to see an option to uninstall from the dropdown arrow found next to the install button.
+    
+    
+Title: Android Studio Exclude Class from build?
+Description: 
+    
+    
+                    
+I've been learning Android over the past few months and have been using Eclipse Juno as my IDE.
+
+I am trying to migrate to Android-Studio and wonder how I can "exclude from build path" some of the classes I have yet to complete?
+
+In Eclipse, it was straight forward right click.  I can't find any reference to it in Studio.
+    
+
+        
+Answer 1: 
+
+    
+    
+AFAIK IntelliJ allows to exclude packages. Open Project Structure (Ctr+Alt+Shift+S in Linux) 
+Answer 2: 
+
+    
+    
+Works fine with Android Studio v3.0
+
+apply plugin: 'com.android.application'
+
+android {
+    defaultConfig {...}
+    buildTypes {...}
+    sourceSets {
+        main {
+            java {
+                exclude 'com/example/full/package/path/MainActivity.java'
+            }
+        }
+    }
+}
+
+    
+    
+Answer 3: 
+
+    
+    
+It can't be done.
+
+Maybe it could back in May'13 when the accepted answer was provided, but not anymore (as of 1.2).
+
+Here is the issue:
+https://code.google.com/p/android/issues/detail?id=64957
+
+According to the labels they are targetting AS 1.5 for adding these feature.
+    
+    
+Answer 4: 
+
+    
+    
+The way I used to do the same is by,
+
+For Windows :Right click on the java file -
+Answer 5: 
+
+    
+    
+Move it to a new folder.
+Rightclick -
+Title: Visual Studio IDE - return to previous
+Description: 
+    
+    
+                    
+In VS2008, is there a way to return to the cursor’s previous position after pressing F12 to jump to a function definition?  I know this is possible with some add-ons, but if there a way to get the core product to do this?
+    
+
+        
+Answer 1: 
+
+    
+    
+Ctrl+- should do the trick which is the standard keyboard shortcut for Navigate Backwards. Or using the navigation buttons in the standard toolbar.
+
+This is explained on MSDN at https://blogs.msdn.microsoft.com/zainnab/2010/03/01/navigate-backward-and-navigate-forward/
+
+On this MSDN page, you can see the following explanations
+
+
+  The editor remembers locations when you move in a single command more
+  than several lines away from where you are currently working, or if
+  you edit in a particular location that is not adjacent to the last
+  place you edited.
+  
+  The goal is to remember interesting locations so that you can recall
+  where you have been working without remembering so many locations the
+  feature is not useful (such as every character typed, or every line
+  entering several new lines of code one right after the other).
+
+    
+    
+Answer 2: 
+
+    
+    
+There is a command which does exactly you asking for: View.PopBrowseContext. It always returns you to the very place where you have pressed F12. It doesn't take in account any movements or edits you did after you have pressed F12.
+
+By default in C# layout it is mapped to Ctrl+Chift+8, but you can assign it to any hotkey you want.
+
+BTW, in VS2015 they decided to get rid of this command.
+    
+    
+Title: Making Eclipse behave like Visual Studio
+Description: 
+    
+    
+                    
+I'm doing some Android development, and I much prefer Visual Studio, but I'll have to use Eclipse for this.
+
+Has anyone made a tool which can make Eclipse look and behave more like visual studio? I mainly can't stand its clippyesqe suggestions on how I should program (Yes, I know I have not yet used that private field! Thanks Eclipse!), or its incredibly lousy intellisense.
+
+For example, in eclipse, if I don't type this first, its intellisense won't realise I want to look for locally scoped members. Also, the TAB to complete VS convention is drilled into my head, and Eclipse is ENTER to complete, I could switch everything by hand but that would take hours, and I was hoping someone had some sort of theme or something that has already done it.
+    
+
+        
+Answer 1: 
+
+    
+    
+There are also other choices for Java IDEs.  You've obviously found Eclipse, but you also may want to check out IntelliJ and NetBeans.  IntelliJ is not free, but has a 30 day evaluation period and a Visual Studio key map :)
+
+Shop around, find one that you like and start to use it heavily.  They are all very good IDEs, and I'm sure once you use one for a while you'll get comfortable with it.
+    
+    
+Answer 2: 
+
+    
+    
+Have you tried using the Visual Studio keybindings available in Eclipse Ganymede (3.4)?
+
+(You may want to know that "IntelliSense" is a Visual Studio-term, an probably unknown to anyone without Visual Studio-experience. "Autocompletion" is probably a more widely used term.)
+    
+    
+Answer 3: 
+
+    
+    
+If you start typing the name of any class/variable visible in the current scope and hit Ctrl+Space, it'll bring down the autocompletion.
+
+By default, tab is used to move around autocompleted function call arguments.
+    
+    
+Answer 4: 
+
+    
+    
+I'm gonna play devils advocate here and say that forcing you to use this.myString is actually much safer than just myString. myString could be defined locally (in the method) or in the class as a private member. I sometimes think Visual Studio is a bit cavalier about this. In the sample you mention (I saw the video but it was illegible) where is myString scoped? 
+    
+    
+Title: IntelliJ not starting after OS X Yosemite update
+Description: 
+    
+    
+                    
+I upgraded my OS X to Yosemite and now my IntelliJ IDE is not starting.
+
+Here is the error message:
+
+
+  To open “IntelliJ IDEA” you need to install the legacy Java SE 6 runtime.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The officially recommended solution is to install/update JDK 1.6 on Mac (if this link doesn't open in Safari, try Firefox).
+
+Modifying Info.plist will break the application digital signature and prevent the patch updates.
+
+We do not recommend modifying Info.plist file to run under JDK 1.7 or 1.8.
+
+Please check this document for the list of known critical issues specific to Java 7 and 8 on Mac that prevent JetBrains from using these Java versions by default.
+
+While Java 6 has known security issues and is EOL, these issues are most likely not exploitable when you are using Java 6 to run IntelliJ IDEA (and other IDEs based on this platform). Java 6 doesn't install browser plugin to run applets and it would be extremely hard (if not impossible) for the remote attacker to exploit it when it's used to run the IDE.
+
+If you can't accept these (probably minimal) risks of running under Java 6, we recommend using the special IDE distribution with bundled Java 8 (still experimental). To obtain this version add -jdk-bundled to the file name. Since IDEA 14.1 the suffix has changed to -custom-jdk-bundled
+
+Example:
+
+
+http://download.jetbrains.com/idea/ideaIU-14.0.1.dmg (version that requires Java 6)
+http://download.jetbrains.com/idea/ideaIU-14.0.1-jdk-bundled.dmg (version with bundled Java 8)
+
+
+Please note, it's just an example and may link to an outdated version, please use the latest available version from the the downloads page, click Download, cancel the download, copy the direct link from the Thank you for downloading IntelliJ IDEA page and add -jdk-bundled (-custom-jdk-bundled since 14.1) to the file name. Use this version only if running under Java 6 is absolutely not an option for you, be aware of the known issues.
+    
+    
+Answer 2: 
+
+    
+    
+What you need to do is go ahead and edit this file:
+
+
+  /Applications/IntelliJ IDEA 13.app/Contents/Info.plist
+
+
+Replacing this:
+
+&lt;key&gt;JVMVersion&lt;/key&gt;
+&lt;string&gt;1.6*&lt;/string&gt;
+
+
+with this:
+
+&lt;key&gt;JVMVersion&lt;/key&gt;
+&lt;string&gt;1.7*&lt;/string&gt;
+
+
+Edit: As said by intellij member @crazycoder, the recomended way to total fix this is to install the latest jdk 1.6
+    
+    
+Answer 3: 
+
+    
+    
+I found that installing Java for OS X 2014-001 after upgrading to Yosemite has solved it for me.
+    
+    
+Answer 4: 
+
+    
+    
+Or change asterisk to plus
+
+&lt;key&gt;JVMVersion&lt;/key&gt;
+&lt;string&gt;1.6+&lt;/string&gt;
+
+
+The drawback is OS X will with each IDEA start ask you for network permission.
+
+But Java 8 still have some bugs, especially on Retina devices and JetBrains still encourages to use Java 6 from Apple. Latest update working with IDEA on Yosemite is available here http://support.apple.com/kb/DL1572?viewlocale=en_US&amp;locale=en_US
+    
+    
+Answer 5: 
+
+    
+    
+If you have latest JDK, you could change info.plist to handle this.
+
+edit Info.plist file, in your jdk, for example:
+
+/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Info.plist
+
+
+update JVMCapabilities dictionary to have following values:
+
+          &lt;key&gt;JVMCapabilities&lt;/key&gt;
+            &lt;array&gt;
+                    &lt;string&gt;CommandLine&lt;/string&gt;
+                    &lt;string&gt;JNI&lt;/string&gt;
+                    &lt;string&gt;BundledApp&lt;/string&gt;
+                    &lt;string&gt;WebStart&lt;/string&gt;
+                    &lt;string&gt;Applets&lt;/string&gt;
+            &lt;/array&gt;
+
+
+Now, try restarting the app. The application should now make use of the your JDK instead of looking for JDK 6
+    
+    
+Answer 6: 
+
+    
+    
+OSX has its JDKs in the folder /Library/Java/JavaVirtualMachines/.
+There can be multiple versions there, for e.g. 1.7 or 1.8.
+
+As indicated by @CrazyCoder, IntelliJ needs a 1.6 version to be present there, which Yosemite kicked out (in favor of a 1.7 if I'm not mistaken).
+
+To install jdk 1.6, you can indeed simply use the dmg from apple as recommended by @CrazyCoder and confirmed by @LanceP.
+
+As a homebrew cask user, I installed via
+
+brew tap caskroom/versions
+brew cask install java6
+
+
+After this, IntelliJ was up and running again.
+
+See also this useful post on managing multiple Java versions on OSX.
+    
+    
+Answer 7: 
+
+    
+    
+Got the same problem with MacOS Catalina version 10.15.2 (19C57) after the PyCharm update.
+
+Workaround: I rolled back to the Version 2019.2 - 2019.2.5.
+    
+    

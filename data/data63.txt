@@ -1,0 +1,2036 @@
+Title: Cloud9 IDE and C Programming
+Description: 
+    
+    
+                    
+How can I write a C program in the IDE, cloud9? Whenever I start to write its showing errors, I even tried to change the file extension to ".C", but it doesn't work.
+
+Does the cloud9 IDE support C programming?
+    
+
+        
+Answer 1: 
+
+    
+    
+Short answer
+
+Yes Cloud9 does support C and C++ programming
+
+Long Answer
+
+Cloud9 has a varying level of support for different programming languages and frameworks.
+
+
+Cloud9's ACE editor currently supports highlighting for about 60 programming languages including C/C++. The list is growing and you can get the full list from the "View -/p/lilip/p/lilip/pulli/lili/lili/lili/li/ul/lilip/p/lilipcode/code/p/lilip/p/li/olp/p/div
+Answer 2: 
+
+    
+    
+It claims support on the web page for "Javascript and Node.js applications as well as HTML, CSS, PHP, Java, Ruby and 23 other languages".
+
+Yet it's very light on regarding details of those other languages. It does state that the editor, ACE, supports many different languages although whether that's natural languages or computer languages it doesn't specify. Additionally, an editor supporting a language is not the same as an IDE supporting it. It makes little sense having syntax coloring for C but no compiler.
+
+Certainly C++ is possible as shown here but the fact that you simply use the editor then switch to a terminal session to compile the code seems to reduce the attractiveness of the so-called "IDE". It doesn't seem to give you anything you can't get from vim/gcc under Linux, or MinGW under Windows. It certainly isn't integrated in the sense that Visual Studio (even Express) or Code::Blocks is.
+
+Regardless, the proper place for this sort of query is most likely on their support page here. I suspect they'd know more about what's supported than anyone here on SO.
+
+Though I wouldn't be hopeful for a response. There's a very similar question asked back on Feb 28 which has still had no response. You have to wonder whether you want to entrust your precious code to a company that takes over four months to answer a simple support query.
+
+In fact, to be brutally honest, I'm not sure I see the value proposition in using such a service. Given that you can get very good local IDEs already (for zero cost), the only possible advantage that springs to mind is collaboration. And, if you're working in a shop that has geographically dispersed developers, they'd probably have a fit if you told them you wanted to store your code where someone outside the company can get at it :-)
+
+I'm not trying to turn you off the idea, just stating that (based on my experience), it doesn't seem as good as a substantial number of other solutions.
+    
+    
+Answer 3: 
+
+    
+    
+Cloud 9 does support C ( and C++ ) using gcc and g++
+
+gcc --version
+(GCC) 4.4.7 20120313 (Red Hat 4.4.7-4)
+
+You can use their integrated editor, but the run button still acts like it trying to execute Javascript, which is the default, and seems to be their the target audience.
+They have a fine C hello world example -- http://support.cloud9ide.com/entries/23541348-C-hello-Cloud9
+Typically I just maximize the terminal, and run vim ( they have 7.2 installed ), and it works just like any passable unix terminal.  They also have gdb installed, if you need a debugger.
+There are comparisons against installed compiler solutions, but that isn't what Cloud9 is competing against.  Their own description is Google Docs for code, and that seems to pretty fairly accurate.  It certainly isn't all things to all people, but it is a pretty amazing service.
+With Cloud9 I can write code on my Chromebook without having to install a bunch of stuff to almost make Linux run on it.  This would be a good solution for students, since it would allow them to work in a computer lab without needing any software installed.  I have found that using github and c9, I can easily switch back and forth between c9 while I am remote, and a local setup when I am on a real computer.
+    
+    
+Title: Android Studio Can&#39;t resolve Gradle project
+Description: 
+    
+    
+                    
+When moving to a new computer I have lost a drive and now am using a different file path for my programming assets.
+
+When I start up one of my previous working projects in Android Studio I run into an issue with Gradle.
+
+It reads as follows.
+Gradle 'Timer' project refresh failed:
+            Can't resolve Gradle project. Reason: given path (E:\Media\Documents\Dropbox\Programming\Android\AndroidStudioProjects\Timer\build.gradle) doesn't point to a file
+
+My new gradle path is 'C:\Programs\gradle\gradle-1.6' and when I go to Gradle settings in my project it says that it detects this, however after hitting 'ok' and saving/reloading the project the same error persists.
+
+I have GRADLE_HOME set in the environmental variables.
+Other projects that are built on this system work however do give this following error "Could not execute build using Gradle distribution 'http://services.gradle.org/distributions/gradle-1.6-bin.zip'."
+
+Am I missing a configuration step somewhere?
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+I just ran into this problem when moving to a new computer. 
+
+What I did was choose to import a project (using build.gradle as import file) rather than open a project.  When prompted about gradle information I didn't supply a gradle home but selected to use the gradle wrapper.
+    
+    
+Answer 2: 
+
+    
+    
+Thanks for your suggestion oceansize42, but actually that didn't help me fix my problem as it reoccurred after I restarted Android Studio.
+
+After some more searching,I found two files with references back to my old drive.
+
+.idea\workspace.xml
+and
+.idea\gradle.xml
+
+workspace.xml contained an option "KEY_STORE_PATH" that had an old path.
+gradle.xml contained my issue "externalProjectPath" that was giving me the error.
+
+Changing both of these and then restarting fixed my issue completely.
+    
+    
+Title: open include files in emacs as you can in msvc (visual c++)
+Description: 
+    
+    
+                    
+MSVC visual c++ allows you to right click on an #include directive header file (.h) and select to "open document".
+This makes browsing source code a breeze as it turns an entire source code tree basically into a hyperlinked website. 
+Is this convenience available with emacs? Is there another apparatus that allows browsing source code, any code you write, any project create, so automatically? Does Xcode have it? Does eclipse? Does anything?
+    
+
+        
+Answer 1: 
+
+    
+    
+C-c C-o, which runs the command ff-find-other-file, is what you are looking for.  It will open the included file when the point is on the #include line.
+
+Googling for emacs code browsing also reveals 
+
+
+ECB (Emacs Code Browser)
+How can I best do source code browsing inside Emacs?
+code browsing, refactoring, auto completion in Emacs
+
+    
+    
+Answer 2: 
+
+    
+    
+You can use semantic Smart Jump, move the cursor to the #include line, then execute command semantic-ia-fast-jump, this command is usually used to jump to symbols, it can also jump to include file.
+
+As a precondition to use semantic-ia-fast-jump, you need manage you code in an ede project, here is an example for C/C++ project
+
+suppose your directory structure like this:
+
+~/myproject/
+  |-include/test.h
+  |-src/test.c
+  |-Makefile
+
+
+and your ede project configuration
+
+(ede-cpp-root-project "MyProject"
+    :file "~/myproject/Makefile"
+    :include-path '( "/include" )
+    :system-include-path '( "/usr/include/mysql/" )
+
+
+test.c
+
+#include &lt;mysql.h&gt;
+#include "test.h"
+
+
+Now, move your cursor to either of the two line in test.c, run semantic-ia-fast-jump
+    
+    
+Title: Getting IntelliJ to show all errors of an Ant build
+Description: 
+    
+    
+                    
+How can I display all of the errors from an Ant build? I'd like to see those 21 other errors.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I'd suggest trying to Toggle tree/text mode - on the left hand side of the Messages window
+
+
+    
+    
+Answer 2: 
+
+    
+    
+The stack trace describes only one error, and the ... 21 more string indicates 21 other methods that were the original call hierarchy.
+
+IDEs will usually suppress the base caller information because it will not be specific to the error, such as the framework/tool internal calls.
+
+To see the entire stack trace, either adjust your IDE settings, or run ant on the command line, where the entire stack trace will be printed.
+    
+    
+Title: Good IDE for C++ like xcode for windows with perfect autocomplete?
+Description: 
+    
+    
+                    
+I'm searching good IDE like xcode for Windows ( xcode is IDE with best autocomplete only for Mac ) . 
+requirements: This IDE must have perfect autocomplete. For me editor with autocomplete and very good formating style on first place. Do you know it?
+    
+
+        
+Answer 1: 
+
+    
+    
+Visual Studio would be a good starting point.
+
+There is also a free edition, Visual Studio Express.
+    
+    
+Answer 2: 
+
+    
+    
+Here are some suggestions:
+
+
+Visual studio
+Geany gtk (this one !!!)
+Code::blocks IDE
+Dev C++ (it doesn't have word completion, but it is a really nice editor) 
+
+
+Links:
+
+
+http://en.wikipedia.org/wiki/Geany
+http://wiki.codeblocks.org/index.php?title=Main_Page
+http://en.wikipedia.org/wiki/Microsoft_Visual_Studio
+
+
+PS: I highly recommend you to use Geany. It's really reliable, and usable.
+    
+    
+Answer 3: 
+
+    
+    
+Microsoft Visual C++ Express can be used for free and brings a great couple of features.
+    
+    
+Answer 4: 
+
+    
+    
+Have a look at Netbeans IDE for C/C++. Here is the link to download
+    
+    
+Title: Netbeans C/C++ 7.2 -std=C++11 not recognized by gcc v4.6 or lower
+Description: 
+    
+    
+                    
+I left Eclipse to NetBeans for C/C++ development right after release v7 and it all seems a wise choice except that -std=C++11 flag in the current latest release, namely 7.2, is not recognized by gcc 4.6 (-std=C++0x) or the previous. Since Ubuntu 12.04 ships with gcc 4.6 (which should be fair enough to use for my jobs in term of 11 features) and a fresh installation of gcc 4.7 might bring about complexity in maintenance of the system (well...I'm a person extremely simple, neat and clean), is there any work around?
+    
+
+        
+Answer 1: 
+
+    
+    
+Using the "C++ standard" option from NetBeans does not work. My solution is to do it manually.
+Add: 
+
+-std=c++0x
+
+
+To the "Additional Options" in the Project 
+Title: How to interrupt MATLAB IDE when it hangs on displaying very large array?
+Description: 
+    
+    
+                    
+Suppose I'm using the MATLAB IDE and happen to have some very large objects in my workspace (e.g. arrays of 500k+ elements). Now, suppose that I stupidly and accidentally double click on one of these very large variables, which triggers a load to the array editor. Unfortunately, with arrays this big, MATLAB just hangs. 
+
+I've tried CTRL+C, CTRL+BREAK, CTRL+D, but none seem able to interrupt the behavior of the IDE. I know I can force matlab to quit, but reading all of those variables into the workspace in the first place takes a lot of time, and I may have unsaved changes in an editor window, etc.
+    
+
+        
+Answer 1: 
+
+    
+    
+I found a way, but it's not the best, it requires a change of path and back once to get a handle to the original openvar
+
+function openvar(name,array)
+    persistent org_openvar
+    if isempty(org_openvar)
+        curdir=pwd;
+        cd(fullfile(matlabroot,'toolbox/matlab/codetools'));
+        org_openvar = @openvar;
+        cd(curdir);
+    end
+
+    if numel(array)&gt;1e5
+        if strcmp(questdlg(sprintf('Opening ''%s'' which has %d elements.\n\nAre you sure? This is gonna take a while!',name,numel(array)), ...
+        'Variable editor','Yes','Cancel','Cancel') , 'Yes')
+                org_openvar(name,array)
+            end
+    else
+        org_openvar(name,array)
+    end
+end
+
+
+getting that handle is the biggest problem, calling it is just fine. If openvar would be built in, you could use the function builtin:
+
+builtin('openvar',name,array)
+
+
+but this is unfortunately not the case :(
+str2func in combination with the complete path also doesn't work, at least I don't get it to work...
+    
+    
+Answer 2: 
+
+    
+    
+The variable editor is launched using the command openvar.  To solve your problem you can take advantage of a Matlab quirk that causes functions to be masked by variables with the same name. For example if you create a variable named plot the plot() function stops working.
+
+The solution, although hackish, is to simply create an empty variable named openvar.  Then anytime attempt to open the variable editor will fail because the function openvar is being hidden by the variable.
+
+If you want to use the  variable editor again simple call clear openvar to delete the variable and the function will be unmasked.
+    
+    
+Title: Is there a refactoring tool to split a large function into small functions automatically?
+Description: 
+    
+    
+                    
+I want to use some C codes from a function, however, the function has 300+ lines of code and 20 variables, which make me really headache to deal with.
+
+I'm just wondering whether there's such a tool that can separate(refactor) small functions from a large function automatically. Then it will save me a lot of time to deal with long functions like that.
+
+(I don't think it's a very hard thing because this tool only need to analysis the position where a Variable was defined first time, and the position where a Variable was used at last, then give me some suggestion about where to split..)
+    
+
+        
+Answer 1: 
+
+    
+    
+The problem is that it is difficult for a computer to know what the purpose of a function is. If it so happens that all 20 of the variables and 300 lines of code are all needed for a task and it does not make sense to split that task up, then it is a good function. It is a little hard to imagine, but still.
+
+Don't break something up just because it is long. Break it up because it makes sense to do so. Keep functions performing only one thing. As of now computers are not smart enough to figure out the purpose of a function and especially not smart enough to decide what are sub-sections of the function that could reasonably be split out.
+    
+    
+Answer 2: 
+
+    
+    
+Yes, there are tools than can do that.  What you want is a program transformation tool that parses C into ASTs, can determine data flows within a function, and can transforms the ASTs using the dataflows as a guide, and can regenerate text from the transformed tree.
+
+One of the issues you have to face is how to tell the tool where to split the function. What part do you want as a sub-function?   Arguably you can designate any set of operations in the function (assignment, sub-expression, or statement) in the function to go into a sub-function and you need that much control in general; this can be a pretty long and detailed description (probably a set of line/column pairs).  But often you want some automatic selection such as "put everything that supports only  operation" into the subroutine; a tool with data flow analysis can then compute a backward slice from the operation, find out what part of the backward slice is only used for the operation, and move the corresponding code. As a practical matter you'll need to combine these ideas.  In either case, the tool now knows what has to be moved.  Moving designated code into a subroutine is "just" a set of standard program transformations; most compilers have internal machinery to do this.
+
+You might even want the tool to offer interactive graphical sliced views of the code so that you can make this decision.  (Grammatech offers a C slicing tool call CodeSurfer that does exactly this).
+
+A tool that can compute such slices and do the code transformations is our DMS Software Reengineering Toolkit with its C Front End.  (It isn't interactive like CodeSurfer; but then CodeSurfer can't change the code).
+You need to configure DMS to implement that specific task; it has all the machinery mentioned above.  As a practical matter, that's likely more work than the effort it will take you to split your one function by hand.
+
+Having said this, you are still stuck with deciding how to split the function. And that, not the tool, seems to be the actual problem you are having.
+    
+    
+Title: PyLint in PyDev only analysing files in top-most project directory
+Description: 
+    
+    
+                    
+My project directory is something like
+
+src
+    ProjectName
+        Package1
+            __init__.py
+            Module1.py
+            Module2.py
+        Package2
+            __init__.py
+            Module3.py
+            Moduel4.py
+        __init__.py
+        main.py
+        setup.py
+
+
+When I do Project-/pp
+Answer 1: 
+
+    
+    
+The PyLint configuration (window 
+Answer 2: 
+
+    
+    
+This could be caused by recent changes in Pylint's output format which now prints column offset. You should contact the pydev maintainers reporting this. 
+    
+    
+Answer 3: 
+
+    
+    
+
+  I have gone into Project-
+Answer 4: 
+
+    
+    
+I just discovered that if the file you are trying to lint is not a valid python module name, then pylint will (silently) not run on it. For example if you have an executable python script named do-thing, in your projects bin directory, it will simply not be linted. Rename the file dothing and suddenly it will work (no .py) extension is needed.
+    
+    
+Title: What&#39;s a free flash IDE that supports netbeans/eclipse style shortcuts?
+Description: 
+    
+    
+                    
+I tried flashdevelop and the basic flash cs5 IDE, and both fail miserably in the shortcuts department.
+
+I am very comfortable with the netbeans set of shortcuts and want to know if there's any AS3 IDEs that would support them.
+
+Some examples are:
+
+ctrl+/ for toggle comment
+control+shift+up/down to duplicate a line
+alt+shift+up/down to move a line up and down
+ctrl+D to delete a line
+alt+shift+f to autoformat
+
+    
+
+        
+Answer 1: 
+
+    
+    
+FlashDevelop is the best. Quick, intelligent and powerful. Love it. 
+
+You have total control over such customizations. And honestly... if you find you actually can't make certain changes (in this case - hotkey shortcuts), accommodating the application's minor differences  is a small price to pay for such an elegant programming environment, imho. 
+    
+    
+Answer 2: 
+
+    
+    
+All of these are easy to edit in the xml.
+
+Ctrl+Q to toggle a comment
+ctrl+shift+D to delete a line. 
+not sure about the auto format.
+
+
+you could add a line to your MainMenu.xml for the line duplication:
+
+&lt;button label="Duplicate Line" click="ScintillaCommand" tag="LineDuplicate" shortcut="Control|Shift|Up" flags="Enable:IsEditable" /&gt;
+
+
+for the adding a line etc. and all the other commands you have access to they have it posted here. http://www.flashdevelop.org/community/viewtopic.php?f=9&amp;t=3729
+
+FlashDevelop is the best tool as everyone has said. Most of us swear by it.
+    
+    
+Title: Very Weird Behavior: Delphi 5 adding a component on my form with empty name
+Description: 
+    
+    
+                    
+Now this is a very puzzling matter I hope you can help me.
+
+I have a custom component derived from TCustomControl that is included in a package. This package is correctly compiled and installed in D5. The package also requires the use of another library of components the ImageEn library.
+
+I have an application that uses this component, Now until some day ago everything seemed to be fine, but now, after some recent changes to the component (mostly changing the name of the types it uses) I am having a very weird behavior going on. On the form where this component is placed Delphi will create I would say just for no reason a TImageEnIo component (from the ImageEn library) that was not even included in the dfm of the form.
+
+Even more puzzling is the fact that this added imageenio component has no name, thus causing me a lot of trouble when I try to run the application (run-time error). If I delete this component it will reappear as soon as something is updated (for example if I switch between the text and the form of the dfm). Delphi just adds this thing on any form , where I use my custom component. This happens only when my custom component is present, other comps of the package do not generate this problem.
+
+I noticed that it creates 1 of these empty TImageenio for each custom component I have on the form, and moreover if I switch back and forth between the text and the form views of the dfmit will add another imageenio component each time I do this.   
+
+Finally the problem is not dependent from the application as it will happen with any application as long as I add my custom component on a form.
+
+Now I have been recompiling everything the imageen and my package many times, I have even tried to restore an older version of the component but the problem persisted (I am quite sure I hadn't experience it with the older version), I have tried anything conceivable but I cannot figure it out. I am at a complete loss, please advice If you need more info please ask, I will try to explain better.
+
+Many Thanks to those who will take the time to answer.
+    
+
+        
+Answer 1: 
+
+    
+    
+It would seem that the problem was introduced by recent changes in your custom component.
+
+You should use your revision control system to go back to a known good version. Then advance to intermediate versions of the code, perhaps using a binary search for efficiency. Once you've isolated the revision which introduced the bug then you should be able to study the code changes in that revision and identify the problem.
+    
+    
+Answer 2: 
+
+    
+    
+Wild guess: Your custom component directly or indirectly instantiates a TImageEnIo with the wrong Owner. Instead of using Self (i.e. the custom component instance) it uses its Owner property, which points to the form it is sitting on.
+    
+    
+Answer 3: 
+
+    
+    
+The first thing I would try would be to start a new application, create one of your custom controls at run time and put breakpoints on the third party source code where the TImageEnIo component is instantiated, constructor of the component would be fine. If the design time behavior is exhibited at also run-time, the breakpoint would be hit and you would be able to figure out the code part creating the component from the stack trace.
+
+Otherwise, it is possible to debug design-time behavior by debugging the IDE with another instance of the IDE, but I don't know how it can be done with D5.
+    
+    
+Title: Hadoop development environment, what yours looks like?
+Description: 
+    
+    
+                    
+I would like to know what yours Hadoop development environment looks like?
+Do you deploy jars to test cluster, or run jars in local mode?
+What IDE do you use and what plugins do you use?
+How do you deploy completed projects to be run on servers?
+What are you other recommendations about setting my own Hadoop development/test environment?
+    
+
+        
+Answer 1: 
+
+    
+    
+It's extremely common to see people writing java MR jobs in an IDE like Eclipse or IJ. Some even use plugins like Karamasphere's dev tools which are handy. As for testing, the normal process is to unit test business logic as you normally would. You can unit test some of the MR surrounding infrastructure using the MRUnit classes (see Hadoop's contrib). The next step is usually testing in the local job runner, but note there a number of caveats here: the distributed cache doesn't work in local mode, and you're singly threaded (so static variables are accessible in ways they won't be in production). The next step (and most common test environment) is pseudo-distributed mode - all daemons running, but on a single box. This is going to run code in different JVMs with multiple tasks in parallel and will reveal most developer errors.
+
+MR job jars are distributed to the client machine in different ways. Usually custom deployment processes are seen here. Some folks use tools like Capistrano or config management tools like Chef or Puppet to automate this.
+
+My personal development is usually done in Eclipse with Maven. I build jars using Maven's Assembly plugin (packages all dependencies in a single jar for easier deployment, but fatter jars). I regularly test using MRUnit and then pseudo-distributed mode. The local job runner isn't very useful in my experience. Deployment is almost always via a configuration management system. Testing can be automated with a CI server like Hudson.
+
+Hope this helps.
+    
+    
+Title: Portable PHP IDE / Editor
+Description: 
+    
+    
+                    
+There are a lot of IDE posts here but not for portable.
+
+Can anybody help me find a good portable PHP IDE? I am looking for this features:
+
+
+FTP &amp;&amp; SFTP Sitemanager   
+Syntax Highlighting  
+Auto-complete (Optional)  
+
+
+I am fine even with a paid version. I tried aptana on my usb but the experience was not good.
+    
+
+        
+Answer 1: 
+
+    
+    
+what about Code Lobster or Dev PHP ? they are both great editor with ftp managment, auto-complete, sintax highlighting and even debugging options, and yes, they are both portable.
+    
+    
+Answer 2: 
+
+    
+    
+Have you tried a portable gVim. It has a lots of plugins for ftp and sftp. I usualy use it with a portable WinScp together. About the autocomplete: I have it running under the desktop version, but i havent find a way to do that at a portable version. But I get used to snippets like in TextMate. Completion is fine, but I find this solution better.
+    
+    
+Answer 3: 
+
+    
+    
+Take a look at 
+
+http://phpanywhere.net/
+    
+    
+Answer 4: 
+
+    
+    
+You can use Coda for the Mac. It has FTP/SFTP/Syntax/Autocomplete
+    
+    
+Answer 5: 
+
+    
+    
+What kind of troubles did you have with Aptana?, because I've made a portable version of Aptana Studio 2 with the original PHP plugin and it works great. I've got instructions and a video on my blog if you want to have a look here
+Or else you could try Filezilla for FTP and Notepad++ for code editing, both these programs are free and can be put on to USB. But with Aptana you get the built in browser and server everything you need in the one package.
+    
+    
+Answer 6: 
+
+    
+    
+Check out JetBrains' "PhpStorm." I use the Mac OS X version and it's pretty nice! It's also reasonably priced at $99 per individual developer license and there is a 30 day free trial, so you can try it first.
+    
+    
+Answer 7: 
+
+    
+    
+Sublime Text2, Just $59 and very powerful editor for any language
+    
+    
+Title: Can I have Visual Studio IDE auto-comple brackets?
+Description: 
+    
+    
+                    
+Suppose I have a line of code that starts like the following:
+
+Func1(Func2(Func3
+
+
+Is it possible to set up Visual Studio (2005, 2008, 2010) IDE, so that when I hit ';' it will auto-complete all the brackets. I am only interested in brackets, nothing fancier. It doesn't have to be ';' key, it can be another key that auto-completes both brackets and ';'. This is a tiny thing that pops-up time and time again, and I've always wondered if I had to live with it.
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+Check CodeRush, or implement your own add-in...
+    
+    
+Answer 2: 
+
+    
+    
+You could also check out Resharper: http://www.jetbrains.com/resharper/
+Once you go Resharper, you can't go back. ;)
+    
+    
+Answer 3: 
+
+    
+    
+Also, Telerik has a product called JustCode that can do these sorts of things too.
+    
+    
+Title: How to use the &ldquo;Locals&rdquo; window in VBA IDE
+Description: 
+    
+    
+                    
+When I'm coding VBA in Access 2003, I keep the Immediate window visible and I use Debug.Print and Stop to solve my challenges.  But I've never known how to get help from the "Locals" window.  I understand what's in there for the most part.  But it usually seems like I'd have to dig around for the item I want, and it could take a while to find it in all those folded structures.  
+
+(And "Locals" doesn't bring up anything from the built-in VBA help files.  Maybe I'm missing a file ...)
+
+I bet I could start using Locals, if I knew what it's good for in a practical way.  Do do you have an explanation or anecdote that would clue me in?  
+    
+
+        
+Answer 1: 
+
+    
+    
+Locals provides a couple of benefits: You can F8 through the code and watch how a variable changes by looking at the locals window as opposed to issuing debug.print statements or hovering over the variables.  You can see the contents of an array a heck of a lot quicker than issuing lbound and ubound and a bunch of other statements to check values.  Not just arrays either, but any complex data structure such as a custom class module.
+    
+    
+Title: VS2008 Shortcut to Move Tabs across Tab Groups
+Description: 
+    
+    
+                    
+Is there a keyboard shortcut to move tabs from one tab group to another in Visual Studio 2008? If not, how do I create a macro/command to do it?
+    
+
+        
+Answer 1: 
+
+    
+    
+There isn't one by default but you can add one in Tools 
+Answer 2: 
+
+    
+    
+Or simply, you can use :
+
+
+Alt + W,x   
+Alt + W,r
+
+
+Often I find with menu entry keyboarding, if you get used to it, you will be able to use it on  other peoples computers without having to set key-bindings.
+    
+    
+Title: how to highlight user specified words in vscode
+Description: 
+    
+    
+                    
+I need to have my vscode highlight specific words so I can leave different notes in the code and easily see them when I need to, for example: Note: with the color green and DEBUG with color red and so on.
+    
+
+        
+Answer 1: 
+
+    
+    
+Download and install TODO Highlight  extension. After you download and install the extension, make sure you restart your VSCode. Now please follow the following steps in order to add custom keyword highlighting in your code.
+
+On windows hold down Ctrl + Shift and on mac Command + Shift,
+thenthe key press p.
+
+a command line opens up.
+
+On the command line type &quot;open    settings&quot; and click on
+&quot;Preferences: open settings&quot;.
+
+Settings window will open.
+
+under the &quot;search setting&quot; input on the right handside look for the
+three dots &quot;...&quot; and click on it.
+
+Click on &quot;Open settings.json&quot;.
+
+
+&quot;User Settings&quot; tab will open.
+It contains a split screen window. on the left side you see the defualt settings and on the right side you see the user settings
+
+in the &quot;search settings&quot; type &quot;todohighlight.keywords&quot;
+
+you will see &quot;todohighlight.keywords&quot;: [].
+
+Hover over it with your mouse
+
+a little pen will show up on its left side
+
+click on it
+
+you'll see a drop-down select menu opens.
+
+click on &quot;Replace in settings&quot;.
+
+you can now see &quot;todohighlight.keywords&quot;: [] in the right pannel window (USER SETTINGS).
+This is an array that contains json objects such as following:
+&quot;todohighlight.keywords&quot;: [
+    {
+        &quot;text&quot;: &quot;todo:&quot;,
+        &quot;color&quot;: &quot;#000000&quot;,
+        &quot;backgroundColor&quot;: &quot;DarkKhaki&quot;,
+        &quot;overviewRulerColor&quot;: &quot;DarkKhaki&quot;,
+        &quot;border&quot;: &quot;1px solid DarkKhaki&quot;,
+        &quot;borderRadius&quot;: &quot;3px&quot;,
+        &quot;isWholeLine&quot;: false
+    },
+    {
+        &quot;text&quot;: &quot;note:&quot;,
+        &quot;color&quot;: &quot;#000000&quot;,
+        &quot;backgroundColor&quot;: &quot;#72824E&quot;,
+        &quot;overviewRulerColor&quot;: &quot;#72824E&quot;,
+        &quot;border&quot;: &quot;1px solid #72824E&quot;,
+        &quot;borderRadius&quot;: &quot;3px&quot;,
+        &quot;isWholeLine&quot;: false
+    },
+    {
+        &quot;text&quot;: &quot;system.debug&quot;,
+        &quot;color&quot;: &quot;#000000&quot;,
+        &quot;backgroundColor&quot;: &quot;STEELBLUE&quot;,
+        &quot;overviewRulerColor&quot;: &quot;STEELBLUE&quot;,
+        &quot;border&quot;: &quot;1px solid STEELBLUE&quot;,
+        &quot;borderRadius&quot;: &quot;3px&quot;,
+        &quot;isWholeLine&quot;: false
+    },
+    {
+        &quot;text&quot;: &quot;|DEBUG|&quot;,
+        &quot;color&quot;: &quot;#000000&quot;,
+        &quot;backgroundColor&quot;: &quot;#72848A&quot;,
+        &quot;overviewRulerColor&quot;: &quot;#72848A&quot;,
+        &quot;border&quot;: &quot;1px solid #72848A&quot;,
+        &quot;borderRadius&quot;: &quot;3px&quot;,
+        &quot;isWholeLine&quot;: true
+    }
+]
+
+Iif you're not familiar with json notation copy the content of &quot;todohighligh.keywords&quot; from the sample above and past it to your &quot;user settings&quot; window in between the two [] brackets. you can change the values on the left side of : colon in between &quot;&quot; double quotes. if you would like to add more than two keywords simply add a comma after the last closing curly bracket } in your &quot;user settings&quot; and copy/past one json object (which is from one { open bracket to the first closing } bracket) and then change its content. you can add as many keywords as you'd like to.
+
+MAKE SURE YOU SAVE THE FILE by holding down Ctrl(windows) / command(mac) and press the key &quot;s&quot; or from the menu bar go to File -&gt;
+Save
+
+Edit It's been a while since I published this post. I've updated the sample for more detailed highlighting. Post your comments down below if you need clarifications. Cheers!🍻
+    
+    
+Title: PhpStorm - autoclose and autocomplete HTML tags without typing &ldquo;&lt;&rdquo; at the beginning
+Description: 
+    
+    
+                    
+So... I used Atom to this date and I wanted to try out PhpStorm and I have an issue with HTML tags.
+
+How PhpStorm does it:
+
+If you want to auto complete HTML tag, you have to type for eg. &lt;d than autocomplete menu appears, press enter -code/codecode/codecode/code/ppstrong/strong/ppcode/codecode/code/ppstrong/strong/ppcode/codecode/code/p/div
+Answer 1: 
+
+    
+    
+Just type div and hit Tab - PhpStorm will auto-generate &lt;div&gt;&lt;/div&gt;.
+.container+ Tab will result in &lt;div class="container"&gt;&lt;/div&gt;.
+
+Please refer to https://www.jetbrains.com/help/phpstorm/using-zen-coding-support.html for more information
+    
+    
+Title: Add a function template in PyCharm
+Description: 
+    
+    
+                    
+I am developing python code in pycharm
+
+I am looking to define a skeleton of function definition in python.
+
+What I am looking for is that each time I initiate a function definition, say:
+
+def func1(arg1,arg2):
+
+
+and press enter, it should automatically create the below skeleton for me to edit inside of it.
+
+def func1(arg1,arg2):
+    try:
+        return(1)
+    except Exception as e:
+        print(e)
+
+
+Is that possible in PyCharm?
+    
+
+        
+Answer 1: 
+
+    
+    
+Go to file &gt; settings
+
+Once an editor dialogue is opened, expand Editor and select Live Templates as shown in the image below.
+
+  
+
+Expand preferred option, in your case python here.
+
+Click on the green plus sign at top right corner and select Live Template  
+
+
+
+After that has been done define Abbreviation, Description, and Template Text as shown below.
+
+  
+
+You would see a warning just below Template Text, you will have to define the context where this template can be used.
+
+See below, select all that is applicable and click apply and ok.
+
+  
+
+Finally, try typing the Abbreviation wherever applicable and hit enter.
+
+
+
+you will see the template as below.  
+
+
+
+That's it. Cheers.
+    
+    
+Answer 2: 
+
+    
+    
+This is absolutely possible - PyCharm has a function called "Live Templates," which you can read more about here.  Based on what you're trying to do, the code you would want to define in your "Template text" would look like:
+
+def $name$(arg1,arg2):
+    try:
+        return(1)
+    except Exception as e:
+        print(e)
+        $END$
+
+
+You'll have edit your variables (or add more than just $name$ if you want to populate more than just the name) and then, whenever you type def, one of the options on the menu should be your predefined function stub.  
+
+The JetBrains documentation goes into more detail in how to do this, as well as troubleshooting things (make sure you define your context as "Python"), but this should be enough to get you up and running.  Hope this helps!
+    
+    
+Title: How to use snake case for file names and camel case for file names in CLion?
+Description: 
+    
+    
+                    
+When I create new class MyClass, CLion creates MyClass.h and MyClass.cpp, but I want my_class.h and my_class.cpp. And when I try to rename files it renames class to class my_class {}. How can I have class MyClass {} and my_class.h, my_class.cpp?
+    
+
+        
+Answer 1: 
+
+    
+    
+You have to write some Apache Velocity engine code to do that. Inside the CLion preferences you can adjust the file creation template settings (something like that, I don't have CLion open here to look it up) and write something like:
+
+#set( $CamelCaseName = "" )
+#set( $part = "" )
+#foreach($part in $NAME.split("-"))
+    #set( $CamelCaseName = "${CamelCaseName}$part.substring(0,1).toUpperCase()$part.substring(1).toLowerCase()" )
+#end
+
+    
+    
+Answer 2: 
+
+    
+    
+You can go to "Settings -
+Title: Android Studio - &ldquo;No analysis has been performed&rdquo;
+Description: 
+    
+    
+                    
+
+
+I'm having this weird problem.  Code analysis and errors are not showing within a particular file, but they work fine in other files.  The icon "OFF" appears where the green check-mark should be.
+
+I checked power save mode, it's disabled.
+
+How do I turn code analysis back on?
+    
+
+        
+Answer 1: 
+
+    
+    
+I solved the problem. Look in the lower-right corner of the window for the sad-policeman icon. It's for setting the &quot;Current Inspection Profile&quot;.
+
+    
+    
+Title: Killing processes in IntelliJ without confirming
+Description: 
+    
+    
+                    
+I am working on IntelliJ 14, and running a lot of processes of my code for many tests. When I want to close them all, I right click one of the processes' tab and 'close all'. The problem is, I need to confirm disconnecting each one of the processes in the window down here.
+Is there a way to close them all without needing to confirm each one of them? Couldn't find a decent solution.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The processes about which you are being asked to kill are actually running Java processes.  I don't know of a way to automatically terminate these processes from within IntelliJ, but here is a one line solution you can try from a terminal:
+
+kill $(ps aux | grep 'java' | awk '{print $2}')
+
+
+Keep in mind that this will kill any process which has Java in its name, so be aware of this.
+    
+    
+Answer 2: 
+
+    
+    
+Run below command 
+
+killall /snap/intellij-idea-ultimate/181/jbr/bin/java
+
+
+/snap/intellij-idea-ultimate/181/jbr/bin/java is the path for java running intellij and can be found using below command
+
+ps -eo command | grep java | awk '{ print $1 }'
+
+    
+    
+Answer 3: 
+
+    
+    
+The answer from Tim Biegeleisen is partial and could fail.
+
+Because ps aux | grep 'java' includes the grep command.
+
+Therefore if grep 'java' command appears in ps list before java command. The kill command will terminate the grep 'java' command.
+
+The better command is to insert the grep command into the awk command.
+
+kill $(ps -eo pid,args |awk '$2 ~ "java" {print $1}')
+
+
+You can replace "java" with "intellij" it will kill the intellij process.
+
+This is safer, because you might have other java processes running.
+    
+    
+Title: How do you create a simple Automation Extender for Visual Studio with UITypeEditor
+Description: 
+    
+    
+                    
+In Visual Studio when you select project or project items in the solution explorer there are times when you might want to add custom properties to the properties window(the window that pops up when you press F4). Also, to fill in the values of those properties I need to add a button to pop up a form so I can collect information from the user at design time.  
+
+What is the simplest implementation of this so I can get started?
+How would I create a user interface to collect the value some how by using UITypeEditAttribute?
+    
+
+        
+Answer 1: 
+
+    
+    
+This is the simplest implementation I could come up with. 
+
+Since this is an advanced topic, it is implied that you feel comfortable with completing all the steps before you start the implementation(these are all common programming tasks). 
+
+If anything is not clear enough just comment and I will try to simplify. Note that this is configured to create a custom property for a Visual C# file within visual studio. When you run or debug your visual studio package followed by clicking any .cs file, the custom property should show in the properties window. The comments provided are required instructions. 
+
+
+
+
+Create a Visual Studio package.
+Create an interface that implements the custom properties that you would like to add to the properties page. 
+Create a class that implements the custom property interface and decorate the custom property with attributes.
+Create class that implements IExtenderProvider interface and override GetExtender and CanExtend methods.
+Create a new class that inherits from UITypeEditor and override GetEditStyle and EditValue methods.
+
+
+Let's get started. 
+
+1. Create Package in visual studio. 
+
+Package.cs
+
+// ... 
+public sealed class ThePackage : Package
+{
+    private DTE2 Host;
+    private ObjectExtenders _extensionManager;
+    private MyExtenderProvider _extenderProvider;
+    protected override void Initialize()
+    {
+
+    Host = (DTE2)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SDTE));
+    _extenderProvider = new MyExtenderProvider();
+
+    _extenderProviderCookie = Host.ObjectExtenders.RegisterExtenderProvider(VSConstants.CATID.CSharpFileProperties_string,
+        "MyExtenderProvider", _extenderProvider);
+    }
+    protected override void Dispose(bool disposing)
+    {
+        Host.ObjectExtenders.UnregisterExtenderProvider(_extenderProviderCookie);
+        _extenderProvider = null;
+        base.Dispose(disposing);
+    }
+}
+
+
+2. Create class that implements your desired custom properties.
+
+[ComVisible(true)] // Important!
+public interface IMyDynamicExtender
+{
+    String NewProperty { get; set; }
+}
+
+
+3. Create a class that implements the custom property interface.
+
+[ComVisible(true)] // Important!
+public class NewPropertyExtender : IMyDynamicExtender, IDisposable
+{
+    // These attibutes supply the property with some information
+    // on how to display and which UITypeEditor to use.
+    [DisplayName("New Property")]
+    [Category("New")]
+    [Description("Specifies the new property")]
+    [Editor(typeof(CustomUiTypeEditor), typeof(UITypeEditor))]
+    public String NewProperty { get; set; }
+    private readonly IExtenderSite _extenderSite;
+    private readonly int _cookie;
+    private bool _disposed;
+
+    public NewPropertyExtender(IExtenderSite extenderSite, int cookie)
+    {
+        _extenderSite = extenderSite;
+        _cookie = cookie;
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        // take the instance off of the finalization queue.
+        GC.SuppressFinalize(this);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (_disposed) return;
+        if (disposing &amp;&amp; _cookie != 0)
+        {
+            _extenderSite.NotifyDelete(_cookie);
+        }
+        _disposed = true;
+    }
+}
+
+
+4. Create class that implements [IExtenderProvider] interface and override [GetExtender] and [CanExtend] methods.
+
+public class MyExtenderProvider : IExtenderProvider
+{
+    private IMyDynamicExtender _extender;
+    public object GetExtender(string extenderCatid, string extenderName,           
+         object extendeeObject, IExtenderSite extenderSite,
+        int cookie)
+    {
+        return _extender = CanExtend(extenderCatid, extenderName, extendeeObject) ?  
+            new NewPropertyExtender(extenderSite, cookie) : null;
+    }
+
+    public bool CanExtend(string extenderCatid, string extenderName, object extendeeObject)
+    {
+        // Some implementation will be here in the real world. 
+        return true;
+    }
+} 
+
+
+5. Create a new class that inherits from [UITypeEditor] and override [GetEditStyle] and [EditValue] methods.
+
+public class CustomUiTypeEditor : UITypeEditor
+{
+    public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
+    {
+        return UITypeEditorEditStyle.Modal;
+    }
+
+    public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
+    {
+        // Use the result of a dialog or something else here.
+        return "HELLO WORLD";
+    }
+}
+
+    
+    
+Title: Component editor doesn&#39;t immediately prompt for saving new property values
+Description: 
+    
+    
+                    
+I have a custom control which has a component editor (two different screens available through two different context menu items). In both these instances, when I change properties of the component it's editing, the IDE does not acknowledge that any changes have been made, and thus the "Save All" button in the Delphi IDE remains inactive (assuming it was inactive prior to changes).
+
+Although the property changes have clearly been applied on the design-time control, if I immediately run the project, the changes done from the component editor haven't been applied in runtime. I've had to make minor tweaks in the form designer / object inspector to trigger the "Save All" button to become enabled, so I can actually save the changes.
+
+Here's how I execute the context menu selection:
+
+TMyControlEditor descends from TDefaultEditor
+
+procedure TMyControlEditor.ExecuteVerb(Index: Integer);
+begin
+  case Index of
+    0: begin
+      ExecEditor;
+    end;
+    1: ...
+  end;
+end;
+
+procedure TMyControlEditor.ExecEditor;
+var
+  F: TfrmMyControlEditor;
+begin
+  F:= TfrmMyControlEditor.Create(TMyControl(Component));
+  try
+    case F.ShowModal of
+      mrOK: begin
+        F.SaveTo(TMyControl(Component));
+      end;
+    end;
+  finally
+    F.Free;
+  end;
+end;
+
+procedure TfrmMyControlEditor.SaveTo(ADst: TMyControl);
+begin
+  ADst.ThisProperty:= chkThisProperty.Checked;
+  ADst.ThatProperty:= txtThatProperty.Text;
+  ADst.Width:= seWidth.Value;
+  ADst.Height:= seHeight.Value;
+  ADst.Visible:= chkVisible.Checked;
+  ... set other properties ...
+end;
+
+
+This even happens with properties which I do not even reintroduce, such as Visible or Width. If I change any property from this property editor, it does immediately show me that change in the Object Inspector. However, the rest of the IDE doesn't acknowledge that anything has changed, and thus doesn't give me the option of saving my changes.
+
+How do I make the IDE acknowledge when changes have been made to my control's properties? 
+    
+
+        
+Answer 1: 
+
+    
+    
+The comments for the IComponentEditor interface in DesignIntf.pas have some advice:
+
+
+  Whenever the component modifies the component is must call Designer.Modified to inform the designer that the form has been modified.
+
+
+There are some typos, but the gist is clear: your component editor needs to call Designer.Modified.
+    
+    
+Title: How to make getter and setter methods in QT creator automatically [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        Auto-generate setters/getters with QTCreator?
+                            
+                                (4 answers)
+                            
+                    
+                Closed 6 years ago.
+        
+
+
+    
+
+I am wondering if there is any way in Qt creator IDE to Make the getter and setter function automatically if we ave already declared the variable .
+    
+
+        
+Answer 1: 
+
+    
+    
+If you are using Qt version 2.3.x above your should easily do it using following.
+
+Right click on your class member variable. You will see Refactor then Generate Getter and Setter member function
+    
+    
+Answer 2: 
+
+    
+    
+You can do it without your mouse. 
+
+Press Alt+Enter and select Create Getter and Setter Member Functions.
+    
+    
+Title: Is there a code snippet editor for Intellij Idea 13?
+Description: 
+    
+    
+                    
+Visual Studio has Snippet Designer extension available for creating and managing custom code snippets. Is there something like this extension for Intellij Idea 13, or a way to simply add custom code snippets?
+    
+
+        
+Answer 1: 
+
+    
+    
+There's no extension that I'm aware of (and I'm not familiar with Snippet Designer), but that functionality exists in IntelliJ Idea.
+
+Hit Preferences and start typing to find "Live Templates". Expand one of the existing ones to see some of the available functionality. You can set tab stops, cursor position, references to local variables. It's very handy.
+    
+    
+Title: How to disable AT&amp;T/enable Intel syntax in lazarus debug window?
+Description: 
+    
+    
+                    
+By default Lazarus shows x86/x64 assembly using the awful (horrible) AT&amp;T syntax. 
+
+How do I make it display the Intel syntax that sane people use?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Luckily there is an option.
+
+Goto tools-
+Title: How do I turn off the unlimited whitespace in IntelliJ 12? [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                Closed 7 years ago.
+        
+
+
+    
+
+
+  Possible Duplicate:
+  IntelliJ IDEA - caret behavior  
+
+
+
+
+Previous versions had 'Allow placement of caret after end of line' in Settings -
+Answer 1: 
+
+    
+    
+IDEA 12 has exactly the same setting:
+
+
+    
+    
+Title: 2-pane IDE for JavaScript/CoffeeScript?
+Description: 
+    
+    
+                    
+I am looking for a simple IDE that looks like the coffee2js website:
+
+
+2-pane - CoffeeScript on left, JavaScript on right - live preview
+Simple debugging feature - REPL, breakpoints, stepping
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Visual Studio has plugin Web Essentials that allow transparent compilation of CoffeeScript, so you can open compiled JS and split window vertically etc
+
+Sublime Text 2 has plugin for compiling CoffeeScript as well and also allow splitting screen on two windows.
+
+I personally love all three ( including Webstorm wrick answered about ) and use them depending on the project ( .NET stack in VS2012, other stuff in ST2 and WS ) 
+    
+    
+Answer 2: 
+
+    
+    
+The good old vim has a plugin to enable live preview 
+https://github.com/kchmck/vim-coffee-script if you're looking for a lightweight solution.
+
+:CoffeeCompile watch
+
+    
+    
+Answer 3: 
+
+    
+    
+Found one: Webstorm. Although its a more heavyweight ugly IDE than I would have imagined (looks like its a fork of IntelliJ)
+    
+    
+Answer 4: 
+
+    
+    
+For what it's worth, I've tried Komodo, Sublime, Aptana, and others. For front end, javascript-heavy web development, Webstorm is the best.
+
+As you say, @wrick, it has a live coffeescript preview option.
+
+It also (at least in the latest EAP) has SASS compilation and JSHint integration.
+    
+    
+Title: Java keywords not changing color in eclipse
+Description: 
+    
+    
+                    
+I just launched Eclipse and I am brand new to it.  None of my Java code is changing color for some reason code highlighting is off.  Why is this?  Thanks
+
+Note that I am using the latest version of Eclipse.
+
+EDIT: Ok, code highlighting is finally on after I restarted eclipse.  Thanks for the help.
+    
+
+        
+Answer 1: 
+
+    
+    
+Make certain that your file is indeed a Java file, i.e. has the .java extension. Also, you can check Eclipse -
+Answer 2: 
+
+    
+    
+I also had this problem. the fix for me was actually changing the "theme" in personal settings on my desktop to the default setting. I had it on the "High Contrast" theme and it was changing all the text in eclipse to black. When I looked at my preferences (as recommended above) I noticed colors were assigned to the text, but they were all black. Once I restored the default theme all the text coloring worked in eclipse. Hope that helps.
+    
+    
+Answer 3: 
+
+    
+    
+right click the file and make sure open with Java editor is checked and not for example the Text editor
+    
+    
+Answer 4: 
+
+    
+    
+Also you can check the "Outline" panel. If there is a warning link there mentioning "Scalability". You can go on Preferences 
+Title: In Selenium IDE, can I use wildcards with the type command?
+Description: 
+    
+    
+                    
+I am new to Selenium IDE, which has been tremendously helpful in my testing, but I have run into a snag.  I am trying to enter a fake credit card number in my company's testing environment (e-commerce company), but the XPath changes each time I go back to the page.  The path is below.  
+
+//*[@id="dwfrm_paymentinstruments_creditcards_newcreditcard_number_d0hnrobkriuu"]
+
+
+d0hnrobkriuu is what changes each time.  I tried the following alternatives - 
+
+//*[@id="dwfrm_paymentinstruments_creditcards_newcreditcard_number_*"]
+//*[@id="dwfrm_paymentinstruments_creditcards_newcreditcard_number_[a-zA-Z0-9]"]
+
+
+According to various selenium documentation I have found, those globbing techniques should work, but they're not.  Any help would be greatly appreciated.  
+    
+
+        
+Answer 1: 
+
+    
+    
+Not this way, no. But, using the XPath contains() function, you can do
+
+//*[contains(@id, "dwfrm_paymentinstruments_creditcards_newcreditcard_number_")]
+
+    
+    
+Title: Tools for Javascript animations
+Description: 
+    
+    
+                    
+Are there any editors or tools, similar to flash, which can generate animations in javascript ?
+    
+
+        
+Answer 1: 
+
+    
+    
+Simple animations can be done in jQuery. http://api.jquery.com/category/effects/
+
+jQuery Transit is a simple and effective tool for animations in JS. Its Open Source and available on GitHub : https://github.com/rstacruz/jquery.transit
+
+PS: I know you asked for a tool but I showed you a framework in jQuery Transit. But the framework is so easy that its faster to code in this than to use a tool :P
+    
+    
+Answer 2: 
+
+    
+    
+Sencha Animator. If you like Sencha (which I don't). It's commercially licensed,  though.
+
+Also, Apple Keynote can export it's magically animated goodness into HTML with CSS3 animations. Not open source of course.
+    
+    
+Answer 3: 
+
+    
+    
+I've heard of Edge but I've never personally tried it. You could give it a shot. Isn't open source, but it's made for HTML5, unlike Flash.
+    
+    
+Title: Visual Studio IDE - What is this icon?
+Description: 
+    
+    
+                    
+What does this symbol mean in my Visual Studio IDE? Not the green bar, I already know that is source code. The little button icon?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The little button is a bookmark.  There is a menu that you can add on the top of the screen that allows you to move through bookmarks.  It is another way to mark where you were in a piece of code.
+    
+    
+Title: Most efficient way to move an inline class, interface, or enum to it&#39;s own file in Visual Studio
+Description: 
+    
+    
+                    
+Sometimes when I'm developing I may prefer to quickly inline classes, interfaces and/or enums when I'm building a fresh design or from within a test fixture. However, I find it inconvenient to interrupt my thought process to create new code files, copy and paste the class/interface/enum written inline to the new file, and all the time it takes to navigate between them.
+
+I'm looking for an extension, macro, or hidden shortcut combo that will automatically create a file for the highlighted or selected inline class/interface/enum, and, if possible, copy the using list so that it can be built (but remove &amp; sort will clean it up later). 
+
+I'm open to extensions, macros, or hidden shortcut keys. Suggestions?
+
+Edit #1: ReSharper looks awesome, yes, and it appears to have exactly what I need, but I would like to find a free solution, if it exists, that didn't push me back $200. 
+
+Edit #2: After your helpful input, I'm pushing for my dev team to all run the ReSharper trial, and re-evaluate in a few weeks if the value-add is worth it. We want keep our extension use consistent, so I'm hoping we all find it equally worthwhile. 
+
+Example: I want to turn this (IExample.cs):
+
+using System.Linq;
+
+public interface IExample
+{
+}
+
+public class Example : IExample
+{
+}
+
+public enum ExampleType
+{
+}
+
+
+...into these:
+
+IExample.cs:
+
+using System.Linq;
+
+public interface IExample
+{
+}
+
+
+Example.cs
+
+using System.Linq;
+
+public class Example : IExample
+{
+}
+
+
+ExampleType.cs
+
+using System.Linq;
+
+public enum ExampleType
+{
+}
+
+    
+
+        
+Answer 1: 
+
+    
+    
+ReSharper offers the feature Move to another file to match type name, the ALT+Enter shortcut makes your work faster.
+    
+    
+Answer 2: 
+
+    
+    
+The built in refactoring tools do not have a simple way to extract a class to its own file, so the simplest thing to do if you do not have a refactoring tool like Resharper or Refactor! Pro that do have it is to:
+
+
+Copy the class to memory.
+Add a new file with the class name.
+Paste the class to the new file.
+
+    
+    
+Answer 3: 
+
+    
+    
+Devexpress Refactor!pro can be your solution....in example you posted, refactor! Pro shows a quick action menu at the bottom of the class name that you want to move.
+In this Actionmenu there s the "Move to file" option that' s all you need....
+    
+    
+Title: How did you find Visual Studio 11 Beta? 
+Description: 
+    
+    
+                    
+Visual Studio 11 Beta version is released recently. I'm to download and replace my VS2010, while i'm in the middle of some risky projects. How do you find it?
+There are many aspects that I wish I can ride of them by putting VS2010 away:
+
+
+Single Edmx diagram: It's very important to create separated (splitted) edmx files for large data models.
+Weak garbage collection and memory management: Installing some or many extensions ends to memory problems and exceptions.
+Weak modeling tools: one unanswered problem of mine is an example. Also, I couldn't check my layers references using layer diagram or other kind of available diagrams.
+
+
+There are many other points, that you and me faced with them.
+
+How's the VS 11 Beta? How did you find it? What are benefits and risks?
+    
+
+        
+Answer 1: 
+
+    
+    
+I wouldn't replace it. In fact, the user interface is a disaster and was the first thing to make me revolt and uninstall it after ten minutes of use. Now, a user interface doesn't stop me from doing work, sure, but this was so far from an improvement that I won't be touching it until Microsoft brings back some colour into the icons. Even then, the idea that mono-colour glyphs are easier for humans to perceive amongst a sea of other same-coloured glyphs on a background of the same colour is unfounded and unresearched. It seems more that were simply trying to "make it like the other stuff" without even doing any UX testing.
+
+Humans fundamentally evolved colour eyesight because it aids in perceiving our environment. Grass is green, fire is orange, sky is blue, scary monsters are gray and scaly. When users have ten or more years of visual 'muscle' memory behind them, removing colour, let alone shape and form (in the form of object based icons) is disorienting and plain stupid.
+
+No one ever complained that Visual Studio 2010 was too colourful and distracted them from their code, at least not in the way that the developers are complaining about the beta. If anything, it reinforces the structure of the IDE panel and toolbar layout by providing colour, shape and line cues in our peripheral vision.
+
+I could go on, but given the almost universally negative feedback on this issue, I'm not alone in my frustration.
+
+All the features in the world couldn't get me to use a UI like that, especially when I have a user interface as nice as Visual Studio 2010's. I had trouble separating the IDE into panels and objects. Which gray rectangle with gray shapes is the solution explorer. Which gray rectangle with gray shapes is the toolbox?
+    
+    
+Answer 2: 
+
+    
+    
+Well, visually, it is quite different. Really heavily inspired by WP7, and the expression blend suite. 
+I find it quite appealing visually speaking. It also seems more user friendly while installed out of the box (you can however import settings from your current VS installation, which I chose not to do)
+
+You get some pack of additionnal tools, and seem easier to access (at lest IMO). 
+
+Concerning extensions, we will have to wait and see, but most of the extensions I use are quite good, and dont crash inexpectedly, so I believe the extension developper is more at fault than Visual Studio itself :). 
+
+You should simply try it out to see, because you can install side by side with your current VS install, it should not interfer 
+    
+    
+Answer 3: 
+
+    
+    
+You can find Visual Studio 11 Beta here.
+
+I haven't used it to be honest, although your question implies you're going to replace VS2010 with the new Beta version - that's not a good idea! You should be able to download and install it alongside Visual Studio 11 until it's released properly.
+    
+    
+Title: How to install jVi plugin in jME3 SDK?
+Description: 
+    
+    
+                    
+I am trying to install jVi into jME3 SDK. When I attempt to manually add them from within the SDK (via tools-
+Answer 1: 
+
+    
+    
+Okay I just found the solution. When manually installing from the jVi zip file in jME3 SDK, you should only select the following modules:
+
+jVi Core
+jVi for NetBeans
+jVi Help
+NB-jVi-SPI
+
+Hope this helps anybody having the same problem!!
+    
+    
+Title: Make vim close syntactic construction for code block automatically
+Description: 
+    
+    
+                    
+Is there plug-in that makes vim close syntactic constructions that wraps code blocks automatically for any language based on data in indent and syntax files?
+
+For example I editing lua file, when I write
+
+function myfunction()
+
+
+and press enter it automatically make an closing "end"
+
+function myfunction()
+    &lt;cursor position&gt;
+end
+
+
+Or maybe anyone can show an example how to write your own plug-in for specific language with long keywords for code blocks (like lua, erlang or pascal) ?
+    
+
+        
+Answer 1: 
+
+    
+    
+Endwise seems to be what you're looking for. It already has lua support, and it looks like it would be pretty easy to extend, if you are comfortable with VimL.
+    
+    
+Answer 2: 
+
+    
+    
+I would use a snippet plugin like UltiSnips (my favorite) or Snipmate. They essentially expand some small word or piece of text into larger pieces of code and allow you to edit only the parts that are unique for each structure. Both UltiSnips and Snippmate include snippets for many languages and let you create your own snippets.
+
+For example UltiSnips inclueds a function snippet for Lua. I just have to type out fun and then press tab and it gets expanded to
+
+function new_function(args)
+
+end
+
+
+and new_fuctnion gets selected so I can edit the function name. Then once I press Ctrl-j (in my vimrc I rebind this to Tab) it selects the next part of the snippet which is args in this case allowing me to enter the function's arguments. A final Ctrl-j puts the cursor in the body of the function.
+    
+    
+Title: Eclipse on an Android Tablet?
+Description: 
+    
+    
+                    
+Note: Not sure if this is the right stack, please tell if I should migrate. (Linux Stack may be the appropriate location).
+
+I am really looking to buy an Android tablet and currently the only thing holding me back is, I want to develop on my device. Does anyone know if Eclipse can be installed on an Android tablet? If not is Eclipse working on a port?
+    
+
+        
+Answer 1: 
+
+    
+    
+And this is the best I've seen now
+
+https://play.google.com/store/apps/details?id=com.aide.ui&amp;hl=en
+    
+    
+Answer 2: 
+
+    
+    
+There is currently no Android port for Eclipse. Even if there was, you would still need the Java SDK to run on Android which is not possible (yet).
+    
+    
+Answer 3: 
+
+    
+    
+Its in early stages of development, but looks promising: java-ide-droid
+    
+    
+Answer 4: 
+
+    
+    
+Use SL4A to do scripting on android 
+
+or use Java IDE droid to create native Android applications. It has the Eclipse compiler by the way. 
+    
+    
+Answer 5: 
+
+    
+    
+You can use DroidDevelop. It is JavaIDEDroid-shell for more comfortable programing.
+
+http://en.assoft.ru/droiddevelop
+
+https://market.android.com/details?id=com.assoft.DroidDevelop
+    
+    
+Title: Can actions in TActionList be sorted in Delphi XE IDE?
+Description: 
+    
+    
+                    
+When the number of actions in DXE IDE grows, in a single actionlist, it quickly becomes hard to locate the action you want to inspect or change. 
+
+There is no search / filter box like there is for components, and actions are not automatically sorted. Sorting action declarations in code does not alter the order in which they are displayed in the actionlist editor. 
+
+Not even incremental search works: if you focus the actionlist pane and start typing, the keypresses go to the object inspector (and you inadvertently change some property or other). Major annoyance!
+
+Is there perhaps a hidden setting, a registry hack (there are quite a few for Delphi), or maybe a third-party extension that would keep actions sorted?
+    
+
+        
+Answer 1: 
+
+    
+    
+You could sort them in the dfm file. You would want to write a little utility script to do it.
+
+Or a workaround would be to use categories to make the list of actions more manageable.
+    
+    
+Answer 2: 
+
+    
+    
+Write a small IDE plugin that extends the context menu of a TActionList with a Sort option. For sorting the actionlist you can use this code:
+
+procedure SortActions(ActionList: TActionList);
+var
+  act: TContainedAction;
+  arr: TArray&lt;TContainedAction&gt;;
+  I: Integer;
+begin
+  SetLength(arr, ActionList.ActionCount);
+  for I := 0 to ActionList.ActionCount - 1 do begin
+    arr[I] := ActionList[I];
+  end;
+  TArray.Sort&lt;TContainedAction&gt;(arr,
+    TDelegatedComparer&lt;TContainedAction&gt;.Create(
+      function(const Left, Right: TContainedAction): Integer
+      begin
+        result := CompareText(Left.Name, Right.Name);
+      end));
+  for I := 0 to High(arr) do
+    arr[I].Index := I;
+end;
+
+    
+    
+Title: Add scala capabilities into an existing EJB eclipse project
+Description: 
+    
+    
+                    
+I have an existing EJB project set up in Eclipse Helios, and would like to slowly introduce Scala into the project. The Scala IDE has been installed successfully, and I'm able to create standalone scala project.  The issue however comes when trying to use my existing project with scala additions.  I've went as far as manually editing the .project, .classpath, and related files under .settings of the project's home directory for eclipse. 
+
+However I still have the issue where the Java compiler tries to compiles .scala classes, which results in errors and ultimately not being able to build the project. 
+
+Has anyone faced a similar scenario or are there any workarounds?
+
+Thanks in advance.
+    
+
+        
+Answer 1: 
+
+    
+    
+You should be able to right-click the project, go to "Scala" and click on "add scala nature". Then .scala files should be recognized as such. You might also have to add the scala library to your dependencies. Depending on whether this is a "simple" Eclipse project or you're using Maven there might be other steps required.
+    
+    
+Answer 2: 
+
+    
+    
+Right click on project, and choose Configure/Add Scala Nature.
+    
+    
+Title: Setting Unit Defaults?
+Description: 
+    
+    
+                    
+Not a programming question as such, but..
+
+..Is there a way from the Delphi IDE to define information that will be applied to newly created Units?
+
+For example, suppose I wanted each new Unit to add some commented information to the top, like so:
+
+
+
+I like to add such information to Units so that anyone else who may need access to it has some brief information. Obviously I am not expecting the IDE to fill in the Overview information.
+
+I noticed some OpenSource Components include the License Information at the top of Units, I assume they were just Copy and Pasted in there, but wouldnt it be handy if there was a way to Automate such IDE behaviour?
+
+Additionally, I have a few external Units added to my Library Path, which I add to the Uses Clause of a Form/Unit when needed. There is one paticular Unit I always find myself using, It would also be handy to Automatically include X Unit to the Uses Clause of New Units.
+
+Is there a trick to doing something like this, or should Copy and Paste be enough?
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+You'll have to stick to copy/paste.  If there was a slick way to do this then every single Delphi programmer on the planet would have used it to turn this
+
+type
+  TForm1 = class(TForm)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+
+into this
+
+type
+  TForm1 = class(TForm)
+  end;
+
+    
+    
+Answer 2: 
+
+    
+    
+You can consider using a Delphi live template too.
+    
+    
+Answer 3: 
+
+    
+    
+The closest you can get is to use GExperts or CNPack. These are great IDE enhancements and they can be used to paste configurable pieces of code using a simple hotkey. In GExperts this is called Code Librarian, CNPack has a similar feature. They contain a lot of other valuable tools so it might be worth to check these out.
+    
+    
+Answer 4: 
+
+    
+    
+Like Marjan already mentioned using an expert for a new custom unit, you can also make an IDE expert rewriting Delphi's default unit code for maximum customizability. But since this answer likely implies the most required work of all, I shall not go in detail or sample code. It's just a possibility.
+    
+    
+Title: Is there any HTML 5 &ldquo;Builder&rdquo;
+Description: 
+    
+    
+                    
+Or do you know of anyone working on one? I've been checking all the stuff you can do with HTML 5 here and some other sites and is amazing. I think such a big library should have some IDE with intellisense and easy documentation (like when you press F1 on Visual Studio while a symbol is highlighted) and all that stuff. And if there is not then I should probably start working on one :).
+    
+
+        
+Answer 1: 
+
+    
+    
+Most of known IDEs and their latest version, like Netbeans, Eclipse, Dreamweaver, support natively HTML5. You can find more info and pick one according to your preferences.  
+    
+    
+Answer 2: 
+
+    
+    
+There are numerous HTML 5 IDEs, it's important to not necessarily separate current web technologies with HTML5 as they are really are very close to being one and the same. For example, the latest version of Adobe's tool offer support for HTML5, as well as other IDEs such as Aptana. Unfortunately, the HTML5 spec is not done yet so there will be discrepancies between browsers, which a builder could work around, but will put a lot of onus on you. 
+
+Alternatively, there are numerous client and server-side frameworks that abstract HTML5 and some of its features, each of these have varying levels of support, a builder, and intellisense. For example, I'm a co-founder of the NOLOH development platform (http://www.noloh.com), which abstracts away browser differences and supports HTML5 transparently to you the developer, allowing you to concentrate on your application and functionality without worrying about the plumbing. We also have what's known as "code stubs" that you can add to any IDE most IDEs and get intellisense/auto-complete functionality. We also have a visual builder in the works that should be out relatively soon.
+
+Whatever you pick, just make sure you're comfortable with it, but you definitely don't want to re-invent the wheel here.
+    
+    
+Answer 3: 
+
+    
+    
+if you are looking for something that builds mobile sites or ads html5 builder, maybe you could try http://mobdis.com.
+    
+    
+Answer 4: 
+
+    
+    
+You should definitely try HTML5 Builder.
+    
+    
+Answer 5: 
+
+    
+    
+Try this, HTML5 Boilerplate
+    
+    
+Title: Coding PHP like asp.net - Is it possible?
+Description: 
+    
+    
+                    
+While I know PHP extremely well, I was wondering if there is any frameworks / GUI's out there that allow you to develop PHP in the manor that you can develop ASP.net sites?  Most important features would be the separation of behind the scene's coding from the actual web view itself. This means each page has it's own class generated behind the scenes and can auto detect when certain buttons are clicked. It would be ideal for all this to be handled by the framework so I don't have to do it all.
+
+Things like textbox1.text would be amazing, but I have no expectations of that.  Getting from the $_POST is ok.
+
+Other key features I'd like is the ability to create classes with namespaces and #regions so i can easily access / see only what I want at a specific time.  A Data Access Layer object like .net would also be amazing so my SQL could stay clear and in an object form.
+
+Again I am being very optimistic in asking if anyone knows of a setup like this, but figure it's worth asking as I have to develop a rather large PHP project and development time decreases 10 fold due to the usability of even Netbeans compared to ASP.net / Visual Studio.
+
+I appreciate any input
+    
+
+        
+Answer 1: 
+
+    
+    
+The closest PHP framework I have seen is Prado.
+
+
+  PRADO is a component-based and event-driven framework for rapid Web programming in PHP 5. PRADO reconceptualizes Web application development in terms of components, events and properties instead of procedures, URLs and query parameters.
+
+
+I haven't looked at it in years though and the old site says they have a new framework, but I'm not sure if it uses the same style.
+    
+    
+Answer 2: 
+
+    
+    
+What you're looking for is a PHP framework with an MVC architecture. There are a lot of those out there, so take your pick. It won't work exactly like .NET since it's a different technology, but you should definitely use a properly structured framework for any serious project.
+    
+    

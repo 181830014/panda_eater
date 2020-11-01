@@ -1,0 +1,3083 @@
+Title: How to add Go support to Geany
+Description: 
+    
+    
+                    
+I am trying to make syntax hightlighting and building options work for Geany, any advice?
+    
+
+        
+Answer 1: 
+
+    
+    
+Look in $GOROOT/misc and http://go-lang.cat-v.org/text-editors/ for syntax files from other editors to get an idea.
+
+Barring that, start with C or C++ and add/substract things like go, &lt;-, func, etc.
+    
+    
+Answer 2: 
+
+    
+    
+I just noticed this page: http://go-lang.cat-v.org/text-editors/geany/
+
+Seems like they've got everything you need right there.
+    
+    
+Answer 3: 
+
+    
+    
+Here is the Geany formatting Instructions posted by Steve Horsley to golang-nuts: 
+
+
+In Geany, goto Tools-
+Answer 4: 
+
+    
+    
+Have you defined the Go filetype in ~/.config/geany/filetype_extensions.conf ?
+
+[Extensions]
+...
+Go=*.go
+...
+
+
+if the conf file doesn't yet exist, copy it from /usr/share/geany and add that line under 'Extensions' (or look for it under Tools /p/div
+Answer 5: 
+
+    
+    
+I made a Python script that automates the directions in the link provided by Jaybill McCarthy.
+
+import shutil, re, os
+
+HOME = os.environ['HOME']
+
+shutil.copy('/usr/share/geany/filetype_extensions.conf', HOME +'/.config/geany/')
+with open(HOME + '/.config/geany/filetype_extensions.conf', 'r') as f:
+    fileData = f.read()
+fileData = re.sub(r'Haskell=.*;', r'Go=*.go;\nHaskell=*.hs;*.lhs;', fileData)
+fileData = re.compile('(\[Groups\][^\[]Programming=.*?$)', re.DOTALL|re.MULTILINE).sub(r'\1Go;', fileData)
+with open(HOME + '/.config/geany/filetype_extensions.conf', 'w') as f:
+    f.write(fileData)
+
+
+textSettings = """[settings]
+extension=go
+lexer_filetype=C
+comment_single=//
+comment_open=/*
+comment_close=*/
+comment_use_indent=true
+"""
+textKeywords = """[keywords]
+primary=break case chan const continue default defer else fallthrough for func go goto if import interface map package range return select struct switch type var
+secondary=byte int int8 int16 int32 int64 uint uint8 uint16 uint32 uint64 float32 float64 complex64 complex128 uintptr string"""
+
+shutil.copy('/usr/share/geany/filetypes.c', HOME + '/.config/geany/filedefs/filetypes.Go.conf')
+with open(HOME + '/.config/geany/filedefs/filetypes.Go.conf', 'r') as f:
+    fileData = f.read()
+fileData = re.compile(r'\[settings\].*?^\[', re.DOTALL|re.MULTILINE).sub('%s\n\n[' %textSettings, fileData)
+fileData = re.compile(r'\[keywords\].*?^\[', re.DOTALL|re.MULTILINE).sub('%s\n\n[' %textKeywords, fileData)
+with open(HOME + '/.config/geany/filedefs/filetypes.Go.conf', 'w') as f:
+    f.write(fileData)
+
+print "Complete!"
+
+
+I'm not sure if this means I am lazy, or the other way around... o.O.
+    
+    
+Title: PHP IDE with vi key bindings
+Description: 
+    
+    
+                    
+At the moment I'm using eclipse with viplugin. I also know about netbeans and its vi plugin.
+I find both of these IDEs don't really fit my tastes though. Too slow, bad remote editing support. I don't really have time at the moment to set up and try a vim based ide either.
+
+So, what other PHP IDE is available that supports vi key bindings? I'm willing to pay for a commercial one if necessary.
+    
+
+        
+Answer 1: 
+
+    
+    
+I personnaly use netbeans with jvi plugin. The vi emulation of this vi plugin is near perfect, plus you get the very good (and fast growing) Netbeans Ide.
+    
+    
+Answer 2: 
+
+    
+    
+I too would be curious as to why VIM is not an option for you.  If you have reason to rule it out, that's fair enough - but if not then I'd encourage you to think again about it.
+
+I am a PHP programmer and I currently use VIM as my IDE.
+
+
+Fast (very!)
+VI key bindings come standard, no setting up necessary
+Various options for remote file editing
+
+
+And yeah you still get the omni-completion, file explorer, smart auto-indenting, it's cross platform, etc etc.
+    
+    
+Answer 3: 
+
+    
+    
+I believe that PHPStorm (paid) from JetBrains has a plugin that will make the editor simulate Vim.
+The IDE is build on a common base for many of JetBrain's IDEs like IntelliJ IDEA, WebStorm, PyCharm, RubyMine and plugins are shared between them.
+
+Also I would expect the IDE to be pretty good as I have some of their products and I'm very happy with them (JetBrains make good stuff).
+I'm not doing PHP anymore so can't speak about the PHPStorm itself, but I'd recommend you give it a try if you can afford it.
+
+http://www.jetbrains.com/phpstorm/
+
+http://plugins.intellij.net/plugin/?webide&amp;id=164
+    
+    
+Answer 4: 
+
+    
+    
+Check out Komodo Edit (free) from ActiveState. There is also Komodo IDE but that's about $250. It supports a bunch of dynamic languages (JavaScript, Perl, PHP, Python, etc) and has Vi and Emacs key-bindings.
+    
+    
+Answer 5: 
+
+    
+    
+Visual Studio has a vi emulator (http://www.viemu.com) available for it.
+
+I'm not sure how well Visual Studio works as an IDE for PHP though.  But it's a good IDE in general.
+    
+    
+Answer 6: 
+
+    
+    
+You could try vimmate. I am going to today.
+    
+    
+Title: Haskell Interactive
+Description: 
+    
+    
+                    
+I am a bit rusty on my Haskell and am looking to ramp back up. One thing I enjoy from F# is the F# Interactive shell integrated with Visual Studio: I can evaluate virtually anything (including function and class definitions) and use F# as a shell. Is there an equivalent in Haskell? When I use ghci, I cannot evaluate function definitions. How do you work around that?
+
+My current preferred setting is using Emacs with haskell-mode and opening an interactive ghi interpreter. However, is there a way to evaluate just region of a file?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can define a function using 'let':
+
+$ ghci
+Prelude&gt; let double n = n + n
+Prelude&gt; double 42
+84
+
+
+Also, I won't quite recommend this, since (A) I wrote it, and (B) it's terribly undeveloped, but Halp can be handy in Emacs -- it's a little bit like a spreadsheet for Haskell code integrated right into your source-code buffer. You can have a set of expressions you're interested in and with one keystroke see how all their values change depending on your edits  since the last reevaluation.
+    
+    
+Answer 2: 
+
+    
+    
+As you've observed, GHCi is fairly limited in what it can do --- short functions or expressions are about all that's easy at the command line.  For the rest I find myself loading modules.  One of the difficulties is that Haskell does not have definition before use so it is often hard to pull a meaningful fragment out of a file.  I generally find myself defining small modules and loading and reloading them.  The interactive experience is definitely not as nice as one might like.
+    
+    
+Answer 3: 
+
+    
+    
+Haskell mode for Emacs provide functions for work with intepreter. So if you want to run some function from the module that you edit, you can use C-c C-l to load current module to ghci (or another haskell interactive) and switch to buffer with interactive and execute some commands there
+    
+    
+Answer 4: 
+
+    
+    
+ghci provides some special syntax for doing things like that. Use let for function definitions. However, it's noted on the GHC FAQ that it can be tricky with complex functions and generally loading from a file is preferred. If you use something like Emacs that allows for easy integration between your source file and a ghci process, it becomes a non-issue because you can load your definitions into the interpreter with a keystroke.
+    
+    
+Answer 5: 
+
+    
+    
+With O'Caml and F#, definitions proceed from the top of the file down. However, in Haskell, a type or function defined earlier in a file can reference a type or function later in that file. So in Haskell, a module needs to be compiled all at once. An interactive loop is incompatible with compilation all-at-once.
+    
+    
+Answer 6: 
+
+    
+    
+Flymake combined with Emacs Haskell Mode 2.8 works very well and you get an immediate response of the type checker. In my eyes this is more interactive.
+    
+    
+Title: Netbeans IDE Project Window not visible
+Description: 
+    
+    
+                    
+The project window within Netbeans IDE is not being displayed. I tried bunch of different things, but the Project window does not open at all.
+
+Things I already tried:
+
+
+Tried with multiple version of Netbeans and JDE, currently using Netbeans IDE 8.2 on MAC.
+Tried to reset windows using Reset Windows, cmd 1, open existing project,
+create new project. But still the project window does not open within
+Netbeans IDE.
+
+
+I made a clean install on MAC with different version of Netbeans, but the issue remains in all. Any suggestion would be helpful.  
+    
+
+        
+Answer 1: 
+
+    
+    
+Have you tried running it with java 8? If you're using java 9 or 10, you don't get a Projects window because NB 8.2 isn't compatible with them.
+
+There's more info at How can I install Netbeans with JDK 10.
+    
+    
+Answer 2: 
+
+    
+    
+This is a known issue in Netbeans 8.2. It happened to me when I upgraded my Ubuntu from 16.04 to 18.04. The root cause is that the java version was upgraded to 11 along with the OS.
+
+You can fix this by doing one of the following:
+
+
+Change the default jdk/jre version in the OS to java 8.
+Change the jdk version to 8 in Netbeans by changing its configuration (etc/netbeans.conf). The configuration name is netbeans_jdkhome
+
+    
+    
+Answer 3: 
+
+    
+    
+like @rocko say, (I don't have 'add comment' right yet, so answer this frame )
+I encounter same problem in NB 12.0 .
+DEAL)   ...my action
+I changed JDK1.8 → JDK 11 setting in netbeans/etc/netbeans.conf
+After launch NB,  then open new project.
+Project tree appeared and usable again.
+#netbeans_jdkhome=&quot;C:\xxx\jdk1.8.0_242&quot;
+netbeans_jdkhome=&quot;C:\xxx\jdk11.0.3_7&quot;
+
+Environment
+
+win10
+corretto
+
+    
+    
+Title: IDE and Assembler for 8086/88
+Description: 
+    
+    
+                    
+I want to learn how to programming with assembly language for 8086/88 processor, but I couldn't find any IDE and assembler for this reason.
+    
+
+        
+Answer 1: 
+
+    
+    
+I generally use nasm (see here) and gdb for any assembler-related development nowadays. I used to use a86 and d86 but they suffer from the problems that:
+
+
+they cost money so, in terms of bang per buck, nasm is infinitely better, literally so, since the buck denominator is zero :-)
+they run only under Windows.
+they don't support the latest chips.
+
+
+I'm not too fussed about an IDE since I use Vim for editing, along with makefiles or cmd files for assembling it all.
+    
+    
+Answer 2: 
+
+    
+    
+I suggest emu8086. It has got IDE too, and it has some good example of assembly programming language.
+    
+    
+Answer 3: 
+
+    
+    
+For Windows (almost any version) I recommend EasyCode from Ramon Sala. It has an integrated visual IDE to create your apps and plenty of manuals from the creator's own hand. I spent some time flirting with the -also- very good Radasm but EasyCode is still developed as for 2012 with bug fixes and the like.
+    
+    
+Answer 4: 
+
+    
+    
+Well, I choose the assembler based on the platform; Its plain old Vim editing + nasm if Im on linux, I choose masm32 if Im on windows. If you are doing asm programming on windows, masm32 is an option you might want to look into. You also get an MASM32 editor(i think its named wrongly, its the closest I have seen to an IDE, for assembly).
+    
+    
+Answer 5: 
+
+    
+    
+The Best IDE and Assembler for 8086/88 is TASM (Turbo Assembler) &amp; MASM (Microsoft Assembler)
+    
+    
+Title: Python IDE for teaching?
+Description: 
+    
+    
+                    
+I am a student in a year 11 Computer Science class. Previously having taught only Visual Basic, my teacher is looking for a language and IDE to teach the class with that is cross-platform and is easy to learn, so I suggested Python to him for the language.
+
+However, he would also like to teach with an IDE with it that includes a form builder in addition to the typical functions of an IDE (editor, project management, code completion, debugging, etc.). Having only ever developed with a text editor (usually nano) and a relevant compiler, I know next to nothing about IDEs and what would be good to use.
+
+I've also realised that Python has bindings for a multitude of graphical toolkits, of which one is probably chosen for use 'behind-the-scenes' in each IDE's form builder, so that is certainly another thing to consider.
+
+Could anyone suggest a free, open source IDE for Python that would fit my class' needs, and would be able to run on Windows, Mac OS X and Linux-based operating systems at least?
+
+For those who recommend that plain console programming is the best start for beginners, I agree! If I were the teacher, I'd direct my students straight over to the Python console that is already installed on the computers and start teaching some programming not tainted by the issues of GUI programming. However, I would still like to find an IDE for him in case he says that he has to follow the curriculum strictly and needs to teach GUI programming with an IDE/form builder.
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  PyDev is a Python IDE for Eclipse,
+  which may be used in Python, Jython
+  and IronPython development.
+
+
+Reference: PyDev
+
+Also you can use PySide  - it includes GUI programming
+
+Update:
+
+So, as I searched around, I found some Python IDEs with integrated gui builder,  such as:
+
+Visual Tkinter Python IDE
+
+Monkey Studio
+
+and other ones (please look at the bottom of the page at the section: IDEs with integrated gui builder)
+
+Update 2:
+
+I lately started using PyCharm and I can tell it is very complex IDE and has a lot of features (I was very familiar with the interface of the IDE, since I use for Java development IntelliJ IDEA which is basically from the same company), so I would recommend to anyone to use it.
+
+For more related to Python IDEs, please look at this question. It covers in detail almost each Python IDE for its important features: What IDE to use for Python?
+    
+    
+Answer 2: 
+
+    
+    
+You have to try PyScripter:
+
+
+Fast IDE
+Very small memory foot-print
+Intuitive interface
+Supports code-completion and remote-debugging
+Free &amp; it's open-source!
+
+    
+    
+Answer 3: 
+
+    
+    
+Wing IDE 101 is free scaled down Python IDE designed for use in teaching introductory programming classes. It omits many features found in Wing IDE Professional and makes simplifications appropriate for beginners.The OS X version requires an X11 Server.
+    
+    
+Answer 4: 
+
+    
+    
+How about PyCharm? Classroom licence is free, and includes key, that can be used on countless PyCharm installations, so students can take it home as well (But it's not open-source).
+
+And as for GUI - Glade.
+    
+    
+Answer 5: 
+
+    
+    
+First of all, to get started with a new programming language console programs are much easier since you don't have to work with a - usually more or less complicated - GUI toolkit.
+
+Then a nice text editor like GVim is usually enough for python - however, I'd never use something like nano that doesn't even have syntax highlighting.
+    
+    
+Answer 6: 
+
+    
+    
+Well maybe he would consider a web based IDE? 
+
+A good example that comes to mind would be Koding. You get all the features of a normal local IDE but with a certain twist. You get real time code collaboration perfect for teaching a class. It comes with Python preinstalled and whole lot more stuff.
+
+Worth a shoot.
+    
+    
+Answer 7: 
+
+    
+    
+emacs Python Mode might be a good , can be a bit confusing at the beginning but eventually you will like it :)
+
+But if you really want a IDE with a GUI Eric might be a nice one
+
+Eclipse and Netbeans as well supports for Python..
+
+Happy Coding :) 
+    
+    
+Answer 8: 
+
+    
+    
+I would recommend IDLE. It is pretty basic but still features a debugger, syntax highlighting and is cross-platform.
+    
+    
+Answer 9: 
+
+    
+    
+Aptana Studio IDE + wxGlade GUI builder
+    
+    
+Answer 10: 
+
+    
+    
+PyCharm (as well as now being free and open source for the community edition), now has an Education Edition as well. Best I've come across.
+    
+    
+Answer 11: 
+
+    
+    
+I'd suggest IDLE. It was my first IDE for Python and it worked great for me as a fellow year 11 computing student. The language itself is quite easy to get to grips with and IDLE uses colours to clearly identify conditionals, variables and syntax errors. The shell diagnoses syntax errors well and is quite easy to understand even of itself. Although I disliked the language the IDE was a great starting point for programming. Unfortunately I don't know about the compatibility, it worked great on Windows, even on my low powered machine but I never tried it on Mac or Linux. And it's free, so who cares?
+    
+    
+Answer 12: 
+
+    
+    
+Im late to the party but i don't see anyone suggesting 
+
+https://thonny.org/
+
+Which for beginners is the best one.
+
+Regards
+    
+    
+Answer 13: 
+
+    
+    
+try working with these editors from start. will be beneficial afterwords.
+emacs
+kate - linux
+eclipse  
+    
+    
+Title: phpstorm next-line braces
+Description: 
+    
+    
+                    
+I recently started using PHPStorm. Now I have a simple question but I cant find the answer.
+
+So, I want that the braces of funtions, classes etc. go automatically in the next line, like:
+
+function xyz(){  
+}  
+
+
+will be  
+
+function xyz()  
+{  
+}  
+
+
+without pressing CTRL + ALT + L all the time. Is there a way to do it?
+I appreciate any answers.
+    
+
+        
+Answer 1: 
+
+    
+    
+You probably want the setting (this is the way to get there on OSX at least):
+
+
+Preferences 
+Title: Standalone c++ compiler
+Description: 
+    
+    
+                    
+I would like a standalone C++ compiler that doesn't need installing. Something that can run from a directory or from a USB key. 
+
+I have googled it, but I can't really find exactly what I am looking for. It doesn't matter if it is just a command line compiler or if is an IDE. I would appreciate a link to the page where I can actually download the file that I need.
+
+Since I am still new to C++, just to make sure that you all understand what I am looking for: I would like a program so that I can run that program on a source file (.cpp) and produce and executable. 
+
+I am on 64 bit Windows 7.
+
+EDIT: Just to be clear. I would prefer if I could simply just download a zip-file (or something like that) and unzip it into a directory on the computer and then boom it works.
+    
+
+        
+Answer 1: 
+
+    
+    
+I recommend STL's MinGW distro, which is xcopyable and includes the latest GCC (currently, GCC 4.7).
+    
+    
+Answer 2: 
+
+    
+    
+SO user rubenv has some distributions of Mingw-w64:
+
+For gcc 4.7.0. Grab one with win64 in the filename.
+
+He also had clang somewhere, but I can only find the 32-bit windows version right now.
+
+Just download and unzip the file. You will have to update your PATH manually though.
+However, no boost like STL's distro.
+    
+    
+Title: Eclipse &amp; other Java IDEs for debugging concurrent code
+Description: 
+    
+    
+                    
+I'm currently working on some concurrent code that would appear to have a few race conditions in it. I'm attempting to debug the code using my current IDE, Eclipse, but I'm not completely satisfied. In particular, a race condition is present for a variable such that without a break point on one of the methods accessing it (the one 'getting' it), the variable setting method does not complete, and the variable is set to null. However, if I put a break point on the accessing method, and hold F8--the default step over button--the variable is almost always set to the correct (non-null) value.
+
+This leads me to ask the following: is it possible that Eclipse doesn't pause execution on the breakpoint across all threads quickly enough that I can look at the potential race condition as it appears without a break point, or is something else (probably) happening?
+
+If it is the case that Eclipse doesn't pause execution quickly, are there other IDEs/debuggers for Java that may do a better job of this? Note that I'm not looking for formal verification tools like Java Pathfinder--I don't want to check if race conditions are present, I want to see them unfold in my debugger (if only because it might be interesting to watch).
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  This leads me to ask the following: is it possible that Eclipse doesn't pause execution on the breakpoint across all threads quickly enough that I can look at the potential race condition as it appears without a break point, or is something else (probably) happening?
+
+
+Well, not only this, but the very presence of the debugger alters the environment in such a way that you are not reproducing the identical situations you get when running your program for real. Eclipse will pause some threads when they hit your breakpoint, but other threads that don't hit the breakpoint can keep running and continue to alter your data.
+
+Troubleshooting race conditions with a debugger is pretty hard - not only are you looking for a needle in a haystack but the debugger alters the structure of the haystack.
+
+You are possibly much better off being able to reason about the code and the strategies you take for handling concurrent code. For example, are you protected shared state with locks? How/what are you synchronizing on? To be able to write to variable foo, what steps do threads have to go through?
+    
+    
+Answer 2: 
+
+    
+    
+By default, Eclipse will not suspend other threads if your break point is reached by one thread. However, you can change this behaviour in Window &gt; Preferences &gt; Java &gt; Debug &gt; Default suspend policy for new breakpoints =code/code/p/div
+Answer 3: 
+
+    
+    
+Remember that accessing/setting variable is not guaranteed to be done in one step. You probably want to use atomic object to be sure. 
+
+And also remember that the variable value may be cached. To make sure it is not cached, use volatile.
+
+And if you forgot, you can set the breakpoint for variable. Just click the left side of the variable declaration like when you create a normal breakpoint.
+    
+    
+Title: php project through ftp (Netbeans, Eclipse or any free IDE)
+Description: 
+    
+    
+                    
+I am new to Netbeans. Is it possible to work directly on the server files through  sftp to avoid downloading/uploading each time. Will the intelisense  work the same ?
+
+If it is possible I can't find how to do that or what plug-in i need to use. And if it isn't what other free php IDE offers this option ?
+    
+
+        
+Answer 1: 
+
+    
+    
+So.
+
+With Netbeans
+
+To work directly through ftp/sftp on Netbeans 6.8
+
+
+Open a new project and select "Php application from remote server"
+It stills need a local storage for the files so that you can work on them so you need to specify a project name and it's local folder
+Next step is the remote configuration: Click on the "Manage" button to add a new connection by giving it a name and selecting sftp or ftp. Then enter the connection configuration with the initial directory
+Back on the remote configuration screen the upload directory must be the same as the "initial directory"
+On the next screen you can retrieve all the project's sources
+
+
+Once done each time you will save a file it will be automatically uploaded to the server. If not go in the project properties and check "Upload Files" is on "OnSave" mode in the "Run configuration" section.
+
+PS:
+I had problems with a "The authenticity of ... can't be established. RSA fingerkey is..." warning that kept appearing each time I saved. If so just create an empty and writable known_host file and point to it in the "Known host files" property of your remote connection, then restart Netbeans (seen on netbeans forum)
+
+Edit: At this stage the behaviour still isn't quite what I am expecting since when you open a file netbeans will open the local copy and overwrite the remote copy when you save.
+
+Edit2: Apparently you can not open the file directly from the server in Netbeans. You'll have to download the file before modifying it.
+
+General solution
+
+One workaround is to use an utility that will map the remote storage as a local drive. I know Fuse does it for Mac &amp; Linux. I haven't found one for Windows yet.
+    
+    
+Answer 2: 
+
+    
+    
+Looks like NetBeans added it a few minor versions ago: http://blogs.oracle.com/netbeansphp/entry/sftp_support_added.
+
+Just confirmed that this support is in the 6.8 version I have running.
+
+The intelisense will work the same as long as you have all of the completable objects within your project scope, it won't pull libraries still on the server.  Download a local copy of any 3rd party libraries your project may need and add them to your project's include path to get full code completion.
+    
+    
+Title: Is there a decent browser-based javascript self-editor?
+Description: 
+    
+    
+                    
+Is there a decent browser-based javascript self-editor?
+
+It is obvious one can make a quick js editor with a page containing a form textarea, some buttons and callbacks.  I'm wondering if someone has taken that as a beginning and ran with it.
+
+The javascript to be edited could be defined in a global string or it could be a served .js 
+
+The ideal editor would show a pretty version inside a browser window and provide some kind of development environment for editing the script.  
+
+It is understood that user-written scripts would only exist inside the browser and could not be saved without some additional server-side functionality.  The ideal package would discuss and explore this.... but I'd settle for anything that just lets the user make their own simple changes to 100-200 line scripts. 
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm not sure exactly what you're asking for, but does jsbin satisfy your needs?
+    
+    
+Answer 2: 
+
+    
+    
+The hard part of what it sounds like you want to do is going to be parsing the javascript so that you can do intelligent things with it. The CodeMirror library can help you develop something to put on a page.
+
+UPDATE:
+
+Etherpad isn't around anymore but Ace is really nice. It's got a long history and is the engine used by the Cloud9 IDE
+    
+    
+Answer 3: 
+
+    
+    
+There is
+
+
+http://sourceforge.net/projects/codepress
+http://www.cdolivet.com/index.php?page=editArea&amp;sess=4b049cee4477f0820c82231b09e80a91
+http://marijn.haverbeke.nl/codemirror/
+
+    
+    
+Answer 4: 
+
+    
+    
+Do also check out Bespin.
+    
+    
+Answer 5: 
+
+    
+    
+There are also integrated solutions which, in addition to browser-based online editing of JavaScript code, do other things for you, like running the JS code in the browser or hosting it for you.
+
+If you're interested in those, try Erbix.com.
+    
+    
+Answer 6: 
+
+    
+    
+coderun
+    
+    
+Title: Is there a functionality like Sublime&#39;s &ldquo;HTML: Encode Special Characters&rdquo; in Intellij IDEA
+Description: 
+    
+    
+                    
+I'm looking something like the functionality given in Sublime Text by the shortcut (windows) Ctrl + Shift + P named "HTML:  Encode Special Characters" but in IntelliJ IDEA. This functionality is able to transform this (as a example):
+
+I'm a special character phrase "áéíóú ñ"
+
+
+Into this:
+
+I'm a special character phrase &amp;quot;&amp;aacute;&amp;eacute;&amp;iacute;&amp;oacute;&amp;uacute; &amp;ntilde;&amp;quot;
+
+
+Only by surrounding the specified text and pressing the shortcut key combination given above (again, in windows Ctrl + Shift + P).
+
+Any thoughts?
+
+UPDATE (07-04-2016)
+
+By now, Intellij Idea support this feature natively (version 2016). You need to select the text you want to transform and (in OSX) Cmd+Shift+A and type "Encode" then select the action "Encode XML/HTML Special Characters"
+
+
+
+The only caveats are that this only works (to my knowledge) in html strings.
+    
+
+        
+Answer 1: 
+
+    
+    
+It is not supported by IntelliJ directly, but a plugin called String Manipulation can help
+
+From the plugin page:
+
+
+  Provide actions for text manipulation:
+  
+  
+  Un/Escape selected Java text
+  Un/Escape selected JavaScript text
+  Un/Escape selected HTML text
+  Un/Escape selected XML text
+  Un/Escape selected SQL text
+  Un/Escape selected PHP text
+  Trim selected text
+  Trim all spaces in selected text
+  Remove all spaces in selected text
+  De/Encode selected text as URL
+  Convert selected text to Camel Case
+  Convert selected text to Constant Case
+  Capitalize selected text
+  Encode selected text to MD5 Hex16
+  De/Encode selected text to Base64
+  Remove empty lines
+  Convert non ASCII to escaped Unicode
+  Convert escaped Unicode to String
+  Grep selected text, All lines not matching input text wil be removed. (Does not work in column mode)
+  Increment/Decrement selected text. Duplicate line and increment/decrement all numbers found. 
+  
+
+    
+    
+Title: Tumblr development tools
+Description: 
+    
+    
+                    
+I want to create Tumblr theme and ineteresting is there any IDE (Netbeans, Eclipse, PHPStorm) plugins or tools for development? Ideal is to preview my theme in browser without uploading it to Tumblr.
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+In terms of resources there's a few that I've found.
+
+
+TumblrThemr
+Thimble
+Tumblr Boilerplate
+
+
+There's also a TextMate bundle although it's a few years old.
+
+Developing for Tumblr is a bit of a pain, the way I do it is by setting up a test tumblr to use, reblogging or posting each post type that I want (photo, photoset, audio, text, etc.). I work on the HTML locally and get it set up how I want it to, until I know I can do pretty much everything I need to achieve via CSS alone. I then host any assets (CSS/JS/etc.) on my server, use the theme editor on my test theme to update the HTML, and then anything I need to do can just be done on my remote assets. If I need to edit the HTML I do it locally then paste it back into the theme editor. 
+
+It's not the nicest way of working, but I've done about 4 themes that way and it works okay for me. 
+    
+    
+Answer 2: 
+
+    
+    
+I found my own way to develop tumblr themes using PhpStorm (or possibly any other IDE) and avoid the manual copy pasting to see my updates. I wrote a simple javascript to execute in your browsers console (MIT licensed).
+
+setInterval(function() {
+jQuery.ajax('YOUR-URL-TO-THE-THEME-FILE', {cache: false}).success(function(html) {
+    var btn = jQuery("div[data-action='update_preview']").first();
+    if (html!=ace.edit('editor').getValue()) {
+        ace.edit('editor').setValue(html);
+        if (!btn.hasClass('disabled'))
+            btn.click()
+
+    }
+});
+},1000);
+
+
+Howto:
+
+
+Use JetBrains PhpStorm to edit your html theme file ( It is possible to use other editors, the only important thing is that the file has to be hosted on a (local or public) server. )
+Click Open in browser in PhpStorm while viewing the file.
+Your browser should open with an url like this: http://localhost:63342/TumblrTheme/index.html.
+Paste this URL in the snippet above.
+Open http://www.tumblr.com/customize/YOUR-BLOG-NAME.
+Click Edit html.
+Open your browsers javascript console.
+Paste in the snippet above (remember changing the path to your theme file).
+The preview now is auto-updated every second if the source has changed.
+
+
+Published at this gist: https://gist.github.com/cmfcmf/7154536
+    
+    
+Title: Should I check-in IDE project files to version control system?
+Description: 
+    
+    
+                    
+For a Java project (with the team of 5-10 developers) should I store my IDE project files (e.g. Eclipse or IntelliJ Idea) in version control system (currently I store only build scripts)? What's the best practice?
+
+PS Do you aware of any tools to automatically generate project files for common Java IDEs according to some descriptor?
+    
+
+        
+Answer 1: 
+
+    
+    
+You might want to take a look at the answers to this question: Which eclipse files belong under Version Control. As to the second part, maven has plugins for IntelliJ and Eclipse at least.
+    
+    
+Answer 2: 
+
+    
+    
+If you care about the project file at all, then you should check it into a VCS. Really, you might not care. But if you do, VCS it...
+    
+    
+Answer 3: 
+
+    
+    
+Our team (6-8 developers) originally checked in project files, and soon found that they can cause problems when it comes to paths and build path, etc.  Usually not, but when an issue did arise it could take time to ferret it out.  Then we stopped doing that, and it has worked much better.  We now put definitions in the VCS ignore files to make sure they don't get in.  However, in our case we work with Maven, so the practice has been create an eclipse workspace and then import the Maven projects from the source.  So recreating project environment is quick and predictable.  From my experience, checking in can cause minor headaches.
+    
+    
+Answer 4: 
+
+    
+    
+There are different opinions. Once I was told that I shouldn't put project files in VCS, but then project files ware added to repository (not accidentally).
+
+Many open source projects have project file in VCS. I think it could be good practice if one particular IDE is proffered in other case developers should probably take care on project files by themselves.
+
+Maven can generate project files (at last for eclipse) 
+    
+    
+Title: Eclipse ignoring incorrect @Override annotations
+Description: 
+    
+    
+                    
+For some reason one of my eclipse installations is ignoring incorrectly set @Overrideannotations. For example, if I put @Override on a method that isn't overriden, it just completely ignores it. 
+
+Any ideas on how to bring it back to a state where it will display an error for an incorrectly annotated method?
+    
+
+        
+Answer 1: 
+
+    
+    
+The definition of @Override changed slightly in Java 6 (and unfortunatly without proper documentation) wherein an @Override annotation on a method that implements an interface method is valid. In Java 5 that was considered an error.
+    
+    
+Answer 2: 
+
+    
+    
+My theory is that your Eclipse is configured for JDK 1.6 compliance, but your Ant (or whatever) build is compiling with a JDK 1.5 compiler.
+
+There was a change in the @Override annotation between JDK 1.5. and 1.6.  In 1.5, it could only be used when a concrete method actually overrides a concrete method in a superclass.  In JDK 1.6, it can also be used when the annotated method implements an abstract method defined in an interface or superclass.
+
+The way to set Eclipse's compliance level is to open Windows
+Answer 3: 
+
+    
+    
+The @override annotation was introduced in the JDK p/p/div
+Title: Is there any F# IDE that works over Mono?
+Description: 
+    
+    
+                    
+I am using F# on a Mac and I wonder kbow if there is any F# IDE that works over mono (not a general purpose editor). It seems that there is an addon for MonoDelvelop, but I think it may no be mature enough. Any suggestion ?
+    
+
+        
+Answer 1: 
+
+    
+    
+strong textI actually started working on a new F# binding for MonoDevelop. I'll post the news as soon as I have something worth sharing.
+
+Strange, seems like I can't add a comment to my answer...
+Anyway, I'd like to start with basic functionality that allows for creating and compiling F# projects. When that's done I'll be looking at implementing things like auto-completion and thing like that.
+
+Update: Due to a recent addition to our family I haven't been able complete my work. Fortunately someone else picked up the effort and results of his work are here: http://github.com/vasili/FSharpBinding
+    
+    
+Answer 2: 
+
+    
+    
+I think the MonoDevelop addon will be your best bet.  Unfortuately, at this point, asking for a mature F# compiler (even on Windows) is a bit of a stretch.  
+
+It's not even officially released on Windows (CTP still for VS 2008, and 2010 is still Beta).
+    
+    
+Answer 3: 
+
+    
+    
+I use Aquamacs and some hooks into Tuareg mode. - No .Net completion (there's a C# mode here), but dabrev mode:
+
+;; F# specific configs 
+;; hooked ocaml tuareg mode. If you do ML with mono e. g. 
+(add-to-list 'load-path "~/.elisp/tuareg-mode")
+    (autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
+    (autoload 'camldebug "camldebug" "Run the Caml debugger" t)
+    (autoload 'tuareg-imenu-set-imenu "tuareg-imenu" 
+      "Configuration of imenu for tuareg" t) 
+    (add-hook 'tuareg-mode-hook 'tuareg-imenu-set-imenu)
+    (setq auto-mode-alist 
+        (append '(("\\.ml[ily]?$" . tuareg-mode)
+              ("\\.topml$" . tuareg-mode))
+                  auto-mode-alist))
+
+;; now we use *.fs files for this mode
+(setq auto-mode-alist (cons '("\\.fs\\w?" . tuareg-mode) auto-mode-alist))
+
+(add-hook 'tuareg-mode-hook
+       '(lambda ()
+       (set (make-local-variable 'compile-command)
+        (concat "fsc \""
+            (file-name-nondirectory buffer-file-name)
+            "\""))))
+
+(defun tuareg-find-alternate-file ()
+  "Switch Implementation/Interface."
+  (interactive)
+  (let ((name (buffer-file-name)))
+    (if (string-match "\\`\\(.*\\)\\.fs\\(i\\)?\\'" name)
+    (find-file (concat (tuareg-match-string 1 name)
+               (if (match-beginning 2) ".fs" ".fsi"))))))
+
+
+
+compile from the editor window with FSC
+get an interactive session with syntax highlighting with the Mono backend
+
+(source: 666kb.com)  
+
+
+You get syntax highlighting from Ocaml (very similar) and it takes care for the white spaces. I had some problems forking the FSI from Shell, because it seems there's a delay while typing. I didn't investigate this issue and switched to VisualStudio. 
+
+Alternatively there's a Textmate F# bundle. I did test that for half a minute and it works. However you don't get the Alt+Enter option from VS to evaluate your marked parts directly at the interactive prompt.
+    
+    
+Title: How to treat .tpl syntax highlighting like php&#39;s syntax highlighting in PHPStorm
+Description: 
+    
+    
+                    
+I use PHPStorm
+
+I need to know how could I treat .tpl files syntax highlighting like that of .php syntax highlighting?
+    
+
+        
+Answer 1: 
+
+    
+    
+If you want to treat .tpl files in the same way as .php, then you will have to re-assign *.tpl pattern to PHP files type in Settings | File Types
+
+P.S.
+This is IDE-wide setting and will affect all projects
+    
+    
+Answer 2: 
+
+    
+    
+In PhpStorm configuration settings:
+
+ File-&gt;Settings-&gt;Editor-&gt;File Types-&gt;php-&gt; + -&gt; add *.tpl
+
+
+
+    
+    
+Title: Cannot create new project - There must not already be a project at this location
+Description: 
+    
+    
+                    
+I am trying to start using the just released Android Studio, I have already established the location for the Android SDK, and the Studio opens correctly. 
+
+Now, I want to create a new application project, but I cannot figure out what to select as project location. 
+
+Steps followed: 
+
+
+Launch Android Studio
+Select New Project
+Enter Application Name, Module Name, Package Name. 
+Click on the '...' button to select a project location
+Select the appropriate folder I created for the project, which is empty. See Screenshot here of the dialog at this point.
+Clicked Ok on the dialog, and now I am prompted with a second dialog, that is now labeled 'Select Path', where previous dialog was labeled 'Please choose a Project Location'. No matter what folder I select, the option for 'Ok' is grayed out and cannot be selected. Image here. 
+
+
+I read a similar question, and I am making sure, as you can tell by the steps I followed, that I am entering the path at the very end, and it still won't work for me. 
+
+I really think there must be a silly thing I am missing here, not sure what it may be though. 
+
+Any ideas? 
+    
+
+        
+Answer 1: 
+
+    
+    
+So, apparently what caused the main problem is that the first time I launched Android Studio I didn't create a new project, I imported one, and that seemed to screw the whole workflow of it. 
+
+As per someone's answer, who was apparently removed, here are the steps. 
+
+
+Go to C:\Users\Username\ and erase the folder named: .AndroidStudioPreview. 
+Launch Android Studio again, it will ask if you want to import any settings, select the option that doesn't import anything. 
+Optionally Configure,  Project Defaults, Project Structure, Platform Settings, and make sure that both the JDK and Android SDK are configured, for instance, I had to point Android Studio to a folder where the SDK had already been downloaded. 
+Create new project, and leave the default workspace that will now show, it should be C:\Users\Username\AndroidStudioProjects
+
+
+That's it, just go through the setup wizard, and you're done. 
+    
+    
+Answer 2: 
+
+    
+    
+This is a really simple issue. Android Studio likes to create the folder for the project on its own. That means you can't just select a pre-made folder. For example if you select C:/Android Projects with Android Projects being a folder, you must append a folder name to the location for Android Studio to create, for example C:/Android Projects/NEW PROJECT 
+
+No work-arounds needed.
+    
+    
+Answer 3: 
+
+    
+    
+I have found a workaround.Here's what I did :
+
+
+Click on check out from version control.
+Select git(I have a bitbucket account,but might work with github).
+Put in repo-url
+Select the parent directory(this directory will also become the parent directory of your android projects)
+Then click clone
+Select YES when asked if you want to create Android studio project from existing sources.
+Select Create Project from existing sources
+Don't change anything,select Next and then Finish.
+Now it will create a new project at your selected location
+Close android studio,go back to your parent directory and delete the project folder.
+And now start your new project wizard,you should be able to see your parent directory listed in project location.Start typing details about your project and the directory will be updated accordingly.
+
+    
+    
+Answer 4: 
+
+    
+    
+I had the same issue this morning when trying to create a new project and found a simple way to get around it.
+
+Choosing the path to the project folder was impossible as I kept getting the same error message 'There must not already be a project at this location'. What I then did was type out the path manually, but not all at once. To begin with I thought I'd just try to set a folder at the root of my drive eg. C:\AndroidStudioProjects. It seemed to be ok with this, which led me to try to add the rest of the path manually as well. So the final path would be something like C:\Development\Android\AndroidStudioProjects
+
+This worked, no errors showed up and it let me go through the rest of the set up. 
+
+Hope this works for others out there who are facing the same issue.
+    
+    
+Title: introspective code completion with VIM? &hellip; or other lightweight editor with this feature?
+Description: 
+    
+    
+                    
+I've been all over the web trying to find a way to get VIM to have code completion similar to PyDev.  It doesn't seem like it is possible!  
+
+-I have tried to use the omnicompletion suggested at this link: http://blog.dispatched.ch/2009/05/24/vim-as-python-ide/ .  
+
+-I have tried several addons to alleviate the problem, none work.
+
+The "omnicomplete" functionality is NOT what I am looking for.  It just takes all the words in the file you are working on and uses those to try and complete what I am doing.  For example if I wrote:
+
+import numpy
+a_single_array = range(100)
+np.a#[then I hit cntrl+n to code complete]
+
+
+It would spit out "a_single_array" as a possible completion -- but that is absurd!  That is not a valid completion for "numpy.a ..."
+
+What is the issue here?  All the addon would have to do is run a dir(work you want to find) from the folder you are in and then filter the output!  This cannot be that difficult!  (I suppose you would also have to read the file you are currently editing and filter that as well to take note of name changes... but that's pretty much it!)
+
+Speaking of how easy it would be... if there isn't anything already made, I was thinking of writing the script myself!  Any guides on how to do THAT?
+    
+
+        
+Answer 1: 
+
+    
+    
+No, the omni completion functionality is EXACTLY what you are looking for.
+
+You are using &lt;C-n&gt; instead of &lt;C-x&gt;&lt;C-o&gt;:
+
+
+type &lt;C-n&gt; &amp; &lt;C-p&gt; to complete with words from the buffer (after and before the cursor respectively)
+type &lt;C-x&gt;&lt;C-o&gt; to complete method/properties names
+
+
+It's specifically explained in the article you linked:
+
+
+  In V7, VIM introduced omni completion – given it is configured to recognize Python (if not, this feature is only a plugin away) Ctrl+x Ctrl+o opens a drop down dialog like any other IDE – even the whole Pydoc gets to be displayed in a split window.
+
+    
+    
+Answer 2: 
+
+    
+    
+Ctrln is insert-completion.
+
+Ctrlx Ctrlo is omni-completion.
+
+I remap omnicompletion to CtrlSpace:
+
+inoremap &lt;C-Space&gt; &lt;C-x&gt;&lt;C-o&gt;
+
+
+You could also try SuperTab.
+    
+    
+Answer 3: 
+
+    
+    
+I have no idea about the various completion options for Python in Vim.  But if you want to roll your own you'd be well advised to study and modify one of the existing ones, like this:
+
+http://www.vim.org/scripts/script.php?script_id=1542
+
+Also, if all your omnicompletion is doing is listing words in current file then you don't have it set up properly for Python-specific completion. . . .  Not sure how good the specialized Python completion systems get, but they certainly does compete based on Python units external to your current file. . . .  
+    
+    
+Title: Best editor/IDE(?) for Javascript / PHP development [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                Closed 10 years ago.
+        
+
+
+    
+
+
+  Possible Duplicate:
+  Better PHP,MySql,HTML and JavaScript IDE  
+
+
+
+
+I'm primarily a C#.NET developer, and dabble with VB.NET when I need to for dealing with older applications within the organisation.
+
+I have been doing more work with PHP and Javascript lately, mainly in the domain of Wordpress.
+
+I think Visual Studio is a great IDE, really familiar with it. Is there anything out there that's the defacto standard for PHP development?
+
+I'm looking for intellisense type features to speed things up where possible etc.
+
+I looked at CodeLobster which is free, but I am willing to pay if there's anything out there that's particularly good. What is the Visual Studio for PHP developers?
+    
+
+        
+Answer 1: 
+
+    
+    
+Not sure about it being the Visual Studio for PHP but Netbeans is easily the best IDE for PHP i've used.
+    
+    
+Answer 2: 
+
+    
+    
+I feel Komodo Edit is a great tool.
+
+
+It supports autocompletion, both from standard library and custom code.
+It can handle multiple language files (such as HTML with PHP tags and some Javascript), with autocompletion for all of them
+Is fully scriptable, in Javascript and Python
+Recognizes a lot of languages
+Is open source 
+
+    
+    
+Answer 3: 
+
+    
+    
+Aptana Studio is a nice product.  It also allows you to use the plethora of Eclipse plugins out there.
+    
+    
+Answer 4: 
+
+    
+    
+Zend Studio IMO is the Visual Studio of the PHP world. Pretty good product.
+    
+    
+Answer 5: 
+
+    
+    
+If you're looking for an IDE I would look at Komodo, or Zend Studio. You could also look at InteliJ but that's less PHP / Javascript focused then the others.
+
+Personally I find little if any need for an IDE with TextMate. Everything I need handled is handled. If you drop auto-completion and start memorizing function calls (not a trivial task, but better in the long run) it prepares you more for the situations where you don't have access to all the fancy tools you're accustomed to. When you have a bad server and end up using SSH and VI[M] to fix something you actually can.
+    
+    
+Answer 6: 
+
+    
+    
+I use PHPEclipse for PHP (either that or just Notepad++). I like using Eclipse for most of my development, because it supports most languages, and has a ton of plugins if you need them. There's JSEclipse, and also a JS plugin for all the Eclipses.
+
+There's also NetBeans, which is a little more lightweight. It's meant for Java, but also does PHP just fine.
+    
+    
+Title: How can I highlight text in Scintilla?
+Description: 
+    
+    
+                    
+I am writing an editor using Scintilla.
+
+I am already using a lexer to do automatic syntax highlighting but now I would like to mark search results. If I want to mark only one hit I can set the selection there, however, I would like to mark (e.g. with yellow background) all the hits.
+
+I writing this in Perl but if you have suggestions in other languages that would be cool as well.
+    
+
+        
+Answer 1: 
+
+    
+    
+Have you read the Markers reference in Scintilla doc?
+This reference can be a bit obscure, so I advise to take a look at the source code of SciTE as well. This text editor was originally a testbed for Scintilla. It grown to a full fledged editor, but it is still a good implementation reference for all things Scintilla.
+
+In our particular case, there is a Mark All button in the Find dialog. You can find its implementation in SciTEBase::MarkAll() method. This method only loops on search results (until it loops on the first search result, if any) and puts a bookmark on the found lines (and optionally set an indicator on the found items).
+The found line is gotten using SCI_LINEFROMPOSITION(posFound), the bookmark is just a call to SCI_MARKERADD(lineno, markerBookmark).
+Note that the mark can be symbol in a margin, or if not associated to a margin, it will highlight the whole line.
+
+HTH.
+    
+    
+Answer 2: 
+
+    
+    
+The "sample" editor scite uses the bookmark feature to bookmark all the lines that match the search result.
+    
+    
+Answer 3: 
+
+    
+    
+I used Indicators to highlight search results.
+    
+    
+Title: How to list all suggested quick actions
+Description: 
+    
+    
+                    
+Is there a way to list all the suggested Quick Actions for an open project in VS2017 (v15.3.3)?
+
+I do not see any listed in the Error List window (even with "Build + IntelliSense" selected), though I do see other types of IntelliSense warnings such as CS warnings (e.g. CS1591).
+
+(Quick Actions being the items that are marked in the gutter with a light bulb and accessed with either Alt +Enter or Ctrl+.)
+    
+
+        
+Answer 1: 
+
+    
+    
+This isn't exactly the same as what you're looking for, but could help you make changes much more quickly to the entire document, project, or solution:
+
+When you try to apply a quick action (using Ctrl + .), you'll get a preview of the changes it will make. At the bottom of that preview is a button that says 
+
+"Apply to all occurrences in ..."
+
+This will save you from having to go to every single occurrence in a certain scope and fixing it, which is what I've done for a couple of hours now :( 
+    
+    
+Answer 2: 
+
+    
+    
+Thanks to a response from the @VisualStudio twitter account, I've come across this MS Docs page that answers this question: https://docs.microsoft.com/en-us/visualstudio/ide/code-styles-and-quick-actions?utm_source=t.co&amp;utm_medium=referral
+
+It describes how to set code style preferences by opening the Tools /strongstrong
+Title: Preprocessor-aware code navigation in IDE for C project
+Description: 
+    
+    
+                    
+Background
+
+I spend a lot of time navigating and editing convoluted scientific C codes. Usually they contain hundreds of optional features switched on and off with preprocessor directives. This makes it almost impossible to say at a glance whether the current block of code is activated in my current setup or not. The code itself does not help as every feature is smudged all over the place and everything is usually done using global variables.
+
+Question
+
+Is there an IDE that can handle preprocessor directives by folding/shading the inactive code? 
+
+I imagine one can maintain a project with a config of used flags and work with it not being bothered by inactive branches of logic.
+    
+
+        
+Answer 1: 
+
+    
+    
+Looking at similar question it seems like Eclipse CDT has exactly the functionality you need and the other question actually tells where you can set your ifdefs.
+
+Emacs has something similar in form of hide-ifdef-mode.
+
+But you can also try to use IDE-agnostic solution like running the code through unifdef and working with the result. If you just need to read the code, it's almost perfect solution. If you need to make some changes, things become a bit more complicated, but you can use git then to manage changes, like:
+
+
+import whole code base into git
+run through unifdef
+commit the result, that's the basis for your patches
+work with the code base in whatever IDE/editor you prefer, commiting changes as usual
+if there is a need to produce patches for original code base, just checkout the original import commit and cherry-pick (or rebase) your patches from your branch (of course there is a chance for conflict, but it should be quite easy to resolve as you know your intended change for the code from the patch and you just need to adjust for ifdefs)
+if there is a need to update code base, just start from original import, apply an update, commit that, run through unifdef, commit that and then rebase your changes on top of that
+
+
+Of course, whether this approach will work or not depends on particular code base and what you're going to do with it, but it can be useful in some scenarios.
+    
+    
+Answer 2: 
+
+    
+    
+I use Vim with several plugins as my IDE of choice (thank you Steve Francia). It is likely this is not your cup of tea, but in case it is, I found a couple suggestions to accomplish this.
+
+Autofold #ifdef..#endif in Vim via .vimrc
+
+C Preprocessor Fold in Vim
+    
+    
+Answer 3: 
+
+    
+    
+I haven't heard about this feature in any IDE. BUT you can still use 
+after preprocessed code to work with. 
+Can gcc output C code after preprocessing?
+    
+    
+Title: How can I show columns number in Notepad++?
+Description: 
+    
+    
+                    
+in Notepad++ can I show also the columns number (where a column is a single written character) as I do for the rows number?
+
+Tnx
+    
+
+        
+Answer 1: 
+
+    
+    
+
+
+Notepad++ already has the required feature. There's no need for any extension or plugin. Look for the information presented in the bar at the bottom of Notepad++ window.
+
+The image shows my cursor is at Line:1 and Col:70
+    
+    
+Answer 2: 
+
+    
+    
+You can use a plugin called TextFX .
+
+
+    
+    
+Answer 3: 
+
+    
+    
+You can use a plugin called TextFX.
+
+And before making a column : 
+
+1|2|3|4|5|6|7|8 -- insert this 
+data1|data2|data3|data4 
+
+
+then using textFX to make a column.
+    
+    
+Title: Problems importing libraries to my c++ project, how to fix this?
+Description: 
+    
+    
+                    
+I'm using the &lt;XZY&gt; IDE to compile my program, and have some trouble to import/integrate a specific library with it.  
+
+I get error messages like
+
+fatal error: 3rdPartyLib.h: No such file or directory
+
+
+for a
+
+#include "3rdPartyLib.h"
+
+
+statement 
+
+ld.exe: cannot find `lib3rdParty.a`
+
+
+for specifying 
+
+3rdParty
+
+
+in the additional libraries
+
+At least I got some error message like
+
+undefined reference to `lib3rdParty::foo()'
+
+
+What can I do to fix this?
+    
+
+        
+Answer 1: 
+
+    
+    
+It's a common misconception, that the current IDE used, is responsible for getting errors like stated in the question.
+See for example 
+
+
+c++ lib in two same project ,one can work but the other can 't
+Issue linking libxml++ and glib libraries with CodeBlocks IDE for C++ Windows
+...
+
+
+The problem is almost never related to the currently used IDE.
+In the most cases the solution boils down, to supply the actual toolchain's compiler/linker with the appropriate path's to search for included headers, to be linked libraries.
+
+One of the major applicable answers for the linker related problems are
+
+
+  
+  What is an undefined reference/unresolved external symbol error and how do I fix it?  
+  undefined reference to `WinMain@16'
+  
+
+
+
+
+Most of the common IDEs provide features to configure this for a specific project. Here are some samples
+
+
+
+Eclipse-CDT
+
+Include path settings:
+
+
+Library &amp; library search path settings
+
+
+
+
+Visual Studio 2013
+
+
+
+
+
+Code Blocks
+
+
+
+
+
+**DEV C++ (Bloodshed C++)
+
+As from their FAQ:
+
+
+  9. How can i use the OpenGL library and others ?
+  
+  All the libraries that comes with Mingw reside in the Lib directory. They are all named in the following way: lib*.a
+  To link a library with your project, just add in Project options, Further option files :
+  -lopengl32
+  This is for including the libopengl32.a library. To add any other library, just follow the same syntax: 
+  Type -l (L in lowercase) plus the base name of the library (filename without lib and the .a extension).
+
+
+You may also consider putting a -L option there to add directory pathes searched for libraries.
+
+
+
+Qt Creator
+
+In order to add include paths you have to open up the .pro file and then add
+the directories to the INCLUDEPATH variable. These paths are separated by spaces. Reference can be found here.
+
+
+
+
+
+If none of the above samples applies for your actually used IDE/toolchain, I hope you're able to get the point of abstraction:
+
+
+  It's an issue how to provide compiling/linking options to your actual toolchain. The IDE used to setup the context is a minor point here.
+
+    
+    
+Answer 2: 
+
+    
+    
+For eclipse I use the pkg-config plugin where possible:
+
+https://marketplace.eclipse.org/content/pkg-config-support-eclipse-cdt
+
+Failing that this configuration window:
+
+
+    
+    
+Title: Finding the try for an except or finally
+Description: 
+    
+    
+                    
+I'm dealing with some code that has fantastically long methods (10k lines!) and some odd use of try-finally and try-except blocks. Some of the latter are long by themselves, and don't always have the try at the start of the method.
+
+Obviously I'm trying to refactor the code, but in the meantime just being able to fix a couple of common pathologies would be much easier if I could jump to the start of a block and see what is happening there. When it's 20+ pages away finding it even with the CNPack rainbows ("code structure highlight") is just tedious.
+
+I'm using D2010 and  have GExperts (with DelForExp), CNPack and DDevExtensions installed, but I can't find anything that lets me jump from the try to the finally or back. Am I missing something? Is there another add-in that I can use that will get me this?
+    
+
+        
+Answer 1: 
+
+    
+    
+GExperts have it in Editor Experts: "Move to Matching Delimiter", with the keyboard shortcut Ctrl+Alt+Right by default. If you invoke it repeatedly it cycles from try to the matching finally or except, to end, then back to try, and so on.
+    
+    
+Answer 2: 
+
+    
+    
+If you are going to refactor the code, I'd advice you to name each Try Except/finally End code block and move it into a separate function/procedure within the main method. 
+
+Second advice, start with the inner most try except/finally end code block. 
+
+procedure class1.method1 ;
+var
+   anyVariables : ... ;
+begin
+ ....
+ try 
+ ....
+ finally
+ ... 
+ end ;
+ ....
+end ;
+
+
+.
+
+procedure class1.method1 ;
+var
+   anyVariables : ... ;
+   procedure first_try_finally_block ;
+   begin 
+      try 
+      ....
+      finally
+      ... 
+      end ;
+   end ;
+begin
+ ....
+ first_try_finally_block
+ ....
+end ;
+
+
+I hope that this will help you to solve your problem.
+    
+    
+Title: Overriding #define in libraries
+Description: 
+    
+    
+                    
+I have created an Arduino Library for a device, of which it can be generally configured in several ways. E.g. use interrupts or poll it. From other examples I have created the following files: foo.h, fooConfig.h and foo.cpp shown below for the library. Where fooConfig.h contains the configuration of how to use the shield. Such as with or without interrupts etc...
+
+In doing so I would like the main sketch's INO file to be able to over-ride default settings, which have been declared using #define's. Including in the library's instance. The results show it really does. At least the way I am doing it.
+
+The below code is a simplified example with the problem:
+
+definetest.ino
+
+#define BAR USE_POLL
+#include &lt;foo.h&gt;
+
+foo test;
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+
+  Serial.print(F("setup's defined BAR was "));
+  Serial.println(BAR);
+
+  Serial.print(F("inside foo.begin defined BAR was "));
+  Serial.println(test.begin());
+}
+
+void loop() {
+}
+
+
+foo.h
+
+#ifndef FOO_h
+#define FOO_h
+
+#include "FOOConfig.h"
+
+class foo {
+  public:
+    int begin();
+};
+#endif // FOO_h
+
+
+FooConfig.h
+
+ #ifndef FOOCONFIG_h
+  #define FOOCONFIG_h
+
+  #define USE_INT      1
+  #define USE_POLL     2
+
+  #ifndef BAR
+    //default to using interrupts
+    #define BAR USE_INT
+  #endif // BAR
+
+#endif  // FOOCONFIG_h
+
+
+foo.cpp
+
+#include &lt;foo.h&gt;
+
+int foo::begin() {
+#if defined(BAR) &amp;&amp; BAR == USE_INT
+  Timer1.attachInterrupt( isr );  // error here, because of the define...
+  return 1;
+#elif defined(BAR) &amp;&amp; BAR == USE_POLL
+  return 2;
+#endif
+  return 0;
+}
+
+
+Yields the following serial output:
+
+setup's defined BAR was 2
+inside foo.begin defined BAR was 1
+
+
+Where it was desired to have the BAR inside the foo.begin equal to 2, not 1. Noting it is desired to have the precompiler decide to or not omit the attachInterrupt. Don't want the dependancy and consumption of the resources of the library if it is not used. Simply want it to be an advanced option.
+
+I understand this may best handled with a make file or eclipse, but I am trying to publish this library for the Arduino IDE currently at 1.0.3. 
+
+Any help is appreciated.
+
+FYI, the real and whole code is here. 
+https://github.com/mpflaga/Sparkfun-MP3-Player-Shield-Arduino-Library/tree/master/SFEMP3Shield
+    
+
+        
+Answer 1: 
+
+    
+    
+Regardless of tool chain, the program does not and should not determine how the library is compiled.  A key concept of a library is that it is fully developed, compiled and packaged without the existence of any program.  There is a one way dependency:  a program depends on the library -- a library has no dependency on any program.  A key point that highlights this is that you do not have to distribute source code to use a library.  A library can be used with just headers and binary (.a)  Take a peek into all the WinAvr libraries that are used.
+
+What you are seeking is how to have multiple configurations of your library.  In other tool chains this is readily done at the project level where you can create any number of output configurations.  In your case you would have poll and int, and the toolchain would produce two libraries, for example:
+  libMySomething_int.a
+  libMySomething_poll.a
+
+Programs choose which configuration of the library they wanted to use.
+
+As noted by others, the Arduino IDE will not provide for this form of complexity.  Since you stated you intend to stay within that toolchain, these are solutions I can see:
+
+
+Make two copies of the library that differ just by the one #define.  This is basically you providing the two configurations.  Because they differ by a tiny amount, it will be easy to WinMerge between to two and keep codebases synchronized.
+Rethink whether it is necessary to have one interface to the two forms.  You do not have to have just one begin(), you can have two forms:
+
+void beginInt();
+void beginPoll();
+
+void getSomethingInt();
+void getSomethingPoll();
+
+
+Keep in mind that this does not waste code space.  The linker will remove all unused functions from the final program, so if you just use the Int form, all the Poll functions get dropped.
+
+The choice between these two isn't clear and somewhat subjective.  The decision should consider what you are intended to encapsulate/hide in the library, and what you want to make clear.  If this library was an interface to a variety of real time clock chips, then you would clearly be fair to encapsulate all the differences and provide one set of functions.  But in your case you are implying key changes in resource consumption, timing, and concurrency -- I'm not sure it is best to hide this.
+    
+    
+Answer 2: 
+
+    
+    
+The Arduino IDE compiles libraries individually so you would need to pass the define as a -D option during the compile. The Arduino IDE does not currently provide a facility for you to easily do that. Arduino 1.5 provides some functionality via the boards.txt system but this probably will not provide the flexibility you need.
+
+So, as you say, the options are editing make files in products such as Eclipse or by setting one of the "Defines" project properties (such as "Defines - Project") in Visual Studio Pro.
+
+Or by using the TeensyDuino IDE and adding your own menu. defs to the boards.txt
+    
+    
+Answer 3: 
+
+    
+    
+IF your library is used ONLY from the main sketch
+AND you can live with putting all your code in the .h file (i.e. no .cpp file)
+THEN you can achieve what you want.
+
+It is questionable coding practice to do this, but it seems not uncommon in the Arduino world. 
+
+PS: To be entirely correct, it is actually also possible to have a .cpp file, but only if its compilation is entirely unaffected by the overridable #define's.
+    
+    
+Answer 4: 
+
+    
+    
+I'm not Arduino specialist, but on first glance. Your foo::begin() outputs 1, because you didn't define  "BAR" in foo.cpp, so preprocessors falls to your default. May be you can add a "configuration" method to "foo" class. This method will receive an argument with desirable configuration, so you will be able to pass your define as parameter from INO file to "foo" class instance.
+    
+    
+Title: IntelliJ 12 code coverage not working in editor for GWT Projects
+Description: 
+    
+    
+                    
+I'm trying IntelliJ 12, and I can't manage to get the line colored (red, green, yellow) in the editors after running the tests with coverage. 
+Did anybody noticed the problem or it's just me not being able to make it work?
+    
+
+        
+Answer 1: 
+
+    
+    
+By default code coverage results are displayed only in the left gutter and may be hard to notice:
+
+
+
+You can either change the gutter colors or configure IntelliJ IDEA to change the background of the whole lines (instead of the foreground) depending on their coverage status:
+
+
+
+Now it's much easier to see the coverage status:
+
+
+    
+    
+Answer 2: 
+
+    
+    
+Finally I found out what was causing IntelliJ IDEA 12.0.0 (and also 12.0.1) to malfunction the code coverage.
+
+My project is a GWT project, so there is some additional configuration to run the gwt client tests: the source directories are added in the classpath so that the gwt devmode can be ran headless to be tested:
+
+ &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+                &lt;version&gt;2.5&lt;/version&gt;
+                &lt;configuration&gt;
+                    &lt;additionalClasspathElements&gt;
+                        &lt;!-- the following two lines, causes intellij coverage to stop working --&gt;
+                        &lt;additionalClasspathElement&gt;${project.build.sourceDirectory}&lt;/additionalClasspathElement&gt;
+                        &lt;additionalClasspathElement&gt;${project.build.testSourceDirectory}&lt;/additionalClasspathElement&gt;
+                    &lt;/additionalClasspathElements&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+
+Adding the source folders to the classpath of surefire causes IntelliJ IDEA 12.x to misconfigure the project (the .iml file) and the coverage stops working. 
+
+Notice that this maven configuration doesn't have any impact in IntelliJ IDEA 11.x, that works perfectly.
+
+To reproduce the bug, just add the &lt;additionalClasspathElement&gt; to your surefire configuration, then rightclick on your project and do a "Maven-/pp/ppcode/code
+Answer 3: 
+
+    
+    
+I'm using IntelliJ 13 on a Mac with the Darcula theme. 
+
+I did not notice the green/red colours at first as they are very dull and don't stand out from the black background.
+
+However if you look very carefully in the lefthand on the left of the line numbers (if you have them configured) you will see them faintly.
+
+You can easily configure the colours to make them more noticeable.
+
+The defaults ought to be changed by IntelliJ in a future release.
+    
+    
+Title: Making Source writable from the Delphi IDE
+Description: 
+    
+    
+                    
+Is it possible to make readonly source code (eg., .pas &amp; .dfm) writable from within the Delphi IDE?  The right click option to make files Readonly/Writable within the IDE doesn't change the properties on the file system.  Is there an IDE extension or similar that can achieve this?
+
+A way to do this without having to integrate a source control system would be preferable.  I am using Delphi XE and Delphi 6.
+
+Thanks!
+
+sse
+    
+
+        
+Answer 1: 
+
+    
+    
+This is how I would do it.
+
+Create a new package which will be installed into the IDE at designtime. If you have an existing package handy then you could carry on using it. Make sure the package requires the designide package. You can do this in the project manager, or just by viewing the project source and adding designide to the requires clause.
+
+Now add the following unit to your package.
+
+unit MakeEditable;
+
+interface
+
+procedure Register;
+
+implementation
+
+uses
+  Windows, SysUtils, Menus, ToolsAPI;
+
+type
+  TMakeEditable = class(TObject)
+  private
+    FEditorServices: IOTAEditorServices;
+    FFileMenu: TMenuItem;
+    FMakeEditable: TMenuItem;
+    function MenuItemWithCaptionLike(const Menu: TMenuItem; const DesiredCaption: string): TMenuItem;
+    procedure MakeEditableClick(Sender: TObject);
+  public
+    constructor Create;
+    destructor Destroy; override;
+  end;
+
+constructor TMakeEditable.Create;
+var
+  Index: Integer;
+  PreviousMenuItem: TMenuItem;
+begin
+  inherited;
+  FEditorServices := (BorlandIDEServices as IOTAEditorServices);
+  FFileMenu := MenuItemWithCaptionLike((BorlandIDEServices as INTAServices40).MainMenu.Items, 'File');
+  if Assigned(FFileMenu) then begin
+    PreviousMenuItem := MenuItemWithCaptionLike(FFileMenu, 'Reopen');
+    if Assigned(PreviousMenuItem) then begin
+      Index := PreviousMenuItem.MenuIndex;
+      if Index&gt;=0 then begin
+        FMakeEditable := TMenuItem.Create(FFileMenu);
+        FMakeEditable.Caption := 'Ma&amp;ke Editable';
+        FMakeEditable.OnClick := MakeEditableClick;
+        FFileMenu.Insert(Index, FMakeEditable);
+      end;
+    end;
+  end;
+end;
+
+destructor TMakeEditable.Destroy;
+begin
+  FMakeEditable.Free;
+  inherited;
+end;
+
+function TMakeEditable.MenuItemWithCaptionLike(const Menu: TMenuItem; const DesiredCaption: string): TMenuItem;
+var
+  i: Integer;
+  Target, Found: string;
+begin
+  Target := StringReplace(LowerCase(Trim(DesiredCaption)), '&amp;', '', [rfReplaceAll, rfIgnoreCase]);
+  for i := 0 to Menu.Count-1 do begin
+    Result := Menu.Items[i];
+    Found := StringReplace(LowerCase(Trim(Result.Caption)), '&amp;', '', [rfReplaceAll, rfIgnoreCase]);
+    if Pos(Target, Found)&gt;0 then begin
+      exit;
+    end;
+  end;
+  Result := nil;
+end;
+
+procedure TMakeEditable.MakeEditableClick(Sender: TObject);
+
+  procedure MakeFileEditable(const FileName: string);
+  var
+    Attributes: DWORD;
+  begin
+    Attributes := GetFileAttributes(PChar(FileName));
+    SetFileAttributes(PChar(FileName), Attributes and not FILE_ATTRIBUTE_READONLY);
+  end;
+
+var
+  FileName: string;
+  FileExt: string;
+  LinkedFileName: string;
+  EditBuffer: IOTAEditBuffer;
+
+begin
+  EditBuffer := FEditorServices.TopBuffer;
+  FileName := EditBuffer.FileName;
+  if FileExists(FileName) then begin
+    MakeFileEditable(FileName);
+    EditBuffer.IsReadOnly := False;
+
+    FileExt := ExtractFileExt(FileName);
+    if SameText(FileExt,'.dfm') then begin
+      LinkedFileName := ChangeFileExt(FileName, '.pas');
+    end else if SameText(FileExt,'.pas') then begin
+      LinkedFileName := ChangeFileExt(FileName, '.dfm');
+    end else begin
+      LinkedFileName := '';
+    end;
+    if (LinkedFileName&lt;&gt;'') and FileExists(LinkedFileName) then begin
+      MakeFileEditable(LinkedFileName);
+    end;
+  end;
+end;
+
+var
+  MakeEditableInstance: TMakeEditable;
+
+procedure Register;
+begin
+  MakeEditableInstance := TMakeEditable.Create;
+end;
+
+initialization
+
+finalization
+  MakeEditableInstance.Free;
+
+end.
+
+
+When you compile and install this package you will now have a new menu item on the File menu which both clears the read-only flag in the input buffer and makes the file writeable.
+
+
+    
+    
+Answer 2: 
+
+    
+    
+You can call a .bat file from the tools menu.  So you could write a .bat file to do the work for  you, and call it with $EDNAME as the parameter.
+Your .bat file should see the filename as %1.  Then you'd need a little bit of logic to change the read-only flag (attrib command?) and then see if there is a .dfm and do that one as well.
+
+You could also (obviously) make a Delphi command-line app to do this, if you're not comfortable with .bat files.  
+
+This idea inspired by this article that talks about how to use a .bat file to integrate SVN commands with the Delphi tools menu:
+http://delphi.wikia.com/wiki/Adding_TortoiseSVN_to_the_Tools_menu
+    
+    
+Answer 3: 
+
+    
+    
+Another idea: Just add an option to the tools menu: "open command prompt here". It lets you do all sorts of things from the command line, such as running the attrib command.
+
+Add a new entry to the Tools menu, and use these settings:
+
+Title: Open Command Prompt Here
+Program: cmd.exe
+Working Dir (leave blank)
+Parameters:  cd $PATH($EDNAME)
+
+
+Also, make yourself an "Open Folder Here" entry:
+
+Title: Open Folder Here
+Program: explorer.exe
+Working Dir (leave blank)
+Parameters: $PATH($EDNAME)
+
+    
+    
+Title: Can I change the size of the Xcode IDE fonts?
+Description: 
+    
+    
+                    
+I'd like to change the font size of the "Groups &amp; Files" panel of the Xcode IDE.  I know how to change the "Fonts &amp; Colors" in the preferences, but those (seem to) only affect the code window, not the rest of the IDE.  Any ideas?  Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+I believe you can change the size of the Groups &amp; Files pane by setting the PBXTableFontSize parameter in ~Library/Preferences/com.apple.Xcode.plist. This needs PBXTableFont to be set first to take effect.
+
+1) Run defaults write com.apple.Xcode PBXTableFontSize 20 in Terminal, substituting 20 for whatever value you wish to use. 
+2) Run defaults write com.apple.Xcode PBXTableFont Helvetica in Terminal, substituting Helvetica for the font you wish to use. I'm not sure what OS X's default Sans Serif font is, but Helvetica is pretty generic.
+    
+    
+Answer 2: 
+
+    
+    
+I also wanted to do so. It's ridiculously small!
+    
+    
+Answer 3: 
+
+    
+    
+No, I don't believe this is possible - unless you want to start hacking away at XCode's internal structure. I'd file an enhancement request on this.
+    
+    
+Title: Delphi Library Path - what should really be going in there?
+Description: 
+    
+    
+                    
+I've been putting the path to the unit (.pas) file folders of our packages into the Delphi Library path but I'm beginning to wonder if this is a mistake! Take this problem for an example:
+
+I have two home grown packages:
+
+
+LowLevelPackage
+HighLevelPackage
+
+
+HighLevelPackage uses units contained in LowLevelPackage.
+
+If the path to both package's unit folders are in the library path then there is the chance of me building HighLevelPackage before LowLevelPackage and HighLevelPackage will implicitedly contain LowLevelPackage's units (i think?).
+
+I'm wondering if instead I should be putting the path to the DCUs of these packages into the Library Path. And maybe putting the path to the actual source units in the Browsing Path so we can still step into them when debugging.
+
+Does that sound right? What should really be going into the Library Path? Paths to .DCUs? .DCPs? .BPLs? or .PASs?
+    
+
+        
+Answer 1: 
+
+    
+    
+Library Path: *.dcu, *.inc, *.dfm
+Package Output: *.bpl
+Dcp Output: *.dcp
+Browsing Path: *.pas
+
+    
+    
+Answer 2: 
+
+    
+    
+Hmmm, I just had a look at Delphi Help's word on library path:
+
+
+  Library Path
+  Specifies search paths where compiler
+  can find the source files for the
+  package. The compiler can find only
+  those files listed in the library
+  path. If you try to build your package
+  with a file not on the library path,
+  you will receive a compiler error.
+
+
+I'm not sure I agree with this as it means every package can see every other package's source units so if one package used another packages units and you built them out of order I believe there's potential for dependencies getting screwed up. Oh well, who am I to question Delphi Help, lol. ;)
+    
+    
+Answer 3: 
+
+    
+    
+I usually don't put any package sources into the library path at all. This is because all the 3rd party libraries a project uses go into a subdirectory (svn:external) of the project, so having them in the library path would result in the wrong sources being added to a project. Instead I add the relative paths to the project's search path.
+    
+    
+Answer 4: 
+
+    
+    
++1 to Cesar, though I wasn't aware of a "Browsing Path" option... I'm pretty sure it wasn't there in D7. That would certainly save having to add PAS files to the Library Path in order to step through code.
+    
+    
+Title: Intellisense (autocompletion) for model in Laravel for Visual Studio Code or another IDE
+Description: 
+    
+    
+                    
+I am looking for sth similiar to Intellisense in .NET in Laravel. So far I've been using .NET and autocompletion for models is awesome and makes my work way more easy. 
+
+Now I need to create Laravel application, I've been following this tutorial to prepare my environment but the only autocompletion I get is for default PHP functions and some predefined methods (ex. SaveSessionListener from Symfony\Component\HttpKernel\EventListener - I am not even using Symfony anywhere).
+
+What I'd like to achieve is get autocompletion from models, for example there is a class called Model in Laravel, I have class Page which extends Model.
+
+use App/Page
+
+$home = new Page();
+$home-&gt;content = "lorem ipsum";
+$home-&gt;save();
+
+
+I don't have any completion when I write $home-&gt;, no content, no save(), only some random functions. I can understand why there might be no content autocompletion - its not written directly into code, but its written on database and object-database engine is parsing that one, I didn't figure out how yet, but I don't understand why even save() doesn't get autocompletion.
+
+I tried to google the issue, but without any good result.
+    
+
+        
+Answer 1: 
+
+    
+    
+I figured it out how to get it work with Visual Studio Code.
+
+First and most important is the link morph provided me in comment:
+laravel-ide-helper
+
+I just followed docs and generated basic helper + model helper. I guess later I'll automate those generation commands, its also explained how to do it in docs.
+
+Second thing is that it works only with:
+PHP Intelephense plugin
+Note that you need to reset VSC before it actually works.
+
+Third thing I did - VSC have build-in php autocompletion, it was pretty annoying cause it started to show me model fields in suggestions, but it was between dozens of other suggestions. To disable build-in autocompletion I added line to user settings:
+
+"php.suggest.basic": false,
+
+
+Last thing I did - I have moved snippets to bottom of suggestions box to clear autocompletion results a little bit more:
+
+"editor.snippetSuggestions": "bottom"
+
+
+And that works really decent as Laravel programming environment.
+    
+    
+Answer 2: 
+
+    
+    
+I use PHP Doc for fields definition like following example:
+namespace App\Models;
+
+use App\Enums\MediaType;
+use App\Models\Commons\BaseModel;
+use DateTime;
+
+/**
+ * Famous Media.
+ *
+ * @property int $id
+ * @property int $famous_id
+ * @property MediaType $type
+ * @property string $url
+ * @property int $position
+ * @property DateTime $created_at
+ * @property DateTime $updated_at
+ */
+class FamousMedia extends BaseModel
+{
+  const TABLE = 'famous_medias';
+
+  /**
+   * The attributes that are mass assignable.
+   *
+   * @var array
+   */
+  protected $fillable = [
+    'type',
+    'url',
+    'position',
+    'famous_id',
+  ];
+
+  /**
+   * The attributes that should be hidden for arrays.
+   *
+   * @var array
+   */
+  protected $hidden = [
+    'famous_id',
+    'deleted_at',
+    'created_at',
+    'updated_at',
+  ];
+
+  public function famous()
+  {
+    return $this-&gt;hasOne(Famous::class, 'famous_id');
+  }
+}
+
+    
+    
+Title: Set a Default Interpreter and use NO virtualenv in PyCharm 2017
+Description: 
+    
+    
+                    
+I'm on Ubuntu 16.04. I went to File &gt; Default Settings &gt; Project Interpreter &gt; add local and browsed to my anconda3/long/path/python3.6. When I open a new project or file the anaconda interpreter is NOT chosen, and instead a virtual environment based on the systems default python3 interpreter is created in /home/myname/venv and is used. To change it I need to go into settings, search for "interpreter" and choose the anaconda3 I added earlier, but thats a hassle!  
+
+How can I get PyCharm to use the anaconda3 interpreter by default and avoid having those anoying virtual environments poping up in my home folder everytime I need to write a script?
+    
+
+        
+Answer 1: 
+
+    
+    
+This is a bit convoluted. When clicking File &gt; New Project you get a pop-up window where you set the project name, under the name there is a little text saying Project Interpreter: Python 3.6. Click on it and some options expand. The preset option is New Virtual Environment with the default system interpreter. The other, not set option, is Existing Interpreter which is the one you set in the Default Settings. 
+    
+    
+Title: Which editor and debugger for typescript
+Description: 
+    
+    
+                    
+I am working on a nodejs project in which all code is written in typescript. It follows a microservice pattern (and each microservice is an independent project) hence lot of projects needs to be opened and debugged at the same time.
+
+I tried webstorm and visual studio (with NTVS) but not satisified with both of them. Webstorm ignores many build errors (very important as those will fail during CI) and not as good as visual studio in intellisense and ease of use. On the other hand, Visualstudio is not as fast as I want. Also I am tied to windows and the filename length problem in node_modules is very frequent and annoying. 
+
+Others (atom, VSCode) doesn't have typescript debug support (or am I missing something?).
+
+Can you please share your experience? Also I was wondering which editor google developers might be using to develop angular 2 :)
+    
+
+        
+Answer 1: 
+
+    
+    
+I have been working on a TypeScript project for 1.5 years now and am quite happy with using Visual Studio because we used .NET for back-end stuffs. For myself I consider the speed as "Ok", it is not that good - but the other stuffs e.g. intellisense is what we really like. I also personally think that as a "son" of Microsoft, TypeScript will get the best support from its "cousin" - Visual Studio.
+
+However if you are a Eclipse person, you may be interested in this TypEcs (http://typecsdev.com/). There was also a post by Steve Fenton talking about TypeScript IDEs you may be interested (https://www.stevefenton.co.uk/Content/Blog/Date/201409/Blog/Which-TypeScript-IDE/), he listed a few of the popular ones with a few sentences of comments, including Atom and the atom-typescript extension.
+    
+    
+Answer 2: 
+
+    
+    
+VSCode can debug in Node. No browser debugging yet.
+    
+    
+Answer 3: 
+
+    
+    
+A bit late to the conversation.
+
+I recently tried VisualStudio 2015, VisualStudio Code 0.9, Atom (with Atom-Typescript package). And quite comfortable with Atom.
+
+Atom-TypeScript uses the latest version of TypeScript so you can use all new features like async/await, string interpolation etc. The package created by community so we don't need to wait for major IDE release to use new TypeScript features.
+
+For debugging couldn't find one. But love to use node-inspector for its light weight. The problem is you need to debug it in javascript version not in typescript version. Not so sure but maybe if you can provide map file you can debug the typescript version? like we have on Google Chrome Inspector.
+    
+    
+Answer 4: 
+
+    
+    
+Not a recommendation, but I suggest you do not buy JetBrains' products (IntelliJ/WebStorm/ReSharper) for TypeScript editing unless you have evaluated them properly.
+
+They reused a lot of their own logic for other languages instead of taking full benefit of the TypeScript language service, which means they behave more like a fancy JavaScript editor that can make some clever guesses as opposed to a robust IDE for a statically typed langauge. (Their type inference is different from the compiler and may fool you into believing an untyped expression (implicit any) is well-typed. Also, all the refactoring are the same as the JS ones, so they do not use or preserve any type information. No type-information-based refactoring (like safe renaming and moving) are available either.)
+
+As for debugging, you may have more milage debugging the generated JS. Not only is it well supported, it also reveals problems that occur in compiler-inserted code. The latter would be otherwise difficult to understand if you're only looking at the TypeScript source. Also, in the generated code, you can actually set break points in single line lambda function bodies.
+    
+    
+Answer 5: 
+
+    
+    
+I too use Visual Studio. I haven't had any problem with its speed; I find everything is as immediate as I expect it too.
+
+However, I haven't been using "TypeScript" projects. I have been using generic "Web" projects with TypeScript files. Plus, I don't use Visual Studio's own building and compilation facilities; I use my own Gulp tasks for my project (including rebuilding, watching for saves, minification, testing, etc), and Task Runner Explorer to manage/run them from inside Visual Studio. I think it's the best of both worlds: the snappiness and features of Visual Studio, and the flexibility of running my own custom tasks independent of platform.
+
+I have to admit I don't do any deep debugging (e.g. breakpoints, stepping) from the IDE. Does VS do that with TypeScript? If I catch an error during execution (in the browser), I always have my source maps indicating where the error is, so I go back to the code, attempt to fix it, save, and reload in the browser.
+    
+    
+Answer 6: 
+
+    
+    
+I am using VSCode to actively debug an angular/node/typescript application.  It does work, but you will need to do some setup/configuration.  You must tell VSCode how to debug your applications.  For instance I have multiple options in my launch.json configuration to debug my gulp scripts, my node server.js file, and the angular/typescript application via chrome using the "Debugger for Chrome" extension installed in VSCode.  It is all possible with some configuration. Finally, depending on your exact situation you may need to have and correctly configure the map files for your project from javascript to typescript.
+
+I also had the problem of file paths too long in the node_modules folder in visual studio when opening a project with npm.  This is due to Visual Studio trying to download all your packages - incorrectly so I might add.  The only way to avoid this for my project was to mark the node_modules folder as a hidden folder in windows (top level only).
+    
+    
+Title: How do I make IntellIJ use JVM options for all main files in a project?
+Description: 
+    
+    
+                    
+I can configure a main file to use natives needed, but in my project there are multiple main functions so I need all the files to to use the JVM option when I can choose to debug whichever one I want without having to create a configuration for each one
+    
+
+        
+Answer 1: 
+
+    
+    
+You can change the configuration under Defaults node (Templates in the new versions), all the new configurations will inherit its settings. Make sure to change the correct default configuration type, Application is most likely what you need.
+
+
+
+Refer to the documentation for details.
+    
+    
+Title: Is it possible to name a thread in the Visual Studio debugger?
+Description: 
+    
+    
+                    
+I'm working in C# 4.0 (winforms), debugging an application with 10+ threads.  While debugging, there is a drop down to select which thread I should be debugging (only accessible during a breakpoint).
+
+These show up as "Win32 Thread", "Worker Thread", "RPC Callback Thread", etc...
+
+I'd love to name them from within my code.  I'm running all my threads via background workers. 
+
+Edit: my solution.  This may not work 100% of the time, but it does exactly what it needs to.  If the labels are wrong in some case, thats OK in the context I'm working with.
+
+At every backgroundworker's *_dowork event, I put the following line of code in:
+
+ReportData.TrySetCurrentThreadName(String.Format("{0}.{1}", MethodBase.GetCurrentMethod().DeclaringType, MethodBase.GetCurrentMethod().Name));
+
+
+Which is...
+
+  public static void TrySetCurrentThreadName(String threadName)
+  {
+     if (System.Threading.Thread.CurrentThread.Name == null)
+     {
+        System.Threading.Thread.CurrentThread.Name = threadName;
+     }
+  }
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Well you can use the Thread.Name property, but you can only write to it once - so when you create the thread, give it an appropriate name.
+    
+    
+Answer 2: 
+
+    
+    
+Thread.CurrentThread.Name = "Give your name here";
+
+    
+    
+Title: Eclipse: dynamic web project, where to put my download jQuery API
+Description: 
+    
+    
+                    
+I have created my dynamic web project in Eclipse. Since my UI use javascript jQuery, I have download the jQuery API, I am wondering where to put it in my eclipse project?. 
+Under which directory? is there any configurations for the jQuery API inside eclipse?
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm not quite sure if you just want to know how to provide jQuery for your WebApplication or if you want to be able to develop JavaScript applications with jQuery and have autocompletion for doing so.
+
+To use jQuery in your WebApp you can put it somewhere in the WebContent folder. I usually create a "scripts"-folder where I have all the js files.
+
+You can then link from your servlet / html file... or whatever to the js file. E.g. you have an index.html in the WebContent directory then you would use the path scripts/jquery.js to link to the js file in the scripts folder.
+
+I hope this was some help to you.
+
+br, Chris
+    
+    
+Answer 2: 
+
+    
+    
+It's up to you where you put it. Once you decide on somewhere include jQuery with script tags on which ever pages you want it. For example:
+
+&lt;script type="text/javascript" src="/path/to/jquery/jquery-1.4.4.min.js"&gt;&lt;/script&gt;
+
+
+Obviously the name and version of your jquery .js might be different so update where necessary.
+    
+    
+Answer 3: 
+
+    
+    
+create a new folder in your existing project as example script and place jquery.js file.
+
+To include the file in programming just give the path as:
+
+&lt;script type="text/javascript" src="/script/jquery/jquery-1.4.4.min.js"&gt;&lt;/script&gt;
+
+    
+    
+Title: How to get IntelliJ From making annoying blue popups?
+Description: 
+    
+    
+                    
+On Mac OSX running the latest JDK, my IntelliJ  9.0.3 pops up these incredibly annoying and persistent windows:
+
+
+
+This stuff compiles and runs fine, the JDK is definitely operational on this machine. It should be a java.util.string, not some other apache string. 
+what is this supposed to be, and how do i get rid of it? Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+My guess is that you have not configured the Java SDK that your project is using.
+
+File -
+Answer 2: 
+
+    
+    
+Found it!
+In intellij idea 14, go to
+
+settings -
+Answer 3: 
+
+    
+    
+You can ignore certain packages &amp; classes from the import-popup.
+
+See the answer here: Limiting IntelliJ IDEA import suggestions on completion
+    
+    
+Title: What is the shortcut to focus back on the Atom editor when focus is on the tree-view? And the opposite?
+Description: 
+    
+    
+                    
+Is there in atom.io a shortcut to get the focus back on the editor (maybe even on a particular pane) when the tree has the focus?
+
+I've checked on the documentation but I couldn't find anything.
+    
+
+        
+Answer 1: 
+
+    
+    
+Just hit escape. This works on Mac OS.
+    
+    
+Answer 2: 
+
+    
+    
+On fedora 29 Workstation(Gnome desktop), Linux.
+Use the keybinding (keyboard shortcuts) , ALT+\, for toggle between  "Tree View" and Editor area.
+    
+    
+Answer 3: 
+
+    
+    
+I prefer a Ctrl+[number] combination for switching between panels, tree view and editor.
+
+You can add the following lines to your keymap.cson file [1] to change the default Atom keybindings.
+
+'.tree-view':
+  'ctrl-1': 'tree-view:unfocus'
+
+'.platform-win32':
+  'ctrl-3': 'tree-view:toggle-focus'
+
+
+This would result in:
+
+Ctrl + 3 to focus on the tree-view
+Ctrl + 1 to go back to editor
+
+[1]: To access the keymap file, type ctrl + , to access Atom settings and go to Keybindings 
+Title: How to get Xamarin Studio C# output within the IDE?
+Description: 
+    
+    
+                    
+I recently started experimenting with Xamarin and Mono C# on my Mac. I am used to working on Windows with Visual Studio so I find it cumbersome when every time I run my console application, a new terminal window and mono compiler terminal  open up. And I have to manually close them. Is there anyway to get the output of my programs from a window or pane inside the IDE ? Or is there anyway to set it up so only one terminal window shows up ? 
+    
+
+        
+Answer 1: 
+
+    
+    
+If you open the Project Options there is a Run on external console check box in the Run - General category which controls this behaviour. If you uncheck this option when you run a console application the output will be shown in an Application Output window inside Xamarin Studio and no external console window will be opened.
+    
+    
+Answer 2: 
+
+    
+    
+For anyone else arriving at this question who can't locate 'Project Options', the item is found in a drop down menu under the Project Tab (located at the top of the screen on the app's main nav bar). When a solution/file is loaded, the item is listed with your project's actual name, ex: 'MyProject Options' or 'MyProject&amp;Options' (–it does not literally read 'Project Options').
+    
+    
+Title: Sublime Text Indentation Settings Being Overwritten By a File
+Description: 
+    
+    
+                    
+I am working on a project where tab size is supposed to be 4 and tabs should not be spaces. I updated my Preferences.sublime-settings file to include
+
+"detect_indentation": "false",
+"tab_size": 4,
+"translate_tabs_to_spaces": false,
+
+
+When I open a new file these settings are set to how I want and everything works. However, if I open an existing file (scss or html) that has indentations as 2 spaces, my Sublime settings are overwritten and indentations change to 2 spaces. If I click View /pp
+Answer 1: 
+
+    
+    
+So I figured this out by completely uninstalling Sublime Text and all associated packages and settings, then reinstalling the app and one-by-one reinstalling my packages. It turns out that one of my packages, EditorConfig, was overwriting my Sublime Text style settings. 
+
+EditorConfig is actually a really cool plugin that allows a number of developers working on one project across multiple IDEs to have a consistent style by defining indentation type, size, charset, and other settings. 
+
+The answer to my problem was that in the particular project directory I was working some of the node modules I had downloaded had .editorconfig files that had indentation set as size 2 and spaces instead of tabs. I had to either uninstall the EditorConfig package from my Sublime Text or create a new .editorConfig file in the root directory of my project. This is the .editorConfig file I created that fixed my problem. 
+
+# top-most EditorConfig file
+root = true
+
+# 4 Tab Indentation
+indent_style = tab
+indent_size = 4
+
+    
+    
+Answer 2: 
+
+    
+    
+When a file is loaded, its contents are examined, and the "tab_size" and "translate_tabs_to_spaces" settings are set for that file. The status area will report when this happens. While this generally works well, you may want to disable it. You can do that with the "detect_indentation" setting. 
+
+This might be helpful: https://www.sublimetext.com/docs/2/indentation.html
+    
+    
+Title: Intellisense for Ruby, Ruby on Rails, Python
+Description: 
+    
+    
+                    
+Are there any intellisense options for languages like Ruby, Ruby on Rails, Python, etc?
+
+This could include an IDE, if necessary. I'm looking for something like Visual Studio's c# or Eclipse's java intellisense.
+    
+
+        
+Answer 1: 
+
+    
+    
+Sure are!!
+
+jetbrains has full line of ide's.
+
+PyCharm and RubyMine
+
+http://www.jetbrains.com/ruby/
+    
+    
+Answer 2: 
+
+    
+    
+Because of the dynamic nature of these languages, implementing things like auto-completion is quite difficult, and only works for some cases.
+
+Examples for Python: pydev (eclipse plug-in), rope (this is a refactoring library that can easily be used into emacs),anyting with ipython (again, an emacs mode).
+
+Anyways, don't expect them to be as powerful as the tools you have for Java or C#.
+
+Rope for example, does a bit of type inference to figure out parameter types in order to give you completion suggestions. This might take an awfully long amount of time for big codebases, thus making the feature useless on such codebases.
+
+anyting with ipython on the other hand actually spawns a background python process that imports your current module and any modules it references, and does runtime checking on entities (classes, functions, global variables...) in those modules. Because it doesn't do type inference, it can't give you any auto-completion suggestions for variables passed as parameters or local variables.
+    
+    
+Answer 3: 
+
+    
+    
+My vim setup uses the supertabcomplete, snipmate, and python-mode plugins for mostly intellisense completion. 
+
+It's windows centric, because that is what I develop on, but just change the paths in the vimrc file after cloning and you should be up and functional.
+    
+    
+Answer 4: 
+
+    
+    
+Sublime Text 2 also supports this to a limited extent. Auto-completion is very difficult for dynamic languages, so this will display recently use variables/methods, and anything else that is nearby that matches the fuzzy text filter.
+    
+    
+Answer 5: 
+
+    
+    
+Use vim with dot files which includes syntax highlight, smart indentation, auto-complete for Ruby among other features. Although it had been worked for MacOS, but you can easily adapt to your OS if you're using other.
+
+Another option includes Aptana for Eclipse or Jetbrains RubyMine. So try all the solutions and decide what best fits your needs.
+    
+    
+Title: How to plot how variables change in Visual Studio
+Description: 
+    
+    
+                    
+oes anyone know a way to plot how a watched variable changes over time in Visual Studio 2010?  I.e. if you had the following code
+
+double someVariable;
+for ( int i = 0; i &lt; 20; i++)
+{
+    someVariable = Math.Pi() * i;
+}
+
+
+and you watched 'someVariable' in the ide you could step through the code and watch how it grows with each step.  I would like to be able to run through the loop and plot what that variable did with out having to manually step through it.  I am doing a lot of math and sometimes watching how variables change is really useful and insightful.
+
+More info:
+I have a bunch of slightly different solvers and depending on the problem I am troubleshooting I would like to watch different variables to see where the problems are occurring.  I currently put log these variables to a log file but it slows down the solver significantly and I have to spend a decent amount of time changing debug code to track down problems.  I am looking for a slicker way to do this that is IDE centric.  Sort of a Visualizer on steroids.
+    
+
+        
+Answer 1: 
+
+    
+    
+How about using Tracepoints? In VS 2008 (it's somewhat different in VS 2010) you just add a normal breakpoint, then right-click on it, then select "When Hit...".
+
+In the subsequent dialog box, check "Print a message" and enter something like
+
+someVariable = {someVariable}
+
+
+This will just output its value to the output window in the IDE.
+
+Screenshot:
+
+
+    
+    
+Answer 2: 
+
+    
+    
+Easy way? None.
+
+But you can code it yourself..
+
+
+Use property.
+In setter put code, that will log change in some collection. Possibly save time too.
+Use some plotting control to plot this collection
+
+
+Edit:
+If you dont want to create property, you can create some kind of generic class, that will have this property and has some kind of internal logging logic.
+    
+    
+Answer 3: 
+
+    
+    
+Use Perfmon and publish that value to a counter that perfmon can read.  Perfmon does all the plotting etc.  You just need to publish to perfmon.  Unfrotunately it is not very well documented and is not trivial. (well, at least it wasn't trivial for unmanaged c++ when I was looking into it)
+
+I did this a while back and used some classes published in an old MSJ article.  (ca 1998 or so)
+
+I will try to find some online docs.
+
+See this question for some links
+
+This may also be useful
+
+If you find a solution or this works for you please let us know.
+    
+    
+Answer 4: 
+
+    
+    
+Hopefully someone will come up with a better answer, but here is what I did in a similar situation...
+
+I output the values, in CSV format, to the console.  From there, I would copy and paste into Excel, and let Excel do some graphing for me.  It worked quite well, but was a complete hassle during a caffeine-driven development session.
+    
+    
+Answer 5: 
+
+    
+    
+Can't you just define and array and write someVariable to array[i] inside the loop?  Then you could reference it after you're done.
+
+double[] x = new double[20];
+double someVariable; 
+for ( int i = 0; i &lt; 20; i++) 
+{
+     someVariable = Math.Pi() * i;
+     x[i] = someVariable;
+} 
+
+    
+    
+Answer 6: 
+
+    
+    
+I've found SpPerfChart very easy to use and helpful. Simply add the user control and input your changing data to it. You'll get a graphical plot of whatever number you input realtime.
+    
+    
+Title: Stuck at &ldquo;Hello World&rdquo; with IntelliJ IDEA 9.0.1 for Scala
+Description: 
+    
+    
+                    
+I've been using Eclipse since 2.x and IDEs in general for over 20 years (since Turbo Pascal and Turbo C in the late '80s!).
+
+(that preamble is supposed to imply, "I'm not an idiot" ... but doesn't sound so smart as I read it... LOL :-] )
+
+Now I'm trying to use the Scala debugger in IntelliJ 9.0.1. I've resigned myself to an old standby, the "hello world" trick to check if the environment is setup correctly:
+
+
+class hello {
+  def main(a: Array[String]) = println("got args: " + a)
+}
+
+
+I also tried this version, just in case:
+
+
+object hello extends Application {
+    println("hi")
+}
+
+
+Alas, I'm unable to get even this simple Scala example to run. I'd like to eventually put a breakpoint in it, but for now just running it would be great. I have Java 1.6u20 and the Scala plug-in 0.3.473 (January 2010). The error below summarizes my experience:
+
+
+
+
+What possibly could I be doing wrong?
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+From your screenshot it looks like you were using:
+
+class hello {
+  def main(a: Array[String]) = println("got args: " + a)
+}
+
+
+The main method has to be on an object to support a main method.
+
+Capitalizing the object / class name is the convention but it isn't enforced.
+    
+    
+Answer 2: 
+
+    
+    
+When you change your implementation from class to object, it works like a charm:
+
+object Hello {
+   def main(a: Array[String]) = println("got args: " + a)
+}
+
+
+I picked up this little, but important difference here:
+http://sonyarouje.com/2011/03/18/running-scala-in-intellij-idea-10/
+    
+    
+Answer 3: 
+
+    
+    
+It may be a bug in the plugin. If you define you object as Hello (capitalized) then it works, at least on my machine. 
+    
+    
+Answer 4: 
+
+    
+    
+Is your file called hello.scala? (I can't see that it has the .scala extension in your screenshot) - it must be a .scala file as otherwise the compiler will not be able to compile it
+    
+    
+Title: How can I remain productive with one hand completely immobilized?
+Description: 
+    
+    
+                    
+I broke my left collarbone and my left hand completely immobilized so I can type only with my right hand (thank God I'm right-handed). As you can imagine my typing speed is greatly reduced.
+
+Can anyone suggest a way to overcome this impediment, maybe some emacs mode or Visual Studio plug-in which is specially designed for people who can only type with one hand?
+
+I'm not big mouse user so any suggestions how simplify my interaction with OS (Linux, Windows) are welcome.
+    
+
+        
+Answer 1: 
+
+    
+    
+Take the time it takes to heal, to let yourself heal!
+
+If that isn't an option, try to think out as much as you can before ever touching the keyboard. (I try to do that anyway .. even works for me sometimes:-)
+
+But most of all, take care and get well soon!
+    
+    
+Answer 2: 
+
+    
+    
+There is a Dvorak keyboard layout for typing with just the right hand: 
+
+
+http://www.onehandedkeyboard.com/dvorak.html
+http://www.pcguide.com/ref/kb/layout/alphaSingle-c.html
+http://en.wikipedia.org/wiki/Dvorak_Simplified_Keyboard#One-handed_versions
+
+    
+    
+Answer 3: 
+
+    
+    
+I was acquainted with a programmer with an artificial dummy hand.  However, he typed faster than me, and he was doing it in regular editors.  So, the typing speed in such circumstances is just a matter of habit, I guess.
+    
+    
+Answer 4: 
+
+    
+    
+Learn the dvorak right-hand keyboard.  You can switch to this layout in Windows, Mac, or Linux.  In windows it is under control panel, regional.
+    
+    
+Answer 5: 
+
+    
+    
+Speech recognition can help a lot.  But you know, it won't be that long before you get the hand back.
+    
+    
+Answer 6: 
+
+    
+    
+I think there is nothing to worry, if you are very good with emacs commands, i read here in stackoverflow that there is some solution to work in visual studio with emacs commands, i will try to search/learn more about it and edit this answer when something to add. Good luck
+
+Some more usefull links:
+
+
+visual-studio-emacs
+
+    
+    
+Title: How to create multi-file template in PhpStorm (or WebStorm)?
+Description: 
+    
+    
+                    
+I need 2 files for creating new component in React:
+
+${NAME}.js
+
+import React from 'react';
+import css from './${NAME}.css';
+const ${NAME} = () =&gt; (
+  &lt;div&gt;&lt;/div&gt;
+);
+export default ${NAME};
+
+
+${NAME}.css
+
+/* Empty */
+
+
+Note: ${NAME} needs to be entered like constant while creating these files.
+
+I would like to use PhpStorm (or WebStorm) file template feature (or some other simple way) to create both files - by only clicking to create component like on image below:
+
+
+
+Is something like that possible ?
+    
+
+        
+Answer 1: 
+
+    
+    
+As far as I'm aware it's not possible ... unless you code a plugin for that yourself.
+
+https://youtrack.jetbrains.com/issue/IDEA-91565 -- watch this ticket (star/vote/comment) to get notified on any progress.
+
+This duplicate ticket asked about the same ... just for Angular.
+
+
+
+Some links if you are thinking about coding it yourself:
+
+
+Plugin Development Docs
+API Forum
+Some example
+
+    
+    
+Title: mutil-line editing in KDevelop?
+Description: 
+    
+    
+                    
+I would like to do multi-line edits in KDevelop, similar to the column-edit in Visual Studio when alt is held, such that my cursor extends accross multiple lines, and each key I press is written to each line simultaneously.
+
+This link seems to show that Kate has such a feature, and my understanding is that Kate is KDevelop's text-editing engine. However, when I use ctrl-shft-B to enter block editing mode, the cursor only appears at the bottom of the block and types onto a single line. Am I doing something wrong, or is multi-line editing not actually supported?
+
+I'm currently using version 4.7.2
+    
+
+        
+Answer 1: 
+
+    
+    
+After activating block editing mode you can select multiple lines by using the mouse or eg. Shift+Down. Then just start typing.
+
+
+    
+    

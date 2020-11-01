@@ -1,0 +1,907 @@
+Title: Running eclipse from a network file system
+Description: 
+    
+    
+                    
+How does eclipse perform when running directly from a network file system on linux?
+
+Use case:
+We do not want to install eclipse in local drives as of now as upgrades and maintenance become overhead (we'll head to this eventually). However, we still want to have control on the eclipse edition being used (this includes couple of other default settings, plugin installations, and preferences that we want developers to adhere to). One possible solution is to put the tar in a network location and let people copy that and run locally. But this makes upgrades to this eclipse bundle difficult. We would rather want to put the exploded eclipse folder in the shared NFS and let people run directly from there (and control upgrades via symlinks).
+
+Concern:
+Does eclipse load all the plugins at the time of startup? If yes, the only possible impact could be the startup time. If not, then there can be latencies in various operations being performed later.
+
+Please note, workspace is still going to be on a local drive. Yes we can try this out, but I don't want that a good network bandwidth available right now (which can get bad due to increased network traffic) gives false results, and so want to confirm the behavior.
+    
+
+        
+Title: NetBeans IDE 8.1 HTML Class background highlighted?
+Description: 
+    
+    
+                    
+NetBeans IDE 8.1 HTML undefined class background highlighted with light green color, I want to get ride of this background?
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You could try this: Tools-
+Title: How can I get Eclipse to make assumptions about my template parameters?
+Description: 
+    
+    
+                    
+I have
+
+template &lt;typename T&gt; class Foo : public T { /* ... */ }
+
+
+and I only instantiate it with Ts which are subclasses of Bar. If it helps, I can static_assert that's the case.
+
+So, Eclipse CDT doesn't recognize T is "really" also a Bar. I can't complain about that - but can I make it understand that? That is, can I somehow tell the Indexer to look for methods and types in class Bar as a base class of Foo?
+    
+
+        
+Answer 1: 
+
+    
+    
+This is a really good question!
+
+Currently, there is no way to tell Eclipse that a template will only be instantiated with arguments that are subclasses of a particular type.
+
+However, there is an upcoming C++ language feature that will allow you to express this relationship in your code, and for Eclipse to pick up on it as well: Concepts.
+
+Concepts allow you to constrain template parameters such that they have to satisfy a concept, which can be thought of as a type predicate - a boolean function on types, evaluated at compile-time.
+
+For example, you can write a concept like this:
+
+template &lt;typename T&gt;
+concept bool DerivedFromBar = std::is_base_of&lt;Bar, T&gt;::value;
+
+
+This defines a concept DerivedFromBar which is satisfied only by types that are derived from Bar.
+
+You can then use this concept in your class template definition:
+
+template &lt;DerivedFromBar T&gt; class Foo : public T { /* ... */ }
+
+
+Note the use of DerivedFromBar instead of the usual typename to declare the template parameter T. This tells the compiler that T is constrained to satisfy DerivedFromBar.
+
+Once you express your code in this way, Eclipse can, in principle, make inferences that would allow it to offer members of Bar as auto-completion proposals when calling a method on an object of type T inside the template.
+
+Concepts is currently supported by GCC, with other compilers such as MSVC and clang working on implementing it.
+
+Bug 492682 tracks Concepts support in Eclipse CDT. Taking advantage of Concepts for better auto-completion would then be a follow-up feature.
+    
+    
+Title: Ruby Rails - Cloud9 - (SocketError)
+Description: 
+    
+    
+                    
+When trying to start my Rails app in C9.io, I see the Socket Error below. I am unsure how to correct this issue. Any ideas?
+
+
+ruby 2.3.0p0 (2015-12-25 revision 53290) [x86_64-linux]
+Rails 4.2.5
+Cloud9 IDE
+
+blacknight659:~/jh_projects/mybay2 $ rails s -b -$IP -p -$PORT
+
+
+=
+Answer 1: 
+
+    
+    
+I got the same error when tried to start my Sinatra app on cloud9. It turned out that I was running the command : $ bundle exec rackup -p $PORT -o $IP with root user (su). Try to run it on normal user.
+    
+    
+Answer 2: 
+
+    
+    
+You have a dash before ip and port arguments. The values of the arguments are specified without dashes. Try:
+
+rails s -b $IP -p $PORT
+
+    
+    
+Title: File spinner_background_material.xml does not exist (or is not a file) android xml
+Description: 
+    
+    
+                    
+I get this error when try to view the xml in the editor view.
+
+java.lang.NullPointerException
+at android.graphics.Typeface.createAssetUid(Typeface.java:219)
+at android.graphics.Typeface.createFromAsset(Typeface.java:193)
+at com.accionplus.dbdplus.vistas.font.MaterialDesignIconsTextView.setTypeface(MaterialDesignIconsTextView.java:28)
+at com.accionplus.dbdplus.vistas.font.MaterialDesignIconsTextView.&lt;init&gt;(MaterialDesignIconsTextView.java:22)
+at com.accionplus.dbdplus.vistas.font.MaterialDesignIconsTextView.&lt;init&gt;(MaterialDesignIconsTextView.java:17)
+at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+at java.lang.reflect.Constructor.newInstance(Constructor.java:422)
+at org.jetbrains.android.uipreview.ViewLoader.createNewInstance(ViewLoader.java:465)
+at org.jetbrains.android.uipreview.ViewLoader.loadClass(ViewLoader.java:172)
+at org.jetbrains.android.uipreview.ViewLoader.loadView(ViewLoader.java:105)
+at com.android.tools.idea.rendering.LayoutlibCallbackImpl.loadView(LayoutlibCallbackImpl.java:176)
+at android.view.BridgeInflater.loadCustomView(BridgeInflater.java:247)
+at android.view.BridgeInflater.createViewFromTag(BridgeInflater.java:171)
+at android.view.LayoutInflater.createViewFromTag(LayoutInflater.java:727)
+at android.view.LayoutInflater.rInflate_Original(LayoutInflater.java:858)
+at android.view.LayoutInflater_Delegate.rInflate(LayoutInflater_Delegate.java:70)
+at android.view.LayoutInflater.rInflate(LayoutInflater.java:834)
+at android.view.LayoutInflater.rInflateChildren(LayoutInflater.java:821)
+at android.view.LayoutInflater.rInflate_Original(LayoutInflater.java:861)
+at android.view.LayoutInflater_Delegate.rInflate(LayoutInflater_Delegate.java:70)
+at android.view.LayoutInflater.rInflate(LayoutInflater.java:834)
+at android.view.LayoutInflater.rInflateChildren(LayoutInflater.java:821)
+at android.view.LayoutInflater.inflate(LayoutInflater.java:518)
+at android.view.LayoutInflater.inflate(LayoutInflater.java:397)
+at com.android.layoutlib.bridge.impl.RenderSessionImpl.inflate(RenderSessionImpl.java:317)
+at com.android.layoutlib.bridge.Bridge.createSession(Bridge.java:429)
+at com.android.ide.common.rendering.LayoutLibrary.createSession(LayoutLibrary.java:350)
+at com.android.tools.idea.rendering.RenderTask$2.compute(RenderTask.java:520)
+at com.android.tools.idea.rendering.RenderTask$2.compute(RenderTask.java:508)
+at com.intellij.openapi.application.impl.ApplicationImpl.runReadAction(ApplicationImpl.java:967)
+at com.android.tools.idea.rendering.RenderTask.createRenderSession(RenderTask.java:508)
+at com.android.tools.idea.rendering.RenderTask.access$600(RenderTask.java:75)
+at com.android.tools.idea.rendering.RenderTask$3.call(RenderTask.java:620)
+at com.android.tools.idea.rendering.RenderTask$3.call(RenderTask.java:617)
+at com.android.tools.idea.rendering.RenderService.runRenderAction(RenderService.java:371)
+at com.android.tools.idea.rendering.RenderTask.render(RenderTask.java:617)
+at com.android.tools.idea.rendering.RenderTask.render(RenderTask.java:639)
+at org.jetbrains.android.uipreview.AndroidLayoutPreviewToolWindowManager.doRender(AndroidLayoutPreviewToolWindowManager.java:654)
+at org.jetbrains.android.uipreview.AndroidLayoutPreviewToolWindowManager.access$1700(AndroidLayoutPreviewToolWindowManager.java:82)
+at org.jetbrains.android.uipreview.AndroidLayoutPreviewToolWindowManager$7$1.run(AndroidLayoutPreviewToolWindowManager.java:596)
+at com.intellij.openapi.progress.impl.CoreProgressManager$2.run(CoreProgressManager.java:142)
+at com.intellij.openapi.progress.impl.CoreProgressManager.registerIndicatorAndRun(CoreProgressManager.java:446)
+at com.intellij.openapi.progress.impl.CoreProgressManager.executeProcessUnderProgress(CoreProgressManager.java:392)
+at com.intellij.openapi.progress.impl.ProgressManagerImpl.executeProcessUnderProgress(ProgressManagerImpl.java:54)
+at com.intellij.openapi.progress.impl.CoreProgressManager.runProcess(CoreProgressManager.java:127)
+at org.jetbrains.android.uipreview.AndroidLayoutPreviewToolWindowManager$7.run(AndroidLayoutPreviewToolWindowManager.java:591)
+at com.intellij.util.ui.update.MergingUpdateQueue.execute(MergingUpdateQueue.java:337)
+at com.intellij.util.ui.update.MergingUpdateQueue.execute(MergingUpdateQueue.java:327)
+at com.intellij.util.ui.update.MergingUpdateQueue$3.run(MergingUpdateQueue.java:271)
+at com.intellij.util.ui.update.MergingUpdateQueue.flush(MergingUpdateQueue.java:286)
+at com.intellij.util.ui.update.MergingUpdateQueue.flush(MergingUpdateQueue.java:244)
+at com.intellij.util.ui.update.MergingUpdateQueue.run(MergingUpdateQueue.java:234)
+at com.intellij.util.concurrency.QueueProcessor.runSafely(QueueProcessor.java:238)
+at com.intellij.util.Alarm$Request$1.run(Alarm.java:352)
+at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+at java.lang.Thread.run(Thread.java:745)
+
+
+It says "Use View.isInEditMode() in your custom views to skip code or show sample data when shown in the IDE" but I can't figure it out. This error doesn't let me see the icons or the elements correctly in the preview of the editor.
+    
+
+        
+Title: How to change the default code template for C++ in Eclipse?
+Description: 
+    
+    
+                    
+I'm using Eclipse as an IDE for C++ programming. When creating a new project, I get the following default template:
+
+//============================================================================
+// Name        : .cpp
+// Author      : "name I can specify"
+// Version     :
+// Copyright   : ©opyRights
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+cout &lt;&lt; "" &lt;&lt; endl; // prints 
+return 0;
+}
+
+
+So, what I want to know is: How can I change this default template as a whole - the include files, the first part which contains the Name (in blank), and other information?
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+Templates are located in the preferences window. Here is the path:
+
+Window 
+Answer 2: 
+
+    
+    
+The template is probably stored in a jar file inside the Eclipse's plugin folder. You can use WinRAR to search within all the jar files. Search for a significant word, like Author      :. Once found the jar file, unzip it, modify the template, re-zip it, rename it to jar. Go back to the Eclipse's plugin folder, make a backup of the old jar (rar it or 7zip it or move it from that folder) and replace it with your new jar (it must have the exact same filename).
+    
+    
+Title: How to Save PyCharm Embedded Terminal Tabs
+Description: 
+    
+    
+                    
+Is there a way to save the Embedded Tabs so each time you open PyCharm you don't have to reconfigure the tab names? It seems like such a simple issue to have but I am unable to find any information on it. This is the documentation on JetBrains Site for Embedded Tabs but it mentions nothing about saving them to the default layout. Each time you open the IDE you are required to click the plus sign and rename the tab. 
+
+I have tried exporting settings and re-importing them with no luck at all. It has nothing to do with them theme from what I can tell.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+There is an issue about saving terminal tabs between sessions, please vote :)
+    
+    
+Title: Correctly configuring Eclipse for non-web JavaScript development
+Description: 
+    
+    
+                    
+Recently I've needed to write a small utility for Acrobat in its JavaScript. 
+
+Because the editor in Acrobat is pretty limited, I've installed the latest release of Eclipse IDE for JavaScript and Web Developers (Neon). It should already include the latest JSDT 2.0. 
+
+However, I've been surprised, that Eclipse's JavaScript editor does not correctly parse even simple common JavaScript patterns, like namespaces, modules, single global variable, etc. Also code folding is missing, except the very first function.
+
+I do not expect to debug Acrobat's JavaScript code in Eclipse, but I wanted to have a smart JavaScript editor and also projects, where I could gather a few non-JavaScript resources. Some automation possibilities would be also nice, of course.
+
+I've played with Eclipse preferences a lot and I've also searched on Internet, but I was not able to find anything really helpful.
+
+Have I missed something in Eclipse configuration or is it really wasting of time and I should use something else?
+
+For small projects a free IDE would be preferable, but also reasonably priced commercial products would be acceptable.
+
+A configuration solution in Eclipse would be the most welcome, of course.
+
+Thanks a lot for your help.
+    
+
+        
+Answer 1: 
+
+    
+    
+The support for newer Javascript Syntax is very bad in Eclipse (Bug).
+
+You can use Tern.js it has a good ES5 and ES6 support.
+
+But for Javascript development there are a lot of much better editors like Webstorm, VisualStudio, Sublime out there. You'll like more!
+    
+    
+Answer 2: 
+
+    
+    
+From my experience with Acrobat JavaScript, and the Acroforms technology (which you use when you work in PDF), there are not that many advantages you get from an IDE. 
+
+In fact, for my work (which IS extensive), a good text editor, with quote and parentheses balancing, maybe even auto-indent, and basic JavaScript code coloring is pretty much sufficient. I personally do write the scripts in BBEdit, and then copy/paste them into the Acrobat JavaScript editor window. 
+
+Keep in mind that JavaScripts in Acrobat/PDF are generally quite short, because they do not have to deal with DOM overhead, and because the field event sequence is quite structured (and it is really important to understand this sequence… more important than fancy JavaScript constructs). You also have to be aware that the JavaScript core implementation in Acrobat is relatively old (recently, they did upgrade it, but if your forms/applications are for the general public, you can't rely on them having the very newest version of Acrobat/Reader).
+    
+    
+Title: WebStorm debugger not importing multiple values (ES2015)
+Description: 
+    
+    
+                    
+In my project I have a config.js file like this
+
+ export const SETTING_A = 1;
+ export const SETTING_B = 2;
+
+
+Somewhere in my code I have
+
+ import {SETTING_A, SETTING_B} from './config';
+
+
+When I run my code from the commandline (or hit play button in WebStrom) it work perfect
+
+$&gt; ./node_modules/.bin/babel-node ./index.js
+
+
+However, when I start the debugger within WebStorm the values imported are undefined. 
+
+Here is my WebStorm setup:
+
+Node Interpreter: ~/WebstormProjects/test/node_modules/.bin/babel_node
+Working directory: /Users/me/WebstormProjects/test
+Javascript file: ./index.js
+
+
+When I run it in debug mode, in the console I see the following command
+
+$&gt; /Users/me/WebstormProjects/test/node_modules/.bin/babel-node --debug-brk=51396 ./index.js
+
+
+Any suggestions why the debugger cannot import ?
+    
+
+        
+Title: Unable to start app server in Netbeans
+Description: 
+    
+    
+                    
+I am unable to run either Tomcat (Version 7), or Glassfish (Version 4.1.1) in Netbeans. 
+
+I have tried re-installing the app servers and the IDE. Tried with Netbeans 8.0.2 and 8.1. It was working a few days ago.
+
+When I run a project, the process takes a long time (/pprecode/code/prep/p/div
+Title: Matlab : Autocompletion in the field of the current directory path
+Description: 
+    
+    
+                    
+I have been working on Matlab recently and can't manage to auto-complete the string I put when I want to change the current working directory.
+
+Here is an image showing what I want to do : I want to have the Desktop location selected and added to the path by either pressing the TAB button or by pressing the Right arrow.
+
+ 
+
+I managed to do that by pressing Enter after selecting the right directory. However, when I press enter I lose the focus on the field. Since I'm working with quite long paths, I need to click in the field again to type the next directory.
+
+Basicly, all I want to do is to navigate in this field the same way as I would do in a terminal. Is it possible ?
+
+PS : I have looked at the Preferencies Keyboard Shortcuts. And I have the "Expand or Select Tree Node" set to "Right".
+
+PS 2 : I am using Matlab R2013a if it can help
+
+PS 3 : I run Matlab under RedHat Linux.
+
+Thanks in advance
+    
+
+        
+Title: Android studio Experimental Plugin 0.6.0 NDK Debugging
+Description: 
+    
+    
+                    
+I recently updated to android studio 2.1 AI-143.2790544 on android studio. In previous versions NDK debugging functioned correctly and allowed me to step through code. 
+
+After updating it seems whenever the debugger stops on a breakpoint the debugger stops on the JDWP thread and the stack frame that is presented is: 
+
+art::MallocAllocator::~MallocAllocator()
+art::JDWP::JdwpState::HandlePacket()
+art::JDWP::JdwpAdpState::ProcessIncoming()
+art::JDWP::JdwpState::Run()
+art::JDWP::StartJdwpThread(void *)
+__pthread_start(void *)
+__start_thread
+
+
+This is very detrimental to my workflow. As to navigate around this I have to change the thread to the thread that exists in my codebase.
+
+Currently the same issue happens when debugging on a Galaxy S7, Nexus 5, and x86 Nexus 5 emulator.
+
+My gradle build file has the following build properties set:
+
+apply plugin: 'com.android.model.application'
+
+model {
+    android {
+        compileSdkVersion = 18
+        buildToolsVersion = "24.0.0 rc2"
+
+        defaultConfig.with {
+            applicationId = "..."
+            minSdkVersion.apiLevel = 18
+            targetSdkVersion.apiLevel = 18
+            versionCode = 1
+            versionName = "1.0"
+        }
+
+        compileOptions.with {
+            sourceCompatibility JavaVersion.VERSION_1_6
+            targetCompatibility JavaVersion.VERSION_1_6
+        }
+    }
+
+    android.ndk {
+        moduleName = "coconuteng"
+        stl = "gnustl_static"
+
+        def libs = [
+                "log",
+                "android",
+                "EGL",
+                "GLESv3",
+                "jnigraphics",
+                "dl"
+        ];
+
+        def includes = [
+                "-I${projectDir}/src/main/jni/engine/include".toString(),
+                "-I${projectDir}/src/main/jni/engine/glm".toString(),
+                "-I${projectDir}/src/main/jni/engine/lua".toString(),
+                "-I${projectDir}/src/main/jni/android_app_glue".toString(),
+                "-I${projectDir}/src/main/jni/engine/platforms/android".toString(),
+                "-I${projectDir}/src/main/jni/engine/platforms".toString()
+        ];
+
+        def flags = [
+                "-DGL_V_3",
+                "-DUSE_ANDROID",
+                "-DANDROID_NDK",
+                "-DFT2_BUILD_LIBRARY",
+                "-DDEBUG_SHADERS"
+        ];
+
+        ldLibs.addAll(libs)
+
+        CFlags.addAll(flags)
+        CFlags.addAll(includes)
+
+        cppFlags.addAll(flags)
+        cppFlags.add("-std=c++11")
+        cppFlags.addAll(includes)
+    }
+
+    android.buildTypes {
+        release {
+            minifyEnabled = false
+            signingConfig = $.android.signingConfigs.get("release")
+        }
+        debug {
+            debuggable = true
+            applicationIdSuffix = ".debug"
+        }
+    }
+
+    android.signingConfigs {
+        create("release") {
+            keyAlias = "..."
+            keyPassword = "..."
+            storeFile = file("release-key.keystore")
+            storePassword = "..."
+            storeType = "jks"
+        }
+    }
+
+    // You can modify the NDK configuration for each variant.
+    components.android {
+        binaries.afterEach { binary -&gt;
+//            String localProjectDir = "-L\""+projectDir.toString()+"/src/main/ldLibs/" + binary.name.toString() + "\""
+//            binary.mergedNdkConfig.cppFlags.add(localProjectDir)
+
+            binary.mergedNdkConfig.cppFlags.add(
+                    "-DVARIANT=\"" + binary.name + "\"")
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.amazonaws:aws-android-sdk-core:2.+'
+    compile 'com.amazonaws:aws-android-sdk-s3:2.+'
+}
+
+
+My Gradle wrapper:
+
+#Mon Oct 19 22:06:39 EDT 2015
+distributionBase=GRADLE_USER_HOME
+distributionPath=wrapper/dists
+zipStoreBase=GRADLE_USER_HOME
+zipStorePath=wrapper/dists
+distributionUrl=https\://services.gradle.org/distributions/gradle-2.10-all.zip
+
+
+local.properties:
+
+java.runtime.version=1.6
+ndk.dir=/home/julian/Android/Sdk/ndk-bundle
+sdk.dir=/home/julian/Android/Sdk
+
+
+and my project's build.gradle:
+
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle-experimental:0.6.0'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+
+Any help with this issue would be appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can fix this issue first updating Android Studio to the last available version (2.1.3 in my case) and then changing the used gradle to the last experimental version (gradle-experimental:0.7.3).
+
+The final project's build.gradle shold look like:
+
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle-experimental:0.7.3'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+
+As far as I know, the 0.7.3 version uses 'gradle-2.14.1-all', so the gradle-wrapper-properties file should look like this:
+
+#Thu Aug 25 10:42:24 CEST 2016
+distributionBase=GRADLE_USER_HOME
+distributionPath=wrapper/dists
+zipStoreBase=GRADLE_USER_HOME
+zipStorePath=wrapper/dists
+distributionUrl=https\://services.gradle.org/distributions/gradle-2.14.1-all.zip
+
+    
+    
+Title: Selecting an active scala console in IntelliJ Idea
+Description: 
+    
+    
+                    
+After opening a scala console in IntelliJ Idea you can use "send selection to scala console" (default hot-key CTRL+SHIFT+X). So far so good. 
+
+However, if I open a second scala console I can't send selections to the first console anymore, no matter what. The first console is still working if I type to it directly, only sending code-selections to it is the problem.
+
+It seems that if I have multiple consoles open the commands are always sent to the most recently opened one. 
+
+Is there a way to select the "Active" console where the selections are sent if I have multiple consoles open?
+
+I have tried:
+
+1) Closing the most recently opened console (In this case I can't send selections to any console anymore until I open a new one)
+
+2) Selecting different consoles tabs to be "on the top" (In this case the selections are still sent to the most recent one).
+
+Thanks for the help.
+    
+
+        
+Title: Library platform keeps switching to 64-bit Windows in Delphi Seattle
+Description: 
+    
+    
+                    
+I have just installed Delphi Seattle Upgrade 1.
+
+If I go to menu Tools\Options\Environment options\Delphi options\Library the Selected platform dropdown keeps reverting to 64-bit Windows.
+
+
+
+After installing a lot of 3rd party packages with manual updates of the Library path, it is not funny to find out I put them all in the wrong place ;-(
+
+I run Win32 code on a Win64 Windows 7. Only once did I build a 64-bit package, but it's been 32-bit ever since.
+
+Anything I can/should do to fix this?
+
+Edited to add:
+
+
+In the project manager, all projects in the project group show target platform Win32 only.
+In my source tree, all dproj files have &lt;Platform value="Win32"&gt;True&lt;/Platform&gt; and &lt;Platform value="Win64"&gt;False&lt;/Platform&gt; (5 out of 20 have an additional &lt;Platform value="OSX32"&gt;False&lt;/Platform&gt;)
+Explicitly saving the Default Layout does not help
+
+    
+
+        
+Answer 1: 
+
+    
+    
+One reason could be that you are building a project configured for a 64-bit platform.
+
+I tried the following :
+
+
+Set Library platform to 32-bit
+Build a project, Target : 64-bit
+
+
+==/pp/p/div
+Answer 2: 
+
+    
+    
+No, there is nothing you can do about this. This caught me out a couple of times too. It doesn't seem to be a preference stored anywhere (or contextual based on the current project settings). The form just defaults to showing you the 64-bit Library settings when it is first opened.  
+
+The only way to fix this is to remove the mistakenly added entries from the 64-bit library and move them to the 32-bit library.  If there are really a lot, you can always script this or do it in the registry rather than via the IDE's GUI.
+    
+    
+Title: List of &ldquo;#pragma ide diagnostic ignored&rdquo; for CLion (and other IDEs?)
+Description: 
+    
+    
+                    
+I've been using the Google Testing framework with CLion, and the IDE can't parse a lot of the macros in the framework.  Today I clicked the light bulb next to the inspection and clicked "ignore inspection for statement" and CLion inserted
+
+#pragma ide diagnostic ignored "CannotResolve"
+
+
+along with clang diagnostic push and pop pragmas.  This seems useful, but I can't find a list of allowed values for diagnostics to ignore anywhere.  Does anyone know where I can find such a list?  Also, does anyone know if this is just a CLion thing, or is it more broadly applicable?  Is this intended to be a signal to all IDEs, even if CLion is the only one using it? (or is it the only one?)
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't know about #pragma IDE, but for #pragma GCC and #pragma clang, you can use any -W option that does not require an =.
+
+For gcc you can use, gcc --help=warnings to list all possible warnings, though note that different warnings apply to different languages.
+
+For clang, there is no direct way to list all the warnings, but running with -Weverything is a good way to find all possible warnings that apply to any given piece of code.
+    
+    
+Title: Optimize imports as part of refactoring in IntelliJ IDEA
+Description: 
+    
+    
+                    
+I'm planning to move a widely used class from the non-standard package mycompany.etc to the more standard com.mycompany.etc. IDEA finds and updates references nicely, but when doing so, it updates import statements in-place without moving them according to the import order. The result is that they end up wildly out of place between all the remaining non-standard imports starting with mycompany.
+
+Is there a way to instruct IDEA to move the updated import statement, or better yet, automatically perform an 'optimize imports' on each file where imports were updated during refactoring?
+    
+
+        
+Answer 1: 
+
+    
+    
+Maybe you should use "Optimize imports on the fly".
+Settings-
+Title: Can&#39;t see anything in android studio
+Description: 
+    
+    
+                    
+I feel a bit stupid asking this question but when i open a project in android studio, literally nothing shows up on my screen apart from the toolbar. I've had a mess around with the view settings since this occurred but i haven't found anything to help me. Below is a screenshot of my desktop.
+
+Any help would be greatly appreciated thank you in advance.
+
+https://gyazo.com/5549ed669e639906cab1ffd43b1ede32
+
+EDIT*******
+
+Ok so i have reinstalled and got the following error.
+
+https://gyazo.com/48adb068f1b40f19f2cb0effdcc72bb5
+    
+
+        
+Answer 1: 
+
+    
+    
+
+
+Click View tab and tick the following as in the picture. Let me know if it fails
+    
+    
+Answer 2: 
+
+    
+    
+Go to view -
+Title: Force eclipse to open files in a different tab
+Description: 
+    
+    
+                    
+I would like that each time I open a reference to another file, Eclipse will be forced to open the file in a different editor, even if the current editor has already a tab with that file.
+
+The motivation is that I hate when I click CTRL+Left Click (or just F3) to open a reference to a variable/function/class and such... it uses my current editor to open the file, drives me nuts because I have 6 different editors open in my workspace, and I would highly like them to be utilized.
+
+An image for illustration, in this image Eclipse is open with 4 different editors.
+
+
+Any ideas?
+    
+
+        
+Answer 1: 
+
+    
+    
+Sounds like you might have limited the number of open editors in your preferences, causing them to be recycled.
+    
+    
+Answer 2: 
+
+    
+    
+To me it sounds like this is what you like to do:
+Eclipse: Files opened by multiple searches using same editor tab
+
+"Disable the option
+
+Preferences 
+Title: How to enable any language other than Python?
+Description: 
+    
+    
+                    
+I recently found out about liclipse and was very excited about its concept (lite eclipse) especially when newly installed Liclipse managed to start up in 5 seconds. But it seems I cannot find how to use it for any of languages listed on the website as it comes only with PyDev perspective and several other Python-related things (e.g. PyDev), but since I am not a Python developer and was looking for nim and Go support I started exploring their documentation but had no success.
+
+So my question is if I should install the plugins for languages I want (e.g. like in standard Eclipse) but that would be odd since Liclipse says it supports those languages out-of-the-box.
+
+I downloaded the latest version of Liclipse from their website and am on Win32 p;latform if it changes anything.
+    
+
+        
+Answer 1: 
+
+    
+    
+LiClipse has a lightweight editor for those languages (which provides basic syntax highlighting, outline, comment/uncomment and basic code-completion -- i.e.: based on templates), so, if that's enough for you, you should be able to just open the file you want and use the provided editor.
+
+Now, if you require more features for some given language, you can still install another more full-featured plugin to edit it.
+
+Related to the perspective, you should be able to use the Resource Perspective for any language.
+    
+    
+Title: How to automatically update CMake files in jucipp?
+Description: 
+    
+    
+                    
+So, jucipp is a pretty cool IDE but I'm not sure how to add files to my project. I certainly don't want to be managing my own CMake files.
+
+Does anybody have any experience with this IDE and knows how to automate the build process?
+    
+
+        
+Answer 1: 
+
+    
+    
+Well, historically, CMake was able to generate projects files for IDEs (Code::Blocks, Eclipse, Visual Studio), but now things are shifting towards IDEs being able to run CMake and parse CMakeLists.txt files themselves.
+
+See this talk by Stephen Kelly at FOSDEM 2016 for instance https://fosdem.org/2016/schedule/event/cmake_gui/attachments/slides/1149/export/events/attachments/cmake_gui/slides/1149/cmake_gui_tools.pdf
+
+So it's seem you're going to need to learn how to write CMakeLists files, sorry :)
+    
+    
+Title: WebStorm 11 doesn&#39;t recognise my AngularJS controllers
+Description: 
+    
+    
+                    
+My app is running without any errors, but WebStorm seems to have problems with the way I use my controllers. I declare and link them in my app.js like so:
+
+$routeProvider
+.when(...)    // Omitted in sample
+.when('/register/', {
+    templateUrl: '/app/components/register/register.html',
+    controller: 'RegisterController',
+    controllerAs: 'registerCtrl'
+})
+.otherwise({
+    redirectTo: '/home/'
+});
+
+
+And then call them from my templates like so:
+
+&lt;div class="form-group" ng-class="{'has-success': registerCtrl.firstNameValidates()}"&gt;
+
+
+But hovering over registerCtrl shows the message: "Unresolved variable or type registerCtrl".
+
+If I declare my controller using the ngController directive, all is well, but declaring them in app.js is standard AngularJS behaviour too, as far as I can tell... Could it be that WebStorm just doesn't go that far in resolving variables? Has any one gotten it to work?
+    
+
+        
+Title: How to auto redeploy app resources with Gradle?
+Description: 
+    
+    
+                    
+I have the web app that was build with maven, now i'm learning gradle and want to know is there a way for auto redeploy of resources (class files, js, css, jsp's etc.) with gradle ?
+
+With the help of IDE it was easy enough, but now i'm using cargo plugin and run gradle task from command line so IDE can't help here.
+
+Is there any simplification, so I wont need to stop tomcat and run task again every time ?
+    
+
+        
+Title: Javascript pseudo-enum with IDE completion
+Description: 
+    
+    
+                    
+Sometimes I need enum-like structures for fixed sets of string valus in Node.JS. Basically an object with keys for each enum value, and each value is a string equal to the key:
+
+var State = {FOO: 'FOO', BAR: 'BAR', SOME_REALLY_LONG_NAME: 'SOME_REALLY_LONG_NAME'};
+
+
+This enables me to type State.S and the IDE will suggest State.SOME_REALLY_LONG_NAME, and typos are practically eliminated. I can do if (x === State.FOO) etc.
+
+The above syntax is however obviously not ideal due to the duplication of each literal during creation of the set of values. So I can do for example:
+
+var State = _.indexBy(['FOO', 'BAR', 'SOME_REALLY_LONG_NAME'];
+
+
+However, as soon as the object is created indirectly, the IDE (WebStorm in my case) will be unable to suggest/auto-complete the values. Sure, with JavaScript we're not very spoiled with working auto-complete anyway, but in my case it bugs me because the whole purpose of my "enum" is to simplify usage of a fixed set of strings.
+
+There are also several enum utilities to create more proper enums, but they will suffer from the same thing. Also, if what I need is basically a fixed set of strings, more proper enums would force me into writing State.FOO.key to get the string value.
+
+Is there a clever way to accomplish these really simple {key: 'key'} mappings without having to type each key twice during creation, but while still maintaining the IDE's understanding of which properties exist in the object? I'm guessing WebStorm only performs a static code analysis which goes out the window as soon as a function is called? Or is there some clever trick?
+    
+
+        
+Answer 1: 
+
+    
+    
+It's been a while that i used Webstorm, and it's macro-utilities, but maybe u can write a simple macro that expands your String-Array into the desired Structure.
+
+Otherwise, you could try the Typescript-plugin. First of All: every valid JS should be valid TS (don't know exactly about ES7, and if some of the ES6 may bug the plugin).
+
+But TS has a Enum-implementation and webstorm should therefore give you autocompletition and type-safety
+    
+    
+Title: Repeat last command in Ipython console using spyder
+Description: 
+    
+    
+                    
+I am using the Spyder IDE for Python.
+
+How can I repeat the last command in the IPython console?
+
+I tried the up arrow - but it doesn't work. 
+
+any idea? 
+
+thanks. 
+    
+
+        

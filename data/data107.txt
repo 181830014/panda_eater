@@ -1,0 +1,1155 @@
+Title: How select up or down in Visual Studio?
+Description: 
+    
+    
+                    
+In most text editors, pressing Ctrl + Shift + ↑ selects everything behind the cursor on the current line and everything in front of the cursor on the line above. Likewise with Ctrl + Shift + ↓ except downwards. 
+
+I'm wanting to customize the shortcuts in VS to be those, but I can't find the corresponding field in Tools 
+Title: CLion new C++ Class file template
+Description: 
+    
+    
+                    
+CLion has file template to generate C++ Class, which generates source file and header. In my project I have handler classes that have same code part, and i want to generate them by file templates. And templates that i created can't do this:
+
+
+Set file names for class MyHandlerClass i want my_handler_class.cpp and .hpp
+From one class name i want to generate 2 files header and source, don't know how to do that.
+I also want to have string like MyClass -code/code/li/olp/pprecode/code/prepcode/code/ppa href="https://www.jetbrains.com/help/clion/template-variables.html" rel="nofollow noreferrer"/a/p/div
+Answer 1: 
+
+    
+    
+
+Its impossible to change file name from template. When you create a C++ Class, you set class name and select file name encoding. When you create file from template its saves file with your file name. I found solution this way, enter file_name (in snake case), and with Velocity create CamelCaseName for class name:
+#set( $CamelCaseName = &quot;&quot; )
+#set( $part = &quot;&quot; )
+#foreach($part in $NAME.split(&quot;_&quot;))
+    #set( $CamelCaseName = &quot;${CamelCaseName}$part.substring(0,1).toUpperCase()$part.substring(1).toLowerCase()&quot; )
+#end
+
+Its impossible to generate 2 files from one click like it do C++ Class template. I have to templates, and use them both.
+
+This function is for liveTemplates, for FileTemplate i used velocity: #set( $NeededString = $NAME.replaceAll('_', '-') )
+To include header file from cpp use #[[#include]]# &quot;${NAME}.hpp&quot;
+
+
+    
+    
+Title: How can I make my C editor support Intellij keymap?
+Description: 
+    
+    
+                    
+I'm used to the keyboard shortcuts used in JetBrains products such as Intellij IDEA and PyCharm.
+
+I'm now using CodeLite to work on C code, and it's really annoying that the keyboard shortcuts are different.
+
+Is there a way to make CodeLite support pretty-much the same key-mapping as PyCharm? If not, what C editor (apart from the paid-for CLion) supports this?
+    
+
+        
+Answer 1: 
+
+    
+    
+CodeLite has no builtin maps (I might consider this as a feature request if you will open one here: https://github.com/eranif/codelite/new)
+
+You can change the current default keyboard bindings from the main menu bar:
+
+Settings-&gt;Keyboard Shortcuts
+
+Just type in the search box the description you want to change, for example:
+If you will type build you will get list of all actions associated with the build keyword, double click one and you will open the edit dialog.
+
+
+
+HTH,
+Eran
+    
+    
+Title: How to decide how PhpStorm formats comments in TWIG code?
+Description: 
+    
+    
+                    
+I recently lost my PhpStorm settings and am unable to recover them. Since this PhpStorm seems to format my code differently when I try turn a line into a comment. I do so by pressing : ctrl + /.
+
+I have googled about the issue (regarding Twig templates) And unfortunately I haven't found an answer.
+
+Current situation:
+
+{% for comment in phpstorm %}
+    {% if comment|length %}
+{#        {{ "now"|date("m/d/Y") }}#}
+    {% endif %}
+{% endfor %}
+
+
+Expected result:
+
+{% for comment in phpstorm %}
+    {% if comment|length %}
+        {# {{ "now"|date("m/d/Y") }} #}
+    {% endif %}
+{% endfor %}
+
+
+As you can see the in my current situation the comment doesn't respect it's current situation and it doesn't place a space after and before the  comment tags.
+    
+
+        
+Answer 1: 
+
+    
+    
+Go to plugins install symfony plugin and php annotation
+
+After install go preferences-
+Title: Flutter does not save the last build of the project
+Description: 
+    
+    
+                    
+When I disconnect the mobile phone from the IDE, it does not save the last compilation of the project, only the last one. Has anyone had this problem using the flutter?
+
+I'm using flutter along with android-studio.
+
+This happens in all my flutter projects.
+    
+
+        
+Title: Pycharm: how to change all color include project tree
+Description: 
+    
+    
+                    
+So i download the plugin One Dark and set it as my theme:
+
+
+
+And as you can see this change my editor color but the color of the Left panel/Project tree remain the same and i did not find any way to change it to the same color.
+    
+
+        
+Answer 1: 
+
+    
+    
+You need to change Settings | Appearance &amp; Behavior | Appearance | Theme:
+
+
+    
+    
+Title: Pycharm : Return type of a function in the auto-completion window?
+Description: 
+    
+    
+                    
+I'd like to know if it's possible to force PyCharm considering types in a static way (like Java IDEs for instance).
+
+Right now I've found some tools that help to check types on runtime, like Pyre but that's not what I'm looking for.
+
+Is there a way to have str instead of the A object type ?
+Please have a look at this explicit use case : https://imgur.com/S5wY6cS
+
+Thanks for your help.
+    
+
+        
+Title: Error - unbound symbol modulo (Scheme) when using Repl online IDE
+Description: 
+    
+    
+                    
+A homework problem needs me to calculate gcd of 2 numbers. But using the modulo keyword in the function for gcd gives the above error when run on Repl.it (online IDE).
+
+I looked at other answers, but they don't exactly provide a solution to the problem. I tried to run the program using jdoodle.com (another online IDE) and it works perfectly there. So, I don't know why it won't work on Repl.
+
+;; My gcd function
+
+(define (gcd a b)
+  (cond 
+    [
+      (= b 0) a
+    ]
+
+    [else 
+      (gcd b (modulo a b))
+    ]
+  )
+)
+
+
+I would like to know why this doesn't work for Repl IDE and if there is any way how I can make it work there without simply switching to another website.
+    
+
+        
+Answer 1: 
+
+    
+    
+modulo function is not implemented in BiwaScheme used by repl.it. However good new is - mod function is! So, with some reasonable reformatting, this should work:
+
+(define (gcd a b)
+   (cond [(= b 0) a]
+         [else (gcd b (mod a b))]))
+
+    
+    
+Title: How can I get Eclipse IDE to default to &ldquo;Selected lines&rdquo; in the Find/Replace dialogue when multiple lines are selected?
+Description: 
+    
+    
+                    
+When working in Eclipse and hitting Ctrl+F with lines of code selected, the default behavior I expect is for the Find/Replace dialogue to open with the "Selected lines" option and, perhaps, either buffer contents or a previous search query in the "Find" prompt. On my home machine, what happens instead is the entire selection gets automatically copied to the "Find" prompt and Scope is reset to "All" instead of "Selected lines" every time.
+
+I somehow do have this working by default on my work machine: "Selected Lines" scope option is chosen automatically when more than one line is selected in the editor.
+
+Possibly unrelated: I do have CDT installed and I work mostly with C++ in Eclipse. Home machine is running Ubuntu 18.10, work machine is running Ubuntu 18.04.
+
+I tried:
+
+
+Re-downloading Eclipse, reinstalling CDT &amp; cmake4eclipse
+Changing to a new Workspace in Eclipse (without copying settings)
+Searching high and low online for recipes on how to control this.
+
+
+How do I change the IDE at home to the desired "Selected Lines" behavior?
+
+[Edit 1 hour later]: I am now almost convinced the issue has to do with the Ubuntu version somehow. I'm running 18.04 on my Laptop (same as my work computer) and I just upgraded CDT &amp; Eclipse Platform to latest stable versions (9.7 and 4.11/2019-03, respectively), which I have everywhere else. The new "wrong" behavior didn't appear. I will also start a thread on the Eclipse forums or perhaps even open a bug report. I don't want to reinstall the whole system or downgrade it (slim chance of success) just to get this back; if it's an Eclipse bug, I'd rather work on fixing it.
+
+[Edit 2 days later] The bug did not manifest on a fresh install of Ubuntu 18.10. I still have no idea what was different on the 'culprit' machine. I ended up wiping the drive and reinstalling 18.04 on the same machine and the problem went away.
+    
+
+        
+Title: how to setup ide for a chroot&#39;ed project
+Description: 
+    
+    
+                    
+I am trying to build i3wm (https://github.com/i3/i3), inside my basic debian /chroot/stretch. I am using an IDE installed in my host, not in chroot. However, I realized it's complicated, because all include directives are resolved on host, instead of being resolved in /chroot/stretch ...
+
+My question is:
+
+
+How do I use an IDE (in my case, CLion) from host to build, and develop projects inside a chrooted environment?
+Should I use a full blown VM, with X forwarding, instead of chroot?
+any other tool?... May be I can download all dependencies on the host, without chroot, and somehow trick include into taking those headers, instead of ones in /usr/include ?
+
+
+I am really new to C, and the fact that my development setup might mess with my system is a quite annoying, and I am surprised and couldn't find something like "setup-your-tools-for-development" instructions on google..
+    
+
+        
+Answer 1: 
+
+    
+    
+Okey, I guess using VIM + Ctags is the only solution, no need for a VM...
+    
+    
+Title: c# How to validate parameters in VS2017 IDE similar to string.Format
+Description: 
+    
+    
+                    
+I noticed that in the VS2017 IDE, a line like the following
+
+string.Format("{0}: {1}, {2}, {3}, {4}", 1, 2, 3, 4);
+
+
+Has the {4} highlighted with a green squiggly underline. When hovering over it, the warning "Format string contains invalid placeholder" is shown, indicating that the IDE for VS2017 is capable of validating the parameters for a call to functions like string.Format.
+
+This is great, because I get immediate feedback about the problem while I'm writing code with a mismatch between the format string and the arguments, rather than some time later at runtime. However, if I define my own functions with similar prototypes to string.Format, and which use string.Format internally, no parameter validation is done.
+
+class Example
+{
+  void ThrowException(string format, params object[] args)
+  {
+    throw new Exception(string.Format(format, args));
+  }
+
+  void LogMessage(int errorCode, string format, params object[] args)
+  {
+    throw new NotImplementedException("No logger!", new Exception(string.Format(format, args)));
+  }
+
+  void Main()
+  {
+    string.Format("{0}: {1}, {2}, {3}, {4}", 1, 2, 3, 4);
+    ThrowException("{0}: {1}, {2}, {3}, {4}", 1, 2, 3, 4);
+    LogMessage(0, "{0}: {1}, {2}, {3}, {4}", 1, 2, 3, 4);
+  }
+}
+
+
+
+
+Only the line with string.Format shows the validation error. This means that when calling my custom functions that require the same validation, I only detect the problem as a runtime error.
+
+I looked at the reference source for string.Format, hoping to be able to copy an attribute that configures the IDE validation, but did not see anything relevant there, and couldn't figure out good search terms to find if this has been asked elsewhere (e.g. a google search for the exact error message only seemed to find the Roslyn source that generates the error)
+
+What controls whether the IDE performs validations of this kind on a format string, and how would I enable it for my own code such as the example functions?
+    
+
+        
+Answer 1: 
+
+    
+    
+[Placeholder answer until someone else gives an answer that's likely to be better than this one for later visitors with similar questions!]
+
+To summarise what I understand from the answers given in comments:
+
+This is not possible in Visual Studio 2017 in any reasonably-obvious way.
+
+It requires writing your own Roslyn-Analyzer (as suggested by Flat Eric), or Visual Studio Extension (as suggested by Chetan Ranpariya), and there is no way to simply instruct the compiler to use the existing analyser that is already written for string.Format.
+
+We are instead expected either to redo the same work that Microsoft already did for string.Format, for every function that has similar sets of parameters, or to make do without the same level of assistance in the IDE. (I'm unclear on exactly how much of Microsoft's work needs to be repeated, and it's not a solution I intent to pursue in order to find out).
+
+JuanR also suggests refactoring the code at the calling site to use string interpolation instead (something I just learned about when reading that comment, and probably worth trying).
+
+I'd hoped that DRY principles would be followed in the design of this feature, so that I could just instruct the compiler to apply the well-known code analyser to the 'format' and 'args' parameters of my functions using the same rules as the equivalent parameters for string.Format, but this appears to something that has not yet been designed into the system.
+    
+    
+Title: Does anyone have the pycharm external documentation URLs for Scrapy:
+Description: 
+    
+    
+                    
+In settings &gt; tools &gt; python external documentation you can set the URL and path pattern for pycharm to provide documentation. 
+
+Does anyone know the path pattern for scrapy? Nothing is working for me. 
+    
+
+        
+Title: Generate function signature automatically in c++
+Description: 
+    
+    
+                    
+I have a problem with generating functions its getting pretty tedious, copy and pasting i have around 400 functions.
+What would be the easiest way to generate them automatically?
+I was hoping to just type up IController.h and the rest would be automatically populated, If somebody could direct me to such a thing that would be great.
+
+I have 4 seperate files. 
+
+IController.h
+Controller.h
+Controller.cpp
+MockController.h
+
+
+For example in the IController.h file  i have a function called display
+
+class IController
+{
+ public:
+ virtual void display(Gui* gui) = 0; 
+}
+
+
+Controller class would inherit from IController and the keyword virtual is removed and the =0.
+
+class Controller : public IController
+{
+  public:
+  void display(Gui* gui);
+}
+
+
+Controller.cpp will contain the definition
+
+void Controller::display(Gui* gui)
+{
+
+}
+
+
+And finally MockController.h will contain the following
+
+class MockController : public IController
+{
+ public:
+  MOCK_METHOD1(display, void(Gui* gui));
+};
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Took me a few days to figure things out, hope this helps somebody I managed to solved the problem above with the script i made shown below. gmock_gen.py currently does not work with python 3.7.2, I installed 2.7.13 and the script below works.
+
+user only needs to generate code for the first interface class and all the other files are autogenerated.
+
+import os
+
+#read contents of IController.h
+filename = "IController.h"
+file = open(filename,"r")
+
+#variables
+flag = False
+classheader = ""
+mockheader = ""
+classbody = None
+header = []
+classitems = []
+
+#read each line in the file
+for line in file:
+    # if the class name has been found 
+    if(filename[:-2] in line):
+        flag = True
+    # save all data before the calss name
+    if flag == False:
+        header.append(line)
+    #
+    if filename[:-2] in line:
+        flag = True
+        classname = filename[1:-2]
+        line = line.replace("class ", "public ")
+        classbody = "class " + classname + " : " + line
+
+    # remove virtual = 0
+    if "virtual" in line:
+        line = line.replace("virtual","")
+        line = line.replace(" = 0","")
+        classitems.append(line)
+
+classbody += "\n"
+classbody += "{\n"
+classbody += "  public:\n"
+
+for x in classitems:
+     classbody += x 
+     classbody + "\n"
+
+classbody += "};"
+
+for x in header:
+    classheader += x
+
+classheader += "#include " + "\""  + filename + "\"" + "\n\n"
+mockheader += classheader
+classheader += classbody
+
+#create controller.h file
+f = open(filename[1:], "w")
+f.write(classheader)
+
+cppbody = ""
+
+for x in classitems:
+    temp = x.split(" ", 2)
+    temp2 = temp[1] + " " + filename[1:-2] + "::" + temp[2].replace(";","{\n\n\n}\n")
+    cppbody += temp2 
+
+#create controller.cpp file
+cppfilename = filename[1:-2] + ".cpp"
+f = open(cppfilename,"w")
+f.write(mockheader)
+f.write(cppbody)
+
+
+mocktemp = "Temp" + filename[1:]
+mockfilename = "Mock" + filename[1:]
+
+input = "python gmock_gen.py " + filename
+os.system(input + " &gt; " + mocktemp)
+
+#create MockIController.h
+with open(mocktemp) as f:
+    with open(mockfilename, "w") as f1:
+        f1.write(mockheader)        
+        for line in f:
+            f1.write(line)
+
+    
+    
+Title: My C code isn&#39;t compiling on Visual Studio 2017 and keeps giving me an error saying it can&#39;t find the specific file?
+Description: 
+    
+    
+                    
+I recently installed Microsoft Visual Studio 2017. Whenever I try to compile my C code I get an error that says, 
+
+Unable to start program.
+"c:\users\myname\source\repos\ConsoleApplication2\Debug\ConsoleApplication2.exe'.
+The system cannot find the file specified.
+
+
+I wrote my code by choosing, 
+file 
+Answer 1: 
+
+    
+    
+As Lance Li-MSFT mentioned in his comment I went and saw the video https://www.youtube.com/watch?v=Slgwyta-JkA
+
+It basically said to do this:
+
+New project 
+Answer 2: 
+
+    
+    
+Actually,in VS2017(especially 15.7.3 or higher versions),we usually create new C projects by :
+
+create C++ Windows Desktop=&gt;Windows Desktop Wizard=&gt;Empty Project This is the much easier way to create a simple C project in VS.
+
+Also, we can create Windows Console Application(C++),this way we need to remove the pch.h and all the .cpp file under source files, (disable "Precompiled Header" if we only need to create a simple project), add a C class to make it work.
+    
+    
+Title: How to debug a Delphi dynamic package?
+Description: 
+    
+    
+                    
+My application dynamically loads BPL packages at runtime by using the LoadPackage function.
+
+LoadPackage('.\MyPackage.bpl');
+
+
+I need to set breakpoints for debugging the code of the MyPackage project.
+
+I've set both executable and package project build configuration to "Debug" but each time I run the application, all break points that I've placed into MyPackage's code doesn't work and appear as follows:
+
+
+
+Further informations:
+
+I've set the executable as "Host application" for the dynamic package:
+
+
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Your host application is located on the W: Drive. Is this some sort of mapped drive?
+
+I had issues with not beeing able to load debug symbols when using the mapped drive letter as "Output Path" instead of the full UNC Path (eg. \myserver\shared\ instead of W:). 
+
+You can see the path Delphi needs in the list of loaded modules if you stop in the main application after loading your package. 
+
+But keep in mind: Delphi 2007 has many Debug-Symbol-Not-correctly-loaded-bugs. Most of them appearing and disappearing from time to time with no change of anything.
+    
+    
+Title: How to create a toolbar icon / shortcut for &ldquo;Server View&rdquo; in Eclipse?
+Description: 
+    
+    
+                    
+I have checked a number of questions regarding server view - but my problem is not that I dont have a server view .
+
+I do have it .
+
+The problem is - everytime I maximise my code window - I have to go to :
+
+
+  windows 
+Title: Netbeans IDE - Download one file from thousands in one directory
+Description: 
+    
+    
+                    
+[[Question Updated for Clarity]]
+
+I am using the Netbeans IDE.  
+
+I have created a PHP Project within the IDE and wish to download files that are on my server so that they can be edited in my local envirionment.
+
+Once connected to the server, the Netbeans GUI presents me with a directory listing with checkboxes to select which files to download.
+
+In one of these directories on the server, there is a single file - that I know the name of - nestling amongst thousands of other files in the same directory.
+
+I want to download just this one file to my local Netbeans environment, but it seems that in order to do so, Netbeans has to list all these thousands of files, even though I only want the one file.
+
+Is there a quicker way or a bypass I am missing. 
+
+Many thanks in advance.
+    
+
+        
+Title: Visual Studio 2017 equivalent for Eclipse Quick outline (Ctrl + O)
+Description: 
+    
+    
+                    
+In Eclipse there is Ctrl + O shortcut for quick outline, which lets explore class attributes and methods with incremental search
+
+
+
+Is there equivalent shortcut in Visual Studio 2017?
+    
+
+        
+Answer 1: 
+
+    
+    
+Probably you need a Class Veiw (from View or Ctrl+Shift+C). Or the bar at top of edit window.
+
+Or,
+
+
+
+Basically you don't need shortcuts. After you type  the dot this list drop automatically. But Ctrl+Space do the same.
+
+Also, you can open a definition in the 'Peak View', by Ctrl + click:
+
+
+Or open Code definition window (from View or Ctrl+Shift+V)
+    
+    
+Answer 2: 
+
+    
+    
+Keyboard command you want is Window.MovetoNavigationBar as can be seen in Default keyboard shortcuts in Visual Studio. Its shortcut is CTRL+F2, though in Visual Studio / Tools / Options it's asociated with ALT+Home. Both work for me.
+
+Once in Navigation Bar, you actually have three separate combo-boxes between which you can navigate using TAB key. The third one is the Eclipse Outline lookalike.
+
+Unfortunately, it's easier to do this via mouse, as there is no direct shortcut to the last combo-box.
+    
+    
+Title: How do I fold code for comment blocks inside method blocks in the Eclipse IDE
+Description: 
+    
+    
+                    
+How can I fold comment blocks inside method blocks to be folded (outlined), just like methods and regions, etc.?
+
+sample_method_or_Class()
+{
+ /* I'd like to fold this
+  * comment block
+  */
+}
+/* The same way I can fold this one
+ * outside the code block.
+ */
+
+
+Does Eclipse support functionality like Visual Studio does  like (How do I fold code for comment blocks inside method blocks?) ?
+    
+
+        
+Answer 1: 
+
+    
+    
+There is no such support in Eclipse, unfortunately. There is a request for this though, reported in 2008 with only 10 votes, so I would not expect it implemented any time soon.
+
+Mentions of an Eclipse folding plugin called Coffee Bytes can be found, but most links are broken. Looks like latest Eclipse versions are not supported and the project looks discontinued.
+
+Update:
+
+As indicated by howlger in the comment below, EclipseFolding plugin is alive and well. I've tested it now, installed it via Help / Install new software... / Add... using its update site:
+
+
+https://github.com/stefaneidelloth/EclipseFolding/raw/master/com.cb.platsupp.site
+
+
+After Eclipse restart I got little red squares indicating folding capability for both comment scenarios from the question:
+
+
+    
+    
+Title: Result different in Powershell.exe compared to Powershell IDE
+Description: 
+    
+    
+                    
+Any idea why this is happening? I'm trying to build a string that contains all the information I want (the final is to be output in a GUI, in a DataGridView cell), in Powershell.exe the mediatype and healthstatus are shown as codes (3,4,0) instead of the strings (HDD,SSD,OK) like shown in IDE:
+
+The code is exactly the same in both : 
+
+$DisquesPhysiques = invoke-command -ComputerName XXXX -ScriptBlock {get-physicaldisk}
+
+foreach ($disque in $DisquesPhysiques) {
+$infodisque = $($disque.FriendlyName) + " - " + $($disque.SerialNumber)+ " - "  + $($disque.MediaType)+ " - "  + $($disque.HealthStatus)+ " - "  + $([math]::Round($disque.Size/1gb))  + " GB"
+$infodisque
+}
+
+
+
+
+The WEIRDEST part is sometimes it will not show codes and it will show actual words (SDD, HDD, Healthy). This is very problematic since I can't rely on it being a number or a word consistently!
+    
+
+        
+Answer 1: 
+
+    
+    
+This was very strange so I ended up getting the info from CIM (WMI) and do an IF on the media type (4 is SDD):
+
+$DisquesPhysiques = Get-CimInstance -ComputerName $poste MSFT_PhysicalDisk -Namespace Root\Microsoft\Windows\Storage
+
+                foreach ($disque in $DisquesPhysiques)
+                {
+                    if ($disque.MediaType -eq 4) { $type = "SSD" }
+                    else { $type = "HDD" }
+                    $infodisque = $($disque.FriendlyName) + " - " + $($disque.SerialNumber) + " - " + $type + " - " + $([math]::Round($disque.Size/1gb)) + " GB"
+                    $tableInfoPoste.Rows.add("Disque physique", $infodisque)
+                }
+
+    
+    
+Title: Visual Studio 2017 - Cant view variables when in debug mode
+Description: 
+    
+    
+                    
+I have been trying to figure this problem out for a while now.
+
+I work in Visual Studio 2017 and have many solutions I work on.  Every single one of them shows me variables and their values when I am debugging it except one.  It runs perfectly tho.
+
+What I have done:
+
+
+Played around with managed compatibility mode
+Clean and rebuild and all those basics
+Remove local solution and get it fresh from Git
+
+
+The other developers working on the same solution do not have this problem
+
+Tried debugging the solution in VS2015 and VS2019 Preview
+
+
+Cant seem to fix this, any ideas on what more I can try?
+
+Edit: Clarification, I can step through the code when debugging, but I cant view value of variables.
+
+EditEdit: Was doing some testing, and I have new information. While one a breakpoint I look at a few variables. 
+
+
+public ActionResult Detail(Guid? id) /lili
+Answer 1: 
+
+    
+    
+screenshot - not showing
+
+
+screenshot - showing
+
+
+List&lt;ClassA&gt; list = new List&lt;ClassA&gt;();
+ClassA retVal = list.Where(o =&gt; o.MyProperty1 == 1).FirstOrDefault();
+
+
+Here will be no exception (error), retVal is null and you will not see the properties or the values of the properties of the class.
+
+All you have to do is add some items into the list.
+
+List&lt;ClassA&gt; list = new List&lt;ClassA&gt;();
+list.Add(new ClassA() { MyProperty1 = 1, MyProperty2 = 2 }); //adding item
+ClassA retVal = list.Where(o =&gt; o.MyProperty1 == 1).SingleOrDefault();
+
+    
+    
+Answer 2: 
+
+    
+    
+I have found a solution to my problem, tho I dont know why it works.
+
+I will try to explain.  
+
+I have a model that contains to IEnumerables. 
+
+Model
+
+public SuperModel()
+{
+      public IEnumerable&lt;MemberObject&gt; memberList1{get; set;}
+      public IEnumerable&lt;MemberObject&gt; memberList2{get; set;}
+}
+
+
+Controller
+
+public ActionResult Detail(Guid? id)
+{
+    //Model initialized
+    SuperModel model =  GetTheModel();
+
+    //Then there were 2 foreach loops throu my einumerables
+    foreach(var item in model.memberList1)
+    {
+        //Do things
+    }
+    foreach(var item in model.memberList2)
+    {
+        //Do things
+    }
+
+}
+
+
+This broke the debugger, If I only left 1 of the loops in debugger worked.
+
+Workaround
+
+public ActionResult Detail(Guid? id)
+{
+    //Model initialized
+    SuperModel model =  GetTheModel();
+
+    //Then there were 2 foreach loops throu my einumerables
+    model.memberList1.ToList().Foreach((item) =&gt; 
+    { 
+        //Do Things
+    });
+    model.memberList2.ToList().Foreach((item) =&gt; 
+    { 
+        //Do Things
+    });
+
+}
+
+
+Fin
+
+I have no idea why using the .ForEach methods works while using a classic foearch() loop does not.  But if anyone runs into something like this I hope this can help.
+    
+    
+Title: recommendations for implementation of C++ template class in a separate file and IDE support
+Description: 
+    
+    
+                    
+Template class implementation needs to be accessible when the template is instantiated in the calling code. Hence the easy solution is to put the class definition and implementation in a single header file. 
+There are of course other solutions. The solutions I could find with Google are basically already summarized in http://blog.ethanlim.net/2014/07/separate-c-template-headers-h-and.html
+which proposes either:
+
+
+All implementation into the header file
+Explicit Template Instantiation in the implementation (*.cpp)
+
+
+A variant of the first I have seen other persons use and I have used myself is to create a header file for the implementation myTemplateClass_impl.h that is included from the other header myTemplateClass.h.
+I always thought it was the recommended way of doing this but searching with Google, I was surprised I could not find this technique described anywhere. Now I have one problem with this technique: it breaks vscode intellisense (or other IDEs C++ support) because the myTemplateClass_impl.h is not self contained.
+
+Now there is a way to make it IDE friendly but it is a bit convoluted:
+
+myTemplateClass.h
+
+#ifndef MYTMPCL_H
+#define MYTMPCL_H
+namespace tmpcl {
+  template &lt;typename T&gt; class TmpCL
+  {
+    ...
+  } 
+} // namespace tmpcl
+#include "myTemplateClass_impl.h"
+#endif // MYTMPCL_H
+
+
+myTemplateClass_impl.h
+
+#ifndef MYTMPCL_IMPL_H
+#define MYTMPCL_IMPL_H
+#include "myTemplateClass.h"
+namespace tmpcl {
+    // implementation
+  template &lt;typename T&gt; TmpCL::...
+
+} // namespace tmpcl
+
+#endif // MYTMPCL_IMPL_H
+
+
+Now it does not matter which of the two files is included. They both expand to the same code and vscode intellisense is happy.
+Is this design any good?
+
+Thank you.
+
+Also I was surprised I could not find recommendations for how to do this in the C++ core guidelines at https://isocpp.org/
+    
+
+        
+Title: IDE for picoblaze with KCPSM3 instruction set
+Description: 
+    
+    
+                    
+the pblazeIDE is no longer available for download
+
+see related discussion 
+
+https://forums.xilinx.com/t5/Embedded-Processor-System-Design/PicoBlaze/td-p/748483
+
+is there another assembly IDE that supports the KCPSM3 instruction set, and allows single step and register value monitor?  I tried it with intel FPGA monitor program but it doesn't support it.
+
+I've been searching and there is this , but it is password protected 
+http://www.sourcecodeprojects.com/downloadkey=weaf&amp;f=PBlazeIDE+software&amp;r=&amp;u=1926134 
+    
+
+        
+Answer 1: 
+
+    
+    
+I have been working on that thing but is a very old/useful stuff.
+
+You can download it directly from here.
+
+It is a design reference tutorial but in FMCDVI_DVI_Pass_Through_Demo_12_2_20100921/verilog/rtl/picoblaze directory, you can find pblazeIDE executable (for winXP x86).
+
+Also if you want to make a picoblaze module maybe you should take a look to this and this. First one is a open picoblaze compiler for linux and last one is for programming reference.
+    
+    
+Title: While debugging how does an IDE identifies the code sequence. Can the entire workflow be viewed pictorially like class diagram?
+Description: 
+    
+    
+                    
+I can see the plugins for debugging in plugins folder in eclipse directory &amp; I want to explore how these programs act at machine level to implement the debugging process.
+
+what are the basic &amp; most essential executable programs that help in debugging in any IDE.
+
+How does any IDE creates the complete map for execution of code/program.
+
+I want to understand how IDE changes the addressing mode in terms of normal/general mode execution &amp; debug mode execution. 
+
+Also especially in the case of Java where execution happens at VM(Virtual machine) level, how does the handshake is created/maintained with hardware/assembler. 
+    
+
+        
+Title: Scala Compiler Cannot Apply Installation for Project Settings
+Description: 
+    
+    
+                    
+I am working on eclipse for last one year. Now I faced an issue in using scala project settings instead of default. Eclipse cannot apply the scala installation.
+
+I attached Screen shot in which my project required scala installation is selected but apply and close button is not working on any type of scala installation.
+If anyone can help me?
+
+    
+
+        
+Title: error: selected text cannot be mapped to a symbol name &amp; call hierarchy is not working - eclipse
+Description: 
+    
+    
+                    
+I had working eclipse workspace and everything was fine. Not sure what went wrong but now I am not able to perform code navigation in eclipse. 
+
+I am not able to jump to the definition of the variable or function and getting error:
+
+selected text cannot be mapped to a symbol name
+
+
+I am not able to see Call Hierarchy and observing below error:
+
+cannot resolve selected text to a defined function or member
+
+
+I need call graph and want to jump to the definition to analyze the code fast. 
+
+Tried with some of SE answers which says to perform the below steps. 
+
+calling eclipse with eclipse.exe -clean -refresh forces Eclipse to
+rebuild the index. After that, the feature worked again
+
+The above solution for call hierarchy worked for me once but now not able to make the eclipse up for code navigation. Tried with other solution mentioned on internet but not worked.
+    
+
+        
+Title: Intellij on Linux: Menu: jdk &gt; javap option
+Description: 
+    
+    
+                    
+I use Intellij community 2018 on Ubuntu. How can I have a jdk option in the menu that appears after right clicking inside the editor window?
+
+I don't know if this option is built into the IDE or some external plugin.
+
+This jdk option should have (at least) 2 javap options to disassemble class files.
+See the following screen shot. Taken from an older Intellij on Mac.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You can configure an external tool to run javap on the active file using the $FilePath$ macro as an argument. Set the tool group to jdk.
+
+If you want to get the output for the .class file while right clicking inside the source .java file, you may use something like this for the argument: $OutputPath$/$FileDirRelativeToSourcepath$/$FileNameWithoutExtension$.class
+
+Note that IntelliJ IDEA has a built-in disassembler and some third-party plug-ins to view the byte code, so you may not need this tool at all.
+    
+    
+Title: How to get Scala and Java to work with Visual Studio Code?
+Description: 
+    
+    
+                    
+I am trying to use Java with VSCode, but when I run my Java code, I am getting 
+
+Error: could not open `C:\Program Files\Java\jre1.8.0_201\lib\amd64\jvm.cfg'. 
+
+
+Does anyone know how to fix this? 
+
+Also, does anyone know how to get Scala on VSCode? I can't seem to find much information on it. 
+    
+
+        
+Title: STS- Add Server - Next Button is disabled when I try to add oracle weblogic server
+Description: 
+    
+    
+                    
+I am facing issue in adding oracle weblogic sever in sts. when I go to Windows -
+Title: Communicate with Language Server (Languager Server Protocoll)
+Description: 
+    
+    
+                    
+I want to test the language server protocoll in a simple self written text editor. But I am not quite sure if I understand correctly how to write to the server and read from it. I want to do this in C++. 
+
+For testing purpose I use Qt in this example. But if you use another library this is okay too. As a server I installed ccls (it is working as I tested it with atom).
+
+So this was my generel idea:
+1. Start server as a process
+2. Define a json file for the initialization according to the specification
+3. Convert it into a String and sent it to the client
+3. Wait for a response (Which should be an InitializeResult)
+
+#include &lt;QCoreApplication&gt;
+#include &lt;QProcess&gt;
+#include &lt;iostream&gt;
+#include &lt;QFile&gt;
+
+int main(int argc, char* argv[]) {
+  QCoreApplication app(argc, argv);
+
+  QFile file {"src/initializeRequest.json"};
+  file.open(QIODevice::ReadOnly);
+
+  QProcess* myProcess = new QProcess(&amp;app);
+  myProcess-&gt;start("ccls", QStringList {});
+
+  std::cout &lt;&lt; myProcess-&gt;write(file.readAll()) &lt;&lt; '\n';
+  std::cout &lt;&lt; myProcess-&gt;readAll().toStdString();
+  file.close();
+  return app.exec();
+}
+
+
+But actually I am not even sure if those messages (didOpen,initialzeRequest etc.) are really sent as files. According to the language server protocoll website they are interfaces descirbing a json file ... but I didn't find anything about how they are sent 
+
+So I would appreciate if any can tell me if I am on the right track (with my attempt to send actual files) and if anyone could show me the most simple communication to the server, so I actually get a response (to see if it works). 
+    
+
+        
+Answer 1: 
+
+    
+    
+I experimented a lot and created a minimal working example. In this example I send an initialize request to ccls (which is a C++ language server) and read the response. 
+I used QProcess for starting the server (but of course one can use something different) and rapidjson (https://github.com/Tencent/rapidjson) for the construction of the json file. 
+
+#include &lt;QCoreApplication&gt;
+#include &lt;QProcess&gt;
+#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
+
+int main(int argc, char* argv[]) {
+  QCoreApplication app {argc, argv};
+
+  //Start server as a QProcess
+  QProcess* server = new QProcess {&amp;app};
+  server-&gt;start("ccls", QStringList {"-log-file=/tmp/ccls2.log", "-init={}"});
+  server-&gt;waitForStarted(-1);
+  std::cout &lt;&lt; "Server started" &lt;&lt; '\n';
+
+  //Construct json Request
+  rapidjson::StringBuffer output {};
+  rapidjson::Writer&lt;rapidjson::StringBuffer&gt; writer {output};
+
+  writer.StartObject();
+  writer.Key("jsonrpc");
+  writer.String("2.0");
+  writer.Key("id");
+  writer.Int(0);
+  writer.Key("method");
+  writer.String("initialize");
+  writer.Key("params");
+  writer.StartObject();
+  writer.Key("processId");
+  writer.Int(0);
+  writer.Key("rootUri");
+  writer.String("home");
+  writer.Key("capabilities");
+  writer.StartObject();
+  writer.EndObject();
+  writer.EndObject();
+  writer.EndObject();
+
+  std::string content = output.GetString();
+  std::ostringstream oss;
+  oss &lt;&lt; "Content-Length: " &lt;&lt; content.length() &lt;&lt; "\r\n" &lt;&lt; "\r\n";
+  std::string header = oss.str();
+
+  std::cout &lt;&lt; header &lt;&lt; content &lt;&lt; '\n';
+
+  //Send request to server
+  server-&gt;write(header.c_str());
+  server-&gt;write(content.c_str());
+
+  //Wait for response and read it
+  server-&gt;waitForReadyRead(-1);
+  std::cout &lt;&lt; "Server has sent response" &lt;&lt; '\n';
+  std::cout &lt;&lt; server-&gt;readAll().toStdString() &lt;&lt; '\n';
+
+  return app.exec();
+}
+
+
+And the output: 
+
+Server started
+Content-Length: 106
+
+{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"processId":0,"rootUri":"home","capabilities":{}}}
+Server has sent response
+Content-Length: 1046
+
+{"jsonrpc":"2.0","id":0,"result":{"capabilities":{"textDocumentSync":{"openClose":true,"change":2,"willSave":false,"willSaveWaitUntil":false,"
+save":{"includeText":false}},"hoverProvider":true,"completionProvider":{"resolveProvider":false,"triggerCharacters":[".",":","&gt;","#","&lt;","\"",
+"/"]},"signatureHelpProvider":{"triggerCharacters":["(",","]},"definitionProvider":true,"implementationProvider":true,"typeDefinitionProvider"
+:true,"referencesProvider":true,"documentHighlightProvider":true,"documentSymbolProvider":true,"workspaceSymbolProvider":true,"codeActionProvi
+der":{"codeActionKinds":["quickfix"]},"codeLensProvider":{"resolveProvider":false},"documentFormattingProvider":true,"documentRangeFormattingP
+rovider":true,"documentOnTypeFormattingProvider":{"firstTriggerCharacter":"}","moreTriggerCharacter":[]},"renameProvider":true,"documentLinkPr
+ovider":{"resolveProvider":true},"foldingRangeProvider":true,"executeCommandProvider":{"commands":["ccls.xref"]},"workspace":{"workspaceFolder
+s":{"supported":true,"changeNotifications":true}}}}}
+
+
+As I said I wanted to show everyone who has the same question a minimal working example. Of course it makes sense to create structs for Request etc. 
+    
+    

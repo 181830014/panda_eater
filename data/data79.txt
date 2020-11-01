@@ -1,0 +1,633 @@
+Title: Dynamic doc blocks for type hinting and autocomplete with dynamic output classes
+Description: 
+    
+    
+                    
+I have a medium-sized MVC application.  The use cases for the app are such that I require a bit more control of the SQL used to interact with my database (among other things, data is highly normalized and we use a LOT of joins).  So, I've grown my own design for models, rather than using Doctrine or Eloquent or anything.  I recently discovered my design is called the Table Data Gateway pattern.  At any rate, it looks like this (simplified a bit for clarity):
+
+We have an an abstract class which all my TableGateways extend.  It knows how to talk to PDO and do SQL stuff, but not about any particular table:
+
+abstract class TableGateway {
+
+    protected $db = null;
+
+    public $tableName = '';
+
+    public $outputClass = null;
+
+    function __contruct(\PDO $pdo) {
+        $this-&gt;db = $pdo;
+    }
+
+    /**
+     * $return \StdClass[]
+     */
+    function all() {
+        $result = $this-&gt;query(sprintf('SELECT * FROM %s',$this-&gt;tableName));
+        return $result;
+    }
+
+    /**
+     * @param $query
+     * @param array $params
+     * @return \StdClass[]
+     */
+    public function query($query, $params = array()) {
+        $stmt = $this-&gt;db-&gt;prepare($query);
+        if($this-&gt;outputClass) {
+            $stmt-&gt;setFetchMode(PDO::FETCH_CLASS, $this-&gt;outputClass);
+        } else {
+            $stmt-&gt;setFetchMode(PDO::FETCH_OBJ);
+        }
+        $success = $stmt-&gt;execute($params);
+        return $stmt-&gt;fetchAll();
+    }
+}
+
+
+Then each table has a gateway class which extends the parent class and applies the table-specific stuff.  There will be a lot of functions in here which call $this-&gt;query(), bringing their knowledge of the table's structure to build a useful query, but there are also some basic functions, like PostsGateway::all() which are the same for every table, so they live in the parent class.
+
+class PostsGateway extends TableGateway {
+    public $tableName = 'posts';
+
+    public $outputClass = 'Post';
+}
+
+
+Each result from the query is loaded into an object.  By default they are just StdClass objects, but you can specify an alternate $this-&gt;outputClass to have them output in that other class, like this one:
+
+class Post {
+    /** @var int $id */
+    /** @var string $content */
+}
+
+
+All this is working pretty well for me.  However, my IDE can't keep up.  You and I know that PostsGateway::all() is going to return an array Post objects, but the IDE thinks it's just a regular array.  This means I don't autocomplete hints for the properties of the Post objects.
+
+Does anyone know any clever ways to resolve this, so the IDE will know about the change?
+
+I was thinking about a script to automatically generate doc blocks for PostsGateway, but I'm a little leary of code gen in general, and especially code gen in a class I'm going to modify periodically.  The script would have to periodically update the doc blocks, based on changes to TableGateway, and not mess up anything I've added to PostsGateway.
+
+Are there any other cool ways to do get around this?  Or can you recommend some good libraries for generating this code blocks?
+    
+
+        
+Title: Delphi XE7: disable virtual text space
+Description: 
+    
+    
+                    
+is it possible to disable the annoying virtual space in editor?
+If I click somewhere right on a line (behind last character) I want to get the cursor just behind the last character. Similary, if I am at the end of a line (just after the last char) and push right arrow I want to jump the next line before the first character.
+
+Lot of thanks!
+    
+
+        
+Title: Delphi IDE profiling while debugging; can we time F7, F8 stepping?
+Description: 
+    
+    
+                    
+I am using Delphi XE6.  Often while stepping through code i'd like to trace where the CPU is being used, at least approximately.  
+
+I have AQtime but have been unable to get it running with my (large) application without getting lots of errors, and it seems overly complex for what i need.
+
+My thought is that it would be very nice if the IDE ran a timer when executing my program , and could give me deltas whenever it pauses (whether by breakpoint, F4, F7 or F8).  Through judicious use of this I should get a good idea of which functions etc in my code need speed improvement.  I do this now approximately by judging where a slowdown is, but if its in a function called a zillion times taking a couple of ms my judgement fails me, eg:
+
+   for i := 1 to 1000 do
+    begin
+      fastfunction1;  // takes 1ms
+      fastfunction2;  // takes 1ms
+      slowfunction;   // takes 20ms!!!  If I was able to see this while stepping over it...
+      fastfunction3;  // takes 1ms
+    end;
+
+
+Has anyone seen a plugin for the IDE that might do this?  Or would it be hard to write one?
+
+Thanks,
+Chris
+    
+
+        
+Title: Multiple separated development environments on Windows?
+Description: 
+    
+    
+                    
+Since I develop on different projects which require different settings and different kinds of plugins with specific settings, is there any way I can use different idea.properties files without renaming them every time or duplicating the whole IDE?
+
+For example I pass the specific config as parameter like 
+idea64.exe -config="environtment1.properties" which leads to C:\project1\config
+idea64.exe -config="environtment2.properties" which leads to C:\project2\config
+
+Is something similar possible with NPM? Because I often encounter problems which are caused from other packages which I don't even use, or I need different versions of the package for each project, so it would be great if I could start with a completely fresh environment every time I create a new workspace.
+
+The only thing I could think of are virtual machines, but that wouldn't be very performant and each VM would create overhead and setting up a new VM, even from a snapshot is crazly annyoing... But that would be a way to separate each project.
+
+Second thing would be duplicating the applications which I already mentioned, but this would take about 1GB and more per project only for the apps.
+
+I can't come up with a clean solution, I'd like to set different config folders per app but if the software doesn't support passing a new config path through a parameter I'm pretty much screwed.
+
+Someone got an idea how to solve my first world problems?
+    
+
+        
+Title: How to add new action handler from another class in NetBeans?
+Description: 
+    
+    
+                    
+I wanted to edit guarded blocks manually but I'm not able to do this so I go to right lower corner in NetBeans where "Events" tab in "properties" is located. And there's a line "actonPerformed", where I can add new handlers. I have internal class ActionHandler:
+
+public class ActionHandler implements ActionListener 
+{
+    public void actionPerformed(ActionEvent e) 
+    {
+        Object source = e.getSource();
+
+        if (source==one) 
+        {
+            jTextField1.setText(one.getText());
+        }                             
+    }
+}
+
+
+and I want to add something like ActionHandler.class.actionPerformed(evt) to my JButton "one":
+
+one.addActionListener(new java.awt.event.ActionListener() 
+{
+    public void actionPerformed(java.awt.event.ActionEvent evt) 
+    {
+        oneActionPerformed(evt);
+        CalculatorGUI.this.actionPerformed(evt);
+    }
+}
+
+
+Can someone help me?
+    
+
+        
+Title: Eclipse white box behind cursor
+Description: 
+    
+    
+                    
+I know it might not seem like a serious question but for about a year that I'm using
+Eclipse(Juno) I was not able able to understand why sometimes a white box appears (usually behind
+my cursor in whitespace). I can't seem to be able to make it go away! Below is what it looks like:
+
+Does anyone know how can I get rid of this white box(if it is possible at all) and why
+it appears in the first place?
+
+Cheers,
+Alex
+    
+
+        
+Title: How can I point vim and python-mode to custom python version
+Description: 
+    
+    
+                    
+I am trying to customize vim to work as python IDE using python-mode. But since my Redhat machine has python2.6 by default it's not picking up my custom libraries that reside in python2.7. 
+
+How can I point python-mode to suggest autocomplete from python2.7. I tried jedi and YouCompleteMe as well.
+    
+
+        
+Title: Disable shortcut for quit in phpstorm
+Description: 
+    
+    
+                    
+Shortcut for "Quit PHPStorm" is ⌘Q. Unfortunately, "Q" is just near "S" on french keyboard. Sometimes, I want to save my work, and I quit PHPStorm. 
+
+Is there a way to disable that shortcut ?
+    
+
+        
+Title: An internal error occurred during: &ldquo;C/C++ Indexer&rdquo;
+Description: 
+    
+    
+                    
+For some reasons eclipse starts showing me this message recently and after that auto-completing and intellisense stop working
+
+ An internal error occurred during: "C/C++ Indexer".
+tried to access method java.lang.Object.clone()Ljava/lang/Object; from class org.eclipse.cdt.internal.core.dom.parser.cpp.semantics.SemanticUtil 
+
+I searched a lot but with no value!
+    
+
+        
+Answer 1: 
+
+    
+    
+Generally changing params Xms and Xmx to something like:
+
+-Xms2048m
+
+-Xmx2048m
+
+in eclipse.ini file should fix it
+    
+    
+Title: IntelliJIdea show me errors on the views of a Play project
+Description: 
+    
+    
+                    
+I've recently ported a Play 2.3.2 application written in Scala from Eclipse to IntelliJIdea 13.1 Ultimate Edition.
+
+For do that I import the project using SBT.
+
+All works fine, but IntelliJ show me errors on some of my views package files.
+
+In IntellijIDEA i get error like cannot resolve symbol Assets.
+
+
+
+I've installed correctly the Scala and Play plugins and the SBT works good.
+
+What's wrong??
+
+When in the Controllers I used the Play classes, all goes fine.
+    
+
+        
+Title: Visual studio as PIC IDE
+Description: 
+    
+    
+                    
+I want to be able to use VS2013 as an IDE, for editing my PIC-microchip.
+I have MPLAB X IDE 2.20 and the oppropriate compiler installed, and it works OK, but the SVN/GIT client and autocomplete is not so useful as the one i am accustomed to.
+Someone has asked this question before, and the answer said that it is possible, but not how.
+
+When compiling in MPLAB, the following is written in output:
+
+make -f nbproject/Makefile-PIC32MX795F512L.mk SUBPROJECTS= .build-conf
+make -f nbproject/Makefile-PIC32MX795F512L.mk dist/PIC32MX795F512L/production/project.X.production.hex
+"C:\Program Files (x86)\Microchip\xc32\v1.33\bin\xc32-g++.exe" -g -x c++ -c -mprocessor=32MX150F128D -frtti -fexceptions -fno-check-new -fenforce-eh-specs -MMD -MF build/PIC32MX795F512L/production/main.o.d -o build/PIC32MX795F512L/production/main.o main.cpp 
+"C:\Program Files (x86)\Microchip\xc32\v1.33\bin\xc32-g++.exe" -g -x c++ -c -mprocessor=32MX150F128D -frtti -fexceptions -fno-check-new -fenforce-eh-specs -MMD -MF build/PIC32MX795F512L/production/configuration_bits.o.d -o build/PIC32MX795F512L/production/configuration_bits.o configuration_bits.cpp 
+"C:\Program Files (x86)\Microchip\xc32\v1.33\bin\xc32-g++.exe" -g -x c++ -c -mprocessor=32MX150F128D -frtti -fexceptions -fno-check-new -fenforce-eh-specs -MMD -MF build/PIC32MX795F512L/production/interrupts.o.d -o build/PIC32MX795F512L/production/interrupts.o interrupts.cpp 
+"C:\Program Files (x86)\Microchip\xc32\v1.33\bin\xc32-g++.exe" -g -x c++ -c -mprocessor=32MX150F128D -frtti -fexceptions -fno-check-new -fenforce-eh-specs -MMD -MF build/PIC32MX795F512L/production/system.o.d -o build/PIC32MX795F512L/production/system.o system.cpp 
+"C:\Program Files (x86)\Microchip\xc32\v1.33\bin\xc32-g++.exe" -g -x c++ -c -mprocessor=32MX150F128D -frtti -fexceptions -fno-check-new -fenforce-eh-specs -MMD -MF build/PIC32MX795F512L/production/user.o.d -o build/PIC32MX795F512L/production/user.o user.cpp 
+"C:\Program Files (x86)\Microchip\xc32\v1.33\bin\xc32-g++.exe"   -mprocessor=32MX150F128D  -o dist/PIC32MX795F512L/production/DDG.X.production.elf build/PIC32MX795F512L/production/main.o build/PIC32MX795F512L/production/configuration_bits.o build/PIC32MX795F512L/production/exceptions.o build/PIC32MX795F512L/production/interrupts.o build/PIC32MX795F512L/production/system.o build/PIC32MX795F512L/production/user.o          -Wl,--defsym=__MPLAB_BUILD=1,--defsym=_min_heap_size=4096,--defsym=_min_stack_size=4096
+"C:\Program Files (x86)\Microchip\xc32\v1.33\bin"\\xc32-bin2hex dist/PIC32MX795F512L/production/DDG.X.production.elf 
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Although this is for AVR, this might help you with configuring VS2013 for PIC: http://www.instructables.com/id/Use-Visual-Studio-2010-to-Compile-AVR-Hex-Files/
+    
+    
+Title: Missing parts of Help Menu - Eclipse Luna
+Description: 
+    
+    
+                    
+I'm working in Eclipse Luna, after install Oracle Enterprise Pack for Eclipse (OEPE)  Help Menu shows with missing items. I'm attaching a screenshot
+
+
+
+Missing items:
+
+Also, I checked the Menu Visibility:
+
+
+
+
+Check for updates
+Install New Software..
+Installation Details
+and So on..
+
+
+Any ideas?
+    
+
+        
+Answer 1: 
+
+    
+    
+Look in 'Window /p/div
+Answer 2: 
+
+    
+    
+I faced the same issue after updating STS based on Luna with OEPE,
+
+It works back after deleting all Oracle related files from the plugins folder.
+
+Then i did proper uninstall from market place.
+
+Install Back OEPE but with only selecting 
+
+
+Oracle Java EE tool 
+Oracle Weblogic Server Tools
+
+
+unchecked every thing else, this worked for me.
+    
+    
+Answer 3: 
+
+    
+    
+EDIT: ok, i've found the solution, first uninstall eclipse (in arch that would be pacman -Rcns eclipse) then head to ~/.eclipse/ you'll see that it kept gtk setting of previous version of eclipse delete all of it, then install eclipse again.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  
+
+this isn't an answer but since my reputation  is &lt; 50, i'll post here
+
+i have similar problem with Gere, i'm running manjaro linux, and eclipse luna 4.4.1.1 and while in Gere case the option is shown in Windows/Menu Visibility in my case it only shows
+1. Welcome
+2. Help Contents
+3. Search
+4. Dynamic Help
+5. Tips and Tricks ...
+6.  About Eclipse   
+
+this is exactly the same as shown in Help menu
+
+there are no option for update, nor to install new software
+
+so apparently the problem wasnt in menu visibility as previously in kepler it was ok, the problem only occured after updating to luna, and removing+installing doesnt help
+    
+    
+Answer 4: 
+
+    
+    
+I had the very same problem with Eclipse Luna on my Debian.
+I did a "mv ~/.eclipse ~/.eclipse-old" (for safety :) ),  restart Eclipse and get the "install new software" menu back.
+
+I then remove the ~/.eclipse-old directory
+    
+    
+Answer 5: 
+
+    
+    
+I had similar issue Gere. I went to eclipse/plugins folder, search everything with "oracle" and deleted them. Once I did that I restarted the Eclipse and voila I got back my eclipse. I hope this helps.
+    
+    
+Title: phpDesigner 8 how to FTP files to remote server
+Description: 
+    
+    
+                    
+I've never had so much difficulty trying to figure out something that should be so simple! I used the FTP Manager to set up a new connection. That's fine, and I see the connection in the FTP/SFTP panel.  But then what?? From my Project Panel, I right click the files 
+Title: Eclipse cannot resolve org.springframework.extensions.*
+Description: 
+    
+    
+                    
+I should develope a java backed web script for alfresco but some libraries are missing on the classpath so most of the classes I like to use can not be resolved. I can build the project but Eclipse can not find the classes:
+
+import org.springframework.extensions.webscripts.AbstractWebScript;
+import org.springframework.extensions.webscripts.WebScriptException;
+import org.springframework.extensions.webscripts.WebScriptRequest;
+import org.springframework.extensions.webscripts.WebScriptResponse;
+
+
+Where can I download the jar to add it to the classpath? I already searched and googled but I cannot find a download :/
+    
+
+        
+Answer 1: 
+
+    
+    
+if you are using maven ,add this to your pom.xml
+
+     &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.extensions.surf&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-webscripts&lt;/artifactId&gt;
+        &lt;version&gt;1.0.0.M3&lt;/version&gt;
+      &lt;/dependency&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.extensions.surf&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-webscripts-api&lt;/artifactId&gt;
+        &lt;version&gt;1.0.0.M3&lt;/version&gt;
+      &lt;/dependency&gt;
+
+    
+    
+Title: How do I change the default editor for a python file?
+Description: 
+    
+    
+                    
+When I right-click on a .py file, I am given the option to "Edit with IDLE". How can I replace IDLE with another IDE, such as PyCharm? ie when I right-click on any .py file, I would like there to be the option to "Edit with PyCharm".
+
+I am using Windows by the way.
+    
+
+        
+Answer 1: 
+
+    
+    
+The "Edit with IDLE" option is actually placed there by IDLE itself. The thing you could do is just change the default program you want python files to be opened with (by right clicking, choosing "Open with" and choose a default program).
+
+The additional entries in the context menus are specified in the registry. So i think if you want to manually add a "Edit with PyCharm" option you would have to edit the registry yourself. But I wouldn't recommend to do that at all.
+    
+    
+Answer 2: 
+
+    
+    
+Assuming you have Windows 7/8 and have the program (in this case PyCharm) installed already, you would:
+
+
+Right click any python file (typically ending with .py) 
+Click "Open With" 
+Either select PyCharm or the desired program from the list of programs OR
+Click Choose Default Program and 'find more options' or 'choose program from list' and find PyCharm in the directory you installed it in and select program
+
+
+Hope this helps! Be sure to specify if you meant a different OS than Widows.
+    
+    
+Title: How to remove file system folders from eclipse package explorer view?
+Description: 
+    
+    
+                    
+In the "package explorer view" of eclipse, some of my "file system folders" (e.g. src/main) are shown (my source folder is set to src/main/java).
+
+
+
+Showing the folder twice is redundant. How can I prevent this behaviour by default?
+    
+
+        
+Answer 1: 
+
+    
+    
+Have you tried this?
+
+1) Right click on the project, choose Properties.
+
+2) Java Build Path
+
+3) Source tab, select the folder on your build path (src/main) then select Excluded node
+
+4) Click Edit... button and add the pattern to exclude (src/main) and include (src/main/java) from the build path. You can fine-tune it with wildcards.
+    
+    
+Answer 2: 
+
+    
+    
+It's simple.
+
+
+click the project of your choice.
+Hit the 'edit' bottom.
+scroll down to the 'delete'. 
+
+    
+    
+Answer 3: 
+
+    
+    
+I had the same problem with a C project.
+
+On the top-right angle of the project explorer, you can find a triangle icon. Click on that, you will find one of these two following menu items (depending on the version):
+
+
+"Customize Window"
+"Filters"
+
+
+Click the one you find, and you will get a checkboxes list with "Non Java-Elements" option. Toggle it and it works.
+
+In case of C/C++ project, the entry is called  "Non C-Objects".
+
+Tried on Eclipse Oxygen and MCUxpresso. 
+    
+    
+Title: How do I make RubyMine index non-builtin gems for code completion?
+Description: 
+    
+    
+                    
+I was hoping to be able to see all the functions that are available to a class.
+
+So I should be able to type required_gem_classname.some_function_incomplete and see the popup with all the functions as in Visual Studio?
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't know how to do exactly what you ask using RubyMine's code completion. However,
+
+
+If you type SomeClass.so and type control-space twice, RubyMine will offer to complete using all declared names, whether they're in your code or in gems. (If the autocomplete popup is already showing, you just have to type control-space once.)
+You can see all the declared names that RubyMine knows about by typing option-command-O twice and typing the start of the name you're looking for. (That key combo is on the MacOS X 10.5+ keymap; on other keymaps use whatever Navigate -/p/lilipcode/code/p/li/ul/div
+Title: For the pycharm IDE how would I open a terminal in the IDE that uses an identical project environment
+Description: 
+    
+    
+                    
+Currently when I open a terminal in or out of pycharm the path has it open up python2.7.8. My project interpreter in python points to another version installed on my system (python2.6) it all works fine except when I open a terminal from within pycharm it still points to python2.7.8. I know about .pycharmrc, but how would I have the pycharm terminal point to the project python interpreter? Is there an an easy way?
+    
+
+        
+Title: How to stop eclipse to add space between class and &hellip; like template&lt;class &hellip; Args&gt;?
+Description: 
+    
+    
+                    
+I'm new to eclipse CDT, and I like it. However, there is an annoying thing:
+
+I want my code to look like:
+
+template&lt;class... Args&gt;
+void f(const Args&amp;... args)
+{}
+
+
+rather than look like:
+
+template&lt;class ... Args&gt;
+void f(const Args&amp;... args)
+{}
+
+
+The latter is generated by the eclipse formatter. How to stop it?
+    
+
+        
+Title: Naming Guidelines for PHP Storm
+Description: 
+    
+    
+                    
+I am used to have Resharper in Visual Studio which warns me, if a Methodname, Constant, Field, Property or Variable isn't in the right Case in terms of Microsoft Coding Style.
+
+For PHP I am using PHP Storm as IDE. It is developed by Jetbrains, the company, which already developed Resharper.
+
+I am search for a similar Option for this. I looked into Inspections from the Options and navigate to PHP
+
+Many good Features that are in Resharper are also here. But not Naming Guidelines.
+
+So, is there a Plugin or Some Option I don't see, to get PHP Storm warn me, if I write HelloFRomHEre() instead of helloFromHere()?
+
+Regards
+    
+
+        
+Answer 1: 
+
+    
+    
+As @LazyOne pointed out, CodeSniffer is current the best option. There is no native way implemented in PHPStorm (Also the new 8 release).
+
+PEAR:
+http://pear.php.net/package/PHP_CodeSniffer/redirected
+
+Manual for PHP Storm:
+http://www.jetbrains.com/phpstorm/webhelp/using-php-code-sniffer-tool.html
+
+This is current the only solution, but i am looking forward to a better integration.
+    
+    
+Title: PPA for Spring Tool Suit
+Description: 
+    
+    
+                    
+I need to install STS in my linux machine.
+In Spring site they are providing zip files for installation of STS.
+
+But I am not getting any updates of STS with the system update
+Is there any ppas available for STS. so that update will happen with the system update
+    
+
+        
+Answer 1: 
+
+    
+    
+There are no Linux platform packages for STS (as far as I know). It is designed to be executed as an app with user privileges, so there isn't really a lot of benefit in having a formal package for it. Just unzip the distro and run it.
+    
+    

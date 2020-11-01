@@ -1,0 +1,1983 @@
+Title: Why is Intellij Idea Java IDE not recognizing updates to my local maven projects
+Description: 
+    
+    
+                    
+I created an Intellij-idea (11.1) single module project based on a maven projects, some of the maven dependencies are other projects also created by me. 
+
+All these other projects  have been installed locally with mvn install and everything was working okay.
+
+However the problem occurs when I make a change to one of these local projects such as adding a new method, despite running mvn install  and resychronizing main project pom I cannot get IntelliJ to be aware of the new methods I've added. If I build my main project with mvn it works okay its only within Intellij itself that I have a problem.
+    
+
+        
+Answer 1: 
+
+    
+    
+I can assume that you do not use SNAPSHOT in version e.g.
+
+  &lt;groupId&gt;com.my.app&lt;/groupId&gt;
+  &lt;artifactId&gt;my-app&lt;/artifactId&gt;
+  &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+
+
+if you use just 
+
+version&gt;1.0&lt;/version&gt;
+
+
+It means that version 1.0 is stable and any project that has dependency on it will download it just once (at first time).
+
+SNAPSHOT - shows that current project is under development so your maven will download it each time you run install
+
+
+More information you can find in Maven documentation
+    
+    
+Title: codeigniter IDE for mac os x
+Description: 
+    
+    
+                    
+I'm looking for a codeigniter IDE for mac os x.does it exist a plugin for netbeans for this framework? I found it only for windows. I would found it for auto complete !
+    
+
+        
+Answer 1: 
+
+    
+    
+An IDE specific for Codeigniter doesn't exist as far as I know, however you can for example extend Eclipse to be able to auto-complete CI functions and methods: Eclipse CI auto complete
+
+If syntax highlighting in a standard text editor is what you are looking for, there are several plugins available for TextMate, for example: Full Codeigniter Textmate Bundle that will also work excellent with the free Sublime Text 2.
+    
+    
+Answer 2: 
+
+    
+    
+You can get autocomplete for Codeigniter in Netbeans IDE using the CodeIgniter plugin for Netbeans available at http://kenai.com/projects/nbphpci/pages/Home
+    
+    
+Title: IDE for python (something with a mix of KDE and emacs)
+Description: 
+    
+    
+                    
+I am using a text editor (Sublime Text) for programming in Python. The latest version is pretty cool, but I was wondering if there are any (free) IDEs available for Python which meet the following two criteria (the ones I care about)
+
+
+Gives auto-suggestions for the names/methods, like in Visual Studio or KDE (at least in C++ version) whenever you start typing the name of the class. Sublime text keeps a track of the words which have been typed in the windows open and does suggests, but it returns all the words typed as suggestions.
+Indentation lock after 4 spaces. Emacs has this very cool property where you can lock the indention to four spaces and no matter how many times you press tab and space it doesn't goe beyond those spaces, for a given block. This is nifty when doing ctrl + c and ctrl + v as just with one tab, the indentation is taken care of. I believe this can be done in KDE also.
+
+
+I used KDE for C++ development and it was pretty cool.
+Additional plus point: if I can define my own visual environment... :P like plugins..
+
+Any suggestions?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can give Eclipse a try. It has a plugin named PyDev which lets you work in python.
+Have a look here Python Development with PyDev and Eclipse
+    
+    
+Answer 2: 
+
+    
+    
+Keep in mind that #1 is not really possible in Python. Some tools take a stab at it, but there are always significant limitations. Consider this code:
+
+if foo():
+   bar = "quux"
+else:
+   bar = [42]
+
+
+Now when you type bar. on the following line, what methods should be suggested? Those for strings, or those for lists? And that's just the tip of the iceberg.
+    
+    
+Answer 3: 
+
+    
+    
+There are some decent IDEs out there in Aptana and PyCharm.  The latter costs money, but it's still a great Python IDE.
+
+Geany is a text-based IDE which isn't as powerful as the other two, but it can do some suggestions.  I'm not 100% sure about the space enforcing though.
+    
+    
+Title: Keeping Visual Studio project files in sync with directory contents?
+Description: 
+    
+    
+                    
+We have a large C project with development happening on Linux, Mac OS and Windows.  Most of our Windows developers use MSVC -- for example, the free edition of Visual C.  Oftentimes .c source files are added, renamed or deleted, and we find it very frustrating to keep the Visual C project in sync with these changes to directories.
+
+Developer A might add newfile.c, check it in to Subversion and happily continue work.
+
+Developers B, C, etc. update to the latest revision.  Then when they compile in MSVC they get an error (buried somewhere in the huge compile output) saying the linker can't find such-and-such symbol.  They then need to look to see what files have changed and manually add that to the project tree in MSVC.
+
+(Developer A might be on Unix where build scripts tend to automatically find the right files to compile, and not realise how much work they've just created for B and C!)
+
+My question is, is there a way to tell MSVC to consider every .c file in a directory as part of the project?
+
+Update We have build scripts that can create initial MSVC project files.  But there's a signicifant amount of customisation that gets done after this (pointing to libraries, etc.) which would be blown away each time the scripts were rerun merely to add a new file.
+
+Given how many large projects there are out there, I'm kind of surprised Visual Studio requires such manual work by each developer just to pick up new files added by others.
+  I'm going to optimistically hold out for a better solution for now...
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't think Visual Studio can do what you want (but would be glad if I'm proved wrong!).
+
+What works for me is to use cross platform project files. Take a look at CMake, which allows you to define the structure of your project in a platform independent text based format. Then on each platform these project files are processed with a tool that then automatically generates the appropriate thing, which could be Makefiles, Visual Studio solution and project files, etc.
+    
+    
+Answer 2: 
+
+    
+    
+If this is really a serious problem, I would recommend writing a script which updates VS project file accordingly with directory contents.
+    
+    
+Title: Auto-format on method save in Pharo
+Description: 
+    
+    
+                    
+Pharo has a built-in code formatter. I want that whenever I save a method, Pharo ignores all my formatting and auto-formats the code instead. Can that be done?
+    
+
+        
+Answer 1: 
+
+    
+    
+Sure, there is a setting if you use the Refactoring Engine and OmniBrowser: In the "Settings Browser" navigate to Refactoring Engine /emem
+Answer 2: 
+
+    
+    
+I figured out a sort of hack , to deal with self formating method saves. It might come in handy.
+
+In NautilusUi -&gt; compileSource: aText notifying: aController
+
+add this line in the begining.
+
+self refactor formatSourceCode.
+
+
+That is this will create the auto format on save functionality. Also i admit, that this is not the right way to do this, but it works for me.
+
+ **compileSource: aText notifying: aController
+        | source category method |
+        self refactor formatSourceCode.
+        source := aText asString.
+        category := self selectedCategory.
+        method := self selectedMethod.
+        category ifNil: [ method ifNotNil: [ category := method protocol. ]. ].
+        (category isNil and: [ method isNil. ])
+            ifTrue: [
+
+                source first isUppercase
+                    ifTrue: [ ^ self compileAClassFrom: source notifying: aController. ].
+                category := Categorizer default.
+                ]
+            ifFalse: [
+
+                (category = self allLabel and: [ self selectedMethod notNil. ])
+                    ifTrue: [ category := self selectedMethod protocol. ].
+                ].
+        self compileAMethodFromCategory: category withSource: source notifying: aController.**
+
+    
+    
+Answer 3: 
+
+    
+    
+For OmniBrowser, I added this new method:
+
+OBTextMorphEditorWithShout&gt;&gt;accept
+"
+This method did not previously exist for this class.
+It is a subclass hook to auto format code on accept.
+"
+
+(ORCmdFormat on: 'TargetIsNotUsed' for: self model) execute.
+super accept
+
+    
+    
+Title: VS 2010 IDE 2GB limit
+Description: 
+    
+    
+                    
+I am using VS 2010 on a win 7 64 bit system with 8 GB of memory. My application is 32 bit. While in the VS 2010 .Net IDE, the app shows up in the Windows task manager as "MyApp.vshost.exe *32" while the VS IDE itself shows up as "devenv.exe *32". 
+
+I checked and it appears that the VS 2010 IDE file (devenv.exe) is complied with the /LargeAddressAware flag. 
+
+However, when debugging large models, the IDE fails with an Out of memory exception. In the Windows Task manager, the "MyApp.vshost.exe *32" process indicates about 1400 MB of memory usage (while the "devenv.exe *32" process is well under 500 MB). Is it possible to set the "MyApp.vshost.exe *32" process to be /LargeAddressAware in order to avoid this out of memory situation? If so, how can this be done in the IDE. While setting the final application binary to be /LargeAddressAware would work, I still need to be able to debug the app in the IDE with these type of large models. I should also note that my app has a deep object hierarchy with many collections that together required a lot of memory. However, my issue is not related to trying to create say 1 large array that requires greater then 2 GB of memory etc.
+
+I should note that I am able to run the same app in the VB6 IDE and not get an out of memory situation as long as the VB6 IDE is made /LargeAddressAware. In the case of VB6, the IDE and the app being debugged are part of the same process (and not split into 2 as is the case with VS 2010.) The VB6 process can be larger then 3 GB without running into out of memory issues.
+
+Ultimately, my objective is to have my app run completely in 64 bit to access more memory. I am hoping that in such cases, the IDE will allow the debugging process to exceed 2 GB without crashing (and certainly more then 1.4 GB as is the current case). However, for now, while 95% of my app is 64 bit, I am calling a legacy COM 32 bit DLL and as such, my entire app is forced to still run in 32 bit mode until I replace that DLL.
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  the IDE fails with an Out of memory exception
+
+
+No, your program fails with that exception, not the IDE.  You'd have to run editbin.exe in a post build event to set the flag:
+
+set path=%path%;$(devenvdir);$(devenvdir)\..\..\vc\bin
+editbin /largeaddressaware $(targetpath)
+
+
+That will not work on the vshost.exe version, you'll have to turn off the hosting process.  Project + Properties, Debug tab.
+    
+    
+Answer 2: 
+
+    
+    
+Some options I can think of:
+
+
+Disable the VSHost process - Do you actually require the extra debugging features from the VS hosting process? If not just to untick the "Enable Visual Studio Hosting Process" option.
+Externalise the problematic DLL - Wrap the COM DLL in a simple 32-bit process and compile the rest as 64-bit using an appropriate variety of IPC to connect the two.
+Force the flag in the VSHost process - Use a post-build command to forcibly set the flag in the .vshost.exe (no idea if that would work though!)
+
+    
+    
+Title: Is it possible in any Java IDE to collapse the type definitions in the source code?
+Description: 
+    
+    
+                    
+Lately I often have to read Java code like this:
+
+LinkedHashMap&lt;String, Integer&gt; totals =  new LinkedHashMap&lt;String, Integer&gt;(listOfRows.get(0))
+for (LinkedHashMap&lt;String, Integer&gt; row : (ArrayList&lt;LinkedHashMap&lt;String,Integer&gt;&gt;) table.getValue()) {    
+    for(Entry&lt;String, Integer&gt; elem : row.entrySet()) {
+        String colName=elem.getKey();
+        int Value=elem.getValue();
+        int oldValue=totals.get(colName);
+
+        int sum = Value + oldValue;
+        totals.put(colName, sum);
+    }
+}
+
+
+Due to the long and nested type definitions the simple algorithm becomes quite obscured. So I wished I could remove or collapse the type definitions with my IDE to see the Java code without types like:
+
+totals =  new (listOfRows.get(0))
+for (row : table.getValue()) {    
+    for(elem : row.entrySet()) {
+        colName=elem.getKey();
+        Value=elem.getValue();
+        oldValue=totals.get(colName);
+
+        sum = Value + oldValue;
+        totals.put(colName, sum);
+    }
+}
+
+
+The best way of course would be to collapse the type definitions, but when moving the mouse over a variable show the type as a tooltip. Is there a Java IDE or a plugin for an IDE that can do this?
+    
+
+        
+Answer 1: 
+
+    
+    
+IntelliJ IDEA will convert the types on the right-hand side of a declaration to &lt;~&gt;. So that:
+
+Map&lt;Integer, String&gt; m = new HashMap&lt;Integer, String&gt;();
+
+
+Will appear folded as: 
+
+Map&lt;Integer, String&gt; m = new HashMap&lt;~&gt;();
+
+
+This is settable via the Editor / Code Folding / Generic Constructor and Method Parameters property and the community edition of the IDE is free.
+
+
+Or you could use Scala, which has type inference:
+
+val totals = new mutable.Map[String, Int]
+for { 
+    row &lt;- table.getValue
+    (colName, value) &lt;- row.entrySet 
+} totals += (colName -&gt; (value + totals.get(colName) getOrElse 0)
+
+    
+    
+Title: Setting a maximum size for vertical windows in vim
+Description: 
+    
+    
+                    
+When working with split windows, I often make use of the command to size all windows equally. However, I also use mini buffer explorer in a vertical window, which I want to keep to a maximum width of 25. Is there any way I can configure vim so that either the mini buffer explorer window does not get re-sized or it stays at a maximum width of 25?
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+You can do
+
+:set winfixwidth
+
+
+in the window that you want to stay the same.
+
+See
+
+:help winfixheight
+:help winfixwidth
+
+    
+    
+Answer 2: 
+
+    
+    
+Here is a part of minibufexpl.vim:
+
+"               If you would like a vertical explorer you can assign the column
+"               width (in characters) you want for your explorer window with the
+"               following .vimrc variable (this was introduced in 6.3.0):
+"
+"                 let g:miniBufExplVSplit = 20   " column width in chars
+"
+"               IN HORIZONTAL MODE:
+"               It is now (as of 6.1.1) possible to set a maximum height for
+"               the -MiniBufExplorer- window. You can set the max height by
+"               letting the following variable in your .vimrc:
+"
+"                 let g:miniBufExplMaxSize = &lt;max lines: defualt 0&gt;
+"               
+"               setting this to 0 will mean the window gets as big as
+"               needed to fit all your buffers. 
+
+
+This should help to solve your problem.
+    
+    
+Title: Can IntelliJ auto complete and include simple generics?
+Description: 
+    
+    
+                    
+I have recently switched back to IntelliJ from Eclipse and one thing I am struggling with is the auto complete, especially when declaring Collections. *This is not a question about which IDE is better its just a question on how to perform a task if that task is possible *
+
+In IntelliJ I type 
+
+List&lt;String&gt; listOfNames = new ArrayL  (then key stroke **Alt Ctrl Space**)
+
+
+I get 
+
+List&lt;String&gt; listOfNames = new ArrayList
+
+
+Which saves me typing three letters, not a great saving I am sure you will agree
+
+If I use Eclipse and use the key stroke Ctrl Space on 
+
+List&lt;String&gt; listOfNames = new Ar
+
+
+I get this result including the generics
+
+List&lt;String&gt; listOfNames = new ArrayList&lt;String&gt;()
+
+
+I am sure I am missing something like a keystroke I can't find or a plugin I need to add. 
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+type 
+
+List&lt;String&gt; listOfNames = new //be aware of the space after new
+
+
+and press crtl+shift+spacebar, magic happens!
+    
+    
+Title: what else text editors can be used to editor Objective-C code except xcode
+Description: 
+    
+    
+                    
+I am new to mac, my question is what else text editors can be used to edit Objective-C code except xcode. And which one is the best for productively editing source code?
+    
+
+        
+Answer 1: 
+
+    
+    
+Have you tried TextMate?
+    
+    
+Answer 2: 
+
+    
+    
+What text editors can't edit c code?
+
+I'd recommend vim, emacs or textmate.
+    
+    
+Answer 3: 
+
+    
+    
+Emacs, obviously, tho' heretics will advise Vi(m).
+    
+    
+Title: Python3 function annotations for type hinting versus Boo
+Description: 
+    
+    
+                    
+I've started on a medium-sized project in python, and I decided to use python 3 because I'm not using any large external libraries and py3k has some nice new syntactic sugar and more importantly function annotations. However, it seems like none of WingIDE, Pydev, or pycharm actually have any support for type hinting using function annotations. If I want something resembling static typing in python, is switching to boo a reasonable option?
+    
+
+        
+Answer 1: 
+
+    
+    
+Boo is a great Python-like statically-typed language, but keep in mind that there more differences than just static typing. Actually you can also do duck typing on Boo.
+
+Technically, I'd say the biggest difference is that Boo runs on Mono/.Net so the libraries and framework are totally different.
+
+SharpDevelop and MonoDevelop both have good support for Boo. There's also a Visual Studio 2010 plugin that adds Boo support. It's still alpha, yet already usable.
+    
+    
+Answer 2: 
+
+    
+    
+You could try with Cython. It is in some way CPython with static typing.
+See also this link
+    
+    
+Title: Managing multiple Visual Studio Layouts
+Description: 
+    
+    
+                    
+I'm currently using Visual Studio 2008. As other applications, it saves its layout in their setting folder. That's fine. But, my problem is that I often launch 3~4 Visual Studios, and change each instance's layout.
+
+However, Visual Studio can only remember a single set of layout of the last terminated instance. I don't blame this limitation as this is a just normal behavior.
+
+I'd happy if multiple layouts could be saved, or it would be perfect if Visual Studio allows per-solution/project layout saving. Is there anyone who wants this sort of feature? Is it feasible to make such extension?
+    
+
+        
+Answer 1: 
+
+    
+    
+Note: I started writing an answer but further testing showed that it does not work as well as I had hoped. Here it is anyway. Maybe it can help you going further.
+
+VS has the notion of storing different layouts, based on what the developer is doing. While debugging, windows can be positioned differently than during "normal" editing. Start debugging and windows move/show/hide in order to be in the same position as the last debugging session. Stop debugging and the windows move back to the state before debugging.
+
+I guess you knew this already, but what's great is that you can add new layouts yourself.
+
+If you open the macro editor (Alt-F11), you'll see a samples project, which has a 'Utilities' file. There, you'll find 2 macros, SaveView and LoadView, which save and load the current window configurations. Each one asks for the view name.
+
+I tried creating a new layout/view, hiding windows and moving them and then re-loading the view. It worked great.
+
+You could change the macros to load or save a view by solution name. Or have one pair for editing and one pair for debugging. If you write an add-in, you can get notified of a solution load, but I don't know if you can detect the starting of a debug session.
+
+What is not so great is that if you leave VS and re-launch it, loading a previously-saved layout does not work very well (e.g. some tool windows don't come back to where they were). Maybe it's worth studying the underlying class (WindowConfiguration), but it's not an easy solution.
+    
+    
+Answer 2: 
+
+    
+    
+If you're not switching frequently between the layouts then one option may be to use the Tools /pp/pp/p/div
+Answer 3: 
+
+    
+    
+This is an old question, but since it came up in my Google search, I am adding an answer.
+
+I'm looking into http://perspectives.codeplex.com/ (found it from http://www.addictivetips.com/windows-tips/save-windows-tool-panes-layouts-with-visual-studio-2010-perspectives/). It adds "Perspectives" to Visual Studio 2010. I haven't decided if it is fully meets my needs, but it looks promising.
+
+There are many aspects of Eclipse that are better, or at least more configurable, or at least that I like how the work better than Visual Studio.
+    
+    
+Title: Is there any open source IDE written in C/C++ , which preferbly uses Qt and has plugin support like eclipse?
+Description: 
+    
+    
+                    
+Is there any open source IDE written in C/C++ , which preferably uses Qt and has plugin support like eclipse?
+    
+
+        
+Answer 1: 
+
+    
+    
+KDevelop is Qt+KDE based. 
+    
+    
+Answer 2: 
+
+    
+    
+There is for example MonkeyStudio.
+    
+    
+Title: favourite IDE for griffon development
+Description: 
+    
+    
+                    
+I am experimenting with Groovy Griffon development and I am wondering what IDE to use.
+
+I am trying to use NetBeans 6.5, and I found this post
+
+https://blogs.oracle.com/geertjan/entry/notes_on_converting_netbeans_grails
+
+essentially it describes forking the NetBeans trunk and hacking the Grails support; I was hoping for something more lightweight.
+
+Are there any simple tools to create eclipse, netbeans or pom.xml's from Griffin Apps?
+
+Or is it best to use a simple text editor?
+    
+
+        
+Answer 1: 
+
+    
+    
+There is a NetBeans Griffon plugin already available at http://plugins.netbeans.org/PluginPortal/faces/PluginDetailPage.jsp?pluginid=18664
+    
+    
+Answer 2: 
+
+    
+    
+Griffon apps have some rudimentry hooks already for IDE integration.  
+
+First, a .classpath and .project file are generated that mark the expected source and test directories for Eclipse.  Both IntelliJ and NetBeans have importers for these eclipse files (and they work, I use them regularly).
+
+Second, Griffon 0.1.1 adds more targets to the parallel build.xml so that more of the common scripts can be used as though they were ant tasks (run-app, compile, debug-app, etc.)
+
+Third, there is some better IDE support in the works form some of the IDE vendors.  As mentioned in the article you linked because Griffon is grails derived it is fairly easy to re-purpose existing Grails support.  IntelliJ has the only specific tracked feature request I am aware of.
+    
+    
+Answer 3: 
+
+    
+    
+IntelliJ Idea has very good Griffon support.
+    
+    
+Answer 4: 
+
+    
+    
+This question usually comes with a next question:
+
+How to debug Griffon?
+
+Just in case someone still requires a helping hand trying to figure out how to debug Griffon in Eclipse/STS I've written a simple step by step guide to get it done:
+
+http://ivo43.blogspot.com/2012/02/debugging-griffon-in-eclipsests.html
+
+Hope it helps someone someday, :D
+
+PD: I've tried Netbeans and even though it looks great am still with STS, call me a maniac!
+    
+    
+Title: Incremental paste plugin?
+Description: 
+    
+    
+                    
+I know that often using a for loop to generate repetitive content is the better way than pasting something 20 times and changing each paste to the correct number by hand.   But let's say for cases where content is hard-coded and I just want a list from 1-20.
+
+I would like a text editor with a "smart" paste command that takes any number imbedded in a string on the clipboard and increments it each time I paste.  If it doesn't exist, I will make a plugin.
+
+I'm trying to think of a good 2-stroke keyboard shortcut to do it, close to the ctrl-V.  Maybe ctrl-g or numpad_+ (in an app with no zooming).
+
+Does it exist?
+    
+
+        
+Answer 1: 
+
+    
+    
+In Zeus this can be easily done as follows:
+
+
+Column mark the area to be converted to a numbers
+Use the Macros, Execute Script menu
+Type in numbers to run the numbers Lua macro
+Type in the first number of the sequence
+
+
+The marked area will be replaced by an incrementing sequence of number starting at the first number provided in step 4.
+
+
+  I'm trying to think of a good 2-stroke
+  keyboard shortcut to do it,
+
+
+Making this into a key stoke action is as simple as binding the numbers Lua macro to the keyboard.
+
+Here is an example of how it works. If 1 values in the text below are column marked and the macro executed with a starting number of 1000:
+
+Field_1
+Field_1
+Field_1
+Field_1
+
+
+the following text changes will be made:
+
+Field_1000
+Field_1001
+Field_1002
+Field_1003
+
+    
+    
+Answer 2: 
+
+    
+    
+Armed bear J has a renumber region command, as well as a case-preserving replace-in-files, which means I often keep it around for those features.
+    
+    
+Answer 3: 
+
+    
+    
+TextPad is another text editor with a Fill Region function, for filling with a character, a string, or incrementing numbers (starting from X, with left- or right-alignment, and space- or zero-filled.)
+
+I used Notepad++ now, but I have to keep TextPad around just for that number-filling function.
+    
+    
+Title: Visual Studio 2008 Emacs Mode
+Description: 
+    
+    
+                    
+When using emacs mode in Visual Studio 2008 the tab key no longer inserts tabs. It simply formats the current line. It is possible to remap tab to Edit.IncreaseIndent but this has many undesirable side effects. Has anyone else experienced this? If so is there a fix/hack?
+
+Also I have noticed that the performance of the text editor rapidly degrades over time when emacs mode is enabled. It gets to the point that there is full second lag on the cursor updating. I suspect this has something to with the way the kill ring or Edit.EmacsSetMark is implemented since in the default mode Emacs.SetMark does not work.
+
+Any thoughts or help with these issues would be great. Even just some other people sharing my pain.
+    
+
+        
+Answer 1: 
+
+    
+    
+Try Ctrl+q TAB
+
+I use it every day with no performance degradation in VS2008 SP1.
+    
+    
+Answer 2: 
+
+    
+    
+Not sure if this works in VS2008 but the workaround offered for the Emacs Emulation extension for VS2010 is this:
+
+
+  Known Issues
+  
+  
+  Pressing Tab on a blank line will not    add the proper indentation. The
+  workaround is to add text to the
+  line    and then press Tab. 
+  Pressing Tab when    Intellisense Statement Completion is    active will
+  not complete.  The    workaround is to
+  use another    completion character or
+  Enter to    commit.
+  
+
+    
+    
+Answer 3: 
+
+    
+    
+I haven't tried it in VS 2008, but in most apps with emacs key-bindings, if you do a Shift-Tab it'll insert a Tab instead of indent. (Learned from using Vimacs plugin in Vim).
+    
+    
+Answer 4: 
+
+    
+    
+I'm using Emacs mode, and I've noticed performance degradation.  Not sure if it's related though.
+
+I wish emacs mode wasn't so buggy.  Much improved since vs 2005, but sometimes simple commands such as ctrl-n and ctrl-p don't work (in aspx, for instance).
+    
+    
+Title: How to move the panels in Spyder 4.0?
+Description: 
+    
+    
+                    
+Spyder 4.0 just released and I am not able to move the panels for my desired layout.
+
+How can I do this?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can enable panel moving by switching off the option in View &gt; Lock panes and toolbars, or pressing Ctrl+Shift+F5. From there, you can drag around panes as you wish. 
+
+When you're done, you can lock them again with the same process. If you want to save the current layout, you can use Alt+Shift+S. Also, in the View &gt; Window Layouts menu, you can see and launch preset layouts that mirror other editors such as R Studio and Matlab.
+    
+    
+Title: How can I enable a Node.js Intellisense in VS Code?
+Description: 
+    
+    
+                    
+How can I enable a Node.js Intellisense in VS Code?
+
+For instance, I am aware of a constant in Node.js __dirname, but when I try to type __dir in VS Code I am not getting any suggestions, while I would expect to see the __dirname as a suggestion.
+
+
+
+What can I do about it? Maybe I should install a plugin?
+
+Here is the version of VS Code I am using:
+
+Version: 1.33.1 (user setup)
+Commit: 51b0b28134d51361cf996d2f0a1c698247aeabd8
+Date: 2019-04-11T08:27:14.102Z
+Electron: 3.1.6
+Chrome: 66.0.3359.181
+Node.js: 10.2.0
+V8: 6.6.346.32
+OS: Windows_NT x64 10.0.17763
+
+
+Thank you.
+    
+
+        
+Answer 1: 
+
+    
+    
+There was some time while a back that :
+
+npm install node;
+
+
+in the project root folder was enough for vscode (at least for my case) to give me intellisense for node . Now I need to do also that :
+
+npm install @types/node;
+
+
+again in the project folder .
+Also the same solution seems to be suggested from vs code docs .
+    
+    
+Title: PRODUCT IS NOT SUPPORTED (Visual Studio 2019)
+Description: 
+    
+    
+                    
+I downloaded Visual Studio Community from here ,But getting this exception when installing.
+Please let me know what could be the reason despite using latest version of windows.
+I have also read this article , and using professional version of windows.
+
+Installer
+
+
+
+System Configuration
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The 2015 in the System properties indicate you use a very old Windows 10 Version (TH1/TH2), but you need at least the Creators Update from March 2017:
+
+
+  Visual Studio 2019 will install and run on the following operating
+  systems (64 bit recommended):
+  
+  Windows 10 version 1703 or higher: Home, Professional, Education, and Enterprise
+
+
+So, update your Windows 10 to the 1809.
+    
+    
+Title: Is it possible to call an external Batch file from Genexus IDE (external tool)
+Description: 
+    
+    
+                    
+From the Genexus IDE, I would like to call a batch file passing as an argument the Genexus project location; similar to "External Tools" in Jdeveloper, is this possible? if so, where?
+    
+
+        
+Answer 1: 
+
+    
+    
+As far as i know, to do so, you must use genexus sdk and develop an user extension to integrate it inside the IDE 
+    
+    
+Answer 2: 
+
+    
+    
+As of Genexus 15 U12, there's a new feature called Build Events https://wiki.genexus.com/commwiki/servlet/wiki?39474
+I believe that's what you need
+    
+    
+Title: Stylelint error in PhpStorm IDE : no configuration provided
+Description: 
+    
+    
+                    
+I cannot make stylelint to work in PhpStorm
+
+"C:\Program Files\nodejs\node.exe" "K:/dev/npm packages/node_modules/stylelint/bin/stylelint.js" -f json --stdin-filename ..\..\..\..\..\..\..\..\:/dev/D8/themes/amu_www/css/style.css
+K:\:\dev\D8\themes\amu_www\css\style.css
+Error: No configuration provided for K:\:\dev\D8\themes\amu_www\css\style.css
+    at module.exports (K:\dev\npm packages\node_modules\stylelint\lib\utils\configurationError.js:8:28)
+    at stylelint._fullExplorer.load.then.then.config (K:\dev\npm packages\node_modules\stylelint\lib\getConfigForFile.js:47:15)
+
+Process finished with exit code 78
+
+
+I have placed a stylelintrc.json config file about everywhere I could think of but I don't know in which folder it is supposed to be put.
+    
+
+        
+Answer 1: 
+
+    
+    
+it was a .stylintrc.json and placing it just above the app working directory makes it foundable
+    
+    
+Answer 2: 
+
+    
+    
+In my case, the problem was that my Webstorm IDE is always looking for the configuration file in the project root directory, while my stylelint.config.js was located in configs/stylelint.config.js.
+
+I've solved by moving it to the root.
+    
+    
+Title: Spyder doesn&#39;t detect changes in imported python files
+Description: 
+    
+    
+                    
+I'm using Spyder 3.2.4 (Python 3.6). Spyder doesn't detect changes in imported python files. For example:
+
+test2.py:
+
+def func():
+    return 5
+
+
+test1.py:
+
+import test2
+
+a = test2.func()
+print(a)
+
+
+When I wrote those classes, and saved them (in the same working directory), and ran test1.py the output was 5.
+
+BUT when I change the function in test2.py, to like:
+
+def func():
+    return 10
+
+
+Save it, and then run python1.py, I still get 5. Only when I save, exit the IDE, and return, I will get the changed code (10). 
+
+This behavior is going on since I started using Spyder (few months by now), and it's super annoying. Help would be appreciated. 
+    
+
+        
+Answer 1: 
+
+    
+    
+What you are experiencing is a Python feature. Modules are initialized when first imported and kept in a cache. Each subsequent import uses the cache, so the module code is not run again.
+
+What in most cases is an eminently reasonable economy, is rather annoying when developing. You can force python to reload a module using importlib.reload.
+    
+    
+Answer 2: 
+
+    
+    
+(Spyder maintainer here) This is a know issue and it'll fixed in our 3.2.5 version, to be released on December/2017.
+    
+    
+Title: How do I update glassfish 4.1.1 inside netbeans 8.2
+Description: 
+    
+    
+                    
+I am working on a tutorial using glassfish inside netbeans https://netbeans.org/kb/docs/javaee/ecommerce/setup.html . I reached this point in the tutorial (Don't mind the Pool name, I changed it to fit my own) 
+
+But when I click next I get this error 
+
+I read on the internet that some people say this error occurs cause there is a bug in glassfish version 4.1.1 but when I try to update glassfish from inside Netbeans 
+
+And I click yes then I get this error  
+
+It doesn't help either if I go into the glassfish admin area and click on Update tool 
+
+Cause no Items show up even though there have been updates since and glassfish is now on version 5.0. I by the way checked if I was behind a proxy here http://amibehindaproxy.com/ and I wasn't and my internet speed showed this 
+
+So is there anybody who can tell me what I do wrong??? There are some other post about the subject but non of the solutions helped me.
+    
+
+        
+Answer 1: 
+
+    
+    
+The Update Center in GlassFish no longer works because the server it tries to connect to does not exist any more after Oracle ended commercial support. To update GlassFish you will need to:
+
+
+Download GlassFish separately
+Unzip it to a location of your choice
+Add it to netbeans manually by right-clicking "servers" and choosing "Add Server"
+
+
+If you are concerned about bugs in GlassFish, you may want to try Payara Server, which is derived from GlassFish but has many more bug fixes. (Payara Server has the same free, open source license as GlassFish)
+    
+    
+Title: PhpStorm: how to tell the var type of an array member?
+Description: 
+    
+    
+                    
+I use PhpStorm 2016.2.1 IDE. I have a typed array (all members will be of the same, known class) and I'd like the IDE to know the type so I it can help me out with autocomplete/intellisense.
+
+class MyClass{    
+     /**
+     * @var array
+     */
+    public $userArray;
+
+    public addUser($uid){ $this-&gt;$userArray[$uid] = new User($uid); }
+
+    public processUser($uid){
+
+        $oUser = $this-&gt;$userArray[$uid];
+            //since the PHP array can contain anything, the IDE makes 
+            //no assumption about what data type $oUser is. How to let it 
+            //know that it's of type User?
+    }
+}
+
+
+I have tried...
+
+ /**
+ * @var User
+ */
+public $oUser = ...;
+
+
+And also
+
+ /**
+ * @type User
+ */
+public $oUser = ...;
+
+
+So far, the only thing I've gotten to work is to use getter functions:
+
+/**
+* @return User
+*/
+function getUser($uid){ return $this-&gt;$userArray[$uid]; }
+
+function processUser($uid){
+    //now the IDE knows the type of $oUser
+    $oUser = $this-&gt;getUser($uid);
+}
+
+
+But slowing down the script with unneeded function calls just to get better IDE support seems like a bad idea.
+
+Any idea how I can let PhpStorm know the type of a variable? Or even better: how to tell it which type an array will contain in the PHPDoc metadata for that array?
+    
+
+        
+Answer 1: 
+
+    
+    
+For class variables, as you know, you can simply do
+
+@var User
+
+For local variables, it's not officially a supported format, but you must also specify the variable name:
+
+@var User $oUser
+
+Specific to PHPStorm, you'll need to use double asterisks (I think it's the only IDE that needs it, please consider that):
+
+/** @var User $oUser */
+
+See the PHPDoc manual for more info
+    
+    
+Title: Hide Top-Right Username on Visual Studio 2015
+Description: 
+    
+    
+                    
+Visual Studio 2015 display the licensed user name on top-right corner of the window.
+
+
+
+How do I to hide/remove this? Its really boring blur it whenever I need take screenshots.
+    
+
+        
+Answer 1: 
+
+    
+    
+I have an extension for Visual Commander that hides it on Visual Studio startup:
+
+private bool HideSignIn()
+{
+    System.Windows.FrameworkElement e = 
+        FindElement(System.Windows.Application.Current.MainWindow, 
+            "PART_MenuBarFrameControlContainer");
+    if (e != null)
+    {
+        e.Visibility = System.Windows.Visibility.Collapsed;
+        return true;
+    }
+    return false;
+}
+
+    
+    
+Title: IntelliJ: use docker jvm or docker maven?
+Description: 
+    
+    
+                    
+I have a docker/jvm instance, which I use from the command line to compile and run java code. IntelliJ's project config requires me to point at a jvm on the filesystem. 
+
+So, I was wondering, can I configure intellij to use this docker container? I suppose I could configure a docker container, keep it running, and mount/share its filesystem, but I don't want that -- I want to use my ephemeral container instance.
+
+I have the same idea for using maven -- can I use a docker instance of maven without mounting the filesystem, from within intellij? Again, intellij seems to require a pointer to a filesystem location for maven, so this seems problematic.
+
+Does anyone have any clue if this is possible, or how to go about configuring such a thing?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  Again, intellij seems to require a pointer to a filesystem location for maven, so this seems problematic.
+
+
+The only way for an application to use another containerized one would be for that application itself to be in the same container (or to mount a data volume from another container, which avoids mounting the local filesystem)
+
+So using something like dlsniper/docker-intellij/ (used for go, but easily adapted for java) would work, and allow an IntelliJ container to
+
+
+share the X11 socket in order to see the containerized application on the host desktop,
+uses data volumes (again, without mounting a local filesystem directly):
+
+
+data-volume for the jvm
+data-volume for the java sources
+
+
+    
+    
+Answer 2: 
+
+    
+    
+If you're on a posix system, you can make a simple executable shell script that takes command line argument and forwards those to:
+
+docker exec [OPTIONS] CONTAINER COMMAND [ARGS...]
+
+
+This may even work on Windows with a batch file.
+
+One problem is when you have to pass in file paths. A solution could be to mount the working directory at an identical path in the container, as on the host.
+
+Don't forget the shebang if you go for a shell script.
+
+On Windows, a filepath may be 'unixified' in a batch file like this:
+
+set FILEPATH=%FILEPATH:C:=/c%
+set FILEPATH=%FILEPATH:\=/% 
+
+    
+    
+Title: How to automatically advance to the next line after F9 in Spyder IDE
+Description: 
+    
+    
+                    
+Coming from RStudio, I'm familiar with the behavior of the cursor automatically moving to the next line after running the current line. I think this makes sense for data analysis. Does Spyder have something similar?
+
+I'm familiar with the concept of cell and auto-advancing cell in Spyder. However, I want to maintain a pure Python script (that can be run with python file.py) for portability, and don't want to use something that only makes sense on Spyder.
+    
+
+        
+Answer 1: 
+
+    
+    
+I have requested this feature on the Spyder github repository and it will be implemented in version 3.0 which will probably be released next month!
+
+See here for more information: https://github.com/spyder-ide/spyder/issues/3115
+    
+    
+Answer 2: 
+
+    
+    
+Spyder is an IDE. You can create a python script in the editor area, save it and run it using F5.
+
+If you have a file in the editor area there isn't the concept of cell. You can create something similar. Have a look here. Once you have created some 'code cells' you can run these snippets using shift + Enter.
+
+A third option would be to use F9 but you have to select the code you want to execute manually.
+    
+    
+Title: How to make NetBeans automatically format indenting when pasting into a loop/if statement?
+Description: 
+    
+    
+                    
+When I write my code in NetBeans, there are times when I want to add/remove if statements and loops. However, every time I want to add/remove a statement but keep the content, I have to fix all the indenting for the contained code. Likewise, every time I try to paste code into a statement, the indenting is all messed up and I have to fix it.
+
+Is there any way to highlight the code and fix indentation?
+
+I'm aware that Eclipse has an option to fix all formatting upon saving. I'm not looking for something that changes formatting upon saving, rather only something I can click on the moment I want the formatting fixed. I put an example of what I'm talking about below.
+
+if (condition == true){
+    //pasted code
+//pasted code
+//pasted code
+}
+
+
+or
+
+//other code
+//removed if statement
+    //original code that is spaced too far right
+    //original code that is spaced too far right
+//removed }
+//other code
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Try to paste using Ctrl + Shift + V.
+If it worked, look at the netbeans options to configure the shortcut you want.
+To change shortcuts go to : Tools 
+Title: Shortcut for Capitalizing in Android Studio
+Description: 
+    
+    
+                    
+I want a shortcut for capitalize (change first letter of every word to upper case) in Android studio.
+
+I know that Toggle Case shortcut is Ctrl+Shift+U (Command+Shift+U on Mac) in Android Studio. 
+
+I want a shortcut for capitalize just first letter of all words... it would be very useful for Javadocs.
+    
+
+        
+Answer 1: 
+
+    
+    
+You should use String Manipulation plugin:
+
+http://plugins.jetbrains.com/plugin/?id=2162
+
+it supports Capitalize selected text. 
+
+When you install this plugin, you can select your text and use Alt+M to open String Manipulation menu.
+    
+    
+Title: RubyMine code autocompletion
+Description: 
+    
+    
+                    
+I'm about to get used to work with Java in Android Studio. The great thing there is that everything is strongly declared. So when I type MyClass.someme..., the IDE offers me advanced code autocompletion features. The development is rapid and pleasantly.
+
+But then I wanted to learn RubyOnRails. I'm in love with JetBrains products and so I've installed RubyMine on my Windows machine.
+
+Despite of a bag of problems with Windows enviroment, I was confused with not-so-well working code completion. Even if the method is known by the IDE (it can be found by Ctrl+B combination), it does not offer it in popup menu (discover the picture).
+
+Function from railstutorial.org:
+
+# SomeControllerHelper.rb
+# Redirects to stored location (or to the default)
+def redirect_back_or (default)
+  redirect_to(session[:forwarding_url] || default)
+  session.delete(:forwarding_url)
+end
+
+
+
+
+Is there any way to fix this problem? Are there any better IDEs with really smart code completion?
+    
+
+        
+Answer 1: 
+
+    
+    
+Although, RubyMine doesn't work for ALL code completion all the time due to the dynamic nature of Ruby. But, I still find it the BEST Ruby IDE for code completion, method navigation, searching features.
+
+Here is a screenshot to show you how to configure RubyMine for Code Completion:
+
+
+
+Here is a good tutorial by Justin Gordon which shows some awesome features of RubyMine which may interest you.
+
+I don't know any other Ruby IDE that has smarter code completion than RubyMine. In fact, a vast majority of Ruby programmers doesn't even use an IDE, rather they use a Text Editor!
+
+Here are couple of short sitepoint articles that would give you more insights:
+
+Which IDEs do Rubyists Use?
+
+What Editor Do Rubyists Use?
+    
+    
+Answer 2: 
+
+    
+    
+As mentioned before, Ruby's code completion is very complicated due to dynamic typing. Switching from C#/Java I've been struggling with it for some time and I've found one way to at least mitigate it a bit. Example:
+
+def extract_data_from_this_array(input_array)
+  # some code
+end
+
+
+Suppose you want to deal with the array you're getting as an input. You type input_array and no methods or all methods are listed, because Ruby has no idea that it's an array. What I do is write:
+
+Array.new.
+
+
+And RubyMine suggests all Array methods. It helps a lot when you've just picked Ruby.
+    
+    
+Title: Modern language IDE similar to QBasic?
+Description: 
+    
+    
+                    
+I'm trying to find a modern environment similar to what I found great about QBasic but making up for the flaws. The purpose of this is to code with my 6 year old son.
+
+I'm looking for an IDE that uses a modern language, has the ability to draw graphics and play audio, and doesn't force the User to jump around much between coding and running their application.
+
+In QBasic you had basically two modes: Edit and Run. There were no third party libraries required for creating graphics or generating Audio tones (that I remember). You never had more than one "window" opened at a time.
+
+Is there a modern day equivalent IDE which uses a modern language that provides what I'm looking for? 
+
+I don't want him to have to jump around between various windows, try to wrap his mind around window toolkits, understand the command line, or use OOP just to get started. My end goal is to create simple graphical games with him -- not printing text out to the console.
+
+(Preferably cross platform or useable on Mac OSX since that's what we have at the house. Preferably Python based since that's my language of choice.)
+    
+
+        
+Answer 1: 
+
+    
+    
+QBasic is a great option.  You can purchase an old PC from a thrift store and run QBasic on it.  There is the option of QB64 which can run on both Mac and Windows.  Hope this is helpful.
+    
+    
+Answer 2: 
+
+    
+    
+I'd suggest QB64, almost 100% compatible with QBasic/QuickBasic but runs on Windows.
+    
+    
+Answer 3: 
+
+    
+    
+You could maybe try Small Basic, it aimed to recreate the ease-of-use and educational purposes of the old BASIC languages build into home computers from the 1980s
+
+The Small Basic project was initiated following this article on Salon:
+Why Johnny can’t code (David Brin, 2006)
+    
+    
+Title: console view not displaying in eclipse when debug perspective is selected
+Description: 
+    
+    
+                    
+Eclipse IDE console view is not displaying in Debug perspective is selected.
+If I select Console view from Window -&gt; Show View -&gt; Console then there is no Console View is displayed it is hiding. How to display Console view in Eclipse IDE when Debug perspective is selected.
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+I am unfortunately press some shortcut key of eclipse kepler suddenly eclipse console window is closed.
+
+Problem is solved after open eclipse new window from Window Menu Window -&gt; New Window and closed previously opened window.
+    
+    
+Title: Scala IDE for eclipse: Any way to &ldquo;quickfix&rdquo; imports?
+Description: 
+    
+    
+                    
+For Java, in the editor of a class, I am used to hovering over an unknown class to bring up the quickfix menu which suggests imports to resolve the problem quickly.
+
+Is there any such feature in the Scala IDE for eclipse? Hovering over an unknown class in a scala file does not bring up anything for me, so I end up typing imports manully. That is pretty annoying.
+    
+
+        
+Answer 1: 
+
+    
+    
+On a mac: CMD+shift+O adds imports as necessary and putting the cursor on a class name and doing CMD+1 does it for that one thing.  Non-mac I'm sure has similar.
+    
+    
+Title: How to run dart spark on my own computer?
+Description: 
+    
+    
+                    
+I see there is a project named spark, which is a Chrome app based development environment.
+
+It seems interesting, and I want to run it my own computer(mac os), expected to see a chrome-based IDE for dart. But I can't find any document to tell me how to run it. There are just some pages for how to develop and test, but how to run it?
+
+I tried with the grind shell with all kinds of options, but no lucky :(
+    
+
+        
+Answer 1: 
+
+    
+    
+Thanks for the question! The Spark effort is still spinning up, and we're not yet ready for a public release. All the source code is available publicly, so it is possible for people to build it for themselves. Once we're further along we'll put a developer preview release up on the chrome web store.
+    
+    
+Answer 2: 
+
+    
+    
+The steps to build &amp; run Spark IDE on Windows are:
+
+
+Install Dart SDK to e.g. C:\dart-sdk
+Download the Spark source code to e.g. C:\spark
+Open cmd and type: cd C:\Spark
+set PATH=%PATH%;C:\dart-sdk\bin
+set DART_SDK=C:\dart-sdk
+pub get
+grind.cmd deploy
+Load the upacked extension from C:\Spark\ide\build\deploy-out\web in Chrome Dev.
+
+
+Alternatively, you can download Chrome Dev Editor packaged app, based on Spark 0.13,
+    
+    
+Title: IDE that recognizes pandas objects
+Description: 
+    
+    
+                    
+Is there a Python IDE that recognizes pandas objects such as Dataframes? If not, is there a plan to develop this?
+
+This is done well in RStudio for R. There dataframes are listed and can be viewed outside of the terminal. Spyder's object viewer (as one example) does not pick up on Dataframes from pandas. It should be possible to view the dimensions, column names and other useful information.
+    
+
+        
+Answer 1: 
+
+    
+    
+I am using spyder and it is the closest I have found to something like Rstudio. It also integrates with Ipython!
+
+Spyder
+    
+    
+Answer 2: 
+
+    
+    
+I don't know anything about a pandas-centric IDE but the main difference between python and R is that python is a general purpose object with so many dynamic features that is very difficult to make and IDE which introspects all the objects while you're coding. One useful approach for the python community is to use IPython as interactive shell, it works really nice with pandas, matplotlib, numpy and scipy.
+    
+    
+Title: How do I get qt creator to give me the exit code of my program?
+Description: 
+    
+    
+                    
+No matter what I do, qtcreator always gives back:
+
+/home/tim/build-foo-Desktop-Debug/foo exited with code 0
+
+
+for the following code:
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+int main()
+{
+    return 1;
+}
+
+
+Am I just looking in the wrong place for the exit code, or does qt creator not support this?
+    
+
+        
+Answer 1: 
+
+    
+    
+Is Qt Creator running your code in a terminal? If yes, go to Projects, Run and then uncheck "Run in terminal". That works for me.
+    
+    
+Title: how do i add AndEngine and Box2D into Android Studio_
+Description: 
+    
+    
+                    
+i've tried to follow the google's guide, but it says to create a new empty module and in the newest version there's no option for that... how can i do it? thank you.
+    
+
+        
+Answer 1: 
+
+    
+    
+This is whole tutorial how to work with AndEngine and PhysicsBox2D extension using Android Studio and Gradle. As long as gradle doesn't support native libs I'm using the hack described here Android Studio Gradle with native libs error
+
+My project structure is:
+ - ProjectRoot
+ - build.gradle
+ - settings.gradle
+ - MainProject
+ -- src
+ -- res
+ -- aidl
+ - Modules
+ -- AndEngine
+ --- src
+ --- res
+ --- libs
+ ---- libs.jar
+ --- build.gradle
+ -- PhysicBox2D
+ --- src
+ --- res
+ --- libs
+ ---- libs.jar
+ --- build.gradle
+ --- settings.gradle
+
+in both AndEngine and PhysicsBox2D i put folders armeabi, armeabi-v7 and so on into lib folder, then zipped it and renamed into libs.jar. It's described in the link i gave above.
+
+My main settings.gradle file looks like this
+
+include 'Modules:AndEngine'
+include 'Modules:PhysicBox2D'
+
+
+and build.gradle like this
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.6.3'
+    }
+}
+apply plugin: 'android'
+
+dependencies {
+    compile project(':Modules:PhysicBox2D')
+    compile project(':Modules:AndEngine')
+
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.8'
+}
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19"
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['MainProject/src']
+            resources.srcDirs = ['MainProject/resources']
+            aidl.srcDirs = ['MainProject/src']
+            renderscript.srcDirs = ['MainProject/src']
+            res.srcDirs = ['MainProject/res']
+            assets.srcDirs = ['MainProject/assets']
+        }
+
+        instrumentTest.setRoot('MainProject/tests')
+    }
+
+    dependencies {
+
+    }
+
+    defaultConfig {
+        ...
+    }
+
+    signingConfigs {
+        ...
+    }
+
+    buildTypes {
+        debug {
+            ...
+        }
+        release {
+            ...
+        }
+    }
+}
+
+
+Modules/PhysicBox2D/settings.gradle
+
+include ':Modules:AndEngineGLES2'
+
+
+Modules/PhysicsBox2D/build.gradle
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.6.3'
+    }
+}
+
+apply plugin: 'android-library'
+
+    dependencies {
+
+        compile project(':Modules:AndEngineGLES2')
+        compile fileTree(dir: 'libs', include: 'libs.jar')
+    }
+    android {
+
+    buildToolsVersion "19"
+    compileSdkVersion 19
+
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 19
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+
+sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['aidl']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+    }
+}
+
+
+Modules/AndEngine/build.gradle
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.6.3'
+    }
+}
+
+apply plugin: 'android-library'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: 'libs.jar')
+}
+
+android {
+
+    buildToolsVersion "19"
+    compileSdkVersion 19
+
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 19
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['aidl']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+    }
+}
+
+
+And Everything works fine. I hope I've put all the necessary information to make it running.
+    
+    
+Title: Why does my Codeblock only display output for less than second..?
+Description: 
+    
+    
+                    
+I installed Codeblock a week ago and have not changed any setting. I created a simple console application and when I clicked build and run it display my output for like milisecond and disappear... It used to stay forever until I exit it. Anyone know why is this happening? In the Build log tab it says "Process terminated with status 0 (0minnutes, 0 seconds)
+    
+
+        
+Answer 1: 
+
+    
+    
+You don't have any problem actually, neither in your Codeblocks Application nor in your code, But codeblocks doesn't wait for you to close its console window manually, It automatically does it.
+
+You've 3 ways, choose that suits you better
+
+
+Go to Menu Bar and toggle 'show output window'
+Alternatively you can append a C++ code that waits for an event to happen, so that you may get enough time to watch your Output.
+You can use the code which I've given below
+It will be definitely good if you choose to see your output message through debugging(Step Over). It will also improve your debugging skills.
+
+
+If you want to choose second approach then append following code in your application
+
+#include&lt;conio.h&gt;
+int main()
+{
+    // After your code - write
+    getch();
+    return 0;
+}
+
+
+Note:- I believe you're using codeblocks on Windows Platform, this code will work fine on windows, but &lt;conio.h&gt;
+won't be available to you if you want to port your program from Windows to Linux
+
+I'll recommend you to give them preference in this order [3 &gt; 1 &gt; 2]
+    
+    
+Answer 2: 
+
+    
+    
+for those who may encounter this error:
+all you need to do to make the console not dissapear is this:
+
+go to project properties.
+click on build targets
+there is an option below console application  &quot;pause when execution ends&quot;
+check it and you are good to go!
+
+Hope this helps
+    
+    
+Answer 3: 
+
+    
+    
+Use :
+
+#include &lt;iostream&gt;
+//...other includes....
+int main()
+{
+   /*Your Code */
+   //...
+   std::cin.ignore(); //wait for Enter, will makes the console to stay.
+}
+
+    
+    
+Answer 4: 
+
+    
+    
+You may be clicking on the red arrow, however click on the "build an run" arrow instead, which has a little cog and a green arrow.
+    
+    
+Answer 5: 
+
+    
+    
+Solution if you are copying and pasting input: For me, the issue was that I was copying and pasting my input file from the web. Presumably, this copied some invisible characters, such as a return, which my program registered as the user having pressed any key to continue. The solution I used was to download the file to my computer, then run my program in command prompt, piping the input into the .exe file in the following manner:
+
+C:\Project Directory&gt; myProgram.exe &lt; myInputFile.txt
+
+
+Many of my professors recommend running programs from the command line, and I advise using this tactic as it is quick and lets you skip manual typing. Also, you can save the output of your program to a desired file, rather than having it print on the command line, by doing the following:
+
+C:\Project Directory&gt; myProgram.exe &lt; myInputFile.txt &gt; programOutput.txt
+
+
+Hope this helps. 
+    
+    
+Title: Code::Blocks how to stop auto tab delete?
+Description: 
+    
+    
+                    
+I know, I know, I should ask this on the C::B forums, but they're down, so I can't. Right, question: I use Code::Blocks as IDE for C++, but it kind of annoys me how it deletes unneccesary tabs on empty lines every time I save. So, is it possible to turn that of, so those tabs can stay there, and I don't have to add them again every time I save? Thanks in advance.
+ - bonjorno7
+    
+
+        
+Answer 1: 
+
+    
+    
+Setting -
+Title: How can I improve my Visual Studio 2012 Typescript Workflow?
+Description: 
+    
+    
+                    
+I am an Actionscript Developer who is new to TypeScript and Visual Studio.  My biggest problems right now are related to workflow. 
+
+Visual Studio 12 is a feature rich environment, as an Eclipse user it feels familiar but I feel it is heavy and bloated for my needs. I feel like 80% of the features are not required from a TypeScript perspective? Is there anything I can do to improve the software? 
+
+When I press the debug button on a TypeScript program, I run Chrome, but this process takes about 16 seconds to launch, is this normal and again can this be improved? 
+
+Finally, maybe it is just the case that Visual Studio is above me and this whole question is stupid, but in this case, is there any other IDEs that are good right now for TypeScript development and pretty much simple to setup and use?
+    
+
+        
+Answer 1: 
+
+    
+    
+WebStorm from JetBrains features TypeScript editing, is lighter-weight than VS, and might be better for your needs: http://www.jetbrains.com/webstorm/
+
+Here's a list of others:
+
+
+  Microsoft provides a plug-in for Visual Studio 2012 and WebMatrix as
+  well as basic text editor support for Sublime Text, Emacs and Vim.
+  JetBrains supports TypeScript with code completion, refactoring and
+  debugging in its web application IDE's PhpStorm 6 and WebStorm 6.
+  The online Cloud9 IDE also supports TypeScript.
+
+
+If you continue with VS2012 then the WebEssentials 2012 extension is very useful.
+
+In terms of performance, you shouldn't need to launch the debugger every time you make changes. Setting compile-on-save means you should be able to make changes, then simply refresh the page in your browser.
+
+My typical workflow in VS2012 is Debug a href="http://blogs.msdn.com/b/typescript/archive/2012/11/15/announcing-typescript-0-8-1.aspx" rel="nofollow"/aa href="http://www.aaron-powell.com/web/typescript-source-maps" rel="nofollow"/a/pp/p/div
+Title: PhpStorm - Exclude forlder from index but not from list
+Description: 
+    
+    
+                    
+How to exclude forlder with all files from index and autocomplete, but not project directories list?
+
+This articles don't help with problem
+    
+
+        
+Answer 1: 
+
+    
+    
+It's not possible right now, vote for the open feature request in YouTrack.
+    
+    
+Title: Disable &ldquo;go to parent class&rdquo; triangle in Eclipse
+Description: 
+    
+    
+                    
+In Eclipse Indigo, there's this little triangle next to an overriding method in a Java editor that, when clicked, will take you to the overridden method definition.  It just so happens to be right on top of the area you click to add breakpoints, which I do much more frequently than something easily accomplished by ctrl-click.
+
+I've looked around, and can't figure out what the name of this feature is, or how to turn it off. Any ideas?
+
+This is the misbehaving button in question:
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+That is an editor annotation.
+
+In Juno at least you can turn them off from your preferences in General 
+Title: What are advantages of using WebDriver over IDE?
+Description: 
+    
+    
+                    
+I am new to Selenium and have spent about a week using IDE. So far, so good. However, some other parts of our application involve heavy drag-n-drop capabilities, and I'm not so sure about that...which brings me to my question...what type of specific things can WebDriver do that the IDE cannot do? I read the Selenium front page, and know that WebDriver can make more "robust" tests, but I'm not entirely clear what robust means in this context? Longer? More capabilities?
+
+What I'm looking for is what type of particular tests could be run with WebDriver that couldn't be run in the IDE? And are any of them related to drag-n-drop? This will inform my decision about whether to keep on using the IDE or to switch over. I think it's better to use something from the beginning than to create a lot of tests and then switch over.
+
+Thanks much in advance.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use the full features of your chosen language. For example, using the IDE you are stuck to using the IDE's API, however if you choose to use the WebDriver explicitly you can combine it with C# and use C#'s full features (such as LINQ).
+
+A few of the IDE commands are not directly converted with the WebDriver.
+
+You can integrate a pure WebDriver test into a CI (Continuous Integration) server.
+
+It is not limited to just Firefox, whereas the IDE is (since the IDE is only available in Firefox).
+
+You can improve and extend Selenium more easily. For example using Extension methods and inheritance. (For instance, extending Selenium so that whenever it cannot find an element, it takes a screenshot of the page)
+
+It will be more robust, as the IDE will not always give you the most reliable way of finding an element. For instance, if the element you require is nested within a table, the XPath that the IDE will give you will infer directly to specific table rows and cells.
+
+For instance something like this:
+
+//table[1]/tr[1]/td[2]/table[1]/tr[1]/td[3]/a[1]/b
+
+
+Is not the most reliable XPath in the world. Those without any knowledge of XPath or automated testing or how Selenium works, will stick with that and then waste hours figuring out why this XPath query fails. Others will change it, and just use the XPath as a base query.
+
+The IDE should usually be used for those who don't have much programming knowledge (e.g some testers), if you want your developers and/or the test developer's to use Selenium, go directly with the WebDriver. It will feel more like programming with a fully-fledged language instead of scripting (after all, the scripts that the IDE generates are purely HTML files). The idea is generally for those who don't have much programming knowledge to simply hit 'play' and let Selenium do the work.
+
+Drag-and-drop are applicable within the IDE and WebDriver.
+
+Most of the development in Selenium (it seems) goes into extending the WebDriver code, the IDE may be left behind in some new features.
+
+Using WebDriver directly, you can also use the full features of a unit testing framework (usually NUnit with C# or Junit/TestNG for Java). This allows things like repeating tests for each browser (i.e repeating tests in Chrome, Firefox and IE) or defining certain logic before and after tests (i.e adding user memberships, creating users, setting up other test data).
+
+Fellow developers might be more inclined to help out if it is using a programming language as opposed to a scripting language (ie WebDriver is programmed in a programming language, the IDE scripts are just HTML files). Putting it in your solution and having it as part of the nightly build process helps to ensure developers help out in your tests progression. 
+
+Thinking about it, another example is a bug is fixed but introduces a new bug which causes your test to fail. Who's responsibility is it to fix the test? You or them? Having it use WebDriver directly, they can just look up the source code to Selenium and figure out the API usage themselves. With the IDE, it is literally a HTML file that calls some javascipt. Not much documentation on it.
+
+To sum up: if you don't have much programming experience, either learn a language and use WebDriver with it directly, or just stick with the IDE. Either will do the job.
+    
+    
+Answer 2: 
+
+    
+    
+IDE cannot be used for serious automation. I would sussgest learn the API and use it with Java/C#/Python. It will help you churn out some good automation and will payback really well.
+
+You can always use the IDE to learn how the code is generated.
+    
+    

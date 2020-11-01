@@ -1,0 +1,2474 @@
+Title: IronPython - Editor for end-user
+Description: 
+    
+    
+                    
+We're currently investigating how we can embed IronPython (scripting) into our C# application. 
+
+We see the benefits it will provide to our end users, giving them the ability to hook into our application but one question that keeps arising is how do we provide the end-user with code editing abilities that are aware of the different entry contexts in our application. 
+
+I know that we can provide a simple text editor with syntax highlighting but how do we go one step further and allow a user to test their scripts against objects that we expose from our application. Keeping in mind that we will expose different objects depending upon the context of the entry-point.
+
+How do you allow end users to test, write and edit scripts in your application?
+
+PS - I am new here so let me know if I am not doing this right!!!
+    
+
+        
+Answer 1: 
+
+    
+    
+Maybe what you want is to use the Visual Studio 2010 Shell Isolated. It can be used to provide a visual studio environment within an application, kind of how VBA used to be. As far was Python support you can look at IPyIsolatedShell
+    
+    
+Answer 2: 
+
+    
+    
+You could host IronPython in your C# application. Then you can pass in variables from your C# application and execute IronPython code which uses them. Dino Viehland did a talk at PDC about this called Using Dynamic Languages to Build Scriptable Applications. Dino made the source code for the application he created at the PDC available but it is using an older version of IronPython.
+
+Here is some code for IronPython 2.7.1 that shows you how you can host IronPython in a few lines of code.
+
+using System;
+using IronPython.Hosting;
+using Microsoft.Scripting.Hosting;
+
+public class MyIronPythonHost
+{
+    ScriptEngine scriptEngine;
+    ScriptScope scriptScope;
+
+    public void Initialize(MyApplication myApplication)
+    {
+        scriptEngine = Python.CreateEngine();
+        scriptScope = scriptEngine.CreateScope();
+        scriptScope.SetVariable("app", myApplication);
+    }
+
+    public void RunPythonCode(string code)
+    {
+        ScriptSource scriptSource = scriptEngine.CreateScriptSourceFromString(code);
+        scriptSource.Execute(scriptScope);
+    }
+}
+
+
+The code above passes an application object called MyApplication to IronPython via a script scope and sets its variable name to be app. This app variable is then available to the IronPython code where it can call methods on it, access properties, etc. 
+
+The final method in the code above is the RunPythonCode method which takes in the IronPython code written by the user and executes it.
+
+Going further than this and allowing the user to debug their IronPython code in a similar way to how you can debug VBA macros is a major piece of development work however.
+    
+    
+Title: Is there any IDE capable of Rename refactoring namespaces in PHP?
+Description: 
+    
+    
+                    
+Do you know any PHP IDE capable of rename classes and namespaces, and refactor the code (all files) properly?    
+    
+
+        
+Answer 1: 
+
+    
+    
+Same as the suggestion made by @BetaRide. I use PHPStorm: http://www.jetbrains.com/phpstorm/ and its probably one of the best IDE's I have used. Check it out
+    
+    
+Answer 2: 
+
+    
+    
+Have you tried Zend Studio?  It's not free, but it will refactor/rename across files in a project.
+    
+    
+Title: Does XCode have a cursor navigation stack like Visual Studio?
+Description: 
+    
+    
+                    
+Visual Studio tracks cursor positions and lets you move forward and backward through these positions.  For example, you can type Ctrl+- to navigate backwards and Ctrl+Shift- to navigate forwards.
+
+I see that XCode tracks the history of which files you've visited, but does it also allow me to go forward and backward through the cursor locations?
+
+The reason I ask is because I find that by using Command-Double left click, I visit function definitions (often in the same file), and then I want to quickly return to where I was previously in the same file.  Because I'm in the same file the file history navigation is not useful.  Currently I have to search through the code to figure out where I was, which is tedious.
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+In xcode4, [Control + Command + &lt;--] jump to the previous, [Control + Command + --/p/div
+Answer 2: 
+
+    
+    
+Not in XCode 3.1.
+
+XCode 3.2 is still under NDA, so we can't discuss its features here, but there are a lot of new features, and you should definitely reinvestigate the question when it comes out.
+    
+    
+Answer 3: 
+
+    
+    
+Yes, it does - Command + Alt + . 
+
+My XCode is 3.1.2 and it works...almost every time. It you open a new window and start working there it won't go to your previous working window. But if you change files and/or positions in files during your coding in a single window - it'll get you back. 
+
+It is called "Go Back" and lives in View menu along with "Go Forward" - Command + Alt + .
+
+For "Go to function definition" the default key binding is Command + F12. In the menu it lives in Edit -
+Answer 4: 
+
+    
+    
+jump to definition is not defined by default in xcode 3.1.1
+you may set it yourself. go to xcode-
+Answer 5: 
+
+    
+    
+I was searching for this for so long time and what works for me is:
+
+⌃ + 2 (Ctrl + 2 - Shows previous history) then click ↓ - this will jump back to previous definition
+
+⌃ + 3 (Ctrl + 3 - Shows next history) then click ↓ - this will jump to next definition
+
+This will only work if you navigate through your class using ⌃ + 6 to jump between definitions.
+    
+    
+Title: Disable auto save of code in Visual Studio 2012
+Description: 
+    
+    
+                    
+I am using Microsoft Visual Studio 2012 Pro for windows software development. Earlier I used to use VS 2008. 
+
+One option that I couldn't find (which was there in older version) is :
+
+Before building - 
+ -Do not save any changes 
+ -Save all changes 
+ -Prompt to save changes
+
+The above was available in Tools-
+Answer 1: 
+
+    
+    
+That feature was dropped in Visual Studio 2010.  As far as I know it hasn't resurfaced in Visual Studio 2012.
+
+Save All Files Before Build Gone in Visual Studio 2012?
+    
+    
+Answer 2: 
+
+    
+    
+The IDE prompts for saving on unsaved code or resources when you close the project.
+
+With GIT or other source control you can run on command to save versions.
+I actually like the program "Second Copy" which you can set up to save versions of your code (I save the last 15 versions of any changed file in the project). This is set up to run whenever a file changes, but you would not want it to save a new version every time you make a change while testing/debugging, preferring to only back up to the new version every time the file is SAVED either manually using the mouse/Shortcut keys or upon close of the IDE. That way you have true backup of code you are satisfied with.
+
+I think having autosave is dangerous because it overworks the source control if you have one in place (either GIT or Second Copy or whatever) and if you don't you lose the ability to go back to a prior version should you stuff up the code or decide not to proceed with changes. Having the option, though, to have autosave (either at intervals or on "Run"/"Build") should still be there to please all users (but the default should be "off")
+Of course on "Publish" all files are saved anyway (as they should be).
+
+Give "Second Copy" consideration...http://www.secondcopy.com/ (I have no association with second copy, I have just used it for years and love it)
+    
+    
+Title: Web-base IDE with shell / file management integration for *nix
+Description: 
+    
+    
+                    
+is there anything like a web application (like in php) that exposes access to the files on the server it's installed on, shell access and integrated IDE?
+
+I know it's not something secure, but for development purposes it would be useful when you have a *nix dev server you can't directly access (like, you're behind a proxy and can only navigate *:80).
+
+I know of various administration tools a-la Webadmin or cPanel, but they lack any sort of web-based IDE to edit the files (as long as i know).
+
+Maybe Mozilla Skywriter (ex Project Bespin) is similar to what I'm after, but I'm not sure about its current state (considering that they're in the process of rewriting it) and most of all i think it lacks server-side integration.
+
+Any suggestion appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+Have you tried ShiftEdit or CodeRun?
+
+Both are web-based HTML/CSS/JS/PHP editor with some decent IDE features (snippets, syntax debugging).  I believe both are SaaS, so no hosting it on your own machine.
+
+You might also be interested in ECCO, which is open-source, so you can self-host it.
+    
+    
+Answer 2: 
+
+    
+    
+Webmin has a file manager; you can also create custom commands to allow edition of particular files in user by user case.
+
+
+  File Manager: View, edit and change permissions on files and directories on your system with a Windows-like file manager. All operating systems.
+
+
+It uses https by default and can be as secure as any other remote access tool like SSH, for example.
+    
+    
+Answer 3: 
+
+    
+    
+If you are on a Linux client, or can get an X11 environment through something like Cygwin, I would suggest using X11 forwarding over SSH. Once you get it set up it's as easy as
+
+ssh -X user@server
+
+
+From there on out, you could start Eclipse, or any other IDE/Editor from the command line.
+
+I haven't seen any server-installable online IDE's, but there are a number of them if you don't mind hosting your code on their servers. Coderun has one, Ideone is another.
+
+You might want to check out this tersely-explained SF project: http://online-ide.sourceforge.net/. It looks to be like a first-attempt at what you're looking for.
+    
+    
+Answer 4: 
+
+    
+    
+There's no simple answer to your question. Depending on the web server, there may be a whole spectrum of options available to you but in general web servers are quite strict about exposing their internal environment/code for obvious reasons.
+
+At my work place, we ran into a similar situation with restricted access to our production server. Our work around was to create a password protected upload service which simply overwrote the files we wanted to modify from local copies on our machines. Whilst we didn't install any in-place editing system, it could easily be done, via CodeMirror (http://codemirror.net/) and some ajax calls.
+
+It goes without saying that the viability of this approach is dependent on your administrative right to configure the uploading behaviour of the target web server.
+    
+    
+Answer 5: 
+
+    
+    
+Typically command line access to development servers is via ssh.  There are various Windows ssh clients, most notably putty.  There are also ssh tunnels which can run over http.  
+
+The capabilities of an ssh solution are significantly greater that would be available to a web server application.
+
+Remote graphical access is often done using VNC, and more recently RDP.  Alertatively, a local Xserver can be be used to supply a display for applications running the development server.
+
+These applications can provide the ability to edit files for which it is very insecure to allow a web application write access.  
+
+The web applications, I have seen provide significantly less functionality than is available through the above choices.  In limited cases such as configuration files, the web application may provide a simpler interface to do standard changes.
+    
+    
+Answer 6: 
+
+    
+    
+PHPShell is pretty cool, it just gives you, well... a shell.
+
+http://phpshell.sourceforge.net/
+
+can't use an "Integrated IDE" through it of course. But if you have a decent IDE then it should be able to access your remote files through SFTP and open/save them directly.
+
+That said, I would recommend moving away from any host that is so limited as to not give you shell access, or find some way around the proxy using ssh tunnels.
+    
+    
+Answer 7: 
+
+    
+    
+goormIDE has web-based shell and file explorer.
+
+this looks like visual studio or eclipse
+
+i think you need to try this~
+
+
+http://goorm.io
+http://github.com/xenoz0718/goorm
+
+
+if you use node.js, just type this
+
+$ npm install goorm -g
+
+    
+    
+Title: Does anyone have experience with Ruby in Steel?
+Description: 
+    
+    
+                    
+Coming primarily from a .NET background, I am quite attached (for better or worse) to Visual Studio.
+
+I'm going to school for software engineering now, though, and my first class is in XP (Extreme Programming) using Ruby on Rails. Mostly I've heard that when you're developing in Ruby, you tend to skip the whole IDE altogether; and I'm totally open to that possibility. There are IDEs out there, though, and so it seems like there must be at least some folks who still find that using one is worthwhile.
+
+Since I am so familiar with VS, I was just wondering if anybody out there has used Ruby In Steel. From the website, it certainly looks nice. I have literally no idea how useful or appropriate it is for general RoR development, though, which is why I thought I'd throw this question out there.
+
+Have you used Ruby In Steel? What are your impressions of it? How does it stack up against other well-known IDEs such as Netbeans? And is it even worthwhile to use an IDE for RoR development, or is a good text editor preferable?
+    
+
+        
+Answer 1: 
+
+    
+    
+Short answer
+
+Skip the IDE and use Vim (or your favorite, simple, text editor)
+
+Long answer
+
+I'm a C# developer and have used Visual Studio as an IDE since I started programming.  I love Visual Studio and always laughed at those people who didn't use an IDE.  I just didn't get it.  So when I started learning Ruby on Rails, the first thing I did was look for the best IDE available.  I tried NetBeans, RubyMine, Aptana, and every text editor I could find (not Ruby in Steel, however, b/c I didn't want to pay for it).
+
+I settled on NetBeans finally and thought it was pretty good.  But it takes 30-60 seconds to load.  And you soon find out that intellisense with ruby doesn't really work (and even if it did, the rails api's don't really make sense with intellisense anyway).  What happened was that I found myself using Notepad++ to make quick edits to my files.
+
+But then slowly I started using Notepad++ more often and would need to have my server running, so I opened up the console to run the server (instead of my ide).  Then I needed a controller generated, but it was faster to look up the command line syntax to generate the controller than it was to load my IDE.  That's when I started to realize that I didn't really need, or even want, and IDE for rails development, I was perfectly happy with Notepad++.  Those no-IDE guys weren't so crazy after all.  
+
+So I started looked at all of the text editors I could find and ran across Vim (you know, that crappy old text editor that those grumpy old programmers used to use before I was born).  Vim, with some rails plugins, is all I use now for rails development.  It was hard to convince my Visual Studio loving self that a console based text editor would actually make me more productive than an full IDE, but once I gave it a chance, I was really impressed.  
+
+Now, learning Vim and Rails and Ruby at the same time is a large undertaking, but I would at least recommend you learn the rails command line and use your favorite text editor, instead of a fat, slow, $200 IDE.
+    
+    
+Answer 2: 
+
+    
+    
+I looked at the original release - it was nicely done but the trial period expired and it hadn't become essential to my development existence. To date, no IDE has, although I do keep an up-to-date install of NetBeans for the occasional foray into Rails framework debugging (that's usually bugs in my understanding rather than bugs in Rails, btw).
+
+While the IDEs (and I note that Ruby In Steel 2.0 was just announced in early Nov 2010) are all smart, I have tended to find that applying TDD mostly removes the need for IDE-based step-through style debugging.
+
+Assuming they continue the trial program as before, you should be able to spend 60 days with RIS 2.0 before you have to commit any money. That ought to be enough to establish whether or not it can be worth buying.
+    
+    
+Answer 3: 
+
+    
+    
+I was really interested in Ruby in Steel but I didn't find the trial very useful. This was some time ago and it has more features now. Before you plonk $200 for this, I'd definitely give Aptana RadRails a try as a free IDE, or look at e-TextEditor which is what I use now. It has really good bundles for rails development and is also a great general purpose editor; although it does not have an integrated debugger I've found that I am just as effective without it using the rails console. 
+    
+    
+Title: What is the best Python IDE for Mac OS X? [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                Closed 10 years ago.
+        
+
+
+    
+
+
+  Possible Duplicate:
+  What&rsquo;s a good IDE for Python on the Mac?  
+
+
+
+
+Hi,
+
+I'm going to start a quite big python project development under Mac OS X. What is the best python IDE for Mac OS X -recommended freeware-.
+    
+
+        
+Answer 1: 
+
+    
+    
+Pydev with Eclipse.
+    
+    
+Title: In Keil uVision 5, how can I keep the text editor line current while stepping through the debugger?
+Description: 
+    
+    
+                    
+I'm using the education/evaluation version of uVision 5. When debugging my project, the disassembly window marks the next statement that will be executed with a yellow arrow in the margin.
+
+The margin in the text editor for each line will turn green when that line of code has been reached. This would seem to imply that the text editor knows what line of code is currently being executed.
+
+However, the text editor doesn't update unless it loses and regains focus, making it very hard to track what line of code I'm on when debugging. I have to hit F11, then click on the scroll bar in the text editor to see the next line turn green to be able track where I'm at.
+
+I know that there is some way to keep the text editor current with the currently executing code, as there have been a couple of projects I've looked at on a fellow student's computer where the editor was updated with each press of F11 (next statement). However, neither he nor I know how this feature was enabled.
+    
+
+        
+Answer 1: 
+
+    
+    
+Just close the disassembly window, start debugging with F10,F11!!   
+
+
+    
+    
+Title: Scala Editor in Eclipse doesn&#39;t work
+Description: 
+    
+    
+                    
+I installed the latest version of Scala IDE for Eclipse
+
+http://scala-ide.org/download/current.html
+
+Now I try to open a .scala.html file with the Scala editor and it says Failed to create the part's controls with the errors detailed below. The troubleshoot says enable JDT weaving, which is already enabled.
+
+Another site which references this error: https://github.com/scala-ide/scala-ide-play2/issues/33
+
+I have also tried adding Scala nature to the project it does nothing.
+
+How can I edit .scala.html files in Eclipse? This is an essential task when developing Play application so I'm looking for an alternative if there is no fix.
+
+java.lang.ClassCastException: org.eclipse.jdt.internal.core.CompilationUnit cannot be cast to scala.tools.eclipse.InteractiveCompilationUnit
+    at scala.tools.eclipse.ScalaCompilationUnitEditor$class.getInteractiveCompilationUnit(ScalaCompilationUnitEditor.scala:84)
+    at scala.tools.eclipse.ScalaSourceFileEditor.getInteractiveCompilationUnit(ScalaSourceFileEditor.scala:68)
+    at scala.tools.eclipse.ScalaSourceFileEditor.createPartControl(ScalaSourceFileEditor.scala:297)
+    at org.eclipse.ui.internal.e4.compatibility.CompatibilityPart.createPartControl(CompatibilityPart.java:129)
+    at org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor.createPartControl(CompatibilityEditor.java:95)
+    at org.eclipse.ui.internal.e4.compatibility.CompatibilityPart.create(CompatibilityPart.java:300)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+    at java.lang.reflect.Method.invoke(Unknown Source)
+    at org.eclipse.e4.core.internal.di.MethodRequestor.execute(MethodRequestor.java:56)
+    at org.eclipse.e4.core.internal.di.InjectorImpl.processAnnotated(InjectorImpl.java:859)
+    at org.eclipse.e4.core.internal.di.InjectorImpl.processAnnotated(InjectorImpl.java:839)
+    at org.eclipse.e4.core.internal.di.InjectorImpl.inject(InjectorImpl.java:111)
+    at org.eclipse.e4.core.internal.di.InjectorImpl.internalMake(InjectorImpl.java:319)
+    at org.eclipse.e4.core.internal.di.InjectorImpl.make(InjectorImpl.java:240)
+    at org.eclipse.e4.core.contexts.ContextInjectionFactory.make(ContextInjectionFactory.java:161)
+    at org.eclipse.e4.ui.internal.workbench.ReflectionContributionFactory.createFromBundle(ReflectionContributionFactory.java:102)
+    at org.eclipse.e4.ui.internal.workbench.ReflectionContributionFactory.doCreate(ReflectionContributionFactory.java:71)
+    at org.eclipse.e4.ui.internal.workbench.ReflectionContributionFactory.create(ReflectionContributionFactory.java:53)
+    at org.eclipse.e4.ui.workbench.renderers.swt.ContributedPartRenderer.createWidget(ContributedPartRenderer.java:141)
+    at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createWidget(PartRenderingEngine.java:896)
+    at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:630)
+    at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:732)
+    at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.access$2(PartRenderingEngine.java:703)
+    at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$7.run(PartRenderingEngine.java:697)
+    at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+    at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createGui(PartRenderingEngine.java:682)
+    at org.eclipse.e4.ui.workbench.renderers.swt.StackRenderer.showTab(StackRenderer.java:1114)
+    at org.eclipse.e4.ui.workbench.renderers.swt.LazyStackRenderer$1.handleEvent(LazyStackRenderer.java:67)
+    at org.eclipse.e4.ui.services.internal.events.UIEventHandler$1.run(UIEventHandler.java:41)
+    at org.eclipse.swt.widgets.Synchronizer.syncExec(Synchronizer.java:180)
+    at org.eclipse.ui.internal.UISynchronizer.syncExec(UISynchronizer.java:150)
+    at org.eclipse.swt.widgets.Display.syncExec(Display.java:4687)
+    at org.eclipse.e4.ui.internal.workbench.swt.E4Application$1.syncExec(E4Application.java:187)
+    at org.eclipse.e4.ui.services.internal.events.UIEventHandler.handleEvent(UIEventHandler.java:38)
+    at org.eclipse.equinox.internal.event.EventHandlerWrapper.handleEvent(EventHandlerWrapper.java:197)
+    at org.eclipse.equinox.internal.event.EventHandlerTracker.dispatchEvent(EventHandlerTracker.java:197)
+    at org.eclipse.equinox.internal.event.EventHandlerTracker.dispatchEvent(EventHandlerTracker.java:1)
+    at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:230)
+    at org.eclipse.osgi.framework.eventmgr.ListenerQueue.dispatchEventSynchronous(ListenerQueue.java:148)
+    at org.eclipse.equinox.internal.event.EventAdminImpl.dispatchEvent(EventAdminImpl.java:135)
+    at org.eclipse.equinox.internal.event.EventAdminImpl.sendEvent(EventAdminImpl.java:78)
+    at org.eclipse.equinox.internal.event.EventComponent.sendEvent(EventComponent.java:39)
+    at org.eclipse.e4.ui.services.internal.events.EventBroker.send(EventBroker.java:81)
+    at org.eclipse.e4.ui.internal.workbench.UIEventPublisher.notifyChanged(UIEventPublisher.java:58)
+    at org.eclipse.emf.common.notify.impl.BasicNotifierImpl.eNotify(BasicNotifierImpl.java:374)
+    at org.eclipse.e4.ui.model.application.ui.impl.ElementContainerImpl.setSelectedElement(ElementContainerImpl.java:171)
+    at org.eclipse.e4.ui.internal.workbench.ModelServiceImpl.showElementInWindow(ModelServiceImpl.java:418)
+    at org.eclipse.e4.ui.internal.workbench.ModelServiceImpl.bringToTop(ModelServiceImpl.java:385)
+    at org.eclipse.e4.ui.internal.workbench.PartServiceImpl.delegateBringToTop(PartServiceImpl.java:579)
+    at org.eclipse.e4.ui.internal.workbench.PartServiceImpl.bringToTop(PartServiceImpl.java:315)
+    at org.eclipse.e4.ui.internal.workbench.PartServiceImpl.showPart(PartServiceImpl.java:985)
+    at org.eclipse.ui.internal.WorkbenchPage.busyOpenEditor(WorkbenchPage.java:3079)
+    at org.eclipse.ui.internal.WorkbenchPage.access$22(WorkbenchPage.java:3003)
+    at org.eclipse.ui.internal.WorkbenchPage$8.run(WorkbenchPage.java:2985)
+    at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:70)
+    at org.eclipse.ui.internal.WorkbenchPage.openEditor(WorkbenchPage.java:2981)
+    at org.eclipse.ui.internal.WorkbenchPage.openEditor(WorkbenchPage.java:2940)
+    at org.eclipse.ui.actions.OpenWithMenu.openEditor(OpenWithMenu.java:338)
+    at org.eclipse.ui.actions.OpenWithMenu$2.handleEvent(OpenWithMenu.java:180)
+    at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:84)
+    at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1053)
+    at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4169)
+    at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3758)
+    at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$9.run(PartRenderingEngine.java:1029)
+    at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+    at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:923)
+    at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:86)
+    at org.eclipse.ui.internal.Workbench$5.run(Workbench.java:588)
+    at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+    at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:543)
+    at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+    at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:124)
+    at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+    at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+    at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+    at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:353)
+    at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:180)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+    at java.lang.reflect.Method.invoke(Unknown Source)
+    at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:629)
+    at org.eclipse.equinox.launcher.Main.basicRun(Main.java:584)
+    at org.eclipse.equinox.launcher.Main.run(Main.java:1438)
+    at org.eclipse.equinox.launcher.Main.main(Main.java:1414)
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Do you have both the Scala IDE and Play plugin installed? In the Scala IDE update site, the Play plugin appears under the Incubation category.
+
+If you do not need to reuse an existing Eclipse installation, the simplest way to get started is to use a pre-packaged bundle of Scala IDE, which is an Eclipse installation with all the required plugins pre-installed, including Play. You can download the right one for your platform here.
+    
+    
+Title: How do I enable a &ldquo;contextual&rdquo; editor in Visual Studio?
+Description: 
+    
+    
+                    
+A number of IDEs and editors are offering "contextual" editing tools:
+
+
+A simple example is the Assistant Editor In XCode. A secondary edit windows automatically loads a relevant secondary file depending on which context you are in. For instance, if you open a header (foo.h) in the primary window, it automatically opens the implementation (foo.m) in the assistant window, and so on.
+
+
+
+
+
+Brackets has Quick Edit where pressing Ctrl+E allows you to edit the CSS selector that points to your current HTML element.
+
+
+Light Table has inline documentation and drafting tables:
+
+
+
+
+Microsoft has a Debugger Canvas project that is similar to what I want, but it's debug mode only and limited to Visual Studio Ultimate. The tool I am looking for is a tool for coding, not debugging.
+
+
+
+
+I would like a normal editor, and a secondary editor that shows me the context of what I am currently editing.
+
+
+If I am on a class that implements an interface, I would like the secondary editor to show the interface
+If I am on a class member that is an instance of another class, I would like the secondary editor to switch to the class source
+If I am on a method, I would like the secondary editor to point to the method body
+
+
+and so on&hellip;
+
+Is there a way(*) to have a similar experience in Visual Studio 2012? 
+
+(*) some hidden trick, an extension feature, a quick hack, a solution that works for you&hellip;
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use a Code Definition window.
+
+You enable it by going to View &gt; Code Definition Window. You can then dock it on the middle right. It works like so:
+
+
+    
+    
+Title: Is there any plugin for Intellij IDEA for running Clojure tests?
+Description: 
+    
+    
+                    
+I have been programming in Clojure for some time now on Intellij IDEA. I love the language and IDEA is, by far, my favorite IDE. But one thing that annoys me is not being able to run tests from the IDE and see the red/green/orange bar. Is there any plugin for that? Or, at least, some clever trick?
+    
+
+        
+Answer 1: 
+
+    
+    
+Searching gives two main variants:
+Leiningen (as in this tutorial) and lazytest. 
+There is inconvenience that lazytest still hasn't integration with IDEA as plugin.
+    
+    
+Title: visual studio copy to clipboard IDE freezes
+Description: 
+    
+    
+                    
+this is really frustrating me. this problem occurs when I have a particularly large .cs file (one i'm working on at the moment has 6000 lines and many anonymous types).
+
+I will copy a line or a part of text, and sometimes after copying several things to the clipboard, or sometimes even after the first copy, vs CPU usage shoots up to 50% and the IDE freezes for anything up to a minute, maybe longer. pasting happens immediately, no freezing.
+
+if i end the devenv.exe task and restart it, usually the copying is good again for a couple of times until it starts freezing again.
+
+i have a feeling the problem could be tied to intellisense trying to recalculate itself.. but why this happens when code is copied doesn't really make sense to me. 
+
+one thing i have found that if i copy text via the "select and drag &amp; ctrl with the mouse" method, i avoid the problem. that is what led me to believe it may be something to do with the clipboard ring, or writing to the clipboard.
+
+i have already tried:
+
+
+SP1 installed
+disabled antivirus
+disabled intellisense by renaming feacp.dll (this doesn't seem to disable it at all)
+disabled intellisense by unticking texteditor/c#/intellisense checkboxes (also doesn't seem to disable it at all)
+disabled intellisense by unticking auto list members &amp; parameter information (does seem to disable it)
+ran a macro to remove all items from the clipboard ring - it removed them but the problem remained.
+
+
+i must stress this only seems to happen as the code files get large, which is also usually due to having many anonymous types in the code.
+
+i'm using Win7 x64 with 3gb RAM, however i had this problem on vista x64 too.
+
+also, and i mean this in the nicest possible way, please don't take the refactoring approach. i do a lot of database work with large data sets so the anonymous types need to be there. it's my opinion that no matter how someone writes their code, this functionality of VS should work properly without freezing the IDE.
+    
+
+        
+Answer 1: 
+
+    
+    
+try this within visual studio 
+
+tools --
+Answer 2: 
+
+    
+    
+I've come to the conclusion that it must be when one is editing massive .cs files.
+
+I've since been working with ASP.NET MVC and haven't had this issue, and I've been using much more 'broken up' codes files.
+
+My bad for programming design where i put 10K+ lines in a codebehind file. Yes I know, I've seen the error of my ways!
+    
+    
+Title: Why does auto import generate relative path for root node modules in PhpStorm/WebStorm
+Description: 
+    
+    
+                    
+My project structure:
+
+/website
+   /node
+     /node_module &lt;&lt;-- library root
+     /type_src  &lt;&lt;-- ts files
+     /src  &lt;&lt;-- compiled js files
+
+
+I used to be able to auto import root node modules like this:
+
+/type_src/store/BaseStore.ts:
+
+import {observer} from "mobx-react/native";
+@observer
+class BaseStore{
+
+}
+
+
+But recently, the auto import generates relative paths for these node modules:
+
+import {observer} from "../../node_modules/mobx-react/index";
+@observer
+class BaseStore{
+
+}
+
+
+The only way to generate import {observer} from "mobx-react/native"; is to wait for that red light bulb to show up, which isn't as convenient.
+
+I've created another project and it works fine, but I have no idea why this project suddenly has this problem. Can anyone help me figure out this problem?
+
+tsconfig:
+
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "moduleResolution": "node",
+    "removeComments": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "outDir": "./src",
+    "jsx": "react",
+    "experimentalDecorators": true,
+    "noLib": false,
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "lib": ["es6", "dom"],
+    "types": ["reflect-metadata"]
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
+
+
+
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Based on referenced link, it is (already fixed) bug in webstorm.
+
+Solution - upgrade to 2017.1 or higher
+    
+    
+Title: lambda expressions are not supported at this language level IDEA
+Description: 
+    
+    
+                    
+I'm trying to create my first fxml java project and at the initialising stage I'm trying to set cell value factory for the table columnt, for example
+
+      @FXML
+        private void initialize() {
+        agentId.setCellValueFactory(cellData -&gt; cellData.getValue().getIdProperty());
+       .....}
+
+
+and this is underlined red and gives an error that mentioned in title. Changing language level in project structure gives no effect. What else may be the reason of error?
+
+UPD: I've found that it is nesessary to install java with lambdas that is not included to the official release. I did it and nevertheless it didn't help. I've downloaded it here
+    
+
+        
+Answer 1: 
+
+    
+    
+I had to do a few things to get rid of this problem.
+
+
+File 
+Answer 2: 
+
+    
+    
+the answer is the following: I had to change the language level not only in project structure-
+Answer 3: 
+
+    
+    
+If you are use Android Studio version 3.2.1 ,you can change the language level using below mention steps:
+
+
+Go to project structure
+Under modules section,click on app.
+In the properties tab, change the Source Compatibility to 1.8.
+
+    
+    
+Answer 4: 
+
+    
+    
+
+Click on File, left top corner in Android Studio.
+Click on Project structure.
+Click on App.
+Choose Properties and set Source Compatibility to 1.8.
+
+    
+    
+Answer 5: 
+
+    
+    
+For "Android Studio" version 3.3:
+
+
+Click on "File" (left top corner in "Android Studio").
+Click on "Project structure".
+Click on "App" (under "Modules").
+In the "Properties" tab, change "Source Compatibility" value to "1.8".
+In the "Properties" tab, change "Target Compatibility" value to "1.8".
+
+
+This solution worked for me.
+    
+    
+Answer 6: 
+
+    
+    
+If you've been through the above and it's still not fixed it, and if you are setting up a new module, check your module source folder hasn't been added to the parent module. I found it was being compiled at 1.5 as this was the parent module setting (since the parent contained no java source). Updating that to 1.8 too finally got rid of the warning and removing the module's source folder from the parent module.
+File 
+Title: How do you try out small/simple C or C++ source codes?
+Description: 
+    
+    
+                    
+It is very easy on Linux to fire-up vi and write a 100-200 lines of code, compile and see the results: ie. Trying small simple examples of C/C++ code.
+
+On windows however, I like Visual Studio but to use it you have create a new solution then a project which then creates a new folder, generates very large PDB and caching files and a small example of 100-200 LOC becomes a 20Mb large project(?!) after compilation.
+
+So the question is how do you write this kind of small codes on Windows? Possibly Cygwin or Dev-C++ (which is not active since 2004?).
+    
+
+        
+Answer 1: 
+
+    
+    
+You can compile from the command line using cl.exe. See the MSDN article How to: Compile a Native C++ Program from the Command Line for detailed instructions.
+    
+    
+Answer 2: 
+
+    
+    
+When you installed Visual Studio it created an entry in your programs named something like "Visual Studio Command Prompt" (maybe in a group "Visual Studio Tools").
+
+Execute that Command Prompt (it sets up some environment variables needed for the command line compiler) and use cl, the command line compiler.
+
+
+/prehrpem/em/ppa href="http://msdn.microsoft.com/en-us/library/ms235639%28VS.80%29.aspx" rel="nofollow noreferrer"/aa href="http://msdn.microsoft.com/en-us/library/ms235639.aspx" rel="nofollow noreferrer"/a/p/div
+Answer 3: 
+
+    
+    
+For the simplest examples codepad may be an option.
+    
+    
+Answer 4: 
+
+    
+    
+I think there's nothing wrong with firing up Visual Studio for some testing. You can delete the 20MB afterwards ;)
+
+However, you can also just invoke the command line compiler on Windows. Just start a Windows SDK console (or Visual Studio console) and you're there. And you can even use vi (need to install it first, of course).
+    
+    
+Answer 5: 
+
+    
+    
+I always use MinGW (GCC for windows) for such tasks.
+    
+    
+Answer 6: 
+
+    
+    
+MinGW is a good solution if you're not using anything Visual Studio specific.  If you are, in the start menu with Visual Studio, there should be a script that starts a "commandline" for visual studio.
+
+Also, please keep in mind, even if you aren't going to use Visual Studio, if you use MinGW, you're going to run into issues even with things you might not expect (like...if you decide to try the Apple Bonjour SDK, in which case you're going to get nasty link errors) because GCC and MSVC++ libraries don't always play nice.
+    
+    
+Answer 7: 
+
+    
+    
+And if you don't have access to your local computer, or you are to lazy to look for command line compiler you can paste your code to on-line compiler. There are several of them on the net you can try one of them here. It's free, no registration needed. It has some flaws but for quick code check it's just fine.
+
+You can also use some other languages, C, C++, D, Haskell, Lua, OCaml, PHP, Perl, Python, Ruby, Scheme, Tcl to be precise.
+    
+    
+Answer 8: 
+
+    
+    
+Maybe I'm just a *nix geek, but I went on over to http://consoletelnet.sourceforge.net/gccwin32.html and got gcc for win32. I then headed over to http://unxutils.sourceforge.net/ and go these command line tools. (I renamed their find.exe to gfind.exe to avoid conflict with windows find). I then use gvim for win32 to write code and make/gcc to compile it. Now I only have to learn one environment.
+    
+    
+Answer 9: 
+
+    
+    
+For small bits of code I want to test, such as code that I'm going to include in an SO answer, I always use the command line. My tools on Windows are:
+
+
+the MSYS tools, particularly their bash shell
+the vim editor
+the MinGW GCC compiler (Twilight Dragon branch)
+
+    
+    
+Answer 10: 
+
+    
+    
+I haven't used any of them, but MinGW and lcc-win32 seem to be pretty lightweight, and people seem to like them in news:comp.lang.c.  MinGW is a port of GNU Compiler Collection for Windows and is free, lcc-win32 is free for non-commercial use.
+    
+    
+Answer 11: 
+
+    
+    
+You can do the exact same thing for Windows -- fire up VI and run the output through gcc.
+
+Either get MingGW/MSys, Cygwin, or native ports of each app (gnu tools, vi)
+
+Just because you're using Windows, doesn't mean you're forced to use Visual Studio.
+    
+    
+Answer 12: 
+
+    
+    
+I've got a Visual Studio test project with a main file I just overwrite every time I want to test something new. The couple of MB taken up by the .ncb file really really really doesn't matter. A bigger issues is the need to create a project. But I get around that by reusing an old test project.
+    
+    
+Answer 13: 
+
+    
+    
+For small/simple C or C++ source codes I use Ideone. It supports over 40 programming languages.
+    
+    
+Answer 14: 
+
+    
+    
+I usually edit my code within notepad++ then compile it with gcc under cygwin or msys.
+    
+    
+Answer 15: 
+
+    
+    
+I have used Dev-C++ post 2004, and it still works quite well. 
+
+I even used projects coded in Dev-C++ for my practicals that had to run on machines using Linux. Just changed the make files.
+    
+    
+Answer 16: 
+
+    
+    
+I also use Visual Studio; for quick testing and prototyping, I have a file scratch.c on my desktop, which I just load up and test things out in.
+
+I don't see opening Visual Studio, clicking the new document icon, writing code, pressing F5 then just accepting the defaults for everything as being too much effort :)
+
+The other alternative I have (which I don't use for C, but do for Haskell) is to PuTTY into a Linux box I have access to, and do everything on there.
+    
+    
+Answer 17: 
+
+    
+    
+I have a Test.sln which has a Test.vcproj which has a Test.cpp. The solution has a few handy configurations (for maximum C++ std conformance and others). I just paste code into/from the Test.cpp file and compile it that way.
+    
+    
+Answer 18: 
+
+    
+    
+I use cl.exe and nmake.exe from Visual C++ Express to compile small groups of .c and .cpp files. Rolling your own simple Makefile for nmake.exe is easy.
+    
+    
+Title: Could not list the contents of folder in phpstorm latest version
+Description: 
+    
+    
+                    
+I have latest version of phpstorm, downloaded today. While uploading files to remote server i click on refresh icon in remote host, then phpstorm displays error
+could not list the contents of folder phpstorm. How can i correct that ??
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Go to Tools -code/code
+Answer 2: 
+
+    
+    
+Go to Tools 
+Answer 3: 
+
+    
+    
+for me nether of these settings worked. in my settings i didn't even have passive mode (intellij idea). 
+
+so what i did is, lookup the server directory with a php info file (uploaded it with another ftp tool, that was able to list the direcories: transmit) and then rebuild that path inside tools / deployment / root path. 
+    
+    
+Answer 4: 
+
+    
+    
+For me was that for some reason the folder of the Root path was deleted. Check yours!
+    
+    
+Title: What is the best way to visualize a DataTable while debugging?
+Description: 
+    
+    
+                    
+I have some very big DataTables, which I need to see their content while debugging.
+Is there a better way to do that other than opening the Columns' and rows' lists Properties in the Watch panel?  
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+Use the DataTable visualizer; hold your mouse over the variable and click on the magnifying glass this will open the DataTable visualizer.
+
+Btw, there are more VS2010 visualizers for other actions.
+I really like the WPF Tree visualizer: hold your mouse on a WPF control and click the magnifying glass ;-)
+    
+    
+Answer 2: 
+
+    
+    
+Open the DataSet visualizer.  Either hover over the variable in the source code or look at one of the variables in a debugger window (Locals, Auto, etc.)  Then click the magnifying glass.
+
+MSDN article on How to Use a Visualizer.
+    
+    
+Title: BPMS or just plain programming?
+Description: 
+    
+    
+                    
+What do you prefer (from your developer's point of view) when it comes to implement a business process?  
+
+A Business Process Management System (BPMS) or just your favorite IDE with the needed tools and frameworks (a reporting tool for example)?
+
+What is from your point of view the greatest Benefit of a BPMS compared to an IDE with your personal tools and frameworks?
+
+OK. Maybe I should be more specific... I got to know one specific BPMS which should make it easy to implement a business process by configuring rules. But for me as a developer it is hard to work with the system. I would like to work with text files which I can refactor and I would like to be able to choose the right technology or framework for the job I have to do. Instead the system forces me to configure. 
+
+There are rules where I can use java, but even then I have to stick to the systems editor without intellisense etc.
+
+So this leads me to the answer of my own question - I would like to use the tools I am used to instead of having to learn how to work with a BPMS (at least the one I know) because it limits me more than it helps. The BPMS I know is a framework from which it is hard to escape! At this time, I would prefer a framework like Grail over any BPMS I know.
+
+So maybe the more specific question is: do you feel the same or are there BPMSes which support you in beeing a developer and think like a developer or do most of them force you to do your job a different way? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Not sure what exactly you ask, but the choice BPM vs. plain programming will depend on the requirements. A "business process" is a relatively vague term in software engineering. 
+
+Here are a few criterion to evaluate your needs:
+
+
+complexity of the rules - Are the decisions/rules embodied in your process simple, complicated, configurable, hard-coded?
+volatility of the process - How frequently does your process change? Who should be able to make the change?
+integration need - Is your process realized using multiple heterogenous services, or is all implemented in the same language?
+synchronous/asynchrounous - Is your process "long-running" with the need to handle asynchronous actions?
+human tasks - Does your process involves human interaction, with task being assigned/routed to people according to their roles/responsibilities?
+monitoring of the process - What is the level of control you want on the existing process instances being executed? Do you need to audit the actions, etc. ?
+error handling - Depending on the previous points, how do you plan to deal with errors, or retry of faulty process execution?
+
+
+Depending on the answer to these questions, you may realize that your process is closer to a simple state chart with a few actions and decisions that can be executed in a sequence, or you may realize that you need something more elaborated, and that you don't want to re-implement all that yourself. 
+
+Between plain programming and a full-fledge BPM solution (e.g. Oracle BPM suite which contains BPEL, rule engine, etc.), there are intermediate solutions such as jBPM or Windows Workflow Foundation and probably a lot of others. These intermediate solution are frequently good trade-off.
+    
+    
+Answer 2: 
+
+    
+    
+In my experience the development environments provided by BPMS systems are third rate, unproductive, and practically force you to write hard to maintain, poorly designed code (due to their limitations).  Almost all the "features" (UI, integrations, etc) provided by the BPMS system I'm familiar with (the one sold by that company named for its database) were not worth the money we paid.
+
+If you're forced to use BPMS, as a developer, my advice would be to build as much of your application in a conventional development environment, such as Java or .Net, build as little as possible in the BPMS environment itself, and integrate the two.  The only things that should go in the BPMS is the minimum to make the business process work.
+    
+    
+Answer 3: 
+
+    
+    
+I have worked with Biztalk in the past and more recently with JBPM. My opinion is biased against BPMs for the following reasons:
+
+
+Steep learning curve : To make a process work, I have to understand how the system and the editor works. It is hard enough for a developer to understand  the system, let alone a business user. The drag and drop and visual representation is a great demo tool. It certainly impresses managers (who ultimately pay for it), but a developer's productivity just drops.
+Non developers changing the workflow : I haven't seen one BPM solution do it flawlessly. Though it doesn't look like code, right click on the box and you do have to put some code, otherwise it is not going to work. So you definitely need a developer to do it. The best part is that it is neither developer friendly nor business user friendly, just demo user friendly.
+Testablity and refactoring : It is virtually impossible to test drive a BPMS. You do have 'unit test frameworks' advertised, but most of them are hacks and hard to use. Recently I tried the JBPM one; I ended up writing a lot of glue code and fake workflow handlers to make it work. The deal breaker for me though is refactoring. If the business radically changes it's mind about how a business process should look, then good luck re-arranging the boxes, because just re-arranging them won't work, all the variables bound to the boxes also need to be re-arranged. I would prefer the power of the IDE and tests to refactor my business process.
+
+
+If your application has workflow, then you could try a workflow library (with or without persistent state). It will still manage your workflows without all the bloat that comes with a BPM. If a business user needs to understand the code, then let the business prepare good process flowcharts and translate them into good domain driven code. Use cucumber style acceptance tests to make bring the developers and business together. A BPM is just something that tries to do too many things and ends up doing all those things badly.
+    
+    
+Answer 4: 
+
+    
+    
+BPMS-- a lot of common business case, use case are already implemented. So you just have to know how to use it. For common workflow, you don't even need to write a single line of code, though mostly you would have to write some scripts to cover things that are not yet implemented.
+
+Plain programming-- just use the IDE to hack out the code. The positive side: more control. The negative? A lot of times are spent on rewriting boilerplate code. And you have to maintain them. 
+
+So in a nutshell, I would prefer a Business Process Management System. One that I would recommend is ProcessMaker. It features an intuitive process designer that allows you to design workflow with drag and drop. And you can always write trigger to extend the process functionalities. It's open source as well.
+    
+    
+Title: How to get output of exe in python script?
+Description: 
+    
+    
+                    
+When I call an external .exe program in Python, how can I get printf output from the .exe application and print it to my Python IDE?
+    
+
+        
+Answer 1: 
+
+    
+    
+To call an external program from Python, use the subprocess module.
+
+
+  The subprocess module allows you to spawn new processes, connect to their input/output/error pipes, and obtain their return codes. 
+
+
+An example from the doc (output is a file object that provides output from the child process.):
+
+output = subprocess.Popen(["mycmd", "myarg"], stdout=subprocess.PIPE).communicate()[0]
+
+
+A concrete example, using cmd, the Windows command line interpreter with 2 arguments:
+
+&gt;&gt;&gt; p1 = subprocess.Popen(["cmd", "/C", "date"],stdout=subprocess.PIPE)
+&gt;&gt;&gt; p1.communicate()[0]
+'The current date is: Tue 04/14/2009 \r\nEnter the new date: (mm-dd-yy) '
+&gt;&gt;&gt; 
+
+    
+    
+Answer 2: 
+
+    
+    
+I am pretty sure that you are talking about Windows here (based on the phrasing of your question), but in a Unix/Linux (including Mac) environment, the commands module is also available:
+
+import commands
+
+( stat, output ) = commands.getstatusoutput( "somecommand" )
+
+if( stat == 0 ):
+    print "Command succeeded, here is the output: %s" % output
+else:
+    print "Command failed, here is the output: %s" % output
+
+
+The commands module provides an extremely simple interface to run commands and get the status (return code) and the output (reads from stdout and stderr). Optionally, you can get just status or just output by calling commands.getstatus() or commands.getoutput() respectively.
+    
+    
+Title: Delphi compiler warnings pointing to Delphi&#39;s own units
+Description: 
+    
+    
+                    
+In Delphi 2007, working on a project which includes a custom component, I'm getting this set of warnings as the first four in Messages when I do a full build (but not when I do a straight compile):
+
+[DCC Warning] Dialogs.pas(1426): W1002 Symbol 'TFileOpenDialog' is specific to a platform
+[DCC Warning] Dialogs.pas(1446): W1002 Symbol 'TFileSaveDialog' is specific to a platform
+[DCC Warning] ComCtrls.pas(6757): W1036 Variable 'Section' might not have been initialized
+[DCC Warning] ComCtrls.pas(19268): W1023 Comparing signed and unsigned types - widened both operands
+
+
+I generally try to eliminate compiler warnings where I can, but these are "stock" Delphi units. Are these warnings the indirect result of something in my code?  If so, how do I figure out what/where? If not, what should I do about them?
+    
+
+        
+Answer 1: 
+
+    
+    
+I believe it is because you have the stock Delphi source in your build path.  If you remove the Delphi source directories, then it should build without these warnings.
+    
+    
+Answer 2: 
+
+    
+    
+The reason they show up only when doing a Build is that the compile command only compiles source which has changed since the previous compile. While the Build command recompiles everything in the project regardless of changes.
+
+The warnings are most likely caused by the Delphi source folder being included in the project search path. Removing it and deleting the dcus in your project's folder will tell you if anything in the project required the Delphi source when you recompile. In my experience you should need the Delphi source if you have found a bug in Delphi's implementation and made a custom copy of a Delphi class to correct the bug. If this is the case when you try to build without the Delphi source you will usually get:
+
+
+  Unit '%s' is compiled with unit '%s'
+  in '%s' but different version '%s'
+  found (F2446)
+
+
+Where %s will be some low level Delphi class.
+
+If you don't get any error's it didn't really need the Delphi source. 
+
+This can also happen if the Delphi source is in the environment search path.
+    
+    
+Answer 3: 
+
+    
+    
+The first two warnings you mention (along with a few others) are to make you aware that the code you're currently using won't compile across different platforms Delphi supports. For Delphi 2007, there isn't much, but it carries the remnants of Kylix (the Linux version that's gone) and Delphi for .NET (which is also gone).
+
+More recent versions of Delphi support cross-platform (Win32/Win64, OS X, iOS, and Android), where these messages are relevant again when developing Firemonkey applications (or VCL apps if there are differences between Win32 and Win64). They indicate the points in your code where you will have to make adjustments in your code for different operating systems. (For instance, the two you cite are for Windows-specific dialogs; you'd need to use a different dialog based on the target platform, and use {$IFDEF} statements around the areas that are platform-specific to keep them from being compiled in for other platforms.
+
+As your current code can't be ported directly (even in a modern Delphi version) to anything other than Windows because it's VCL-based, you can safely turn off those warnings. Use Project-&gt;Options-&gt;Compiler Messages, and uncheck the following messages (or use the compiler define I've included in your code):
+
+Library Symbol                       {$WARN SYMBOL_LIBRARY OFF}
+Platform Symbol                      {$WARN SYMBOL_PLATFORM OFF}
+Library Unit                         {$WARN UNIT_LIBRARY OFF}
+Platform Unit                        {$WARN UNIT_PLATFORM OFF}
+Unsafe type  (.NET remnant)          {$WARN UNSAFETYPE OFF}
+Unsafe code  (.NET remnant)          {$WARN UNSAFECODE OFF}
+Unsafe typecast (.NET remnant)       {$WARN UNSAFECAST OFF}
+
+
+The last two you've mentioned I can't reproduce with D2007 (IDE version 11.0.2804.9245), so I'd suspect that skamradt's answer is correct - it's because you have the VCL source directories in your search path, and you shouldn't. It should be set to $(BDS)\Lib. If you need to be able to step through the source, use the Project-&gt;Options-&gt;Compiler page, and check the Use debug DCUs option under Debugging instead.
+    
+    
+Answer 4: 
+
+    
+    
+I spent ages getting these problems (well, your first two anyway) and in my ignorance actually uninstalled Delphi and reinstalled it to no avail. I finally found that it is caused by the lack of project settings. At least atfirst, if you migrate a projects from an earlier Delphi, your existing project settings get converted but for no apparent reason Delphi can start forgetting about this and gives you a 'blank' set of project settings. You can see this by opening Project-Options where you will find Base, Release and Debug. Check out the active one (it is bold in the project manager) and you should see that it has no directory paths as well as all hints and warnings at their defaults. Most of these defaults are fine but 'Platform Symbol' and 'Platform unit' should be disabled (at least for Win32 stuff).
+Regards,
+Brian
+    
+    
+Answer 5: 
+
+    
+    
+If you want to continue explicitly compiling the VCL source into your project you can make a copy of the units that are raising the compiler hints/warnings and "fix" the hints/warnings in that copy.
+Put the updated/"fixed" copies of those VCL units in another folder and make sure you add the path to that folder to your project's Search path BEFORE the path to the Delphi VCL source.
+
+E.g. my project search path looks something like this: "C:\Dev\Source\MyFixedVCLUnits;C:\Program Files\CodeGear\RAD Studio\6.0\source"
+
+To give an example of the simple fixes required to remove these warnings, here is one of the functions in the Dialogs.pas that now lives in my 
+"C:\Dev\Source\MyFixedVCLUnits" folder:
+
+{$WARNINGS OFF}
+function TFileOpenDialogWrapper.CreateFileDialog: TCustomFileDialog;
+begin
+  Result := TFileOpenDialog.Create(nil);
+  Result.OnExecute := OnExecuteEvent;
+end;
+{$WARNINGS ON}
+
+
+In this case, just add the {$WARNINGS OFF} etc as required.
+    
+    
+Answer 6: 
+
+    
+    
+TFileOpenDialog will work only on Windows Vista and up. You should use TOpenDialog instead of TFileOpenDialog, in newer Delphi versions it will detect what OS it is running and display proper dialog. 
+https://forums.embarcadero.com/thread.jspa?threadID=70498
+    
+    
+Answer 7: 
+
+    
+    
+If you develop only for specific platform open project source and add
+
+{$WARN SYMBOL_PLATFORM OFF}
+
+    
+    
+Answer 8: 
+
+    
+    
+Compiler warnings can be disabled individually (separate per warning type) in the project options under 'Delphi Compiler | Hints and Warnings'
+    
+    
+Title: An internal error occurred during: &ldquo;Requesting JavaScript AST from selection&rdquo;
+Description: 
+    
+    
+                    
+I'm facing unique error/alert-popup while editing JavaScript files in Eclipse and it pops up this error every time I place the cursor on that line. 
+
+JS: NullPointerException when cursor is placed at the end of the line containing return statement.
+
+foo.bar = function(x) {
+    if (xyz) {
+      return fn(x);«error»
+    }
+
+    return fn(x);«error»
+
+    return (fn(x));«error»
+
+    return new fn(x);«ok»
+
+    return x;«sometimes»
+
+    return "";«error» 
+
+    return x+"x";«error» 
+
+    return this.x;«error»
+
+    return fn(
+        x);«error»
+
+    return new fn(
+        x);«ok»
+
+    return;«error»  
+};
+
+
+
+«» — cursor position
+«ok» — no error
+«error» — triggers error  
+«sometimes» — I have code that never triggers an exception in that case, but I don’t see a pattern.
+
+
+If cursor is at the end of the line of a return, this exception happens:
+
+An internal error occurred during: "Requesting JavaScript AST from selection".
+java.lang.NullPointerException
+
+
+The Eclipse error is:
+
+'Requesting JavaScript AST from Selection' has encountered a problem. 
+An internal error occured during "Requesting JavaScript AST from selection". 
+java.lang.NullPointerException
+
+
+Is there a solution or workaround available to fix the problem?
+    
+
+        
+Answer 1: 
+
+    
+    
+Simplest solution:  
+
+
+Turn off Toggle Mark Occurrences  (Alt-Shift-O or the paintbrush icon on the toolbar, which handily, will show you your current state).
+
+
+It's just disabling the feature of highlighting other occurrences of whatever variable, etc you have your cursor on. 
+
+
+
+Official solution:   
+
+
+You can track the official bug here.
+There is a patch posted here which you might try.
+
+    
+    
+Answer 2: 
+
+    
+    
+Opening JavaScript files in text editor helps. You may like to change the default default file association for js files to Text Editor.
+    
+    
+Title: Android Studio: How to stop getting error marks on unused symbols
+Description: 
+    
+    
+                    
+In any code, i guess, there are variables/method/classes that are really not used and maybe just there for show/just in case.
+
+Anyway, How do i set Android Studio to stop giving me the 'yellow' error stripe marks in the scrollbar for unused variables.  Although, i don't want to stop getting warnings all together.
+    
+
+        
+Answer 1: 
+
+    
+    
+Fount it!
+
+Right click the scroll bar code/code
+Answer 2: 
+
+    
+    
+add SuppressWarnings annotation at the methods/variables/classes which are unused...
+
+@SuppressWarnings("unused")
+private String unusedString;
+
+@SuppressWarnings("unused")
+private void unusedMethod() {
+
+}
+
+@SuppressWarnings("unused")
+private class UnUsedClass {
+
+}
+
+    
+    
+Answer 3: 
+
+    
+    
+
+
+You can change highlighting level by clicking the button at the right corner in android studio.
+    
+    
+Title: How can I deal with having to code classic ASP? [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        A good IDE for classic ASP?
+                            
+                                (8 answers)
+                            
+                    
+                Closed 3 years ago.
+        
+
+
+    
+
+I've just accepted a classic ASP project, because I need the work and the pay is good.  So, can I use Visual Studio /p/div
+Answer 1: 
+
+    
+    
+I've worked extensively with ASP-Classic and ASP.NET for many years and I can categorically state that without question the best way to edit and debug ASP Classic code remains Visual Studio (2005 &amp; 2008, I have yet test the experience in 2010 yet).
+
+If you have VS2005 or VS2008 then by all means go ahead and use it.
+
+Sorry if this sounds a bit dogmatic but I do tend to get a little irritated with the "Edit it text editor, debug it with Response.Write" crowd.  Its simply isn't necessary and is very painful.  Its true that debugging ASP is not as slick as ASP.NET (you can't just press the "run" button) but its close, much closer than many people seem to think.
+    
+    
+Answer 2: 
+
+    
+    
+Honestly, I tend to do classic ASP in a straight text editor, like Sublime Text or Notepad++. Both have good syntax highlighting for ASP, and I don't think an IDE buys you as much with classic ASP as it does with ASP.NET.
+    
+    
+Answer 3: 
+
+    
+    
+I too program in classic ASP in a straight text editor (using the web creation program I developed myself - Sitestepper, which contains StepEdit with full syntax highlighting for classic ASP and a possibility to easily make multi language versions of your ASP code).
+
+Since I am a web developer myself, the program is I developed is aimed at web and asp development with little smart tricks to make my work easier.
+
+If anyone is interested in this program, drop me a not info at edelcom dot be. I don't want to push it here but I know for certain it has its merits. Knowing that I do web development myself half of the time, you can imagine that it make sence to make the program as workable as possible (within my limits of programmer and time I can spend on the development). It is aimed more at the technical programmer (as myself), than at end users. It has a limited user base, but the people who use it, use it to maintain and develop sites with multiple languages and hundreds of pages.
+    
+    
+Answer 4: 
+
+    
+    
+You could also try Dreamweaver if you have it.  It handles Classic ASP and even provides some Code Completion.
+    
+    
+Answer 5: 
+
+    
+    
+Visual Studio (2005 or 2008) is good with classic ASP; and the intelisense (although limited) will be of use if you're not yet 'fluent' in classic asp.
+
+Or if you want to get raw with the code; textpad is good and free.
+    
+    
+Answer 6: 
+
+    
+    
+I have to do ASP Classic a lot at my work :( I use Textpad it seems to do a fine job. Honestly you don't get much out of using an IDE with ASP Classic 
+    
+    
+Answer 7: 
+
+    
+    
+If you have Visual Studio, use it.
+Otherwise, MS Expression Web (aka Frontpage) does a passable job.
+    
+    
+Answer 8: 
+
+    
+    
+I have used an editor called Primal Script, which has syntax highlighting.  In addition it has rather good intellisense and can be configured for degugging.  It is proprietary though.  I have also used Notepad++ which is not bad, specially if you mix the templates for VB script and ASP.
+    
+    
+Title: Can I have the Code Editor for C# in Visual Studio 2008 show a line separating methods?
+Description: 
+    
+    
+                    
+Sorry for the dumb question, but...
+
+I'm moving from VB to C# and this is really bugging me.
+Is there a way to convince VS 2008 to draw a line separating my methods like it does for VB?
+
+I'm really used to those, and i'm used to doing
+
+//-------------------------------------------------------
+
+myself in Javascript.
+
+I'm hoping I won't have to do it manually in C# too.  
+
+Any pointers?
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+Not out of the box.  There may be third-party apps which will do this like CodeRush or something like that.  
+
+But my advice:
+Get out of the habit of putting lines in between your procedures.  Comments without meaning are evil.
+    
+    
+Answer 2: 
+
+    
+    
+You can do this for free (assuming you are using Visual Studio 2008 Standard edition or higher).
+
+Install the free CodeRush Xpress. Then install the free plugin DrawLinesBetweenMethods
+
+Copy the DLL to this location - C:\Program Files\Developer Express Inc\DXCore for Visual Studio .NET\2.0\Bin\Plugins.
+
+This will producethe effect described here: Lines between methods in the C# editor (CodeRush/DxCore plugin) 
+
+If you don't want CodeRush Xpress then an alternative is to install the free DXCore extensibility engine and then install the above plugin. If you install DXCore you are also able to make use of a number of other useful plugins, most of which can be found at the same site as DrawLinesBetweenMethods. 
+    
+    
+Answer 3: 
+
+    
+    
+Why not add bona fide summary comments to methods? Any number of tools can create some form of documentation out of this. 
+
+Also the IDE can collapse the method so unsure of the gain of this line.  Wouldn't #regions be of more interest? (rhetorical question)
+
+VS10 will allow you WPF inline and so if you can wait you could even draw a sunset between two methods!
+    
+    
+Answer 4: 
+
+    
+    
+Devexpress.com makes CodeRush, which has some visualizations.
+    
+    
+Answer 5: 
+
+    
+    
+Or use #region to separate any regions of code. For example, I separate overrides, methods, properties, events and objects, but you could wrap your methods in #region to clearly separate each one (and collapse them when not in use.)
+
+This isn't what you asked for, but it is a great alternative. 
+    
+    
+Answer 6: 
+
+    
+    
+Not quite what you are looking for, but using Resharper it's possible to set up a custom type members template that would surround every method in a file/project/solution with a region whenever you pressed a shortcut.
+
+Your other Resharper option would be to create a custom surround template, which would let you select a block of text and chose surround with-/p/div
+Answer 7: 
+
+    
+    
+This should easily be possible in Visual Studio 2010 due to the extensible, WPF-based text editor.
+    
+    
+Answer 8: 
+
+    
+    
+A note regarding your comment:
+
+
+  separators [...]
+  allow me to skim through the code
+  REALLY fast. [...] I
+  can very quickly jump to the next [method].
+
+
+What I see a lot, is that people forget about the two dropdown list at the top of the editor window (listing the classes of the current file and the class members of the current class). It allows navigating to class members very quickly.
+    
+    
+Title: Quick inserting a relative path in PhpStorm
+Description: 
+    
+    
+                    
+In PhpStorm:
+
+Is there a fast way for inserting relative path to other file (ex. css,js, image files) in another one? (Perhaps by dragging file in code position)
+    
+
+        
+Answer 1: 
+
+    
+    
+Ctrl + Space + Space
+
+Hold Ctrl and press Space twice...
+
+Autocompletes relative path...
+    
+    
+Answer 2: 
+
+    
+    
+No, there isn't anything that I would consider "fast" but there are a few tricks that I've found to be useful.
+
+In a large number of contexts PHPStorm will by way of it's auto-complete help you form your relative files references. For example, when typing a PHP require statement, you can use completion to get a list of files and directories in the auto-complete popup, and use that to help you navigate and create the string you want:
+
+
+
+The auto-complete doesn't seem to always happen automatically, but you can invoke it. My keyboard shortcut is CTRL+SPACE. From the menu, it's Code -
+Title: Required Things to start Smartcard Programming Using Javacard
+Description: 
+    
+    
+                    
+I wanted to start with the smartcard programming soon. Please help me the things required for starting the learning using javacard. Which IDE (If any IDE Supports), Software and Hardware related? Like Mobile phone simulator is there any smartcard simulator or else if I have to buy a smartcard specify those cards where and how I can get? 
+    
+
+        
+Answer 1: 
+
+    
+    
+A general answer regarding smartcard programming is that you should be ready to navigate a confusing list of tools and technologies. Typically smartcard developers begin with a specific hardware platform in mind: more specific than simply javacard.
+
+Since you've specifically mentioned javacard, we can focus on a few starting points.
+
+Javacard SDK
+
+You might begin with the javacard dev kit. I haven't used the most recent - I'm still using 2.0.2. This dev kit is very command-line oriented, so expect to be doing most of your work outside an IDE. However, the documentation is pretty helpful and should get you up to speed pretty quickly. At any rate, it's a good place to start, since it's official.
+
+EclipseJCDE also looks interesting, but I haven't used it. I seem to recall another project aiming to build javacard Eclipse tools, but I may just be thinking of EclipseJCDE.
+
+IBM Tools
+
+At one time IBM published and maintained a set of JCOP tools that integrated with the Eclipse IDE. The great thing about this is that they would send you a package containing some dev tools and a couple of JCOP cards. The annoying thing is that an activation code was required. Have a look here. The download link is still good, good luck with the email address listed there. Also note that these tools require an older build of Eclipse. The build/debug support is very good, including a built-in javacard simulator.
+
+Global Platform
+
+If you plan on doing javacard programming, you should also get to know Global Platform. It's a smartcard standard, and in the context of javacard, you'll need to know about the GP spec when you need to load and manage javacard applets. This is required for working with JCOP cards. For the latest GP spec search for GlobalPlatform Card Specifications. You'll need to be very familiar with basic smartcard concepts, e.g. APDUs.
+
+Hardware
+
+Hardware choices are too varied for me to make useful recommendations, beyond the JCOP stuff above. As I mentioned, if you can use the IBM kit then you'll get a good JCOP/javacard simulator with the Eclipse tools. I'm sure there are other card simulators available.
+
+etc.
+
+Beyond that there is a long list of other technical specifications employed by smartcard programmers, and unfortunately many of them aren't freely available (ISO docs). If you'll be doing GSM programming, I think you can get to all of the GSM specs, search for ETSI GSM specifications. GSM 11.11 is particularly useful for learning more about APDU command/response, without access to ISO specs, e.g. ISO 7816-4.
+    
+    
+Answer 2: 
+
+    
+    
+Share two new Free tools that I am using to learn javacard here.Hope to help others get started with javacard easily.
+
+
+JCIDE: It is an Integrated Development Environment designed specifically for the Java Card programming language.
+PyAPDUTool: It is a handy tool which can communicate with the card via the reader connected to PC. It is a PC/SC compliant application.
+
+    
+    
+Title: IDE for embedded development
+Description: 
+    
+    
+                    
+I do a lot of embedded development work in C. I'm looking for an IDE that can give me the same kind of features as Eclipse or Visual Studio. In the past I've used Vim, but I'm just not happy with the amount of work it is to use. Right now I'm trying to use Eclipse, but I can't get it to tag my code correctly. I also have access to Visual Studio and I might be able to get a SlickEdit license.
+
+Can anyone recommend an editor? I'm looking for something that has
+
+
+Some type of code completion
+SVN support
+Indexing/tagging of variable, function names etc
+Support for interpreting code that may be #ifed out
+Third party compiler support
+
+
+Is there a way to generate tags on the code without having a make file or building the code with gcc?
+    
+
+        
+Answer 1: 
+
+    
+    
+I think you are going in the right direction (with Eclipse).
+
+I think your question is why you can't tag you code, 
+however I know that Eclipse supports ctags (so it is not in any way impossible).
+    
+    
+Answer 2: 
+
+    
+    
+I widely used Code::Blocks 
+
+code::blocks
+
+This thing is so amazing,
+If you have any binutils arm-elf, avr-elf, VC, mingw, installed You could use whatever you want, just chose toolset in properties of project, add some libraries etc...
+
+I've used to add other tools like flash2000 for LPC processors, objdump etc. as an external command.
+
+There are plenty of tools for this IDE which makes your cross compilation faster &amp; easier.
+And it's much better (read faster, smaller) than Eclipse + CDT and other stuff.
+    
+    
+Answer 3: 
+
+    
+    
+Eclipse is used as the basis for Embedded development IDEs from QNX Software Systems (who are also the primary contributors to the CDT), WindRiver, Mentor Graphic, and others, so it has some weight behind it. Green-Hills have an Eclipse plug-in for their toolchain. 
+
+Getting a seamless development environment from integrating your own tools is hard work however, but more viable than with other Text Editors because of the open plug-in architecture. It depends on the level of integration you want. Edit and build are straight-forward in most editors. Getting all of, edit, build, build/dependency-management (makefile generation), version control, source browsing and remote source level debug, is a bit of a task outside of an off-the-shelf suite from someone like one of the above vendors.
+
+Many of the proprietary non-Eclipse based IDE's from the likes of Keil or IAR are looking a little old fashioned, and are seldom satisfactory as editors, although they often offer a lot of low level functionality in terms of target hardware and RTOS awareness and simulation.
+    
+    
+Answer 4: 
+
+    
+    
+http://mbeddr.com/
+
+Just released an IDE for embedded systems
+    
+    
+Answer 5: 
+
+    
+    
+I have been working on embedded products for quite some time, mostly I use emacs with ctags (etags) and cscope. I have, of late, started using SlickEdit, it works just fine. However, I personally recommend you to get familiar with Vim/Emacs whatever editor you feel comfortable. The best thing about emacs/vim is that the flexibility to extend the functionality through plugin / whatever you call it. There are lot of third party plugins available to extend these editors. Of course, you need to invest some time to get started.
+    
+    
+Answer 6: 
+
+    
+    
+I'm currently using IAR's Workbench which is nice enough.  I've used Eclipse with the CDT plug-in before (and probably will again at some point) and its code navigation worked just fine.  I don't recall having to futz around too much to get it to index the code, but I was using GCC (which might be a factor) and I do recall having to restart Eclipse and/or manually tell it to reindex at times when it would seem to have some trouble navigating.
+
+However, even though IAR's Workbench works well enough for most things, when I really want to have nice code navigation at my fingertips, I just load up Visual Studio with a makefile project that includes the source tree.  The makefile commands simply call out to IAR's command line utilities to perform the build.   This works fantastically well except for the debugging - I have to go to IAR Workbench for that.  And when I'm in a debugging mode it's just easier to stay in IAR.  But if I'm analyzing or cutting code, I'll move to VS for that.
+
+So basically, you can generally use whatever IDE you prefer for much of your development as long as your toolchain for the target provides for being driven by the command line.  
+    
+    
+Answer 7: 
+
+    
+    
+I've used Microscope (Vex Platform), EVC++, and the Maemo compilers+Nano for embedded programming. Most of the other tools you request are often found outside the IDE.
+
+However, Netbeans can be configured to compile non-Java code. Its not just not as convenient. If you are developping with C++ you might be able to change the compiler used and you would be able to use the C++ plugin with ease.
+    
+    
+Answer 8: 
+
+    
+    
+I think if the question is about the choice of IDE, then the answer is Eclipse with CDT. Seasoned guys like the author of "TDD with Embedded C", James Grenning likes and uses it. See appendix of the mentioned book for more.
+    
+    
+Answer 9: 
+
+    
+    
+Unless you're developing on the device, why not just use the IDE you usually use? You're gonna be cross-compiling anyway.
+    
+    
+Answer 10: 
+
+    
+    
+
+I used vim especially working with Linux/unix systems with cscope (for source cross-reference). Vim is nifty with latest versions supporting code-completion. Lot of plugins available.
+Emacs is a power-horse, lot of customizing support.It support CVS/Clearcase AFAIK.
+
+    
+    
+Answer 11: 
+
+    
+    
+If you are willing to compromise on in-built compiler and SVN support, then I would say Source Insight is the best tool for your all other requirement. 
+    
+    
+Title: Turn off autocomplete in PhpStorm
+Description: 
+    
+    
+                    
+Right now if I type in $ into Jetbrains PhpStorm IDE, it will display a whole bunch of suggestions (e.g. variables that have already been declared) which slows down my typing. 
+
+Is there a way to configure PhpStorm to NOT do this? In other words, turn off auto-complete or only do auto-complete if I press Ctrl+Space and not when I just type in $?
+    
+
+        
+Answer 1: 
+
+    
+    
+Disable code completion?
+
+See Settings/Preferences(depends on OS) - IDE Settings - Editor - Code Completion
+
+There you should find an option Autopopup code completion in (ms)
+
+
+  If the check box is not selected, PhpStorm will not suggest code completion automatically.
+
+
+See also the online help.
+    
+    
+Answer 2: 
+
+    
+    
+This is more an answer to the linked "duplicate" question, but I can't answer that one. Hope this helps someone.
+
+To disable HTML auto-completion, see Settings -
+Answer 3: 
+
+    
+    
+My auto-completion was not working, I had to execute in menu File-&gt;Invalidate cache... (and disable Nette tester plugin in my case)
+    
+    
+Title: How can I detect whether a user control is running in the IDE, in debug mode, or in the released EXE?
+Description: 
+    
+    
+                    
+I have a user control that I'm building.  It's purpose is to display the status of a class to the user.  Obviously, this does not matter, and will slow things down when the control runs in the IDE, as it does as soon as you add it to a form.
+
+One way to work around this would be to have the control created and added to the controls collection of the form at run-time.  But this seems less than perfect.
+
+Is there a way to set a flag in the control so that it can skip certain sections of code based on how it is running?
+
+p.s. I'm using C# and VS 2008
+    
+
+        
+Answer 1: 
+
+    
+    
+public static bool IsInRuntimeMode( IComponent component ) {
+    bool ret = IsInDesignMode( component );
+    return !ret;
+}
+
+public static bool IsInDesignMode( IComponent component ) {
+    bool ret = false;
+    if ( null != component ) {
+        ISite site = component.Site;
+        if ( null != site ) {
+            ret = site.DesignMode;
+        }
+        else if ( component is System.Windows.Forms.Control ) {
+            IComponent parent = ( (System.Windows.Forms.Control)component ).Parent;
+            ret = IsInDesignMode( parent );
+        }
+    }
+
+    return ret;
+}
+
+    
+    
+Answer 2: 
+
+    
+    
+I found this answer on another post and it seems to be easier and working better for my situation.
+
+Detecting design mode from a Control&#39;s constructor
+
+using System.ComponentModel;
+
+if (LicenseManager.UsageMode == LicenseUsageMode.Runtime)
+{
+}
+
+    
+    
+Answer 3: 
+
+    
+    
+This is the method I used in my project:
+
+//use a Property or Field for keeping the info to avoid runtime computation
+public static bool NotInDesignMode { get; } = IsNotInDesignMode();
+private static bool IsNotInDesignMode()
+{
+    /*
+    File.WriteAllLines(@"D:\1.log", new[]
+    {
+        LicenseManager.UsageMode.ToString(), //not always reliable, e.g. WPF app in Blend this will return RunTime
+        Process.GetCurrentProcess().ProcessName, //filename without extension
+        Process.GetCurrentProcess().MainModule.FileName, //full path
+        Process.GetCurrentProcess().MainModule.ModuleName, //filename
+        Assembly.GetEntryAssembly()?.Location, //null for WinForms app in VS IDE
+        Assembly.GetEntryAssembly()?.ToString(), //null for WinForms app in VS IDE
+        Assembly.GetExecutingAssembly().Location, //always return your project's output assembly info
+        Assembly.GetExecutingAssembly().ToString(), //always return your project's output assembly info
+    });
+    //*/
+
+    //LicenseManager.UsageMode will return RunTime if LicenseManager.context is not present.
+    //So you can not return true by judging it's value is RunTime.
+    if (LicenseUsageMode.Designtime == LicenseManager.UsageMode) return false;
+    var procName = Process.GetCurrentProcess().ProcessName.ToLower();
+    return "devenv" != procName //WinForms app in VS IDE
+        &amp;&amp; "xdesproc" != procName //WPF app in VS IDE/Blend
+        &amp;&amp; "blend" != procName //WinForms app in Blend
+        //other IDE's process name if you detected by log from above
+        ;
+}
+
+
+Attention!!!: The code returned bool is indicating NOT in design mode!
+    
+    
+Title: Restoring the IntelliJ IDEA &ldquo;Project tab&rdquo;
+Description: 
+    
+    
+                    
+By default the IntelliJ IDEA interface contains the following tabs/panels:
+
+
+Project (tabbed to the left)
+Structure (tabbed to the left)
+Commander (tabbed to the right)
+Ant Build (tabbed to the right)
+IDEtalk (tabbed to the right)
+Maven Projects (tabbed to the right)
+Data Sources (tabbed to the right)
+TODO (tabbed at the bottom)
+Web Preview (tabbed at the bottom)
+
+
+Due to some fiddling around with the settings in one of my projects I've managed to remove all tabs/panels but the following:
+
+
+IDEtalk (tabbed to the right)
+Maven Projects (tabbed to the right)
+Data Sources (tabbed to the right)
+Web Preview (tabbed at the bottom)
+
+
+I'm running IntelliJ IDEA 8.1.
+
+Question:
+
+
+How do I the Project tab and the rest of the lost tabs?
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The (infuriating) answer is that you just need to click the icon at the very bottom left of your screen. Then the project and other tabs will magically reappear. UX #fail
+    
+    
+Answer 2: 
+
+    
+    
+Procedure to recover all tabs:
+
+
+Backup the "damaged" project
+Create a new project using the same project name as the damaged project
+Restore the backup of the damaged project, but copy over the .iml and .ipr files which were created when creating the fresh project in the previous step
+Open the recovered project and then used File &gt; Synchronize to pick up all files in the project
+The project and all tabs are now restored. Done!
+
+
+The above procedure has been tested and is known to work.
+    
+    
+Title: Anyone have issues with Eclipse over Remote Desktop Connection?
+Description: 
+    
+    
+                    
+I have a very strange issue that I'm hoping someone can help me with.  I have various installations of Eclipse on my development machine at work. The one I primarily use is Weblogic WorkSpace Studio 10.2.  This installation, along with a few Pulse installations I have set up works fine when I'm logged into my computer physically.  
+
+However, when I try to log into the computer using Microsoft's Remote Desktop Connection utility I get an error stating: "Could not create Java virtual machine." and then I get the lovely Eclipse error box which I personally can gather almost nothing from.
+
+Even if you don't have the solution, any help would be greatly appreciated.
+
+Justin
+    
+
+        
+Answer 1: 
+
+    
+    
+What ended up working for me was the memory settings for the JVM. Apparently the remote desktop connection, or some other setting in Windows, blocks off a fairly large amount of space. By reducing the heap size allocation for the JVM during Eclipse and server start-up I was able to get this working. As a side note, I had PLENTY of space that windows could have used, so I don't think blankly adding more memory would necessarily solve the issue. If you find another solution, please let me know.
+    
+    
+Answer 2: 
+
+    
+    
+•   We came across an issue when user RDC’s to a remote system where the OS is Windows 10 and has a running Eclipse instance, the Eclipse instance terminates
+
+•   Eclipse is one of the IDE’s for Java
+
+•   The issue is because of Windows 10 Exploit protection
+
+•   Pre-requisite: You will need Administrative permissions for executing the below
+
+•   Navigate to Settings -
+Answer 3: 
+
+    
+    
+Perhaps it is permission related. take a look at similar issue that symantec has:
+
+http://service1.symantec.com/support/ent-security.nsf/854fa02b4f5013678825731a007d06af/8ea1593f1d1fcee68025759a003d8403?OpenDocument
+
+Try to see if you have same patches installed that causes the security issue. Also refer to application log to see if there is a more specific error. Good luck :)
+    
+    
+Answer 4: 
+
+    
+    
+I think issue happens due to Windows, not Eclipse nor JVM. There is still open Bug report on the Eclipse side and one of the comments state that Microsoft is working on the issue.
+    
+    
+Answer 5: 
+
+    
+    
+I have tried Windows Remote Desktop-ing into my dev machine at work (which had only one version of eclipse installed on it). I had no troubles. 
+
+Is it possible that your problems stem from multiple versions of eclipse running at the same time?
+
+Also, have you tried a fresh install of eclipse on your dev machine?
+
+If the above two suggestions don't work, then the only thing that I can think of is what Mohammad said: you might need to check your permissions.
+
+I would check the system log if I were you: Start 
+Answer 6: 
+
+    
+    
+The first thing to look at is the .log file which is in your eclipse's metadata folder (found in your workspace at $WORKSPACE_ROOT/.metadata/.log).  If you post the stack trace that it generates upon initialization, we can give a definitive answer.
+    
+    
+Answer 7: 
+
+    
+    
+I am now experiencing this in Eclipse (the Oxygen release and Java 1.8.0_181). I previously had the same problem with another Java-based program (Oxygen XML/XSL editor - the product name is coincidentally the same as the Eclipse version). Last year the Oxygen support team answered that it may be a known problem in Java. 
+
+
+  Even without seeing a crash report, considering your sequence of
+  events, this seems like a known common cause of crash for the Java
+  runtime. Keeping Oxygen/Java running for a long time, until the screen
+  or video card enters sleep then connecting/disconnecting
+  screens/projectors or connecting/disconnecting RDP can trigger a crash
+  in the Java runtime. We keep updating the Java runtime (JRE) with each
+  new version of Oxygen, but so far the issue has not been resolved in
+  newer versions of the JRE.
+  
+  e.g. Java VM logged issue:
+  https://bugs.openjdk.java.net/browse/JDK-8153389
+
+    
+    
+Title: Xcode 4 won&#39;t allow me to open the storyboard edited in Xcode 5
+Description: 
+    
+    
+                    
+I have a problem: I can't open the Storyboard file in Xcode 4.6 after having used the app in Xcode 5. What should I do to open it in Xcode 4?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Go back to your Storyboard in Xcode 5, then go to the right pane under the File Inspector tab (select it from the top, it's the icon with the little blank sheet). You will find a section called Interface Builder Document. There, set Opens in as Xcode 4.6 instead of Default (5.0). It will also change the way your user interface will look like, since Xcode 4.X doesn't support iOS 7 SDK, which contains the User Interface components (known as flat UI).
+
+Though, you can use Xcode 5 to develop for iOS 6 (I do). EDIT As Idan said, you won't be able to submit apps for the App Store from a beta version of Xcode, so until its official 'stable' release comes out
+    
+    
+Answer 2: 
+
+    
+    
+Check my answer here:
+Just installed xcode 5 and have missing storyboards
+
+Btw, You can develop for iOS5,6 etc. with Xcode 5 but you cannot submit the app with a beta Xcode. So you would have to wait or use old Xcode to submit.
+    
+    
+Title: Visual Studio (or resharper) variable and method coloring
+Description: 
+    
+    
+                    
+Ok, I am not sure what the naming for this is actually called, but I would like to know if the following is possible in Visual Studio.
+
+When I set my cursor on or highlight a variable, or method name, or string... etc, I would like the IDE to highlight all uses of it.  So if I highlight variable x, then it highlights all other uses of variable x.
+
+This is done in eclipe and Notepad++, and I have become very fond of that feature, but when I move to VS, I cannot seem to get that functionality.  
+
+I know I can use the right click and find definition, also I can use resharper to find all uses, but that is not as easy and intuitive.  I am currently using VS2008, but would like it in both 2008 and 2005.
+
+Also, if this is a feature of resharper that I just don't see, that is good too.
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+With Reshaper you can press Shift+Alt+F11 when your cursor is inside a variable to highlight all usages of that variable in that file. (Then ESC to remove the highlighting)
+    
+    
+Answer 2: 
+
+    
+    
+This is not a feature of Visual Studio 2008 or previous versions.  It will be a feature of Visual Studio 2010 though.  
+
+
+http://blogs.msdn.com/somasegar/archive/2008/12/19/code-focused-development-in-vs-2010.aspx
+
+    
+    
+Answer 3: 
+
+    
+    
+With ReSharper, if you're using the IDEA keybindings, use Ctrl+Shift+F7. If you're using the VS keybindings, use Shift+Alt+F11 (like Martin Harris said).
+
+You can find the full map of keybindings here: ReSharper Feature Map
+    
+    
+Answer 4: 
+
+    
+    
+A VS plugin that I use, WholeTomato's Visual Assist X, does this.  If the thing being highlighted is a variable, it will even show assignments and reads in different colors.
+    
+    
+Answer 5: 
+
+    
+    
+DevExpress Refactor or Code Rush (I have both, so I'm not sure which) will do this.
+
+Place the cursor on a variable and hit tab; all uses of the variable that are in scope will be highlighted.
+    
+    
+Answer 6: 
+
+    
+    
+In Visual Studio, have the variable selected(you can also select methods etc.), then in the top menu go to Resharper -&gt; Find -&gt; Highlight Usages in File or press Shift + Alt + F11 on the keyboard.
+
+Then if you want you can navigate down trough the usages with Ctrl + Alt + PgDn and upwards with Ctrl + Alt + PgUp.
+    
+    
+Title: Macro to wrap selected text with tags in Visual Studio
+Description: 
+    
+    
+                    
+I realize that I may be being a bit lazy, but does anyone know of a Visual Studio macro, where I can select some text inside of the Visual Studio IDE,  click a button, and have it wrap the selected text with tags?  It would generate something like:
+
+&lt;strong&gt;My Selected Text&lt;/strong&gt;
+
+
+I would even be up for creating a macro, just not sure where to exactly start! 
+    
+
+        
+Answer 1: 
+
+    
+    
+The code to do so is rather simple:
+
+Sub SurroundWithStrongTag()
+    DTE.ActiveDocument.Selection.Text = "&lt;strong&gt;" + DTE.ActiveDocument.Selection.Text + "&lt;/strong&gt;"
+End Sub
+
+
+Now, if you don't know much about macros here's how to add it:
+
+
+First you need open the macros IDE, click Tools-
+Answer 2: 
+
+    
+    
+I know this is an old topic, but maybe someone finds this useful.
+
+I have the following set up:
+
+Sub WrapInH1()
+    WrapInTag("h1")
+End Sub
+
+Sub WrapInP()
+    WrapInTag("p")
+End Sub
+
+Sub WrapInStrong()
+    WrapInTag("strong")
+End Sub
+
+Sub WrapInTag()
+    WrapInTag("")
+End Sub
+
+Sub WrapInTag(ByVal tagText As String)
+    EnableAutoComplete(False)
+
+    If tagText.Length = 0 Then
+        tagText = InputBox("Enter Tag")
+    End If
+
+    Dim text As String
+    text = DTE.ActiveDocument.Selection.Text
+    text = Regex.Replace(text, vbCrLf &amp; "$", "") 'Remove the vbCrLf at the end of the line, for when you select the line by clicking in the margin, otherwise your closing tag ends up on it's own line at the end...
+
+    DTE.ActiveDocument.Selection.Text = "&lt;" &amp; tagText &amp; "&gt;" &amp; text &amp; "&lt;/" &amp; tagText &amp; "&gt;" &amp; vbCrLf
+    EnableAutoComplete(True)
+End Sub
+
+Private Sub EnableAutoComplete(ByVal enabled As Boolean)
+    Dim HTMLprops As Properties
+    Dim aProp As EnvDTE.Property
+    HTMLprops = DTE.Properties("Texteditor", "HTML Specific")
+    aProp = HTMLprops.Item("AutoInsertCloseTag")
+    aProp.Value = enabled
+End Sub
+
+    
+    
+Answer 3: 
+
+    
+    
+Dim HTMLprops As Properties = DTE.Properties("Texteditor", "HTML Specific")
+
+Dim aProp As EnvDTE.Property = HTMLprops.Item("AutoInsertCloseTag")
+
+aProp.Value = False
+
+    
+    
+Answer 4: 
+
+    
+    
+Original answer
+If you want an out of the box solution, Visual Studio 2015 comes with a new shortcut, Shift+Alt+W wraps the current selection with a div. This shortcut leaves the text &quot;div&quot; selected, making it seamlessly changeable to any desired tag. This coupled with the automatic end tag replacement makes for a quick solution.
+Example
+Shift+Alt+W &gt; strong &gt; Enter
+
+    
+    
+Title: Gradle Dependencies not recognized in Intellij
+Description: 
+    
+    
+                    
+I'm working on a Spring Boot Application using Gradle as a dependency management system or whatever.
+
+After adding a couple of dependencies to the build script and rebuilding the project, I would expect the build to have added those dependencies to the project. And yet, it does not. Cannot import those libraries. What step am I missing?? I am a node.js developer and am used to just running an npm install to import dependencies.
+
+Here are the dependencies:
+
+dependencies {
+    compile('org.mongodb:mongodb-driver:3.2.2')
+    compile('org.springframework.boot:spring-boot-starter-data-mongodb')
+}
+
+
+Not that it matters, since they were not added to the project, but here are the eventual import statements:
+
+import org.mongodb.MongoClient;
+import org.springframework.data.mongodb.core.MongoTemplate;
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Ok, so there is a right-hand menu bar, viz:
+
+And the gradle tab has a refresh option:
+
+That'll do it. Ugh, ide's...
+    
+    
+Title: Xcode 7 - cannot expand Projects/Target tab
+Description: 
+    
+    
+                    
+I am completely flummoxed by what ought to be a rather simple task. My Projects/Targets tab in Xcode 7 has become shortened in width, as you can see below. 
+
+
+
+All attempts to drag the rightmost side of the area to the right to expand the width fail (I can get the little |/p/div
+Answer 1: 
+
+    
+    
+Had to the same issue recently. First hide the utility and navigator areas. Then try to expand the project/target tabs. When you reopen the both areas, the project/target tabs will still be expanded. 
+    
+    
+Answer 2: 
+
+    
+    
+Funny, but if you just select the "project" instead of the target you can freely just drag the window size bigger. 
+    
+    
+Answer 3: 
+
+    
+    
+You have to type this in terminal:
+
+defaults delete com.apple.dt.Xcode
+
+
+This will delete all the Xcode settings to their original state.
+    
+    
+Answer 4: 
+
+    
+    
+Found the answer on stack exchange:
+
+
+  Looks like it's just an layout (probably AutoLayout) issue with Xcode
+  on smaller screens. When I close some panels or view Xcode on larger
+  screen I'm able to expand and resize the projects and targets panel.
+
+
+https://apple.stackexchange.com/questions/207300/cant-fully-expand-projects-and-targets-list-in-xcode-7
+    
+    
+Title: Delphi how to remove Code Completion totally?
+Description: 
+    
+    
+                    
+My IDE hangs for minutes since I work on a big project every time I press "." or do CTRL+SPACE.
+
+If I am lucky I hit the ESC key on time, if not I must wait 1 minute while banging my head against the table.
+
+I want to totally disable it, how to do?
+    
+
+        
+Answer 1: 
+
+    
+    
+Andreas Hausladen's IDE Fix Pack does wonders for several performance issues in Delphi IDE
+
+http://andy.jgknet.de/blog/ide-tools/ide-fix-pack-2009-10/
+
+And this is one of them.
+    
+    
+Answer 2: 
+
+    
+    
+After searching for the 10th times I found it:
+
+Tools 

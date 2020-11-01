@@ -1,0 +1,2178 @@
+Title: VS2010: How to prevent changing a Horizontal Tab Group to a Vertical Tab Group when restarting?
+Description: 
+    
+    
+                    
+In Visual Studio I can create New Tab Group either by dragging or by right click a tab. When no tab group was created one can choose whether the group is vertical or horizontal. Later on it is possible to create only groups of the same type as first one. 
+
+Is it possible to change Horizontal to Vertical layout? 
+
+The main problem is that when VS is closed and opened again the vertical group is changed to a horizontal one. 
+
+Edit
+The problem is present in VS2012 and accepted solution works.
+    
+
+        
+Answer 1: 
+
+    
+    
+I had the same problem, where all of the sudden my tabgroups changed to vertical.  Same symptoms: horizontal tab groups if I start VS2010 and then loaded project; vertical tab groups when opening project directly.  I don't know what started it but I did run an experimental hive about the time this started.
+
+This solution worked for me:
+
+
+Open C:\Documents\Visual Studio 2010\Settings\CurrentSettings.vssettings*
+Find DocumentGroupContainer Orientation="Vertical"
+Remove the Orientation="Vertical", (my settings had two of these, you could probably figure out which one corresponds to your problem, but I just deleted both of them)
+
+
+*See "Tools | Options /p/div
+Answer 2: 
+
+    
+    
+You can drag individual tabs from a group and create a new group within any other group. You cannot do this for a group as a whole.
+    
+    
+Title: Open File at Cursor Does Not Open the File in the IDE
+Description: 
+    
+    
+                    
+When I mouse over the UnitNames within the Uses clause a window pops up showing the UnitName Namespace. For example when I mouseover the SysUtils unit I see SysUtils Namspace in a popup window. If I right-click on SysUtils and choose Open File at Cursor the source code opens in the IDE.
+
+If I right-click and choose Open File at Cursor on some of the other untis I am presented with an Open File dialog box.
+
+How come all the units don't simply just open into the IDE?
+    
+
+        
+Answer 1: 
+
+    
+    
+This happens when the source (.pas) file isn't on the current Search or Browsing path. 
+
+You can usually fix it by simply adding the unit to the project (right-click project in Project Manager, choose 'Add', navigate to the file, and double-click. This adds it to the .dpr file and makes it readily available to the IDE. 
+
+You can also add it to the paths using Project-&gt;Options-&gt;Delphi Compiler-&gt;Search Path or Tools-&gt;Options-&gt;Environment Options-&gt;Delphi Options-&gt;Library-&gt;Browsing Path.
+    
+    
+Title: How to make and store methods and classes in irb?
+Description: 
+    
+    
+                    
+I'm studying Ruby. I know that Ruby was heavily influenced by Smalltalk. Smalltalk IDEs offer image based persistence, which means one can add methods and classes from within the running image.
+
+Is the same possible in Ruby's irb?
+    
+
+        
+Answer 1: 
+
+    
+    
+Nah, that's smalltalk only. But you can use maglev ruby to get the smalltalk VM back.
+You can use pry and its edit command to edit code on the disk and the shell takes care of reloading. But you can't save the session, only the code you wrote to disk.
+    
+    
+Answer 2: 
+
+    
+    
+@Tass is slightly mistaken. Using Pry you can indeed edit methods you've written on the console, but only methods. For example:
+
+pry(main)&gt; def foo
+pry(main)*   "bar"
+pry(main)* end  
+=&gt; nil
+pry(main)&gt; edit-method foo
+=&gt; nil
+## launches editor
+
+pry(main)&gt; class Foo
+pry(main)*   def bar
+pry(main)*     "qux"
+pry(main)*   end  
+pry(main)* end  
+=&gt; nil
+pry(main)&gt; edit-method Foo#bar
+=&gt; nil
+## launches editor
+
+
+Both cases work, whereupon you can save and modify the method in your editor. However you can't do e.g. edit-class Foo.
+
+It does have at least one limitation, though:
+
+pry(main)&gt; class Foo; def bar; "baz" end end
+=&gt; nil
+pry(main)&gt; edit-method Foo#bar
+Error: Pry can only patch methods created with the `def` keyword.
+
+
+Weird.
+    
+    
+Title: Emacs integrated with a different IDE
+Description: 
+    
+    
+                    
+I have seen several post comparing emacs as IDE with IDEs such as Eclipse.
+Usually it is assumed that all activities will be done through the emacs facilities and facilities provided by command line tools.
+
+How easy would it be to integrate an IDE such as Eclipse with emacs, emacs being either an editing component, or an interface to Eclipe's features?
+Both projects are open-source and both support extensions.
+    
+
+        
+Answer 1: 
+
+    
+    
+I believe emacs-eclim is an appropriate option for you. https://github.com/senny/emacs-eclim.
+Empowerd by eclim which import the Eclipse functionality to your editor, you can do what you want: emacs being either an editing component, or an interface to Eclipe's features.
+    
+    
+Title: Are there any &ldquo;sugars&rdquo; for Espresso which add brace/bracket highlighting to javascript editing?
+Description: 
+    
+    
+                    
+Also, would it be possible to develop such a sugar?
+    
+
+        
+Answer 1: 
+
+    
+    
+It isn't quite what you are likely picturing, but my Seesaw.sugar will provide on-demand balancing using selections:
+
+https://github.com/onecrayon/Seesaw.sugar
+    
+    
+Answer 2: 
+
+    
+    
+No, it is not possible currently.
+
+https://twitter.com/#!/espressoapp/status/134318651783389184
+    
+    
+Title: samsung bada development without using pointers
+Description: 
+    
+    
+                    
+Objects in C++ can be created using the methods listed below(that I am aware of): 
+
+Person p;
+
+
+or
+
+Person p("foobar");
+
+
+or
+
+Person * p = new Person();
+
+
+Then, why does not the Samsung Bada IDE allow me to do the first two methods? Why do I always have to use pointers? I am ok with using pointers and all, just that I want to know the fundamental reason behind the style.
+
+Sample code from Bada API reference.
+
+// Create a Label
+Label *pLabel = new Label();
+pLabel-&gt;Construct(Rectangle(50, 200, 150, 40), L"Text");
+pLabel-&gt;SetBackgroundColor(Color::COLOR_BLUE);
+AddControl(*pLabel);
+
+
+I modified and tried using the code below. Although it compiles and the app runs, the label does not show up on the form.
+
+// Create a Label
+Label pLabel();
+pLabel.Construct(Rectangle(50, 200, 150, 40), L"Text");
+pLabel.SetBackgroundColor(Color::COLOR_BLUE);
+AddControl(pLabel);
+
+
+Note : Rectangle class which is used creates an object on the fly without pointer. How is it different from Label then? Its confusing :-/
+    
+
+        
+Answer 1: 
+
+    
+    
+In this code:
+
+// Create a Label
+Label pLabel;
+pLabel.Construct(Rectangle(50, 200, 150, 40), L"Text");
+pLabel.SetBackgroundColor(Color::COLOR_BLUE);
+AddControl(pLabel);
+
+
+the label object is destroyed when it goes out of scope and hence it fails to show up on the form. It is unfortunate that the AddControl method takes a reference as that implies that the above should work. Using:
+
+Label *pLabel = new Label();
+
+
+works because the destructor is not called by default when the pLabel variable goes out of scope.
+    
+    
+Answer 2: 
+
+    
+    
+Note that Bada documentation says this
+
+
+  All containers and controls must be created on the device heap memory. When an application terminates, the bada platform deletes the frame control and its descendants. Furthermore, the platform frees the heap memory that has been allocated to the application.
+
+
+Your code may run fine because it ignores the call to AddControl because it detected that the control was not allocated in the heap space. In that case AddControl should have returned an error code.
+
+To get a correct Bada code, one needs to write something like:
+
+result MySample::OnInitializing() {
+  result r = E_SUCCESS;
+
+  std::auto_ptr&lt;Label&gt; pLabel(new Label);
+  if (pLabel.get() != null &amp;&amp; E_SUCESS == pLabel-&gt;Construct(Rectangle(50, 200, 150, 40), L"Text"))
+  {
+     pLabel-&gt;SetBackgroundColor(Color::COLOR_BLUE);
+     r = AddControl(*pLabel);
+     pLabel.release();
+  }
+  else
+  {
+    r = E_FAILURE;
+  }
+  return r;
+
+
+}
+
+Following such coding guidelines ensures that your application will be able to escalate any issues while initializing UI except if the issue happens whiele executing OnAppInitializing.
+    
+    
+Answer 3: 
+
+    
+    
+Visitor nailed it in his comment; Bada uses C++ techniques pioneered in the mid-nineties by Symbian. They're utterly outdated today. Don't take it too seriously, you can't really expect Samsung to put their top-rate people on such a doomed project. Those will be working on their Android line.
+    
+    
+Title: Scion for GHC 7.0.2
+Description: 
+    
+    
+                    
+Is there a repository of scion, which is ready for GHC 7.0.2?
+
+I found
+
+hackage linking to nominolo's scion (stops at GHC 6.12) but there are 46 forks, don't know which is populuar for 7.0.2...
+
+If there is none... might I install GHC 6.12 in parallel to GHC 7.0.2?
+
+Thanks for helping!
+    
+
+        
+Answer 1: 
+
+    
+    
+You need to pass a flag to scion to tell it to build with the proper version of Scion:
+
+cabal configure -fcabal_1_10
+
+This is done automatically by EclipseFP when building scion (we know with cabal to use and which version it is.
+    
+    
+Answer 2: 
+
+    
+    
+Looking at scion's network graph, I see that this fork (presumably used in EclipseFP) is being actively worked on (last commit dates from 2011-05-12) and includes "GHC 7 support". Thomas's repo also contains a scion-2nd-attempt branch which has been updated recently. I can't comment on stability though, as I don't use scion myself - you should ask the developers.
+    
+    
+Title: Which IDE to use for Android Phone development?
+Description: 
+    
+    
+                    
+I see another person asked this question and was answered but the other person was on a Mac. Also, I want to know why people are recommending the Classic Eclipse IDE. What is "Java EE"?
+
+I'm on Windows 7 64-bit. 
+
+I'm new at using Java but I don't want to start off with something that will later need changing. If I am intending to write apps for Android Phones (and later tablets), which environment should I use?
+
+I see the following options for download:
+- Eclipse IDE for Java Developers
+- Eclipse IDE for Java EE Developers
+- Eclipse Classic 3.6.2
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+For a list of the different Eclipse editions, see http://eclipse.org/downloads/
+
+"Java EE" is a release of Eclipse with all the features that are particular useful for Java EE development. Other similar editions are aimed at PHP, plug-ins, C++, etc.
+
+Any of these can be used as the basis for Android development, but if you "just" want to development Android stuff and have no need for Java EE support, PHP or whatever, then choose "...for Java Developers", as it is the smallest available...
+    
+    
+Answer 2: 
+
+    
+    
+You can write in Javascript using titanium.It converts the code js to java or objective c.
+I think this is the easiest way.It's the titanium link
+    
+    
+Answer 3: 
+
+    
+    
+You can use the Eclipse download for Java Developers and install Android Development Toolkit (ADT) plugin from Google.
+
+Eclipse Pulsar which is intended for mobile developers is also available for from Eclipse downloads home.
+    
+    
+Answer 4: 
+
+    
+    
+If you are used to using Visual Studio on windows or other big IDEs, I'd recommend you use Eclipse for Java Developers.
+
+If you are just getting started, I'd suggest you skip out on IDEs.  For me, Eclipse was more trouble than I needed.  Using VIM or Notepad++ and a batch file gives you great results.
+    
+    
+Title: Cloud IDE for local server
+Description: 
+    
+    
+                    
+Sorry about the confusing title.
+
+Are there any web IDEs available that can be downloaded and installed on a local server.
+
+For example something like cloud9 or shiftedit but that I can use locally.
+
+I am aware of the ACE text editor which seems to be what a lot of this stuff is based off of but it doesn't seem to do syntax highlighting for mixed html/php/javascript.
+    
+
+        
+Answer 1: 
+
+    
+    
+Can't you use cloud9 locally? https://github.com/ajaxorg/cloud9
+    
+    
+Answer 2: 
+
+    
+    
+also, goorm IDE can be alternative~
+
+http://github.com/xenoz0718/goorm/
+
+or npm install goorm -g
+    
+    
+Title: Delphi7 - How can i find where my project is hanging the compiler?
+Description: 
+    
+    
+                    
+I have a project in Delphi7. Its is rather large consisting of 40 odd forms and frames.
+Recently, the compiler only allows me to compile the project once so i can run it, then every re-compile the IDE hangs and i have to end the Delphi process. Before this occurs, my CPU goes to 50% (on dual core machine) so my deduction is the compilation process has gone into an infinite loop. The Executable it produces is not runnable and usually at a fixed size after it hangs.
+
+I was wondering how i can go about finding where this inconsistency in my project is. Other projects do not suffer from this same issue.
+    
+
+        
+Answer 1: 
+
+    
+    
+Use "process of elimination", to see if it's something in your code.
+
+First, make a backup of where you are, or save to your CVS (you ARE using version control, right? RIGHT? good.)  Revert your branch to an earlier version where it worked.  See if that works.  If so, merge half of the changes from the present-day version. If that works, try the other half. Keep cutting things in half, and you'll find the code that causes the problem, by process of elimination.
+
+Or, it may turn out to be something in the configuration. Carbonite may be your friend here.
+    
+    
+Answer 2: 
+
+    
+    
+
+You can use Process Explorer to discover what compiler is doing (reading a file, or ...).
+Check the QC 3807 issue.
+Check the system resources - free disk space, memory. Clean the temp folder. Check the disk for errors. Do you have antivirus running ? If yes, then try to turn it off.
+
+    
+    
+Answer 3: 
+
+    
+    
+You can either:
+
+
+Enable "Compilation progress display" in the "Environment Options" window, in the "Preferences" tab. 
+Use the command line compiler bcc32.exe to have a detailed console output.
+
+
+Both will let you know which file is hanging the compiler.
+
+Take a look at the great Delphi Speed Up tool, which allows e.g. to abort CodeCompletion and HelpInsight by ESC/mouse move.
+    
+    
+Title: Java IDE with VIM integration for someone coming from C/C++
+Description: 
+    
+    
+                    
+I'm an experienced C/C++ programmer getting into Java and looking for a good IDE with VIM integration or a VIM plug-in that let me use the same key mappings for things like editing, cscope and omnicompletion functionality.  What I mean is that whatever native functionality is provided by the IDE can be mapped to the equivalent vim key bindings.  It should run on both Windows or Linux. I don't care if I have to pay for both the IDE and the plug-in as long as they meet my needs.
+
+The most recent question I saw dealing with this type of question here on SO is over a year old and I'm sure the 'state of the art' has changed since then. 
+
+I want to hear from people with actual hands on experiance with these IDEs and VIM plug-ins.
+    
+
+        
+Answer 1: 
+
+    
+    
+Why not just use VIM?
+
+You know exactly what it can do and how it can be extended, and it appears to be what you want anyway.
+
+You will not be satisfied by any emulation as it will fall short, and with your current mindset you will not like having to learn a new editor.  It is, however, what I will recommend you to do.  The things modern Java IDE's can do are miles above what VIM can do because they know your source intimately.  You will benefit the most from an IDE if you use its default configuration, and I do not know any which wants to look like vi/vim.  
+
+When THAT is said, you might find http://ideavim.sourceforge.net/ interesting.  IDEA is the only common place Java IDE left which makes money...
+    
+    
+Answer 2: 
+
+    
+    
+There's a VI plugin for IntelliJ. I've never used it, so can't comment on its userfriendliness, but IntelliJ itself is excellent.
+    
+    
+Answer 3: 
+
+    
+    
+Recently when I've been coding Java at work I've been using vrapper It has some minor usability bugs and some missing features (such as cit) but it really seems to work well in just providing basic vi editing functionality.
+
+Ok, it seems I misread the original question a bit by looking too much at the other answers. I don't really know how easily you can map Eclipse's native omnicompletion functionality to the corresponding vim mappings. However I think you can be very productive with the bindings provided by wrapper and by learning just a few of the most important coding assistance keys in Eclipse.
+
+There might even be a Stackoverflow question about this but the most important shortcuts I've found are:
+
+
+ctrl+space for "omnicompletion"
+ctrl+1 for opening the menu of suggested quick fixes for an error or warning
+shift+ctrl+t for opening a type
+
+    
+    
+Answer 4: 
+
+    
+    
+I've been using the viplugin for eclipse (http://www.viplugin.com/viplugin/)
+
+It's quite good, fights a little bit with refactoring, but most of the main editing commands work. I still have to use vim for complex regex work, but I only have to do that about twice a year.
+
+Unfortunately it's commercial (€15) and development seems to have slowed a lot. It seems to be currently more feature complete than vrapper, but I haven't tried that.
+    
+    
+Answer 5: 
+
+    
+    
+I'm also researching VIM / Eclipse integrations, and these seem most interesting:
+
+
+Vrapper
+Eclim
+
+
+(according to this Hacker News discussion and this other SO question)
+    
+    
+Answer 6: 
+
+    
+    
+Looks like there is one for netbeans,  (a stack overflow thread)  Is it possible to use VI or VIM keymap in NetBeans?
+    
+    
+Title: MonoDevelop &mdash; GTK Designer just shows a blank square?
+Description: 
+    
+    
+                    
+I am having problems getting the GTK designer to work with MonoDevelop. I tried 2.4 on Arch Linux and it gave this problem. Then I tried 2.2 on OpenBSD and it gives the exact same problem. Both machines are 64bit. 
+
+Instead of having a window to drag things on I just have a blank square:
+
+alt text http://img96.imageshack.us/img96/4766/monodevelop.png
+
+The tutorials I've seen look similar to this though:
+
+alt text http://monodevelop.com/@api/deki/files/142/=Stetic_Tutorial_06.jpg?size=bestfit&amp;width=700&amp;height=425
+
+So what gives? With my blank square I can't drag anything onto it, not a VBox or other container even. It will not react to anything. 
+
+Am I missing some sort of GTK# configuration or what? I find it highly improbable that both OSs' packages I tried are broken. Also, I've attached a (huge) bounty to this because this is a pretty big issue for me. 
+
+The console output from the starting of Mono and including me trying to drag an  element onto the gray box is here
+
+Update
+
+Ok, so I've finally gotten a bit closer to solving the mystery. I use Fluxbox as my window manager usually. Well I tried using both KDE and Gnome-Session and both of them cause MonoDevelop to work properly(though still missing the window border, you could at least drag components onto it). Now my question is what makes Fluxbox not work for it? 
+    
+
+        
+Answer 1: 
+
+    
+    
+I have the same problem in openSUSE 11.3 x64 KDE using Mono JIT compiler version 2.6.7 (tarball Wed Jul 14 18:00:23 UTC 2010) downloaded from here
+
+type -a monodevelop returns: 
+
+monodevelop is /usr/bin/monodevelop 
+monodevelop is /usr/bin/X11/monodevelop
+
+
+Running monodevelop from terminal gives the following output
+
+1)
+
+
+  WARNING: Cannot find Mozilla directory
+  containing libgtkembedmoz.so. Some
+  Addins may not be able to function.
+  Please set MOZILLA_FIVE_HOME to your
+  Mozilla directory.
+
+
+This can be solved by adding an environment variable in your .bashrc file from your home directory.
+
+
+  export MOZILLA_FIVE_HOME='/path/to/libgtkembedmoz.so/directory/'
+
+
+To find if that library exists on your systems use: 
+
+
+  sudo find / -name libgtkembedmoz.so
+  -print
+
+
+(from this bug report this library is contain in the Mozilla's XUL Runner package, but in newer versions I don't know if it's still there, I had to use libgtkembedmoz.so provided by Slickedit which was installed in /opt/slickedit/bin/mozilla/)
+
+2) 
+
+
+  WARNING [2010-07-29 20:22:37Z]: Inotify watch limit is too low (8192).
+
+
+To resolve this problem read Inotify Watches Limit
+
+3) 
+
+
+  WARNING [2010-07-29 20:22:37Z]: Error creating composed icon gtk-execute___asm0__debug-overlay-22.png__SmallToolbar at size SmallToolbar. Icon __asm0__debug-overlay-22.png__SmallToolbar is 22x22, expected 16x16.
+
+
+I get the exact same error using Monodevelop 2.4, and I think this could be either from a broken GTK# installation or from a bug in Monodevelop, 
+
+Your result is the same as mine, see here. I suggest compiling MonoDevelop from Github and/or using a newer version of gtk-sharp/gdk-sharp
+
+This part 
+
+
+  ERROR [2010-07-29 20:22:37Z]: GdkPixbuf-Critical: gdk_pixbuf_composite: assertion `dest_x 
+Answer 2: 
+
+    
+    
+Uh, that is the designer.  If the toolbox didn't show up, go to View-
+Answer 3: 
+
+    
+    
+
+set global gtk theme to default
+check all bindings depends
+try start monodevelop from console and post output on pastebin
+
+    
+    
+Answer 4: 
+
+    
+    
+"Now my question is what makes Fluxbox not work for it? " remember the GTK protect was made for GNOME project, all the libraries are made to work on that Desktop. so need to see all the dependencies to run it property
+    
+    
+Title: Python&#39;s IDLE for Java
+Description: 
+    
+    
+                    
+Question: IS there and IDE like python's IDLE for other languages? specifically I'd like one for java, but any programing just feels so much nicer with a debug system like IDLE's. 
+
+
+
+Info:
+
+The main feature I'm getting at is the ability to test programs. In IDLE I can have the editor for my class in one window, i save and run it then IDLE pops up. it there was anything to run, such happens. but If I'm making just the classes and not the full program it just sits there with a dumb look on it's face. I type in for example:
+
+a = foo(%constructor params%)
+
+
+and now a is an instantiation of foo and i can test any of the functions i want at will:
+
+a.bar("function call params!")
+
+
+and then foo.bar runs. it is incredibly useful for debugging. But I've only ever seen it in python. But would really like it in java, where I have to write a whole separate class in order to do anything. which is incredibly annoying. 
+
+
+
+Conclusion: 
+
+Thank you those who answered. recursive, TwentyMiles, recursive, Justin Ethier, and especially recursive... recursive... The wikipedia page is wonderful. a REPL was what I was looking for.
+
+P.S. sorry for the lack of info, I was in a hurry and forgot. one of those moments your you have it in your head that you know what you mean, surely everyone else does...
+    
+
+        
+Answer 1: 
+
+    
+    
+If you are talking about a REPL (Read Eval Print Loop), or some sort of console where you can test out code without having to compile the whole project/file, BeanShell is the best I've found for Java. It isn't tightly integrated with an IDE, like IDLE, but with a language like Java it's about as good as it gets.
+    
+    
+Answer 2: 
+
+    
+    
+BlueJ is probably the closest thing available in the Java community.
+    
+    
+Answer 3: 
+
+    
+    
+I would like to add that Intellij IDEA has an interactive shell when at break points as well, it is a little calculator icon in the debug panel when at a break point. Also since Groovy is a superset of Java, you can write straight up Java in its interactive shell as well.
+    
+    
+Title: loading a java project
+Description: 
+    
+    
+                    
+I am currently studying at university and based on other peoples recommendations I am beginnning to read other peoples code.  
+
+i have found and downloaded the source for an open source java project, that seems quite interesting.  I want to load this project into an IDE (netbeans or eclipse), so as to make it easier to read and navigate.  However both IDE's say that the project is not recognised.  It is not only this project, but any project I have attempted to load.
+
+How do I load a project (ie. a file structure of source files) into the above IDE's as a project.
+
+Thanks in advance,
+Sam
+    
+
+        
+Answer 1: 
+
+    
+    
+In Eclipse, select File, New, Java Project, give the project a name and then select Create Project from Existing Source. You should then select the src folder that contains the code that you'd like to use. 
+
+Eclipse should then create a new project containing the source. To change the project settings e.g. source folders/external jars, right click on the project in the Package Explorer and select Properties, Java Build Path, Source and make any appropriate changes.
+    
+    
+Answer 2: 
+
+    
+    
+Actually there is a cool trick with Eclipse, you should be able to just select the class that you are interested (select all of the text from your browser), and just paste this in Eclipse right on top of a project, it will automatically create a class for you.  It's very handy when working with SWT snippets for example.
+
+You need to have created an Eclipse project first.  But you can just create one project and put any number of classes in it.
+    
+    
+Answer 3: 
+
+    
+    
+If the open source project in question uses Maven as the build system (i.e., there is a pom.xml file in the root of the project) and you have Maven installed, you can run 'mvn eclipse:eclipse' to build the project files for eclipse to use.  Then just use File /p/div
+Title: Ruby on Rails IDE for Windows
+Description: 
+    
+    
+                    
+Which one do you prefer for serious Ruby on Rails development?
+
+I've been using NetBeans for PHP and Java for more than year, which works really great, but the Rails support isn't imho good enough. I often have problems with code completiton, where it doesn't find most of imported gems and functions and it's also pretty slow.
+
+On the other side, I tried JetBrains RedMine, which is super fast compared to NetBeans, but I don't have such long time experience with JetBrains.
+
+Lots of people recommend TextMate, so I've tried its Windows port e-TextEditor, which I think is some sort like PSPad ... good for small edits, but not so convenient for big projects.
+
+The last I found people mentioning is Aptana Studio, but I have absolutely no experience with that one.
+
+So my question is, which of these IDEs do you recommend for development of enterprise class applications ON WINDOWS.
+
+The reasony why I'm asking is if there are any problems that you came across while using that particular IDE, that might not be obvious when someone just tries it
+
+Please answer only if you have some experience in the field, not only if you "tried it"
+
+btw I don't think this one is a dupe, since it's much more specific than those other questions
+    
+
+        
+Answer 1: 
+
+    
+    
+I use Netbeans 6.7 for my work.  It's much better than all the other systems except RubyMine, and it's free.  It does a good job of code highlighting in the views, and manages multiple projects well.  It also doesn't lock up when you check out a different branch (using git)
+
+I tried RubyMine, and I liked it better, particularly the RSpec integration, but not enough better to buy a license.
+
+I don't really use the code completion much, so I don't have the problems you describe, but I don't think Aptana is any better.  RubyMine is better at that stuff, so if that's important to you, give it a try.
+    
+    
+Answer 2: 
+
+    
+    
+I'm biased, but I think you should also have a look at Komodo IDE:
+
+http://www.activestate.com/komodo/
+
+It has Ruby debugging and code intelligence. Using the Rails project template, it's quite easy to create and debug Rails apps:
+
+http://docs.activestate.com/komodo/5.1/tutorial/railstut.html
+
+If you don't need the debugger (and a few other goodies), Komodo Edit might work for you. It's free:
+
+http://www.activestate.com/komodo_edit/
+    
+    
+Answer 3: 
+
+    
+    
+Try Sublime Text http://www.sublimetext.com/. Its relatively new editor and it's available on all platforms. Many developers start to favor it instead of NetBeans, Aptana, TextMate etc....
+    
+    
+Title: What Windows C++ IDEs support the new C++0X standard?
+Description: 
+    
+    
+                    
+What are excellent C++ IDE options that support the new standard c++0x (windows os friendly) besides visual .net 2010 (the beta is way too slow/clunky)?
+    
+
+        
+Answer 1: 
+
+    
+    
+While not supporting the full C++0x standard, much of the TR1 stuff is included in the SP1 update to Visual Studio 2008. The SP1 update includes the feature pack that was released last year.
+    
+    
+Answer 2: 
+
+    
+    
+Now, two years after the question was asked, VisualStudio 2010 supports the following core language features.
+
+
+Lambda functions
+Rvalue references (move semantics and perfect forwarding).
+type inference (auto and decltype)
+nullptr
+Trailing return type specification auto f() -&gt; int
+static_assert
+
+    
+    
+Answer 3: 
+
+    
+    
+Your problem is that there are few compilers that support the C++0x spec. Specifically, g++ does not come near yet, and there won't be any FOSS IDEs that fully support C++0X until g++ does.
+    
+    
+Title: How can I get the Delphi IDE&#39;s Main Form?
+Description: 
+    
+    
+                    
+I'm writing a property editor for Delphi and I would like it to show up on the correct screen for multi-monitor support. In order to position it, I would like a reference to the "main" form for the Delphi IDE.
+
+I've tried using the Application's MainForm property, and the Application object itself, but neither seems to work. I believe this is because the MainForm is actually the hidden TApplication instance referenced in this article by Nathanial Woolls (search for "application form"): 
+
+http://www.installationexcellence.com/articles/VistaWithDelphi/Original/Index.html
+
+Does anyone know how to get a handle to the visible main form for the IDE. I'm trying to avoid something cheesy like iterating all forms and searching for "CodeGear RAD Studio" in the caption. 
+    
+
+        
+Answer 1: 
+
+    
+    
+The IDE's main form is Application.MainForm. My quick test design package:
+
+procedure DoStuff(Form: TCustomForm);
+var
+  S: string;
+begin
+  S := Form.Caption;
+  Form.Caption := S + ' - this one';
+  try
+    ShowMessage(Format('%s [%s] on monitor %d', [Form.Name, Form.ClassName, Form.Monitor.MonitorNum]));
+  finally
+    Form.Caption := S;
+  end;
+end;
+
+initialization
+  DoStuff(Application.MainForm);
+
+
+This in my case displays "AppBuilder [TAppBuilder] on monitor 0" and I can see the " - this one" suffix in the main form's caption.
+What doesn't seem to work in your case?
+    
+    
+Answer 2: 
+
+    
+    
+IIRC the main form is called TAppBuilder, so something like FindWindow('TAppBuilder',nil) might be a starting point for you.
+    
+    
+Title: RadRails trial expired - any free options for Rails in Eclipse?
+Description: 
+    
+    
+                    
+I installed RadRails a while back and uninstalled it after it said that my trial had expired.
+
+Is it correct that this is the only option for Rails development in Eclipse?
+
+And is there any other - free - option for Eclipse? (I tried "Ruby RDT" but it doesn't offer any Rails support, just basic Ruby editing.)
+    
+
+        
+Answer 1: 
+
+    
+    
+Use the full Aptana Studio, and after it says the Professional trial is over, you can continue using the Community Edition mode.
+
+Doesn't seem to be a way to just get the Community Edition by itself, but it'll just ask you to close and restart Eclipse after 30 days.
+    
+    
+Answer 2: 
+
+    
+    
+Try Aptana IDE - it is Eclipse based and totally free. Also as much as I know its Rails support is bases on Rad Rails eclipse plugin.
+
+BTW, I'm using NetBeans 6.5.1 for Rails and I've already convinced everybody is my office that it is better than Aptana :)
+    
+    
+Answer 3: 
+
+    
+    
+I was using Eclipse for a while for Rails development, based on RDT plus mods described in the following article:
+
+www.napcs.com/howto/railsonwindows.html
+    
+    
+Title: How do I migrate my Netbeans themes to other computers?
+Description: 
+    
+    
+                    
+Short of copying the entire .netbeans directory is there any way to transfer custom Netbeans color schemes to other computers? I am using the latest (6.5). 
+    
+
+        
+Answer 1: 
+
+    
+    
+The color settings are stored under config/Editors/ in the user directory, so you only need to transfer that portion of the userdir (which should be tiny; most of the bulk of the userdir is taken up in var/ where the code indices etc. live).
+
+-- Tor
+    
+    
+Title: Question How to invalidate/refresh the VS IDE designer for C#?
+Description: 
+    
+    
+                    
+I have CustomForm inherited from Form which implements a boolean property named Prop. The forms I'll be using will inherit from CustomForm. This property will do some painting and changes (if it's enabled) to the form. However, this is not working as it should, the VS IDE designed is not being refresh to show the changes. But if I press Ctrl+Shift+B (Menu: Build » Build Solution) the VS IDE will refresh, the form designer will even disappear for a split second and will redraw itself with the new changes applied.
+
+So, is there a way, by code, to force the VS IDE designer to refresh itself just like it happens when I build the solution? If so, I could add that code to the Prop set accessor and my problem was gone.
+
+Note that I've tried to call Invalidate(), Refresh() and Update. But none of them seemed to fix the problem...
+
+
+
+Here's a little insight on my real problem. My code goes something like this:
+
+internal class MyForm : Form {
+    private FormBorderStyle formBorderStyle;
+    private bool enableSkin;
+
+    [DefaultValue(false)]
+    public bool EnableSkin {
+        get {
+                return enableSkin;
+        } set {
+                enableSkin = value;
+
+                if(enableSkin) {
+                        BackColor = Color.Lime;
+                        MaximizedBounds = Screen.GetWorkingArea(this);
+                        TransparencyKey = Color.Lime;
+
+                        base.FormBorderStyle = FormBorderStyle.None;
+                } else {
+                        BackColor = SystemColors.Control;
+                        MaximizedBounds = Rectangle.Empty;
+                        TransparencyKey = Color.Empty;
+
+                        base.FormBorderStyle = FormBorderStyle;
+                }
+        }
+    }
+
+    [DefaultValue(FormBorderStyle.Sizable)]
+    public new FormBorderStyle FormBorderStyle {
+        get {
+                return formBorderStyle;
+        } set {
+                formBorderStyle = value;
+
+                if(EnableSkin) {
+                        base.FormBorderStyle = FormBorderStyle.None;
+                } else {
+                        base.FormBorderStyle = formBorderStyle;
+                }
+
+        }
+    }
+
+    internal MyForm() {
+        EnableSkin = false;
+        FormBorderStyle = FormBorderStyle.Sizable;
+    }
+}
+
+
+And the problem I'm having is something like this: http://blogs.msdn.com/calvin_hsia/archive/2007/05/01/windows-vista-aero-borderstyle-paint-problem-as-non-administrator.aspx
+
+In my case, that happens when you set the EnableSkin to True, change it back to False and then, changing the FormBorderStyle will cause the issue you can see on the link above. As stated in the article, the problem doesn't happen when running VS as administrator.
+
+That's why I'm looking for a way to refresh the VS IDE designer. In other words, now that I've found that article, I need to recreate the window just like it happens when the solution is rebuilt.
+
+
+
+How do I declare a property in the base form?
+
+I currently have:
+
+public class MyForm : Form { }
+
+
+And I can only declare properties inside that class, not inside the Form one... I also have used Invalidate() as I said in the first post, but it doesn't fix my problem.
+    
+
+        
+Answer 1: 
+
+    
+    
+Someone else helped me out and to fix the problem. I just call ReCreateHandle() when the user sets EnableSkin to false. Problem solved :)
+
+Thanks everyone though :)
+    
+    
+Answer 2: 
+
+    
+    
+All you need to do is add this Attribute to your property:
+
+ [Description("Description of your property."), NotifyParentProperty(true),
+ RefreshProperties(RefreshProperties.Repaint)]
+
+
+That will cause the IDE to repaint when the value is changed.
+    
+    
+Answer 3: 
+
+    
+    
+As far as I know the painting routines doesn't reflect in the IDE if you are showing the object that do the painting. For instance, if your base form do some painting, the inherited shows that... but if you open the base form it doesn't show the painting result.
+
+I think that if you need to view the result of changing the property on your child forms, the property should be declared in base form, and do the painting in that form.
+
+By the way... in the property body you should call this.Invalidate() in order to refresh the painting.
+
+Hope that helps!
+    
+    
+Title: Is it possible to align code in Atom IDE?
+Description: 
+    
+    
+                    
+I have
+
+Goal
+I'm trying to align a block of code base on =.
+
+How would one go about doing this in Atom IDE?
+    
+
+        
+Answer 1: 
+
+    
+    
+It looks like there is an atom-alignment package.
+    
+    
+Answer 2: 
+
+    
+    
+Try one of these plugins:
+
+
+https://atom.io/packages/alignment
+https://atom.io/packages/atom-alignment
+
+
+This related question may help.
+    
+    
+Title: How to export color scheme from Rider?
+Description: 
+    
+    
+                    
+I'm trying to export Visual Studio Dark color scheme by clicking export button in dropdown menu to the right of the scheme name, then I get a file, which looks like this: 
+
+&lt;scheme name="Visual Studio Dark copy" version="142" parent_scheme="Visual Studio Dark"&gt; &lt;option name="FONT_SCALE" value="1.0" /&gt; &lt;metaInfo&gt; &lt;property name="created"&gt;2017-11-14T17:52:25&lt;/property&gt; &lt;property name="ide"&gt;Rider&lt;/property&gt; &lt;property name="ideVersion"&gt;2017.2.1.0.0&lt;/property&gt; &lt;property name="modified"&gt;2017-11-14T17:52:34&lt;/property&gt; &lt;property name="originalScheme"&gt;_@user_Visual Studio Dark&lt;/property&gt; &lt;/metaInfo&gt; &lt;option name="EDITOR_FONT_SIZE" value="12" /&gt; &lt;option name="EDITOR_FONT_NAME" value="Menlo" /&gt; &lt;/scheme&gt;
+
+Why this file looks like this? I do the same things with WebStorm and I get a file full of xml code which I can successfully import in any IDE by JetBrains.
+    
+
+        
+Answer 1: 
+
+    
+    
+Parent color scheme files are not exportable by default. You can export them by going into the Rider installation folder, then /lib. Copy the rider.jar file and rename it rider.zip. Inside the zip, you'll have a colorSchemes folder, with all the Rider and Visual Studio color schemes. You'll need to change their extension to .icls to be able to import them.
+
+The color schemes are unfortunately not entirely compatible with IntelliJ IDEA and probably other IntellIJ Platform IDEs. I tried it, and the granularity in the color scheme settings is not the same as Rider, so the inheritance is broken.
+    
+    
+Title: Line on the right in Intellij Idea code editor
+Description: 
+    
+    
+                    
+What is that line on the right in Intellij Idea code editor?
+
+Here you can see the line:
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+That's the right margin. It's telling you roughly how long your lines should be for readability purposes. You can adjust its length in the settings (see the link above), although the default of 80 characters is a widely accepted standard. 
+
+Note that if you try to write a line longer than that marker, it may cut the line down and put the remainder on the line below. 
+    
+    
+Answer 2: 
+
+    
+    
+The right margin can be toggled in the  Editor | Appearance settings:
+
+
+
+To change the position of the margin, use the Code Style options:
+
+
+
+See help for more details. Basically, it's the guide line showing where the wrapping will occur (if enabled for certain code constructions).
+    
+    
+Answer 3: 
+
+    
+    
+setting - editor - codeStyle - (choose your code) - wrapping and braces - hard warp at
+    
+    
+Title: How to I prevent Visual Studio from showing application insights reminder?
+Description: 
+    
+    
+                    
+Occasionally, while working in visual studio 2015 IDE, I received window reminding me that I can use Application insights. However, I dont see any disable button on the window itself and would like to disable the notifications. How can I ensure that I no longer receive these notifications?  
+    
+
+        
+Answer 1: 
+
+    
+    
+I found it out. Looks like Microsoft wanted to make it a little tricky to disable the notifications. ;) I had to do the following ;
+
+
+Search for application insights in toolbar
+
+
+
+
+
+Click "enable application insight notifications" to disable. That ensures it wont show again. 
+
+
+
+    
+    
+Title: Should I Uninstall Eclipse, or Just Install a New Version on Top?
+Description: 
+    
+    
+                    
+To preface, I am a student and have limited experience with IDEs. My situation is that I currently have two versions of Eclipse on my machine (OSX El Capitan), one being a C/C++ IDE (Mars) and the other is a Java IDE (Mars.2).  I am interested in upgrading to Eclipse Neon for my Java IDE.  
+
+Would it be a good idea to uninstall my current Mars.2 version, or just install Neon on top of what I have?
+
+Or, is there a another simple way to upgrade?
+
+If the solution involves uninstalling my Mars.2 version, what files/directories do I need to delete so that my C++ IDE remains functional?
+
+I apologize for the newbie question, but I wanted to get an expert's take that I can bring into my (hopeful) career.
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+No need to uninstall existed Eclipse since it's allowed to let multi eclipse run on the same machine. 
+
+If no big change has been made from original eclipse, I suggest just download a new version eclipse and unzip it to a different folder from existed eclipse folder based on instructions from FAQ How do I upgrade Eclipse IDE? 
+
+
+  We strongly recommend against unzipping over your existing Eclipse
+  version as unexpected side effects may occur, including (but not
+  limited to): nausea, vomitting, shortness of breath, corrupt
+  installation.
+
+
+You can then point the new Eclipse version to your existing workspace(s) and it will load with all your projects and preferences intact.
+
+If your you have added many plugins and preferences to current Eclipse, please follow Easiest way to upgrade eclipse 3.7 to 4.2 (Juno) to migrate the plugins and preferences. Although that's a bit of a dicey process, since many plugins would be incompatible or need to be updated themselves. Better to just install whatever third-party plugins you use into the new Eclipse installation.
+    
+    
+Title: Unclear IDE suggestion
+Description: 
+    
+    
+                    
+Im using PyCharm to write automated tests for an API. PyCharm highligts one line in my tests and suggests This dictionary could be written as dictionary litteral.
+
+def test_get_products_combination_2(self):
+    """
+    TC-586:GET Products - combination 2 valid
+    """
+    params = {} # &lt;--- this line is highlighted with the message above
+    params["start_at_document"] = "100"
+    params["document_limit"] = "2"
+    path = "/v1/users/%s/products" % self.user_id
+    r = self.client.request(path, params)
+    self.assertEqual(r.status_code, 200)
+
+
+Is there a better a "style" to do this to make this message dissapear?
+    
+
+        
+Answer 1: 
+
+    
+    
+If you change params to dictionary literal it should fix the warning:
+
+params = {
+    "start_at_document": "100",
+    "document_limit": "2"
+}
+
+    
+    
+Answer 2: 
+
+    
+    
+PyCharm actually supports this refactoring right out of box. Just navigate on the warning line, then press Alt+Enter; a popup menu appears; the first item says "Replace dictionary creation"; so press Enter again to get
+
+params = {"start_at_document": "100", "document_limit": "2"}
+
+    
+    
+Title: How to auto add imports in IntelliJ?
+Description: 
+    
+    
+                    
+I am new to IntelliJ. I am writing some code and am seeing IntelliJ complain that it can't resolve a class/object:
+
+
+
+It knows to suggest which import to add but I'm looking for a shortcut that will allow me to say "Yes, please auto add that import!". In Eclipse, this is as easy as Cmd+Shift+O...any ideas here?
+    
+
+        
+Answer 1: 
+
+    
+    
+Alt-Enter is the shortcut. Actually it's general shortcut for fixing problems which the IDE understands.
+    
+    
+Title: Auto-complete in a Spyder IPython console
+Description: 
+    
+    
+                    
+Is there a straight-forward way to get a Spyder IPython console to support autocomplete?
+
+I find Spyder's autocomplete functionality, provided in the standard python console, to be useful. For example:
+
+
+
+I'd like to switch to an Ipython console (within Spyder) but it doesn't seem to provide autocomplete. Is there an easy way to enable it?
+
+Spyder version 2.3.5.2
+    
+
+        
+Answer 1: 
+
+    
+    
+(Spyder dev here) Sorry, but there is no support for autocomplete in the IPython Console.
+
+That's a separate project that we just embed in Spyder, so we can't do anything about it (other than waiting for someone to add support for it later on :)
+    
+    
+Title: How do I get &ldquo;table view&rdquo; working for CSV data in PyCharm?
+Description: 
+    
+    
+                    
+I used to able to rely on the ability to edit CSV data in PyCharm (and other JetBrains IDEs) in a fully functional tabular view:
+
+
+
+however I can't find this functionality anywhere in my current version (5.0.x). 
+
+How do I get this functionality back?
+
+
+
+Note that it appears that I can right click on the selected text of the CSV and choose something called (incorrectly and misleadingly) "Edit as Table..."; but this can't be intended as a replacement for the missing functionality!
+    
+
+        
+Answer 1: 
+
+    
+    
+According to the PyCharm Docs:
+
+
+  For the table editor and associated features to be available:
+  
+  
+  You should be using the Professional Edition of PyCharm. (The corresponding functionality is not available in the Community Edition.)
+  The Database Tools and SQL plugin must be enabled. (This plugin is bundled with the IDE and enabled by default.)
+  The file name extension must be associated with the text file type. See e.g. File Types.
+  
+
+
+I use  Professional Edition, so im my case, the issues was in missing association of file type. I fix it next:
+
+
+Go to `File | Settings | Editor | File Types
+Find Text file type
+Add *.csv to the Text file type.
+Save end exit
+
+    
+    
+Answer 2: 
+
+    
+    
+Please vote for DBE-1845 to be notified on any progress. As a temporary workaround you can try assigning a keyboard shortcut to  "Edit as Table..." action as suggested in https://youtrack.jetbrains.com/issue/DBE-1845#comment=27-1193834
+    
+    
+Title: How to disable the document well in Visual Studio 2015?
+Description: 
+    
+    
+                    
+The document well is the feature in VS 2015 that closes a tab automatically when you switch to a different tab, unless you click the "Keep Open" button in the tab. 
+
+I find this very annoying, because often I will open a tab during debugging only to have it disappear after which I have to go hunting for the file again.
+
+Is there a way to disable this feature, i.e. to keep all tabs open permanently, the way VS 2013 did?
+
+I've looked in Tools\Options, and also did a quick web search, but couldn't find a way to do this.
+    
+
+        
+Answer 1: 
+
+    
+    
+Uncheck the Allow new files to be opened in the preview tab option:
+
+
+    
+    
+Title: How are you supposed to use text editors without debugging tools?
+Description: 
+    
+    
+                    
+The thing I haven't been able to understand is how I am supposed to use a plain ol' text editor like TextWrangler or Atom to code, as opposed to a full-blow IDE like Xcode or Visual Studio. There are no debugging tools, so you can't know if you made an error, and their isn't autocomplete (prebugging, heh heh) which makes it much easier to make mistakes. I feel like I am missing something; how do people debug with their text editor workflow?
+    
+
+        
+Answer 1: 
+
+    
+    
+Using a text editor without debug tools forces you to write beautiful code that works first time 100% of the time. Each line of code is carefully crafted and does exactly what you expect it to do.
+
+I personally use VIM for all my programming, it takes a while to learn but it's definitely worth it.
+You end up writing code which is easy to read, because you have to read and re-read you code before you run it.
+Debugging is more than just pressing a button and someone else software tells you whats wrong with yours. It's about deeply understanding your code and exactly what it is doing. I'll admit that sometimes finding a missing comma can be a pain, but the tradeoff is definitely worth it.
+
+At the end of the day it depends on whether you just want to turn out 800 line of code an hour, or if you want to build software which is robust and easily extendable by anybody.
+    
+    
+Answer 2: 
+
+    
+    
+Atom and almost all this ide VIM ...
+their is a plugins https://atom.io/packages
+You install what plugins that you want
+
+I believe that this is the power of this editors. You decide what plugins you want. 
+
+For atom for example
+
+linter https://atom.io/packages/linter is a tool for visualize errors.
+
+autocomplete https://atom.io/packages/autocomplete is a tool for auto complete. 
+    
+    
+Answer 3: 
+
+    
+    
+The only difference is you have to compile manually. 
+If the error happens at compile time, the compiler will tell you, otherwise you have to find &amp; fix the error yourself.
+
+For the auto-complete, it's still available in most text editors(Atom, notepad++ etc...), however it's not always as good as intellisense.
+    
+    
+Title: encounted error &#39;6985&#39; &#39;6A88&#39; during installing the .cap file when debugging in JCIDE
+Description: 
+    
+    
+                    
+I am using JCIDE to debug its sample applet- walletdemo.  
+
+I encounted error 6985 
+
+
+  conditions not satisfied'and 6A88'Referenced data or reference data
+  not found
+
+
+during installation of the .cap file on the JCVM when debugging. But I don't know what's wrong and what to do.
+
+The following is part of the applet:
+
+private WalletDemoApplet(byte bArray[], short bOffset, byte bLength)
+{
+   /* cardid=new byte[MAX_NUM_CARDID];
+    key  =new byte[MAX_NUM_KEYS];
+    for (byte i = 0; i &lt; MAX_NUM_KEYS; i++)
+        key[i] =i;
+    for (byte i = 0; i &lt; MAX_NUM_CARDID; i++)
+        cardid[i] =i;*/
+
+    balance  = 0;
+    integral = 0;
+
+
+    Key = (DESKey)KeyBuilder.buildKey(KeyBuilder.TYPE_DES, KeyBuilder.LENGTH_DES3_2KEY, false);         
+    //cipherDES_ECB_NOPAD = Cipher.getInstance(Cipher.ALG_DES_ECB_NOPAD, false);
+    cipherDES_ECB_NOPAD = Cipher.getInstance(Cipher.ALG_DES_CBC_ISO9797_M1, false);
+    myRandomS = RandomData.getInstance(RandomData.ALG_SECURE_RANDOM);
+
+    pin = new OwnerPIN(PIN_TRY_LIMIT,   MAX_PIN_SIZE);
+    cardID = new byte[10];
+    output = new byte[16];
+    //input = new byte[16];
+    bRand = false;
+    ExternalMark=false;
+    verifyMark=false;
+    byte iLen = bArray[bOffset]; // aid length
+    bOffset = (short) (bOffset+iLen+1);
+    byte cLen = bArray[bOffset]; // info length
+    bOffset = (short) (bOffset+cLen+1);
+    byte aLen = bArray[bOffset]; // applet data length
+    bOffset = (short)(bOffset+1);        
+    byte pinLen = bArray[bOffset];
+
+
+    // The installation parameters contain the PIN
+    // initialization value
+    pin.update(bArray, (short)(bOffset+1), pinLen);
+
+    // Initialize key
+    bOffset = (short)(bOffset+pinLen+1);
+    byte keyLen = bArray[bOffset];
+    Key.setKey(bArray, (short)(bOffset+1));
+
+    // Initialize cardID
+    bOffset = (short)(bOffset+keyLen+1);
+    byte idLen = bArray[bOffset];
+    Util.arrayCopy(bArray, (short)(bOffset+1), cardID, (short)0, (short)idLen); 
+
+    register(); 
+}
+public static void install(byte[] bArray, short bOffset, byte bLength) {
+    // GP-compliant JavaCard applet registration
+    new WalletDemoApplet(bArray, bOffset, bLength);
+
+}
+
+    
+
+        
+Answer 1: 
+
+    
+    
+If the problem is not caused by the algorithm, maybe it's because a installation parameter is required when install.You can try to set the installation parameter, such as  “08112233445566778810404142434445464748494A4B4C4D4E4F080010203040506070”. 
+
+I hope that i can help you.
+    
+    
+Answer 2: 
+
+    
+    
+@TheGoodUser
+
+The first quarter and the third quarter : i.e. 08112233445566778810and 080010203040506070.  I based on this code,
+
+// The installation parameters contain the PIN
+// initialization value
+pin.update(bArray, (short)(bOffset+1), pinLen);
+
+// Initialize key
+bOffset = (short)(bOffset+pinLen+1);
+byte keyLen = bArray[bOffset];
+Key.setKey(bArray, (short)(bOffset+1));
+
+// Initialize cardID
+bOffset = (short)(bOffset+keyLen+1);
+byte idLen = bArray[bOffset];
+Util.arrayCopy(bArray, (short)(bOffset+1), cardID, (short)0, (short)idLen); 
+
+
+there need to three parameters: PIN, key and cardID.
+
+As long as the Tag-Len-Value Formats, these numbers can be other Numbers.
+
+Specific you can see "GlobalPlatform specification".
+    
+    
+Title: Pycharm upgrade to 4.0.5 causes issues
+Description: 
+    
+    
+                    
+I've been using PyCharm 4.0.4 (community edition) for a while without problems and just updated to PyCharm 4.0.5. When trying to modify a project that I had developed in 4.0.4, the IDE suddenly hangs even though I'm simply typing into the editor/adding a comment/etc. I'm not even attempting to run the program. The IDE hangs after about 2-3 minutes of having PyCharm open. Two questions here:
+
+
+Any tips/suggestions/insights on why the issue is occurring or a potential solution to the problem?
+If no to the above, is there a straightforward way to revert to the previous version?
+
+
+Thanks in advance for your help.
+    
+
+        
+Answer 1: 
+
+    
+    
+I've also been encountering freezing with 4.0.5 on OSX. Tried removing my old projects created with the previous version of PyCharm and recreating them with 4.0.5 but no effect. I'm trying to find a download for an older version of PyCharm 4 but the previous release page only has version 3.
+
+UPDATE: You can download 4.0.4 here
+    
+    
+Answer 2: 
+
+    
+    
+I also had problems with the update. I uninstalled Pycharm, then I installed 4.0.5. I haven't had any problems since. 
+    
+    
+Answer 3: 
+
+    
+    
+I have same trouble with the release 4.0.5 uptdated from 4.0.4 on OSX 10.6.8. I resolved the issue by setting the application "PyCharm CE.app" to run in the 32-bit mode (selecting the file and using "Get info" to enable the check box "Open in 32-bit mode").
+
+It works normaly on 32-bit mode.
+    
+    
+Title: How to get a list of all components on the Form at Design-Time?
+Description: 
+    
+    
+                    
+I need to get a list of all components on the Form at Design-Time (not controls, just components).
+
+The components must also be visible on the Form as a 24x24 image at Design-Time.
+
+I could use code like this
+
+procedure TForm2.GetComponentList(Memo1: TMemo)
+var
+  i: Integer;
+begin
+ for i := 0 to ComponentCount-1 do
+   if (Components[i] is TComponent) and not (Components[i] is TControl) then
+    Memo1.Lines.Add(Components[i].Name);
+end;
+
+
+but here I will get invisible components like TField etc.
+
+I need only components that the IDE show on the Form as a 24x24 bitmap.
+
+May be I can use Open Tools API?
+    
+
+        
+Answer 1: 
+
+    
+    
+Non-visual components created as part of other components (e.g. a TField within a TDataSet etc) are children of the containing component.  This relationship is apparent in the DFM - if viewed as text you will see that the field components are children of the corresponding dataset object.
+
+Non-visual components that are placed on the form directly (e.g. the TDataset's themselves) are children of the form object:
+
+object frmMain: TfrmMain
+  ...
+  object MyClientDataSet: TClientDataSet
+    ...
+    object MyClientDataSetID: TIntegerField
+      FieldName = 'id'
+    end
+    object MyClientDataSetTitle: TStringField
+      FieldName = 'title'
+      Size = 255
+    end
+  end
+  object MyDataSource: TDataSource
+    DataSet = MyClientDataSet
+    Left = 488
+    Top = 120
+  end
+end
+
+
+Even though there is no visual parent/child relationship between non-visual components, non-visual components never-the-less do know whether or not they have a parent.
+
+This is accessible via the HasParent property of a TComponent.
+
+Crucially however, a Form is not considered to be the parent of directly placed non-visual components.
+
+Therefore, if HasParent is FALSE for a non-visual component on a form (an item in Form.Components) then it is a directly placed component, not a child of some other component.
+
+Simply modify your if condition as follows:
+
+if (NOT (Components[i] is TControl)) and (NOT Components[i].HasParent) then
+  Memo1.Lines.Add(Components[i].Name);
+
+
+Note that I have removed the test for is TComponent since this is always going to be TRUE for an item in the Components property of a form.
+    
+    
+Title: Scripting on an android tablet for simple text analytics and discrete simulation
+Description: 
+    
+    
+                    
+Which language/ide would you use for using an 8 inch Android tablet to process text-files and output result to file.
+
+I tried Cloud 9 and also ssh-to my VPN, but an 8" is a bit small for doing that.
+
+My requirements aren't that high:
+
+
+String manipulation including reqular expressions.
+Datastructures such as lists and maps would be desirable.
+Random numbers
+
+
+Thanks for any suggestions!
+
+(I'll be trying out Paul Laughton's BASIC! ... It's been decades since the last time i wrote antying stuff in QBasic, Amiga Basic and Casio basic, but it might work out for this purpose)
+
+Update:
+Tried basic! and looking forward to experimenting with the
+Suggestions below.
+
+First impressions editing on an 8 inch tablet without bluetooth keyboard
+
+
+BASIC 28 minutes: http://m.youtube.com/watch?v=roSpa1L7uWI
+Ryby under 10 minutes: https://www.youtube.com/watch?v=YuK3quoLmSA
+Python, 11 minutes using QPython https://www.youtube.com/watch?v=qd5VMDv5UL4
+
+    
+
+        
+Answer 1: 
+
+    
+    
+As an IDE I think you can't go past DroidEdit. It has a great minimal interface with file tabs and support for Dropbox &amp; SFTP. As for language I prefer Python for all the tasks you've listed but DroidEdit has syntax support for 100+ languages.
+
+DroidEdit can compile/run code remotely via SSH and pipe the results back. In addition it also supports SL4A to run various scripting languages directly on Android.
+    
+    
+Answer 2: 
+
+    
+    
+ruby-language is a dynamic, open source programming language with a focus on simplicity and productivity. It has an elegant syntax that is natural to read and easy to write certainly allows you to meet and exceed the requirements that you have listed
+
+Ruboto IRB allows interactive Ruby running on Android. Edit, save, and run scripts on the phone. Great for learning, prototyping, and small apps. Ruboto IRB taps the power of JRuby to open up the Android API.allows you to write and run scripts. 
+
+It's available on play but if you're confident with android programming you'd prefer to get started with ruboto-irb is to install a prebuilt binary package. These packages can be found at https://github.com/ruboto/ruboto-irb/tree/master/dist.
+
+additional useful documentation:
+
+
+http://github.com/headius/ruboto-irb
+https://github.com/ruboto/ruboto/wiki/Using-Ruboto-IRB-to-jump-start-development
+http://groups.google.com/group/ruboto
+http://code.google.com/p/android-scripting/
+
+    
+    
+Title: Force NetBeans to provide code completion for a JavaScript variable assuming a specific type
+Description: 
+    
+    
+                    
+I am using NetBeans, specifically the HTML5 &amp; PHP bundle. Currently I'm working on a game which makes use of the HTML5 canvas element. I have a global variable called context:  
+
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+
+
+Obviously, the IDE has no idea what type context is, since it cannot find out the type of canvas in the first place and it can't possibly know what getContext() is going to return when called on that canvas. I would like NetBeans to provide code completion feature for context assuming it represents a specific type (namely, CanvasRenderingContext2D). After doing some research I found this: https://blogs.oracle.com/netbeansphp/entry/defining_variable_type_in_a. The site states that such feature can be used in PHP by providing a PHPDoc comment which looks like the following: /* @var $variable type */. I am aware it concerns PHP, but I decided to give it a try in JavaScript as well:  
+
+/* @var context CanvasRenderingContext2D */
+
+
+Unfortunately, the above did not work. I thought that maybe NetBeans for some reason doesn't know that type and tried something simpler:  
+
+/* @var test HTMLImageElement */
+
+
+Again, there were no proposals for test except for the ones that are native to all JavaScript objects.  
+
+So, is this even possible? I would appreciate it if someone provided a solution. Thanks in advance!
+    
+
+        
+Answer 1: 
+
+    
+    
+JavaScript uses JSDoc, not PHPDoc, so you need to use
+
+/** @type HTMLImageElement */
+var myImage;
+
+    
+    
+Title: Display the Procedure/Function the cursor is in
+Description: 
+    
+    
+                    
+Does the IDE display the current Procedure or Function that the cursor is inside of? If I search for myVariable is there any way to know (without having to scroll up) which function I landed inside of?
+
+If it is not native are there any plugins that support this feature?
+    
+
+        
+Answer 1: 
+
+    
+    
+This functionality is not available in the IDE itself.
+
+The an open-source CNPack Wizards have this functionality. See the images below, particularly the highlighted areas of the toolbar and code editor window. (Image from Delphi 2007 IDE, but CNWizards support later versions of Delphi up to and including XE5.)
+
+
+
+It works with code that contains procedural (non-OOP) code as well. Here are two captures of separate procedural functions/procedures, with the relevant portions of the toolbar and code editor highlighted:
+
+
+
+    
+    
+Answer 2: 
+
+    
+    
+Castalia has this feature, among other things.
+    
+    
+Answer 3: 
+
+    
+    
+Since it is not an existing IDE functionality, various 3rd party tool providers have added it to their product.
+
+On the list of existing tools is ModelMaker Code Explorer.
+
+On the list of past tools, I'd like to add CodeRush as it was among the first to implement it. A screenshot can be found here (scroll down a bit).
+    
+    
+Title: Calling g++ in c++ source code
+Description: 
+    
+    
+                    
+So I already searched everything I could have. I'm writing my own IDE using C++ and I'm trying to find a way to call g++ or any other compiler. The only way I have thinked of so far is as such:
+
+int main(){
+   system("g++ --flags");
+   return 0;
+}
+
+
+Do you guys know or can think of any other way to do this in c++?
+
+Best regards,
+Zé Pedro
+    
+
+        
+Answer 1: 
+
+    
+    
+The most "raw" way is using your OS's API: the exec() family on POSIX, CreateProcess[Ex] on Windows.
+
+Quite often, you can also use this through a platform-independent abstraction. It's quite likely the toolkit you're using for GUI (whatever it is) already has process-launching functionality as part of its API. For example, Qt has QProcess, wxWidgets has wxExecute().
+    
+    
+Answer 2: 
+
+    
+    
+If you're attempting to preserve the output from the command, you should use popen.  Its use resembles opening a file, and it can be used that way as well
+
+FILE *compiler = popen("g++ --flags", "r");
+
+
+then use the fgets, fscanf, etc stdio commands.  This will work find if you are targeting linux.
+Here's a (fairly) more complete example
+
+#include &lt;cstdio&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    FILE *compiler = popen("g++ -Wall f.cpp -std=c++11", "r");
+    char c;
+    while (( c = std::fgetc(compiler)) != EOF) {
+        std::cout &lt;&lt; c;
+    }
+    std::cout &lt;&lt; '\n';
+}
+
+    
+    
+Answer 3: 
+
+    
+    
+Your way will work fine.  Here are some other ways to do it if you are interested: how to call .exe file within c++ program?
+    
+    
+Answer 4: 
+
+    
+    
+system function call is blocking call. It will generally wait for the call to return if my understanding is correct.
+    
+    
+Title: Scala configuration in Intellij
+Description: 
+    
+    
+                    
+I am trying to run an HelloWorld kind of program for Scala , in Intellij.
+
+My code is:
+
+
+  package helloscala
+  
+  object HelloScala {   def main(args: Array[String])   {
+      Console.println("Hello, world!");   } }
+
+
+I am clueless about the error , that is prompted by the INtellij IDE.
+
+ JDK is JDK5
+
+
+Error is:
+
+
+  java.lang.UnsupportedClassVersionError: Bad version number in .class
+  file  at java.lang.ClassLoader.defineClass1(Native Method)    at
+  java.lang.ClassLoader.defineClass(ClassLoader.java:621)   at
+  java.security.SecureClassLoader.defineClass(SecureClassLoader.java:124)
+    at java.net.URLClassLoader.defineClass(URLClassLoader.java:260)     at
+  java.net.URLClassLoader.access$100(URLClassLoader.java:56)    at
+  java.net.URLClassLoader$1.run(URLClassLoader.java:195)    at
+  java.security.AccessController.doPrivileged(Native Method)    at
+  java.net.URLClassLoader.findClass(URLClassLoader.java:188)    at
+  java.lang.ClassLoader.loadClass(ClassLoader.java:307)     at
+  sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:268)     at
+  java.lang.ClassLoader.loadClass(ClassLoader.java:252)     at
+  java.lang.ClassLoader.loadClassInternal(ClassLoader.java:320)
+  Exception in thread "main"
+
+
+Any input would be great.
+    
+
+        
+Answer 1: 
+
+    
+    
+Scala 2.10 doesn't support Java 5. 
+
+
+  Software Requirements:
+      The Scala software distribution can be installed on any Unix-like or Windows system. It requires the Java runtime version 1.6 or later.
+
+    
+    
+Answer 2: 
+
+    
+    
+Use JDK 7 + sbt-idea plugin.
+
+SBT is the preferred build tool
+
+I recommend my project skeleton for setting it all up. Intllij + SBT (+eclipse if you so want to)
+    
+    
+Title: How to make PHPStorm treat a function as defined?
+Description: 
+    
+    
+                    
+The double_metaphone() function is defined in a PECL extension and as such PHPStorm cannot see it being defined.  I wouldn't like to see any warnings about this.  I assume I could make PHPStorm treat this function call as defined through some kind of annotation but I don't know how to make this happen.
+    
+
+        
+Answer 1: 
+
+    
+    
+You need what is called "stub files":
+
+
+Create a .php file and place it anywhere in your project (be it project itself .. or as some External Library (Settings | PHP | Include paths) -- does not matter, as long as PhpStorm can see it in this project).
+Add that function definition as it would be done in PHP itself: describe all parameters, return type etc .. just leave the body of the function empty. The documentation is optional -- just the more doc you have the more useful it will be for PhpStorm (as IDE can warn you about incorrect return type usage; invalid parameter type etc)
+That's it
+
+
+That's exactly how ALL known to PHP functions/classes/etc are done in PhpStorm in first place: just Ctrl + Click on any standard function/class/constant and see it yourself.
+
+An example: how standard bin2hex function is defined:
+
+&lt;?php
+/**
+ * (PHP 4, PHP 5)&lt;br/&gt;
+ * Convert binary data into hexadecimal representation
+ * @link http://php.net/manual/en/function.bin2hex.php
+ * @param string $str &lt;p&gt;
+ * A character.
+ * &lt;/p&gt;
+ * @return string the hexadecimal representation of the given string.
+ */
+function bin2hex ($str) {}
+
+    
+    
+Title: Why doesn&#39;t the new-component wizard display any ancestor classes?
+Description: 
+    
+    
+                    
+I'm trying to create new VCL component in RAD Studio XE2. I got the same result using C++ Builder or Delphi:
+
+
+
+How do I get the list of VCL components? I tried "repair setup," but no success.
+    
+
+        
+Answer 1: 
+
+    
+    
+That happens when your list of design-time packages is empty. So, somehow I guess you have lost your design-time packages. Restore them like this:
+
+
+From the menu select Component | Install Packages.
+If you see anything in the list, check, at the very least, Embarcadero Standard Components.
+If Embarcadero Standard Components is not in the list, click Add and browse to the Delphi bin directory (C:\Program Files (x86)\Embarcadero\RAD Studio\9.0\bin).
+Once there, select dclstd160.bpl.
+Also add any other packages that you need. You may wish to include more than just the standard components.
+
+
+At this point the New Component dialog will start offering you some ancestor components.
+    
+    
+Answer 2: 
+
+    
+    
+For those who still have not solved the problem, it seems that the PowerPDF Package inhibits listing of ancestors. (for unknown reasons)
+If you have installed it, try temporarily disabling it in Component/Installed packages (uncheck the PowerPDF Design-time package).
+Magically, all your ancestors will reappear....:-)
+    
+    
+Title: Tcl/tk version in Python installation
+Description: 
+    
+    
+                    
+I need the help of those who familiar with Python-Tcl/tk bundle. 
+
+I cannot start IDLE IDE for Python 3.2.3 or 3.3.0 installation. Command 
+
+python -m idlelib.idle
+
+
+gives next output:
+
+   C:\Python33&gt;python -m idlelib.idle
+   Traceback (most recent call last):
+   File "C:\Python33\lib\runpy.py", line 160, in _run_module_as_main
+    "__main__", fname, loader, pkg_name)
+  File "C:\Python33\lib\runpy.py", line 73, in _run_code
+    exec(code, run_globals)
+  File "C:\Python33\lib\idlelib\idle.py", line 11, in &lt;module&gt;
+    idlelib.PyShell.main()
+  File "C:\Python33\lib\idlelib\PyShell.py", line 1421, in main
+    root = Tk(className="Idle")
+  File "C:\Python33\lib\tkinter\__init__.py", line 1756, in __init__
+    self.tk = _tkinter.create(screenName, baseName, className, interactive, want
+objects, useTk, sync, use)
+_tkinter.TclError: Can't find a usable init.tcl in the following directories:
+    {C:\Program Files\CSR\BlueSuite 2.4} C:/Python33/lib/tcl8.5 C:/lib/tcl8.5 C:
+/lib/tcl8.5 C:/library C:/library C:/tcl8.5.11/library C:/tcl8.5.11/library
+
+
+Init.tcl is located both in C:\Python33\tcl\tcl8.5 and C:\Python33\tcl\tix8.4.3 but something preventing tkinter from starting. 
+
+During previous attempts to start idlelib.idle module form command line I got the message
+
+ "Tcl": have 8.5.11, need exactly 8.4 
+
+
+So this is a stage I can't pass. What is the system may force me to use Tcl 8.4 and prevent from using 8.5.11 installed with Python 3.3.0?
+
+Thank you in advance.
+    
+
+        
+Answer 1: 
+
+    
+    
+Solved.
+
+I had to remove environment variable TCL_LIBRARY, which pointed to some non-existent installation.
+    
+    
+Title: Delete all spaces and tabs around point in intelliJ?
+Description: 
+    
+    
+                    
+In emacs, there's an action called just-one-space which is binded to Meta+Space.
+
+It is used to 
+
+
+  Delete all spaces and tabs around point, leaving one space (or N
+  spaces).
+
+
+I used this action a lot in emacs and it's quite useful for me.
+
+I was wondering whether there are also such actions in intelliJ?
+
+(The use case is like this: 
+
+      Line1
+      Line2
+
+
+when I use Ctrl+k at the end of Line1 twice, the text becomes this:
+
+      Line1                Line2
+
+
+I need several actions to delete the spaces to make it like this:
+
+      Line1 Line2
+
+    
+
+        
+Answer 1: 
+
+    
+    
+IntelliJ can use regex, so
+
+Search: \b\s+\b
+Replace: &lt;space&gt;
+
+    
+    
+Answer 2: 
+
+    
+    
+Just found that Join Lines might be what I need.
+    
+    
+Title: Sublime Text 2 autocompletion shortcut not working
+Description: 
+    
+    
+                    
+I'm getting really crazy right now.
+The shortcut for autocompletion in Sublime Text 2 (ctrl+space ??) won't work for me.
+Every time I press ctrl+space it gives me the last word I typed before.
+But the code completion does work while I'm typing.
+
+Anyone that knows how to fix this or what's wrong?
+
+A video to make clear what a mean: http://shots.wouterds.be/ST2-CodeCompletion-Help-0oD220SKlB.mov
+    
+
+        
+Answer 1: 
+
+    
+    
+That particular popup isn't Sublime Text 2's built-in autocomplete dialog at all -- it's the SublimeCodeIntel code suggestion window.
+
+Sublime Text 2 by itself only offers autocompletion suggestions based on snippets, API-injected completions, .sublime-completions files, and words in the buffer (see here for more information). SublimeCodeIntel, on the other hand, builds a library of suggestions based on the language you're using and (presumably) the project you're working on. You should be able to tell which window is which by examining the content of the popup versus the content of your working file -- SublimeCodeIntel's suggestions will contain more information (like the (function) keyword) and might include words not present in the current file.
+
+SublimeCodeIntel's suggestion list pops up automatically while you're typing, but has a distinct keyboard shortcut listed in your Preferences -&gt; Package Settings -&gt; SublimeCodeIntel -&gt; Key Bindings -- Default file. Ctrl+Space calls the default autocompletion dialog. You could potentially adjust the completion shortcuts so that Ctrl+Space instead raises SublimeCodeIntel's autocompletion list by adding the line...
+
+{ "keys": ["ctrl+space"], "command": "code_intel_auto_complete" }
+
+
+...to your Preferences -&gt; Key Bindings -- User file, although doing so might mess up the appearance of the regular autocompletion window.
+    
+    

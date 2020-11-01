@@ -1,0 +1,1650 @@
+Title: Is there a technical term for the part of an IDE which maintains a dynamic symbol table as you code?
+Description: 
+    
+    
+                    
+My context is MSVC 6.
+
+Starting with a successfully compiled program, with browse information built, I can go into a existing function and hover over a variable, and the IDE will show me the data type, and variable name.   One could well imagine that the information is coming from the browse file.
+
+In practice, If I create a new variable.
+
+int z;
+
+
+and hover over the z, the IDE will show me the data type and variable name.  I have not compiled the program yet, hence the browse file has not been updated.  This seems to say,
+that there is a portion of the IDE, which watches as you type, and stays aware of the datatypes and functions as you enter them.   For all I know, it may compile them internally as well.
+
+I have also noticed, that syntax errors can effectively disable this functionality.
+
+I haven't seen this discussed anywhere.   Is there a term for this sort of functionality?
+    
+
+        
+Answer 1: 
+
+    
+    
+It's probably the lexical analysis and syntactic analysis at work and building up it's own symbol table. It's part of the parsing phase of most compilers.  That would explain why the functionality breaks when you see syntax errors.  The parsing needs to occur successfully to have a reliable symbol table.
+    
+    
+Answer 2: 
+
+    
+    
+In compilers, its usually called a symbol table.
+
+I'm not sure that there's a term common to all integrated development environments.
+    
+    
+Title: Manipulating Access VBA IDE methods from VBScript
+Description: 
+    
+    
+                    
+I'm trying to write a VBScript that will export and import the code modules from an Access MDB file to text files.
+
+From within the app I can loop through the DAO Container &amp; Documents and use the 'undocumented' Application.SaveAsText method, but can I do it externally?
+    
+
+        
+Answer 1: 
+
+    
+    
+Basically it is all COM, but the COM interface doesn't expose methods for opening files, using MDWs for security, etc, but minds greater than my own have found a solution to the problem at http://www.mvps.org/access/modules/mdl0036.htm.
+Once I've got a reference to the database, I can then use the techniques Remou and HansUp mention as normal.
+    
+    
+Answer 2: 
+
+    
+    
+It's all COM, so pretty much anything you can do from VBA in the IDE, you can do from a .vbscript file externally.
+
+Set accessApplication = CreateObject("Access.Application")
+' then do what you do from the IDE
+
+    
+    
+Title: Is there any free portable (meaning &lt;100mb ) IDE for C++ windows developers with compiler capable of codehinting and tested working with Win32 API?
+Description: 
+    
+    
+                    
+What I need is a small sized IDE+compiler for creating C++ applications that will interact with win32APIs... And It'd be grat for it to be capable of analizing headers I give it for code completion and connecting DLL's (not .Net DLLs but If it'd be capable ofcompiling C++ .NET projects I would just be super-duper glad) to project should be eazy. So I know my requirements are hard. For example for C# I found SharpDevelop but it does not provide C++ capabileties... so Any Ideas, please
+    
+
+        
+Answer 1: 
+
+    
+    
+Code::Blocks is another one to consider. The binaries for the IDE + the Mingw compiler are only 73 MB compressed. Code::Blocks should be able to do all or most of what you want, though I'm pretty sure it can't do any C++/CLI stuff.
+    
+    
+Answer 2: 
+
+    
+    
+Eclipse IDE for C++ developers comes in at 88MB
+direct download
+http://www.eclipse.org/downloads/packages/eclipse-ide-cc-developers/heliossr1
+The IDE installed is more than 100mb, but it still has a very small footprint after installation...
+    
+    
+Answer 3: 
+
+    
+    
+NetBeans IDE is another possible option.
+
+and it has an even smaller footprint than Eclipse IDE
+    
+    
+Title: NetBeans not generating @author and @version of javaDoc?
+Description: 
+    
+    
+                    
+NetBeans by default will not generate documentation from @author and @version tags. How do I enable this from within the IDE?
+
+Edit: There is indeed an option within NetBeans to display these tags. Run
+Answer 1: 
+
+    
+    
+Modify build.xml, the build file for Ant. Redefine your "javadoc" target to include all of the information you see fit. The solution is independent from NetBeans, so it'll work with any Ant-based build environment.
+
+Here are some very concrete instructions.
+    
+    
+Answer 2: 
+
+    
+    
+Its possible in the settings:
+
+right click on project -&gt; properties -&gt; (Build) -&gt; Documenting, check both tags below Document Additional Tags.
+    
+    
+Title: Python Triple Quoted Strings in Visual Studio 2010
+Description: 
+    
+    
+                    
+I'm used to using Idle for Python development, but decided to give Visual Studio 2010 + IronPython a try last week.  It seems to work fine, but I noticed that triple-quoted (multi-line) strings don't highlight correctly in the editor.  See photo:
+
+
+
+Does anyone else have this problem or know of a good fix?  Apart from that bug, Visual Studio seems to be great for Python.
+    
+
+        
+Answer 1: 
+
+    
+    
+This is a bug that is already fixed for the next release - I screwed up storing our state while processing line-by-line when fixing another bug.  
+
+If you're really anxious you can actually build the MSI which includes the tools from the sources on CodePlex.  Once you have the VS SDK installed it should be as simple as running Scripts\Bat\Dev.bat to setup the enlistment environment and then msbuild Msi\Installer.proj which will produce an MSI in Bin\Debug.
+    
+    
+Title: How to set up a large and complex Java web project so that &ldquo;trial-and-error&rdquo; isn&#39;t terrible waste of time?
+Description: 
+    
+    
+                    
+This question is something like a holy grail of project environment setting. Here goes a rationale:
+
+Big projects tends to have poor documentation so there are a lot of trial-and-error cycles. Therefore I often use the reload-without-redeploy feature of some libraries (facelets, webflow, tapestry, jrebel...).
+
+The easiest way to use such feature is to have the same structure in VCS as is in servlet container and point servlet container directly to the development directory.
+
+However big projects are also often divided into some kind of modules to avoid too much complexity. This means that directory structure is very different in VCS and in the web container. Right now I even have a situation where I have two projects sharing the same core project which I need to develop simultaneously.
+
+If the project is small enough, I'm using incremental building with ant that is run by Eclipse on save of any file. But if there are several thousands of files where timestamp needs to be compared or some other time consuming action is run, than even incremental build can be quite annoying.
+
+The only thing that would make incremental builds faster (and therefore makes development MUCH MORE enjoyable) is some kind of IDE save action hooks that would supply ant more information about what is saved so that ant can avoid unnecessary work.
+
+If you have ever though about this, please share your thoughts with me - your favorite project setting, IDE tips, trial-and-error strategy criticism, whatever.
+
+For example I recently noticed the new "Web Deployment Assembly" feature, but I don't know how it can be used to make deployment dir structure synchronized with development dir structure during DEVELOPMENT, not build.
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm not sure about Eclipse, but with IntelliJ IDEA you can set up a project so that the project directories (i.e. "modules") are arranged however you want, and it will keep the output directory in sync with them, updating them as changed, and even doing a hot-deploy automatically.
+    
+    
+Answer 2: 
+
+    
+    
+Haven't jrebel make your life easier? it has IDE plug-ins as well as maven integration.
+    
+    
+Title: What is the difference between building C++ Builder project from IDE and command line?
+Description: 
+    
+    
+                    
+I have different behaviour of compiler, when building project from IDE and from command-line, which I can not explain. 
+
+The detailed issue's description is rather big, but it's really simple.
+
+I have a C++ Builder project, which has a PAS-file included (IncludeUnits.pas). This pas-file has several units and inc-files listed. These files are located in separate folders and these folders are listed in library&amp;include paths in project's options.
+
+Folders layout:
+
+
+  C:\Demo\Bin
+  C:\Demo\Project
+  C:\Demo\Project\CBuilder5
+  C:\Demo\Project\Common
+  C:\Demo\Source
+  C:\Demo\Source\Common
+
+
+Bin is output folder, Project/CBuilder5 holds project (bpr-file), Project/Common holds included pas-file (IncludeUnits.pas), Source and Source/Common hold other files (pas&amp;inc). I think that it's pretty usual layout.
+
+C:\Demo\Project\Common\ IncludeUnits.pas :
+
+unit IncludeUnits;
+
+interface
+
+uses
+  Test;
+
+implementation
+
+end.
+
+
+C:\Demo\Source\ Test.pas :
+
+unit Test;
+
+interface
+
+{$I Test.inc}
+
+implementation
+
+end.
+
+
+C:\Demo\Source\Common\ Test.inc :
+
+// this file is empty
+
+
+If I compile this project from C++ Builder IDE - it will compile fine. C++ Builder IDE doesn't have any additional paths in IDE settings set.
+
+Now, I want to compile it from command-line. First, I issue
+
+
+  bpr2mak.exe MyProject.bpr
+
+
+command.
+
+This command creates MyProject.mak file, where I can see all paths ("....\Source" and "....\Source\Common" are the paths in question):
+
+
+  ...
+  INCLUDEPATH = $(BCB)\include;$(BCB)\include\vcl;..\Common;..\..\Source;..\..\Source\Common
+  LIBPATH = $(BCB)\lib\obj;$(BCB)\lib;..\Common;..\..\Source;..\..\Source\Common
+  ...
+
+
+Now, I run make command:
+
+
+  make.exe -B -f"MyProject.mak"
+
+
+It gives me the following output:
+
+
+  C:\PROGRA~1\Borland\CBUILD~2\BIN\dcc32 -N2....\Bin -N0....\Bin -$Y+ -$W -$R -v -JPHNE -M -UC:\PROGRA~1\Borland\CBUILD~2\bin..\include;C:\PROGRA~1\Borland\CBUILD~2\bin..\include\vcl;..\Common;..\..\Source;..\..\Source\Common -D_DEBUG;_RTLDLL;NO_STRICT -OC:\PROGRA~1\Borland\CBUILD~2\bin..\include;C:\PROGRA~1\Borland\CBUILD~2\bin..\include\vcl;..\Common;..\..\Source;..\..\Source\Common --BCB ..\Common\IncludeUnits.PAS
+  Borland Delphi  Version 13.0  Copyright (c) 1983,99 Inprise Corporation
+  C:\Demo\Project\Common\IncludeUnits.pas(1) C:\Demo\Project\Common\IncludeUnits.pas(1) C:\Demo\Project\Common\IncludeUnits.pas(1) C:\Demo\Project\Common\IncludeUnits.pas(6) C:\Demo\Source\Test.pas(1)                 C:\Demo\Source\Test.pas(5) Fatal: File not found: 'Test.inc'
+
+
+As you can see - all search path is passed to compiler and the file (Test.inc) is all here - in that Source\Common folder. But still compiler can't find it?
+
+Of course, I run both commands from folder with bpr-file. And changing paths to absolute doesn't help. 
+
+Copying Test.inc from Source\Common to Source will help. Changing {$I Test.inc} to {$I Common\Test.inc} will also help.
+
+Why? It seems that I'm missing something. Remember: project have no problems with compiling from IDE, Test.inc is found without copying or changing declaration. Did I miss some switch to make or dcc32?
+    
+
+        
+Answer 1: 
+
+    
+    
+I found the reason: command line for dcc32 misses -I switch, which specifies paths for include files. 
+
+For some reason, bpr2mak doesn't respect this option. Fortunately, it allows you to specify alternate template for conversion bpr -/p/div
+Title: Visual Studio IDE Customisation - Breakpoint string highlighting
+Description: 
+    
+    
+                    
+I'm trying to make my IDE fonts and colours more visible, but I'm stuck on one last detail: the string highlighting for selected breakpoints.
+
+Given the following example:
+
+Session["mySessionVar"] = someValue;
+
+
+The text for "mySessionVar" - including the quote marks - has (in my case) yellow text on a bright pink background - almost impossible to read.  My problem is I can't find any way to set the Breakpoint (Enabled) strings, keys or parameters to a more readable setting.
+
+Can it even be done?
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm guessing you've tried changing the various "Breakpoint" settings in Tools-&gt;Options-&gt;Environment-&gt;Fonts and Colors, but even those wouldn't leave the string a different color than any other text in the breakpoint.  The intent, for breakpoints, is that the foreground color of everything in the breakpoint is overridden by the breakpoint foreground color.
+
+Do you have an extension installed that changes the formatting for comments, or did you get into this state just from changing around options in Fonts and Colors?
+    
+    
+Title: Tool to Surround or Wrap Highlighted Text
+Description: 
+    
+    
+                    
+StackOverflow's WYSIWYG has the ability to quickly surround highlighted text through keyboard shortcuts.
+
+For example, when I push Ctrl+B on some highlighted text, it would bold the text or surround it with two stars.
+
+I am looking for a tool that will give me this function but with "custom-input". That is... instead of bolding the word, I could surround it with a &lt;div&gt; tag or... in my case, I need to localize my Wordpress Plug-in, thus __("Surrounded Text").
+
+I am currently using Notepad++ but I can't find any way to create this function.
+
+Can this be done in Notepad++?
+If it can not, I would like some suggestion for a IDE that can.
+
+Thank you.
+    
+
+        
+Answer 1: 
+
+    
+    
+If you've never used an "optimized" text editor, Vim would be a sea change, but it does have a great surround.vim plugin.
+
+
+  Emphasize hello: ysiw&lt;em&gt;
+  
+  &lt;em&gt;Hello&lt;/em&gt; world!
+  
+  Finally, let's try out visual mode.
+  Press a capital V (for linewise visual
+  mode) followed by S&lt;p
+  class="important"&gt;.
+  
+  &lt;p class="important"&gt;
+       &lt;em&gt;Hello&lt;/em&gt;&gt; world!
+  &lt;/p&gt;
+
+
+
+
+Alternatively, you could probably get a fair bit of the functionality for which you are looking with an AutoHotkey script, but at best I think you'd have to do the highlight-first thing like the StackOverflow WYSIWYG editor.
+
+Still, this would probably allow you to keep using Notepad++.
+    
+    
+Answer 2: 
+
+    
+    
+You can do this in VIM using the surround plugin
+    
+    
+Title: Widget inside a custom text editor in Eclipse
+Description: 
+    
+    
+                    
+I'm developing a custom text editor for a programming language in Eclipse. Is it possible to put a widget (a button, for instance) inside a custom text editor?
+    
+
+        
+Answer 1: 
+
+    
+    
+For all SWT related questions, always have a look at the official Snippet page first. Often it is really helpful. This is one of these cases: Snippet217 shows how to embed arbitrary controls in a StyledText, which seems to be what you aim for.
+    
+    
+Answer 2: 
+
+    
+    
+It doesn't directly awnser your question but I would recommend using http://www.eclipse.org/Xtext/ (Xtext).  By defining a grammar for your programming language, Xtext generates a whole IDE for your language including an editor with syntax highlighting and auto-completion, an outline and hooks for builders etc.
+
+It really is amazing, the first time I used it my jaw just dropped. 
+    
+    
+Title: What development tools can build 64 bit programs for Windows x64 and/or Mac?
+Description: 
+    
+    
+                    
+Delphi does not yet support building 64-bit applications. What common tools are there for building native 64 bit programs, especially with an IDE? For instance, I believe that Visual Studio supports this. Anything else?
+    
+
+        
+Answer 1: 
+
+    
+    
+On Mac, Xcode builds 64-bit apps.  Bear in mind that you must use the Cocoa UI APIs.
+    
+    
+Answer 2: 
+
+    
+    
+Visual Studio 2005, Visual Studio 2008, Free Pascal x64.
+    
+    
+Answer 3: 
+
+    
+    
+Delphi XE2, with FireMonkey, now supports Windows x64 and the Mac OS.
+    
+    
+Title: Does NetBeans have anything like Eclipse&#39;s Shift-F2 to bring up PHP Manual page for keyword?
+Description: 
+    
+    
+                    
+In Eclipse when you put your cursor on a keyword and press Shift-F2 it brings up the PHP manual page for that keyword.
+
+Is there anything like that in NetBeans?
+    
+
+        
+Answer 1: 
+
+    
+    
+Ctrl+Shift+Space brings up the documentation.
+    
+    
+Answer 2: 
+
+    
+    
+i think what you want is ctrl-space ;)
+    
+    
+Title: Eclipse JPA structure view, detail view, and persistence.xml editor not working?
+Description: 
+    
+    
+                    
+Eclipse has pretty cool JPA Structure and JPA Detail views along with a persistence.xml editor and a JPA perspective.  However, I cannot seem to get them to "turn on".  I had them all working several months ago, but something must have changed.
+
+Any tips as to what secret sauce is needed to get them working again?
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't really use Dali but if I recall correctly you need to add the Java Persistence Facet to your project (right-click on a project then go to Properties /strongstrong/stronga href="http://www.eclipse.org/webtools/dali/gettingstarted.php" rel="nofollow noreferrer"/a/p/div
+Answer 2: 
+
+    
+    
+Turns out this is a bug with Dali not understanding the Maven way of filter resources:
+
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=251323
+
+Who knows when this gets fixed, but I got around it by removing the "**" exclusion on my persistence module's resources directory in the build path.  I basically included Meta-Inf and excluded everthing else.
+
+I then did a project-/pp/p/div
+Title: HTML 5 , CSS3 support PHP IDE?
+Description: 
+    
+    
+                    
+Is it available for HTML5 and CSS3 support PHP IDE ? In this days, I'm using espresso in Mac. But espresso is lacking dictionaries for HTML5. So, I want to know , What IDE support HTML5 and CSS3 ?
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm not totally sure, but I would definitely recommend checking out a JetBrains product.  They've got some new IDEs for Python and PHP.  I've been using PyCharm for quite a while now and its been excellent.  It looks like WebStorm does support HTML5 - so I assume the Python and PHP equivalents do as well.  Hope this helps!
+    
+    
+Answer 2: 
+
+    
+    
+I guess a good one would be aptana studio.
+
+It is very popular and has a lot of features that support html5 and css3, also a lot of library support such as jquery.
+
+If you think it is too heavy, like me, you can also use Eclipse with pdt, it has decent support for html5 and css3.
+    
+    
+Answer 3: 
+
+    
+    
+The newest Version of Adobe Dreamweaver also is a charm, if you are willing to pay for and don't rely on freeware
+    
+    
+Title: A good PHP IDE to work with Joyent
+Description: 
+    
+    
+                    
+I want to start working with Joyent accelerator over PHP. I have been using aptana IDE + Cloud for a year and I'm fed up with it.
+Have you some good suggestions?
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+It depends on what you want out of an editor/IDE.
+
+Some of the issues with Aptana and PHP are due to the switch from using a custom version of PHP support to PDT between version 1.5 to 2.0. Aptana Studio 3 instead reverts back to a custom plugin for improved integration and support.
+
+For alternatives, many people use Eclipse + PDT.
+
+Alternately, if you want a paid version, then there is Zend Studio, or perhaps PHPStorm.
+
+Coda, TextMate, and others will behave closer to an editor, and will have limited support for things beyond syntax coloring, and perhaps some validation.
+    
+    
+Answer 2: 
+
+    
+    
+CODA is the answer ;)
+    
+    
+Title: Inspecting methods in IDEs - why aren&#39;t there side effects?
+Description: 
+    
+    
+                    
+Some IDEs (like Eclipse) seem to allow method calls to be inspected while debugging. How is this done without causing side effects?
+    
+
+        
+Answer 1: 
+
+    
+    
+I know that in Visual Studio, executing code as part of 'inspecting' some value can indeed have effects.  I think all debuggers are probably like this.  Beware!
+    
+    
+Answer 2: 
+
+    
+    
+I believe Brian is right. However, you could do it by saving the registers and tracking any memory writes, and restoring them when the inspection ends
+    
+    
+Title: Visual Studio 2010 Language Support
+Description: 
+    
+    
+                    
+I want to be able to develop code using Visual Studio 2010. I just got VS2010 and I'm not able to get the languages I want on it. The main reason that I'm asking this is that I'm trying to migrate to ONE IDE that does it all for me. Thus far eclipse has been doing a good job, but I've been informed that VS2010 is better and I'm trying to get into the groove of that standard
+
+So my question is two-fold. 
+
+
+I am not able to find a complete list of languages supported by VS2010. What are these languages?
+How can I get VS2010 support for:
+
+
+Python/IronPython
+C/C++/C#/XNA
+Java
+
+
+
+My Googling has given me no promising/definitive results.
+
+I'd really appreciate any help.
+    
+
+        
+Answer 1: 
+
+    
+    
+From Wikipedia (search Visual Studio 2010):
+
+"Visual Studio supports languages by means of language services, which allow the code editor and debugger to support (to varying degrees) nearly any programming language, provided a language-specific service exists. Built-in languages include C/C++ (via Visual C++), VB.NET (via Visual Basic .NET), C# (via Visual C#), and F# (as of Visual Studio 2010[3]). Support for other languages such as M, Python, and Ruby  among others is available via language services installed separately. It also supports XML/XSLT, HTML/XHTML, JavaScript  and CSS. Language-specific versions of Visual Studio also exist which provide more limited language services to the user. These individual packages are called Microsoft Visual Basic, Visual J#, Visual C#, and Visual C++."
+    
+    
+Title: XSLT to PDF Preview
+Description: 
+    
+    
+                    
+i would like to transform a XML into PDF using a XSLT. A killer feature would be a live preview of the result - so when i edit the XSLT, some seconds later (after transforming) the resulting PDF will display in a parallel pane.
+
+Does someone know an IDE fullfilling this requirement?
+    
+
+        
+Answer 1: 
+
+    
+    
+Apache Fop looks like it does that. You could use Stylus Studio to do this for you, or Fop also has Java examples.
+    
+    
+Title: project organization between x86 and x64
+Description: 
+    
+    
+                    
+I have a mixed language solution in VS2008. I would like to structure the bin such that I have 
+
+bin\x86\Release
+
+and 
+
+bin\x64\Release
+
+among the other options. I can do something like this if I have all C# or all C++, but as the platform names don't overlap (x86 vs. Win32) between C++ and C#, I can't seem to do this with the macros (and have an easy solution). I've tried to add a new platform and it won't let me. Is there an easy way to do this?
+    
+
+        
+Answer 1: 
+
+    
+    
+No problem, just change the output folders for each configuration.  In the C++ IDE it is General + Output Directory, make it $(SolutionDir)x86\$(ConfigurationName) for Win32.  In the C# IDE it is Project + Properties, Build tab, Output path.
+
+Switch between configurations and repeat.
+    
+    
+Answer 2: 
+
+    
+    
+Are u using VS2008 Standard Edition? if yes, then you can configure your structure using the Batch Build option... Got to Build -/pp/pp/p/div
+Title: Potential annoyances of tab delimited Python source?
+Description: 
+    
+    
+                    
+Edit: This question has already been asked and answered, and I apparently am not good at using the search wizard.  See Why does Python pep-8 strongly recommend spaces over tabs for indentation? and the link in the comments.  Thanks for replying to those who did so.
+
+I want to start a new project, and I want this to be my first Python project.  I was looking through the style guide, http://www.python.org/dev/peps/pep-0008/, which "strongly recommends" using a 4-spaces indentation style for new projects.  But I just hate this idea!  In my opinion, tabs are better for this purpose.  
+
+What annoyances could crop up one day if another developer wanted to work on my tab-delimited files?  
+    
+
+        
+Answer 1: 
+
+    
+    
+Most Python programmers will have their editors configured to automatically use four spaces for all .py files… Which could, at least initially, cause some minor headaches if they try to edit your source.
+
+But apart from that (given that PEP 666 was rejected), it shouldn't cause any major trouble.
+
+Of course, if you get serious about Python, it would be a good idea to follow PEP 8, as most Python code conforms to it… But, given that this is your first Python project, you've got bigger things to worry about than tabs VS spaces.
+    
+    
+Answer 2: 
+
+    
+    
+If all the world used tab-indented Python source, then everyone would be happy.
+If all the world used 4-space indented Python source, then everyone would be happy.
+
+Unhappiness arises when one tries to comingle tab-indented code with 4-space indented code.
+
+The majority of Python code seems to be of the 4-space variety. If you ever wish to rip out some of this code and use it in your project, you will be saved from the minor annoyance of having to run it through a space-to-tab converter (like unexpand) if you stick with the PEP recommendation and use 4-spaces. 
+
+You'll also cause less of a hassle for other developers (who follow the 4-space convention) who may wish to contribute to your project.
+
+PS. Finding a good text editor is especially important when writing code in Python. It should allow you to press [TAB] and insert 4 spaces instead of 1 tab.
+It should also allow you to be able to shift blocks of code by 1 level of indention to the left or right easily. Once you find the right editor (e.g. emacs or vim), working with the 4-space convention is a breeze.
+    
+    
+Title: any open source IDE with the possibility to go the declaration of a function, a variable..?
+Description: 
+    
+    
+                    
+any open source IDE with the possibility to go the declaration of a function, a variable, a class... presing a key(s)??
+
+Apart from Netbeans and Eclipse.
+
+Regards
+
+Javi
+    
+
+        
+Answer 1: 
+
+    
+    
+Take a look at ctags, and e.g. vim.  In reality, "ctags" is a gross understatement, as you can generate an index of function and variable "tags" for almost any language.
+    
+    
+Answer 2: 
+
+    
+    
+emacs or vim would allow you to do this for most languages.  Not really an IDE though.
+    
+    
+Answer 3: 
+
+    
+    
+I prefer to use PHPDesigner which does have a free edition.   What you appear to be asking about is called "code completition" which this editor does, along with the ability to right click a custom function and "Go to definition" or hit F1 to view the PHP Manual on that function.
+    
+    
+Answer 4: 
+
+    
+    
+May be Komodo edit ? It's close to Eclipse and Netbeans, but much more simpler. You can go to declaration of function or variable by a custom shortcut key or just CTRL + Click on the desired var/func.
+    
+    
+Title: Problems with Error: There was an unexpected Confirmation!
+Description: 
+    
+    
+                    
+I am trying to delete a user from a table. At first I was getting a timeout error but used the BeatnicClick() as described here:
+Selenium IDE click() timeout
+That solved the timeout error but I'm still getting the unexpected confirmation error. Here's part of the source code:
+
+selenium.Click(&quot;ctl00_btnAddressBook&quot;);
+selenium.WaitForPageToLoad(&quot;30000&quot;);
+// selenium.BeatnicClick(&quot;ctl00_page_content_ExistingEmployees_ctl03_btnDeleteEmployee&quot;);
+String Are you sure you want to delete
+the selected item? =
+selenium.GetConfirmation();
+
+Any help would be appreciated. Thanks in advance.
+    
+
+        
+Answer 1: 
+
+    
+    
+To handle the confirmation your code should look like
+
+selenium.Click("ctl00_btnAddressBook"); 
+selenium.WaitForPageToLoad("30000");
+//the IDE code is to get around the IDE bug that it waits on click but it works in Se:RC
+selenium.Click("ctl00_page_content_ExistingEmployees_ctl03_btnDeleteEmployee");
+//handle the confirmation that appears after the click
+string confirmMessage = selenium.GetConfirmation();
+//Assert its the correct message
+Assert.IsTrue(Regex.IsMatch(confirmMessage,"Are you sure you want to delete the selected item?"));
+
+
+This should click on the delete element and then get the confirm and if you want it can assert its the correct message
+    
+    
+Title: Running in the Terminal a build made in XCode, how?
+Description: 
+    
+    
+                    
+Im creating a project in Xcode using OpenCV as a framework. It works great with the Build&amp;Run option from Xcode, but now I need to run it in the Terminal and it gives me this error:
+
+dyld: Library not loaded: @executable_path/../Frameworks/OpenCV.framework/Versions/A/OpenCV
+Referenced from: /Users/Victor/Documents/PFC/src/opencv/blob/build/Release/./test3
+Reason: image not found
+Trace/BPT trap
+
+
+I look for the build and just execute it with ./
+
+So, any clue? 
+    
+
+        
+Answer 1: 
+
+    
+    
+You need to run it from the build directory rather than the Release directory (assuming Frameworks is a directory in blob)
+    
+    
+Title: Setting up Dev environment for Java development (Q.1)
+Description: 
+    
+    
+                    
+
+
+1st part
+
+Never worked on team who uses different IDE for one project.. (But our team right now does that)
+Never tweaked Ant Script of IDE, or wrote any Ant script..
+
+I am Netbeans user, (since last 2 years) and ultimately want to become independent of IDEs (except for coding and code completion) .. like deploying, building
+
+So I want some suggestions.. that how you work and what should be the ideal strategy for doing this..
+
+2nd Part
+ Please Help me out in sorting this problem, I don't want to use Tomcat in Netbeans.. takes lots of time in change-deploy-run cycle..(Everyone does not have fast machine). Instead i want to use Jetty, so now i have to run from console (or is it possible to run it in netbeans?? ), is there any tool which shows log output like IDE output window?? 
+
+Cheers,
+    
+
+        
+Answer 1: 
+
+    
+    
+This is really only a part1 answer, and I also suggest splitting this into 2 questions.
+
+The key to using different IDEs is to make sure none of your build/code is IDE dependent. The most typical problem is that you check in the file containing the application's classpath (the .classpath file in eclipse for example). Instead, you should use an external dependency management system such as maven or ivy (ivy works if you use ant, but maven is both a build tool AND a dependency management system so I would recommend maven if you can). Any IDE worth its weight will have plugins to support ant, ivy and maven, so as long as the developers have the plugin, they just point to the appropriate ant or maven build files. Maven's website is http://maven.apache.org/ and Ivy's website is http://ant.apache.org/ivy/.
+    
+    
+Answer 2: 
+
+    
+    
+part2:
+for the second part, consider you can only gain about 4-5 seconds when switching from tomcat to jetty.
+typically the startup of a servlet container takes 30-60 seconds. for a real speed improvement consider using JRebel. this allows you to see most changes in code instantly.
+    
+    
+Answer 3: 
+
+    
+    
+
+Use maven for the build (and everything else maven can do) and the IDE of choice for coding. Eclipse, IDEA, Netbeans, they all integrate with Maven.
+AFAIK, there is still no server plugin in Netbeans for Jetty (see Issue 153500). But it should be possible to start Jetty in debug mode and to attach a remote debugger from Netbeans. Or you could use maven and the maven jetty plugin :)
+
+    
+    
+Title: Debugging multi-threaded Python with Wing IDE
+Description: 
+    
+    
+                    
+I'm debugging a multi-threaded Python program with Wing IDE.
+
+When I press the pause button, it pauses only one thread. I've tried it ten times and it always pauses the same thread, in my case called "ThreadTimer Thread", while the other threads keep on running. I want to pause these other threads so I could step with them. How do I do that?
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't know if multi-thread debugging is possible with Wing IDE. 
+
+However you maybe interested in Winpdb which has this capability
+    
+    
+Answer 2: 
+
+    
+    
+Per the docs, all threads that are running Python code are stopped (by default, i.e., unless you're going out of the way to achieve a different effect). Are the threads that you see as not getting stopped running non-Python code (I/O, say: that gives its own issues), or are you doing something else than running in a pristine install without the tweaks the docs describe to only pause some of the threads...?
+    
+    
+Title: Live HTML &amp; PHP editor/IDE for PC?
+Description: 
+    
+    
+                    
+Are there any IDEs on PC which will allow you to view your changes live as you are typing? / Can any IDEs you know of be set up to do that?
+
+For both HTML and PHP ideally?
+    
+
+        
+Answer 1: 
+
+    
+    
+You could stick a meta refresh in your head, but that will get ugly if you have a lot of php parse errors. You could put the page you want to test inside a frame and have some javascript refresh that frame every few seconds too. Then you could use any IDE and browser you want!
+    
+    
+Answer 2: 
+
+    
+    
+Zend will do this. But be forewarned that seeing a bunch of unfinished PHP code is very ugly. I'd suggest sticking with refreshing your browser.
+
+Oh, and if you actually do anything with that PHP code, like request an RSS feed, you would be making hundreds of calls if it ran the PHP code often.
+    
+    
+Answer 3: 
+
+    
+    
+The PHP PDT has a debugging tool (plus other cool stuff like type hints, auto-complete and etc.) and allow you to preview your code in a browser. Install xampp, host your php files on your localhost, and you should get almost what you want.
+    
+    
+Answer 4: 
+
+    
+    
+I recommend you netbeans .its free. it is available for all platforms, and mostly it is good for editing php, jsp, java, css, html, ...
+Good for SVN, mercurial, Plus you can integrate it easyly with kenai.com...
+
+it helps with the IntelliSense kind of pop up.
+
+believe me, i'm using it for php development and its the best suited ide i can find...
+    
+    
+Answer 5: 
+
+    
+    
+Eclipse with PHPEclipse does have live error and syntax highlighting.
+    
+    
+Title: How to open python source files using the IDLE shell?
+Description: 
+    
+    
+                    
+If I import a module in IDLE using: 
+
+import &lt;module_name&gt;
+print &lt;module_name&gt;.__file__
+
+
+how can I open it without going through the Menu-
+Answer 1: 
+
+    
+    
+
+You can use ALT-M and write the name of the module in the popup box
+You can use CTRL-O to open a file
+
+    
+    
+Answer 2: 
+
+    
+    
+I don't think IDLE will do it for you, but if you use Wing, you can mouse over the name of the module, and do a &lt;Ctrl
+Title: How to improve Intellij 8?
+Description: 
+    
+    
+                    
+Is there a way to improve the intellisense of intellij?  I love how visual Studio intellisense works by making suggestions as you type.
+    
+
+        
+Answer 1: 
+
+    
+    
+That might be a good idea. To get that information you have to hit ctrl+space or ctrl+shft+space Having it automatic might be a good idea.
+
+You can post the suggestion to http://www.jetbrains.net/jira/browse/IDEA after registering and they should get back to you fairly quickly.
+    
+    
+Answer 2: 
+
+    
+    
+Just go to "File:Settings" (or hit Ctrl-Alt-S), and find this panel:
+
+
+Change the autopopup timings to whatever you prefer and be happy! :)
+    
+    
+Title: Getting netbeans more eclipse-y
+Description: 
+    
+    
+                    
+I'm a long-time eclipse user looking to use netbeans now that I've tried netbeans out a bit. I mostly like what I see, except there's a few aesthetics missing. Anyone have ideas on if the following are available in NetBeans?:
+
+
+Eclipse highlights modified &amp; inserted lines in the left margin / gutter 
+Eclipse highlights the currently edited function in the left margin / gutter
+Eclipse highlights TODO / FIXME comments in the right margin
+
+
+For example:
+
+alt text http://img507.imageshack.us/img507/5471/forso.png
+
+... any ideas on how I can get Netbeans to do this sort if stuff ?
+    
+
+        
+Answer 1: 
+
+    
+    
+If your project is connected to source control netbeans will show added lines with a green block at the beginning of the line, modified lines with a blue block, and deleted lines with a red arrow. It also marks these in the right margin/gutter. This is based off of compared to last commit, not last save however.
+
+As for the other two I could not find a way to implement them but I may just be missing something
+    
+    
+Title: How do I get Delphi 2009s (Refactor) Extract Interface to work?
+Description: 
+    
+    
+                    
+I am trying to use Delphi 2009's refactoring to extract an interface from a class. The class looks something like this:
+
+Type
+  TMyClass = class(TObject)
+  private
+    FPrivateVar: Integer;
+  public
+    procedure MyPublicProc(Value: String); 
+    function MyPublicFunc(Value: String): String;
+  end;
+
+
+If I place the cursor in the public section, right click and select Refactoring|Extract interface, there is a slight pause then... nothing. What am I doing something wrong?
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm using Delphi 2009 Version 12.0.3210.17555 (Update 1 and 2 installed), and I checked the feature on your class...
+
+As long as I had only your class interface, and method were not implemented, I was receiving this error message:
+
+
+  Selection should contain either one or
+  several classes or one or several
+  class members.
+
+
+I pressed Ctrl+Shift+C to complete the class implementation, and tried again, and It worked just fine:
+
+http://www.picoodle.com/view.php?img=/2/5/13/kykl1zna1e5r/f_ExtractIntem_4aaede9.png&amp;srv=img30
+    
+    
+Answer 2: 
+
+    
+    
+In D2007 it works OK. (I had to enable/add model support, it auto asks for it).
+When I click a procedure (place cursor somewhere in for example MyPublicProc) it works OK.
+
+Do you see an error if you open the refectoring view?
+(Delphi -
+Title: What are the benefits of sticking with maven&#39;s default project directory structure?
+Description: 
+    
+    
+                    
+Simply put, if you're using maven, should you treat the maven layout as the gold standard, or should you convert your layout to fit your tooling (WASD, myEclipse, RAD, etc.)?  
+
+Realizing that maven is configurable and you can override the defaults in the Super POM, I'm attempting to determine if I should change the layout to support specific tools that are in house, or attempt to make those tools recognize the maven layout.  One thing to consider is the eventual integration of continuous build tools, as well as the different IDEs in play.  MyEclipse is currently being used, but word is that they are not going to renew licenses in 6 months.
+
+The first question I asked regarding this sort of thing was a bit too specific and one-sided. 
+    
+
+        
+Answer 1: 
+
+    
+    
+Maven is following the "Convention over Configuration" principle, which means that if you are following their conventions, then you do not need to redefine basic information, such as your project structure.
+
+As far as I am concerned, I prefer to have the shortest pom.xml I can write, and I don't like to define the information like where to find the sources, the resources, and so on.
+
+In addition to that, having the same structure for several projects is a evident benefit, especially if you have many applications to manage. It also helps new developers to understand the application if it follows some conventions...
+    
+    
+Answer 2: 
+
+    
+    
+Like all "best practices," take it for what it's worth. As you point out, IDEs may have a particular project structure that they like - since most of your development is actually done in the IDE, that's how developers will actually think about problems.
+
+If you standardize your shop around a standard project structure, you can always define that common structure in a company wide parent POM file.
+    
+    
+Answer 3: 
+
+    
+    
+The default project structure works, so don't waste time debating and deciding on a different project structure and then configuring maven to use it. 
+    
+    
+Title: Features of IDEs for web services
+Description: 
+    
+    
+                    
+What are the service oriented architecture/webservices features available in IDE.
+    
+
+        
+Answer 1: 
+
+    
+    
+A lot of IDE's simply let you enter the URL of a webservice and autogenerate clientside proxies at the click of a button. This means you also get intellisense for the web services - but this will normally be the case even if you generate the service in other ways.
+    
+    
+Answer 2: 
+
+    
+    
+If you are talking about Java web services I suggest checking out the Eclipse web tools platform.  http://www.eclipse.org/webtools/
+
+There are web services wizards that will generate a service top-down (from a wsdl file) bottom up (from a java bean) and can also generate client proxies from a WSDL.  There is also the "Web Services Explorer" which will let you test a web service without generating a client, and will also let you search and publish to UDDI registries.
+    
+    
+Title: In Visual Studio 2005/2008, why doesn&#39;t the &ldquo;&gt;open xxxxx.cs&rdquo; shortcut work with forms?
+Description: 
+    
+    
+                    
+In Visual Studio, there is a handy IDE shortcut for directly jumping to a file, i.e.
+
+Ctrl + / (to select the Find combo-box)
+Then type in &gt;open myclass.cs
+
+This is much quicker than navigating through the Solution explorer to open the specified class.
+
+However, if you try and open the code part of a form (not the designer part) in this way then Visual Studio simply returns:
+
+
+  The operation could not be completed
+
+
+... which means that I have to go through the Solution explorer to open them.
+
+Is there any way to get this shortcut to work for forms, or is there some other shortcut?
+
+Update: the problem seems to be with intellisense...
+
+If I type &gt;open form1.cs then this works...
+
+But if I type &gt;open form and then use the up and down keys to select from the intellisense, so that the combo reads &gt;open "Form1.cs (OpenShortcutTest)" then that operation will fail.
+    
+
+        
+Answer 1: 
+
+    
+    
+Why not just use F7 to view the code behind? Maybe I'm missing something?
+
+[edit]I just tried it in VS 2008 and "/p/div
+Title: Full VCL Class Browser for Delphi
+Description: 
+    
+    
+                    
+Remember the old class hierarchy posters that used to come w/Delphi?
+
+I'm wanting a full class hierarchy browser for ALL my Delphi classes, including the custom ones I've built and installed on the palette, plus third-party components.  Ideally easily searchable by class name (including "whole word only" searches, so partial matches don't count).
+
+I've only seen two things that come close: 
+
+1) GExpets Class Browser - Works great, BUT doesn't automatically load ALL installed components / classes, which is what I want.  You have to import all the source units manually, as far as I can tell.... which can be quite a hassle.  It also doesn't allow "whole word only" searches, so sometimes searching for a class w/a common "sub name" takes forever.
+
+2) Eagle / DevExpress CDK -  It loads the full class list automatically, and seems to work brilliantly, but it's only usable in D7 and prior, and it's not really focused on being a class browser per se, so much as an "inherit from" chooser.
+
+Is there anything out there which does this already?  If not, how difficult would it be to write an app that, at bare minimum, builds a self-referencing class-name table, so I could at least throw it into a database / treeview component to easily view inheritance / ancestry, etc.?
+    
+
+        
+Answer 1: 
+
+    
+    
+I think ModelMaker Code Explorer has this feature, but I don't use it
+    
+    
+Answer 2: 
+
+    
+    
+ESSModel is another nice class browser tool, and it's open source.  I don't know if there's any way to get it to load a list of units automatically.  Not sure, but you may be able to manually import all the units you want and then save that as a base project that you start from with all your individual projects.  Not sure how performance would be with that much loaded, or how easy it to view the part(s) you want.
+
+http://essmodel.sourceforge.net/
+    
+    
+Answer 3: 
+
+    
+    
+Assuming you need a Delphi IDE Expert (you've mentioned somewhere in your post: &quot;...installed on the palette, plus third-party components&quot;), DelphiDiver is good for you (Source code available on the DelphiPraxis, registration needed).
+Look and feel:
+
+If you feel like delving into the IDE in order to get more indepth details, click Inspect the IDE hence the name of the Expert (DelphiDiver) ;-)
+Click Inspect the Packages so as to browse any other third party component(s) or whatever package(s)/component(s) you've installed.
+It makes use of the advanced RTTI and requires Delphi 2010 version onward.
+I've personally installed it using Delphi XE on my box.
+
+I hope it can serve as a base for the more focused Full VCL Class Browser you are looking for.
+    
+    
+Title: Shorten delay when hovering over auto-hide panel / toolbars in Visual Studio &#39;08
+Description: 
+    
+    
+                    
+I've disabled the animation for auto-hide panels or toolbars, but i would like to shorten the delay when hovering over them. Somebody any idea how i can do that. I did not find an option in the environment settings.
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Tools then Options then Environment then General has a check box for Animate environment tools.  Below that is a slider that allows you to adjust the speed.  - is slower, + is faster.  Or just turn it off altogether.
+
+I see now that you're looking to shorten the delay before the panel pops up.  I don't see where that's configurable.
+    
+    
+Title: python sleep == IDE lock up
+Description: 
+    
+    
+                    
+When my script sleeps for 50sec my IDE locks up which is very annoying. I cant switch tabs, look through my source, type code, etc. It happens in pylde and pyscripter, i havent tried other IDEs. What can i do to fix this? i'm actually doing 
+
+for i in range(0, timeInSeconds): time.sleep(1) 
+
+
+hoping the IDE will update once per second but it doesnt look that way. What can i do to fix this?
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm assuming you are running your code from within the IDE?
+
+Your IDE is probably blocking while running your code. Look for a setting of some sort which might control that behaviour, otherwise I think your only choice would be to change IDE. (Or, run your code from outside the IDE)
+    
+    
+Answer 2: 
+
+    
+    
+Can you configure to run your script externally? I don't know about the specific IDEs, but I would try to spawn a different process for the debugged script and not run them under the IDE. If that doesn't help, then it is a problem of the IDEs.
+    
+    
+Answer 3: 
+
+    
+    
+The problem is your IDE not python. I don't use sleep that often, I've just tried it on the Eric IDE and you can use your IDE while your code is running, and sleeping. If can't set your IDE to do so and you need it then consider to change IDE or to run your code from console.
+    
+    
+Answer 4: 
+
+    
+    
+Personally, I think you should never ever ever execute code in the same loop as your IDE. Since most IDEs run a GUI mainloop, blocking this will cause complete freeze of the user interface. It is just asking for trouble, and I would take out bug reports against both those IDEs.
+    
+    
+Answer 5: 
+
+    
+    
+I suspect the problem the IDE is sitting in a loop waiting for the script to finish. 
+
+That in itself is not a problem, provided any user generated messages are still processed while the IDE is in this loop. 
+
+But what I suspect is going wrong in this case is the IDE is just running the loop without processing and messages and hence the user interface appears to be locked.
+
+The IDE would need to be changed to either process GUI messages while in the loop or alternatively it needs to create a thread to run the the script. The thread would then run in the background and the GUI would remain responsive.
+
+For example the Zeus for Windows IDE uses the background thread approach and it does not have this problem.
+    
+    
+Title: Which Expression product is for Silverlight developers?
+Description: 
+    
+    
+                    
+I'm not a graphics person, but I want to learn silverlight development.
+
+Which expression product am I looking at here?  Blend or studio or is vs.net 2008 all I need?
+    
+
+        
+Answer 1: 
+
+    
+    
+The studio as a whole is great and you can also do stuff with VS but you are probably looking for Expression Blend.
+    
+    
+Answer 2: 
+
+    
+    
+Blend is the product I've been using for silverlight.  You can work with just visual studio 2008, but Bend can make the vector graphics much easier to make.
+    
+    
+Answer 3: 
+
+    
+    
+For the developer side of silverlight Visual Studio is all you need. For the designer side Expression Blend is what you will want.
+
+Basically the visusl studio designer is read only meaning you have to write all the xaml by hand, blend gives you the ability to drag drop components and generally make creating the UI easier. (When compared to hand coding XAML)
+    
+    
+Title: Spyder &ldquo;Git Command Line Tools&rdquo; Issue
+Description: 
+    
+    
+                    
+Despite my trials to install the command line developer tools, it keeps providing me with an error message that says &quot;Can't install the software because it is not currently available from the Software Update server&quot;. I am on a new mac and am up to date on software.
+Does anyone have suggestions on how to install these tools. Another fix would include how I could hide the message pop up from coming up everytime I do anything on the Spyder IDE. I also will include that I installed this IDE through Anaconda.
+Thank you!
+    
+
+        
+Answer 1: 
+
+    
+    
+I was able to figure it out- on the current Mac OS system you must download XCode in order to fix the issue with command line tools within Spyder.
+I'll leave the question and answer here in case it is useful for anyone else.
+    
+    
+Title: Intellij does not show any errors in the syntax/does not give any suggestions
+Description: 
+    
+    
+                    
+There's a couple of similar threads, but none seems to contain the answer to my issue.
+My IDE does not show any error, does not give any suggestions, does not import anything. Example:
+public static String createInversion(ArrayList&lt;String&gt; splitName) {
+        splitName.removeIf(n -&gt; List.of(&quot;Lord&quot;, &quot;Lady&quot;).contains(n));
+        ArrayList&lt;String&gt; reverted = List.newArrayList(splitName.stream()
+        .collect(Collector.toCollection(LinkedList::new))
+        .descendingIterator());
+        return String.format(&quot;%s, %s&quot;, splitName.get(1), splitName.get(0));
+        gyugyuihu
+                dsfsdf
+                rewfewr
+    }
+
+You can clearly see that the last three lines are random chains of letters without any context. My IDE does not highlight them, does not report any problems. I don't even know if I should use Collector or Collectors class, because I am given zero suggestions, it's like writing in a Word Document.
+I am only given errors the moment I try to compile, but also just in the terminal. The code remains untouched by Intellij.
+I do not have the Power Safe Mode on, SDK is set correctly, language level in Modules is set correctly, Settings -&gt; Build, Execution, Deployment -&gt; Java Compiler -&gt; Target Bytecode Version is set correctly, the main folder is marked as the Source Root.
+I am out of ideas. Please help.
+EDIT:
+Adding a screenshot of my setup.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Have you tried to invalidate the caches? That usually clears up issues like this. It's easy to do too: From the main menu, select File | Invalidate Caches / Restart.
+    
+    
+Title: What is the main difference in Code OSS and VSC?
+Description: 
+    
+    
+                    
+Code OSS seems to be very similar or the exact same to VSC. I was then told to install the bin version of VSC in the Arch wiki.
+Is there any difference?
+    
+
+        
+Answer 1: 
+
+    
+    
+Code OSS is open source repository of microsoft's visual studio code project which is a distribution of the Code - OSS repository with Microsoft specific customizations, including additional source code and extensions, released under a traditional Microsoft product license.
+visit Code-OSS's official Wiki for detailed information.
+    
+    
+Title: Eclipse java debug can&#39;t edit code while running
+Description: 
+    
+    
+                    
+I'm not sure how it happened but a whole bunch of settings in my Eclipse java ide are messed up. I am assuming that this is also the reason why changing code while its running doesn't work anymore for me. When I run it in debug mode, change something and save it the changes are not happening in the program. I also dont get any warm messages if I do something that can't be changed while the code is running like adding a method or a field. Does anyone know what the problem is? I could probably reset all my settings but I also have some settings that I want to keep.
+    
+
+        
+Answer 1: 
+
+    
+    
+Two things to check:
+
+Ensure that Build Automatically is selected under the Project menu; and
+Make sure you're using Java version 1.4 or greater (Window menu &gt; Preferences &gt; Java &gt; Installed JREs.
+
+Eclipse requires both of these conditions in order to perform hotswap debugging.
+    
+    
+Title: Correct Cursor indentation on the new line after the semicolon in Javascript
+Description: 
+    
+    
+                    
+I wish the cursor to be indented properly when I press enter after the semicolon. How can I achieve this in VS Code?
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You can turn off wrappingIndent, or set it back to default same, and then ensure formatOnType is set to true:
+&quot;[javascript]&quot;: {
+    &quot;editor.wrappingIndent&quot;: &quot;same&quot;,
+    &quot;editor.formatOnType&quot;: true
+},
+
+This will put all the new lines the same as the previous, as you type it will automatically indent, where applicable:
+cy.visit('/admin/settings/categories/add')
+  .get('[data-cy=name]').type('category')
+
+
+As shown you would have to explicitly press 'Enter'; it doesn't work if you use shortcuts like CTRL + Enter.
+One thing none of these wrapper-like settings will take into account is context; say you want to deep indent after the first .get(), arbitrarily for illustration:
+cy.visit('/admin/settings/categories/add')
+    .get('[data-cy=name]').type('category')
+        .checkDb('Category', { name: 'Category 2' })
+    .get('[data-cy=submit]').click();
+
+The native formatter will automatically put it back in line with the other children.
+This would ultimately need native extension/onEnter support
+    
+    
+Title: eclipse Invalid location of tag (ol) warning
+Description: 
+    
+    
+                    
+So i have this html setup
+&lt;ul&gt;
+ &lt;li&gt;level one item one&lt;/li&gt;
+   &lt;ol&gt;
+   &lt;li&gt;level two item one&lt;/li&gt;
+   &lt;li&gt;level two item two&lt;/li&gt;
+   &lt;/ol&gt;
+ &lt;li&gt;level one item two&lt;/li&gt;
+&lt;/ul&gt;
+
+The structure should be valid even for html 4.01 . however i get the invalid location tag warning on eclipse for the nested/inner list.
+Any idea why? And how to fix it without making eclipse just ignore that element
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+According to W3.org markup check &lt;ol&gt; does not allow to be within the &lt;ul&gt; element directly.
+So you have to wrap your &lt;ol&gt; element inside a &lt;li&gt;, so do this like this:
+
+
+&lt;ul&gt;
+  &lt;li&gt;level one item one&lt;/li&gt;
+  &lt;li&gt;
+    &lt;ol&gt;
+      &lt;li&gt;level two item one&lt;/li&gt;
+      &lt;li&gt;level two item two&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;level one item two&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+
+If in any case, you wanted to hide the list style element from &lt;ol&gt; part you can do it by CSS styles like this:
+
+
+ul &gt; li:nth-child(2) {
+  list-style: none;
+}
+&lt;ul&gt;
+  &lt;li&gt;level one item one&lt;/li&gt;
+  &lt;li&gt;
+    &lt;ol&gt;
+      &lt;li&gt;level two item one&lt;/li&gt;
+      &lt;li&gt;level two item two&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;level one item two&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+    
+    
+Title: Why do we have so many cells in jupyter notebook instead of one?
+Description: 
+    
+    
+                    
+Why do we have so many cells in jupyter notebook?
+ To execute a piece of code, normally we have one large space like in eclipse, net beans or any other IDE.I want to know what all we can do with the cells in jupyter notebook?
+    
+
+        
+Answer 1: 
+
+    
+    
+The idea of Jupyter Notebook is that you can interleave code with explanatory text. This is why Jupyter offers two kinds of cells: code and markdown.
+
+As an example, this is very useful for exploratory data analysis where you might want to write some prose in a markdown cell about where the dataset came from and what assumptions were made, then apply an algorithm in a code cell, plot the results in another code cell, and explain what it all means in another markdown cell. 
+
+Another advantage of cells is that you can execute them individually. Some algorithms might take a very long time (think machine learning) and don't have to be executed every time you make a change to another part of the notebook (e.g. plotting).
+    
+    
+Answer 2: 
+
+    
+    
+The purpose it do be able to divide the code into several blocks.
+If you just run "Kernel -/pp/pp/p/div
+Answer 3: 
+
+    
+    
+Cells let you save states. Imagine you need to read a large dataset and perform some machine learning on it. You can use one cell to read the dataset–only once–and you can continue your data explorations down in the notebook. It saves a lot of time.
+    
+    
+Title: In IntelliJ IDEA, how do I disable the auto-format on simple methods
+Description: 
+    
+    
+                    
+After making simple methods such as:
+
+    public int getWidth() {
+        return game.getWidth();
+    }
+
+    public int getHeight() {
+        return game.getHeight();
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+
+It will be reformatted as:
+
+ public int getWidth() { return game.getWidth();}
+
+    public int getHeight() { return game.getHeight();}
+
+    public Game getGame() { return game;}
+
+
+In the settings under Editor 
+Answer 1: 
+
+    
+    
+Just saying, it's not that bad since you can click on the method and it expands it.
+
+But you can click File | Settings | Editor | General | Code Folding and click Collapse by Default. Then uncheck One-Line Methods under the Java section.
+    
+    
+Title: For Typescript intersection type (type C = A &amp; B), how to see resulting type signature instead of components in IDE hints?
+Description: 
+    
+    
+                    
+In Typescript, when inspecting types defined by intersection, I see a hint identical to original definition:
+
+
+
+but I would like to see the resulting shape, something like this:
+
+ 
+
+what is a quick / efficient way to do this? 
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't think there's any way to ask your IDE to do this automatically, but you can make a type function that calculates the type you're looking for.  From the answer to the question is duplicates, I would write Expand:
+
+type Expand&lt;T&gt; = T extends infer U ? { [K in keyof U]: U[K] } : never;
+
+
+which takes a type (or union of types) and walks through all of its properties, even if they come from multiple intersections, and packages it (or each union member) into a single object type.  Then you could either write Expand&lt;C&gt; or you could define C to be Expand&lt;A &amp; B&gt;:
+
+type ExpandedC = Expand&lt;A &amp; B&gt;;
+/*
+type ExpandedC = {
+    a: number;
+    b: string;
+    c: boolean;
+    d: Date;
+}
+*/
+
+
+which is what you wanted.  Okay, hope that helps; good luck!
+
+Playground link to code
+    
+    

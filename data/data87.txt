@@ -1,0 +1,1901 @@
+Title: Rollback intelij 12 look and feel
+Description: 
+    
+    
+                    
+The new Intellij 12 look and feel is awesome, but can it be rolled back?
+I am used to the old Intellij style and icons and I really enjoyed the look and feel for the v 11.
+Can I change it back somehow? 
+
+Thanks,
+Arkde
+    
+
+        
+Answer 1: 
+
+    
+    
+Look&amp;Feel can be changed in File | Settings | Appearance, editor color scheme in File | Settings | Editor | Colors &amp; Fonts, old icons can be restored using a plug-in.
+    
+    
+Title: Why does Xcode autocomplete fail to work when I alloc/init a variable?
+Description: 
+    
+    
+                    
+I have a ridiculous problem with Xcode 4.3.2. Whenever I declare a new variable say
+NSMutableDictionary *var = [NSMutableDictionary alloc] init];, Xcode autocompletes NSMutableArray in LHS of the expression but not in RHS.
+
+
+
+This is irritating obviously. Often causes typos which I have to re-correct going back and certainly hampers the flow. From my experience it doesn't happen in any other situation.
+
+Anyone else ever faced this? Should I raise a bug?
+    
+
+        
+Answer 1: 
+
+    
+    
+I think that's because Xcode doesn't know if you want to make some operation with the class and tries to find an appropriate variable. So if you want Xcode to autocomplete your class name in RHS, first write [] then start typing inside: [NS...]
+    
+    
+Title: alternative startup object for different builds
+Description: 
+    
+    
+                    
+I have a standard WPF application. 
+The VS solution has a main project and a unit test project (using the standard VS unit test suite)
+
+For testing purposes beyond unit tests (e.g. just interactively trying out a new piece of code) I have to wait for my whole application to start and then click my way to the form I want to test.
+
+I'd prefer if I could choose an alternative build with a different entry point, which skips all the stuff I do not need and drops me off right where I want to. 
+I have created an additional build configuration besides "debug" and "release" called "debug (test)".
+How do I set different startup object that is executed when I choose this build?
+
+Or is there an alternative solution for this problem? To simplify testing and profiling I'd prefer something that does not involve adding an additional project or dll.
+
+One possible solution would be to define a compiler symbol and check for it in my app.xaml.cs
+
+#if DEBUG_TEST
+    TestWindow view = new TestWindow();
+    view.Show();
+#else
+    MainWindow view = new MainWindow();
+    view.Show();
+#endif
+
+
+anything less hacky?
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't know why you consider this approach 'hacky'.
+This seems to be the right way to go.
+Just select your configuration DEBUG(TEST) and add the DEBUG_TEST define to the properties page of your project.   
+
+Return to normal configuration when you have done with your tests.
+    
+    
+Answer 2: 
+
+    
+    
+An alternative approach would be Dependency Injection: http://www.martinfowler.com/articles/injection.html
+
+Let's say you use this code:
+
+IMainView view = DIContainer.GetInstance&lt;IMainView&gt;();
+view.Show();
+
+
+In your Main project you configure your Dependency Injection Container to use MainWindows
+
+DIContainer.SetDefaultInstance&lt;IMainView, MainView&gt;();
+
+
+and in your test project
+
+DIContainer.SetDefaultInstance&lt;IMainView, TestView&gt;();
+
+
+MainView and TestView Need to implement 
+
+interface IMainView
+{
+     void Show();
+}
+
+
+This simple approach can be done by yourself (use Activator.CreateInstance&lt;T&gt; in GetInstance) but there are a couple of frameworks out there that take care of that.
+
+Which .NET Dependency Injection frameworks are worth looking into?
+    
+    
+Title: How to convert color from (rrr ggg bbb) to RRGGBB by javascript
+Description: 
+    
+    
+                    
+I have this code (in Selenium IDE): 
+storeEval | window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('input')[0]).getPropertyValue('background-color') | result
+
+it's returns me color in (rrr, ggg, bbb), how can i get this color in RRGGBB? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Try this:
+
+command: storeEval
+target : color = window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('input')[0]).getPropertyValue('background-color'); colorArr = color.replace(/[(rgb()\)]/g, '').split(','); hexString = parseInt(colorArr[0]).toString(16) + parseInt(colorArr[1]).toString(16) + parseInt(colorArr[2]).toString(16);
+value  : result
+
+    
+    
+Answer 2: 
+
+    
+    
+you can convert the decimal value (0 - 255) to hex (0 - FF)
+
+var hexString = redNumber.toString(16) + greenNumber.toString(16) + blueNumber.toString(16);
+
+    
+    
+Title: How do I skip past an automatically generated end &lt;/tag&gt; in my IDE without lifting my hands off the keyboard (or using arrow keys)?
+Description: 
+    
+    
+                    
+OK, lets just do a case in point, but before that, a simple key.
+
+"*" means "this is where the cursor is".
+"**" means "this is where we'd like the cursor to be able to 'jump' to"
+
+
+Now assume you or I need to write some code, lets say we're not really even thinking that hard and might even be copying down someone else's code. We're patient, but in a hurry. OK, so you're writing this...
+
+&lt;div class="subject show"&gt; 
+#ok, the "&gt;" and "" were pregenerated, but I didn't need to skip, next line
+&lt;h2&gt;title*&lt;/h2&gt;**
+
+
+and immediately we meet the issue. Yes, it is great that my IDE automatically generated the end tag for my h2 tag, but when I get finished defining it, how do I skip outside of the bracket?
+
+&lt;h2&gt;Show Subject*&lt;/h2&gt;**
+
+
+If my cursor were where that single asterisk is, how might I auto-skip to the place where two asterisks are? What would that even be called? That is essentially my question here. I assume the answer will be very short and simple. Here a couple more examples to pound the point in.
+
+Continuing on in the same html.erb file...
+
+  &lt;table summary="Subject detail view"&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Name*&lt;/th&gt;**
+    &lt;/tr&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+
+
+So here, my IDE (RubyMine, Aptana which I also use does similar stuff, as do most other editors) performs beautifully, automatically generating end tags which I will only need to move beyond later on. I run into the next snag after finishing typing "Name". Again, I'm stuck at * but want to jump to ** without too much disruption.
+
+By now I think I've made my point. I love this community and know some of you know how to get around this. It's a challenge itself just to describe what it is we're even doing here! I'd call it "jumping over the automatically generated end tag", but Google is not sympathetic to this query as of yet.
+    
+
+        
+Answer 1: 
+
+    
+    
+Try pressing the End key, That will skip to the end of the line.
+
+Sources:
+http://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
+    
+    
+Answer 2: 
+
+    
+    
+In some IDE, pressing the tab key will move your cursor to the next placeholders in the currently auto replaced element, and if there is no more placeholders, brings you past the end of the auto replaced text. 
+    
+    
+Title: How to add a new language support to Bluefish editor?
+Description: 
+    
+    
+                    
+I'm working on LESS files under Bluefish editor.  Any idea about how to tell Bluefish that I want him to treat them (syntax coloring, auto indentation, etc) just like CSS files ?  
+
+I checked the preferences em/em/pp/p/div
+Answer 1: 
+
+    
+    
+You don't have to add a language you just have to select CSS when you open a less file in the bluefish editor.
+As i am using the German translation i am not sure about the right menu name look for something like:
+
+Documents -
+Answer 2: 
+
+    
+    
+Bluefish has *.bflang2 files. They are instaled system wide, but they can also be loaded from .bluefish/less.bflang2
+
+Check bflang2.bflang2 and sample.bflang2 for examples how to create a new language file.
+    
+    
+Title: What version of Java do I have to install?
+Description: 
+    
+    
+                    
+What version of Java do I have to install to be able to develop JSP in Debian? There are different version on the Oracle site. What version is needed? Java SE?
+    
+
+        
+Answer 1: 
+
+    
+    
+You only need JDK from the oracle's site. This will provide the standard java API. To get the JSP implementation, you will be needing a standard web container like Apache Tomcat. This will enable you to develop JSP based applications. To develop JSP based applications only, these two will be enough.
+
+However, if you need to use full Java EE stack (JSP, JNDI, EJB etc.) then you will need more than those two. In that case you should use a full fledged Java EE Application Server like GlassFish, JBOSS etc. These will provide the implementation of the Full Java EE specification. 
+
+So for only JSP based applications, use JDK + a standard web container ( like tomcat).
+
+To use full Java EE Stack, use JDK + an application server (like GlassFish, JBOSS etc.).
+    
+    
+Answer 2: 
+
+    
+    
+You can use any version, but JDK 1.5 or above, I would suggest you.
+    
+    
+Answer 3: 
+
+    
+    
+This is not related to an OS.
+You should download at least 1.6 not due to OS but due to the fact that older versions are becoming deprecated.
+Besides the missing features I believe 1.5 is no longer supported by Oracle except in special cases  
+
+Unless you are asking about Java SE or Java EE.
+Either is fine.The difference is that for Java SE you need to include some extra jars to be able to compile certain classes related to servlets.
+For Java EE you just get extra stuff you'll not need.
+Check here for a quick explanation Java Versions
+    
+    
+Title: Best quick alternative compiler/IDE to Turbo C that supports audio and graphics
+Description: 
+    
+    
+                    
+I am making a small 2d GAME PACK as my University project. I am using Turboc 3.0 as the compiler. I am at a stage where I need better graphics and sound. Ive spent days looking for a workaround on the net and by myself too including audio and better graphics.Can you please tell me which Ide can be learnt quickly, as time is a constraint here?
+    
+
+        
+Answer 1: 
+
+    
+    
+Turbo C is just an IDE + compiler for the C programming language. C does not have any audio or graphics capabilities on its own, which means that you will not find a C IDE that readily incorporates such functionality. What you need is a library with a C API that will allow you to do such things.
+
+IIRC Turbo C did come with a rudimentary graphics library for DOS, but I do not believe that there was any support for audio. Unfortunately (or not) Turbo C is pretty much obsolete these days. Most programs written in it would have issues on modern operating systems and handling audio and graphics on DOS essentially means talking straight to the hardware - definitely not something trivial.
+
+If you are after a modern audio/graphics library, SDL is a popular choice for 2D games and, from my experience, rather easy to work with. You will probably need to couple it with a more modern programming environment though - I doubt Turbo C will cut it. You might want to have a look at one or more of the following for a compiler and/or IDE that will be fully functional on modern systems.:
+
+
+Codeblocks
+Dev-C++
+
+Warning: this IDE has not been updated for quite some time. I have used it successfully in the past, but I would not recommend investing time and resources on it at this point.
+Mingw32
+Eclipse CDT, downloadable here
+
+Warning: Eclipse is mostly targeted to professional developers. It is very powerful, but it can occasionally be rather confusing to use. While it will save you a lot of time in the long run, it may not be perfectly suitable for someone that needs to get work done right here, right now.
+Visual Studio Express
+
+    
+    
+Title: Modify Java classes from Eclipse in running servlet?
+Description: 
+    
+    
+                    
+I have a multi-module Maven project that is a Java web application.  I am using Eclipse as my IDE and am wondering if there is anything in WTP that will allow me to add/delete/modify Java classes without doing 
+
+
+"mvn clean install" and, 
+restarting the application server?
+
+
+Edit:  I've seen JRebel and watched some videos, but it doesn't support CXF or GWT and it seems to me that Eclipse/WTP should do something like this out of the box, yes?
+    
+
+        
+Answer 1: 
+
+    
+    
+JRebel does support CXF and GWT - refer to the features page http://www.zeroturnaround.com/jrebel/features/frameworks/
+    
+    
+Answer 2: 
+
+    
+    
+Most web containers allow you to perform hot code replacements but there are a number of limitations, such as:
+
+
+Changing the class/method signature will not work - you have to redeploy and restart
+Changing a "stack frame" call (e.g. Main) generally will not work either.
+
+
+Check out this link for instructions on how to set it up for WTP.
+    
+    
+Answer 3: 
+
+    
+    
+Check Dynamic Code Evolution VM (DCEVM). You do not need to install anything specific in eclipse. Check if it works with CXF. GWT already supports hot deployments in hosted mode, with some limitations. For example, if your server is Jboss, check this.
+    
+    
+Title: How to jump to method in taglist
+Description: 
+    
+    
+                    
+I am using vim with taglist plugin. But when open taglist everytime, it displays fields and method. But i don't care the fields in this class, i just want to just select a method and jump to it. Using search such as /method can actually solve this problem. But i think there must be better solution.
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+Edit straight from the docs (taglist.txt):
+
+
+  For example, to list only the classes and functions defined in a C++ language
+  file, add the following line to your .vimrc file:
+
+ let tlist_cpp_settings = 'c++;c:class;f:function'
+
+
+
+
+
+This configures taglist to pass certain options to ctags, e.g.
+
+ctags --c++-kinds=+p --fields=+iaS --extra=+q
+
+You could you --list-kinds to find out which kinds you want included.
+    
+    
+Title: Cannot install LuaEclipse on Windows 7 64bit
+Description: 
+    
+    
+                    
+Note: Already asked in this post (asked on StackOverflow). However, the problem is not solved.
+
+When I install LuaEclipse by following this instruction, for LuaEclipse 1.2, after input software's URL, check LuaEclipse 1.2 and click Next, it always reports something like this:
+
+
+  Cannot complete the install because some dependencies are not
+  satisfiable   org.keplerproject.ldt.feature.feature.group
+  [1.2.0.200802220021] cannot be installed in this environment because
+  its filter is not applicable.
+
+
+Here are what I tried:
+
+
+With Eclipse for Windows 64bit: I check Lua Development Tool (for 32bit), it failed, so I check 64bit version (without checking 32bit version), but it still failed. I tried checked all, and... it failed again.
+Then I downloaded Eclipse for Windows 32bit (yes, it can run on Windows 7 64bit, and I searched with Google, someone solves the problem by using 32bit version of Eclipse), and tried every possible check like 1., but they all failed!
+I tried 1.1, and it installed successfully, but I need an important feature in 1.2 version!
+
+
+Has anyone experimence this problem? Or can you tell me any LUA plugin for Eclipse that support documentation (I mean, the auto-completion for syntax, ...)?
+    
+
+        
+Answer 1: 
+
+    
+    
+Making @sylvanaar's comment an answer:
+
+
+  Also, you might want to check out http://eclipse.org/koneki/ldt they seem to
+  be picking up where LuaEclipse left off.
+
+    
+    
+Title: What are some ways that I can develop C++ apps in Linux from a Windows workstation?
+Description: 
+    
+    
+                    
+I'm developing C++ apps for Linux, but my workstation is Windows 7. I've read that Visual Studio is the strongest C++ IDE for Windows, but I actually want to execute the code on Ubuntu and be able to use a more graphically pleasing debugger than gdb, although the functionality of gdb is pretty good. I'm really happy with valgrind as well, but again, I'd like to be able to leverage that in an IDE in windows. 
+
+I currently use QtCreator as my C++ IDE and I edit the files over a samba mount to the linux box. I use Putty to run the Linux commands. I use git as my source control system, gcc as my compiler and cmake as my build system. I like QtCreator, but as I have it configured, I'm not taking advantage of code-completion or debugging.
+
+The closest thing I've seen is CodeWarrior. It allows for executing code on remote embedded systems and a full debugger. Has anyone ever used this for general app development on Ubuntu?
+
+Is QtCreator the right IDE for me? Is there something else that I can do to configure it so that it'll give me those rich IDE features that I'm looking for? Or should I look to another IDE? Also, are there some tools that I've neglected to mention that would make C++ development easier on a Linux box from a Windows workstation?
+
+Thanks in advance...
+    
+
+        
+Answer 1: 
+
+    
+    
+It is not clear, you run QtCreator on windows?
+If so, you can run QtCreator in Linux,
+plus install nxserver on Linux,
+and nxclient on windows (http://www.nomachine.com/).
+
+So you run nxclient on windows, login to linux,
+and work on linux, in compare with virtual machines,
+you get more prefomance. 
+    
+    
+Answer 2: 
+
+    
+    
+Use VirtualBox and linux virtual machines?
+    
+    
+Answer 3: 
+
+    
+    
+X Windows.
+
+You could install Cygwin to run an X11 server on your Windows 7 desktop, then run an X11 graphical IDE like QtCreator on your Linux server that renders directly to your Cygwin Windows 7 desktop. I actually tried setting this up with Code::Blocks on openSUSE and Cygwin on Windows 7 just a few weeks ago because I'm in the same situation you're in. It works... kind of. There are weird intermittent errors. 
+
+Your scenario is exactly the scenario that the X Windows system was designed for, and it is awesome in concept, but the actual X11 protocol design and implementation is, I gather, old and pretty hairy. I have very little experience with X, but the people who do have lots of experience with it seem to complain about it a lot, and I suppose there are good reasons for that. Too bad, because it would be wonderful if there were a technology like X Windows that worked. AJAX is basically a cheap hack for solving the same kind of problem that X Windows tried to solve... running a remote application with local rendering of a rich GUI.
+
+I gave up on X and I still do the same thing you do: I have putty and Samba-mounted files that I edit with Visual Studio. Visual Studio is the best text editor I've ever used. All the other Visual Studio IDE features are gravy.
+    
+    
+Answer 4: 
+
+    
+    
+There's some solutions : 
+
+
+VmWare : not free but really good
+Virtualbox : free but less powerfull than VmWare
+KVM/Qemu : Free but less powerfull than VmWare
+
+    
+    
+Title: Run IDE, for Java, ON Android 3.1
+Description: 
+    
+    
+                    
+I am about to purchase a tablet probably a Thrive. I need to know if I can write applications in Java, to use on a regular PC, on a tablet using Android 3.1. I am in school and I write a lot of applications using Java. I need to be able to write code using a tablet running Android 3.1 Honeycomb.
+
+Also if I can do this what IDE can I use?
+
+NOTE: I am not trying to write Android applications in Java. I am trying to write applications in Java (for regular PC) using a IDE from a tablet with Android 3.1 honeycomb.
+
+Basically I want to:
+
+
+Install Java JDK on Toshiba Thrive
+Install IDE on Toshiba Thrive (such as eclipse, jgrasp, netbeans)
+Run IDE and write code in Java
+Save code to flashdrive
+Use/edit code on my PC
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Go to Google Play and download AIDE although it is for designing Android Apps on cell phone.
+It works on my android tablet and takes Java. With a few tweaks I bet you could make it compile and run pure java. Please cheak it out and let me know. I am working on it right now.
+I need portable java development on the go anywhere!!
+    
+    
+Answer 2: 
+
+    
+    
+You can't do that on a normal Android tablet, the best you can hope is to use Remote Desktop/TeamViewer/VNC to remotely use a normal PC an do your actual development there. One option you have is to root the tablet and install Ubuntu side-by-side the Android environment, but I'm doubtful that the OpenJDK will be up to the task.
+
+On the third hand, a tablet is a device that is very hostile to text entry, and you wnt to perform an activity that is very text-heavy. Are you on the right track? (not to menttion the question on how to perforn shift-ctrl-f on a tablet)
+    
+    
+Answer 3: 
+
+    
+    
+With the latest Asus tablet that runs Android on a quad-core chip, I see this as a possibility in the near future if not now.  Essentially, it would be like a merge of iPad and MacBook.
+
+And no AWT/SWing/etc is not a problem for me, since I will be doing server-side development (using Eclipse/tomcat).
+
+Now the question:
+How hard is it to port JDK onto Android?
+
+Allen S.
+    
+    
+Answer 4: 
+
+    
+    
+You can use DroidDevelop
+
+https://market.android.com/details?id=com.assoft.DroidDevelop
+
+http://en.assoft.ru/droiddevelop
+    
+    
+Title: How to create JavaScript projects in Netbeans 7?
+Description: 
+    
+    
+                    
+I have the basic Java version of NetBeans installed, but I want to be able to create JavaScript/HTML projects with auto-completion and other IDE-supported functionality. I can't seem to find out what I need to install to do this. What do I need to do?
+    
+
+        
+Answer 1: 
+
+    
+    
+There is no dedicated Javascript project type in Netbeans 7. There are still various possibilities to work on HTML/JS files:
+
+
+Add a JS/HTML file to any of the available projects, e.g. a PHP project.
+Open the JS/HTML file directly without having a project by using
+File/Open.
+Define own project type. This is likely not so easy.
+
+
+In any case you will be able to edit the file and utilize the IDE language features like autocompletion, etc. But you will not be able to run/debug the JS file. For debugging you will need to use the debuggers integrated with the browsers (Developer Tools in IE, Chrome; Firebug in Firefox, etc.)
+    
+    
+Answer 2: 
+
+    
+    
+You install the PHP plugin from the Plugin directory. This isn't explained anywhere that I can see, I just had to guess.
+    
+    
+Answer 3: 
+
+    
+    
+You can download the php bundle for netbeans here.You can also create xml,json,css,php pages with it.
+    
+    
+Title: python editor/IDE that shows available functions and more importantly their documentation
+Description: 
+    
+    
+                    
+f = open(filename, 'r')
+strings = f.read().lower()
+
+
+I want a python editor/ide  that works like visual studio. In the above after typing 'f.' it shows me the list of available functions and their documentation(DO NOT WAIT FOR ctrl-space). Just like visual express C#. Also preferably it shows autocomplete lists of all variables as well. Is there such an editor? 
+
+I have gone through several suggestions - eclipse , vim , emacs , pyscripter, komodo etc etc. Tired of trying. finally asking. 
+Help me out.
+
+I have checked similar questions, none answered my query.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can try Netbeans. It is free. Some of its features - 
+
+
+It shows a list of functions and their documentations as well as variables but on Ctrl+Space. (I don't know why you don't want to hit Ctrl+Space, otherwise every time you start writing something, you will be disturbed by a popup.)
+It also underlines unused variables, plus the other usual things like syntax highlighting, matching closing brackets, etc.
+You can easily change the name of variables within a function/class using the refractor. 
+You can find usages of a particular names within your project
+You can view all your classes, their methods and attributes, functions and global variables at a glance using the navigator.
+It has a project manager
+You can debug your project.
+(whatever else you can possibly think of.)
+
+
+It has lots of other features... I can't name them all here.
+
+It is the best opensource IDE !
+    
+    
+Answer 2: 
+
+    
+    
+Try to take a look at PyCharm. It not open source but it is quite cheap and powerful IDE:
+
+http://www.jetbrains.com/pycharm/
+http://www.jetbrains.com/pycharm/features/index.html
+
+
+  Code completion for keywords, classes,
+  variables, etc. — Ctrl+Space. Editor
+  suggestions are context-aware and
+  suggest most appropriate options.
+  
+  Quick definition / documentation view
+  — see the object definition or
+  documentation in-place without losing
+  your context
+
+    
+    
+Answer 3: 
+
+    
+    
+I can confirm that wingide code completion works like that. I tried the example you have here and it worked
+    
+    
+Answer 4: 
+
+    
+    
+I use Pydev, after Vim it speeds a lot! You can quickly navigate your project tree, in tabs you open necessary files, also inline watching of class/method definition, you can even 'jump' to that file. Also you can mark project as 'Django project', after setting python paths it really helps make less mistakes and code quickly. Also I've very much benefited multi-file search/replace. Recommend it! :)
+
+Note: If you use Linux, replase OpenJRE with binary from Oracle's site. Otherwise there'll be craches.
+    
+    
+Title: Eclipse - search for resource - limit extension to match .js NOT .jsp
+Description: 
+    
+    
+                    
+In Eclipse, when I press Ctrl+Shift+R to bring up the 'Open resource' dialog window, I can't figure out a way of searching only for javascript files (.js), as any search string I enter will always yield .jsp files as well.
+
+I tried abc*.js (explicit file extension does not work, as still JSPs are returned), abc*.?? (trying to limit the length of extension to any TWO characters, still returns JSPs)... it's a bit annoying. Is there any way to get the window to return .js files only?
+    
+
+        
+Answer 1: 
+
+    
+    
+Wow, I managed to resolve this myself. It doesn't seem like the correct thing for Eclipse to do (naughty Eclipse, naughty, you should be ashamed of yourself) but it does work like a charm - it's as simple as typing a &lt;space&gt; after the search term. 
+
+So, instead of searching for "abc*.js" (which would yield .jsp results also), one can just type in "abc*.js " (followed by a space) and now only javascript files are presented in the results list. Voilà!
+    
+    
+Answer 2: 
+
+    
+    
+I asked about this in the Eclipse forums, and found a real solution.
+    
+    
+Title: Untangling dependency cycles in eclipse
+Description: 
+    
+    
+                    
+I'm trying to export a plug-in feature as webstart in eclipse. After setting up feature.xml, and running the export wizard, when I click finish I get the following error:
+
+A cycle was detected when generating the classpath org.pathvisio.core_2.0.11, org.pathvisio.batik.codec_1.7.0, org.pathvisio.batik.transcoder_1.7.0, org.pathvisio.pdftranscoder_1.7.0, pvplugins-bridgedbSettings_1.0.0.201106291012, org.pathvisio.core_2.0.11.
+
+
+The trouble is, I have no idea where this cycle is exactly. So my question is: how do I find out which plug-in is causing the cyclic dependency? Are there any tools to help analyse dependency problems?
+    
+
+        
+Answer 1: 
+
+    
+    
+The message above lists the exact plug-ins that makes up the elements of the cycle. It is not a single plug-in that is responsible for the cycle; it is the listed set of plug-ins... So org.pathvisio.core has a dependency on org.pathvisio.batik.codec which has a dependency on...
+
+When you try to understand the dependencies, remember to include the installed fragments in the calculations :-)
+
+To visualize the dependencies, I usually open the PDE editor of one of the plug-ins, go to the "Dependencies" page, in the botton-right section you have a number of tools that can help you - in this case primary "Look for cycles in the dependency graph".
+    
+    
+Answer 2: 
+
+    
+    
+A cycle was detected when generating the classpath
+
+It means that somewhere you have a plugin A requiring plugin B and plugin B requiring plugin C. plugin C requiring plugin A.
+
+Find and fix this!
+    
+    
+Title: Which pythonIDE i can use to link with VPS django project
+Description: 
+    
+    
+                    
+I have Django running in my VPS .
+I find it very hard to ssh everytime and edit files and commands there.
+
+I know there are IDEs available like komodo , Pycharm but i want to use that IDE which link with my remote VPS .
+
+I don't know if thats exactly possible or not.
+    
+
+        
+Answer 1: 
+
+    
+    
+you shoud be able to do what you are asking for using the Remote System Explorer in Eclipse (it is provided by default, it's not external addon. Not true). For Python development in Eclipse also consider using the PyDev plugin.
+
+Final result
+
+
+    
+    
+Answer 2: 
+
+    
+    
+I'd recommend doing all your development locally (on localhost).  Once you have a working product upload to your VPS.   
+
+Django has tools for this built right into it.
+    
+    
+Title: Coding in C in Linux vs Windows. Any adequate debugging oriented C-centric IDE?
+Description: 
+    
+    
+                    
+I've run into an issue with writing some code in c. My basic problem is that I am pressed for time and the code I am dealing with has lots of bugs which I have to "erradicate" before tomorrow evening.
+
+The bigger part of the problem is that there is no adequate IDE that can do real time debugging, especially when using threads or spawning processes with fork(). I tried Mono, Eclipse, and finally NetBeans, and have concluded that those are very good but not for coding in C. More over the learning curve to utilize the command line debugger properly is quite steep. (Like I mentioned earlier... I am pressed on time.)
+
+So, since I am a C# developer by profession I was wondering whether I can pull this off in VS2003/VS2005/VS2008/VS2010. If I abstain from using system calls, can I do this?
+
+Of particular interest are FILE* descriptor and fread(), fclose(), fseek() methods. I know they are part of the standard C library, however are they tied to the platform itself? Are the headers the same in Linux vs Windows? What about fork() or shared memory?
+
+Maybe if I use VS2010 to build parts of the component at a time (by mocking inputs and stuff), debug those, and then migrate the working code in the overall Linux project would prove most useful?
+
+Any input would be greatly appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  The bigger part of the problem is that there is no adequate IDE that can do real time debugging, especially when using threads or spawning processes with fork().
+
+
+The Eclipse CDT would probably have the best overall support for C/C++ development and integrated debugging.
+
+Note that multithreaded and multiprocess debugging can be difficult at the best of times.  Investing in a good logging framework would be advisable at this point, and probably more useful than relying on a debugger.  There are many to choose from - have a look at Log4C++ and so on.  Even printf in a pinch can be invaluable.
+
+
+  So, since I am a C# developer by profession I was wondering whether I can pull this off in VS2003/VS2005/VS2008/VS2010. If I abstain from using system calls, can I do this?
+
+
+If you take care to only use portable calls and not Win32-specific APIs, you should be ok.  Also, there are many libraries (for C++ libraries such as Boost++ that provide a rich set of functionality which work the same on Windows, Linux and others.
+
+
+  Of particular interest are FILE* descriptor and fread(), fclose(), fseek() methods. I know they are part of the standard C library, however are they tied to the platform itself? Are the headers the same in Linux vs Windows? What about fork() or shared memory?
+
+
+Yes, the file I/O functions you mention are in &lt;stdio.h&gt; and part of the portable standard C library.  They work essentially the same on both Windows and Linux, and are not tied to a particular platform.
+
+However, fork() and the shared memory functions shmget() are POSIX functions, available on *nix platforms but not natively on Windows.  The Cygwin project provides implementations of these functions in a library for ease of porting.
+
+If you are using C++, Boost++ will give you portable versions of all these system-level calls.
+
+
+  Maybe if I use VS2010 to build parts of the component at a time (by mocking inputs and stuff), debug those, and then migrate the working code in the overall Linux project would prove most useful?
+
+
+You could certainly do that.  Just be mindful that Visual Studio has a tendency to lead you down the Win32 path, and you must be vigilant to not start using non-portable functions.  Fortunately the library reference on MSDN gives you the compatibility information.  In general, using standard C or POSIX calls will be portable.  In my experience, it is actually easier to write on *nix and port to Windows, but YMMV.
+    
+    
+Answer 2: 
+
+    
+    
+Looks like I am the first to recommend Emacs here.  Here is how Emacs works.  When you install it, it is simply a text editor with a lot of extensions(debugger and C font-locking are included by default).  As you start using it and install the extensions you miss, it becomes more than just an editor.  It grows to become an IDE very soon and easily, then on to something that can eschew the OS under one frame.
+
+Emacs might take long to learn, in the mean time, you could use Visual Slick Edit if you are not pressed on the cost part.  I have used it on both platforms and seen it work good with version control, tags, etc.
+    
+    
+Answer 3: 
+
+    
+    
+Perhaps Code::Blocks? I love it and while it says it's for C++ it is, of course, very good for plain C as well.
+    
+    
+Title: Check for write caching enabled or not on Linux
+Description: 
+    
+    
+                    
+I want to check if the write-caching is enabled or not for my IDE drive on Linux... How do I do it ?
+    
+
+        
+Answer 1: 
+
+    
+    
+Run /sbin/hdparm -I as root, write caching is enabled if there is a * next to Write cache.
+    
+    
+Title: Java - identify code which changes a class private member?
+Description: 
+    
+    
+                    
+Using Eclipse or IntelliJ how can you locate all code that may modify a class' private member (type is Object)?  
+
+This member is available via a getter, so in theory a class could call getMyMember() and then set this to another value without calling the setter.  Looking to find all possible cases of this..
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  This member is available via a getter, so in theory a class could call getMyMember() and then set this to another value without calling the setter.
+
+
+I'm not sure I understand you correctly, but you can't change the reference returned by getMyMember() directly, just the object being referenced.
+    
+    
+Answer 2: 
+
+    
+    
+Rename the member; all accesses are now flagged as errors, allowing you to easily locate them.
+    
+    
+Answer 3: 
+
+    
+    
+In Eclipse, right-click on the private member and choose "Open Call Hierarchy."
+
+Note that the private member is a reference, and cannot be modified outside the class -- with some exceptions like JNI and reflection.  
+
+Can you return a wrapper object from the getter?
+    
+    
+Answer 4: 
+
+    
+    
+You'll have to start with Java - identify code which changes a class private member? and then work through the list manually.  To automate it, you'd have to generate a specific call-graph for those accesses. The call-graph isn't hard but they are generic for the whole abstract syntax tree, not limited to a specific member.
+
+It might be faster to create a child class of the target member type and overriding whichever method is appropriate to log the access/modification, along with a stack trace, and then call the parent method.  The getter can create the new class, pass in the real object in the constructor, and return the instrumented class.  Something like an annotation or observer.
+    
+    
+Answer 5: 
+
+    
+    
+In Eclipse: Select the variable or private member, right click, references and workspace or use shortcut ctrl+shift+g on the variable
+    
+    
+Answer 6: 
+
+    
+    
+As mentioned above, the questions is partially flawed: a getObject() accessor will not allow code outside the class to mutate the state of the field.
+
+If you have a setObject() mutator as well, and want to know through which code paths new values will "flow into" the field, try "Analyze..Dataflow to this" in IntelliJ.
+
+See this IntelliJ blog post for more information:
+http://blogs.jetbrains.com/idea/2009/08/analyzing-dataflow-with-intellij-idea/
+    
+    
+Title: How to change Delphi Build configuration?
+Description: 
+    
+    
+                    
+How to change the Delphi 2009 Build configuration?
+
+The only place I see is on top of the Project Options window, anyway I don't feel that the options are applied.
+    
+
+        
+Answer 1: 
+
+    
+    
+Two Ways
+
+From the Project Menu
+
+
+Project /em/liliem/em/liliem/em/lili/li/olp/polliem/em/lili/li/olp/ph2/h2p/ppa href="https://stackoverflow.com/questions/558147/delphi-msbuild-build-configurations-from-command-line/558367#558367"/a/p/div
+Title: Why do many programmers prefer oldfashion tools like NC or VIM to modern file managers and IDEs?
+Description: 
+    
+    
+                    
+I do understand why many use CLI - It provides more facilities and it is more flexible for particular tasks.
+
+But why do many programmers prefer old-fashion tools like NC or VIM to modern file managers and IDEs that have user-friendly, nice-looking interface and provide same functionality?
+    
+
+        
+Answer 1: 
+
+    
+    
+Would those be the modern file managers and IDEs which suffer from feature-bloat, pictures which paint about 5 words, impossibility of operation from the keyboard, a strait-jacket for a specific development method, and blindness to anything other than object-oriented programming ?
+    
+    
+Answer 2: 
+
+    
+    
+IDEs are easier to learn, and faster to use when first learning. They're heavily dependent on the use of the mouse. "Old-fashioned" tools like Vi or Emacs are ultimately faster to use and a pleasure to work with once you've managed to embed their commands within your muscle memory. And there lies the trick. The idea is that you can use them without even lifting your hands from the keyboard. Mastering those lightweight tools is not easy, and it's a sort of a badge of honor for some people.
+
+For an excellent introduction to the magic of vi (vim), I recommend the O'REILLY book 'Learning the vi' with the super weird animal (with two bulging eyes) on the cover. 
+
+As to using MidnightCommander (I think that's you meant by NC, MC not NC), I suppose that you might get a similar benefit out that tool I suppose assuming you knew its commands super well (but I'm not a fan of it, so I really don't know all of its capabilities). 
+    
+    
+Title: Does Visual Studio 2010 have tooling support for IronRuby?
+Description: 
+    
+    
+                    
+I am interested in the following features: Code highlighting, Intellisense, Refactorings, Code navigation (Go to Definition etc.). 
+
+If this functionality is missing from Visual Studio 2010 maybe Microsoft is planning to add these features in the future or there are community project to develop IronRuby tooling add-in?
+    
+
+        
+Answer 1: 
+
+    
+    
+Microsoft has recently released IronPython tools for Visual Studio and they are working on the same thing for IronRuby. 
+No planned release date yet but they are working on it.
+    
+    
+Answer 2: 
+
+    
+    
+Good news! IronRuby Tools for Visual Studio 2010 were released on 21 OCT 2010 and are available here: http://ironruby.codeplex.com/releases/view/49097
+    
+    
+Answer 3: 
+
+    
+    
+no native support. not by microsoft directly
+
+Ruby in Steel
+
+This add-on to Visual Studio by SapphireSteel makes developing Ruby applications inside Visual Studio much more natural. It adds new Ruby project types, intellisense, code snippets, and syntax highlighting. But it costs money.
+    
+    
+Answer 4: 
+
+    
+    
+To clarify, SapphireSteel Software released a free IronRuby IDE way back in February 2008 - with code coloring, project management, build and run, visual form design etc. However, the IronRuby team was not overwhelmingly supportive of this project and we have now ceased development as explained here: http://www.sapphiresteel.com/Goodbye-IronRuby-Hello-Ruby-In
+
+best wishes
+
+Huw Collingbourne
+
+SapphireSteel Software
+    
+    
+Title: open source java IDEs which support code complete
+Description: 
+    
+    
+                    
+What I have known of are eclipse , netbeans and  JavaSideKick for jedit. Are there other alternatives? 
+
+Please let me know cause it really helps me! Thanks a lot!
+    
+
+        
+Answer 1: 
+
+    
+    
+IntelliJ IDEA has free Community Edition version. 
+
+Here is IntelliJ IDEA editions comparison matrix.
+
+Instruction how to check out &amp; build community edition.
+    
+    
+Answer 2: 
+
+    
+    
+JCreator
+    
+    
+Title: Can and should I run 2 versions of XCode side-by-side?
+Description: 
+    
+    
+                    
+Is it possible to install the beta iPhone SDK as well as the latest "official release"? 
+
+Is this even necessary, or can i just use the beta for iPhone/iPod development as well as iPad dev?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  can i just use the beta for iPhone/iPod development as well as iPad dev?
+
+
+Yes. The 3.2 SDK contains 3.1, 3.0 and 2.x SDKs. But make sure you switch to one of those when submitting your app to iPhone AppStore.
+    
+    
+Answer 2: 
+
+    
+    
+I believe Apple recommends that you NOT submit to the AppStore using the Xcode betas on the developer site, even if you use the 3.1x SDK. However, you can install both the beta and current versions of Xcode; just select a different directory to install to when installing the beta (for example, /DeveloperBeta).
+    
+    
+Title: What jQuery IDE is this guy using?
+Description: 
+    
+    
+                    
+In this video: http://vimeo.com/116991
+
+I want to know because the result is changing as he codes it, and I want to use the IDE which has that feature.
+    
+
+        
+Answer 1: 
+
+    
+    
+Never mind, it's SubEthaEdit
+
+See here: http://ejohn.org/blog/etherpad-real-time-editing-with-javascript/
+    
+    
+Answer 2: 
+
+    
+    
+Correction: It's not TextMate, but there is a preference to "Save files when focus is lost".
+    
+    
+Answer 3: 
+
+    
+    
+Aptana studio has intellisense for jQuery and there is also plugin for dream viewer 
+    
+    
+Title: HTML Javascript Rich Text Box (IDE)
+Description: 
+    
+    
+                    
+I am hoping to build an IDE in javascript that behaves much like gmail except the style will change automatically based on what they type as they type. The logic for this isnt where im struggling. Its how gmail achieves the ability to edit in a rich edit format in html. As far as I know the textarea control does not work this way, so how do they fake this functionality?
+    
+
+        
+Answer 1: 
+
+    
+    
+Google for "content editable"
+Try to press F7 in Firefox end edit HTML page directly :)
+Gmail uses Frame inside a page with contenteditable="true".
+
+See also Google Web Toolkit:
+http://code.google.com/docreader/#p=google-web-toolkit-doc-1-5&amp;s=google-web-toolkit-doc-1-5&amp;t=DevGuideWidgetGallery
+There is RichTextArea widget.
+    
+    
+Answer 2: 
+
+    
+    
+I'm not quite sure whether this is what you mean, but are you looking for a online WYSIWYG editor? 
+
+In that case allow me to recommend CKEDitor, it is quite fast, modern and robust.
+
+You can find a broader list in the corresponding Wikipedia entry.
+
+You would probably have to customize any of the editors to be able to edit E-Mails (You wouldn't be able to work with any pre-defined CSS classes for example, so the editor would have to do all the style definitions directly in the tag) but it shouldn't be a problem.
+    
+    
+Answer 3: 
+
+    
+    
+Download one of the many open source system that allow that, and see how they did it.
+Basically, they are attaching event handlers to button which in turn know how to insert "stuff" in the place the cursor is currently located in the text area, OR around the selected area in the textarea. 
+    
+    
+Answer 4: 
+
+    
+    
+My vote is for 'editarea' which is in the list of web based editors: Another Wikipedia entry.
+
+I was able to add it into an existing page with the most simplistic of code:
+
+&lt;script language="javascript" type="text/javascript" src="edit_area/edit_area_full.js"&gt;&lt;/script&gt;
+&lt;script language="javascript" type="text/javascript" &gt;
+editAreaLoader.init({
+  id: "my_textarea_id"   // ID of textarea to turn into syntax editor.
+  , syntax: "php"
+  , start_highlight: true
+  , allow_resize: "both"
+  , toolbar: "search, go_to_line, |, undo, redo, |, highlight, reset_highlight, word_wrap,|,syntax_selection"
+  , min_height:150
+  , min_width:400
+});
+&lt;/script&gt; 
+
+    
+    
+Title: Delphi IDE - How to make disabled toolbar buttons grayscaled?
+Description: 
+    
+    
+                    
+Seams like this one is for real Delphi geeks only.
+
+This is how it looks (sorry, can't post images)
+Delphi IDE ugly toolbar
+
+
+(source: piccy.info)  
+
+What's wrong - disabled Delphi IDE toolbar and menu buttons are ugly black/white images.
+What I want to do - make them look gray-scaled.
+
+How? I made some research. Main problem in virtual TCustomImageList.DoDraw method. When paramater Enabled = False it paints ugly things (see disabled buttons on screenshot). I created my own override for this function and it paints gray-scaled images when Enabled = False
+
+Now I want to replace default DoDraw with my own in IDE (using design-time package):
+
+
+I figured out that unit ImgList is compiled-in bds.exe, so trick with patching this function in rtlXXX.bpl will not work. 
+Searching for function's body content gave no result. Looks like bds.exe's implementation (I'm talikng about machine codes) of DoDraw is a bit different.
+
+
+Any suggestions or ideas of how can I make this possible? As base example of runtime code patching I took Andy's Midas Speed Fix: FindMethodPtr, HookProc, UnhookProc
+    
+
+        
+Answer 1: 
+
+    
+    
+I made it :) Thanks to everyone who participated or viewed this question!
+
+This is how my IDE looks now:
+Fixed toolbar http://blog.frantic.im/wp-content/uploads/2009/11/delphi-ide-after.PNG
+
+I just messed up with vclXXX.pbl, my fault. Sources can be found here. Gradient toolbars must be enabled to make it work. If you are interested in further development of this idea - read this topic
+    
+    
+Answer 2: 
+
+    
+    
+Maybe I'm understanding the problem badly but if you just want to override the DoDraw function why don't you just create your own component that inherits from TCustomImageList, override the desired function so that it does what you want and register it into the IDE?
+    
+    
+Answer 3: 
+
+    
+    
+If you don't want to make your own overriden components, you can change the realization directly in [DelphiPath]\source\Win32\vcl\ImgList.pas.
+
+But it is really not a good way.
+    
+    
+Answer 4: 
+
+    
+    
+I've always disliked the way Delphi creates default disabled images from enabled one. This not only manifests itself in the IDE, but it does persist down to the application you're developing. The disabled images in your application look just as bad.
+
+I have in the past tried to figure out what Delphi did to derive the disabled images and build on that. But it still is on my "things to do" list to finish that off.
+
+None-the-less, these are some articles about the Delphi "glitch" that I encountered quite a while ago that may or may not help you:
+
+
+Indistinguishable gray blobs in disabled menu items, by Vladimir S.
+MenuImgList.pas
+Fixing a Buttons Drawing Glitch in Delphi 5
+Fixing a Menu Drawing Glitch in Delphi 4
+
+    
+    
+Title: delphi 2010 IDE &#39;error insight&#39; error
+Description: 
+    
+    
+                    
+when I open concrete projects the error insight mark with red lines incorrect areas of the screen. Also when I compile It, error messages are shown, but the line number displayed in the message window points to a wrong line in the code window. When I double click over a error message the ide goes to another line. how do i correct this problem?
+
+Regards,
+
+Francis
+    
+
+        
+Answer 1: 
+
+    
+    
+Francis--
+
+It is very likely that your files have some issues with their line endings.  
+
+Has the file ever been opened in another editor besides Delphi?
+
+You can check this way:  Copy all of the code onto the clipboard, paste it into Notepad, copy it all out of notepad, and then paste it back into the editor.  That should clean up all the line endings.  See if that makes a difference.
+    
+    
+Answer 2: 
+
+    
+    
+Turn off error insight. First thing I do after installing. Then fix the line endings as noted earlier.
+    
+    
+Title: JavaScript on CommandLine
+Description: 
+    
+    
+                    
+I have a project that needs to create and use COM objects.  I found some examples using Javascript on the command-line and it looks like the perfect option for me.  They will likely be short scripts (&lt;100 lines) that talk to a COM server and a Postgres database.
+
+Does anyone have a better approach?  Is there a good tool that can assist with creating this type of Javascript.  Most tools (like aptana) tend to focus on running javascript from a browser, not from the command line.  I would really like just a simple IDE with breakpoints and watches or even a simple terminal application that would allow me to type a javascript command and see a result.  Any suggestions?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can run JavaScript on the command line using either Rhino for Java or Windows Script Host.
+
+http://www.mozilla.org/rhino/
+
+http://msdn.microsoft.com/en-us/library/9bbdkx3k%28VS.85%29.aspx
+
+Running JavaScript from the command line will prevent access to browser only objects and the DOM such as:
+window, document, location, and so forth.
+    
+    
+Answer 2: 
+
+    
+    
+Have you tried creating a JSCript.Net file in Visual Studio?  It should be able to debug Javascript compiled into a .Net assembly, though I'll admit that I haven't tried it.
+    
+    
+Title: Delphi Package: &ldquo;The following changes must be made&hellip;&rdquo; never goes away
+Description: 
+    
+    
+                    
+On one of my packages, which was adapted from another using Save-As and edit, I keep getting the following message (this is in Delphi 2007):
+
+=======
+The following changes must be made before this package can be compiled. 
+Choose OK to apply these changes and continue compiling.
+
+  Remove cmSizePanel_Reg.  
+  Unit(s) cmSizePanel_Reg were found in required package cmExtRzPanel_D2007.
+
+
+=======
+
+I click OK, and it then proceeds to compile fine. This message, however, never goes away -- I get it every time I compile the package.
+
+Here is the project source, using right-click, "View Source" to get there:
+
+package cmBaseFrames_D2007;
+
+{$R *.res}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'CM BaseFrames - Base Frames and related panels (TcmBaseFrame, etc)'}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vcl,
+  Rz30Ctls90,
+  vclx,
+  cmExtRzPanel_D2007;
+
+contains
+  cmBaseFrames_Reg in 'cmBaseFrames_Reg.pas',
+  cmBaseFrameFrame in 'cmBaseFrameFrame.pas' {cmBaseFrame: TFrame},
+  cmBaseSizeableFrameFrame in 'cmBaseSizeableFrameFrame.pas' {cmBaseSizeableFrame: TFrame};
+
+end.
+
+
+"cmSizePanel_Reg" isn't in the project anymore, and doesn't show up in teh Project Manager panel.  It would appear that it's "hiding" somewhere in one of the file Delphi uses for the package, but I'm not seeing where.  Any ideas how to stomp out this little inconvenience without having to complete re-create the package from scratch?
+    
+
+        
+Answer 1: 
+
+    
+    
+Try looking through the XML of your .dproj for the package.  .dproj files have a knack for getting corrupted and becoming out of sync with the file list in the DPR, leading to strange problems like this.
+    
+    
+Answer 2: 
+
+    
+    
+Stale .dcp files maybe? They are the compliment to .BPL packages and contain descriptions about the BPL.
+    
+    
+Title: Imported Java applet project into netbeans won&#39;t work, Netbeans refuses to identify or even find main class even when manually set
+Description: 
+    
+    
+                    
+I'm trying to set the main class in netbeans to be the main class it was in the last environment it was in, however the program insists it can't find the main class itself and when I set it as the name of the main class in project properties it says the class does not exist (even though it does).
+
+When I right click on the source file with the main class and hit 'run [file]' it works (albeit with errors related to assets which I can fix later on, has nothing to do with the code itself.
+
+All I did as of now is simply copy and paste the code into netbeans from the last project, so would I be overlooking anything here?
+
+Thanks for any help.
+    
+
+        
+Answer 1: 
+
+    
+    
+The way applets work in Netbeans is annoying to me. The suggested usage from the help is to run the applet as you indicate you did (Run File). NetBeans will produce an HTML file under build/classes that references the applet. You then copy the HTML file to src where your class is. You can then tweak the HTML and in subsequent runs NetBeans will use your HTML file instead of generating it. Every time you run the file NetBeans opens the applet viewer program that ships with Java. You cannot control any of the arguments passed to the applet viewer. It ignores the run-time parameters you configure in the project. To change the parameters passed to the applet you must edit the HTML file manually.
+
+A better way is to use the AppletWindow classes created over at the BlueJ project. It lets you host an applet on a JFrame, which means you can make a small standalone Swing app which calls your applet. The program then has a main method, you can launch an extra Swing window with buttons and text controls to simulate javascript calls to the applet and you can tweak the attributes that get passed to the applet at runtime. It's very nice for trying out new things in your code.
+
+Links:
+
+
+AppletWindow Download: This jar contains the compiled .class files and the source.
+More info about BlueJ and other resources
+
+    
+    
+Answer 2: 
+
+    
+    
+Do you really speak about an applet? Applets have no main-class (they can, but they do not have to). So you probably have an option to import the project as an applet-project, not as standalone-java-app, in Netbeans.
+    
+    
+Answer 3: 
+
+    
+    
+Shift + F6 worked for me in NetBeans 7.3.1
+
+I edited to allow webstart in properties first.
+
+Im using a single applet from Schiltds complete java 7th edition page 626 simple Banner Applet.
+
+I'm glad to give a little back.
+    
+    
+Title: Customizability of the IDEs
+Description: 
+    
+    
+                    
+I am thinking of modifying an existing IDE (Ex : By developing a plugin) to provide support for a proprietary scripting language. I just need to implement few features like syntax highlighting, Autocompleting etc. (i.e the requirements are really simple). What would be the best IDE or Text editor to integrate the feature. As an example if I think to develop an eclipse plugin for that it would be a pain. 
+
+What do you think about Notepad ++?
+    
+
+        
+Answer 1: 
+
+    
+    
+You might want to give the NetBeans Generic Language Framework a try.
+
+NetBeans project called Generic Languages Framework allows you to define a programming language and integrate it to NetBeans IDE. In the first step you should describe the language - lexical part (define tokens using regular expressions) and syntax (grammar rules). In the second step you can define how to visualize this language in NetBeans. You can define colors for tokens (syntax coloring) or folding (based on grammar rules). You can define what parts of this language should be displayed in the navigator, and how to indent this language plus many other features.
+This tutorial should guide you through the process of creating new NetBeans module, adding languages support into it, describing lexical and syntax structure of your language and adding support for all standard editor # features for your language.
+
+    
+    
+Answer 2: 
+
+    
+    
+Notepad++ allows you to define custom syntax highlight files in a very easy way, but it's not a very good solution for auto-completion (look at this SO question).
+
+If you want a real IDE to extend, I suggest you to use Eclipse.
+
+Update: Tutorial on how to develop an Eclipse plugin.
+    
+    
+Answer 3: 
+
+    
+    
+In vim you can easily add your custom syntax highlighting rules by adding another file in the syntax folder; for the details it is best to look at the help.
+
+If I remember correctly notepad++ also allows defining custom syntax files.
+    
+    
+Title: Using new MS C++ compiler with old Visual Studio
+Description: 
+    
+    
+                    
+I want to use a recent MS C++ compiler (I need TR1) with old IDE (Visual C 6.0). I heard that I can download free command line MS C++ compiler only. Is it possible? Can I use new compiler with old IDE? If so what additional problems may arise?
+
+I want to keep VS6 cause I'm familiar with it. I want to use MS implementation of TR1 cause I expect it to be faster than Boost.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can actually download a free version of the new IDE, the Express Edition. It has a few limitations compared to the non-free versions (e.g. no plugin support) but for most applications it's still vastly superior to VS6.
+    
+    
+Answer 2: 
+
+    
+    
+Visual Studio versions will install side by side quite happily.
+
+Just avoid double clicking on solution files (this will open the latest), instead open from the correct version.
+    
+    
+Answer 3: 
+
+    
+    
+Have you considered using Boost.TR1?
+    
+    
+Title: Problems running Swing application with IDEA 8M1
+Description: 
+    
+    
+                    
+Is anyone else having trouble running Swing applications from IntelliJ IDEA 8 Milestone 1?  Even the simplest application of showing an empty JFrame seems to crash the JVM.  I don't get a stack trace or anything, it looks like the JVM itself crashes and Windows shows me a pop-up that says the usual "This process is no longer responding" message.
+
+Console applications work fine, and my Swing code works fine when launching from Netbeans or from the command line. I'm running Windows Vista x64 with the JDK 1.6 Update 10 beta, which may be a configuration the Jetbrains guys haven't run into yet.
+    
+
+        
+Answer 1: 
+
+    
+    
+I have actually experienced problems from using the JDK 6u10 beta myself and had to downgrade to JDK 6u7 for the time being. This solved some of my problems with among other things swing.
+
+Also, i have been running IJ8M1 since the 'release' and I am very satisfied with it, especially if you regard the "beta" tag. It feels snappier and also supports multiple cores which makes my development machine rejoice. ;p
+
+Anyway, i use WinXP32 and IJ8M1 with JDK 6u7 and that is afaik very stable indeed.
+    
+    
+Answer 2: 
+
+    
+    
+Ask your question directly on the IDEA website. They always react fast and the problem you have is probably either fixed or documented.
+    
+    
+Answer 3: 
+
+    
+    
+IDEA 8 Milestone 1 is a beta(ish) "based on a new platform". This may have changed the way that swing is handled. Also you are running a beta JDK.
+
+You will probably get more help/submit a bug at the Jetbrain forums unless they are on SO also. Here is the bug tracker link
+    
+    
+Title: After update Android Stuido 4.1 in Ubuntu 18.4 can&#39;t open facing this issue
+Description: 
+    
+    
+                    
+After update Android Stuido 4.1 in Ubuntu 18.4 can't open facing this issue
+Internal error. Please refer to https://code.google.com/p/android/issues
+    
+    java.lang.NoSuchMethodError: com.intellij.ide.plugins.PluginManagerCore.loadDescriptors()[Lcom/intellij/ide/plugins/IdeaPluginDescriptorImpl;
+        at com.a.a.b.b.ar.a(ar.java:121)
+        at com.a.a.b.b.ar.a(ar.java:71)
+        at com.intellij.idea.MainImpl.start(MainImpl.java:19)
+        at com.intellij.idea.StartupUtil.startApp(StartupUtil.java:303)
+        at com.intellij.idea.StartupUtil.prepareApp(StartupUtil.java:245)
+        at com.intellij.ide.plugins.MainRunner.lambda$start$0(MainRunner.java:47)
+        at java.lang.Thread.run(Thread.java:748)
+
+    
+
+        
+Answer 1: 
+
+    
+    
+please remove the file .local/share/google and Open android studio it will work.
+    
+    
+Answer 2: 
+
+    
+    
+if your android studio not opening properly after updated.
+Just press CTR+H in File manager (show hidden files). now you can see the .local file.
+now go to remove the google file from there. (Path -&gt; local/share/google).
+    
+    
+Title: From the IDE&#39;s Structure Panel, how to copy a TCard to the clipboard?
+Description: 
+    
+    
+                    
+In the Delphi 10.4 IDE Form Designer's STRUCTURE PANEL, I select a TCard container control (containing several controls) and try to copy it to the clipboard with CTRL+C. It does not work. Even in the EDIT sub-context menu, the Copy item is disabled:
+
+Restarted the IDE. Tried again and again for hours.
+Is there a trick to do this? Is this a bug in the IDE?
+    
+
+        
+Answer 1: 
+
+    
+    
+There seems to be a bug in the IDE that interrupts the synchronization between Structure Panel and Form Designer for specific object types like TCard or TTabSheet and similar containers.
+This is a workaround for this bug:
+
+First select the TCard in the Structure Panel
+
+Then click on the Form Designer's TAB  to focus the TCard in the Form Designer
+
+Then press CTRL+C to copy the TCard together with all its sub-controls to the clipboard - this works!
+
+
+    
+    
+Title: How to change the default name of new components
+Description: 
+    
+    
+                    
+Delphi sets the name of components when you add them to a form. The first TButton will be named &quot;Button1&quot; the second &quot;Button2&quot; and so on.
+A while ago I discovered by accident that you can change this &quot;prefix&quot;. Staying with TButton I changed it to &quot;btn&quot; so TButtons will be named &quot;btn1&quot;, &quot;btn2&quot; and so on.
+Now I want to change some more component prefixes but unfortunately I forgot how to do this. It could be some functionality of GExperts. Anybody to the rescue?
+Just if it is important: I'm using Delphi 10.2.
+    
+
+        
+Answer 1: 
+
+    
+    
+In GExperts it's called &quot;Rename Components&quot;:
+http://www.gexperts.org/tour/index.html?renamecomponents.html
+To get there you have to open &quot;GExperts Configurations&quot; and click on &quot;Configure&quot; button at the right side of &quot;Rename Components&quot;:
+http://www.gexperts.org/tour/index.html?gexperts_configuration.html
+There is the same functionality in CnPack in &quot;Prefix-master&quot;
+I can be wrong a little, because I prefer CnPack, but they are similar enough, I think.
+    
+    
+Title: IntelliJ IDEA / JetBrains IDEs: How to hide file last changed timestamp in the project view?
+Description: 
+    
+    
+                    
+Hi how can I hide files timestamp? Can some one help?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+View | Appearance | Details in Tree View (Alt+Shift+\):
+
+
+    
+    
+Title: Execute Python code line by line, like VBA?
+Description: 
+    
+    
+                    
+I'm new to python and I'm having fun. So far I've only been on the road in VBA and SQL, but one thing bothers me. Is there no feature that goes through the code line by line like in VBA? This has always helped me a lot with VBA (F8), I could check the value of the variable on the fly (hold mouseover), i could check the whole code better and see where exactly it is running on a bug. Is this function not really available in python? I use PyCharm as IDE
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+You may try the following command: python -m pdb &lt;script.py&gt;. It will run the script in the Python debugger where you can traverse your code step by step.
+    
+    
+Title: Blurry Dev C++ On Windows 10
+Description: 
+    
+    
+                    
+90% of the apps are displaying correctly sharp and clear as it's supposed to be on my uhd laptop screen. My scaling is 150% (as default also) (because of uhd screen in 15.6" laptop, 100% is too inefficient for my eyes.)
+
+But dev c++ and some old softwares are looking blurry.
+
+blurry dev c++
+
+there is a fix on windows 10 settings named "advanced scaling" that is already enabled. is there any way to fix blurry dev c++ or do you recommend better up to date ide for c++ with compiler? 
+
+advanced scaling settings windows 10
+
+(eclipse-cpp with mingw is slow, 
+clion is super but uses visual c++ compiler (i dont know if is there any setting for compiler, 
+microsoft visual c++ is good but showing some errors for nothing, actually says "no errors" than doesnt compiles for some time)
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Right click on the Dev c++
+Select “Properties” from the popup menu.
+Click on “Compatibility” tab.
+
+
+making the settings to manually fix fuzzy text in windows 10
+
+
+Select “Override high DPI scaling behavior.
+Select “System (Advanced)” not "System" or "Application" from the options provided in “Scaling performed by” section.
+Click on “Apply” button and then on “OK.”
+
+
+Fixed screenshot
+    
+    
+Answer 2: 
+
+    
+    
+There is a new version of Dev C++ compiled with the latest version of Delphi which supports high-DPI, Unicode, and Windows 10.
+https://github.com/Embarcadero/Dev-Cpp/releases
+    
+    
+Title: The database is not connected. What can it be connected with?
+Description: 
+    
+    
+                    
+I can't connect to the database. What can it be connected with?
+
+
+
+
+  Connection to carshop@localhost failed.         [08001] Could not create
+  connection to database server. Attempted reconnect 3 times. Giving up.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Possible workarounds:
+
+
+In DataSource configuration window go to Advanced tab and set serverTimezone property to UTC.
+Or switch DataSource driver to MySQL Connector/J for 5.1 (my version is 5.1.46)
+
+
+Related issue on YouTrack: https://youtrack.jetbrains.com/issue/DBE-7727
+    
+    
+Title: How to get the current project name in Delphi directories settings?
+Description: 
+    
+    
+                    
+In the project directory settings, I often need to use the project name, say 'MyProject', as part of the output paths.
+
+
+
+I would prefer to avoid hardcoding the project name in the settings.
+
+Is there a variable, like $(Config) and $(Platform), to dynamically obtain the current project name (without extension)?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use $(SanitizedProjectName) for this purpose. Be aware that the debugger might not support that.
+    
+    
+Title: what is service url in spring starter project? Alternatives for default service url https://start.spring.io
+Description: 
+    
+    
+                    
+I am new to Spring boot.
+While creating a New Spring Starter project in STS there is a Service URL dropdown defaults to https://start.spring.io as given below.
+
+I searched in stack overflow but didn't find any information about it.
+What is the use of specifying this? Why it has been given as editable? Is there any alternative available instead of https://start.spring.io?
+I noticed that tried with any other URL, it tries to parse as json and gives exception given below.
+JSONException: A JSONObject text must begin with '{' at character 3
+
+Need clarification, what is happening in background?
+    
+
+        
+Answer 1: 
+
+    
+    
+It is a simple client server architecture which various UI clients such as Spring Boot CLI , IDE or official web UI talk to the same backend HTTP API that actually generates the spring starter project.
+
+The service URL is the URL of this HTTP API.  Spring Team already deploy an official one at https://start.spring.io which you can simply use it.
+
+But in case if you want to build your own customised version , you can checkout its source codes , modify according to your needs and deployed to your own server. Then change the service URL to your API server 's URL in order to use it.
+    
+    
+Title: Remove vertical white line in the middle of IDE code editor
+Description: 
+    
+    
+                    
+I'm using 2 monitors. On the 2nd one, I have the Delphi IDE, using the Classic undocked settings.
+
+There is a white vertical line in the middle of the IDE cutting through the source code. I can't seems to find the option in the settings to remove it.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+That line is the Code Editor's "Right margin".  You can turn that on/off in the Display section of the Code Editor settings, or you can set how many characters from the left edge of the editor you want the line to appear (the default is 80 chars).
+
+See Customizing the Code Editor for more details.
+    
+    
+Title: How can I bring back vim-like Ctrl-W behavior in IntelliJ?
+Description: 
+    
+    
+                    
+I recently switched from pure vim to IntelliJ, and it's great. There's one thing that drives me crazy, though: Ctrl-W in insert mode does not behave as it does in regular vim. 
+
+For example, if I had the following code (where | represents my insert-mode cursor):
+
+class StackOverflowExampleFactoryFactoryBuilder {
+    |
+}
+
+
+and I hit Ctrl-W, my decade of vim usage leads to be expect the outcome will be: 
+
+class StackOverflowExampleFactoryFactoryBuilder {
+|
+}
+
+
+However in actuality it's: 
+
+class StackOverflowExampleFactoryFactoryBuilder |
+}
+
+
+Is there some setting somewhere I can do to disable this line-wrapping deletion? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Currently it's not possible. There is related issue on YouTrack: https://youtrack.jetbrains.com/issue/VIM-1359
+    
+    
+Answer 2: 
+
+    
+    
+Issue VIM-1359 was fixed in version 0.52 of the IdeaVim plugin:
+
+0.52, 2019-07-23
+----------------
+// ...
+- VIM-1359 Fix behavior of i_CTRL-W action
+
+    
+    

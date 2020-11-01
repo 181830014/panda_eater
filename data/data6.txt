@@ -1,0 +1,3942 @@
+Title: Intellij Idea: Highlight usage of element at caret option. Change color
+Description: 
+    
+    
+                    
+I just turned on "Highlight usage of element at caret".  (Settings -/p/div
+Answer 1: 
+
+    
+    
+Yup.
+Settings 
+Answer 2: 
+
+    
+    
+Go to,  File -/pp/pp/p/div
+Title: VB6 Editor changing case of variable names
+Description: 
+    
+    
+                    
+I'm not much of a Visual Basic person, but I am tasked with maintaining an old VB6 app.  Whenever I check out a file, the editor will replace a bunch of the uppercase variable names with lowercase automatically.  How can I make this stop!?  I don't want to have to change them all back, and it's a pain to have these changes show up in SourceSafe "Differences" when I'm trying to locate the REAL differences.
+
+It is changing it automatically in the definition, too:
+Dim C as Control becomes Dim c as Control.  Dim X&amp; becomes Dim x&amp;.  But it doesn't do it all the time; for example, three lines down from Dim x&amp;, there's a Dim Y&amp;, uppercase, which it did not change.  Why's it do this to me?
+    
+
+        
+Answer 1: 
+
+    
+    
+Continuing from DJ's answer...
+
+And it won't only change the case of variables in the same scope either.
+
+It will change the case of all variables with the same name in your entire project. So even if they're declared in uppercase in one place, another module might have different variables using the same variable names in lowercase, causing all variables in your project to change to lowercase, depending on which of the declarations was loaded (?) or edited last.
+
+So the reason your C and X variables are changing case, while the Y isn't, is probably because C and X are declared somewhere else in your project too, but in lowercase, while Y isn't.
+
+There's another mention of it here, where they mostly seem concerned with such variable names conflicting when case is being used to differentiate local from global variables. They end up going for prefixes instead.
+
+The only alternative I can think of is to use some other editor with VB6-highlighting capabilities to do your editing...
+    
+    
+Answer 2: 
+
+    
+    
+Since I always find this thread first looking for a solution to messed-up casing, here is one Simon D proposed in a related question:
+
+If you just need to fix one variable's casing (e.g. you accidentally made a cOrrectCAse variable and now they are all over the place), you can correct this for good by adding
+
+#If False Then
+    Dim CorrectCase
+#End If
+
+
+to the beginning of your module. If you save the project and remove the statement later, the casing remains correct.
+
+Using Excel VBA I often accidentally change all Range.Row to Range.row by carelessly dimming a row variable inside some function - with the help of Simon D's solution I can fix this now.
+    
+    
+Answer 3: 
+
+    
+    
+Enums are even worse. Getting the case wrong anywhere the enum is used changes the case of the definition.
+    
+    
+Answer 4: 
+
+    
+    
+To get past the painful file diff experience, set the VSS option in the diff dialog to do case-insensitive comparisons.  That way you'll only see the "real" changes.
+    
+    
+Answer 5: 
+
+    
+    
+It must be defined/declared in lower-case. Locate the declaration and fix it there. The IDE will always change the case to match the declaration.
+    
+    
+Answer 6: 
+
+    
+    
+Close all the VB projects, open the form file with a text editor, change the case of all the names then re-open the Project with VB IDE.
+    
+    
+Answer 7: 
+
+    
+    
+Prevent VB6 auto correct For enum values 
+
+As my general rule I declare constants in UPPERCASE. Since enums are essentially constants I like to declare values for enums in UPPERCASE as well. I noticed the VB6 IDE also auto corrects these.
+
+I found the IDE does not correct these values when using numbers and underscores '_' in the value names.
+
+Example: 
+
+Public Enum myEnum
+  VALUE      'Will be corrected to: Value
+  VALUE1     'Will not be corrected
+  VALUE_     'Will not be corrected
+End Enum   
+
+
+
+
+I do not know if this works in general and if this extends to naming/auto correction of variable names. 
+    
+    
+Answer 8: 
+
+    
+    
+I have had a similar enumeration problem where for no apparent reason UPPERCASE was changed to MixedCase.
+
+Enum eRowDepths
+    BD = 1
+    CF = 1
+    Separator = 1
+    Header = 3
+    subTotal = 2
+End Enum
+
+
+When I changed to the following (tailing the last character of the non-conforming variables), I had no problem
+
+Enum eRowDepths
+    BD = 1
+    CF = 1
+    SEPARATO = 1
+    HEADE = 3
+    SUBTOTA = 2
+End Enum
+
+
+It turns out that this is a case of the tail wagging the dog. I have the following code, not the most elegant I admit but working nonetheless (please excuse formatting issues):-
+
+'insert 3 rows
+  iSubTotalPlaceHolder = i      
+  rows(ActiveSheet.Range(rangeDMirrorSubTotals).Cells.Count +  _
+                                                        Header _
+                                                         &amp; ":" _
+      &amp; ActiveSheet.Range(rangeDMirrorSubTotals).Cells.Count + _
+                                                      Header + _
+                                                    subTotal + _
+                                           Separator).Insert
+
+
+So it seems that the compiler won't accept explicit UpperCase constants as part of this statement.
+
+This was acceptable
+
+Dim fred as Integer
+fred = SEPARATO + HEADE + SUBTOTA
+
+
+So my work-around is to use a variable instead of the constants as part of the complex insert statement if I want to stick to the rule of keeping enumerated constants uppercase.
+
+I hope this is of use
+    
+    
+Answer 9: 
+
+    
+    
+DJ is spot on... VB always changes the case of variables to match the original declaration. It's a 'feature'.
+    
+    
+Answer 10: 
+
+    
+    
+Continuing from Mercator's excellent answer...
+
+I'd recommend:
+
+
+Check out all files (I assume you're using VSS for a VB6 app)
+Do a rebuild of the entire project group
+Recheck back into VSS
+
+
+Now base you're the real differences rather than the 'auto' changes that VB6 has tried to apply.
+    
+    
+Title: Immediate Window, &ldquo;The expression cannot be evaluated&hellip;&rdquo;
+Description: 
+    
+    
+                    
+When I try to evaluate expression in Immediate Window at design time, I get error:
+
+
+  The expression cannot be evaluated while in design mode.
+
+
+If I compile ASP.NET project and try to run it in debug mode I get another error:
+
+
+  The expression cannot be evaluated while in run mode.
+
+
+Why do I get these errors? I have used Immediate Window in the past and it worked fine even in design mode.
+    
+
+        
+Answer 1: 
+
+    
+    
+Assuming that you aren't missing the &gt; operator in the Immediate Window, there could be problems if you are trying to evaluate an expression at design-time in a multi-project solution or even a web project.
+
+According to MSDN:
+
+
+  If you are attempting to evaluate a function in a project that is not
+  the startup project for the solution and you receive an error, try
+  selecting the project in Solution Explorer and attempt the evaluation
+  again.
+
+
+Also:
+
+
+  You cannot use design time expression evaluation in project types that
+  require starting up an execution environment, including Visual Studio
+  Tools for Office projects, Web projects, Smart Device projects, and
+  SQL projects.
+
+    
+    
+Answer 2: 
+
+    
+    
+It's worth noting that the behavior of the Immediate window varies depending on the edition of Visual Studio you are using. If I try to evaluate a simple expression like ? 2+2 in Visual Studio 2013 Express for Web, I receive the "The expression cannot be evaluated while in design mode" error message; however, in Visual Studio 2013 Professional the expression evaluates to 4 without having to be in debug mode.
+    
+    
+Answer 3: 
+
+    
+    
+As northben pointed out in a comment, if you're trying to access properties in the immediate window while your application is not running, you may get:
+
+The expression cannot be evaluated while in design mode.
+
+Therefore:
+
+Set a breakpoint in the file your application will run through;
+Await for the application execution to be stopped (by the breakpoint or an exception) or trigger it manually (e.g.: go to the URL);
+Type in the Immediate Window the property you want to access to (e.g. GlobalConfiguration.Configuration) – now this should get you the proper results if that property exists in that context. If it does not exist, then you will get:
+
+The expression cannot be evaluated while in run mode.
+
+
+
+It's as simple as making sure you are accessing the properties in the right context.
+    
+    
+Answer 4: 
+
+    
+    
+In my case I received this error while using Excel Interop after enabling native debugging. Then in the debug mode I tried this:
+
+?xlworkbook.sheets(1).name
+
+
+The process hung, I did not receive any answer, and after that every other thing, e.g. ?2+2 gave me that error:
+
+
+  The expression cannot be evaluated while in run mode
+
+
+In order to again be able to use debug features, I had to disable native debugging.
+    
+    
+Title: Vim: viewing file structure - classes, methods, functions
+Description: 
+    
+    
+                    
+So I have this dream, right: I'm doing incredible wizardry in PHP, in vim, and every once in a while I'd want to press some fancy button combination (the longer the better) to be able to navigate through the file, not in boring, line-by-line mode, but in a magnificent overview mode. Feast my eyes on a tree-like list of classes, methods, functions, variables and other wonders of code. Jump from function to function in sheer merriment.
+
+Know ye a way to fulfill my desires?
+
+Sort of like any file structure dialog/view in any arbitrary IDE. Anything?
+    
+
+        
+Answer 1: 
+
+    
+    
+This is reminiscent of ack and Ack.vim regarding jumping to functions amongst many files. There's also FuzzyFinder or command-t or NERDTree for file browsing and Taglist for source code browsing. You can also use :help foldmethod to fold all the functions and see them in a "tree-like" fashion that's expandable. Get familiar with gf and * or # to jump around between files and variables.
+    
+    
+Answer 2: 
+
+    
+    
+TagBar is similar to the aforementioned TagList, in a different way, but it's not that good with PHP. 
+
+This very new plugin claims to fix the issue. I've never tested it, though.
+    
+    
+Answer 3: 
+
+    
+    
+I use :set foldmethod=syntax. zM to fold everything up; zx to open the fold under the cursor and close other open folds. The taglist plugin (as already mentioned) will do more, but folds are a quick win.
+    
+    
+Answer 4: 
+
+    
+    
+Taglist allows you to do this for open buffers. 
+    
+    
+Answer 5: 
+
+    
+    
+While it won't fulfill all your dreams of a world of wizardry filled with fancy buttons on which your eyes can feast on endless trees of source code... phpfolding.vim does a wonderful per file job of automatically folding all functions with a quick F5 (and is still updated after 12+ years)
+
+
+    
+    
+Title: How to set the style of line comment in phpstorm
+Description: 
+    
+    
+                    
+How to change the default style of line comment in PHPStorm to at indentation level rather than at first column?
+
+if ($condition) {
+// At first column.
+    // At indentation level
+}
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You can change this in "Options -
+Answer 2: 
+
+    
+    
+For "Ctrl+/" line commenting it is in "Settings-
+Answer 3: 
+
+    
+    
+Version 2017.3 and greater
+
+Looking at this answer, noticed that it needs a little updating.
+As of version 2017.3, this has been updated to:
+
+Preferences 
+Title: How do I change in an eclipse web project the WebContent folder to something different?
+Description: 
+    
+    
+                    
+With the Galileo release it is finally possible to convert a normal Java project to a dynamic web project. Unfortunately it assumes that the Web stuff is located in a folder WebContent, which is not necessarily the case for an existing project. How can I change it? In MyEclipse it is quite easy, but with a stock eclipse I don't find such an option!
+    
+
+        
+Answer 1: 
+
+    
+    
+I am not sure what you meant by "a stock eclipse", but Helios allows this functionality in a very straight-forward way: 
+Right click your dynamic web project and open "Properties".Find Deployment Assembly and you should be able to set context paths from there.
+    
+    
+Answer 2: 
+
+    
+    
+I am not sure if there is UI for this or not, but you can edit file .settings/org.eclipse.wst.common.component, and change following line:
+
+&lt;wb-resource deploy-path="/" source-path="/WebContent"/&gt;
+
+
+Change /WebContent to your preferred directory. I use this for a several years now and encountered no problems with it.
+    
+    
+Answer 3: 
+
+    
+    
+Go in the project properties and do like this example where I use the Maven webapp folder:
+
+
+    
+    
+Title: How can I reformat JavaScript code in WebStorm?
+Description: 
+    
+    
+                    
+I am using JetBrains WebStorm IDE. But I think there is not shortcut to autoformat (beautify) the code. In Netbeans, its CtrlShiftF command which formats the whole file. Is there any command for this? Do I need to install any plugin or something to enable this function?
+    
+
+        
+Answer 1: 
+
+    
+    
+Code | Reformat Code... (Ctrl+Alt+L):
+
+
+
+Keyboard shortcut can be changed in File | Settings | Keymap:
+
+
+
+If you are not familiar with IDE features yet, use Help | Find Action:
+
+
+
+This feature is also documented.
+    
+    
+Answer 2: 
+
+    
+    
+Yes.
+
+Opt+Cmd+L (Mac, or whatever your platform combo is)
+
+Or Code /p/div
+Answer 3: 
+
+    
+    
+Using WebStorm 8.0.4 in Windows the hotkey is (has become?) Alt-F8. 
+    
+    
+Title: How do you enable word-wrap by default in Eclipse?
+Description: 
+    
+    
+                    
+Simple question: how do you enable word-wrap by default in Eclipse? I looked at this plugin but it only goes up to Luna. In addition, this plugin is a separate text editor and does not have syntax highlighting or validation. I'm open to other suggestions.
+    
+
+        
+Answer 1: 
+
+    
+    
+Word wrap is available in Eclipse Neon IDE:  https://www.eclipse.org/neon/noteworthy/#_word_wrap_in_text_editors.
+
+Just consider using the latest version.
+
+Keyboard shortcut: Alt+Shift+Y
+
+Or button:
+
+
+
+Or menu Window 
+Answer 2: 
+
+    
+    
+As pointed out by @KrisWebDev in this answer, Eclipse supports soft line/word wrapping as of Eclipse Neon but the GUI to control this setting does not exist yet. There should be a global settings to enable soft word wrapping by default in any text editor in Window code/code
+Title: Best way to debug third-party gems in ruby
+Description: 
+    
+    
+                    
+Since there may be a lot of Ghost Methods inside a ruby gem, I don't think it is a good idea to study  the inner mechanism of a ruby gem  just  by reading its source code statically. Is there a way to attach the source file of a third-part gem to a running ruby process for debugging so that I can set break point and see how things work dynamically ?
+BTW,I've tried to navigate to the source file of a third-part gem in RubyMine by clicking on the context menu "Go To-code/code/p/div
+Answer 1: 
+
+    
+    
+I would love to know if there's a better way to do this, but how I usually do it is:
+
+
+Add the ruby-debug gem to your Gemfile (or ruby-debug19 if you're on Ruby 1.9.2)
+Find the Gem by doing bundle show gemname. I'm on a Mac so I usually pipe this to pbcopy so it gets copied to my clipboard. bundle show rails | pbcopy
+Open the gem directory in your favorite editor. mvim /path/to/gem/directory
+Navigate to the file and line where you want to put the breakpoint* and insert debugger above the line in question.
+Reload page, run test, or do whatever you would to get the Gem file to execute
+When execution stops at debugger, you can inspect variables (p variable_name), and move line by line with the ruby debugger commands.
+
+
+*Knowing where to put the breakpoint can take some understanding of the code, but you should start in lib/gemname.rb
+    
+    
+Answer 2: 
+
+    
+    
+I would avoid editing the Gem files as suggested in the currently accepted answer.  Instead, put the debugger command in one of your app files and use the break command to set a breakpoint in the gem.  I'm using rvm with a gemset so here is how I do it:
+
+
+break /Users/chris/.rvm/gems/ruby-1.9.3-p125@&lt;gemset&gt;/gems/&lt;gem_name&gt;-&lt;gem-version&gt;/&lt;path_to_file&gt;:&lt;line_number&gt;
+
+    
+    
+Answer 3: 
+
+    
+    
+Both commands output a path to the gem source in your computer. 
+
+# if it is present in your gemfile
+bundle show gemname
+
+# if not in your gemfile
+gem which gemname
+
+
+Then just open the folder in your text editor of choice, and good debugging!
+    
+    
+Answer 4: 
+
+    
+    
+In languages that change the code at runtime, like Ruby, it is hard to accurately predict 100% the origins of symbols, methods etc.
+
+I deal with a lot of third party gems that need source code analysis and I found that the best tool for this task is Netbeans + its Ruby and Rails plugin.
+
+
+allows good navigation in the dependent gems source code (unlike other alternatives)
+visual breakpoints and debugging that actually work (with trace and all) **
+
+
+** it has some glitches with method calls in yielded code blocks (like each {}) but I learned to deal with those.
+
+What I usually do is set breakpoints and analyse the code at runtime.
+    
+    
+Title: Which files should I add to SVN ignore for an Android Studio project?
+Description: 
+    
+    
+                    
+In Eclipse, I had the custom of adding bin and gen directories to SVN ignore. But now, using Android Studio (based on IntelliJ IDEA), which files should I ignore?
+    
+
+        
+Answer 1: 
+
+    
+    
+I added the following items in my .gitignore, it should be the same for SVN:
+
+
+gradle
+.idea
+*.iml
+build
+.DS_Store (for mac only)
+
+    
+    
+Answer 2: 
+
+    
+    
+See this IntelliJ IDEA KB article: "How to manage projects under Version Control Systems".
+
+Add to Subversion:
+
+
+all files under /.idea directory in the project root but ignore workspace.xml and tasks.xml,
+all .iml module files.
+
+    
+    
+Answer 3: 
+
+    
+    
+I've used the following SVN ignore list sucessfully:
+
+.gradle
+local.properties
+.idea/workspace.xml
+.idea/libraries
+.DS_Store
+build
+
+
+The ignore should be applied recursively.
+
+Reference: Same question, for git
+    
+    
+Title: How can I add Version info to my Console Applications?
+Description: 
+    
+    
+                    
+It appears to be what console application projects generated by IDE's intrinsic wizard cannot have version resource managed by IDE &lt;- note the emphasis here. 
+
+Is there any workaround(s) for this issue? (i even ready to write an OTA wizard)
+    
+
+        
+Answer 1: 
+
+    
+    
+Add in your .dpr ( for example above the begin of the main code) the line:
+
+{$R *.res}
+
+
+Then build your project.
+
+It will force a resource file (.res) to be created. This also allows you to set the version info in the project options.
+
+Update: I noticed that this 'bug' is fixed in Delphi 10 Seattle, or maybe in an earlier version. When I create a new console application, it will automatically have that $R directive.
+    
+    
+Title: How to have CMake show headers-that are not part of any binary target-in the IDE?
+Description: 
+    
+    
+                    
+In our workflow, we can have a module A that is composed of several header files, module A not producing any binary (side note: it will obviously be used by other modules, that include some of the headers from module A to produce binaries).
+
+A good example would be a header-only library, for which CMake 3 introduces a good support thanks to the notion of INTERFACE library (see this SO answer, and CMake's documentation of the feature).
+
+We can make an interface library target out of module A:
+
+add_library(module_A INTERFACE)
+
+
+That gives us all the nice features of CMakes targets (it is possible to use it as another target's dependency, to export it, to transitively forward requirements etc.)
+
+But in this case, the headers in module A do not show up in our IDE (Xcode, yet we expect it to be the same with most/every other IDE).
+
+This proves to be a major drawback in the workflow, since we need the files composing module A to be shown in the IDE for edition. Is it possible to achieve that ?
+    
+
+        
+Answer 1: 
+
+    
+    
+Several months down the line, I did not find a way to directly list the header files for an INTERFACE library.
+
+Since the question still has some views, here is what I ended up doing (i.e. what appears like the lesser hack currently available).
+
+Imagine module A is a header only library. In the CMakeLists.txt declaring its target:
+
+# Define 'modA_headers' variable to list all the header files
+set(modA_headers 
+  utility.h
+  moreUtilities.h
+  ...)
+
+add_library(moduleA INTERFACE) # 'moduleA' is an INTERFACE pseudo target
+
+#
+# From here, the target 'moduleA' can be customised
+#
+target_include_directories(moduleA ...) # Transitively forwarded
+install(TARGETS moduleA ...)
+
+#
+#  HACK: have the files showing in the IDE, under the name 'moduleA_ide'
+#
+add_custom_target(moduleA_ide SOURCES ${modA_headers})
+
+
+I do not accept this answer, since I expect further releases of CMake to offer a more semantically correct approach, which will then be accepted : )
+    
+    
+Answer 2: 
+
+    
+    
+You can use the new target_sources command in CMake 3.1.
+
+add_library(moduleA INTERFACE)
+target_include_directories(moduleA INTERFACE ...)
+target_sources(moduleA INTERFACE 
+  ${CMAKE_CURRENT_SOURCE_DIR}/utility.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/moreUtilities.h
+)
+
+
+It is also transitive.
+
+http://www.cmake.org/cmake/help/v3.1/command/target_sources.html#command:target_sources
+
+The limitation of not being able to export targets which have INTERFACE_SOURCES has been lifted for CMake 3.3.
+    
+    
+Title: How to change the braces/parenthesis colors in Visual Studio
+Description: 
+    
+    
+                    
+I am not talking about the highlight colors but the actual colors. I got a color scheme with light background color but the braces/parentheses are barely visible. Anyone knows how to change this?
+
+Btw this is for C# because C++ seems to color braces/parentheses using operator color.
+    
+
+        
+Answer 1: 
+
+    
+    
+Tools 
+Answer 2: 
+
+    
+    
+The Visual Studio 2014 CTP 14.0.22129 dark theme blacked-out the brackets and semi-colon for some reason.  I was able to fix this by changing the foreground color of the "Punctuation" display item.
+    
+    
+Answer 3: 
+
+    
+    
+Tools 
+Answer 4: 
+
+    
+    
+I know this is an old already answered question but I found a solution that suited me at least.
+
+Set the "Plain Text" colour to be the colour you want the braces to be then set the "Identifier" colour to be what you want the rest of the text to look like.
+    
+    
+Answer 5: 
+
+    
+    
+Visual Studio 2017 still has a problem to have black color as Default color in editor. Generally it's not, but it appeared to black by some reasons. 
+
+I changed below two items to Silver and press OK, and open Option again and back to Default it solved.
+
+
+Tools 
+Answer 6: 
+
+    
+    
+To change item foreground and background colors in Visual Studio 2010 Ultimate fallow this: Tools-
+Answer 7: 
+
+    
+    
+I am using dark theme (not light), but I had a very similar problem. My parenthesis, braces and punctuations was black when I started my IDE today, making them just about impossible to see. 
+
+I tried to "default" the fonts and colors but that did not help. Neither did changing the settings for Plain Text, Braces or Punctuations. 
+
+However, changing from Dark to Light theme and then back to Dark again brought everything back to normal.
+    
+    
+Answer 8: 
+
+    
+    
+For anyone that is here and have the same problem with Visual C++, if you are using visual assist, just know that it overrides the punctuation color scheme mentioned by the others. You have to change the color in the Visual Assist options and set it to another color than black (which is the default color).
+
+    
+    
+Answer 9: 
+
+    
+    
+It is "Operator" for C++ (proof below), but "Punctuation" for C#. Change both.
+
+
+    
+    
+Answer 10: 
+
+    
+    
+Bah, posted an answer and it got lost. FF and my proxy server aren't getting along. 
+
+I think there's no way to just change the color of the parens, they seems to follow the text color. I did find this tool that lets you do all sorts of things with paren color; looked pretty nifty for $49. 
+    
+    
+Answer 11: 
+
+    
+    
+You can change the Punctuation color in VS but it will actually change the color of all elements that fall in the Punctuation category.
+
+If you want a solution which you can fine tune you can use the Semantic Highlighter Extension that we have developed. It can color different parts 
+ of code such as braces, brackets, parenthesis, angle brackets and even properties, fields, parameters, namespaces and more.
+
+You can install it as a Visual Studio Extension. It is available in the gallery - just search for "Semantic Highlighter"
+    
+    
+Answer 12: 
+
+    
+    
+VS 2017
+
+The following instruction shows how to change the background color of the matching braces and its rectangles. Click on the picture and take a look at the braces in the source code!
+
+
+  Open Visual Studio --
+Answer 13: 
+
+    
+    
+Here are extensions that will colorize paris of matching brackets in the same color:  
+
+https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer-2  
+
+https://marketplace.visualstudio.com/items?itemName=TomasRestrepo.Viasfora
+    
+    
+Answer 14: 
+
+    
+    
+I have changed the color of Parenthesis, Curly Braces and semi-colon by selecting Tools 
+Answer 15: 
+
+    
+    
+To change the Matching Braces
+TOOLS
+Answer 16: 
+
+    
+    
+in VS 2017 it is Tools 
+Answer 17: 
+
+    
+    
+In VS2019 : Tools &gt; Options &gt; Fonts and Colors &gt; Display Items : VA Brace Matching
+    
+    
+Answer 18: 
+
+    
+    
+As far as I have been able to find, you can't :-(
+    
+    
+Answer 19: 
+
+    
+    
+Tools 
+Title: What are the most important features of an IDE for Perl development?
+Description: 
+    
+    
+                    
+As some of you might know I am the lead developer of Padre, the Perl IDE. In the first year of its development Padre became an acceptable text editor with some extra features for Perl development.
+
+I'd like to ask the Stack Overflow community for some help in driving the project further to turn it into an exceptional IDE for Perl development. So I'd be glad to read what do you think what are the most important features of an IDE that are still missing from Padre?.
+
+Especially I'd be interested from people who currently use Eclipse+EPIC, Komodo, Visual Studio or any of the text editors for programmers.
+    
+
+        
+Answer 1: 
+
+    
+    
+The most important feature of an IDE for Perl development (including Padre) is:
+
+an interactive debugger that actually works. E.g. remembering breakpoints, ability to drill down into complicated data structures, and copy (to clipboard) should work on watched variables - including a menu command Copy Special that allows putting it in various formats; say CSV, XML or tab separated.
+    
+    
+Answer 2: 
+
+    
+    
+The two most invaluable features I find:
+
+
+line-by-line debugging, watchpoints, breakpoints and so on, so I can properly debug my code.
+code completion so I don't have to go looking up docs (even online).
+
+    
+    
+Answer 3: 
+
+    
+    
+OK, here's my third answer, although I hate to say it.
+
+The competition is pretty easy to install. Padre isn't. I tried to update to the latest release today and, once again, got failing tests. 
+    
+    
+Answer 4: 
+
+    
+    
+I am a heavy Perl EPIC user and my biggest gripe is not 
+being able to jump to a function that is clearly defined in 
+the current context (usually by pressing F3). It is pretty 
+much hit or miss at this point.
+    
+    
+Answer 5: 
+
+    
+    
+I work with Komodo. I also use other editors but I come back to Komodo most of the time. A good IDE shoud have:
+
+
+A good Debugger. Breakpoints, watch lists, everything you need.
+Remote debugging. Threads debugging capability.
+Syntax highlighting including weighted fonts as well ( I was pretty disappointed by Oxygen for example, a XSLT IDE, where I can not use bold fonts to emphasise reserved terms)
+Syntax completion.
+Project management tools, preferable extendable by plugins. 
+
+    
+    
+Answer 6: 
+
+    
+    
+Stability. People turn away quickly if their editor crashes and they lose their work.
+    
+    
+Answer 7: 
+
+    
+    
+The first thing I look for is some kind of overview over the currently active file. I'd like to see methods/functions and, if possible, the use'd modules and escpecially any use base statements.
+
+You solved that pretty well in Padre.
+    
+    
+Answer 8: 
+
+    
+    
+Good VCS integration. This is something that I absolutely love in Eclipse: You instantly see what files have local changes and which aren't added to the repository yet. And you get to browse the different versions and have a nice diff view just one mouse click away.
+    
+    
+Answer 9: 
+
+    
+    
+A project manager. It's essential for me to be able to define the set of files and folders that comprise a particular codebase. Sessions are useful but not a replacement.
+    
+    
+Answer 10: 
+
+    
+    
+Testing integration.  
+
+Perl has great unit testing tools.  When I run my test suite, and get a failure, I want to see the code for the test that failed.  
+
+Having a good way to jump through test results and see the code for the failed test along with the expected and actual results would be a great boon.
+    
+    
+Answer 11: 
+
+    
+    
+Visual-Studio style refactoring for variables and function names and extraction of functions.
+Visual studio searches your whole module for all references and allows you to see all changed lines in case you do not want to change one instance (for whatever reason)....
+    
+    
+Answer 12: 
+
+    
+    
+The question seems more debatable than answerable.
+Risking myself of being accused copyright abuser, I will post a contents that I remember from the book "Interactive programming environments" from David R. Barstow, Howard E. Shrobe, Erik Sandewall.
+
+It will not be exactly the same, as I have read the book many years ago and I've jot down it in another language.
+
+PRINCIPLES OF A GOOD INTERACTIVE PROGRAMMING ENVIRONMENT
+
+1: Know the user
+
+    + Know the previous knowledge and practice of the user
+
+2: Minimize the memorization
+    + Selection and not characters entering
+    + Names and not numbers
+    + Predictable behavior: the user should have a previous impression of what the system will do
+    + Possible access and changing of the parameters of the system      
+
+3: Optimization of operations
+    + Fast execution of common operations
+    + Inercy of visualization: the screen should change the less possible
+    + Memorization of system operation in user,s memory
+    + The meaning of specific operations should have a simple relationship with the state of the system
+    + The system must be prepared to accept more than 10 followed
+        commands per second, so that it can operate on the user,s muscular memory
+    + The system should be prepared to organize the parameters of a command
+
+4: Engineer for the errors
+    + Provide good error messages.
+    + Engineer it to remove away the common errors.
+    + The system should provide reversible actions.
+    + Redundancy: the operations should have more than one way of being done.
+    + Integrity of data structures.
+
+    
+    
+Answer 13: 
+
+    
+    
+This can be possibly achieved via use strict; but could be as well a valuable feature even if not use'd explicitly, namely:
+
+the other day we spent about 10-20 minutes debugging the following behavior:
+
+my %hash;
+
+$hash-&gt;{'key1'} = value1;
+
+# on reading in different module
+print $hash{'key1'}; # is of course empty, but was so easy to overlook in the code above
+
+
+resume:
+proper Perl type safety brought in by the IDE.
+
+It might be already implemented in Padre, though, as it turned out not in Eclipse+EPIC
+    
+    
+Answer 14: 
+
+    
+    
+The ability to configure and run external (command-line) tools. Plug-ins are great but end-users won't necessarily want to author one just to integrate with an external tool. Allowing users to configure their own tools provides a great deal of extensibility with minimal barriers to entry.
+
+My editor of choice is UltraEdit. It's not an IDE, but through its support for user tools I've been able to integrate IDE features such as lint, version control, debugging, and more.
+    
+    
+Answer 15: 
+
+    
+    
+I use emacs. I would like a system that helps me refactor code, especially when I'm working on ugly 1999 code that uses the begin-at-the-beginning-go-to-the-end philosophy combined with duplicate-and-modify.
+
+I looked at Eclipse, but I can't work with a system that requires me to create a project before I can make a one-character correction to a file.
+
+I looked at Padre, but it's slow and crashes.
+
+I looked at Kod which claims to be configured by CSS, but I can't find a man page which will tell me where to put the CSS.
+    
+    
+Answer 16: 
+
+    
+    
+Integration of a read-eval-print loop. As a heavy Emacs user, I very much appreciate Sepia. Very useful for trying things out before I commit them to code.
+    
+    
+Answer 17: 
+
+    
+    
+Ability to create and debug XS code.
+    
+    
+Answer 18: 
+
+    
+    
+Line ending policies for files, by directory, and project wide.  
+
+So, for a given project or directory, I'd like to make all line endings be LF only.  While in another directory I may wish to have a mix of CRLF and LF files.
+
+I work a lot on stuff that goes back and forth between Unix and Win32 environments.
+
+The typical solution of automatically converting all files back and forth as one moves from platform to platform hasn't worked well for me.
+
+When a file gets created in the wrong format by accident, it can be a real pain.
+    
+    
+Answer 19: 
+
+    
+    
+I don't know if Padre can do this, but the ability to split the screen is very important to me. As a VIM user I constantly split my screen to look at another file while coding.
+    
+    
+Answer 20: 
+
+    
+    
+The ability to use my own choice of editor (which it may have, as far as I know).  That has a chance of winning over the vim/emacs people.
+    
+    
+Title: No line break after @Override annotation?
+Description: 
+    
+    
+                    
+When overriding methods, android studio automatically inserts a line break after the @Override annotation.
+
+How can I have the IDE insert the @Override without the line break and have it immediately followed by the method declaration (ie on the same line ?):
+
+@Override public Fragment getItem(int position) { ... }
+
+
+instead of:
+
+@Override
+public Fragment getItem(int position) { ... }
+
+    
+
+        
+Answer 1: 
+
+    
+    
+File -
+Answer 2: 
+
+    
+    
+It is possible to have it on the same line, but I would advise against it. It is a common convention to always have the annotation on a separate line.
+
+
+not following conventions without any reason to makes it inconvenient for developers working on several projects or changing project
+when you use many annotations the lines will very easily break ~120 chars, making the code less readable
+
+
+if you still want them on the same line, this is a solution:
+Intellij code formatting, Java annotations on new lines
+    
+    
+Answer 3: 
+
+    
+    
+It's perfectly valid from the viewpoint of Java syntax to have @Override annotation on the same line as method signature. One thing to do is to tune your IDE autoformatiing settings.
+    
+    
+Title: Which Python IDE can run my script line-by-line?
+Description: 
+    
+    
+                    
+I wouldn't call myself programmer, but I've started learning Python recently and really enjoy it.
+
+I mainly use it for small tasks so far - scripting, text processing, KML generation and ArcGIS.
+
+From my experience with R (working with excellent Notepad++ and NppToR combo) I usually try to work with my scripts line by line (or region by region) in order to understand what each step of my script is doing.. and to check results on the fly.
+
+My question: is there and IDE (or editor?) for Windows that lets you evaluate single line of Python script?
+
+I have seen quite a lot of discussion regarding IDEs in Python context.. but havent stubled upon this specific question so far.
+
+Thanks for help!
+    
+
+        
+Answer 1: 
+
+    
+    
+The upcoming RStudio 1.2 is so good that you have to try to write some python with it. 🙌
+    
+    
+Answer 2: 
+
+    
+    
+If you like R's layout. I highly recommend trying out Spyder. If you are using windows, try out Python(x,y). It is a package with a few different editors and a lot of common extra modules like scipy and numpy.
+    
+    
+Answer 3: 
+
+    
+    
+The only one I've had success with is Eclipse with Pydev
+    
+    
+Answer 4: 
+
+    
+    
+It's not an IDE, but you can use pdb to debug and step through your Python code. I know Emacs has built in support for it, but not so much about other editors (or IDEs) that will run in Windows.
+    
+    
+Answer 5: 
+
+    
+    
+PyCharm from JetBrains has a very nice debugger that you can step through code with.
+
+Django and console integration built in.
+    
+    
+Answer 6: 
+
+    
+    
+If you are on Windows, give Pyscripter a try -- it offers comprehensive, step-through debugging, which will let you examine the state of your variables at each step of your code.
+    
+    
+Answer 7: 
+
+    
+    
+WingIDE, I've been using it successfully for over a year, and very pleased with it.
+    
+    
+Answer 8: 
+
+    
+    
+I use Notepad++ for most of my Windows based Python development and for debugging I use Winpdb. It's a cross platform GUI based debugger. You can actually setup a keyboard shortcut in Notepad++ to launch the debugger on your current script:
+
+To do this go to "Run" -/pprecode/code/prep/pp/pprecode/code/pre/div
+Answer 9: 
+
+    
+    
+Rodeo seems to be new contender on the IDE market and the docs indicate that running lines of code is possible. I also have to admit it looks and behaves pretty good so far!
+
+    
+    
+Answer 10: 
+
+    
+    
+I would plump for EMACS all round. 
+
+If you're looking for a function to run code line by line (or a region if you have one highlighted), try adding this to your .emacs (I'm using python.el and Pymacs):
+
+;; send current line to *Python
+(defun my-python-send-region (&amp;optional beg end)
+(interactive)
+(let ((beg (cond (beg beg)
+               ((region-active-p)
+                (region-beginning))
+               (t (line-beginning-position))))
+    (end (cond (end end)
+               ((region-active-p)
+                (copy-marker (region-end)))
+               (t (line-end-position)))))
+(python-shell-send-region beg end)))
+
+(add-hook 'python-mode-hook
+      '(lambda()
+         (local-set-key [(shift return)] 'my-python-send-region)))
+
+
+I've bound it to [shift-Return]. This is borrowed from here. There's a similar keybinding for running .R files line by line here. I find both handy.
+    
+    
+Answer 11: 
+
+    
+    
+I like vim-ipython. With it I can &lt;ctrl&gt;+s to run a specific line. Or several lines selected on visual modes. Take a look at this video demo.
+    
+    
+Answer 12: 
+
+    
+    
+Visual Studio and PTVS: http://www.hanselman.com/blog/OneOfMicrosoftsBestKeptSecretsPythonToolsForVisualStudioPTVS.aspx
+
+(There is also a REPL inside VS)
+    
+    
+Answer 13: 
+
+    
+    
+The Pythonwin IDE has a built-in debugger at lets you step through your code, inspect variables, etc.
+
+http://starship.python.net/crew/mhammond/win32/Downloads.html
+
+http://sourceforge.net/projects/pywin32/
+
+The package also includes a bunch of other utility classes and modules that are very useful when writing Python code for Windows (interfacing with COM, etc.). 
+
+It's also discussed in the O'Reilly book Python Programming On Win32 by Mark Hammond. 
+    
+    
+Answer 14: 
+
+    
+    
+Take the hint: The basic Python Read-Execute-Print-Loop (REPL) must work.  
+
+Want Evidence? 
+
+Here it is: The IDE's don't offer much of an alternative.    If REPL wasn't effective, there's be lots of very cool alternatives.  Since REPL is so effective, there are few alternatives.
+
+Note that languages like Java must have a step-by-step debugger because there's no REPL.
+
+Here's the other hint.
+
+If you design your code well, you can import your libraries of functions and classes and exercise them in REPL model.  Many, many Python packages are documented by exercising the package at the REPL level and copying the interactions.
+
+The Django documentation -- as one example -- has a lot of interactive sessions that demonstrate how the parts work together at the REPL prompt.
+
+This isn't very GUI.  There's little pointing and clicking.  But it seems to be effective.
+    
+    
+Answer 15: 
+
+    
+    
+You need to set the keyboard shortcut for "run selection" in 
+Tools 
+Title: ReSharper sluggishness
+Description: 
+    
+    
+                    
+I like ReSharper, but it is a total memory hog. It can quickly swell up and consume a half-gig of RAM without too much effort and bog down the IDE. Does anybody know of any way to configure it to be not as slow?
+    
+
+        
+Answer 1: 
+
+    
+    
+Turn off the on-the-fly compilation (which, unfortunately, is one of its best features)
+    
+    
+Answer 2: 
+
+    
+    
+The next release 4.5 is going to based around performance and memory footprint.
+
+see Ilya Ryzhenkov's blog
+
+Resharper 4.5 has been released
+From my experience it is less of a memory hog, but i still can run out of memory.
+    
+    
+Answer 3: 
+
+    
+    
+I had an issue where it was taking upwards of 10 minutes to load a solution of 100+ projects.   Once loaded VS performance would be ok, though it would oddly flutter back and forth between ok and really bad.
+
+The short answer:  Eliminating Resharper warnings seems to improve overall VS/R# performance.
+
+The biggest problem ultimately was that we had a number of files of binary data (encrypted stuff) being included as embedded resources, which happened to have .xml extensions.  Resharper was trying really really hard to analyze those files.  Eventually it'd get through but would generate 100K+ errors in the process.  Changing the extension to one Resharper did not automatically analyze (.bin in this case) solved the problem.
+
+We still have about 10 files which when they or a file they depend on is edited performance tanks for a while.  These files are the partial parts of a single class definition where each file averages 3000 LOC.  Yes, that's right, it's about a 30K line class.  It also happens to be rather poor code for other reasons, many of which Resharper flags making the right hand gutter bar practically a solid orange line.  Editing often causes Resharper to reanalyze the whole thing.  While that analysis runs, performance is noticeably affected.  
+
+I've come to the conclusion that the less errors/warnings there are for R# to identify, the better it performs.  My anecdotal evidence gathered while cleaning up/refactoring this project seems to support it.
+
+A lot of folks complain of perf problems with Resharper.  If you have even a few big ugly code files with lots of Resharper warnings, then a little time spent cleaning that code up might yield better performance overall.  It has for us.
+    
+    
+Answer 4: 
+
+    
+    
+Not sure how big your solutions are, but I stopped using 4.5 for the same reasons I stopped using all previous versions, memory usage. 
+
+Code analysis and unit test support was the main reason I bought it, turning it off means the rationale for using it is gone.
+
+Workstation has 4GB of memory, and I can easily kill it with ReSharper when running our end-to-end stack in debuggers.
+    
+    
+Answer 5: 
+
+    
+    
+You can look how much memory ReSharper use.
+
+ReSharper -
+Answer 6: 
+
+    
+    
+If you are working on large source files, Resharper does get sluggish (I'm working on version 5.0 at the time of writing this).
+
+You can view the memory usage of Resharper by clicking on Resharper options -
+Answer 7: 
+
+    
+    
+Regarding memory hogging - I've found that my VS2008 memory footprint grows every time I close one solution and open another. This is true even if I close a solution and re-open that same solution.
+    
+    
+Answer 8: 
+
+    
+    
+The new ReSharper 4.5 works a lot better than the previous 4.x releases. I would recommend you try that one.
+    
+    
+Answer 9: 
+
+    
+    
+In previous versions I had the same problem, when 4.0 came out these problems have seemed to have gone away. Now with 4.1 i do not feel the huge slow down i used to have. My IDE does not freeze up anymore.
+
+have you tried upgrading ?
+    
+    
+Answer 10: 
+
+    
+    
+Try the 4.5 beta. 4.1 was killing my 2GB dev machine, but it's back to running incredibly smoothly with the beta. Others have had the opposite experience, though, so YMMV.
+    
+    
+Answer 11: 
+
+    
+    
+Yes, 4.5 works much better. My understanding is that 4.5 was to address the performance issues.
+    
+    
+Answer 12: 
+
+    
+    
+Me and my colleagues are also having huge performance issues with ReSharper, just now my ReSharper took 1.1GB of memory. Visual Studio slows down specially when writing JavaScript, it's unbearable. You can turn of the on the fly compilation, but it's the best feature it has...
+
+
+edit: Everybody in this thread seems to have ReShaprper 4.x, my version is 6.0.
+    
+    
+Title: How to use Gradle to generate Eclipse and Intellij project files for Android projects
+Description: 
+    
+    
+                    
+Is it possible to generate Eclipse and Intellij project files for Android projects using Gradle?
+
+In maven we would do mvn eclipse:eclipse and in PlayFramework we would do play eclipsify. Does Gradle have this feature for Android projects?
+
+I have installed Gradle (1.6) and Android SDK Manager (22.0.1) explained here
+
+This is my build.gradle file:
+
+buildscript {
+    repositories {
+      mavenCentral()
+    }
+    dependencies {
+      classpath 'com.android.tools.build:gradle:0.5.0'
+    }
+}
+
+apply plugin: 'android'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.7
+version = '1.0.2'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+  compile fileTree(dir: 'libs', include: '*.jar')
+}
+
+android {
+    buildToolsVersion "17" 
+    compileSdkVersion 8
+    defaultConfig {
+        versionCode 1
+        versionName "1.0"
+        minSdkVersion 7
+        targetSdkVersion 8
+    }
+    sourceSets {
+        main {
+              manifest.srcFile 'AndroidManifest.xml'
+              java.srcDirs = ['src']
+              resources.srcDirs = ['src']
+              aidl.srcDirs = ['src']
+              renderscript.srcDirs = ['src']
+              res.srcDirs = ['res']
+              assets.srcDirs = ['assets']
+        }
+        instrumentTest.setRoot('tests')
+    }
+}
+
+
+And then I run the command:
+
+gradle clean build cleanEclipse eclipse
+
+
+It builds just fine, but when I import the project into Eclipse it looks like a normal java project. 
+
+Anyone know how to get Gradle to create Android specific Eclipse project files? 
+
+Is this a prioritized feature by Gradle?
+
+-- UPDATE --
+
+I do believe this is an issue. So I have posted it to the Android Tools team issue #57668. Please star it for them to prioritize the issue :)
+
+-- UPDATE --
+
+It does not look like the Android Tools team are looking into this issue. So for now I have converted to Android Studio where I'm able to import my gradle project with dependencies via the IDE. 
+    
+
+        
+Answer 1: 
+
+    
+    
+Gradle itself is a generic build tool, it is not created specifically for Android.
+All the functionality is enabled using plug-ins. Traditionally, build plug-ins don't generate project structure. That's the job of project specific tools. The Android plug-in for Gradle follows this.
+The problem is that current android tool in SDK generates old type of project structure (ant builds). The new project structure can only be generated via Android Studio.
+There is a concept of archetypes in tools like Maven, which allow using project templates. Gradle does not support that yet (requests have been made for this feature).
+Refer to this thread: http://issues.gradle.org/browse/GRADLE-1289 , some users have provided scripts to generate structure.
+Build Initialization feature is in progress: https://github.com/gradle/gradle/blob/master/design-docs/build-initialisation.md
+Hopefully some one can write a script to do that, refer to this guide for new project structure: http://tools.android.com/tech-docs/new-build-system/user-guide
+Update
+There is now an official Android IDE: Android Studio . It is based on Intellij and the new build system is Gradle based.
+    
+    
+Answer 2: 
+
+    
+    
+There are four issues with the combination of the Gradle plugins 'com.android.application' and 'eclipse': First, the configuration classpaths are not added to Eclipse's classpath, but this is easy to fix. Second, something must be done about the .AAR-dependencies. This was a bit trickier. Third, we need to include the generated sources for things like R.java. Finally, we need to include Android.jar itself.
+
+I was able to hack together a gradle configuration that would generate proper .classpath files for Eclipse from an Android Studio build.config. The effects were very satisfying to my CPU fan, which had been running constantly with Android Studio. Eclipse sees the resulting project as a fully functional Java project, but only that.
+
+I ended up putting the following directly in build.gradle in my app-project:
+
+apply plugin: 'eclipse'
+eclipse {
+    pathVariables 'GRADLE_HOME': gradle.gradleUserHomeDir, "ANDROID_HOME": android.sdkDirectory 
+    classpath {
+        plusConfigurations += [ configurations.compile, configurations.testCompile ]
+
+        file {
+            beforeMerged { classpath -&gt;
+                classpath.entries.add(new org.gradle.plugins.ide.eclipse.model.SourceFolder("src/main/java", "bin"))
+                // Hardcoded to use debug configuration
+                classpath.entries.add(new org.gradle.plugins.ide.eclipse.model.SourceFolder("build/generated/source/r/debug", "bin"))
+                classpath.entries.add(new org.gradle.plugins.ide.eclipse.model.SourceFolder("build/generated/source/buildConfig/debug", "bin"))
+            }
+
+            whenMerged { classpath -&gt;
+                def aars = []
+                classpath.entries.each { dep -&gt;
+                    if (dep.path.toString().endsWith(".aar")) {
+                        def explodedDir = new File(projectDir, "build/intermediates/exploded-aar/" + dep.moduleVersion.group + "/" + dep.moduleVersion.name + "/" + dep.moduleVersion.version + "/jars/")
+                        if (explodedDir.exists()) {
+                            explodedDir.eachFileRecurse(groovy.io.FileType.FILES) {
+                                if (it.getName().endsWith("jar")) {
+                                    def aarJar = new org.gradle.plugins.ide.eclipse.model.Library(fileReferenceFactory.fromFile(it))
+                                    aarJar.sourcePath = dep.sourcePath
+                                    aars.add(aarJar)
+                                }
+                            }
+                        } else {
+                            println "Warning: Missing " + explodedDir
+                        }
+                    }
+                }
+                classpath.entries.removeAll { it.path.endsWith(".aar") }
+                classpath.entries.addAll(aars)
+
+                def androidJar = new org.gradle.plugins.ide.eclipse.model.Variable(
+                    fileReferenceFactory.fromPath("ANDROID_HOME/platforms/" + android.compileSdkVersion + "/android.jar"))
+                androidJar.sourcePath = fileReferenceFactory.fromPath("ANDROID_HOME/sources/" + android.compileSdkVersion) 
+                classpath.entries.add(androidJar)
+            }
+        }
+    }
+}
+
+// We need build/generated/source/{r,buildConfig}/debug to be present before generating classpath
+//  This also ensures that AARs are exploded 
+eclipseClasspath.dependsOn "generateDebugSources"
+
+
+// Bonus: start the app directly on the device with "gradle startDebug"
+task startDebug(dependsOn: "installDebug") &lt;&lt; {
+    exec {
+        executable = new File(android.sdkDirectory, 'platform-tools/adb')
+        args = ['shell', 'am', 'start', '-n', android.defaultConfig.applicationId + '/.MainActivity']
+    }
+}
+
+
+Run gradle eclipse and you will have an Eclipse-project that can be imported and compiled. However, this project acts as a normal Java-project. In order to build the apk, I have to drop back to gradle command line and execute gradle installDebug. gradle processDebugResources picks up changes in Android XML files and regenerates the files under build/generated/source. I use the "monitor" program with Android SDK to view the app logs. I have so far not found any way to debug without Android Studio.
+
+The only features I miss from Android Studio are debugging (but who has time for bugs!) and editing resources visually.
+    
+    
+Answer 3: 
+
+    
+    
+As answered in Issue 57668 by Android team (raised by @arcone)
+
+Project Member #2 x...@android.com
+The eclipse plugin is not compatible with the android plugin.
+You will not be able to import an Android gradle project into Eclipse using the default Gradle support in Eclipse.
+To make it work in Eclipse we will have to change the Gradle plugin for Eclipse, the same way we are modifying the Gradle support in IntelliJ
+
+That is Android team is working on gradle plugin for IntelliJ and gradle plugin for Eclipse needs to be updated too.
+What is possible with Eclipse now is
+.1. import the project as general project
+.project
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;projectDescription&gt;
+    &lt;name&gt;OpenSpritz-Android&lt;/name&gt;
+    &lt;comment&gt;&lt;/comment&gt;
+    &lt;projects&gt;
+    &lt;/projects&gt;
+    &lt;buildSpec&gt;
+    &lt;/buildSpec&gt;
+    &lt;natures&gt;
+    &lt;/natures&gt;
+&lt;/projectDescription&gt;
+
+
+.2. Put 2 Eclipse . &quot;dot&quot; files into modules into /OpenSpritz-Android/app/src/main and /OpenSpritz-Android/lib/src/main
+
+.project
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;projectDescription&gt;
+    &lt;name&gt;OpenSpritz-Android-app&lt;/name&gt;
+    &lt;comment&gt;&lt;/comment&gt;
+    &lt;projects&gt;
+    &lt;/projects&gt;
+    &lt;buildSpec&gt;
+        &lt;buildCommand&gt;
+            &lt;name&gt;com.android.ide.eclipse.adt.ResourceManagerBuilder&lt;/name&gt;
+            &lt;arguments&gt;
+            &lt;/arguments&gt;
+        &lt;/buildCommand&gt;
+        &lt;buildCommand&gt;
+            &lt;name&gt;com.android.ide.eclipse.adt.PreCompilerBuilder&lt;/name&gt;
+            &lt;arguments&gt;
+            &lt;/arguments&gt;
+        &lt;/buildCommand&gt;
+        &lt;buildCommand&gt;
+            &lt;name&gt;org.eclipse.jdt.core.javabuilder&lt;/name&gt;
+            &lt;arguments&gt;
+            &lt;/arguments&gt;
+        &lt;/buildCommand&gt;
+        &lt;buildCommand&gt;
+            &lt;name&gt;com.android.ide.eclipse.adt.ApkBuilder&lt;/name&gt;
+            &lt;arguments&gt;
+            &lt;/arguments&gt;
+        &lt;/buildCommand&gt;
+    &lt;/buildSpec&gt;
+    &lt;natures&gt;
+        &lt;nature&gt;com.android.ide.eclipse.adt.AndroidNature&lt;/nature&gt;
+        &lt;nature&gt;org.eclipse.jdt.core.javanature&lt;/nature&gt;
+    &lt;/natures&gt;
+&lt;/projectDescription&gt;
+
+.classpath
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;classpath&gt;
+    &lt;classpathentry kind=&quot;src&quot; path=&quot;java&quot;/&gt;
+    &lt;classpathentry kind=&quot;src&quot; path=&quot;gen&quot;/&gt;
+    &lt;classpathentry kind=&quot;con&quot; path=&quot;com.android.ide.eclipse.adt.ANDROID_FRAMEWORK&quot;/&gt;
+    &lt;classpathentry exported=&quot;true&quot; kind=&quot;con&quot; path=&quot;com.android.ide.eclipse.adt.LIBRARIES&quot;/&gt;
+    &lt;classpathentry exported=&quot;true&quot; kind=&quot;con&quot; path=&quot;com.android.ide.eclipse.adt.DEPENDENCIES&quot;/&gt;
+    &lt;classpathentry kind=&quot;output&quot; path=&quot;bin/classes&quot;/&gt;
+&lt;/classpath&gt;
+
+.3. Import as Existing Android Code into Workspace
+
+you can then browse code in familiar way, but
+even after that you won't be able to run with Eclipse ADT.
+.4.
+Now you can run build and tasks with gradle CLI or Nodeclipse/Enide Gradle for Eclipse
+(marketplace)
+
+discuss at https://github.com/Nodeclipse/nodeclipse-1/issues/148
+    
+    
+Answer 4: 
+
+    
+    
+The following worked for me
+
+eclipse.classpath.plusConfigurations += configurations.compile
+
+eclipse.classpath.file {
+    beforeMerged { classpath -&gt;
+    classpath.entries.removeAll() { c -&gt; 
+        c.kind == 'src'
+    }
+}
+
+withXml {
+    def node = it.asNode()
+
+    node.appendNode('classpathentry kind="src" path="src/main/java"')
+    node.appendNode('classpathentry kind="src" path="src/debug/java"')
+    node.appendNode('classpathentry kind="src" path="gen"')
+
+    node.children().removeAll() { c -&gt;
+        def path = c.attribute('path')
+        path != null &amp;&amp; (
+                path.contains('/com.android.support/support-v4')
+                )
+    }
+  }
+}
+
+eclipse.project {
+   name = 'AndroidGradleBasic'
+
+   natures 'com.android.ide.eclipse.adt.AndroidNature'
+   buildCommand 'com.android.ide.eclipse.adt.ResourceManagerBuilder'
+   buildCommand 'com.android.ide.eclipse.adt.PreCompilerBuilder'
+   buildCommand 'com.android.ide.eclipse.adt.ApkBuilder'
+}
+
+
+Source - http://blog.gouline.net/2013/11/02/new-build-system-for-android-with-eclipse/
+
+Sample - https://github.com/krishnaraj/oneclipboard
+    
+    
+Answer 5: 
+
+    
+    
+I've created a new Gradle plugin that generates the appropriate Eclipse .project and .classpath files, based on the answer provided by Johannes Brodwall on this stack overflow.
+
+See https://github.com/greensopinion/gradle-android-eclipse for details.  
+    
+    
+Answer 6: 
+
+    
+    
+Maybe I'm missing something very obvious, but isn't the eclipse plugin what you're looking for?  This generates a .project file as well as a .classpath file and updates these as needed when run subsequent times.
+
+There is also an IDEA plugin, though I haven't used this one and can't speak to it.
+
+Hope that helps.
+    
+    
+Title: Comparison of IntelliJ Python plugin or PyCharm
+Description: 
+    
+    
+                    
+So I have IntelliJ and love it, and have been using the Python plugin for a while.  But I noticed that they have PyCharm coming out in beta now. I haven't been using PyCharm since I just use IntelliJ for everything, but is there a compelling reason to buy PyCharm?  
+    
+
+        
+Answer 1: 
+
+    
+    
+Right now PyCharm is quite a bit farther ahead in terms of functionality compared to the Python plugin for IntelliJ IDEA 9. Once we start the EAP for IntelliJ IDEA 10, we'll also release a new version of the Python plugin containing all the latest features of PyCharm, but we don't currently plan to backport the new features to the IDEA 9 version of the plugin. So, if you're OK with using EAP builds of IntelliJ IDEA, you shouldn't need to buy a separate license for PyCharm.
+    
+    
+Answer 2: 
+
+    
+    
+
+  Since this question (and its accepted answer) are older and new
+  versions of both IDEA and PyCharm are available, I figured it would be
+  appropriate to add a new answer without modifying the existing
+  "correct" one...
+
+
+My company has licenses for both PyCharm 1.5 and IntelliJ IDEA 10.5 and I have used both for regular Python development and Django web app development. From my experience, I have not found any features of PyCharm which were not available to me using the Python plugin for IntelliJ.
+
+This makes sense if you consider the fact thet the Python IntelliJ plugin is actually maintained by the PyCharm developers at JetBrains. The only catch to this is that there could be brand new features released to a new version of PyCharm which would not be immediately available to the plugin users but it probably wouldn't take them long to port them over.
+
+If you are considering buying a license for IntelliJ, I would recommend to not also buy a PyCharm license as it seems like a waste of money. However, if you only do Python related development, I would recommend to only buy the PyCharm IDE instead because its licenses are cheaper than IDEA's.
+
+UPDATE (2013-01-23)
+I have been recently using IntelliJ IDEA v12 with the latest (2.10.0) python plugin instead of PyCharm. As an experienced IDEA user, this is my preferred situation. For someone with no (or less) IDEA experience, JetBrains actually recommends starting with PyCharm because it's UI is simpler and more focused on productivity within Python projects.
+
+As for feature difference, JetBrains claims that the Python plugin is built from exactly the same source as PyCharm so the features should be identical. The only differences should be with the user experience, where IDEA's plugin is slightly harder to use because that IDE isn't aimed at Python development in the first place.
+
+JetBrains has a FAQ that has more info about differences between the IDEA plugin and PyCharm.
+    
+    
+Answer 3: 
+
+    
+    
+IntelliJ's comarison of IntelliJ IDEA and PyCharm.
+http://confluence.jetbrains.net/display/PYH/PyCharm+vs.+IntelliJ+IDEA+Python+plugin+FAQ
+
+From their blog: 
+
+
+  Nov., 22nd 2012 - Just a quick heads up: we’ve just released a version
+  of the Python plugin for the latest Early Access Preview build of
+  IntelliJ IDEA 12 (build 123.4). The plugin includes the entire
+  functionality of the current PyCharm 2.7 EAP, including several
+  features which were previously only available in PyCharm (creating
+  virtualenvs, using remote interpreters, creating UML diagrams for
+  Python code etc.).
+
+
+Source: http://blog.jetbrains.com/pycharm/2012/11/python-plugin-for-intellij-idea-12-is-now-available/
+    
+    
+Answer 4: 
+
+    
+    
+Right now Pycharm does a much better job of detecting and automatically configuring itself to run existing Google App Engine apps.  Using IntelliJ and the plugin requires quite a few steps to get an existing project to run.
+
+In PyCharm all you really have to do is configure a run configuration
+Script:  /path/to/dev_appserver.py
+Script Parameters:  /path/to/your/app
+
+Make sure you configure Python 2.5.x as your interpreter.
+
+For comparison:  In IntelliJ you need to first add a Python module to your project, then add Google App Engine to that perspective.  None of that is at all obvious as you are trying to do it as IntelliJ will want to create new module directories rather than use your existing code.
+    
+    
+Answer 5: 
+
+    
+    
+PyCharm supports django and Google App Engine. The django support is really nice if you use django. 
+    
+    
+Title: Enable compiler output pane in Codeblocks
+Description: 
+    
+    
+                    
+This is probably a really noob question, but the fact of the matter is that my Code::blocks wouldn't show me errors when it compiles - it only shows a red bar next to the offending line as shown in screenshot. Also, when my code does run and has output, CB opens a new window instead of showing the output in a pane in the bottom of the editor window like some other IDEs. How do I enable either/both, since they're probably the same feature? Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Press F2 to enable Logs panel. Select "Build log" in it.
+
+Or go to menu: View -&gt; Logs
+
+Have a good developing!
+    
+    
+Answer 2: 
+
+    
+    
+go to view -
+Answer 3: 
+
+    
+    
+If after hitting F2, you don't see "Log &amp; others" tab
+
+You need choose: "View" ==
+Answer 4: 
+
+    
+    
+You just need to hit F2 to enable the "log &amp; others" pane.
+    
+    
+Title: How do I stop wildcard Java package imports in IntelliJ
+Description: 
+    
+    
+                    
+On IntelliJ Java IDE when I import a class using the keyboard shortcut or take the suggested import, IntelliJ imports the whole package, e.g.
+
+public static void main(String[] args) {
+
+  List list = new LinkedList();
+
+} 
+
+
+would result in this import line
+
+java.util.*;
+
+
+I prefer the IDE to not do a package level import and import explicit classes. 
+I want to set this at the global level, so I don't have to deal with this at each project. 
+Is there any way to do this? 
+
+I am on IntelliJ 13.0.2 on Mac OS X 10.8.5
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+Open up preferences and search for "import". This will narrow down the list you need to look through. The screen shot shows the options for when to use single imports vs * (you can see I don't like star imports).
+
+
+    
+    
+Answer 2: 
+
+    
+    
+under File menu 
+
+select Settings (ctrl+alt+s)
+
+select Code Style
+
+select Java
+
+select Imports tab
+
+under General the check box Use single class import will determine whether packages or classes will be imported.
+
+the Use fully qualified class names check box  will not use imports rather it will insert full class names directly into the code.
+    
+    
+Answer 3: 
+
+    
+    
+Please check if you have autoimport
+cancel autoimport
+auto-import settings under "Settings → Editor → Auto Import
+    
+    
+Answer 4: 
+
+    
+    
+I had the same issue. But the following process fixed my problem.
+
+Press key combination ctrl+alt+O, then only the needed packages will be added.
+    
+    
+Title: How to hook a method to the Edit event in Delphi 7 IDE?
+Description: 
+    
+    
+                    
+I'd like to automatically checkout a file when I start to edit it in Delphi 7 IDE. 
+
+ClearCase is my version control system and I really hate the need to checkout a file before starting to edit. It always breaks my thought flow: I'm trying to solve a problem, find where I need to change, try to edit it, fail because the file is read only, open clearcase, search the file, finally checkout, try to edit the file again, fail because the IDE still thinks it is readonly, tell the IDE that isn't readonly. When I finally go back to code, I forgot what I was trying do do. 
+
+I've found this nice and simple ClearCase IDE integration code. It works, but uses the deprecated ToolIntf unit.  I've added a couple of shortcuts. Here is a simplified version of it (didn't try to compile):
+
+unit clearcase;
+
+interface
+uses ToolsApi, ToolIntf;
+
+implementation
+uses
+  Windows, Dialogs, Classes, ExptIntf, Menus, ShellApi, SysUtils;
+
+type
+  TDelphiClearcase = class
+  private
+    FClearcaseMenu,
+    FDoCheckOutPasDfm,
+    FDoCheckInPasDfm : TIMenuItemIntf;
+
+    procedure ExecCommand(const command: string; path: PChar = nil);
+  public
+    destructor Destroy;override;
+    procedure DoClick(Sender: TIMenuItemIntf);
+    property ClearcaseMenu: TIMenuItemIntf read FClearcaseMenu write FClearcaseMenu;
+    property DoCheckOutPasDfm:TIMenuItemIntf write FDoCheckOutPasDfm;
+    property DoCheckInPasDfm: TIMenuItemIntf write FDoCheckInPasDfm;
+  end;
+
+var
+  dcc: TDelphiClearcase = nil;
+
+{ TDelphiClearcase }
+
+destructor TDelphiClearcase.Destroy;
+  procedure Remove(item: TIMenuItemIntf);
+  begin
+    if( item = nil )then
+      Exit;
+    item.DestroyMenuItem;
+    FreeAndNil(item);
+  end;
+begin
+  Remove(FDoCheckOutPasDfm);
+  Remove(FDoCheckInPasDfm);
+  inherited;
+end;
+
+procedure TDelphiClearcase.DoClick(Sender: TIMenuItemIntf);
+  function GetPasDfm(const f: string): string;
+  var
+    aux: string;
+  begin
+    aux := Copy(f, 1, Length(f) - 4);
+    Result := aux + '.pas' + ' ' + aux + '.dfm'
+  end;
+
+var
+  command, fileName  : string;
+begin
+  fileName := ToolServices.GetCurrentFile;
+
+  if( Sender = FDoCheckOutPasDfm )then
+    command := 'cleartool co ' + GetPasDfm(fileName)
+  else if( Sender = FDoCheckInPasDfm )then
+    command := 'cleartool ci ' + GetPasDfm(fileName);
+
+  ExecCommand(command);
+
+  ToolServices.ReloadFile(fileName);
+
+end;
+
+procedure TDelphiClearcase.ExecCommand(const command: string; path: PChar);
+var
+  pi  : TProcessInformation;
+  stinfo : TStartupInfo;
+begin
+  FillChar(stinfo, SizeOf(stinfo), 0);
+  stinfo.cb := SizeOf(stinfo);
+
+  if( CreateProcess(nil, PChar(command), nil, nil, True, CREATE_NEW_CONSOLE,
+      nil, path, stinfo, pi) )then begin
+    WaitForSingleObject(pi.hProcess, INFINITE);
+    CloseHandle(pi.hProcess)
+  end
+end;
+
+procedure CreateMenus;
+var
+  services: TIToolServices;
+begin
+  if( BorlandIDEServices = nil )then
+    Exit;
+  services := ToolServices;
+
+  if( services = nil )then
+    Exit;
+
+  dcc := TDelphiClearcase.Create;
+
+  dcc.ClearcaseMenu := services.GetMainMenu.GetMenuItems.InsertItem(6,
+    'C&amp;learcase', 'ClearcaseMenu', 'ClearcaseTools', 0, 0, 0,
+    [mfEnabled, mfVisible], nil);
+
+
+  dcc.DoCheckOutPasDfm := dcc.ClearcaseMenu.InsertItem(2,
+    'Check Out pas and dfm', 'DoCheckOutPasDfm', 'Undo the check outs', ShortCut(Ord('&gt;'),
+    [ssCtrl]), 0, 2,
+    [mfEnabled, mfVisible], dcc.DoClick);
+  dcc.DoCheckInPasDfm:= dcc.ClearcaseMenu.InsertItem(4,
+    'Check In pas and dfm', 'DoCheckInPasDfm', 'Check in current files', ShortCut(Ord('&lt;'),
+    [ssCtrl]), 0, 2,
+    [mfEnabled, mfVisible], dcc.DoClick);
+
+end;
+
+procedure DestroyMenus;
+begin
+  FreeAndNil(dcc);
+end;
+
+initialization
+  CreateMenus;
+
+finalization
+  DestroyMenus
+end.
+
+
+I'd like to checkout the file when I first start editing it and it is read only. I have no idea how to hook a function to the IDE edit event of a file. Any pointers are welcome.
+    
+
+        
+Answer 1: 
+
+    
+    
+Aternative to writing API or the like is to simply use snapshot views and automatically write files using "Highjack" functionality ...then just check'em in later.
+    
+    
+Answer 2: 
+
+    
+    
+Alternatively you can use the open ToolsAPI to listen for changes in the editor and checkout the file when the user has changed any of the content in the file.
+    
+    
+Title: Delphi: why breakpoints from time to time are not usable (green highlighted line on IDE)?
+Description: 
+    
+    
+                    
+From time to time I lose breakpoint functionality in Delphi.
+
+I thought this to be a Delphi 2009 issue but now I have also it in Delphi XE.
+
+In Delphi 2009 by deleting .dproj file I made the breakpoints work again.
+
+In Delphi XE I am not able to make breakopints appear. I have update 1 with all hotfixes applied.
+
+Does anyone have a solution?
+    
+
+        
+Answer 1: 
+
+    
+    
+Debug info isn't present in the file.
+
+Make sure that you're using the Debug configuration. (Project Manager tree, expand Build Configurations, make sure Debug is bold. If it's not, right click Debug and choose Activate from the context menu.) Make sure you then do a Build of your project, not just a Compile.
+
+If that still doesn't work, go to Project-&gt;Options from the IDE's main menu, click on Compiling under Delphi Compiler, and check the Debugging section on the right half of the window. Make sure that Debug Information and Local Symbols are both checked. If you're trying to trace into the VCL's own source, also check Use debug .dcus (you'll want to turn this off and do a full build of your project as soon as you're done, as it gets annoying when you're debugging normally). Again, you'll want to build and not compile.
+
+If all of the above fails, another possibility is that the code unit you have open in the Code Editor isn't the same one being seen by the compiler. Make sure you don't have multiple copies of the file on your computer in a location that the compiler might find first. If you're not sure, delete the .dcu files with that unit name and then do a build of your project, and see if the newly created .dcu is in the location you'd expect.
+    
+    
+Answer 2: 
+
+    
+    
+I found a better way.
+
+From the Project Manager tree, right click on the project and choose "Clean" from the popupmenu.
+
+The breakpoints reappear magically and it is a very fast method.
+    
+    
+Answer 3: 
+
+    
+    
+I suspect this happens when you have done a release build, with debug disabled. Then you switch back to debug configuration and do a compile rather than a build. The files where you can't set breakpoints correspond to those with DCUs produced by a compile with debug disabled.
+
+Simply doing a build to re-generate all DCU files will make your breakpoints work again.
+    
+    
+Answer 4: 
+
+    
+    
+Here's one more reason to misaligned code vs breakpoint markers (blue/red "pill" in the gutter). 
+
+The editor recognices three different line endings, 
+
+
+CRLF (Carriage Return - Line Feed pair)
+CR only
+LF only
+
+
+Of these, CRLF is the default in the editor.
+
+The compiler however, doesn't seem to consider CR only as a line ending, only CRLF and LF only. Thus if your source file happens to have one or more CR only, the "blue pills" will be offset from the source.
+
+You might have got source files with CR only EOL (end of line) character from e.g. the internet. I recall MAC OS used CR only as EOL.
+
+To verify the EOL's in your file, you can turn on the displaying of EOL's in the editor
+
+( Tools - Options - Editor options - Source options - Show line breaks).
+
+The symbols look weird (see images below), but are just C on top of L for CRLF, C on top of R for CR and L on top of F for LF.
+
+The following images show the normal EOL's (CRLF) and the EOLS's after I forced CR only for one line and LF only for another line in a hex editor. As said above, it is the CR only that offsets the break point markers from the source code.
+
+Normal CRLF EOL's:
+
+
+
+One line with CR only and one with LF only:
+
+
+
+Fix
+To reset all EOL's to CRLF, untick Preserve line ends in Editor Options 
+
+( Tools - Options - Editor options), 
+
+make a trivial change, so that the file is marked as modified, close the file, save changes to XYZ.pas? YES, and reopen.
+Now all line endings are CRLF. Rebuilt the project and all the breakpoint balls will be in the correct locations.  
+    
+    
+Answer 5: 
+
+    
+    
+I had the same problem with XE4. This is why I found this article a couple of hours ago. None of the above solutions worked for me. The correct solution for me - up to now - was to add "remote debug symbols" option. Strange because I don't use remote debugging. Anyway it looks OK now.
+    
+    
+Answer 6: 
+
+    
+    
+Turning on remote debugging symbols did it for me (nothing else worked).   Project 
+Answer 7: 
+
+    
+    
+It is a bug, restarting Delphi will fix your problem.
+    
+    
+Answer 8: 
+
+    
+    
+I had a related problem: I lost the breakpoints in a particular file, but the other files were fine. What had happened was that I had renamed that file, but unknown to me the DCU for the old file was still being used because it was being referenced in a "uses" clause somewhere. 
+
+The solution is to manually delete all the DCUs (doing a "clean" is not enough because the old file represented by the DCU is no longer in the project) and rebuild. You will get a compile error showing the bad "uses" clauses.
+    
+    
+Answer 9: 
+
+    
+    
+Another reason for not working breakpoint could be (often tested with delphi5):
+Too many procedures in a unit.
+The solution is to move procedures to another unit
+    
+    
+Answer 10: 
+
+    
+    
+Try remote debugging to your local PC.
+
+Why it works: (source)
+
+
+  When you debug Delphi projects locally, RAD Studio does not use your RSM debug file because the compiler holds the symbol tables in memory. However, when you debug Delphi projects remotely, you must generate an RSM debug file that contains those symbol tables; otherwise, RAD Studio does not stop at your breakpoints.
+
+
+Of course, you must first configure your project's "Linking" option "Map file" to "Detailed" to generate the *.rsm file. See Overview of Remote Debugging for how to get started.
+    
+    
+Answer 11: 
+
+    
+    
+In delphi 7 there seems to be a real bug on setting breakpoints.
+
+I had a unit where many texts are definied in a 
+
+
+  const constname : array[0..x] of record-type = (...);
+
+
+in interface section, where record-type has some AnsiString items.
+In the implementation section there are some procedures.
+
+In some particular cases, when I set a breakpoint anywhere within a procedure, delphi does not stop at it!
+
+Remarks: all options for debugging are set properly (as for F7 causes delphi stop at the "begin" of the program, blue dots are visible in the whole unit the line stays red while executing the app) and all DCUs that have according PAS files were deleted from all of my disks and within all folders, before I did a complete build on the whole project. So no wold files should hang around anywhere.
+For testing, I renamed the PAS to another name, never ever used before, and surely nowhere else on any disk, then adapted all sources and recompiled, just to be sure that delphi and I are looking at the same PAS file - but the breakpoints did not work either.
+
+But there another, very weird thing happened: the text consts (!) changed within my executable (not within exe file, but obviously within memory)! Those texts were checked for correctness during program start, and sometimes it complained about errors! Display of the texts in a messagebox showed, that there was changed a sinlge character within that texts, that are defined as const. For test, I tried to assign something to that consts within my code, but, as expected, compiler complained, so it cannot be an ordinary assignment that causes the change of the text. Must be a wrong pointer. Weird.
+
+So, hours of testing followed, looking for any source code that might have set up a wrong pointer that later could cause that change in a text const. I placed the messagebox into the initialization section of the first unit within the chain of unit initialization I was able to edit, but the changed char was already there! Must be changed very early during startup of my application, then!
+
+Finally I figured out, that the char that appeared in my texts always was an $CC - which exactly is the assembler code for INT 3, the code that delphi is using for setting a breakpoint. And when moving a breakpoint within that unit a line up or down, the position of the changed character also moves some chars left or right! And the number of characters the wrong one moved just correlated with the estimated amount of assembler coded bytes the concerned lines needed. Setting two breakpoint in lines near each other, suddenly two characters changed! When removing all breakpoints from that unit, the text remained unchanged!
+
+So there's only one conclusion: delphi itself is changing that texts when trying to set a breakpoint and fails to do so. I was unable to get rid of this bug. None of the tips about re-synching delphi's internal bookkeeping of source and object code files did help me out!
+
+As the concerned unit mainly consisted of {$I} lines between multiple {$IFDEF}s, for including some different, but long pascal texts, I considered delphi having problems on too long inclusions or on evaluation of conditional compiler directives. So I removed the includes and put the source text immediately into the unit, and removed the {$IFDEF}s - which compiled without errors, but setting breakpoints also changed my text constants, instead of stopping execution. All the same!
+
+I solved this for now by splitting the unit into two units, one holding just the text consts in it's interface part, and a second one to hold the procedures. And now, without changing any compiler nor linker settings, all breakpoints do work like expected and not text is changed any more!
+
+So, if breakpoints do not work for you, while you are sure they should, possibly delphi is the culprit and fails to set the breakpoints at the correct place. In case of it is changing just some texts, maybe that never gets to your attention. Splitting the unit helped me out, maybe that helps you, too.
+    
+    
+Answer 12: 
+
+    
+    
+If the file you're trying to set breakpoints in is part of a DLL, you need to make that DLL active by double-clicking on it in Project Manager so it turns bold, and then build it. Then the blue circles will show up next to lines where you're allowed to set breakpoints.
+    
+    
+Answer 13: 
+
+    
+    
+In my case, I was setting breakpoints in a unit that whilst open in the IDE was not part of the currently active project. Such breakpoints also show as green. IOW I was not on the right page at all.
+
+(I discovered this after trying all of the above .) 
+    
+    
+Answer 14: 
+
+    
+    
+If the project group uses packages (BPLs) ensure that none of them have any compiler warnings regarding implicitly imported units. If these exist you will only be able to step through the code via the CPU debug window.
+    
+    
+Answer 15: 
+
+    
+    
+Bit late answer but I stumbled on this problem too.
+
+If I activated the MyPackage.bpl (bold) in the project manager with the debug configuration, then compiled it, I could see the IDE registered the debug information (blue dots on left of editor).
+
+But when I activated my MainProject.exe (the one using MyPackage.bpl), those blue dots would disappear, indicating that the debug information is no longer present. After some head scratching, I realized that I did set up a dependency (right click on MainProject.exe -/pp/pp/p/div
+Answer 16: 
+
+    
+    
+I had MSBuild checked under Delphi Compile (we do MS Builds).  That was preventing breakpoints from working.  Unchecked and it works.
+    
+    
+Answer 17: 
+
+    
+    
+By using F9 to run the app, breakpoints will work as expected. I am using XE4 and I do not know if this will "fix" prior versions of Delphi.
+    
+    
+Answer 18: 
+
+    
+    
+I solved my issue by making sure Debug was set to Local:
+
+
+    
+    
+Answer 19: 
+
+    
+    
+Since this is the best resource I found on this issue when encountering this problem with a new install of Delpi XE on a new laptop, I will just add in one more possible answer for Delphi XE.
+
+If you are using a two monitor setup and the code editor window is on the 2nd monitor, the tooltips will not show. Works fine if the editor window is on the primary monitor. Very frustrating. May be a driver issue.
+    
+    
+Answer 20: 
+
+    
+    
+Although this is an old question I can confirm that this is still an issue in the current version of Delphi 10.3 Rio.
+
+The answer above regarding line endings 
+
+https://stackoverflow.com/a/53360447/6445054
+
+Solved the issue for me I had imported some very old Delphi code which had CR line endings 
+in a couple of places,  as soon as I started moving code around the debugging broke completely.
+
+The option to turn line endings on has moved slightly in Rio it's now
+( Tools - Options - Editor - Source - Show line breaks).
+    
+    
+Title: Android Studio hangs / Freezes when project build fails
+Description: 
+    
+    
+                    
+I am experiencing a very wired problem since this evening.
+
+If I have any errors in my android project, and build is failed, then my Android studio gets frozen / stuck. I cant do anything but kill the Android studio application.
+Even if I open the same project next time, gradle will try to build and freezes again. [Please find attached screen shot]
+
+Only solution I could find is .... I have to find what exactly cause the "build fail" and I will have to resolve the issue using some other editor, and then my android studio will start working.
+
+Thing is it was working without any issues till this evening; and suddenly broken down. Any one else having the same issue ??
+
+-n
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+If you are using Android Studio v1.2.1.1 or newer and you are using Macbook, I've recently seen that if your device is connected to your laptop (by usb have no idea about over the wifi) and you sleep your laptop then login again, Android Studio hang. Therefore, you need to unplug usb cable then you should see Android studio is happy and then reconnect your usb cable.
+    
+    
+Answer 2: 
+
+    
+    
+Open your terminal and reset adb:
+
+adb kill-server
+adb start-server
+
+    
+    
+Answer 3: 
+
+    
+    
+This is how I solved the same problem:
+
+
+Go to your project directory using your terminal 
+run ./gradlew (or gradlew.bat) assembleDebug
+Fix the problems reported by gradle
+Restart android studio and the problem is gone
+
+    
+    
+Answer 4: 
+
+    
+    
+Based on barbarian's answer I did this on my Mac:
+
+start a terminal
+chmod +x gradlew
+./gradlew
+./gradlew build
+
+
+This last step showed an error in my xml file, indicating that I used unescaped single quotes. Fixing that solved the hangup.
+    
+    
+Answer 5: 
+
+    
+    
+Well, I uninstalled android studio and installed it again, and now the problem has gone away.
+I still wonder how in the world it broke in the first place. 
+
+In case some one else is facing the same issue, try reinstalling your studio.
+In case if you are using Mac osx refer How to completely uninstall Android Studio? to uninstall Android studio properly; Because only deleting App will not completely uninstall it.
+    
+    
+Answer 6: 
+
+    
+    
+In my case the same thing happened, after I had added image-resources with dashes in the filename. 
+
+I manually deleted them, renamed them, and added them with underscores in the name, and Android Studio worked normally again.
+
+(I am not sure the dashes were the reason, why should they, but doing the above fixed it.)
+    
+    
+Answer 7: 
+
+    
+    
+@Hesam's answer doesn't work for me. Using OSX and AS 1.2.1.1, my building stuck in 'Scanning files to index' and I cannot solve it even after restarted my Macbook. Below work for me:
+
+
+Shut down Android Studio (force to kill or just unplug the usb you will be good to go)
+Go to the directory of AndroidStudioProjects and move the application directory out to some other location (outside AndroidStudioProjects).
+Restart the android studio, now you will be shown the screen asking you whether you want to start a new project or open an old one.
+Again paste the folder you have cut and kept aside in step 2 back to AndroidStudioProjects directory.
+In the android studio prompt, select open existing project and select the directory you have now just pasted to AndroidStudioProjects.
+
+
+It should work for my case.
+    
+    
+Title: PyCharm - Is community edition able to highlight css/javascript?
+Description: 
+    
+    
+                    
+I'm exploring the features of PyCharm to decide if I should use it(now PyDev). All looks great, but I haven't find a way to make PyCharm highlight css or js files:
+
+
+Is this a functionality which only provided in the commercial edition?
+    
+
+        
+Answer 1: 
+
+    
+    
+Web development with JavaScript, CoffeeScript, TypeScript, HTML/CSS supported by Professional Edition only. They are edited as text files with no mark-up in Community Edition.
+
+PyCharm Editions Comparison
+    
+    
+Answer 2: 
+
+    
+    
+If you create css.xml with this content then you'll get css highlighting and code-completion:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;filetype binary="false" default_extension="" description="css" name="css"&gt;
+  &lt;highlighting&gt;
+    &lt;options&gt;
+      &lt;option name="LINE_COMMENT" value="" /&gt;
+      &lt;option name="COMMENT_START" value="/*" /&gt;
+      &lt;option name="COMMENT_END" value="*/" /&gt;
+      &lt;option name="HEX_PREFIX" value="" /&gt;
+      &lt;option name="NUM_POSTFIXES" value="" /&gt;
+      &lt;option name="HAS_BRACES" value="true" /&gt;
+      &lt;option name="HAS_PARENS" value="true" /&gt;
+    &lt;/options&gt;
+    &lt;keywords keywords="@font-face;@keyframes;@media;align-content;align-items;align-self;animation;animation-delay;animation-direction;animation-duration;animation-fill-mode;animation-iteration-count;animation-name;animation-play-state;animation-timing-function;backface-visibility;background;background-attachment;background-clip;background-color;background-image;background-origin;background-position;background-repeat;background-size;border;border-bottom;border-bottom-color;border-bottom-left-radius;border-bottom-right-radius;border-bottom-style;border-bottom-width;border-collapse;border-color;border-image;border-image-outset;border-image-repeat;border-image-slice;border-image-source;border-image-width;border-left;border-left-color;border-left-style;border-left-width;border-radius;border-right;border-right-color;border-right-style;border-right-width;border-spacing;border-style;border-top;border-top-color;border-top-left-radius;border-top-right-radius;border-top-style;border-top-width;border-width;bottom;box-shadow;box-sizing;caption-side;clear;clip;color;column-count;column-fill;column-gap;column-rule;column-rule-color;column-rule-style;column-rule-width;column-span;column-width;columns;content;counter-increment;counter-reset;cursor;direction;display;empty-cells;flex;flex-basis;flex-direction;flex-flow;flex-grow;flex-shrink;flex-wrap;float;font;font-family;font-size;font-size-adjust;font-stretch;font-style;font-variant;font-weight;hanging-punctuation;height;icon;justify-content;left;letter-spacing;line-height;list-style;list-style-image;list-style-position;list-style-type;margin;margin-bottom;margin-left;margin-right;margin-top;max-height;max-width;min-height;min-width;nav-down;nav-index;nav-left;nav-right;nav-up;opacity;order;outline;outline-color;outline-offset;outline-style;outline-width;overflow;overflow-x;overflow-y;padding;padding-bottom;padding-left;padding-right;padding-top;page-break-after;page-break-before;page-break-inside;perspective;perspective-origin;position;quotes;resize;right;tab-size;table-layout;text-align;text-align-last;text-decoration;text-decoration-color;text-decoration-line;text-decoration-style;text-indent;text-justify;text-overflow;text-shadow;text-transform;top;transform;transform-origin;transform-style;transition;transition-delay;transition-duration;transition-property;transition-timing-function;unicode-bidi;vertical-align;visibility;white-space;width;word-break;word-spacing;word-wrap;z-index" ignore_case="false" /&gt;
+  &lt;/highlighting&gt;
+  &lt;extensionMap&gt;
+    &lt;mapping ext="css" /&gt;
+  &lt;/extensionMap&gt;
+&lt;/filetype&gt;
+
+    
+    
+Answer 3: 
+
+    
+    
+You can create a new syntax definition via Settings / Editor / File and Code Templates.
+
+Alternatively create a javascript.xml file in C:\Users\%USERNAME%.PyCharm30\config\filetypes with this content:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;filetype binary="false" default_extension="" description="Javascript" name="Javascript"&gt;
+  &lt;highlighting&gt;
+    &lt;options&gt;
+      &lt;option name="LINE_COMMENT" value="//" /&gt;
+      &lt;option name="COMMENT_START" value="/*" /&gt;
+      &lt;option name="COMMENT_END" value="*/" /&gt;
+      &lt;option name="HEX_PREFIX" value="" /&gt;
+      &lt;option name="NUM_POSTFIXES" value="" /&gt;
+      &lt;option name="HAS_BRACES" value="true" /&gt;
+      &lt;option name="HAS_BRACKETS" value="true" /&gt;
+      &lt;option name="HAS_PARENS" value="true" /&gt;
+      &lt;option name="HAS_STRING_ESCAPES" value="true" /&gt;
+    &lt;/options&gt;
+    &lt;keywords keywords="break;case;catch;class;const;continue;debugger;default;delete;do;else;export;extends;finally;for;function;if;import;in;instanceof;let;new;return;super;switch;this;throw;try;typeof;var;void;while;with;yield" ignore_case="false" /&gt;
+  &lt;/highlighting&gt;
+  &lt;extensionMap&gt;
+    &lt;mapping ext="js" /&gt;
+  &lt;/extensionMap&gt;
+&lt;/filetype&gt;
+
+    
+    
+Answer 4: 
+
+    
+    
+Install the Dart Plugin. And remove *.js from JavaScript file types, then add *.js to Dart file types. It works!
+
+FYI: coffee plugin doesn't work
+    
+    
+Answer 5: 
+
+    
+    
+go this tab https://www.jetbrains.com/help/pycharm/symbols.html and add under, javascript allowed file type *.html or any other filetype where you dont see js properly mark up
+    
+    
+Title: IDE for ironpython on windows
+Description: 
+    
+    
+                    
+I am currently learning ironpython and loving but i'm looking to move on from using notepad++ and cmd.exe and try using something with a bit more juice.
+
+I recently learned that iron python studio does not support iron python 2 so that makes my choice a bit more difficult.
+
+Is their any IDE's for windows that would be good iron python 2 development?
+    
+
+        
+Answer 1: 
+
+    
+    
+SharpDevelop with IronPython 2.0 Beta Integration is worth a look - especially given that it's free.
+
+Also, check out this Iron Python 2 - what IDE do YOU use? discussion. Seems to confirm your belief that "IronPython Studio doesn't support IronPython 2".
+    
+    
+Answer 2: 
+
+    
+    
+NOTE: I recently wrote a review of using several major IDEs with IronPython: http://www.voidspace.org.uk/ironpython/tools-and-ides.shtml
+(Including SharpDevelop, Eclipse and PyDev, Wing, Visual Studio and IronPython Studio)
+
+
+
+I'm not a big fan of IronPython Studio it's not really production quality in my opinion. The designers target IronPython 1 and the generated code require changes to run them on their own with IronPython. Having to modify generated code is never good!
+
+I use the designers with Visual Studio to generate C# and then subclass in IronPython to actually implement the functionality.
+
+For working with IronPython any of the 'normal' Python IDEs will be fine. I like Wing because the autocomplete is the best I've seen in a Python editor. You can also teach it to do autocomplete for .NET libraries (by generating PI files).
+
+For working with Wing (Wing personal is free - but the professional version is better) don't set your interpreter in the project settings to be ipy.exe though because you lose the interactive shell inside Wing which is very useful for trying things out.
+
+This means that you need external tools to run your tests, launch your application, but using the Wing scripting API or the OS tools to integrate these tools into Wing is easy.
+
+Komodo, SPE, Vim, Emacs are all editors / IDEs with Python integration and will all work very well - which you prefer depends on your tastes and workflow.
+
+Do you have any other requirements for an IDE?
+
+For general IronPython development I use MSBuild to provide build automation, Wix for building installers, Pyc (IronPython compiler sample) to compile to binary assemblies,  and a custom executable for the project that is very thin wrapper around the IronPython hosting API written in C#. An editor / IDE is only one of the tools used - and a general Python IDE should serve you well.
+
+[1]:  NOTE: I recently wrote a review of using several major IDEs with IronPython http://www.voidspace.org.uk/ironpython/tools-and-ides.shtml
+    
+    
+Answer 3: 
+
+    
+    
+You can try the ironpythonstudio Visual Studio shell. It seems a bit old, and may require re-building for use with current IronPython versions.
+
+Side note:
+
+On SO Podcast #50 (April 22, 2009), Steve Yegge mentions an internal Google project involving an IDE for JavaScript, and mentions that the "Python crowd" in Google were interested. In the somewhat distant future, we may see some (Iron)Python-capable IDE coming from Google.
+
+From the transcript, after mark [21:37] :
+
+
+  Yegge: Code navigation. So, the JavaScript approach that we've taken is, I think, a model for how we're going to do static analysis, and when I say "we", I mean the industry—how we want to do static analysis for languages like Perl and Python and Ruby and so on. In fact, the Python crowd here, when they [saw] what I had done internally, they were like "oh, we want that for Python in a big way." And so...
+
+    
+    
+Answer 4: 
+
+    
+    
+The Python Tools for Visual Studio are a great choice, and they even support regular Python, Jython, and PyPy as well.
+
+They have support for refactoring, debugging, code completion, and all sorts of other expected VS features. There's even a bunch of features for HPC development as well, as the tools are developed by Microsoft's Technical Computing Group.
+    
+    
+Answer 5: 
+
+    
+    
+I have used wing and SharpDevelop and Corflags and IronPythonStudio. I don't like them as much as Eclipse. Here is why:
+SharpDevelop and CorFlags don't pack as much power and linking DLLs are sometimes a problem. IronPythonStudio is an implementation on Microsoft's Visual Studio, which I absolutely hate because it hogs more of my processor than it has any right to, and being as I work on a laptop, I cannot put up with this.
+
+I have only ever used the free version of Wing, which doesn't give user options such as autocomplete and the ctrl+space for function libraries.
+
+Eclipse IDE is AWESOME for Java, which is how I got introduced to it, in the first place. It has all the user options and I can't see myself using another IDE... ever.
+
+The best thing about eclipse is that they have plugins for every language. I am currently developing code using eclipse in Java, PHP, Python and IronPython. I have also recommended it to friends who have used it for C/C++ coding and love it.
+
+Here's how you make eclipse work with IronPython:
+
+
+Download and Install IronPython 2.6B2 or higher here.
+Download the "Eclipse IDE for Java Developers" version of eclipse here
+Be sure to install the java Virtual Machine or eclipse will refuse to start up.
+Now, open the eclipse IDE and go to Helpcode/code/lilicode/code/lilicode/code/lili/li/olpcode/code/ppa href="https://stackoverflow.com/questions/1578010/ironpython-2-6-py-exe"/a/pp/p/div
+Answer 6: 
+
+    
+    
+Check "DIE" (for Davy's Ironpython Editor).
+It's an opensource project. A clutter free IronPython code editor with some basic IDE features :
+http://code.google.com/p/davysironpythoneditor/
+    
+    
+Answer 7: 
+
+    
+    
+I use emacs. No, really!
+
+If you already use emacs and you'd like to use IronPython from python-mode, I described the process in another stackoverflow question. I've used emacs+IronPython to develop Office automation and various other .NET utility scripts.
+    
+    
+Answer 8: 
+
+    
+    
+Apparently Jetbrains' PyCharm will support IronPython.... have not tried it yet myself but Jetbrains make good stuff.
+    
+    
+Answer 9: 
+
+    
+    
+The implementation of the sys module was improved so that you can now utilize CPython’s pdb module in basic scenarios to debug IronPython sessions provided you pass the –X:Frames or –X:FullFrames options to ipy.exe 
+    
+    
+Title: How to remove these horizontal lines in PHPStorm?
+Description: 
+    
+    
+                    
+How to remove these horizontal lines in PHPStorm?
+
+
+
+I must have searched through the entire Settings window, but I can't seem to find it. Is it even possible to remove them?
+    
+
+        
+Answer 1: 
+
+    
+    
+Generally speaking there are two kinds of such separators:
+
+Actual method separators -- they appear before method/function body. I do not see them on your screenshot so you must have removed them already.
+If someone needs it's controlled by Settings/Preferences | Editor | General | Appearance | Show method separators.
+
+Other separators -- before class/namespace/etc. Those are visible on your screenshot.
+
+
+Thing is -- you cannot &quot;remove&quot; them in the same way -- only mask (make invisible). For that:
+
+Settings/Preferences
+Editor | Color Scheme | General
+Code | Method separator color
+
+Either remove any assigned colors (try this first) or assign the same color as background.
+    
+    
+Title: Which Scheme IDE&#39;s are there?
+Description: 
+    
+    
+                    
+I am planning on learning Scheme (by following 
+SICP) and afterwards doing a project with this language. However, I was wondering what would be a good IDE for this? I've looked around a bit, but could not really find very much, except something called Edwin? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Other answers have given all the good choices, but without much description.  Here's some more detail:
+
+DrRacket
+
+Racket's IDE, DrRacket, is a great tool for beginners and has a lot of strengths for more advanced schemers.  It has good profiler and debugger support (far better than Emacs), uses "standard" keyboard shortcuts by default, and is very clean and easy to use.  However, it sometimes lacks functionality its creators view as confusing; for example, compiling only some expressions from your source code can put the REPL in a confusing state, so it's not provided.  DrRacket only works for the Racket dialect of Scheme and its derivatives, however, so if you want to work with another implementation, you should probably look at:
+
+Emacs
+
+GNU Emacs is another fine option for advanced schemers who are willing to put some time into learning their editor.  It is powerfully customizable, has modes for almost any file type, and handles Scheme well, especially with quack installed (quack is an extension for Scheme named in parody of DrRacket --- get it, quack?).  It doesn't limit you from doing anything you might choose.  However, it has a learning curve like a brick wall --- its model of text is unique, its keyboard shortcuts are different than anything you've used before (unless you use CUA mode, which makes them more normal), and you have to use Emacs Lisp to configure and extend it.
+
+Bottom Line
+
+You'll be happy using either one once you're accustomed to it.  Emacs is less limiting, but harder to learn; DrRacket is more limiting, but more able out of the box in some areas and much easier to learn.
+    
+    
+Answer 2: 
+
+    
+    
+Racket comes with a good IDE.
+    
+    
+Answer 3: 
+
+    
+    
+You can use GNU Emacs with one window open your scheme script and in other scheme interpreter (like guile or MIT Scheme).
+You can run this by
+
+C-x 2
+C-x o
+M-x run-scheme
+
+    
+    
+Answer 4: 
+
+    
+    
+Dr. Racket have been crashing on my Ubuntu 11.10, and I found emacs a bit unfriendly.
+
+Therefore I've created a plugin for Enki
+
+Functionality is very simple. It's enough for my SICP exercises, but, if you are going to code a lot in Scheme, you should probably spend time for learning emacs.
+    
+    
+Answer 5: 
+
+    
+    
+I was writing an answer here regarding PLT scheme so i thought I would check out their webiste. It appears PLT scheme has changed name to Racket. And I suppose the old editor DrScheme is superseeded by the one called DrRacket.
+
+We used DrScheme last year at the univeristy. Very easy to get started. One window for writing definitions and one for output. At the end of the course we created a text adventure game :D (with OO-programming)
+    
+    
+Answer 6: 
+
+    
+    
+There is also schemescript plugin, if you like eclipse.
+    
+    
+Answer 7: 
+
+    
+    
+I'm developing Scheme IDE for Windows. It's called "Babbage" . It is like a minimum Emacs. Babbage is very simple and has windows like key assign. Babbage is Unicode editor. Now Babbage is beta version yet. 
+
+http://homepage1.nifty.com/~skz/Entry/babbage.html
+    
+    
+Answer 8: 
+
+    
+    
+I came across a NetBeans based Scheme IDE, lambdaBeans. It does not seem in active development, and I can't vouch for it.
+    
+    
+Answer 9: 
+
+    
+    
+There is a plug-in for Eclipse using JScheme.
+-a href="http://jscheme.sourceforge.net/jscheme/main.html" rel="nofollow"/a/ppa href="http://sourceforge.net/projects/zclipse/files/JScheme%20Plugin%20%5Bdev%5D%20%5BSDK2.1%5D/" rel="nofollow"/a/pp/pp/p/div
+Title: How can I reduce Eclipse Ganymede&#39;s memory use?
+Description: 
+    
+    
+                    
+I use the recent Ganymede release of Eclipse, specifically the distro for Java EE and web developers. I have installed a few additional plugins (e.g. Subclipse, Spring, FindBugs) and removed all the Mylyn plugins. 
+
+I don't do anything particularly heavy-duty within Eclipse such as starting an app server or connecting to databases, yet for some reason, after several hours use I see that Eclipse is using close to 500MB of memory.
+
+Does anybody know why Eclipse uses so much memory (leaky?), and more importantly, if there's anything I can do to improve this?
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't know about Eclipse specifically, I use IntelliJ which also suffers from memory growth (whether you're actively using it or not!). Anyway, in IntelliJ, I couldn't eliminate the problem, but I did slow down the memory growth by playing with the runtime VM options. You could try resetting these in Eclipse and see if they make a difference.
+
+You can edit the VM options in the eclipse.ini file in your eclipse folder.
+
+I found that (in IntelliJ) the garbage collector settings had the most effect on how fast the memory grows. 
+
+My settings are:
+
+-Xms128m
+-Xmx512m
+-XX:MaxPermSize=120m
+-XX:MaxGCPauseMillis=10
+-XX:MaxHeapFreeRatio=70
+-XX:+UseConcMarkSweepGC
+-XX:+CMSIncrementalMode
+-XX:+CMSIncrementalPacing
+
+
+(See http://piotrga.wordpress.com/2006/12/12/intellij-and-garbage-collection/ for an explanation of the individual settings). As you can see, I'm more concerned with avoiding long pauses during editting than actuial memory usage but you could use this as a start.
+    
+    
+Answer 2: 
+
+    
+    
+I don't think the JVM does a lot of garbage collection unless it has to (i.e. it's getting to its limits). Therefore it grabs all the memory it can get, probably up to the limit set in the eclipse.ini (the -Xmx argument, set to 512MiB here).
+
+You can get a visual representation of the current heap status by checking 'Preferences' -
+Answer 3: 
+
+    
+    
+Just for information, 
+
+
+you can add  
+
+-Dcom.sun.management.jmxremote
+
+
+to your eclise.ini file, launch eclipse and then monitor its memory usage through 'jconsole.exe' found in your jdk installation.
+
+C:\[jdk1.6.0_0x path]\bin\jconsole.exe
+
+
+Choose 'Connection / New connection / 'eclipse' to monitor the memory used by eclipse
+
+
+always use the latest jvm to launch your eclipse (that does not prevent you to use any other jfk to compile your project within eclipse)
+
+    
+    
+Answer 4: 
+
+    
+    
+The Ganymede Java EE plugins are absolutely huge when running in memory.  Also, I've had bad experiences with FindBugs and its reliability over a long coding session.
+
+If you can't live without these plugins though, then your only recourse is to start closing projects.  If you limit the number of open projects in your workspace, the compiler (and FindBugs) will have less to worry about and your memory usage will drop tremendously.
+
+I usually split up my workspaces by customer and then only keep the bare-minimum projects open within each workspace.  Note that if you have a particularly large projects (especially ones with a lot of files checked by WST), that will not only chew through your memory, but also cause a noticeable pause in responsiveness when compiling.
+    
+    
+Answer 5: 
+
+    
+    
+Eclipse by itself is pretty bloated, and the more plugins you add only exacerbates the situation.  It's still my favorite IDE, as it certainly isn't short on functionality, but if you're looking for a lightweight IDE then I'd suggest ditching Eclipse; it's pretty normal to run up half a gig of memory if you leave it running for awhile.
+    
+    
+Answer 6: 
+
+    
+    
+Eclipse is a pretty bloated IDE.  You can minimize it by turning of the automatic project building under Project -/p/div
+Answer 7: 
+
+    
+    
+I'd call it bloated, but not leaky.  (If it was leaky it would climb and climb until something crashed.)  As others have said, memory is cheap!  It seems like a simple decision to me: spend a tiny bit on more memory vs. lose productivity because you don't have the memory budget to run Eclipse @ 500MB.
+
+Summarized rhetorical question: What is more valuable: 
+
+
+The productivity gained from using an IDE you know with the plug-ins you want, or 
+Spending $50-200 on some memory?
+
+    
+    
+Answer 8: 
+
+    
+    
+RAM is relatively cheap (not that this is an excuse for poor memory managmentment). Unused memory is essentially WASTED memory. If you're hitting limits and the IDE is the problem consider less multitasking, adjusting your memory reqs, or buy more. I wouldn't cripple Eclipse if that's your bread-and-butter IDE.
+    
+    
+Answer 9: 
+
+    
+    
+Instead of whining about how much memory Eclipse takes, just go ahead and analyze where the problem is. I might be just one plugin. 
+
+Check the blog here :
+"analyzing memory consumption of eclipse"
+
+Regards,
+Markus
+    
+    
+Answer 10: 
+
+    
+    
+I had problem with java-based programs memory consumption. I found that it could be related to the chosen jvm (in my case it was). Try to run eclipse with -client switch.
+
+In some operating systems (most of linux distros I believe), the default option is server vm, which will consume noticeable more memory when running applications with gui.
+
+In my case initial memory footprint went down from 300MB to 80MB.
+
+Sorry for my crappy English. I hope I helped.
+
+All Regards
+Arkadiusz Jamrocha
+    
+    
+Answer 11: 
+
+    
+    
+Well, you don't specify on which platform this occurs. The memory management may vary if you're using Windows XP, Vista, Linux, OS X, ...
+
+Usually, on my computer (WinXP with 1Gb of Ram), Eclipse take rarely more than 200Mb, depengin of the size of the opened projects, the loaded plugins and the ongoing action.
+    
+    
+Answer 12: 
+
+    
+    
+I usually give Eclipse 512 MB of RAM (using the -Xmx option of the JVM) and I don't have any memory problems with Ganymede. I upgraded to two GB of RAM a few months ago, and I can really recommend it. It makes a huge difference.
+    
+    
+Answer 13: 
+
+    
+    
+Eclipse generally keeps a lot of meta-data in memory to allow for all kinds of IDE gymnastics.
+
+I have found that the default configuration of Eclipse works well for most purposes and that includes a limit (either given explicitly or implictly by the JVM) to how much memory can be consumed, and Eclipse will stay within that.
+
+Is there any particular reason you are concerned about memory usage?
+    
+    
+Title: How to disable font smoothing in Xcode 9?
+Description: 
+    
+    
+                    
+I've got a great programming font Deccy that only looks good with font smoothing (anti aliasing) disabled in Xcode. With Xcode 8 the following would do the trick:
+
+defaults write com.apple.dt.Xcode NSFontDefaultScreenFontSubstitutionEnabled -bool YES
+defaults write com.apple.dt.Xcode AppleAntiAliasingThreshold 24
+
+
+But this no longer works with Xcode 9.
+
+Would it be possible to disable font smoothing in Xcode 9?
+    
+
+        
+Answer 1: 
+
+    
+    
+Mischief managed?
+
+Here's a screenshot of my Xcode 9 with Deccy at 13pt:
+
+
+
+I believe the above is what you want. Here's stock Xcode displaying the same file:
+
+
+
+But how?
+
+I probed deep for a noninvasive way to accomplish this, and failed. As far as I can tell, the text rendering path in Xcode 9 very deliberately turns on font smoothing.
+
+
+  Before going any further, please file a feature request with Apple. It only takes a few minutes, and it's your best hope for an answer that that can be discussed in front of those with sound security instincts and strained cardiovasculature:
+  
+  https://bugreport.apple.com/
+
+
+I wrote an Xcode plugin. You might have heard that Xcode 9 uses code signing restrictions to forbid the loading of plugins. This is true, but a few mavericks press on, and tonight we ride with them.
+
+Step one
+
+There is a tool, update_xcode_plugins. You can use it to strip the code signature from your copy of Xcode, and with it the bundle-loading restriction:
+
+$ gem install update_xcode_plugins
+$ update_xcode_plugins --unsign
+
+
+If you change your mind, you can do this to revert to (a backup copy, I think?) of signed Xcode:
+
+$ update_xcode_plugins --restore
+
+
+Step two
+
+There is another tool, Alcatraz. It's a plugin manager for Xcode. I chose to install it because it provides a plugin which provides a project template for plugins. I followed these instructions to install Alcatraz, which boil down to this:
+
+$ git clone https://github.com/alcatraz/Alcatraz.git
+$ cd Alcatraz
+$ xcodebuild
+
+
+I launched Xcode, clicked through the dialog warning me about the new plugin, and then used the newly-added Window /ph2/h2p/pp/pprecode/code/prepcode/code/ppcode/code/pollip/pprecode/code/pre/lilipkbd/kbdcode/code/p/li/olpcode/codecode/code/pprecode/code/prepcode/codecode/code/pp/ph2/h2pem/em/pp/p/div
+Answer 2: 
+
+    
+    
+If you 'live' in XCode and need a crisp rendering of this TrueType font, then editing XCode application defaults with PrefEdit.app, or defaults write com.apple.dt.Xcode.* has no effect.
+
+
+
+Thinking outside the box you might be interested in the following to achieve crispyness all-over your Mac.
+
+Since the Deccy font is best viewed at 12pt, it makes sense to raise the AppleAntiAliasingThreshold in the global domain to 13, the default for this setting is 4.
+You can also suggest no AppleFontSmoothing.
+
+
+   defaults write -g AppleFontSmoothing -int 0
+   defaults write -g AppleAntiAliasingThreshold -int 13
+
+
+In addition to these tweaks a bit more can be achieved in the Accessibility Preference pane in System Preferences: The Display has 2 checkmarks that you should try: 'Differentiate without  color', and 'Increase contrast'.
+
+
+
+"Beauty is in the eye of the beholder", I hope this helps.
+    
+    
+Answer 3: 
+
+    
+    
+Here are alternative steps that might work for you.
+
+
+Try to find the com.apple.dt.Xcode.plist file under Macintosh HD/Library/Preferences.
+Copy the file to desktop
+Open file and add NSFontDefaultScreenFontSubstitutionEnabled to (Boolean)YES
+add AppleAntiAliasingThreshold to (Number)24
+Replace this file with preference file
+Restart the system and Xcode
+
+
+Note: For safer side keep backup of the original file.
+    
+    
+Title: Visual Studio 2012 not building dependent projects
+Description: 
+    
+    
+                    
+I just upgraded a VS2010 project to VS2012 and am now having a problem where dependent projects are not building on demand.  For instance, say I have the following projects in my solution:
+
+
+Library A
+ConsoleApp 1
+
+
+Where ConsoleApp 1 references Library A.  If I change the signature of a method in a class in Library A and run ConsoleApp 1, there will be a compiler error due to ConsoleApp 1 not seeing my changes because running ConsoleApp 1 did NOT cause Library A to build.
+
+If I manually build Library A, then manually build ConsoleApp 1, it works fine.  However, I would expect that running ConsoleApp 1 should cause any dependent projects to be rebuilt before launching.
+
+Could I have something configured incorrectly?  Or is this a bug in VS2012?
+    
+
+        
+Answer 1: 
+
+    
+    
+Try by removing project references and adding them again (path to follow: References -&gt; (right click) Add reference -&gt; Solution -&gt; Project). Before giving another try Save All. This is how I solved it.
+    
+    
+Answer 2: 
+
+    
+    
+Your symptoms sound very similar to those I experienced a while ago. Ensure that the projects are set to build with your current active solution configuration and active solution platform under Build-&gt;Configuration Manager.
+    
+    
+Answer 3: 
+
+    
+    
+This happens when the .suo file for the solution becomes locked and Visual Studio is no longer able to write to it. Another symptom of this problem is that you will see temp suo files being created next to the solution when you open it. Try closing Visual Studio and deleting all *.suo files in your working area. Then reopen Visual Studio and rebuild all. No need to manually rebuild your solution. This will fix the issue when it is caused by a locked .suo, as happened to a colleague of mine today.
+
+In his case, the cause seemed to be that he shutdown his laptop while Visual Studio was still open. Maybe the shutdown of Windows didn't complete cleanly? We can only speculate on how the .suo originally became locked.
+    
+    
+Answer 4: 
+
+    
+    
+I tried all the solutions above and that did not fix the issue for me. I found that it was because of the Active configuration in the ConfigurationManager was set to build only the Main (start up) project. 
+
+Go to Build code/code/ppa href="http://forums.asp.net/t/996113.aspx/1" rel="noreferrer"/aa href="http://msdn.microsoft.com/en-us/library/kwybya3w.aspx" rel="noreferrer"/aimg src="https://i.stack.imgur.com/b5OKG.png" alt="enter image description here"/p/div
+Answer 5: 
+
+    
+    
+I've encountered a similar problem, the solution (or the probelem) were the Build and Run settings under Tools &gt; Options... &gt; Projects and Solutions &gt; Build and Run where "Only build startup projects and dependencies on Run" was checked. The screenshot shows my currently working solution.
+
+
+    
+    
+Answer 6: 
+
+    
+    
+For me, I resolve the issue by right clicking on the project; Build Dependencies /ppa href="https://i.stack.imgur.com/Xzghw.png" rel="nofollow noreferrer"img src="https://i.stack.imgur.com/Xzghw.png" alt="enter image description here"/a/p/div
+Answer 7: 
+
+    
+    
+make sure that the referencing project has same or higher .Net framework version than the referenced project.
+    
+    
+Answer 8: 
+
+    
+    
+Right Click solution in solution explorer then click "Clean Solution".
+    
+    
+Title: How do I solve error message &ldquo;an error occurred registering this project with source control&rdquo; when loading a project retrieved from a TFS server?
+Description: 
+    
+    
+                    
+the full error message is:
+
+"The Project 'my.project.name' is under source control. An error occurred registering this project with source control. It is recommended that you do not make any changes to this project."
+
+It seems that I can make the error message go away, and load the project correctly by opening the csproj file, and remove all nodes with names starting with "scc" - however, then I have to confirm wanting to use the solution Source control settings every time I open the solution.
+
+Any suggestions?
+    
+
+        
+Answer 1: 
+
+    
+    
+Please open the *.csproj file of your project then replace the following tags:
+
+&lt;SccProjectName&gt;SAK&lt;/SccProjectName&gt;
+&lt;SccLocalPath&gt;SAK&lt;/SccLocalPath&gt;
+&lt;SccAuxPath&gt;SAK&lt;/SccAuxPath&gt;
+&lt;SccProvider&gt;SAK&lt;/SccProvider&gt;
+
+
+With
+
+&lt;SccProjectName&gt;
+&lt;/SccProjectName&gt;
+&lt;SccLocalPath&gt;
+&lt;/SccLocalPath&gt;
+&lt;SccAuxPath&gt;
+&lt;/SccAuxPath&gt;
+&lt;SccProvider&gt;
+&lt;/SccProvider&gt;
+
+
+Close the solution, close VS, reopen VS and then your problem will be resolved.
+    
+    
+Answer 2: 
+
+    
+    
+The problem is with the *.csproj.user and if you have source control with the *.csproj.vspscc (in VS2012). Delete both, close the solution, close VS, reopen VS using the Run As (preferably administrator) and it should be fine.
+    
+    
+Answer 3: 
+
+    
+    
+I would try with removing the previous source control bindings in the .csproj file and then (re-)bind it using File-
+Answer 4: 
+
+    
+    
+In VS2012, Tools -
+Answer 5: 
+
+    
+    
+I had the issue when someone else added a project to the solution and I got latest in solution. All I did was restart Visual Studio.
+    
+    
+Answer 6: 
+
+    
+    
+In case anyone else has the same problem: We ended up solving it taking a backup of the project, removing the project from the solution, checking the solution into source control without it, and then adding the project again. 
+
+Luckily it was a new small project, with very little history - I would hate having to do this with a large old project...
+
+I would probably try tbergstedt's suggestion first, if I where you.
+    
+    
+Answer 7: 
+
+    
+    
+Since none of the above worked for me and I was having problems with libraries that were fine in other projects, it was reasonable for me to consider it to be a problem with the solution rather than an individual project.
+
+What worked for me was to open the solution file (.sln) in notepad (taking a backup first just to be safe), and if there is a section:
+
+GlobalSection(SourceCodeControl) = preSolution
+ ...
+EndGlobalSection
+
+
+then delete it, save the solution and reopen. Problem fixed for me.
+    
+    
+Answer 8: 
+
+    
+    
+Just in case if you are using other tool for source control e.g. source tree for Git and Mercurial, then you can just set Current source control plug-in to None in VS.
+
+In VS2015, Tools -
+Title: Enum as @param type in JSDoc
+Description: 
+    
+    
+                    
+Is it possible to use an enum for the JSDoc @param type declaration like in the following example?
+
+/**
+ * @enum { Number }
+ */
+var TYPES = {
+    TYPE_A: 1,
+    TYPE_B: 2
+}
+
+/**
+ * @param { TYPES } type
+ */
+function useTypesEnum( type ) {
+
+}
+
+
+If I use an IDE like Eclipse etc. for JavaScript, there should no warning be raised?
+    
+
+        
+Answer 1: 
+
+    
+    
+JsDoc comments have no impact on JavaScript code. What it does influence is some tools designed to use that information. Two of the tools that work with JsDoc comments are the documentation generator and the Google Closure Compiler. 
+
+I am not particularly familiar with JsDoc3, in which the @enum tag has been added, but i would assume it works just as any other type.
+
+The Closure Compiler also recognizes the enum correctly and you can use it just like you mentioned in the example and get all the benefits of the compiler (ex: type checking).
+    
+    
+Answer 2: 
+
+    
+    
+So it seems this is the right way to document everything without any warning
+
+/**
+ * @typedef {number} MyType
+ **/
+
+
+/**
+ * @enum {MyType}
+ */
+var TYPES = {
+    TYPE_A: 1,
+    TYPE_B: 2
+}
+
+/**
+ * @param {MyType} type
+ */
+function useTypesEnum( type ) {
+
+}
+
+
+This means: 
+
+
+MyType is a number
+TYPES is an enum that holds MyType values 
+This function accepts enums that output MyType values
+
+
+Works for me on intellij 2017.1
+
+However - this will still allow each string to be passed to the function without warnings. 
+
+If you want to specify the enum values too - so it should raise errors if another string was used, use the method described at: https://stackoverflow.com/a/36501659/1068746
+
+ /**
+    * @typedef FieldType
+    * @property {string} Text "text"
+    * @property {string} Date "date"
+    * @property {string} DateTime "datetime"
+    * @property {string} Number "number"
+    * @property {string} Currency "currency"
+    * @property {string} CheckBox "checkbox"
+    * @property {string} ComboBox "combobox"
+    * @property {string} Dropdownlist "dropdownlist"
+    * @property {string} Label "label"
+    * @property {string} TextArea "textarea"
+    * @property {string} JsonEditor "jsoneditor"
+    * @property {string} NoteEditor "noteeditor"
+    * @property {string} ScriptEditor "scripteditor"
+    * @property {string} SqlEditor "sqleditor"
+    */
+
+    
+    
+Answer 3: 
+
+    
+    
+You can achieve that, by doing this:
+
+/**
+* @param {(1|2)} type
+*/
+function useTypesEnum(type) {
+
+}
+
+
+
+    
+    
+Title: How to disable Edit Project when double click on Visual Studio 2019?
+Description: 
+    
+    
+                    
+On Visual Studio 2019
+
+When I double click or even focus on project, it open Edit project
+
+For previous version, It just only expand the project structure
+
+How to disable this feature ?
+    
+
+        
+Answer 1: 
+
+    
+    
+Visual Studio 2019 (version 16.0) introduced the ability to double click on SDK-style projects in Solution Explorer and having them open in the editor.
+
+Based on feedback, an option has been added in Visual Studio 16.1 (currently in preview) that restores the previous behaviour.
+
+
+
+If you prefer the old behaviour, uncheck this setting.
+
+EDITORIAL: SDK-style projects are very readable and easy to edit by hand. If you use SDK projects you may start to think of project files as regular source file and that double clicking to edit makes sense. Of course you may not, but it's worth considering.
+    
+    
+Answer 2: 
+
+    
+    
+Yes with VS2019, it is implemented the same way. There is a suggestion opened here
+
+As of now there is no direct way to disable.You can click on the arrow to expand and see the files and structure
+    
+    
+Answer 3: 
+
+    
+    
+Here the answer of @Sajeetharan again with a screenshot for a direct way to the setting that currently can be used as a workaround since the accepted answer is not working.
+
+Of course this disables the preview from selected files in the Solution Explorer completely.
+
+Visual Studio 2019 16.3.1:
+
+
+    
+    
+Title: Making a hello world app in a Form in Intellij
+Description: 
+    
+    
+                    
+I'm trying to make a hello world form in Intellij. I've created the form, but the question now is what code to make in main() to make the form run and show up?
+
+PS: all the tutorials around seem to only focus on "how to do forms on intellij" not in "how to actually make it run, then".
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Go to the class with the same name as the form.
+Press the keyboard shortcut for "Generate". It's Ctrl+N on Mac OS X, Alt+Ins on Windows. Alternatively, from the menu, select menu Code → Generate.
+Select "Form main()".
+
+
+Now the main method is written and inserted for you. It will look something like this:
+
+public static void main(String[] args) {
+    JFrame frame = new JFrame("MyForm");
+    frame.setContentPane(new MyForm().mainPanel);
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.pack();
+    frame.setVisible(true);
+}
+
+    
+    
+Answer 2: 
+
+    
+    
+I just did my first Intellij Swing App.
+Steve McLeod has the right instructions, however, when I tried to generate the main method using Alt+Insert =em/em/pp/ppstrong/strong/p/div
+Answer 3: 
+
+    
+    
+Check this tut while it is realy step-by-step:
+
+JetBrains JavaFX HelloWorld
+    
+    
+Title: Scheme IDE for Windows
+Description: 
+    
+    
+                    
+What is a good Scheme IDE for Windows? OK, I'll admit it; I'm not at RMS's level, and don't want to use Emacs or any character-based interface -- I want a graphic IDE with colorization, a REPL, and usable, in-line help for a specific, well-documented dialect of Scheme. I have searched around and PLT Scheme/DrScheme seems the best, but even that does not look too sophisticated.
+    
+
+        
+Answer 1: 
+
+    
+    
+DrScheme is the best Scheme IDE I have found.  It has a JIT compiler, can build stand-alone executables or run in the traditional Scheme REPL, has smart syntax editing  , as well as other traditional IDE features like Menu bars to change features.  Running/stopping your program is as easy as clicking 'Run'/'Stop'.  It also includes a macro-expander (if you're writing macros) as well as a debugger. It's Help menu includes both DrScheme-specific documentation, as well as various Scheme specifications (e.g., R5RS and R6RS).
+
+If there is something you want in a Scheme IDE that is not in DrScheme already, I'm sure the  developers would be interested in hearing from you.
+    
+    
+Answer 2: 
+
+    
+    
+I think you are done already. DrScheme is the most popular Scheme IDE.
+
+Scheme is a bit of niche language, so do not be surprised not to find the kind of super-slick IDE support that is expected by Java/VisualBasic WIMP addicts.
+
+Patronizing? Well, yes.
+    
+    
+Answer 3: 
+
+    
+    
+PLT Scheme is an excellenet product well worth taking a look at. It's got all the features you're asking for
+    
+    
+Answer 4: 
+
+    
+    
+I think what you want actually is Emacs. Let's see:
+
+
+I want a graphic IDE, the latest versions of Emacs are built on top of gtk.
+with colorization, it's M-x font-lock-mode
+a REPL, lookup Quack mode for Emacs,
+and usable, in-line help for a specific, well-documented dialect of Scheme, that too, it's built into Quack.
+
+    
+    
+Answer 5: 
+
+    
+    
+I've been playing with Xacc.Ide and Iron Scheme and found they were pretty good although they felt not finished in some places. They're good enough for trying out scheme, I'm not sure if I'd use them for writing commercial software though. I've seen the author of both of them hang around here so maybe he can tell more..
+    
+    
+Answer 6: 
+
+    
+    
+As far as I know (I used DrScheme for a few months before switching to Emacs), DrScheme has many IDE-like features, but they are presented in a simplified interface because of its educational focus. Do some digging and I think you'll be happy what you find.
+
+Also, I can't resist, since I do use Emacs---an OS specific install of emacs is hardly ever character based.
+    
+    
+Answer 7: 
+
+    
+    
+I just found out the scheme plugin for eclipse, I haven't try it yet.
+It looks pretty nice.
+http://sourceforge.net/apps/wordpress/schemeway/the-schemescript-plugin/features/
+and its git repository
+https://github.com/schemeway/SchemeScript
+    
+    
+Answer 8: 
+
+    
+    
+I personally use ChezScheme. 
+I run scheme scripts from the console and edit them in eclipse, using the SchemeWay plugin. 
+Eclipse is superior to Emacs, in my opinion, and it has some nice features, like automatic indentation and autocomplete for defined names.
+    
+    
+Title: &ldquo;Object library not registered&rdquo; when adding Microsoft Rich Textbox Control 6.0 (SP6)
+Description: 
+    
+    
+                    
+I try to add Microsoft Rich Textbox Control 6.0 (SP6) control via Project -/emcode/code/ppimg src="https://i.stack.imgur.com/8DeIX.png" alt="VB6 IDE Object library not registered error"/ppcode/codecode/code/pp/pprecode/code/prep/ppa href="http://www.rohitab.com/apimonitor" rel="noreferrer"/acode/codecode/code/p/div
+Answer 1: 
+
+    
+    
+The problem has been resolved by running the following in elevated command prompt:
+
+cd C:\Windows\SysWOW64\
+regtlib msdatsrc.tlb
+
+
+This also helped with other older .ocx files, like Graph32.ocx and Threed32.ocx
+    
+    
+Title: How to make visual studio break only on unhandled exceptions?
+Description: 
+    
+    
+                    
+On my other machines Visual Studio always broke on errors when there was not a try/catch to handle them, but if there was a try/catch then it didn't break.  For some reason on this laptop it doesn't work that way.  It didn't break at all at first, but then I found out how to set it to break by going to debug/exceptions.  However, configuring it to break there causes it to always break on exceptions even if there is a try/catch block.
+
+How do I make it work like I'm used to??
+    
+
+        
+Answer 1: 
+
+    
+    
+Make sure you have Just My Code Enabled by going into Tools--
+Answer 2: 
+
+    
+    
+I cannot find the dialogue in the accepted answer.
+In my experience, in Exception Settings, if you hit &quot;Restore the list to default settings&quot;, it will not break on exceptions you handled.  If you checked a particular exception in Exception Settings, then it will break regardless of whether you handles this exception in your code or not.
+    
+    
+Title: #region analogue for eclipse
+Description: 
+    
+    
+                    
+can somebody tell me, is there an analogue of a Visual Studio #region feature for Eclipse IDE ?
+I really need this magic! :)
+    
+
+        
+Answer 1: 
+
+    
+    
+User-defined regions for code folding can be added by using the Coffee-Bytes plugin.
+    
+    
+Answer 2: 
+
+    
+    
+Coffee-Bytes plugin is now available here, download link is here.
+    
+    
+Answer 3: 
+
+    
+    
+Sorry; there is not. 
+
+There might be a plugin
+    
+    
+Answer 4: 
+
+    
+    
+You must download Coffe-Bytes plugin and install to eclipse. 
+url is here
+
+https://code.google.com/p/coffee-bytes/source/browse/
+
+Check bellow links about how can install eclipse plugin
+
+
+How to install plugin for Eclipse from .zip
+http://wiki.eclipse.org/FAQ_How_do_I_install_new_plug-ins%3F
+
+    
+    
+Title: Good Java property files editor
+Description: 
+    
+    
+                    
+I work on an open-source Java project, and we have a lot of resource property files that contains localizable message resources. Those files are translated by volunteers to 20+ languages, and I'm a developer who primarily edits code.
+
+In Java, resource files for different locales are grouped together by a naming convention. For example, if the default (normally English) resource is "foo.properties", Japanese resource is in "foo_ja.properties", French one is "foo_fr.properties", etc. For the sake of this question, let's call this group a "resource group."
+
+Now, every so often, I need to refactor those resource files. In addition, I need the tool to support the basics of the property files. All in all, my list of requirements are something like:
+
+
+Renaming property key name, and I want a tool to rename all the keys in all the files in the same group, without me individually going through them.
+Move a property from one resource group to another, and I want a tool to do so for each resource file in the group.
+In Java, resource files are in the ISO-8859-1 encoding and not in the platform default encoding.
+I don't want to see \uXXXX when editing/browsing property files, but I do expect the tool to preserve them.
+I don't want the tool to rearrange the order of properties in the resource file, nor mess with the comments. I expect the tool to preserve them.
+I want the tool to handle other syntax details of resource files, such as multiline text.
+
+
+Unfortunately, I'm not finding any good tool that fits these criteria. I'm primarily an IntelliJ IDEA user, but it doesn't do #2 and #3. Eclipse built-in property file editor is even worse, and AFAICT it doesn't do #1, #2, #4. In fact it lacks the view that cuts across resource files in the same group. NetBeans is similarly primitive. The same goes for NetBeans, although it does #4.
+
+Does anyone know of a good tool that fits the bill?
+    
+
+        
+Answer 1: 
+
+    
+    
+I used plugin for eclipse. I think this one: http://sourceforge.net/projects/eclipse-rbe/
+
+It is OK, allows adding and renaming properties, shows warnings if property is not translated to all supported languages etc.
+
+Its disadvantage is that it always uses `\uXXXX' notation for unicode characters. So, you must use this plugin to read created files. It makes search very hard. And I do not know whether it is possible to configure it to create UTF-8 encoded bundles. 
+    
+    
+Answer 2: 
+
+    
+    
+Take a look at the online tool POEditor https://poeditor.com. Its project based.
+    
+    
+Answer 3: 
+
+    
+    
+Check out Multiproperties, if you are still looking for such a plugin:see here
+
+Only #6 requirement is missing.
+    
+    
+Answer 4: 
+
+    
+    
+Properties Editor (Eclipse plugin) does #4 for sure. Never needed it for anything else.
+    
+    
+Answer 5: 
+
+    
+    
+Turns out IntelliJ should be able to do #3 (except it doesn't work in the current releasedue to a bug.) So that leaves me with just #2.
+
+For the time being (and for the problem at hand) I decided that putting together a Groovy script is faster than trying out those tools:
+
+#!/usr/bin/env groovy
+// base name of the resource group to move a property from
+File base = new File(args[0])
+// key name of the property to move
+String from = args[1]
+// base name of the resource group to move the property to
+File dst  = new File(args[2])
+// name of the new property after move
+String to = args[3]
+
+/*
+TODO:
+  support multi-line
+  insert the text in a better place, in the sort order
+*/
+
+base.parentFile.eachFileMatch(~"${base.name}(_.*)?\\.properties") { f -&gt;
+  def l = f.name.substring(base.name.length())
+  println "${f}"
+
+  def tmp = new File(f.path+".tmp")
+
+  // delete this property from the source, and remember it
+  def dropped = null;
+  tmp.withWriter("iso-8859-1") { w -&gt;
+    f.filterLine(w,"iso-8859-1") { line -&gt;
+      if (line.startsWith(from)) {
+        dropped = line;
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+  tmp.renameTo(f)
+
+  if (dropped==null)    return; // nothing to copy to
+
+  // append
+  f = new File(dst.path+l)
+  tmp = new File(f.path+".tmp")
+  println "-&gt; ${f}"
+
+  existing = f.bytes
+  needsLF = (existing[existing.length-1]!='\n')
+
+  f.withWriterAppend("iso-8859-1") { w -&gt;
+    if (needsLF) w.write('\n')
+    w.write(to+dropped.substring(from.length()))
+    w.write('\n')
+  }
+}
+
+
+This script is a hack and doesn't understand the property file syntax, so it's not terribly reliable. But VCS can compensate that downside by letting you see exactly what the script did.
+
+I'm still hoping to find a good tool so that I'm more productive in a longer run. So please keep the answers coming!
+    
+    
+Answer 6: 
+
+    
+    
+At this point, I guess the answer is that there is no good property files editor in Java that matches the listed criteria. prbeditor sounded promising but it's gone, IntelliJ IDEA looks good on paper but is suffering a critical bug, and then the Eclipse plugins are all somewhat primitive.
+    
+    
+Answer 7: 
+
+    
+    
+I have been using prbeditor for some time now and I think it can handle the requirements you have:
+
+
+Can be done by changing the key column in the table view.
+Can be done by copying the key column which will actually copy the key and all the values in the different languages and then pasting it into a different table view, which will insert the key and values into the different columns of the table view.
+Characters can be escaped using \uXXXX, not sure if it does it only for non ISO-8591-1 characters or even for all non US-ASCII characters.
+\uXXXX is decoded for the editor and written back to the file as \uXXXX.
+The order of properties is not changed, not sure about how it handles comments.
+You can enter multiline text and it will correctly write to the properties file.
+
+    
+    
+Answer 8: 
+
+    
+    
+This is old but is a good tool. 
+
+JRC-Editor: http://zaval.org/products/jrc-editor/ it do all you except but re-ordering the keys (sort them) which may not be what you want. (May be this feature can be turned off)
+
+Although it might not be good to re-order the keys, I found it very useful when lots of people work on one resource bundle. Source control tools, like SVN, have a better chance to merge the sorted resource bundles.
+    
+    
+Answer 9: 
+
+    
+    
+check out j18n http://j18n.nomagicsoftware.com
+It does what you want and introduces resource inheritance and also provides versioning for all edits
+    
+    
+Title: Webstorm: how to extend to handle PHP files or even just highlight code correctly?
+Description: 
+    
+    
+                    
+I tried this IDE and I like it. Only problem is that if Im in a project that has some PHP in it, its confusing to see plain black text instead of correct PHP highlight. 
+
+I dont need brutal PHP autocomplete or so, but a syntax highlight. Is it possible to achieve in Webstorm?
+
+Or the only option is to use PHPStorm?
+    
+
+        
+Answer 1: 
+
+    
+    
+UPDATE: since TextMate bundles support was added to the IDE, you can add any language syntax highlighting to the IDE if there is TextMate bundle for it. See my reply about adding Ruby highlighting, it would be the same for PHP, just the different bundle.
+
+
+
+Your best option is to use PhpStorm. Another option is to create your custom file type for basic syntax highlighting.
+    
+    
+Answer 2: 
+
+    
+    
+Why not
+
+File Menu 
+Answer 3: 
+
+    
+    
+Associate the .php file extension to HTML file cause the IDE highlight at least HTML code correctly. 
+
+File Menu 
+Answer 4: 
+
+    
+    
+A late reply, but this worked for me:
+
+use this textmate bundle: https://github.com/textmate/php.tmbundle
+
+Then go to settings /pp/p/div
+Answer 5: 
+
+    
+    
+I tried the textmate bundle but it seems that there is an issue. I wasn't able to get highlighting. I think it is an unsolved bug, so I wonder if someone figured out how to use it.
+
+http://youtrack.jetbrains.com/issue/WEB-11065
+
+http://youtrack.jetbrains.com/issue/RUBY-14273
+
+So I think I have to use PHPStorm to get basic syntax highlighting. Thats sad :/
+    
+    
+Answer 6: 
+
+    
+    
+This questions describes how to install textmate plugin which gives you syntax highlighting:
+
+Is it possible to get Ruby syntax highlighting in PHPStorm?
+
+The only difference is that you want to use this bundle: https://github.com/textmate/php.tmbundle
+(but maybe there are better ones)
+    
+    

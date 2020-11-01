@@ -1,0 +1,1784 @@
+Title: How to get the type of a term inside a do block in Leksah?
+Description: 
+    
+    
+                    
+Question in video format : http://youtu.be/3_pvK-gcLMM
+
+Question in text format : how can I get Leksah to tell me the type of unlisten in the code below ? 
+
+Code is taken from https://github.com/SodiumFRP/sodium/blob/master/haskell/examples/tests/unit-tests.hs
+
+If this is not possible with Leksah (to get a type of a term inside a do block) then how is it possible to extract that information ? Is there some other Haskell tool or IDE that can do that ?
+
+module Main where
+
+import FRP.Sodium
+import Control.Applicative
+import Control.Monad
+import Control.Monad.Trans
+import Data.Char
+import Data.IORef
+import Test.HUnit
+
+
+
+main = do
+          putStrLn "Give me a line"
+
+
+event1 = TestCase $ do
+    (ev, push) &lt;- sync newEvent
+    outRef &lt;- newIORef ""
+    sync $ do
+        push '?'
+    unlisten &lt;- sync $ do
+        push 'h'
+        unlisten &lt;- listen ev $ \letter -&gt; modifyIORef outRef (++ [letter])
+        push 'e'
+        return unlisten
+    sync $ do
+        push 'l'
+        push 'l'
+        push 'o'
+    unlisten
+    sync $ do
+        push '!'
+    out &lt;- readIORef outRef
+    assertEqual "event1" "hello" =&lt;&lt; readIORef outRef
+
+
+EDIT: It seems that haskell-vim-now can do it :
+
+
+
+Would be nice to have the same in Leksah somehow.
+    
+
+        
+Answer 1: 
+
+    
+    
+This is a tricky problem with a number of different solutions (ghc-mod, ide-backend and others).  Currently I think integrating ide-backend into Leksah is probably the best approach to fix this properly.
+
+There is slightly clunky a work around that I find myself using some times.  Specify the type to be () and let the compiler complain that it is not.  For instance if you change the code so it is like this...
+
+unlisten :: () &lt;- listen ev $ \letter -&gt; modifyIORef outRef (++ [letter])
+
+
+You should get an error that includes the inferred type of unlisten.  You may get an error asking you to turn on ScopedTypeVariables when you do this.  If so, press Ctrl+R and Leksah should add {-# LANGUAGE ScopedTypeVariables #-} to the top of the file for you to switch it on.
+
+One advantage of this approach is that it works even when your code is does not compile (I am not sure how well the other approaches cope with broken code).
+
+I think you can also change it to a type hole by renaming unlisten to _unlisten, but that only works for names and not any expression and also if you don't rename all of the occurrences you might get a different inferred type.
+    
+    
+Title: How can I force QT Creator&#39;s toggle comment feature to not skip lines
+Description: 
+    
+    
+                    
+Using QT Creator, given the following:
+
+int example = 1;
+
+if (example == 1)
+{
+  example = 2;
+}
+
+
+If I select that text and enter ctrl-/ to toggle comments on the selection, I get:
+
+//int example = 1;
+
+//if (example == 1)
+//{
+//  example = 2;
+//}
+
+
+But I want to get:
+
+//int example = 1;
+//
+//if (example == 1)
+//{
+//  example = 2;
+//}
+
+
+(The empty line is also commented out).
+
+Does anyone know how to configure QT Creator to not skip empty lines when toggling comments?
+    
+
+        
+Answer 1: 
+
+    
+    
+The only way I know is to use multi-line edition. If you have never used this feature, here are the instructions on QtCreator:
+
+Keyboard-only: Put your cursor at the beginning of the first line you want to comment, press Shift+Alt, use the Down arrow to reach the last line, release Shift+Alt, type '//'.
+
+Keyboard + Mouse: Select the code you want to comment and press Atl before releasing the left button of the mouse. Release Alt, and type '//'.
+
+Note: It seems that QtCreator /p/div
+Title: How to automate iframe click in selenium-ide?
+Description: 
+    
+    
+                    
+Also, the simple click command to the skip_intro id is failing. 
+    
+
+        
+Answer 1: 
+
+    
+    
+Please use the selectFrame command in Selenium IDE to select the frame.
+
+If your iframe is like &lt;iframe id="ntbanner" width="100%" scrolling="no" height="113px" frameborder="0"&gt;
+
+Your command will be selectFrame and the corresponding target will be id=ntbanner in IDE.
+
+Once you are in the frame, you can click the button or elements in the frame by using normal click.  If you want to get back out of the frame you can set target as null to the selectFrame command in IDE
+    
+    
+Title: Upload from Cloud9 (c9) IDE to FTP server
+Description: 
+    
+    
+                    
+I'm trying to find a simple way to upload a project, or even just a single file, from the Cloud9 (c9.io) IDE to an existing live FTP server. I see that I can now connect (via a Beta feature) to an FTP or SFTP server from c9, but I can't seem to upload edited files from the IDE via FTP.
+
+Maybe I'm missing something, but I was hoping to deploy directly from c9.
+
+Thank you in advance for any assistance you're able to offer!
+    
+
+        
+Answer 1: 
+
+    
+    
+From documentation:
+
+
+  Cloud9 IDE allows you to easily add files to your curent workspace at any time. You can drag and drop files from your computer directly into the Project Files pane, and the IDE will add them to your project. Google Chrome users can also drag entire folders into the IDE.
+
+
+click for more information
+    
+    
+Title: How to random time in javascript
+Description: 
+    
+    
+                    
+I want to make javascript that random time according the format "HH:MM AM"
+inside my selenium IDE.
+
+I tried the code below:
+    javascript{Math.floor(24*Math.random() + 00) +":" + "00 PM";}    
+
+But as you guess, it doesn't work.
+Please your help thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+Shehryar's answer will give you results that are not properly random, mostly because it should be multiplying by 12 not the current number of hours, and 60 not the current number of minutes. i.e. Higher numbers of hours and minutes will be less frequent. Also it will be possible to get zero hours and 60 minutes due to the use of round instead of floor.
+
+The HTML and use of document object is good though, so I will copy that:
+
+&lt;div id="timebox"&gt;&lt;/div&gt;
+&lt;script&gt;
+function pad(number) { 
+  //Add a leading 0 if the number is less than 10
+  return ((number&lt;10)?"0":"")+number.toString();
+}
+
+function randomTime() {
+  //Generate random minute in the day (1440 minutes in 24h)
+  var r = Math.floor(Math.random() * 1440);
+
+  //The hour is obtained by dividing by the number of minutes in an hour
+  //taking the floor of that (drop the decimal fraction)
+  //take the remainder (modulo) of dividing by 12 (13 -&gt; 1 etc)
+  //add 1 so that the range is 1-12 rather than 0-11
+  var HH = pad(1 + (Math.floor(r/60) % 12));
+
+  //Take the integer remainder of dividing by 60 (remove the hours) 
+  var MM = pad(r % 60);
+
+  //The afternoon starts after 12*60 minutes
+  var AMPM = (r&gt;=720) ? "PM" : "AM";
+
+  return HH + ":" + MM + " " + AMPM;
+}
+
+document.getElementById("timebox").innerHTML=randomTime();
+&lt;/script&gt;
+
+    
+    
+Answer 2: 
+
+    
+    
+Did you already review this post: 
+How to format a JavaScript date 
+and this on the Date object itself: 
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+perhaps these links will provide you with some guidance in coming up with a solution. good luck!
+
+EDIT: I've attempted this jsFiddle to help you, please see: http://jsfiddle.net/damf9hf1/3/
+
+HTML:
+
+&lt;div id="timebox"&gt;&lt;/div&gt;
+
+
+JS:
+
+var myDate = new Date();
+var myHour = myDate.getUTCHours();
+var myMinutes = myDate.getMinutes();
+
+myRandom(myHour, myMinutes);
+
+function myRandom(hrs, mins) {
+    hrs = Math.round(Math.random()*hrs);
+    mins = Math.round(Math.random()*mins);    
+    var hFormat = (hrs&lt;10 ? "0" : "");
+    var mFormat = (mins&lt;10 ? "0" : "");
+    var amPm = (hrs&lt;12 ? "AM" : "PM");
+    document.getElementById("timebox").innerHTML="Time: " +hFormat+hrs+ ":" +mFormat+mins+ " " +amPm;
+}
+}
+
+    
+    
+Title: Debugging Go via GDB with Vim (not gvim)
+Description: 
+    
+    
+                    
+I am starting to get into Go, as it seems like an interesting language for web service development. I have historically created a new Ubuntu Server 14.04 instance for each of my language groups, and have kept the same principle for Go.
+
+I have installed all the usual tools (Syntastic, YCM, NERDTree, ctags, you get the idea) and have got a great writing environment set up with some help from vim-go.
+
+Now, I want to be able to get debugging set up in a similar way, using GDB, and am getting stuck on what the best tooling to use here is.
+
+It seems as if Clewn is a great tool, but as I am using SSH to the development environment, I can't necessarily use gvim.
+
+I basically just need a GDB tie-in to vim (not gvim). I am using vim 7.4 as per apt-get via ubuntu universe, and will be more than happy to build from source if some compatibility has not included.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use dbg.vim.
+
+Once the plugin installed, you can setup your breakpoints and use shortcuts to show value of variable under the cursor, etc.
+    
+    
+Title: In Xcode, is there a way to search for all lines where a specific method is called?
+Description: 
+    
+    
+                    
+It's easy to jump to a symbol definition in Xcode--it's a ⌘-click away. But what about the opposite direction? That is, given the methods:
+
+@interface MyObject : NSObject
+- (void)myMethodWithParameter:(id)parameter
+           someOtherParameter:(id)someOtherParameter;
+- (void)myMethodWithParameter:(id)parameter
+             anotherParameter:(id)anotherParameter;
+@end
+
+
+Is there a way to search a project or workspace for all lines that call the -[MyObject myMethodWithParameter:someOtherParameter:] method?
+
+Note that I'm not asking for lines that include the text "myMethodWithParameter:", since that will turn up results for both methods. I only want results that call the first method, not the second.
+
+Xcode uses libclang to perform symbol lookups, so presumably it knows which method each line is calling. So theoretically, this seems like it should be possible...
+    
+
+        
+Answer 1: 
+
+    
+    
+What you are after is a list of 'callers' of a particular method that you select (whether it be in a .h or .m). Xcode's assistant editor can do this.
+
+Start by opening the assistant editor in Xcode. You should have a split screen. In the left side you should have the header or main file that contains the method you want to find its callers for. Make sure to position the cursor over the method in question.
+
+Next click on the root bread crumb above the right side in the toolbar above. The icon you're looking for is either a bow tie or a book. When clicked on a list should open up that you can scroll down until you see something like 'callers(3)' Hovering over it will expand out all the methods that call the method you selected in the left side. The number in the parenthesis is how many callers of the method there are in the project.
+
+The assistant editor is really cool and it has a lot of useful features.
+    
+    
+Answer 2: 
+
+    
+    
+You can change the Find navigator from searching for text to search for regular expressions, then you can be as detailed as you like.
+
+Searching for the regex "myMethodWithParameter.*some" would return all instance of the first and not the second
+
+On a side not Bamsworld's answer is good too, I had often wondered what those other options were for in the assistant editor. TIL
+    
+    
+Title: LightTable - Adding auto complete keywords
+Description: 
+    
+    
+                    
+Is there a way to add additional auto complete keywords? From my experience with the IDE/Editor, some languages, like clojure, already have every function native to the language available as an auto complete word. Is it possible to add, say, every function from the seesaw library, or every function from the compojure library to that list? Is it possible to add all HTML element names? What about Angular.JS directives? CoffeeScript? The list of items that would be useful to add goes on and on. Is this possible?
+    
+
+        
+Answer 1: 
+
+    
+    
+It's certainly possible. There is this TernJS Plugin for improving JavaScript autocomplete, though I haven't tried it myself yet.
+    
+    
+Title: The methods in Netbeans are always italic. How to remove italic?
+Description: 
+    
+    
+                    
+The methods in Netbeans are always italic and bold. I can unbold them without any problems, but i can't unitalic them. How can it be done? I tried to change the style to normal, but it just doesn't remove the italic.
+    
+
+        
+Answer 1: 
+
+    
+    
+What language are you using? For java make sure to set static method calls to plain aswell. 
+
+go to Tools -
+Title: Is there a Visual Studio option to toggle between two actions with one key combination?
+Description: 
+    
+    
+                    
+I'd like to use just one key combination to toggle between two actions in Visual Studio. Is this possible? Specifically, can I use ctrl+/ to comment code, and then press it again to uncomment code? 
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't think that's possible. You can, if that's enough for you, set various bind to CTRL+H, ALT+H and CTRL+ALT+H.
+
+(You can also play with UPPERCASE)
+    
+    
+Title: Why can&#39;t IntelliJ work with single files?
+Description: 
+    
+    
+                    
+I get that as an IDE IntelliJ focuses on projects. But is it possible to open/create single files without starting a new project all over again?
+    
+
+        
+Answer 1: 
+
+    
+    
+No, it not possible. IDEA it's not easy text editor like Sublime Text or Notepad++. But you can create project with simple structure and open(drag and drop) or create there any files.
+    
+    
+Title: JavaScript IDE/Compiler
+Description: 
+    
+    
+                    
+Now, I hope some of you people will understand what I'm asking. I'm new to programming. I got introduced to JavaScript on Codecademy.com
+
+I use labs.codecademy.com for my JavaScript writing, but it's limited. What IDE/Compiler can I use that's pretty simplistic in terms of being new to programming. Where I'm not surrounded by buttons that I don't know how to use yet.
+
+Does this even exist? A simple IDE?
+    
+
+        
+Answer 1: 
+
+    
+    
+I think these two editors/IDEs are simple and good for beginners:
+
+
+nodepad++ (with Plugins)
+sublimetext (with Plugins)
+
+
+More "complicated", but good javascript support:
+
+
+netbeans
+
+
+This is very subjective, but nevertheless have look at this editors and choose what suites best for you.
+
+I hope I could help you.
+    
+    
+Answer 2: 
+
+    
+    
+Notepad?  JavaScript doesn't have a compiler really.  Though there are ways of shrinking the code that some people call "compiling" but it isn't "compiling" in the strictest sense of the word.
+
+If you are looking for something JavaScript specific, give http://www.jetbrains.com/webstorm/ a try.  The personal license is $50 and I'm sure that while it will do more than you need right now, it will grow with you. There is a 30 day trial.
+    
+    
+Answer 3: 
+
+    
+    
+I was researching this exact question for my daughter. Like you, she started learning JavaScript on Codecademy. She loves it, but she is frequently frustrated, when she doesn't understand why a program doesn't work.
+
+So, I researched IDEs and debuggers, and I read that Visual Studio has a debugger that is easy to use. But after installing 4 different versions, I had to jump through lots of hoops to create a JavaScript project in Visual Studio Express 2013, and then I couldn't debug it.
+
+After a while I gave up and installed Eclipse. I have used Eclipse before, and it's very powerful. I was originally looking for alternatives, because I felt using Eclipse for JavaScript is kind of like using an airplane, when all you need is a bicycle :)
+
+There are many versions and packages of Eclipse. I think this one might be the simplest to install:
+http://www.eclipse.org/downloads/packages/eclipse-ide-javascript-web-developers/heliossr2
+(Helios is a version, and this specific package is for JavaScript developers)
+
+I actually used the latest version (Kepler). Unfortunately it doesn't have a package for JavaScript, so I used the Java package:
+http://eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/keplersr2
+and then added JSDT:
+http://www.eclipse.org/webtools/jsdt/
+
+Yes, Eclipse can be intimidating for a beginner, but the good thing about Eclipse is that it works on multiple platforms, you can find support for pretty much any language, and it's free :)
+
+If you are serious about programming, I recommend you invest a little time in learning how to use Eclipse.
+
+Let me know if this helps, or if you have more questions.
+    
+    
+Title: Visual Studio 2012 ide scrollbar collapsed
+Description: 
+    
+    
+                    
+Suddenly the scrollbar on the visual studio code viewer collapsed I don't know how and why it did. 
+
+I couldn't find anything related to this nowhere 
+
+
+
+http://i57.tinypic.com/2csjdco.jpg
+
+Thanks in advance!
+    
+
+        
+Answer 1: 
+
+    
+    
+Following worked for me
+
+
+Go to %System Drive%\Users\\AppData\Local\Microsoft\VisualStudio\11.0\ComponentModelCache
+Rename the cache file (Microsoft.VisualStudio.Default.Cache) present there to 'Microsoft.VisualStudio.Default.Cache_1'.
+Restart the visual studio.
+
+    
+    
+Title: Visual Studio 2013 C++ auto indenting doesn&#39;t work well
+Description: 
+    
+    
+                    
+For some reason, after I type the following block in Visual Studio 2013:
+
+for (int i = 0; i &lt; m; i++)
+    if (some_condition)
+    {
+
+    }
+
+
+VS 2013 automatically indents the code to this:
+
+for (int i = 0; i &lt; m; i++)
+if (some_condition)
+{
+
+}
+
+
+If I put the if between curly brackets, it formats the code correctly. This behavior is very frustrating. I don't remember having this issue in VS 2012.
+
+If I disable auto formatting, it doesn't even put the cursor at the same indent level as the line above. Even notepad++ works better than VS.
+
+Is there a way to fix this? Maybe to import the indenting rules from VS2012 which worked just fine?
+    
+
+        
+Answer 1: 
+
+    
+    
+Bug is fixed with VS 2013 Update 1. Try install it Tools -
+Answer 2: 
+
+    
+    
+Can you change settings as below and check
+
+
+  In Tool-
+Title: Visual Studio (C++) highlighting TODO and compiler errors in the margin with colored marker?
+Description: 
+    
+    
+                    
+Is there a way in Visual Studio (2012, C++) to allow the IDE to highlight compiler errors and TODO comments (like how Eclipse shows them- as a colored line near the current file's scrollbar)?
+
+I know there is a window called Task List, but I don't want another window- just the lines "highlighted" near the scrollbar.
+    
+
+        
+Answer 1: 
+
+    
+    
+Enhanced Scrollbar from Productivity Power Tools 2012 shows compiler errors, changes, bookmarks and breakpoints near the scrollbar, but not tasks.
+    
+    
+Title: Opening files to edit in Nitrous IDE via CLI
+Description: 
+    
+    
+                    
+I've been doing some testing with a Python box in Nitrous.IO, and I was looking for a way to open files via the CLI into the web based IDE.  This would be an alternative to going through the point &amp; click menu on the left-hand side of the web IDE interface.
+
+Does anyone know if Nitrous.IO has a CLI command that will open files into the web IDE?
+
+Thank you,
+SirCobalt
+    
+
+        
+Answer 1: 
+
+    
+    
+There is no way to do this right now. I've asked the question to Nitrous.IO, this was their reply:
+
+
+  There isn't a way to open files into the editor from the console, but I'll bring this up with the team. Thanks for the feedback!
+
+    
+    
+Title: XCode Local Changes Indicator like other IDEs
+Description: 
+    
+    
+                    
+I'm new to XCode and Objective-C programming. I have used WebStorm, IntelliJ, Netbeans, and Eclipse. They all support something like this:
+
+
+
+Notice the colors on the left that indicate what's changed locally. Clicking on those will show me what it was before and allow me to reset the local copy to what it was before. Very useful and I do it all the time.
+
+Obviously, with iOS programming, I want to use XCode, but I really want to have those indicators. All I see with XCode is this:
+
+
+
+Notice that there's no indicator at all...
+
+Note: I am not talking about being able to open a git diff tool, even if it's built into XCode. I am looking for the simplicity that all the other IDEs give me...
+    
+
+        
+Answer 1: 
+
+    
+    
+The closest thing in Xcode is the version editor. Choose View 
+Title: IDE won&#39;t let me type what I want
+Description: 
+    
+    
+                    
+A couple weeks ago my IDE started getting very forceful...  Since it's hard to explain what I mean, here is a video:
+
+http://www.youtube.com/watch?v=tNGMlWwmzpg
+
+It lets me do what I want outside of the parenthesis, so maybe it thinks it's bad syntax two put to evaluations inside, but even if that's true, I don't want my IDE restricting what I can type, it should just use intellisense and put the squigglies.
+
+Here are the extensions I have installed (I disabled the one I installed most recently but it didn't help).  I've used almost all of these forever without problem...
+
+
+
+update: Offered a bounty because this is making me rage.  I have disabled ALL extensions and right now I have the following line:
+
+output += "&lt;div title='" + dr("ServiceGroupType_Desc") + "'&gt;" + dr("ServiceGroupType_Desc") + "&lt;/div&gt;"""
+
+
+I cannot delete the two extra quotes at the end.  It just won't let me.
+    
+
+        
+Answer 1: 
+
+    
+    
+I had the same issue as you and had to uninstall the Codealike plugin to get it working again.
+    
+    
+Answer 2: 
+
+    
+    
+Often when things start misbehaving like this, I find one of three things has happened:
+1) Somehow a modifier key gets stuck on.  Either my keyboard gets weird, or some software glitch happens.  Make sure none of your keys are stuck on unexpectedly.
+2) Make sure accessibility services are off (or if you use some of them, make sure only the ones you use are on).  Some of these can really mess with you if you are not aware they are on.
+3) Make sure your keyboard is in the expected region with the expected layout.  Sometimes this switches unexpectedly, and starts messing things up, and I won't realize for a long time.
+
+Sorry if that isn't much help, but it is the only things I can think of.
+    
+    
+Answer 3: 
+
+    
+    
+As you've mentioned, "I have disabled ALL extensions", so it should have nothing to do with any plugin. 
+
+Start by turn off IntelliSense
+
+
+  Option－
+Title: How to manualy change Version Info in Delphi project
+Description: 
+    
+    
+                    
+I want to manualy set an Version of program in Delphi project, without IDE. 
+When I change a *.dproj file like this:
+
+  &lt;VersionInfo&gt;
+    &lt;VersionInfo Name="IncludeVerInfo"&gt;True&lt;/VersionInfo&gt;
+    &lt;VersionInfo Name="AutoIncBuild"&gt;False&lt;/VersionInfo&gt;
+    &lt;VersionInfo Name="MajorVer"&gt;1&lt;/VersionInfo&gt;
+    &lt;VersionInfo Name="MinorVer"&gt;2&lt;/VersionInfo&gt;
+    &lt;VersionInfo Name="Release"&gt;3&lt;/VersionInfo&gt;
+    &lt;VersionInfo Name="Build"&gt;456&lt;/VersionInfo&gt;
+    &lt;VersionInfo Name="Debug"&gt;False&lt;/VersionInfo&gt;
+    &lt;VersionInfo Name="PreRelease"&gt;False&lt;/VersionInfo&gt;
+    &lt;VersionInfo Name="Special"&gt;False&lt;/VersionInfo&gt;
+    &lt;VersionInfo Name="Private"&gt;False&lt;/VersionInfo&gt;
+    &lt;VersionInfo Name="DLL"&gt;False&lt;/VersionInfo&gt;
+    &lt;VersionInfo Name="Locale"&gt;1049&lt;/VersionInfo&gt;
+    &lt;VersionInfo Name="CodePage"&gt;1251&lt;/VersionInfo&gt;
+  &lt;/VersionInfo&gt;
+  &lt;VersionInfoKeys&gt;
+    ...
+    &lt;VersionInfoKeys Name="FileVersion"&gt;1.2.3.456&lt;/VersionInfoKeys&gt;
+    ...
+    &lt;VersionInfoKeys Name="ProductVersion"&gt;1.2.3.456&lt;/VersionInfoKeys&gt;
+  &lt;/VersionInfoKeys&gt;
+
+
+and then build project through CMD with MSBuild:
+
+call rsvars.bat
+MSBuild.exe blabla.dproj /p:configuration=release
+
+
+I get the *.exe file with empty Version Info in file properties
+
+But when I set the version in the IDE and build using the same MSBuild calling, everything works fine. *.exe have the Version Info
+
+QUESTION: Why do I get different resuslt with the SAME *.dproj file?
+    
+
+        
+Answer 1: 
+
+    
+    
+Normally when you delete the MyProject.res file, normally Delphi should be able to reconstruct it again from the other project data.
+
+I know the IDE does, check if the command line compiler does also. In the little work I did with Delphi XE2 I've seen a cgrb.exe (Code Gear Resource Builder) that does just that.
+
+So when updating the version numbers in the .dproj, delete the .res and have the build process re-create it.
+    
+    
+Title: What can I do to improve CodeRush Xpress responsiveness?
+Description: 
+    
+    
+                    
+I've used CodeRush Xpress for roughly a couple of years now, and I find it very useful. 
+
+However, I don't think I've ever seen it performing well in terms of responsiveness; when I press Ctrl+` to open the refactoring context menu, it generally freezes the IDE for a few seconds. If I subsequently open the context  menu again, it doesn't freeze the IDE, but it still takes about one second for the excessively fancy menus to be drawn on the screen.
+
+I've experienced this on several different computers and with both Visual Studio 2010 and 2012. The most performant computer I've run it on has an Intel Q6600 quad core processor running at 3.0GHz.
+
+For a productivity tool, I think this is a problem; it's supposed to be saving me time!
+
+In terms of software configuration, what can I do to improve the performance of CodeRush Xpress?
+
+Note for those who like closing questions:
+Please consider that software runs predictably, and I believe it's perfectly reasonable that changing certain options can result in performance improvements for all or most users due to this predictable nature. For example, I suspect that performance may be improved by disabling some of the fancy UI effects.
+    
+
+        
+Answer 1: 
+
+    
+    
+First, I suggest contacting support@devexpress.com. They can help you narrow down the performance issue and fix it quickly. The performance problem is likely caused by the availability check of a code provider or refactoring that is taking too long to determine its availability in your solution. 
+
+A few things: 
+
+
+Support may be able to provide you with a more recent version of CodeRush Xpress that already has the performance issue resolved.
+DevExpress has discontinued the freely available CodeRush Xpress, which means no new versions will come out. You can purchase the full version of CodeRush, and starting with version 13.1 CodeRush includes asynchronously-populated Refactoring and Code menus. This improves the responsiveness of the Code/Refactor menu even in huge projects.
+
+    
+    
+Title: What is the equivalent of Visual Studio Command Window in Netbeans
+Description: 
+    
+    
+                    
+In Visual Studio the command window allows me to write code and test while my program is running. As an example the following may print length of an string in C++:
+? strlen("abcd");
+
+Is there such a feature in Netbeans?
+EDIT:
+ I'm actually trying to see the content of a string. The strings contains some special characters (e.g. \u202C) which do not have a visual representation and cannot be seen using the debugger. 
+    
+
+        
+Answer 1: 
+
+    
+    
+UPDATE1
+
+Sorry for my previous answer. Actually there is such a functionality (in version 7.2.1) 
+
+ 
+
+It is the code evaluator feature. You can access it using the CTRL+f9 when you are in debug mode. 
+
+But unfortunately there is no option to view string's escaped characters.
+
+UPDATE2
+
+But you can print these escaped characters. Consider my question here Print String with escape non printable characters
+
+I think this works pretty well
+
+
+    
+    
+Title: Alternative IDE supporting debugging for Google App Engine in Python (Eclipse + PyDev no debug support on SDK 1.7.6+)
+Description: 
+    
+    
+                    
+I'm developing on GAE-Python 2.7 using Eclipse+PyDev as IDE. Since GAE SDK 1.7.6 (March 2013), where Google "broke" support for breakpoints*, I've been using the old dev server to continue debugging the application I'm working on. 
+
+However, Google will drop support of the old dev server as of July 2013 and, since I do not expect a prompt solution for this on PyDev (I've seen no activity so far about this), I would like to look for an alternative IDE to still being able to do debugging. 
+
+I know that one of the possible options is to go for PyCharm (initial license of 89€+VAT and 59€+VAT each year to continue receiving upgrades), but I would like to know how other people is (will be) addressing this problem and what are the current alternatives to PyCharm
+
+*I would like to clarify the sentence "Google broke support for breakpoints": In SDK 1.7.6+, Google started using stdin/stdout in the new dev server for doing IPC and this leaves no chances to even do debugging with pdb. Google claims that they have created the hooks for tool vendors to support debugging (as PyCharm did) but, in my opinion, they "broke" debugging by forcing people to move away from the IDE they were initially recommending due to an architectural decision (I'm not an expert, but they could have used the native IPC mechanisms included in Python instead of using stdin/stdout). 
+
+EDIT:
+I forgot to mention that I'm running Eclipse+Pydev for MacOSX, so please, also mention your OS compatibility in your alternatives/solutions.
+    
+
+        
+Answer 1: 
+
+    
+    
+I posted this in google groups a while back. I can run debugging in Boa Constructor using remote debugging.  https://groups.google.com/forum/#!topicsearchin/google-appengine/Boa/google-appengine/-m00Qz4Vc7U
+
+I am pretty sure it would be trivial to make winpdb work with remote debugging as well, though I haven't tried it (I don't use winpdb ;-)  
+
+If any other debug environments support similiar remote debugging facilities it shouldn't be too hard to get them going.
+
+There a screen shot of Boa debugging in action here https://groups.google.com/forum/#!searchin/google-appengine/debugging$20Boa/google-appengine/ZHHkwr3ok8c/btDno8oPYyAJ
+
+T
+    
+    
+Answer 2: 
+
+    
+    
+The latest version of PyDev (2.8.1) supports GAE debugging. However, "Edit and Continue Debugging or Interactive Debugging" feature seems to have stopped working.
+    
+    
+Title: Can Eclipse or SQL Developer automatically unquote Java Strings?
+Description: 
+    
+    
+                    
+I'm aware that SQL Developer can craft Java Strings using the Advanced Format option (Ctrl+Shift+F7), but can it or Eclipse do the reverse? Is there a quick command to evaluate (or at least unquote/unwrap) Java Strings?
+
+Given this:
+
+"SELECT * " +
+"FROM table " +
+"ORDER BY status"
+
+
+I want this:
+
+SELECT *
+FROM table
+ORDER BY status
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You could do a simple replace, where you look for quotes and replace them with nothing, then do the same with the + symbol. It's often easier to remove items than it is to add them, hence the handy feature for adding quotes.
+
+Code Example
+
+String.replaceAll("\"", "");
+String.replaceAll("+", "");
+
+
+If you want to be able to do it in one line, you could use regex
+
+String pattern = "[\+\"]";
+// Use the following on any string you want to format.
+String.replaceAll(pattern, "")); 
+
+    
+    
+Answer 2: 
+
+    
+    
+An alternate solution is to store the query in a SQL file and consume it as a Resource. Similarily to images (which we don't store as Base64 Encoded strings) we can store them externally to our Java (which we should because they aren't Java, they are SQL)
+
+private String getTextResource(String Resource){
+    InputStream in = getClass().getResourceAsStream(Resource);
+    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+    String line = null;
+    ArrayList&lt;String&gt; lines = new ArrayList&lt;String&gt;();
+    try {
+        while((line = reader.readLine()) != null){
+            lines.add(line);
+        }
+    } catch (IOException e) {
+        return null;
+    }
+    return Joiner.on("\n").join(lines);
+}
+
+public float getCurrentRiskAssessmentFactor(){
+    String sql = getTextResource("MyComplexSQL.sql");
+    return db.getQueryStatment(sql).get(0);
+}
+
+
+Using this technique allows you to maintain complex queries in a testable format. The sql files can be openned and tested in your favourite SQL editor, or run (independantly) against the database. This avoids transcription errors, and effort, when switching between tools.
+
+I worked with one developer who went as far as to abstract the entire DB access so that you could only specify SQL resources, not pass in raw SQL.
+
+Also, install Eclipse DTP. This will allow you to run the queries directly from Eclipse (or at least give you syntax highlighting).
+
+http://www.eclipse.org/datatools/downloads.php
+
+Optimization Tip: If you do this, it is probably advisable to use some sort of Lazy Loading/Caching mechanism for the SQL
+    
+    
+Title: Netbeans: Creating a Project Concept versus Opening Files
+Description: 
+    
+    
+                    
+I'm having a little trouble understanding a couple of concepts. 
+
+I am new to Netbeans and using it for PHP development. I am previously using JEdit. In JEdit, I just simply open the file browser and start editing files. 
+
+In Netbeans, it wants me to create projects and import files. 
+
+My questions are:
+
+
+When I import a project, it sets up data files that Netbeans needs and leaves the original directory in tact, correct? I noticed I could open and edit a project and it affected the original. 
+Sometimes I like to quickly switch between projects and just want to view the /www/ directory of my wamp server to grab files, look at past projects, etc. Why can't I simply do this? (must I always import projects to see my /www/ folder)
+What is the point between creating a project versus just opening files?
+
+
+Thanks all!
+    
+
+        
+Answer 1: 
+
+    
+    
+The point of creating a project vs just opening files in an editor is that Netbeans knows that all these files go together. They are part of the same project. That allows you, for instance, to refactor function names or class names and have Netbeans automatically apply the changes everywhere those are used within your project.
+
+If you create a project from existing sources, those existing files will be the ones you're editing. If you have your files under version control, you can simply create a Netbeans project in the directory where you checked out your code. You can then do commits and all from within Netbeans.
+    
+    
+Title: Working on remote server
+Description: 
+    
+    
+                    
+My OS: Windows 8
+
+Virtualbox guest:  Ubuntu 12.10 server
+
+I configured apache server on vbox guest and mapped http, https, ssh port successfully into ubuntu server. It works nice without any problem. 
+
+I tried several IDEs like PHPStorm, Netbeans, editors like Sublime, all they do is to copy whole project from server, edit on local machine then sync back. 
+
+But it is not what I need. I want to work directly on guest server using ssh/sftp connection. I know that notepad++ has this functionality but I love sublime look and feel. 
+
+Is there any way to work on guest server with sublime or any other ide for free? (There is sftp solution but it's paid and works just like other ide's, not directly on guest machine) Any suggestions?
+    
+
+        
+Answer 1: 
+
+    
+    
+There are two approaches you can choose from, you will probably select the second one: 
+
+
+Use the KDE desktop environment (yes, it also exists for MS Windows). It features so called 'kio-slaves' which allow to use any protocol out there as if you were doing local file system operations. That means when using a KDE editor like 'kate' or even a whole IDE like 'kdevelop4' you can simply say "open file/project" and not only choose a local file, but something like sftp://server/path/file and start working. The network stuff is handled transparently by the environment, it is fully network transparent. This is how systems should be like. I think the GNOME environment had something similar, but it probably has been removed with version 3 of GNOME. 
+You can 'mount' the guests file system into your MS-Windows file system. not sure about the details how this works in MS-Windows, but I am sure that at least newer versions of MS-Windows have gained such feature. Most likely you are still limited to creating something like a "network harddrive" or something, in other systems (linux, unix, macOS) you can mount whereever in the file system you like. You can use any protocol for this, as long as it is supported by the mounting tools of your local system. 
+Again two options: 
+
+2.a You mount the whole virtual disk. Easy, but might be a problem if that disk is currently used by the guest system. 
+
+2.b You export the virtual disk by starting some server in the virtual system: samba is most likely your choice. Then you can mount that smb file export inside your MS-Windows system and start hacking. 
+
+
+Have fun!
+    
+    
+Title: In emacs how can I execute the currently edited python script with custon arguments?
+Description: 
+    
+    
+                    
+I'm using python.el for editing python scripts. When I write a script which is later intende as a command line command, I naturaly wat to test the script with sample arguments.
+
+I tried using C-c C-c (python-send-buffer) to execute the currently edited script and this works perfectly as long as I do not want to pass arguments to the script.
+
+In order to test the script with arguments I save at the moment the script ("myscript.py") switch to a shell and run
+
+python myscript.py arg1 arg2 arg3
+
+
+Is there a better integrated way to do this? I for sure don't want to modify the script for this test but rsther find a way to call the script with the desired paramters. Obviously python-send-buffer can't do the job, because it executes a file in an already existing python process, so I cannot pass new arguments to it.
+
+It would be excellent if there were just a variable for this (e.g. python-args-for-script), which I could set at the end of my python script via the emacs file variable mechanism.
+    
+
+        
+Answer 1: 
+
+    
+    
+In the Python code, append the desired arguments you need to the sys.argv list before calling python-send-buffer.
+    
+    
+Title: In the REDHAWK IDE when I attempt to export a waveform to the Target SDR I receive an error.
+Description: 
+    
+    
+                    
+I am getting an error stating "Error exporting project to SDR root" when trying to export my waveform to the Target SDR.
+
+I am using REDHAWK 1.8.3 on Centos 6 64-bit.
+    
+
+        
+Answer 1: 
+
+    
+    
+This error is caused by an ownership issue with $SDRROOT. It needs to be owned (or writeable) by the user. One option is the following:
+
+$ sudo chown -R &lt;user name&gt;.&lt;user name&gt; $SDRROOT
+
+
+The error you are referencing has been addressed in the newest documentation - http://redhawksdr.github.com/Documentation/mainch2.html.
+    
+    
+Answer 2: 
+
+    
+    
+The option that I use is to create my own SDRROOT directory, then copy everything over from /var/redhawk/sdr.  This is a VERY GOOD THING TO DO if you have more than one person doing Redhawk development on the same computer or if you use different computer architectures.  I haven't used version 1.8 yet, but in the past, if you had SDRROOT in your home directory and tried to use it on a computer with a different architecture (32 bit vs. 64), bad things would happen.  The fix for that is to copy over the correct binaries when you switch architectures and/or create separate 32 bit and 64 bit SDRROOTs...
+
+You can also check out this link.
+    
+    
+Title: eclipse setup problems
+Description: 
+    
+    
+                    
+I used Netbeans to develop Java Web applications and servlets, also some C++ programs, until now. Due to the fact, that I began to use playframework 2.1 a lot and it only supports IntelliJ or Eclipse (and also because of some other limitations in Netbeans), I decided to dig deeper into Eclipse (Indigo) now.
+
+I created a new play project, eclipsified it and imported it in eclipse.
+
+Iworked sometimes with eclipse, I also know some basic things about it (in fact that it is very modular over its different views and editors). The bare edition of eclipse indigo installed over Mint/Ubuntu software management is missing some features so I wanted to install them. A good IDE in my opinion should have at least the following features:
+
+
+syntax highlight (for Java, Scala, XML, CSS, JavaScript)
+code completion and javadoc (no need für HTML/XML completion)
+simple refactoring tasks like renaming classes, generating getters/setters...
+perhaps some server management support (starting, stopping and deployment on application servers, but thats a lot of comfort already I think)
+integrated version control (I use Git)
+EDIT: I forgot debugging (possibly even the most important feature)
+
+
+Because eclipse was missing Git on my machine I decided to install eGit through eclipse help menu. I also did the "install updates" in the help menu. After restart, eclipse doesn't recognize anything anymore. There is no git, it doesn't syntax highlight java nor xml. Files only open in the simple text editor. Files with .html extension always open in Browser. Config files open in external text editors. 
+
+There are no menu items for refactoring, building, testing or anything like that. It seems that my naive approach of simple try and error does not work with eclipse, its making it even worse. Can somebody tell me how to adopt eclipse the proper way to my needs described above?
+
+P.S. I think I will uninstall Eclipse and install it directly from the website, but which edition should I choose? I prefer to start with a sleek IDE an install plugins when I need them, so I dont't want to have the complete Java EE Edition.
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't know play, so the following should be taken with a grain of salt.
+
+
+Take as starting distro (from Eclipse Dowloads) with the Java Distro  (see the video on using play, there it is Java SDK Eclipse).
+If you are not sure about the Eclipse 4 stream, take the last from Eclipse 3: Indigo. Egit should be included there.
+Install the Eclipse in a local directory, where you will use it for all workspaces. Don't trust Ubuntu to understand what the prerequisits and the organization of Eclipse should be (I will give examples):
+
+One directory for the Eclipse installations: /usr/local/eclipse/ecl732 (for current Indigo)
+One directory for all workspaces: /home/user1/ecl-ws and inside that the real workspace: /home/user1/ecl-ws/ecl732-proj1.
+Define batch files to start Eclipse inside /home/user1/ecl-ws. Name it like the workspaces they use: ecl732-proj1.bash.
+Define inside the batch file the startup parameters: taken JKD (parameter -vm), workspace (parameter -data), add additional parameters if necessary.
+
+
+
+With that setup, you control every aspect, and are sure what is installed where. To give more advice, you should include more information on the steps you have done.
+    
+    
+Title: visual studio fonts and colors code snippet
+Description: 
+    
+    
+                    
+I am struggling with setting fonts and colors manually.
+I am trying to figure out how to set the background color of the Code Snippet when I create a property (type "prop", press [tab]).
+
+I have tried adjusting most of the settings, but just cannot find it. I have checked through the Resharper ones as well as the regular ones.
+
+I am using Visual Studio 2012 and Resharper 7.1.2
+
+Turns out I cannot post images, but just believe me the background and foreground are very close in color.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can change the Background color of those items by changing your Selected Text color in Visual Studio Font &amp; Color Settings.
+    
+    
+Title: NetBeans IDE: Is there a way to make files read-only or lock the contents?
+Description: 
+    
+    
+                    
+In the Netbeans IDE, is there a way to make a file read-only
+or prevent the file's contents from being edited, even though
+the file is part of a project as source code, a test package, or a data file?
+
+PLEASE NOTE: I know a version control system should be used for any kind
+of project, and I diff any file with the version control copy 
+before committing the changes to the repository; I'm just wondering if there's a way to "lock" a file in this editor/IDE.
+    
+
+        
+Answer 1: 
+
+    
+    
+After further research, this feature appears to have been added as an add on:
+
+http://plugins.netbeans.org/plugin/23133/switch-file-read-write-access
+
+http://kenai.com/projects/file-rw-switcher/pages/Home
+    
+    
+Title: Why is Ninja-ide unable to see the installed version of sip?
+Description: 
+    
+    
+                    
+am trying to install and run Ninja-ide.  I have followed the instructions in the documentation here
+
+I move to the Ninja-ide folder and run the suggested command:
+
+$ python ninja-ide.py
+
+
+and get the following:
+
+XXXX-XXXX-MacBook-Pro:ninja-ide twmeggs$ python ninja-ide.py
+Traceback (most recent call last):
+  File "ninja-ide.py", line 26, in &lt;module&gt;
+    import ninja_ide
+  File "/Users/XXXX/ninja-ide/ninja_ide/__init__.py", line 48, in &lt;module&gt;
+import sip
+ImportError: No module named sip
+
+
+so I try to re-install sip with:
+
+XXXX-XXXX-MacBook-Pro:ninja-ide $ brew install sip
+
+
+only to be told that it's already installed:
+
+Error: sip-4.13.3 already installed
+
+
+Now, I will hold my hands up here and say that I'm only just getting used to using a shell to execute commands and only just getting used to the files/directory/folder layouts within a Mac, so it's completely possible that I've messed up something simple here.
+
+If someone could offer some help, or even a nudge in the right direction it would be much appreciated.
+
+Thanks 
+    
+
+        
+Answer 1: 
+
+    
+    
+Thanks for the thought seumas - I didn't have to do that in the end.
+
+Turns out that although I'd downloaded and unzipped sip I hadn't installed it correctly.  I needed to run:
+
+$ python configure.py
+$ make
+$ make install
+
+
+from the sip folder
+
+Once I'd done that I had to repeat the same for the PyQt package.  Having done that I could then launch Ninja-ide from the shell with no problems.
+    
+    
+Answer 2: 
+
+    
+    
+Sounds like you could have two different versions of python, try running:
+
+brew doctor
+
+
+It will tell you what duplicates exist, if you installed python via brew try editing your path to place usr/local/bin before usr/bin as described here
+
+python homebrew by default
+    
+    
+Title: Treat php file as css in Netbeans
+Description: 
+    
+    
+                    
+So I am working within a PHP framework that puts all of its CSS inside PHP files. In short, the CSS files are called CSS.php even though they do not contain any PHP (just CSS). 
+
+I have found that the CSS auto-complete does not like this. Is there anyway to tell netbeans to treat all the code inside these files as CSS without changing the extension?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use a trick as following:
+
+&lt;?php header("Content-type: text/css; charset: UTF-8");?&gt;
+
+
+Also put whatever other files you need to require before beginning of your css code as:
+
+&lt;?php require 'config.php';?&gt;
+
+
+Then finally add this line of code which will trick NetBeans to think that you're writing inline css in php file and will work as nothing but a comment line in css file:
+
+/*
+&lt;style&gt;
+/**/
+
+
+Because otherwise if you just add &lt;style&gt; to your file if will cause problems when loaded and you will have to put it, work on the file and then remove it, and then recursively put/remove it back whenever you need editing with highlighting and code completion support from NetBeans for the subjected file.
+
+I also highly recommend emmet plugin for NetBeans; a total time saver. I hope this will be helpful for anyone out there.
+    
+    
+Answer 2: 
+
+    
+    
+In netbeans CSS code higlighting and complete in CSS files or inside &lt;style&gt; tags.
+
+Not sure is possible use this tags inside CSS files. but you can try this.
+
+And other way is use .css files and in framework use &lt;?php include("style.css"); ?&gt; or CSS import directive.
+    
+    
+Title: Using Selenium and Java for UAT Testers
+Description: 
+    
+    
+                    
+I have a few questions around beginning Selenium, Webdrivers and Java and am trying to work out the scope of the task :)
+
+I work for a mainly manual UAT team working in finance (normally input/verify/enquiry data entry screens on web/rumba systems) but have started to learn about test automation. Currently learning QTP / VB at work whenever possible. My background has XHTML, CSS but more than happy to learn about coding, and hopefully I can find an setup which can be shared with both more and less technically able colleagues.
+
+I have looked at the Firefox IDE and understand that you can code in Selense HTML which would be great for some ppl. They can record, edit some regression tests then copy and tweak the data to cater for other scenarios etc.
+
+However our basic hacked together QTP scripts are always data-driven, editing fields, exporting results and screenshots back to Excel etc. which the IDE cant handle; but we are not coders so might struggle with full on Java.
+
+1.) Can code like the below be generated by the IDE (Selense TestCase?) tweaked a little then placed into a generic Java header/footer template taken from the net? 
+
+How come the below can look like this rather than normal Java? 
+
+This style of code below looks readable enough to be a good middle ground but is more advanced than the IDE.
+
+@Test
+public void testOpenTypeClick() throws Exception {
+    selenium.open("/");
+    selenium.click("link=Advanced search");
+    selenium.waitForPageToLoad("30000");
+    selenium.type("as_q", "selftechy, selenium");
+    selenium.click("//input[@value='Advanced Search']");
+    selenium.waitForPageToLoad("30000");
+}
+
+public void testSelectCheck() throws Exception {
+    selenium.open("http://www.sqajobs.com/");
+    selenium.click("link=Advanced Search");
+    selenium.waitForPageToLoad("30000");
+    selenium.type("bx_jtitle", "Sr. Testing Engineer");
+    selenium.select("rdjt", "label=All Of These");
+    selenium.removeSelection("jids[]", "label=All Categories");
+    selenium.addSelection("jids[]", "label=Functional Testing");
+    selenium.type("bx_kwd", "selenium");
+    selenium.click("idrdKeyw1");
+    selenium.click("id_alltype");
+    selenium.check("id_jtp_1");
+    selenium.uncheck("id_jtp_1");
+    selenium.check("id_jtp_1");
+    selenium.click("//input[@name='cmdSearch' and @value='  Search  ']");
+    selenium.waitForPageToLoad("30000");
+}
+
+
+2.)  How would you setup Selenium to work with code like the below? Can you just access the Client Drivers by coding a link in Eclipse and automate Firefox / IE as I doubt our company would allow the SeleniumServer to run on our PCs.
+
+Appreciate any advice, sorry is the above is unclear as I am very new to coding so lack a strong understanding of terms.
+
+Gav
+    
+
+        
+Answer 1: 
+
+    
+    
+It would make sense to go with Webdriver since it is being actively developed currently.  If you have not started then I would suggest you go with a maven project which would help resolve  all dependencies you need.  Probably this can help : Using Webdriver
+
+If your browser and your tests will run on the same machine, then you need not even have to start a server.  Your tests would be as simple as 
+
+WebDriver driver = new FirefoxDriver();
+driver.get("http://www.google.com");
+WebElement element = driver.findElement(By.name("q"));
+element.sendKeys("Cheese!");
+
+
+I would suggest you go through this which would give you a quick getting started overview.
+
+Hope it helps.
+    
+    
+Answer 2: 
+
+    
+    
+Selenium server is just a jar file and you can place it in your system.
+Selenium server when configured with Eclipse along with Java client bindings will serve your purpose and if you are using a web based application, you can make the most out of selenium which will be useful for performing your UAT testing.
+    
+    
+Title: Eclipse IDE - can you batch code generation in one hit?
+Description: 
+    
+    
+                    
+I have recently started using Eclipse for developing some Google App Engine code, I'm at the early stages where I am creating lots of entity / domain classes.  My usual pattern is to create the domain class, add the private properties, then I go through the IDE menus to
+
+
+Generate constructors based on fields
+Generate default constructor
+Generate getters and setters
+Generate hashcode / equal functions
+Generate toString functions
+
+
+What seems crazy to me is that I can't just go to a combined view that enables me to specify the fields and have checkboxes for each of the items listed above, in one step.
+
+I guess Groovy would give me a resolution to number 3 - as it will generate automatic getters and setters, but I don't want to add anything 'new' to my learning curve for a quick project.
+
+Is there a way in Eclipse to do this code-generation quickly - rather than my manual 5 steps that are driving me crazy?!  I would also be interested to know if this feature is available in Netbeans as I also use this heavily.
+
+Thanks,
+Rob.
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm not aware of an automatic way to generate the type of constructor mentioned in #1.
+
+#2 through #5 can be addressed quickly using the ctrl+space drop-down. In the drop-down below, you can see the code generation options for the default constructor, equals, hashCode, toString, and the two getter/setter pairs. 
+
+Typing the first few letters of an option first will narrow the options down quicker. For example, typing "set" followed by ctrl+space will reduce the list down to those options that start with "set", like the setter-generating options.
+
+
+    
+    
+Answer 2: 
+
+    
+    
+Take a look at the code generation capabilities in the Eclipse M2T (Model to Text) project.  There are several technologies there that each address this problem in a different way.  The basic idea is that you model the code you want to generate and then generate your code from that model using some sort of templating approach.  The model, for example, would list the names, types and dimensions of each property in a class and the templates would provide boilerplate for the declaration, getters, setters and any other use of those variables.  
+
+It turns out you can model an architectural pattern for the entire set of classes you want to generate and so it is possible to generate almost of of your code with the exception of business logic.
+
+I would tell you to use M2T-JET, but there will be equally outspoken advocates for each of the other technologies in Eclipse M2T.  Here's a link to another answer in which I gave an example of how to use M2T-JET
+    
+    
+Title: Intellij: recognize a spring configuration file in jar
+Description: 
+    
+    
+                    
+I have a project that includes a jar, that ships with a spring configuration file. IntelliJ Idea Ultimate version 11.1 gives me a red error/warning when I reference this file in a unit test:
+
+@ContextConfiguration(locations={"/application_context.xml"})
+
+
+I get a red warning from IntelliJ for /application_context.xml, which it highlights in red. However, the file is referenced correctly and my test runs fine. So, this would appear to be just some IntelliJ configuration issue, and not an actual problem with how I am referring to the class. The only difference between this file, and others that IntelliJ does recognize, is that this file lives in a JAR.
+
+What's the correct way to configure IntelliJ, or refer to this file in the ContextConfiguration annotation, so that it recognizes my XML configuration file? 
+
+The answer: Crazy Coder is correct, this looks like a bug. Specifying classpath explicitly fixes the problem:
+
+@ContextConfiguration(locations={"classpath:/application_context.xml"})
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Looks like IDEA-84470. Please check if you have the same problem in IDEA 12 Preview.
+    
+    
+Title: Enabling code completition in Atmel Studio 6
+Description: 
+    
+    
+                    
+I'm looking for autocomplete feature in Atmel's IDE Atmel Studio 6. As it is based on Visual Studio, there should be IntelliSense, but I can only find the menu entry "Intellisense" under "Edit", which has no effect at all. I'm programming in C.
+
+Is there a way to provide autocompletition like in NetBeans (eg. Boxes that automatically pop up while typing)?
+
+Edit: I do not mean autocomletition "wh" -/p/div
+Answer 1: 
+
+    
+    
+Atmel Studio 6 by default ships the Visual Assist (VA) which comprehensively provides intellisense support for C/C++ languague. You can check if VA is properly installed with Atmel Studio from the "Extensions manager" (Tools -
+Title: Intellij - Showing and property values and names
+Description: 
+    
+    
+                    
+Using IntelliJ to edit a Spring Beans file, I am using a properties file to define some of the values of the beans.
+
+In IntelliJ, when you open the bean file all of the properties are displaying their values (in grey).  When you edit this, it then displays the property name.
+
+To get the value back, you have to close and then re-open the file
+
+Is there another way to switch between the property name and value in an XML bean file other than closing and re-opening the file?
+    
+
+        
+Answer 1: 
+
+    
+    
+IDEA is trying to be helpful here, showing you the actual values referred to by the property placeholders ("${foo.bar}").
+
+You can see the raw placeholder expression by:
+
+
+Double-clicking on the value
+Putting the caret on the value, and pressing Ctrl-Plus
+
+    
+    
+Title: Zend Studio / Eclipse formatting new line on end parenthesis of function invocation
+Description: 
+    
+    
+                    
+So, this is how function invocations are setup with my custom formatting:
+
+Eclipse does this regardless, notice at the end the 3 parentheses, together. arg?
+
+$this-&gt;addElement(
+new Form_Element_Note('test', 
+    array(
+        'value' =&gt; 'test'
+    )));
+
+
+I want to figure this out in the formatter, but I literally see nothing aside from chaining method invocations that could accomplish this style of formatting:
+
+$this-&gt;addElement(
+    new Form_Element_Note(
+        'test', 
+        array(
+            'value' =&gt; 'test'
+        )
+    )
+);
+
+
+Notice this applies to object and function invocations.  Any ideas how to edit this manually? I couldn't find anything in the documentation that could do this, but it would surely seem like something possible..
+    
+
+        
+Answer 1: 
+
+    
+    
+I have the same problem. Using a own (no-psr) coding style in eclipse is really difficult. After many tries I finally made it to format array brackets [] and () in new lines. But it's not a very nice solution.
+
+First Open the formatter and edit your profile, then go to:
+
+
+New Lines 
+Title: Sublime Text snippet packages not working
+Description: 
+    
+    
+                    
+I'm using Sublime Text 2 for a while now, with many packages saving me a lot of time in production. However, I never dived into the way snippets and plugins in ST2 work. 
+
+There is a problem : trying to call the Bootstrap official plugin to get a snippet, I don't get any entries with the usual keywords. Browsing the installed, then enabled packages, I saw the plugin as if everything was running normally. 
+
+I deleted the other available bootstrap plugin I installed in order to avoid possible conflicts, and tried to disable, uninstall / install, enable the plugin again, then restarting ST2, in vain. 
+
+Any suggestions ?
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm not really sure what the problem here is but I'll suggest cloning the repository into your packages folder
+
+git clone git@github.com:devtellect/sublime-twitter-bootstrap-snippets.git
+
+    
+    
+Title: Aptanas Build In PHP vs Eclipse PHP
+Description: 
+    
+    
+                    
+I've been back and forth through various IDEs (Netbeans, PHPStorm, even VIM) and am now back at a stable and well configured Aptana Studio - mainly for the great FTP Support and the overall feel.
+
+However, I've tasted the sweet blood of amazing code completion for PHP on Storm and even Netbeans and have the feel that Aptana lacks a bit of the advanced code completion features  (e.g. when a custom class method returns an instance of another custom class, it's a first class citizen in php storm with full support for cc).
+
+Now I wonder if the Eclipse PHP Tools are better than the ones with Aptana. Since I had some problems with mixing plugins in Aptana lately, I want to hear some opinions before I go that road:
+
+
+Is the Eclipse PHP better than Aptanas PHPs?
+What are the main differences?
+Are there any cool PHP (or general webdev tools) that may close that gap for eclipse?
+
+
+I've found only outdated links, so I'd be interested in some up-to-date insights.
+    
+
+        
+Answer 1: 
+
+    
+    
+I love Aptana and its CSS/JS features, but the php code completition is not compareable to the features of eclipse pdt or netbeans. Because of that: Yes, Eclipse PHP is better than aptana php. To name only one missing feature in aptana: phpdoc support and autocompletition for that.
+
+I would mix up aptana + pdt, but that makes more problems for me, than in solves :(
+    
+    
+Title: Is there a third-party tools to convert Eclipse settings to Netbeans?
+Description: 
+    
+    
+                    
+I usually use Eclipse but I'll need to work with Netbeans for a while since I'm starting a JavaFX project.
+
+I can't fathom having to re-map every single shortcut and setting. Is there a tool somewhere that can import Eclipse settings for me?
+    
+
+        
+Answer 1: 
+
+    
+    
+This might help:
+http://wiki.netbeans.org/EclipseToNetBeans
+    
+    
+Title: Is there a better way to explore the Python Standard Library with a proper Class Browser in PyDev/Eclipse?
+Description: 
+    
+    
+                    
+I'm able to browse to my Python System Libs .py files in Eclipse's Package Explorer, but the experience leaves much to be desired from there.
+
+How can I use Eclipse and PyDev to be a proper class browser of the Standard Library as I'm learning Python?  The closest that I'm getting to is the ability to browse and open the library's .py files.  I would like to see not only the a hierarchal view of the library by categories in the reference manual (String services, Numeric, File &amp; Directory Access, IPC, et al) but also click on the class to see methods, available parameters, and descriptions.
+
+Edit:
+Take a look at what IDLE has: a hierarchal view of the module with a view of classes and methods.  I'm looking for something like this in PyDev:
+
+
+
+Compare the same pickle.py when imported in Eclipse.  Only a view of the module, not classes or their methods.  This isn't an issue for me for my own code - I can clearly see the classes, functions, and objects that I write in Eclipse.  I can even look up specifics for the library in the Globals Browser.  But it would be much better if could find a way to have this available in Package Explorer or any other window.
+
+
+
+The best example I can think of in an IDE is the Class View or Object Explorer in Visual Studio - in it, Microsoft had all their libraries to explore - and with wonderful documentation.
+
+**To be clear, I know how and where to access the standard library via pydocs, online reference, etc.  I'm looking for a much more integrated experience.
+    
+
+        
+Answer 1: 
+
+    
+    
+Unfortunately, you can't do that right now in the current PyDev Package Explorer...
+
+Now, if someone would be interested in implementing that in PyDev, it'd be a matter of extending the method getChildren() from https://github.com/aptana/Pydev/blob/development/plugins/org.python.pydev/src_navigator/org/python/pydev/navigator/InterpreterInfoTreeNodeRoot.java for the use-case where it's not a dir or zip-file to try to parse it and create the proper nodes.
+
+( provided the code is properly gotten following instructions from: http://pydev.org/developers.html )
+    
+    
+Answer 2: 
+
+    
+    
+You have a couple of options that I'm aware of, if I'm understanding your question correctly.
+
+You can browse here: http://docs.python.org/library/index.html
+and that will give you everything in the standard library.
+
+Also, depending on your system, you can find those same html file and view them locally. On my Fedora box they are stashed at /usr/share/doc/python-docs-2.7.3/html/index.html (don't forget to yum install python-docs)
+    
+    
+Answer 3: 
+
+    
+    
+You can start the python doc server that ships with python, then navigate to:
+
+http://localhost:7464
+
+
+In windows its in the start menu called "Module Docs"
+    
+    
+Title: Any tool or plugin to make Django template code smart indention and syntax-highlighting possible?
+Description: 
+    
+    
+                    
+I'm new to django, and I'm working on my first google appengine app. I use Pycharm as my IDE.
+In my HTML files, template code has no smart-indent and syntax-highlighting, it looks BAD! Is there any tools or plugins to handle this situation?
+    
+
+        
+Answer 1: 
+
+    
+    
+You should try pycharm 
+
+http://www.jetbrains.com/pycharm/
+    
+    
+Title: issue with the code completion in Scala IDE for Eclipse
+Description: 
+    
+    
+                    
+I'm using "Eclipse for Java Developers 7.2" and Scala IDE 2.1.0. The issue is "code completion"...
+
+I have "Use Scala-compatible JDT" and "Enable JDT content assist" enabled under my Eclipse.
+Are there any other options I shuold turn on?
+    
+
+        
+Answer 1: 
+
+    
+    
+Finally I got luck to solve this.
+
+The reason behind why this happens is because eclipse stores a .metadata file in  , which acts as a cache to load auto-complete suggestions. 
+
+If you try Project-/pp/pp/pp/p/div
+Answer 2: 
+
+    
+    
+re-enable all the following unchecked java content assist mechanism in the scala-ide preferences: 
+
+Preference window:
+/Java/Editor/Content/Assist/Advanced
+
+preferences to check in the 'default' content assist panel:
+
+
+Java Proposals
+
+
+also enable the Java Proposals in the content assist cycling panel thats in the lower part of the window
+    
+    
+Title: Emacs / Slime / Clojure / Browser Tree
+Description: 
+    
+    
+                    
+I was recently playing with CounterClockwise (a Clojure plugin for Eclipse).
+One thing I really liked about CounterClockwise was that:
+
+
+center panel = code
+left panel = file system tree
+right panel = showed a list of all defns/defs of the current file
+
+
+I'm currently using Emacs/Slime. Question: is there something that provides a similar setup? I would prefer the left/right panel/buffers to be "permenant", i.e. to still stay alive even when I press C-x 1.
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+You can achieve similar windows setup with ECB, but CEDET currently lacks Clojure support, so no tags will be shown :-(
+    
+    
+Title: IntelliJ editor customisation: javadoc popup to behave like in NetBeans?
+Description: 
+    
+    
+                    
+Yesterday I installed IntelliJ IDEA IDE and so far I like it (I used to use NetBeans which I like and Eclipse which I avoid).
+When it comes to code editor I would like to change javadoc popup behavior in 2 ways:
+
+I set javadoc popup to show after one second (Settings -&gt; Editor -&gt; Code completion -&gt; Autopopup documentation in). However it only works when I press Ctrl + Space for code completion. When code completion pops up automatically javadoc window does not show. And I want it to. Simply, it is the same issue as the one addressed here: http://youtrack.jetbrains.com/issue/IDEABKL-6124
+The javadoc popup window hides current line (it pops just over code completion window). It would be better if it popped over actual line (with caret) without hiding it.
+
+Is there any plugin that allows such a customisation? Or any setting that I missed?
+
+EDIT 1:
+Here is the picture explaining situation 2:
+As you can see because of javadoc popup I cannot see what I am currently writing - part of the word &quot;System.&quot;
+    
+
+        
+Answer 1: 
+
+    
+    
+The problem with JavaDoc hiding the code is caused by the low horizontal resolution when the popup cannot fit on the right. Normally displays have enough horizontal pixels to fit it. In any case it's still a bug that can be fixed by displaying the popup above the current line of code.
+
+I've submitted this bug to YouTrack, feel free to vote.
+    
+    
+Title: IntelliJ 10 vs IntelliJ 11: code-completion
+Description: 
+    
+    
+                    
+Look at the images below. This happens a lot. For example, typing "pub" will show me classes from Flex 4.5, while I really want to type "public". IntelliJ 10 seems to work just fine. How can I change that to work in IntelliJ 11 as well? Any suggestions?
+
+IntelliJ 10 - good
+
+
+IntelliJ 11 - bad
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The issue will be fixed in build 118.255. Link to the Bug Issue
+    
+    

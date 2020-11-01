@@ -1,0 +1,2350 @@
+Title: How to remove BOM in Intellij Idea
+Description: 
+    
+    
+                    
+I'd like to remove Bite Order Masks from my
+UTF-8 files in Intellij IDEA, how can I do this? 
+
+The problem is that if I'm trying to do it via other editors (e.g. Akelpad),
+when I modify the file later in IDEA it somehow remembers that BOM
+was present and adds it to my file again (((
+    
+
+        
+Answer 1: 
+
+    
+    
+There is no such action to remove BOM from UTF-8 files in IntelliJ IDEA. There was a bug that BOM is removed, but it was fixed a long time ago.
+
+When you remove BOM externally, make sure the file is synchronized with editor, try File | Synchronize.
+
+If IntelliJ IDEA still thinks that this file has BOM, please file an issue with the steps to reproduce.
+    
+    
+Answer 2: 
+
+    
+    
+Tested on PHPStorm 8:
+
+Right click on a file in the project tree,
+click on "Remove BOM"
+
+(Not sure if it exists on the base platform, comments will be helpful)
+    
+    
+Answer 3: 
+
+    
+    
+I had the same Problem.
+
+I found this issue and a "works for me"-fix: 
+http://youtrack.jetbrains.com/issue/IDEA-86880#comment=27-386505
+
+Hope it helps
+    
+    
+Answer 4: 
+
+    
+    
+Intellij Idea has an option, File-/pp/pblockquotep/pp/pp
+Title: IntelliJ IDEA IDE for Android development
+Description: 
+    
+    
+                    
+Hey guys, does anyone has an experience with Android development with intelliJ IDEA IDE? Does it suit all the needs?
+    
+
+        
+Answer 1: 
+
+    
+    
+IDEA is an excellent IDE overall.  Android support is quite good with the exception of the WYSIWYG layout editor which IDEA doesn't have.  This isn't a huge problem since I find that the one in Eclipse doesn't work half the time anyhow.
+
+I've been using IDEA for a long time (many years) and happily pay for the commercial license.  I find the UI to be more intuitive and more productive than Eclipse.  Code completions are smarter, editing is generally smoother, debugging is a bit more reliable (though neither IDEA or Eclipse seems to have flawless integration with adb--probably adb problems).
+
+Eclipse does have slightly better integration with some Android tools such as DDMS which can be hosted in a perspective in Eclipse.
+
+If you find Eclipse confusing and frustrating to get started with, give IDEA a try.  IDE choices are highly personal so I can't promise you'll like it better, but since Android support is now included in the community edition of IDEA you've got nothing to lose but some time.
+
+No, I don't work for JetBrains but as a long-time paying customer I can also vouch for the quality of their customer support.
+    
+    
+Answer 2: 
+
+    
+    
+
+  Does it suit all the needs?
+
+
+Yes it is!
+
+You can develop android application using IntelliJ Community Edition which is free.
+
+http://www.jetbrains.com/idea/features/google_android.html
+    
+    
+Answer 3: 
+
+    
+    
+For develop android application a more suitable eclipse, because it has a profiler. Profiler in the IDEA does not work for Android platform.
+A set of tools in IDEA for android yet insufficient.
+
+I hope in the near future IDEA will be better....
+    
+    
+Answer 4: 
+
+    
+    
+I'm using intensively Intellij IDEA for Android development - and to my opinion it's better than Eclipse. There are still some drawbacks:
+
+
+It doesn't support ProGuard obfuscation for Android
+For versions &lt; 10 there were some minor bugs with respect to Android SDK 9
+
+    
+    
+Title: Referencing a file via classpath in spring context
+Description: 
+    
+    
+                    
+I'm trying to set org.springframework.beans.factory.config.PropertyPlaceholderConfigurer spring bean, I have jdbc.properties in src/main/config .. when I put this file in src/main/resources and put classpath: in value my app deploys successfuly.
+
+This works when jdbc.properties is located in src/main/resources
+
+ &lt;property name="location" value="classpath:jdbc.properties" /&gt;
+
+
+However I'm required to put any configuration inside src/main/config , how do I point springs towards this location in the right way?
+    
+
+        
+Answer 1: 
+
+    
+    
+This is a classpath issue, not a Spring issue.  Add src/main/config to your classpath and it will work.  In Eclipse, this means adding it to the project Build Path-/p/div
+Answer 2: 
+
+    
+    
+The right answer to this is given by @matt b , 
+
+
+  "What I am referring to is the fact
+  that when you package the application,
+  the config files are not packaged in a
+  folder named src/main/config  in the
+  packaged file (jar/war/etc.).
+  Therefore your answer only works when
+  you run the application within the
+  source code, or when src/main/config 
+  is in the classpath (which it is not
+  by default). The correct prefix is to
+  use classpath: or another location."
+
+
+In this question : 
+
+Trying to setup externalizing properties in spring
+    
+    
+Answer 3: 
+
+    
+    
+If it is a maven project, you can add
+
+&lt;resources&gt;            
+        &lt;resource&gt;
+            &lt;directory&gt;src/main/config&lt;/directory&gt;
+            &lt;filtering&gt;false&lt;/filtering&gt;
+        &lt;/resource&gt;
+&lt;resources&gt;
+
+
+to you &lt;build&gt; in your pom.xml
+    
+    
+Title: Eclipse: is there a way to get Eclipse to output the commands given to run your program?
+Description: 
+    
+    
+                    
+I'm having some build issues with Eclipse in that it runs my app just fine in eclipse but for some reason when trying to run using 
+
+#&gt;java MyClass
+
+
+it ends up not running due to not being able to find the class. This makes no sense so I was wondering if there was a way to have eclipse output what it's feeding into the jvm to get it to build/run.
+
+Is this possible?
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+you can get the exact command used by Eclipse like this:
+
+
+Run your program inside Eclipse.
+Go to the Debug perspective.
+Terminate the program, or let it end. right click on the second line. (Terminated, exit value... ) and select properties. in there you will have the full command line used.
+
+    
+    
+Answer 2: 
+
+    
+    
+I don't know of any way of getting Eclipse to show any command line arguments - but I'm sure we can solve your problem in other ways.
+
+
+What is the full name of your class? Is it just MyClass, or is it in some package? You need to supplied the fully qualified name, e.g.
+
+java mypackage.MyClass
+
+Where are the class files? You need to make sure they're on the class path, e.g.
+
+java -classpath bin mypackage.MyClass
+
+
+    
+    
+Answer 3: 
+
+    
+    
+Once you have run a program in eclipse, there is configuration available from the 'debug' and 'run' menus. If you open it, you will see the classpath. From there you can determine what it did.
+
+You can also check the box that writes the launch config to a .launch file, and look at it. It's not precisely the command line, but it will tell you what you need to know.
+    
+    
+Answer 4: 
+
+    
+    
+Eclipse does not pass anything to your java application unless you tell it to in the launch configuration. Check your classpath and your packages, like Jon Skeet already wrote.
+    
+    
+Answer 5: 
+
+    
+    
+Does not Eclipse show the commands in one of the Consoles?
+    
+    
+Answer 6: 
+
+    
+    
+Note: if you want to see the exact java command line Eclipse is launching when running your app (from Eclipse), you can:
+
+
+put a breakpoint at the beginning of your class
+launch your app in debug mode
+launch a Process Explorer (if you are on Windows, that is)
+
+
+
+(source: maximumpc.com)  
+
+You will see under the eclipse.exe (not shown in this picture) the java process.
+Double-click on it, go the the Image tab, and copy-paste the value of the field "command-line". 
+    
+    
+Title: .NET - Find all references of property assignment
+Description: 
+    
+    
+                    
+I am using VB.NET. In Visual Studio, if I right-click a property name and click "Find All References", it searches for all instances of the property being used.
+
+However, a property is always used either for assignment (Set method) or retrieval (Get method). Is there any way of searching for only one of these uses? e.g. search for all uses of the property in code where it is being assigned a value, not when the value is being retrieved.
+    
+
+        
+Answer 1: 
+
+    
+    
+Use the compiler to turn what you want to find into errors. Remove the setter to find all the places were it was going to be used.
+    
+    
+Answer 2: 
+
+    
+    
+With Resharper, if you simply use the "Find Results" tool, and then there is a filter icon in the results window. You can then limit the results to only "Show Write Usages".
+    
+    
+Answer 3: 
+
+    
+    
+You can also use Reflector to browse through your assembly.
+    
+    
+Answer 4: 
+
+    
+    
+Resharper (MSVS addin) has the exact feature you are looking for.
+Check:
+
+ReSharper.FindUsages
+
+or 
+
+ReSharper.FindUsagesAdvanced
+
+in keyboard shortcuts mapping (Tools -
+Title: How to update Android Studio Beta Channel
+Description: 
+    
+    
+                    
+I am using Android Studio when ever i try to update it shows me the below
+
+
+
+How can i update it and also tried by using the option Help-/p/div
+Answer 1: 
+
+    
+    
+
+In Android Studio go to "File 
+Answer 2: 
+
+    
+    
+According to the release notes:
+
+
+  Note: There are no incremental patches to update to 0.8.12; you will need to download it separately
+
+
+Which means that if you want to update from a version &lt;0.8.12 to the latest beta, which is 0.8.14, then you will need to redownload Android Studio.
+    
+    
+Title: where is &ldquo;application servers&rdquo; tab in IntelliJ 11.1.3
+Description: 
+    
+    
+                    
+can't find application servers tab in IDE setting, as it was in previous versions
+    
+
+        
+Answer 1: 
+
+    
+    
+I am using 11.1.3 Ultimate and it's there. Maybe you are missing some plugin?
+
+If you still can't find it, hit Ctrl + Shift + A (Enter action or option name) and type "application servers". Hit Enter and IntelliJ will open proper window.
+
+UPDATE: application servers are not supported in community edition.
+    
+    
+Title: Eclipse: Choosing Run on Server doesn&#39;t launch Firefox, it launches Eclipse&#39;s internal browser
+Description: 
+    
+    
+                    
+I am new to Eclipse and I have created a small web app and it works but when I do Run on Server (Tomcat) from Eclipse it launches the website in its own internal web browser.
+
+I wondered if it was possible to have it launch Firefox for example?
+
+Do I need to download Aptana?
+    
+
+        
+Answer 1: 
+
+    
+    
+I would just enter the URL in your preferred browser, and bookmark it. As simple as that. You'll have to do it with different browsers anyway if you want to test the app on multiple browsers.
+
+You can also choose which browser is used by going to Window - Preferences - General - Web Browser.
+    
+    
+Answer 2: 
+
+    
+    
+yes if u want your application to get started on firefox ..Go to window tab at the top of your eclipse IDE from there preferences and the go to general from there select browsers 
+
+check radio button of use external web browser and select the browser u want firefox or IE..
+    
+    
+Title: Do multiple Eclipse-based IDEs conflict with each other?
+Description: 
+    
+    
+                    
+Based on a previous question, where I asked about IDEs to support development in multiple languages, Eclipse and Eclipse-based IDEs were mentioned in some of the answers. If I were to use these tools, would there be conflicts between them, or can they run side by side smoothly? Is it also possible to run different Eclipse instances with seperate plugins installed in each one?
+    
+
+        
+Answer 1: 
+
+    
+    
+They can run side-by-side without any problems, at least in my experiences. I've run CodeWarrior and Eclipse together, and I'm running Eclipse and IBM ClearQuest Client open at the same time right now.
+
+Each Eclipse-based application is a unique application, with its own settings, plugins, configuration files stored in its directory. You can install and configure them independently of each other without any problems, which includes plugins.
+    
+    
+Answer 2: 
+
+    
+    
+They run side by side smoothly. You can even have different instances of classic Eclipse and they would run side by side smoothly. 
+
+Eclipse stores all of its configuration in its installation directory, so no conflicts, and all of the workspace settings in the workspace directory so you can have as many workspaces as you need. 
+
+update: And yes you can run as many instances with separate plugins as you need. All plugin configuration is stored in the instance's installation directory.
+    
+    
+Answer 3: 
+
+    
+    
+They may run side by side, as long as each has its own workspace and set of projects. When you try to mix them, running multiple instances on the same source directories, things can quickly go very wrong in very nasty ways (especially if you try to run them at the same time on that source tree).
+    
+    
+Title: How to prevent Eclipse from flagging file as erroneous
+Description: 
+    
+    
+                    
+I have a file called "build_properties.xml" in my Java project, which is not a valid XML file, and it is not meant to be. It's included by a build system in another place, so I don't want to touch that file. But it is still a part of the Eclipse project.
+
+By default, Eclipse  didn't try to validate that "build_properties.xml" is actually an XML file, but I accidentally clicked on "Validate". Now it marks this file, and the whole project, as having an error, with the little red "X" icon. This makes it difficult to spot actual errors.
+
+I want Eclipse to ignore the XML validation error. I don't want to change the name of the file or its contents. How do I do this?
+
+(I'm using Eclipse IDE for Java EE Developers, build id 20090920-1017.)
+    
+
+        
+Answer 1: 
+
+    
+    
+right click on project &gt; Properties &gt; Validation &gt; XML Validator &gt; Settings (...) and add your xml to the exclusion list
+    
+    
+Title: Update current indentation spaces size in WebStorm 2016
+Description: 
+    
+    
+                    
+I need to switch from a 2 spaces indentation style to a 4 spaces one within an automatically created Ionic project. 
+
+I'm running WebStorm 2016.1 on Mac OS X.
+
+I already tried to change: 
+
+WebStorm | Preferences | Code Style | JavaScript | Tabs and indents
+
+and play with indent size, tab size, use tab character etc... but no change seems to have effect on existing (and new) JavaScript files.
+
+Any idea about how to achieve it? Might some general setting prevent this changes to take effect?
+    
+
+        
+Answer 1: 
+
+    
+    
+Do you have .editorconfig file in your project? Settings from there will overwrite your Code Style settings (and that is expected behaviour -- that's the whole nature/purpose of EditorConfig plugin).
+
+
+
+P.S.
+IDE should notify you about such behaviour (does for me). For example:
+
+
+
+
+    
+    
+Title: Webstorm generator function not accepted
+Description: 
+    
+    
+                    
+I'm trying to use iojs with koa, what works well. But Webstorm doesn't accept the generator functions as valid. 
+
+/** gets marked as syntactically invalid code */
+app.use(function *() {
+    this.body = 'Hello World';
+}); 
+
+
+My actual version is Webstorm 9.
+Is there maybe a workaround? I couldn't find a matching option for it.
+    
+
+        
+Answer 1: 
+
+    
+    
+Go to the Preferences code/code
+Title: Is it possible to change the auto format shortcut in netbeans?
+Description: 
+    
+    
+                    
+I know that you can auto-format your code in netbeans by pressing Alt+Shift+F, but is there a way to change this key combination to something else, to bind it to some othr keys?
+    
+
+        
+Answer 1: 
+
+    
+    
+Answer is yes. Go to Tools -/ppimg src="https://i.stack.imgur.com/HPiDH.png" alt="enter image description here"/pp/p/div
+Title: Hotkey to go to the function the cursor is on - Delphi
+Description: 
+    
+    
+                    
+To go to a function/procedure I use Control + Click and Delphi will take me there (on a good day). 
+
+Is there a fast way to do that without using the mouse?
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, that functionality does indeed have keyboard access: ALT + ↑.
+
+These keyboard shortcuts are documented: http://docwiki.embarcadero.com/RADStudio/en/Default_Keyboard_Shortcuts
+    
+    
+Answer 2: 
+
+    
+    
+In addition to David's answer, a pretty complete list of Delphi's Editor Key and Key Combinations can be found here: DelphiEditorKeyTable.pdf (compiled from Cary Jensen and Brian Long)
+    
+    
+Title: How to get url from &#39;link&#39; element in Selenium IDE
+Description: 
+    
+    
+                    
+I want to get (and store to variable) url of one hyperlink (link) on the web page. Is it possible to get it in the Selenium IDE?
+
+In my test I have to verify, if link exists, then store url from this link and use it later in the test.
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+driver.findElement(By.xxx).getAttribute('href');
+
+    
+    
+Answer 2: 
+
+    
+    
+Although this question was originally asked for the IDE, I just came here through Google searching for the same answer for Python.
+
+The one above gives
+
+AttributeError: 'WebElement' object has no attribute 'getAttribute'
+
+
+because for Python it is
+
+driver.find_element(By.xxx).get_attribute('href')
+
+    
+    
+Answer 3: 
+
+    
+    
+Yes, you can simply use storeAttribute.
+
+I could be more explicit if you'd say whether you're using Selenese or some other language.
+    
+    
+Title: What is &ldquo;Introspection-based code completion&rdquo;?
+Description: 
+    
+    
+                    
+I'm looking at various IDEs for python. Looking at the official list the IDEs are categorized based on 'introspection based code completion'. 
+
+What does introspection based code completion mean? 
+
+Thanks. 
+    
+
+        
+Answer 1: 
+
+    
+    
+It means the IDE uses introspection to figure out what methods and variables are accessible from a given object, then allows quick code completion, usually by providing a list of options after you type a period following a symbol.
+    
+    
+Answer 2: 
+
+    
+    
+Here's an example if WingIDE Pro inaction. Forgive the hastily thrown together image.
+
+
+
+You can see that arg1 is being shown as 1 in the first example, as well as the helper showing that it is probably an int.
+
+In the second part, you can see that the IDE is looking through the docstrings for what the method get does, in the requests module.
+
+The second image below shows that the IDE can 'auto-complete' code for you, including showing what it does. 
+    
+    
+Title: Installing subclipse on Eclipse manually [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        How to install plugin for Eclipse from .zip
+                            
+                                (10 answers)
+                            
+                    
+                Closed 2 years ago.
+        
+
+
+    
+
+I have downloaded subclipse from http://subclipse.tigris.org/servlets/ProjectDocumentList?folderID=2240
+
+The zip file i downloaded contains the following two folders and 4 files
+
+/features
+/plugins
+artifacts.xml
+content.xml
+index.html
+site.xml
+
+
+Can i just copy the two folders (features and plugins) on to the $ECLIPSE_HOME folder and ignore the files? I have done this before but i don't remember having to copy individual files.  Can the xml and html files be ignored? 
+
+I have to install it manually because the server is behind a proxy and i don't know the proxy details. 
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+The instructions in the previous answer are not correct.  Subclipse provides a zipped archive site.  You install it the same way you do any plugin, from the Eclipse Install/Updates UI.  Instead of entering a URL, you click the button for new local archived site and then browse and select the zip file.
+
+You cannot simply unzip the site into an Eclipse install.
+    
+    
+Answer 2: 
+
+    
+    
+follows these steps:
+
+
+go to your Eclipse install's dropins directory
+create a subfolder and expand your zip into that folder
+Restart Eclipse
+
+    
+    
+Title: How to efficiently delete word, colon and a comma in VIM
+Description: 
+    
+    
+                    
+I often have the piece of code like this:
+
+it "should do something", :focus do
+  ...
+end
+
+
+When I want to delete , :focus I usually do 
+
+
+Go to line 1: 1G
+Go to the colon: f:
+Delete colon (using around word, so I can repeat it): daw
+Delete focus (just repeat previous): ..
+Delete comma (move left and replace it with space): hr&lt;SPACE&gt;.
+
+
+Is there any way steps 3-5 can be achieved more efficiently?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can go:
+
+
+1G to go to first line
+f, to go to the comma
+dE to delete till the next end of WORD (WORD in capital letters is any sequence of characters that is not space).
+
+    
+    
+Answer 2: 
+
+    
+    
+With your cursor on the , you could do v, e,e,d.
+
+or d,2,e
+    
+    
+Answer 3: 
+
+    
+    
+With the cursor or the colon you can do dF,dE. The dF, part will delete backwards up to and including the comma. Then dE will delete up to the next whitespace character. The nice thing about this is that if there is no preceding comma this will still do the same thing. So with the code 
+
+if :focus, "should do something" do
+
+
+If the cursor is on the colon this macro will delete just the :focus, part, although it will leave two spaces behind.
+    
+    
+Answer 4: 
+
+    
+    
+You'd better show where your cursor is, but assuming it's after "end", I'd do this:
+
+?",&lt;CR&gt;ldt&lt;space&gt;.
+
+    
+    
+Title: Can I make ASP.NET MVC2 applications using an express version of Visual Studio?
+Description: 
+    
+    
+                    
+I'm going to make an MVC2 application using C#.
+
+Which IDE can I use for free that will help me build this application? The different versions are very confusing to make out.
+
+I'm going to be following this tutorial:
+http://nerddinnerbook.s3.amazonaws.com/Part1.htm
+
+I see it makes use of Unit Testing. Can an express version do this?
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes.... you definitely can.
+
+Get it here: http://www.microsoft.com/express/Web/
+
+You can't do unit testing with Microsoft's testing framework when using the express edition. Which is not really a big deal. You can still use any of the many, many open source unit testing frameworks out there.
+
+More about it in video on Channel 9: Noah Coad: An Overview of Visual Studio Express 2010
+
+As an additional information: useful link to a page that compares in a table Microsoft Visual Studio versions and features: http://www.microsoft.com/visualstudio/en-us/products
+    
+    
+Answer 2: 
+
+    
+    
+You also can't add projects to your express solution so you can't have a model project, a helper project, a database project etc, in your solution.
+
+you will need to write each of these as seperate projects, compile them and then reference them in your web application.
+
+a pain in the neck but it will enforce good seperation of concerns.  :)
+    
+    
+Answer 3: 
+
+    
+    
+In additional to Leniel:
+
+
+  I see it makes use of Unit Testing. Can an express version do this?
+
+
+nope. Express version have not built in unit testing framework. Moreover Express cannot use plug-ins.
+    
+    
+Answer 4: 
+
+    
+    
+You can use it for basic development.  Although you can't use the built-in Visual Studio Unit Testing Framework for unit testing you can use Nunit by having it load and run tests on the test DLL that you create. However, it won't be able to step into the code for debugging the tests due to restrictions in the integration with test runners.
+    
+    
+Title: IntelliJ Idea 15 - How to &ldquo;update resources&rdquo; without restarting server?
+Description: 
+    
+    
+                    
+When I click to the debug button after the server is started to update resources with/without classes, the prompt that I shared below is displayed. How can I update resources without restarting server?
+
+ps. I am using Tomcat as a server.
+
+
+
+Edit: I have already set the option update resources in the server preferences.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Use 'Update application' action, by default Ctrl + F10.
+    
+    
+Answer 2: 
+
+    
+    
+You're explicitly trying to restart the server (via clicking on "Debug" while the server is running).
+
+Instead of that you can either use "Update" action from "Run /pp/ppa href="https://stackoverflow.com/a/33344839/5060066"/a/p/div
+Answer 3: 
+
+    
+    
+Yes, there is a way can update resources without restart server.
+
+In Server -code/code/pp/pp/ppa href="https://i.stack.imgur.com/XkNvP.png" rel="nofollow"img src="https://i.stack.imgur.com/XkNvP.png" alt="enter image description here"/a/p/div
+Title: Eclipse PDT 3.6 Helios, keyboard shortcuts for toggle comment not working any more
+Description: 
+    
+    
+                    
+Since upgrading Eclipse PDT from 3.5 to 3.6 my toggle comment/block comment shortcuts
+(CTRL + /) in Editors view, are not working any more. I can see them in the Menu
+
+Source &gt; Toggle Commtent (Ctrl + /)
+
+
+as well as in the context menu accessible via
+
+Shift + Ctrl + L
+
+
+But they simple don't work any more.
+
+Has anybody the same problems? And is there a solution out there for this problem?
+    
+
+        
+Answer 1: 
+
+    
+    
+I have found a solution for this in the attached eclipse forum posts.
+
+You simply have to download 
+
+org.eclipse.php.ui_2.2.1.v20101001-2300.jar
+
+from 
+
+http://www.eclipse.org/downloads/download.php?file=/tools/pdt/updates/2.2/milestones/plugins/org.eclipse.php.ui_2.2.1.v20101001-2300.jar
+
+http://www.eclipse.org/downloads/download.php?file=/tools/pdt/updates/2.2/milestones/plugins/org.eclipse.php.debug.core.source_2.2.0.v20101001-2300.jar
+
+http://www.eclipse.org/downloads/download.php?file=/tools/pdt/updates/2.2/milestones/plugins/org.eclipse.php.debug.core_2.2.0.v20101001-2300.jar
+
+and start eclipse with -clean command
+
+cd /path/to/eclipse
+
+eclipse -clean
+
+
+Eclipse Forum posts
+
+http://www.eclipse.org/forums/index.php?t=tree&amp;th=205571&amp;S=d1aa5d2748a6d8ee2064c340ec8eaa88#page_top
+
+http://www.eclipse.org/forums/index.php?t=msg&amp;th=205375&amp;start=0&amp;S=ef58561fd3814f61bc3386addebba90c
+    
+    
+Answer 2: 
+
+    
+    
+This solution doesn't work with the latest Helios release anymore
+
+steps to reproduce:
+
+
+download - http://eclipse.org/downloads/packages/eclipse-classic-362/heliossr2
+install JAVA and PHP development tools (via update)
+download http://www.eclipse.org/downloads/download.php?file=/tools/pdt/update/2.2/milestones/plugins/org.eclipse.php.ui_2.2.1.v20101001-2300.jar
+overwrite the existing file in eclipse/plugin    
+run eclipse with the -clean option
+switch to PHP perspective
+create a new php project, create a new php file 
+toggle comment no longer works 
+
+
+here's the bug report on eclipse.org https://bugs.eclipse.org/bugs/show_bug.cgi?id=360526
+    
+    
+Answer 3: 
+
+    
+    
+I use eclipse kepler (CDT) in opensuse 12.3 and I too can't produce // at the beginning of an actual line by Ctrl+/. However Ctrl+Shift+7 works because on my key-board the key '/' must be typed as Shift+7.
+
+A solution for me was the more simplier short-cut Ctrl+7 installed by 
+Windows|Preferences|General|Keys|Comment/Uncomment ...
+The disadvatange is that Ctrl+7 is a new short-cut.
+
+To comment a text block I first marked it and then I used the
+short-cut Strg+Shift+7, also installed by
+Windows|Preferences|General|Keys|Add Block Comment ...
+
+I hope this can help You!?
+    
+    
+Title: Validate JavaScript syntax in IDE (Editor)?
+Description: 
+    
+    
+                    
+Are there any JavaScript editors that can validate JavaScript syntax on the fly? Things like missing brackets, etc.
+    
+
+        
+Answer 1: 
+
+    
+    
+Personally, I like to use emacs with flymake, which can use Spidermonkey, JsLint or Rhino to do the validation.  This does the sort of on the fly syntax checking I think you are after. If you want a liberal validation, you might want to use Spidermonkey as it is the execution engine from firefox, so it will reject anything firefox rejects.  If you want something a little stricter, Crockford's JsLint enforces good style.
+(source: mnemonikk.org)  
+
+Emacs is not for everyone however.  If you prefer something point-and-click, you might want to check out IntelliJ's IDEA.  It can do on the fly syntax checking, along with a raft of other features.  Sadly, javascript support is not available in the free version.
+
+
+(source: jetbrains.com)  
+
+A free alternative to IntelliJ is Netbeans, which purports to offer the same javascript functionality baked into the core.  I don't have experience with it, but it is free, open source, and reputedly improving in recent versions
+netbean&#39;s javascript syntax highlighting http://netbeans.org/images_www/articles/61/ide/javascript/background_parser.png
+
+If you're a Windows or ASP.NET type developer you might be more interested in Microsoft Visual Web Developer Express 2010.  It supports this features, and probably has better support for ASP.NET development than the other tools I've mentioned.
+    
+    
+Answer 2: 
+
+    
+    
+You can go grab Javascript Lint then do exactly what you want and use whatever editor you want:
+
+Javascript Lint - http://www.javascriptlint.com/download.htm
+    
+    
+Answer 3: 
+
+    
+    
+I use Komodo Edit from Activestate. It validates, has code completion, brace matching, etc., and not just for Javascript.  
+
+Edit: BTW I have a macro in Komodo Edit that calls JS_Beautify and does a spectacular job.
+    
+    
+Answer 4: 
+
+    
+    
+Eclipse (or it's web specialized form  Aptana) and Netbeans offer syntax checking on the fly.
+    
+    
+Answer 5: 
+
+    
+    
+I recommend Visual Web Developer Express 2010.
+    
+    
+Answer 6: 
+
+    
+    
+Here is another idea of validating your .js with c# in VS http://madskristensen.net/post/Verify-JavaScript-syntax-using-C.aspx
+    
+    
+Answer 7: 
+
+    
+    
+If you use Eclipse, the JSDT project provides a JavaScript nature. Like most of Eclipse's language natures, it provides a context engine with realtime validation, syntax highlighting, completion, etc.
+    
+    
+Title: Auto-organize Visual Studio Tabs?
+Description: 
+    
+    
+                    
+Is there any setting in Visual Studio 2008 to group/organize tabs?  For example, I'd prefer to have all code-behind files open in a tab next to its .aspx page if that page is open and vice versa. Dragging tabs around really kills my productivity.
+    
+
+        
+Answer 1: 
+
+    
+    
+Jonathan,
+
+Tabs Studio (developed by me) add-in can automatically group .aspx and .aspx.cs windows in one tab.
+    
+    
+Answer 2: 
+
+    
+    
+Check ot this link - it explains how to make the active tab jump to the left-most position, thereby effectively keeping the most used tabs from 'falling off': window tab management in Visual Studio 
+    
+    
+Answer 3: 
+
+    
+    
+There is no setting for this, but take a look at the documentation for writing visual studio add-ins. This would be a pretty simple one to set up.
+    
+    
+Title: How to run/debug a streamlit application from an IDE
+Description: 
+    
+    
+                    
+I really like streamlit as an environment for research, mixing a notebook/dashboard like output I can design quickly with pure code for its definition (no cells etc.) and the ability to influence my code through widgets while it runs.
+
+For this purpose, I was looking for a way to run or even debug a streamlit application as its default way of startup is via the commandline:
+
+streamlit run code.py
+
+Is there a way to do either?
+
+Cheers
+    
+
+        
+Answer 1: 
+
+    
+    
+I found a way to at least run the code from the IDE (PyCharm in my case). The streamlit run code.py command actually calls python -m streamlit.cli run code.py, such that this can be configured to be what is run with an IDE.
+
+In my case, the -m streamlit.cli run goes into the Interpreter options field of the Run/Debug Configuration, the code.py goes into the Script path field as expected.
+
+
+
+Unfortunately, debugging that way does not seem to work since the parameters appended by PyCharm are passed to streamlit instead of the pydev debugger.
+
+Edit: Just found a way to debug your own scripts. Instead of debugging your script, you debug the streamlit.cli module which runs your script. To do so, you need to change from Script path: to Module name: in the top-most field (there is a slightly hidden dropdown box there...). Then you can insert streamlit.cli into the field. As the parameters, you now add run code.py into the Parameters: field of the Run/Debug Configuration.
+
+    
+    
+Answer 2: 
+
+    
+    
+I've come up with an alternative solution which allows you to use PyCharm debugging in a natural way. Simply set up a run script (which I call run.py which looks like this:
+from streamlit import bootstrap
+
+real_script = &lt;name of your script&gt;
+
+bootstrap.run(real_script, f'run.py {real_script}', [])
+
+and set that up as a normal Python run configuration in PyCharm.
+    
+    
+Title: How to install flutter and dart in Xcode macosx?
+Description: 
+    
+    
+                    
+I need to know if there is any way or plugin to run dart code on Xcode for flutter app development. If there is any mention here, every time I searched on internet it only shows me flutter commands for terminal to run app on iOS. I want my IDE to be XCODE for flutter development. here is what flutter official documentations says when I ask same question
+Flutter Documentation about MacOS
+Thanks in advance. 
+    
+
+        
+Answer 1: 
+
+    
+    
+You can install and use flutter on macOS. But you can not use XCode as IDE, officially they announced either use Android Studio / IntelliJ or Visual Studio Code.
+
+For Android Studio / IntelliJ:
+
+https://flutter.dev/docs/get-started/editor?tab=androidstudio
+
+For Visual Studio Code:
+
+https://flutter.dev/docs/get-started/editor?tab=vscode
+
+As a suggestion iOS or other developer should use VSCode its light weighted and more understandable and android developer have their own option.
+
+
+
+
+    
+    
+Answer 2: 
+
+    
+    
+Dart and Flutter are officially supported by IntelliJ/Android Studio and VSCode.
+
+I think there is some integration with VIM and Emacs, but not officially supported. There is no integration with XCode though.
+    
+    
+Title: Eclipse doesn&#39;t start in Ubuntu 14.04
+Description: 
+    
+    
+                    
+I have a problem trying to launch Eclipse in Ubuntu 14.04. Splash picture pops up, then blinks, turns white - and nothing happens until kingdom come.
+I have tried Luna, Kepler and 3.8 (from Ubuntu repository). EE and SE editions - both the same. I have also tried to launch them with different (oracle) vm - 1.7 and 1.8. 
+And yes, I have tried the -clean and simple workspace removal.
+
+This is the only thing it says in console:
+
+
+  org.eclipse.m2e.logback.configuration: The
+  org.eclipse.m2e.logback.configuration bundle was activated before the
+  state location was initialized.  Will retry after the state location
+  is initialized.
+
+
+Java VM works fine - I can launch (for example) IDEA or java\javac commands. 
+
+Any suggestions?
+    
+
+        
+Answer 1: 
+
+    
+    
+Try this:
+
+1) Remove .snap from:
+
+.metadata\.plugins\org.eclipse.core.resources\.projects\&lt;project&gt;\.markers.snap
+
+
+If you can't find it manually try this:
+
+find /.metadata/.plugins/org.eclipse.core.resources/.projects -name "*.snap" -exec rm -f {} \;
+
+    
+    
+Answer 2: 
+
+    
+    
+The answer is already here, but it's in the comments. So I re-post it as answer:
+check your 2nd screen. Workspace dialogue may be there.
+    
+    
+Answer 3: 
+
+    
+    
+It Generally happen when eclipse is closed unexpectedly.
+Heres things you can do.!
+1)Save and Delete .metadata from workspace folder.
+2) Try Re-installing Eclipse.
+
+This solution worked for me. :)
+    
+    
+Answer 4: 
+
+    
+    
+If you don't have any pending changes and have pushed your project already on your repo, you can also try deleting the project folder where eclipse opens a project path automatically. 
+
+When you run eclipse again, it will work again.
+
+Unfortunately, deleting metadata didnt work for me. Also I don't have any extra monitor so deleting my project folder was my last resort.
+    
+    
+Title: How to create a &#39;local variables&#39; display using DWScript and its debugger
+Description: 
+    
+    
+                    
+I'm writing an IDE for DWScript and have got it stepping through code using the debugger. I now wish to add a display of 'local variables' (i.e those in scope). Can someone give me a pointer to the means of doing this? I can get a list of all symbols but do not understand how to get the current scope part of things.
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+Cast the IdwsProgramExecution to TdwsProgramExecution, you'll gain access to a "CurrentProg", property, a TdwsProgram which is either a TdwsMainProgram (if you're in the main) or a TdwsProcedure (if you're in a proc/func/method). Those will have a Table property, which lists the local symbols, that's the most direct scope.
+That Table will have one or more Parents, which refers the parent scopes (hierarchically, in terms of source code scope).
+
+If in a TdwsProcedure, you may also want to look at its FuncSymbol property, which will have a table of parameters (useful if you want to directly isolate the parameters from the rest of the local scope)
+    
+    
+Answer 2: 
+
+    
+    
+For any others reading this question, I will show some supplementary info concerned with getting the value of a symbol. The symbol is found as described by Eric above but it is hard to work out how to get the actual value of the symbol. The code below is a procedure that populates a TMemo (memLocalVariables) with local variables each time it is called. There are some features missing like neat formatting of the variable value and access to calling parameters. I call this from the debugger 'dsDebugSuspended' state. The less intuitive bit is the access to the symbol data on the stack and the use of the stack base pointer.  A great way to learn how the compiler works! But, maybe there is a utility function somewhere I've not found...? Eric?
+
+  procedure DrawLocalVariables;
+  var
+    ProgramExecution : TdwsProgramExecution;
+    I   : integer;
+    Sym : TSymbol;
+    V   : variant;
+    Adr : integer;
+    SymbolTable : TSymbolTable;
+  begin
+    memLocalVariables.Lines.Clear;
+
+    ProgramExecution := TdwsProgramExecution( dwsDebugger1.Execution );
+    SymbolTable := ProgramExecution.CurrentProg.Table;
+    For I := 0 to SymbolTable.Count-1 do
+      begin
+      Sym := SymbolTable[I];
+      if Sym is TDataSymbol then
+        begin
+        Adr := TDataSymbol( Sym).StackAddr + ProgramExecution.Stack.BasePointer;
+        ProgramExecution.Stack.ReadValue( Adr, V );
+        memLocalVariables.Lines.Add( Format( '%s = %s', [ Sym.Name, VarToStr(V) ] ));
+        end;
+      end;
+  end;
+
+    
+    
+Title: PhpStorm ignores PHP version setting in project
+Description: 
+    
+    
+                    
+I import two different projects to PhpStorm. After that, like always I need to switch PHP version for project from 5.3 to 5.5. After doing this I saved project.
+
+When I reopen this project I see that PhpStorm don't save this setting. I do this same operation again. But again, after reopen project I need to set proper version for project.
+
+I check xml files in .idea folder and php version is there set to 5.5.0 . I check project.default.xml and there php version is set to 5.5.0 too. 
+
+I reinstall PhpStorm using JetBrains Toolbox but this doesn't change anything.
+
+My OS is Ubuntu 14.04 . My project files are in my /home folder and user/group of this is www-data/www-data. My user is in group root/www-data/pmucha. There is no problem with edit files (no permission problem).
+
+I use latest version 2017.3.5 of PhpStorm.
+
+I can't find solution to this problem. Can someone help me ?
+
+I'm really tired of setting PHP version every time I open project or start new one.
+    
+
+        
+Answer 1: 
+
+    
+    
+Do you have composer.json in these projects? Most likely yes.
+
+Thing is: PhpStorm by default synchronizes some settings from composer.json file. It can sync your PHP Language Level as well as Source &amp; Test roots.
+
+Right now it looks like PHP version defined in composer.json is 5.3 or lower (5.3 is the lowest in PhpStorm) .. so PhpStorm resets your manually configured version to the provided one by composer.json. Such sync usually happens on project opening .. hence the feeling that IDE does not remember the settings.
+
+https://blog.jetbrains.com/phpstorm/2017/07/configuring-with-composer-in-phpstorm-2017-2/
+
+Two possible solutions:
+
+
+Either put a proper minimal PHP version into your composer.json (if you are writing your code using PHP 5.5 features .. so what's the point stating the 5.3 as lowest supported -- such code will fail if run using 5.3).
+
+For example (small part of composer.json):
+
+"require": {
+    "php": "&gt;=5.5",
+    ...
+}
+
+Or disable such synchronisation at Settings/Preferences | Languages &amp; Frameworks | PHP | Composer --&gt; Synchronize IDE settings with composer.json
+
+
+
+    
+    
+Title: IntelliJ IDEA: Argument name/hint in method call
+Description: 
+    
+    
+                    
+
+
+That gray blob right before 0. Please identify the feature, and, if possible, tell how to change the color of this hint.
+
+I'm a fan of JetBrains IDEs, but only occasionally I use Java. Seen this feature some time ago, but totally forgot what it is :( 
+    
+
+        
+Answer 1: 
+
+    
+    
+It is a parameter name hint. These can be disabled for that constructor with an intention (AltEnter) on the parameter itself or in Settings | Editor | General | Appearance. The color of the hint can be changed in Settings | Editor | Colors &amp; Fonts | Language Defaults | Inline parameter hint.
+    
+    
+Title: Debugging in Dev-C++ makes IDE crash and not respond
+Description: 
+    
+    
+                    
+I'd love to ask someone to hint me what to do. I have installed Dev-C++ on my computer (the 5.11 ver.)
+I don't know what happened to it, if it's Windows 8.1 problem or some other I really don't know, but when I start to debug, it simply stops working.
+What exactly happens:
+I open dev-c++, then I open my *.c file. I set a breakpoint in my source code, and when I hit debug, a pop-up windows shows:
+
+You have not enabled debugging info (-g) and/or stripped it from executable (-s) in Compiler Options.
+Do you want to correct this now?
+
+
+And when I hit yes, it simply stops to respond, and crashes.
+I have never occured such situation, because on every computer I have worked, I'd got no problem with debugging on Dev-C++. Even running it in compatibility mode didn't help. 
+I really don't know what to do. For any help, thanks in advance!
+    
+
+        
+Answer 1: 
+
+    
+    
+For me to fix by following as below
+
+
+Go to Tools -/lilistrong/strongstrong/strong/lilia href="https://i.stack.imgur.com/oJ3kv.png" rel="noreferrer"img src="https://i.stack.imgur.com/oJ3kv.png" alt="enter image description here"/a/lili/lili/li/ol/div
+Answer 2: 
+
+    
+    
+
+Open File -
+Answer 3: 
+
+    
+    
+
+GO to Tools 
+Answer 4: 
+
+    
+    
+You have to first set up your compiler property by adding -g to both commands fields. Here is a YouTube video shows you how to do that. 
+
+https://www.youtube.com/watch?v=EOnl-Ojd66Q
+
+I'm also using window 8, and after following the video, I still got the same pop up widow with the same message. I found out if you click no for  "Do you want to correct this now" the debugger will start working. I don't know why, but it works for me.  Good luck!
+    
+    
+Answer 5: 
+
+    
+    
+Go to Tools =brbr/p/div
+Answer 6: 
+
+    
+    
+first you have to create a project; then copy your code into the project; set the following compiler option: settings tab -
+Answer 7: 
+
+    
+    
+Follow these steps:
+
+a) Tools -/ppcode/code/pp/p/div
+Answer 8: 
+
+    
+    
+adding the -g manually did not work for me.
+
+This is what worked for me : 
+
+As other said, you have to create a new PROJECT, then paste your old code into it.
+after that, just press the debugger button as you would, it will ask to put the -g for you, and this time when you say YES, it will not crash. It will work as a charm.
+
+Watch this video to clarify :
+https://www.youtube.com/watch?v=xFpShi0yAc4
+    
+    
+Answer 9: 
+
+    
+    
+I also got the same problem when I ran my Program without compiling.
+That was only the reason for this crashes and errors for me.
+
+Dev-C++ IDE requires compilation first then after it allows to run the program unlike other IDE like C-Free which automatically compiles first and run the program for you.
+
+Use F11 shortcut key for compile and run the program for Dev-C++ IDE.
+
+It works for me.
+    
+    
+Title: IntelliJ &ldquo;Java EE: RESTful Web Services (JAX-RS)&rdquo; plugin is not available
+Description: 
+    
+    
+                    
+I'm trying to add RESTful support to my IntelliJ IDEA 14.1.2.
+
+According to JetBrains' documentation, "Java EE: RESTful Web Services (JAX-RS)" plugin should do the work, but it is not available in plugins list. See JetBrains' instructions.
+
+Does anybody have an idea about IDEA?
+    
+
+        
+Answer 1: 
+
+    
+    
+As I found at IntelliJ website, Java EE is supported by Ultimate edition only.
+I used the Community edition :( 
+
+Now I switch this project to Eclipse...
+    
+    
+Title: Android Terminal-IDE: terminal-gcc error: arm-eabi-gcc not found
+Description: 
+    
+    
+                    
+I'm using Terminal-IDE as my development environment. (Google code site here.)
+
+I'm running Terminal-IDE v 2.02 - the very latest. My Android versions are:
+
+
+Android 4.0.3
+Software version 2.14.531.3 71ORD
+(the rest aren't likely pertinent, but more on request)
+
+
+I'm in a suitable development directory with a simple enough c source code file ready and run 'make'.
+
+I have never yet gotten any compilation to work successfully. Most likely, there's a version mis-match with regard to what executable is available versus what the software is looking for.
+
+Here's the command and error message:
+
+terminal-gcc -c -Wall -I/data/data/com.spartacusrex.spartacuside/files/local/include tester.c -o tester.o
+/data/data/com.spartacusrex.spartacuside/files/system/bin/terminal-gcc[43]: arm-eabi-gcc: not found
+make: *** [tester.o] Error 127
+
+
+Snafu, of course. I'm not at all sure how to find out what the right compiler file name(s) should be because, on this non-rooted phone, I don't have permissions to hunt through the PATH and find the actual executables.
+
+It may also be that PATH is set wrong. All input appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+...I'm not sure what's supposed to happen, but I found in the Terminal-IDE directory tree the file:
+
+$IDESYSTEM/android-gcc-4.4.0.tar.gz
+
+
+I also found that terminal-gcc is a bash script. Looking inside it seemed to say that a gcc tree should exist in "$HOME", which is the installation directory. So, I unzipped, then un-tarred the file identified above and put the resulting directory tree as a top-level subdirectory.
+
+Well well, what do you know? Success.
+
+I went a little further and created soft links to the actual compiler in ~/bin for both gcc and just cc, and suddenly all my previously created "Makefile" scripts used in other projects I wanted to move over started working perfectly.
+
+Apparently, even though I thought I'd done it right, I overlooked running this script:
+
+./system/bin/install_gcc
+
+
+It extracts the tar, like I did, but does not create the links you may need.
+
+Hey, if you're glad I got here before you, give it a thumbs up!
+    
+    
+Answer 2: 
+
+    
+    
+A credit goes to @Richard T for his enthusiasm regarding Terminal IDE. The answer is intended to enumerate the steps needed for running a C code.
+
+To run a C code
+
+
+Run Terminal IDE and extract the gcc package by executing
+
+install_gcc
+Create a directory for your projects within the Terminal IDE directory tree. Then in the directory create a source .c file with some code (filename.c here). Compile it
+
+terminal-gcc -c filename.c
+Create the executable file
+
+terminal-gcc filename.o -o filename.out
+Run the output file
+
+./filename.out
+
+
+
+
+If you'd like to use the PC (laptop) keyboard you can telnet Terminal IDE.
+
+To Telnet Terminal IDE
+
+
+From Terminal IDE start the telnetd deamon by executing
+
+telnetd
+Connect the Android device to the PC (laptop) and type
+
+adb forward tcp:[port] tcp:8080
+
+telnet 127.0.0.1 [port]
+
+
+P.S. Telnet's default port is 23.
+    
+    
+Title: Python 2.7 and Sublime Text 2 Setup Guide
+Description: 
+    
+    
+                    
+I am new to Sublime Text 2. Basically I want to setup Sublime T2 as a Python IDE.
+
+I have come across various questions with regards to Python and Sublime T2, but I couldn't find a guide from a beginners perspective. This is what I have done so far:
+
+
+Installed Python.
+Installed Sublime T2.
+Installed Sublime Package Control
+
+
+What steps (e.g. package installations, etc.) should I follow to complete the Sublime Python IDE Setup?
+    
+
+        
+Answer 1: 
+
+    
+    
+Besides Package Control, I use the following packages for Python development:
+
+
+SideBarEnhancements 
+All Autocomplete 
+SublimeCodeIntel 
+GitGutter 
+Pylinter
+
+
+I found SublimeCodeIntel and Pylinter to be especially helpful for writing Python code in Sublime Text. 
+
+Besides installing these packages you should also tweak some of Sublime's preferences. For example, Python can be quite picky about whitespace. Therefore I recommend taking extra care for setting up how Sublime handles whitespace. I'm using these settings (put them in Preferences -/em/pprecode/code/prepa href="https://dbader.org/blog/setting-up-sublime-text-for-python-development" rel="nofollow"/a/p/div
+Answer 2: 
+
+    
+    
+You should be able to select a build system in the tools menu. 
+
+
+
+Then, ctrl + B will build, and pull up the interpreter for you.
+
+EDIT: ctrl + ` will also open your console, without building the project. From there, you can run Python commands with the built-in interpreter.
+    
+    
+Answer 3: 
+
+    
+    
+I've documented my Sublime Text workflow here. Hope this helps.
+    
+    
+Title: Pascal IDE for Mac OS X
+Description: 
+    
+    
+                    
+i'm a beginner Pascal programmer and I recently migrated to the Mac OS X. Today I spent many hours searching for a good Pascal IDE for this OS and found nothing. I used to write code with Geany on Windows and it worked like a charm, I also enjoyed the compiling and running capacity of Geany. 
+
+Do you know any Geany-like IDE or at least one that highlights, compiles and runs pascal code on the Mac OS X?
+
+Thank you very much!
+    
+
+        
+Answer 1: 
+
+    
+    
+People use XCode with a suitable set of templates, but XCode lost pascal syntax highlighting a way back. There are other options:
+
+
+Pascal Gladiator
+Lightweight IDE
+
+
+But I also still like Lazarus best.
+    
+    
+Answer 2: 
+
+    
+    
+Let's try Lazarus, integrated development environment for Free Pascal.
+
+http://www.lazarus.freepascal.org/
+    
+    
+Answer 3: 
+
+    
+    
+@Thiago: Try with only { "cmd": ["fpc", "$file"]}
+    
+    
+Answer 4: 
+
+    
+    
+http://freepascal.org/down/i386/macosx.var
+
+I like Free Pascal the most, for beginning I believe it is the best because you don't have too much fancy GUI features to distract you from programming for beginners (algorithms, procedural thinking...). 
+
+I didn't try to run this on Mac but it should work... I have used Free Pascal on Linux and Windows with satisfaction. 
+    
+    
+Title: Does Mac OS X come with a Lisp environment built in with Emacs?
+Description: 
+    
+    
+                    
+I have been trying to find an environment that does not involve installing anything else on my mac for Lisp, as I will not be using it after I get the homework done (who know if I continue using it). I have tried to look but I can't find anything. Anybody know if it does have it, and how to use it within Emacs?
+    
+
+        
+Answer 1: 
+
+    
+    
+You have a few options for one-click Lisp environments.
+
+If you prefer an Emacs-based environment, check out LispBox. This actually installs a separate instance of Emacs, afaik, so you probably won't have your existing Emacs settings with it.
+
+If you want to use your existing Emacs, SLIME is available both through quicklisp (which you really should be using) or through ELPA.
+
+If you're ok with not having an Emacs environment, and you're not going to be using the language for long, look into LispWorks personal, which has a one-click environment installer in OS X.
+
+If you were actually asking about Scheme (or could go for either Scheme or Common Lisp), take a look at Racket (not technically a Scheme, it actually has a lot of additional features, but they do support R5RS and have a fairly short list of unsupported R6RS features). 
+    
+    
+Answer 2: 
+
+    
+    
+Emacs Lisp is rather different from regular Lisp, so it's probably not directly useful for classes or self-study if your target is something like Scheme or Common Lisp. But yes, Emacs has its own Lisp interpreter (or rather, is its own Lisp interpreter). You might want to read up on the differences between Emacs elisp and other dialects / variants to determine whether it might suit your needs.
+    
+    
+Answer 3: 
+
+    
+    
+Clozure CL is a available for free from the Mac App Store
+http://itunes.apple.com/us/app/clozure-cl/id489900618?ls=1&amp;mt=12
+    
+    
+Answer 4: 
+
+    
+    
+Have you checked Ready Lisp ?
+Also have a look at here.
+    
+    
+Title: Is there a tool like Resharper for Visual Basic 6 IDE
+Description: 
+    
+    
+                    
+I sadly have to work in the vb6 ide more than i prefer.
+I am totally spoiled by the use of Resharper when working with C# in VS2010.
+
+So my question is: Are there any tools out there extending the VB6 ide?
+
+What i miss most are the navigation features like 
+
+
+Find usages
+Goto Type
+Goto File
+
+
+and so on.
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't know if they support those features, but the two tools I've heard recommended are CodeSMART and MZ-Tools.
+    
+    
+Answer 2: 
+
+    
+    
+You could try MZ Tools. That has a very satisfactory "find" function. Not sure about Goto Type or Goto File, though. (I use MZ Tools myself.)
+    
+    
+Answer 3: 
+
+    
+    
+The Zeus IDE can import VB6 projects and it can do class browsing, file and type navigation.
+    
+    
+Title: Is there any way to take screenshots of hundreds of lines of code from within an IDE? Specifically Java and C# colouring
+Description: 
+    
+    
+                    
+I have been print screening and pasting multiple screens into photoshop so far, but there must be an easier way?
+    
+
+        
+Answer 1: 
+
+    
+    
+Try Ducklink software for screen 
+    
+    
+Answer 2: 
+
+    
+    
+What about an pdf-printer-driver ?
+    
+    
+Answer 3: 
+
+    
+    
+In Visual Studio, you can just copy and paste the source. If you paste it into any rich-text enabled software — e.g., Microsoft Word — the code will be formatted the same way as it is in Visual Studio, with all fonts, colours and bold styles intact.
+
+Once you’ve pasted it into Word, you can do with it whatever you want, including printing to PDF.
+    
+    
+Answer 4: 
+
+    
+    
+If you have extra money to spent, SnagIT is worth the price.
+
+It comes with a very intuitive image editor.
+    
+    
+Answer 5: 
+
+    
+    
+For future reference, I found a usable workaround to use Jetbrains' Project Rider to export a source file to HTML, and then use Firefox's fullscreen screenshot feature to capture the screen.
+
+This gave me a screenshot that was higher resolution than the IDE text editor, and contained the whole file (which was what I wanted, to show the levels of indentation and spaghetti-ness of the code) in a file approximately 2k x 6k pixels.
+    
+    
+Answer 6: 
+
+    
+    
+Why do you take screenshots for printing out code??
+Just open your file in Visual Studio, Eclipse, Notepad++ and select File - Print and you'll get your file with a nice coloring (when using a color printer).
+If you need it as a hard-copy on your screen just take FreePDF to print it into a pdf file.
+Update
+I tested it right now with the above PDF printer driver and it comes out just as expected. So i think you just using a Bulls**t pdf printer driver.
+    
+    
+Title: IDE for MSIL
+Description: 
+    
+    
+                    
+There's any number of questions about MSIL on SO but none that directly answer this.
+
+I've been using Textpad which does have a syntax definition file for MSIL and then using ILASM in a command prompt window.
+
+I did find a reference to ILIDE but the link is broken.
+
+Is there an IDE or add-on / plugin to Visual Studio / Eclipse for MSIL that allows syntax highlighting, intellisense, code completion, debugging etc.?
+    
+
+        
+Answer 1: 
+
+    
+    
+Use MonoDevelop
+
+You can build specially MSIL projects. It's very useful for these issues, also you can use it in both Windows and Linux. What is better than this? :)
+    
+    
+Answer 2: 
+
+    
+    
+I made an extension for Visual Studio 2010 that supports syntax highlighting for IL files (.il) and includes projects with full debugging support for C#, F# and Visual Basic that support embedding and calling IL code directly.
+
+IL Support extension
+
+Enjoy!
+    
+    
+Answer 3: 
+
+    
+    
+I believe you can do it in #develop IDE.
+
+No intellisense though.
+    
+    
+Answer 4: 
+
+    
+    
+I have exactly  the same question!
+
+I have found ilide eventually : 
+
+http://nida.se/ilide/
+
+(note : strangely, some links to ilide are broken, some of them even mentioning earlier links that are broken , but then supply a link that's broken too.  I was able to dowload it and Installed it succesfully from the link above though).
+
+further   : 
+http://sourceforge.net/project/showfiles.php?group_id=112895
+
+seems  a very good debugger.
+
+cheers, ph
+    
+    
+Answer 5: 
+
+    
+    
+xacc.ide has syntax highlighting for MSIL, and another odd 20 .NET languages.
+
+See some screenshots here.
+    
+    
+Answer 6: 
+
+    
+    
+IIRC, Visual Studio will give you debugging, if you assemble with /debug. 
+
+I think MS had a demo or sample of some VS plugin that helped a bit with IL. I'm not sure what it was named or if it was released.
+    
+    
+Title: CLion won&#39;t start, says &ldquo;IDE has not been initialized yet&rdquo;
+Description: 
+    
+    
+                    
+After a period of a few weeks not using CLion (which, earlier, I was basically evaluating) - when I now try to start it up, I get:
+IDE has not been initialized yet
+
+(after the usual JVM warning I was getting before and didn't prevent CLion from starting up.)
+Questions:
+
+Why is this happening? And more importantly:
+Can I circumvent this somehow? I tried renaming some CLion-related folders in my home directory, but to no avail.
+
+Notes:
+
+I have a valid license.
+I'm using CLion build CL-201.6251.14 .
+I'm on Devuan GNU/Linux 3 (~= Debian Buster).
+I'm using an x86_64 CPU.
+May be related to this (resolved) issue for IntelliJ Idea.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Another instance of CLion may be running
+
+While you might not see it for some reason, there is another instance of CLion already running (probably for your own user). The error message is somewhat misleading. Look for it with the ps command (e.g. ps aux | grep -i clion) or with pgrep (pgrep clion), then terminate it before re-running.
+
+This may not be the only scenario in which you get the same error message.
+    
+    
+Title: Change .eclipse folder in Linux
+Description: 
+    
+    
+                    
+How can I change the .eclipse folder in Linux? I tried adding this line:
+
+-Dosgi.configuration.area=/directory/directory1/eclipse/.eclipse
+
+
+at the top of eclipse.ini but it doesn't work. I've also tried adding it to various other places in the eclipse.ini but still no luck.
+
+Edit
+
+I have added this line:
+
+-Dosgi.configuration.area=file:/directory/directory1/eclipse/.eclipse
+
+
+immediately below -vmargs. When Eclipse starts, it now reads from the correct .eclipse location and if .eclipse does not exist there, it creates it. Unfortunately, after Eclipse has loaded, another .eclipse folder is created in my home folder and Eclipse then continues to read from that folder. I suspect that my eclipse.ini file is now correct but there is another file I need to change.
+    
+
+        
+Answer 1: 
+
+    
+    
+The simplest thing to do is probably pass java a different user.home so that all the other myriad of places that derive a location base it off of user.home. So instead of what you have, use this in .ini file:
+
+-Duser.home=/directory/other/here
+
+
+In addition to .eclipse, you will probably find other directories created in your overridden user.home, such as .p2, .oracle_jre_usage, etc.
+
+Other notes:
+
+-Dosgi.configuration.area is the changes the configuration area for Eclipse, it does not effect user area. You also probably don't want to change that setting away from the default unless you really want multiple configurations (read more below).
+
+Additionally, the normal thing to do would be to use -configuration as an argument to eclipse{.exe} and let eclipse convert it to the appropriate VM argument.
+
+You probably want -user though to override the user area. Have a look at locations in the Eclipse help for more info (quoted below).
+
+However, there are still things that have individual control over their location, such as secure storage, which is controlled by the -eclipse.keyring command line argument.
+
+
+  Locations
+  
+  The Eclipse runtime defines a number of locations which give
+  plug-in developers context for reading/storing data and Eclipse users
+  a control over the scope of data sharing and visibility. Eclipse
+  defines the following notions of location:
+  
+  User (-user) {osgi.user.area} [@none, @noDefault, @user.home,
+  @user.dir, filepath, url]
+  User locations are specific to, go figure,
+  users. Typically the user location is based on the value of the Java
+  user.home system property but this can be overridden. Information such
+  as user scoped preferences and login information may be found in the
+  user location. 
+  
+  Install (-install) {osgi.install.area} [@user.home,
+  @user.dir, filepath, url]
+  An install location is where Eclipse itself
+  is installed. In practice this location is the directory (typically
+  "eclipse") which is the parent of the eclipse.exe being run or the
+  plugins directory containing the org.eclipse.equinox.launcher bundle.
+  This location should be considered read-only to normal users as an
+  install may be shared by many users. It is possible to set the install
+  location and decouple eclipse.exe from the rest of Eclipse.
+  
+  Configuration (-configuration) {osgi.configuration.area} [@none,
+  @noDefault, @user.home, @user.dir, filepath, url]
+  Configuration
+  locations contain files which identify and manage the (sub)set of an
+  install to run. As such, there may be many configurations per install.
+  Installs may come with a default configuration area but typical
+  startup scenarios involve the runtime attempting to find a more
+  writable configuration location. 
+  
+  Instance (-data) {osgi.instance.area}
+  [@none, @noDefault, @user.home, @user.dir, filepath, url]
+  Instance
+  locations contain user-defined data artifacts. For example, the
+  Resources plug-in uses the instance area as the workspace location and
+  thus the default home for projects. Other plugins are free to write
+  whatever files they like in this location.
+  
+  While users can set any of
+  these locations, Eclipse will compute reasonable defaults if values
+  are not given. The most common usecase for setting location is the
+  instance area or, in the IDE context, the workspace. To run the
+  default Eclipse configuration on a specific data set you can specify:
+
+eclipse -data c:\mydata
+
+
+    
+    
+Answer 2: 
+
+    
+    
+You must put property definitions like this at the end of the eclipse.ini after the -vmargs line. If there is no -vmargs line you must add one.
+
+So:
+
+.... other lines ....
+-vmargs
+... other arguments
+-Dosgi.configuration.area=/directory/directory1/eclipse.eclipse
+
+    
+    
+Title: How to enable CSS editing in Intellij
+Description: 
+    
+    
+                    
+I just switched to IntelliJ IDEA because I thought it would be great for developing JavaFX application.
+
+I must be doing something wrong because when I am editing a CSS file, there is no code-completion. When I am trying to create a new CSS file there is no option for CSS files.
+
+I am using the community version of IntelliJ.
+
+I have looked very long for an answer, and it hurts that I have to ask here! I hope someone can help me.
+    
+
+        
+Answer 1: 
+
+    
+    
+CSS editor is not supported for community edition, as it said at the language support part of IntelliJ IDEA Editions Comparison
+
+
+    
+    
+Answer 2: 
+
+    
+    
+You can get help from community edition plugins page. For CSS editor, SmarterEditor and Shifter plugins may be helpful.
+    
+    
+Answer 3: 
+
+    
+    
+The short answer is no, at least at the moment. 
+The best solution i for me so far is to open the resources folder in Atom editor and do all UI work there. It's handy because you also run atom live server, and not have to restart the application. Also Preview HTML is another very useful plugin.
+    
+    
+Answer 4: 
+
+    
+    
+you can do one thing that just make use of style tag in the html and inside that use all the css that you want to use 
+    
+    
+Answer 5: 
+
+    
+    
+Yes, the CSS editor is not supported for the community version of Intellij , in my case adding plugins did not work but something that helped me was the answer :-
+
+
+  You just need to create a new "file" rather than a directory, package or Java class and save the file with the .css extension.
+
+
+that I got from here Need IntelliJ Ultimate Edition to run CSS?
+    
+    
+Title: Ansible development environment
+Description: 
+    
+    
+                    
+Currently I'm developing ansible orchestration system. The project structure is something like this:
+
+site.yml
+    webservers.yml
+    fooservers.yml
+    roles/
+       common/
+         files/
+         templates/
+         tasks/
+         handlers/
+         vars/
+         defaults/
+         meta/
+       webservers/
+         files/
+         templates/
+         tasks/
+         handlers/
+         vars/
+         defaults/
+         meta/
+
+As a result I have to deal with dozens of play-books, roles, subdirectories, tasks, variable files, so on. For now, I use WinSCP as a kind of IDE (I work from Windows dev machine) This solution is far from being perfect but allow me easy navigation among files and folders. In fact I miss Visual Studio (intellisense!) very much. I tried Eclipse installed on my dev machine before but it was too slow. I found shell tools rather uncomfortable. Due to corporate constraints I can not add any more VM-s. 
+
+So, my question is:
+are there any Windows (or lightweight Ubuntu GUI) tools to deal with complicated structure of files and folders for Linux development?
+    
+
+        
+Answer 1: 
+
+    
+    
+JetBrains-based IDEs have a YAML/Ansible plugin to add some context and syntax highlighting to Ansible playbook structure.
+
+Sublime has a plugin to add syntax highlighting to Ansible files https://github.com/clifford-github/sublime-ansible
+
+Both tools can display folder structure and connect using sftp/ssh to remote servers.
+    
+    
+Answer 2: 
+
+    
+    
+Vim is not considered an IDE by all, but I (work on and) use Rocannon for Ansible every day for its auto-completion, syntax highlighting, built-in help and other IDE-like features.
+
+Vim is not a very quick learn, but it is light. :)
+
+There's a GIF demo on the Rocannon github page to give you a feel for what it offers.
+    
+    
+Answer 3: 
+
+    
+    
+Ansible SHOULD have an IDE that validates both the YAML lint and the syntactical errors of ansible itself (version dependent). It is such a waste of time to have to run and debug and run into things over and over, the latest example being this:
+    "msg": "unsupported parameter for module: register"}
+
+When all you do is:
+
+- name: gather rds instance facts
+  rds:
+    command: facts
+    instance_name: "{{ wp_db_instance }}"
+    register: database_facts
+
+
+vs:
+
+- name: gather rds instance facts
+  rds:
+    command: facts
+    instance_name: "{{ wp_db_instance }}"
+  register: database_facts
+
+
+Notice the indentation. Which is why YAML is a pain.
+    
+    
+Answer 4: 
+
+    
+    
+Netbeans understands yaml but does not have support for Ansible Playbook or even generic projects. So I create a PHP project from exising sources and point that at my ansible playbook. 
+
+
+PLUS I do all my coding apart from python in Netbeans
+PLUS yaml syntax highlighting helps a lot
+PLUS git integration ('cos you do keep your playbook in a scm)
+MINUS no ansible awareness at all eg help with finding variable declarations
+
+    
+    
+Answer 5: 
+
+    
+    
+Here is the official list of IDE's or editors: https://docs.ansible.com/ansible/latest/community/other_tools_and_programs.html#popular-editors
+Currently it seems your best option is Visual Studio Code since it has auto-completion and syntax highlighting specifically for Ansible.
+    
+    
+Title: Navigating Python modules with ctags in Vim?
+Description: 
+    
+    
+                    
+I'm using Vim with ctags for Python and that works very well for classes, fields, etc, but what it doesn't seem to include are Python file names aka module names.  Is this possible?  I'd far prefer to type ta &lt;module&gt; to jump to a module, rather than navigate level-by-level with a file browser like NERDtree, and I'm very accustomed to doing this in Java, which works out since class names are file names.
+    
+
+        
+Answer 1: 
+
+    
+    
+If you generate your tags file using exuberant ctags (Is there any other way?) then try adding the --extra=+f option.  See the man page at http://ctags.sourceforge.net/ctags.html#OPTIONS for details.
+    
+    
+Answer 2: 
+
+    
+    
+Exuberant tags (with --extra=+f) generates tags for python file-names (e.g. my_module.py), but not for the module name (e.g. my_module).  I ended up creating a modified version of the ptags script.  Save the following to a file named ptags somewhere in your path and make it executable:
+
+#! /usr/bin/env python
+
+# ptags
+#
+# Create a tags file for Python programs, usable with vi.
+# Tagged are:
+# - functions (even inside other defs or classes)
+# - classes
+# - filenames
+# Warns about files it cannot open.
+# No warnings about duplicate tags.
+
+import sys, re, os
+import argparse
+
+tags = []    # Modified global variable!
+
+def main():
+    for root, folders, files in os.walk(args.folder_to_index):
+        for filename in files:
+            if filename.endswith('.py'):
+                full_path = os.path.join(root, filename)
+                treat_file(full_path)
+        if not args.recursive:
+            break
+
+    if tags:
+        fp = open(args.ctags_filename, 'w')
+        tags.sort()
+        for s in tags: fp.write(s)
+
+expr = '^[ \t]*(def|class)[ \t]+([a-zA-Z0-9_]+)[ \t]*[:\(]'
+matcher = re.compile(expr)
+
+def treat_file(filename):
+    try:
+        fp = open(filename, 'r')
+    except:
+        sys.stderr.write('Cannot open %s\n' % filename)
+        return
+    base = os.path.basename(filename)
+    if base[-3:] == '.py':
+        base = base[:-3]
+    s = base + '\t' + filename + '\t' + '1\n'
+    tags.append(s)
+    while 1:
+        line = fp.readline()
+        if not line:
+            break
+        m = matcher.match(line)
+        if m:
+            content = m.group(0)
+            name = m.group(2)
+            s = name + '\t' + filename + '\t/^' + content + '/\n'
+            tags.append(s)
+
+if __name__ == '__main__':
+    p = argparse.ArgumentParser()
+    p.add_argument('-f', '--ctags-filename', type=str, default='tags')
+    p.add_argument('-R', '--recursive', action='store_true')
+    p.add_argument('folder_to_index', type=str, default='.')
+    args = p.parse_args()
+    main()
+
+
+Now run the following to generate a tags file by recursively processing the current directory:
+
+ptags -R -f tags_file_to_create /path/to/index
+    
+    
+Title: phpstorm IDE Could not save project:
+Description: 
+    
+    
+                    
+It's on the Ubuntu system.
+I install the phpstorm IDE.
+But when i use it do edit files and save them,it shows a error:
+
+Could not save project:
+java.io.FileNotFoundException: /home/project/.idea/workspace.xml_jb_bak_ (Permission denied).
+
+If anyone know how to solve this problem, Please share your ways.
+
+Thanks in advance
+    
+
+        
+Answer 1: 
+
+    
+    
+go to preferences, system settings -/p/div

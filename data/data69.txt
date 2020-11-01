@@ -1,0 +1,1837 @@
+Title: How to programmatically add a custom component to Visual Studio toolbox?
+Description: 
+    
+    
+                    
+I am creating an installer for a custom SSIS component that we have written. I would like to add the custom component automatically, rather than asking the user to manually add it.
+
+I'm trying to do this with this code:
+
+public void AddToolboxItem(string toolboxTabName, string toolBoxItemName, string toolBoxItemPath) {
+  Type dteReference;
+  EnvDTE.ToolBox toolBox;
+  EnvDTE80.ToolBoxItem2 addedToolBoxItem;
+
+  // Get a reference to the visual studio development environment.
+  dteReference = Type.GetTypeFromProgID("VisualStudio.DTE.9.0");
+
+  if(dteReference != null) {
+    // Get a reference to the toolbox of the development environment.
+    EnvDTE80.DTE2 dte = (EnvDTE80.DTE2)Activator.CreateInstance(dteReference);
+    toolBox = (EnvDTE.ToolBox)dte.Windows.Item("{B1E99781-AB81-11D0-B683-00AA00A3EE26}").Object;
+
+    // Loop through all tab pages to find the toolbox tab page that was specified
+    // in the toolboxTabName parameter.
+    foreach (EnvDTE80.ToolBoxTab2 toolBoxTab in toolBox.ToolBoxTabs) {
+
+      // Is this the right toolbox?
+      if(string.Compare(toolBoxTab.Name, toolboxTabName, true) == 0) {
+
+        // First check if the component is not already in the toolbox:
+        bool found = false;
+        foreach(EnvDTE80.ToolBoxItem2 toolBoxItem in toolBoxTab.ToolBoxItems) {
+          if (string.Compare(toolBoxItem.Name, toolBoxItemName, true) == 0) {
+            found = true;
+            break;
+          }
+        }
+
+        // The toolbox item is not in the toolbox tab, add it:
+        if (!found) {
+          addedToolBoxItem = (EnvDTE80.ToolBoxItem2)toolBoxTab.ToolBoxItems.Add(
+            toolBoxItemName,
+            toolBoxItemPath,
+            EnvDTE.vsToolBoxItemFormat.vsToolBoxItemFormatDotNETComponent);
+        }
+        break;
+      }
+    }
+  }
+}
+
+
+I can get a reference to the "Data Flow Transformations" ToolBox Tab, but adding an item fails without an exception or error.
+
+I call this function with the parameters:
+
+
+toolboxTabName = "Data Flow Transformations"
+toolBoxItemName = "Special Test Component" 
+toolBoxItemPath = "c:\Program Files\Microsoft SQL Server\100\DTS\PipelineComponents\mdTest.dll"
+
+
+As a sanity check, I tried using the vsToolBoxItemFormatDotNETComponent enumeration as Add()'s third parameter. This causes Add to return a valid object (ie, success), but the new item does not appear on the tool box. I suspect there is some sort of 'save' operation that may be necessary (even if I get the Add() to work properly).
+
+Is there any way to programmatically add a SSIS component to the
+toolbox?
+    
+
+        
+Answer 1: 
+
+    
+    
+Same question can also be found in the MSDN forums and it has been answered there by an MVP, Moderator. I am pasting the link to the answer provided in MSDN forums so that others stumbling on this question can know what the answer is.
+
+Programmatically Add an SSIS Component to the Toolbox (social.msdn.microsoft.com)
+    
+    
+Title: Komodo Edit does not support shtml code hinting?
+Description: 
+    
+    
+                    
+I have searched a lot about this feature but it seems that Komodo edit does not support any shtml intellisense.
+
+I cannot believe this as I finally found a great HTML/CSS/JavaScript/jQuery editor but no SHTML support! I thought that I have finally found a replacement for Dreamweaver but without SHTML code hinting, it is a deal breaker for me. The problem is that I work a lot with the technologies mentioned but I also work a lot with SHTML. I googled a lot but I haven't even found a post about this matter! I cannot believe how this is possible.
+
+Do you know how to enable SHTML intellisense for Komode Edit? Is it even possible?
+
+Many thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+I managed to find a solution for this. 
+
+I added the .shtml file type in Edit, Preferences, File Associations. I Linked the .shtml file type to be read as usual HTML.
+
+However, in Komodo Edit, I found out that when you are coding HTML, the classes for instance do not load automatically. You have to manually click CTRL + Space and this only gets you the class which the application thinks you need to use. A list with all the classes beginning with a particular character does not show up.
+    
+    
+Title: Domain model for my Java IDE
+Description: 
+    
+    
+                    
+I'm currently making an IDE for the Java platform. This IDE for education purposes only.I'm working of the documentation and in the analysis phase.
+Right now I'm at the stage of making the domain model for my project and I'm confused what to as to how the domain model figure would look like.
+
+The IDE will feature
+
+
+open/save
+create/remove class
+intellisense
+compile
+execute
+syntax highlighting/formatting
+
+
+so how will the domain model look like? and what is a domain?
+
+Any guidance will be helpful. Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+Well, I would suggest to start with identifying the use cases for your IDE:
+1. Maintain files (open, save, delete, rename)
+2. Parse Code Syntax and display results.
+3. Pass File to compiler and display results.
+( And then write out the simple steps of what these use cases do. This will help alot as well as giving you a 'context' for all those niggly little requirements that will pop up.
+Otherwise it's simply a list of functionality and very hard to organize, implement consistently and completely and know you caught everything.)
+
+So, you could say you have 3 domain objects now: File and Code and Compiler.
+
+Anyway it's a start
+ Yes, A HUGE project for simple curiosity.
+You might alos look at how eclipse is built as well as how an OO compiler is built. These may give you ideas as to your domain objects
+    
+    
+Answer 2: 
+
+    
+    
+It sounds like you need to read up on Domain Driven Design. Your domain objects and ubiquitous language are driven by the language used by the domain experts. Fortunately you're familiar with this language already since you know the domain (programming) already.
+    
+    
+Title: PHP IDE with Integrated Web Server
+Description: 
+    
+    
+                    
+Note: This is not another "What is the best PHP IDE?" question.
+
+I'm looking for a PHP IDE with a specific feature, namely an integrated / embedded (php enabled) web server; ideally with xdebug pre-bundled.
+
+I already know that Aptana 1.5 has this functionality (and some older versions of Zend Studio as well), but Aptana 1.5 hasn't been supported for quite some time and as we make the transition to PHP 5.3 and beyond, it's usefulness will diminish significantly.
+
+I've looked at some options including Eclipse PDT and NetBeans, but it seems every PHP IDE relies on a separate local/remote web server to actually interpret the code.
+
+I know installing a web server locally is fairly trivial, but this is for a classroom solution, where installing, configuring, and maintaining a web server on 1000 machines is simply not feasible.  A remote server solution will also not work due to the need to use debugging functionality (xdebug currently requires a hardcoded IP for the debug client).
+
+This seems like such an obvious feature/plugin for a PHP IDE, but my research thus far has turned up no results.
+    
+
+        
+Answer 1: 
+
+    
+    
+Delphi For PHP has a built-in web server (Apache) that it configures and starts/stops for debugging sessions. There is no end-user configuration necessary. However, the debugging engine is PHP DBG, not xDebug.
+
+Note that Delphi For PHP fully supports debugging any kind of PHP site, it is not limited to sites created with the VCL For PHP framework.
+    
+    
+Answer 2: 
+
+    
+    
+There is also NuSphere's PhpED:
+
+link text
+    
+    
+Answer 3: 
+
+    
+    
+http://www.enginsite.com/php-editor.htm - Found this through Google Search. It is possible to update the PHP.exe the application is currently using to the latest version; therefore, you could apply this solution to other IDE editors that you've discovered.
+
+Komodo Edit (http://www.activestate.com/komodo-edit) - Has the ability to specify the PHP interpreter you want to use while coding PHP. Can set breakpoints and other debugging necessities. (http://docs.activestate.com/komodo/4.4/debugphp.html)
+    
+    
+Answer 4: 
+
+    
+    
+Debug PHP code using Xdebug: You can inspect local variables, set watches, set breakpoints, and evaluate code live. Navigate to declarations, types and files using Go To shortcuts and hypertext links. Use a global PHP include path for all projects or customize it per project.
+
+https://netbeans.org/features/php/
+    
+    
+Answer 5: 
+
+    
+    
+Here are few best PHP IDE with inbuilt web servers in my Knowledge;
+
+
+Aptana Studio
+Netbean
+Microsoft Expression web with IIS for PHP
+
+    
+    
+Title: Issues Upgraging to Visual Studio 2010
+Description: 
+    
+    
+                    
+Just curious how many people are actually running 2010 and what's your feedback so far? 
+
+
+Can I run 2010 concurrently with 2008 without issues? 
+Also, are 2008 projects 100% compatible with 2010 and if so should I just uninstall 2008? 
+
+
+Thanks for any feedback.
+    
+
+        
+Answer 1: 
+
+    
+    
+I've moved the whole development group for our project to VS2010 3 days after it came out. Before this I've been trying out the beta versions on my machine with some side projects.
+
+From the experience I got I can say:  
+
+
+VS 2010 can easily run alongside VS
+2008 on the same machine without any
+issues whatsoever. 
+The projects
+created in VS 2008 can be opened in
+VS 2010. But when they are opened -
+they will be updated to the new
+format, and cannot be reopened in VS 2008. The changes aren't critical, so if it's necessary it is possible to
+revert these changes. Possible, bt
+not straightforward :)
+
+
+This means that if you're working on a collaborative project, either the whole team moves to 2010, or you all stay with VS 2008. That doesn't mean you can't write your own projects in VS 2010 in parallel ^_^
+
+UPD: I haven't met any projects that I wasn't able to convert using the conversion wizard. but just in case you can install VS 2010, convert your project, and see if it's all fine. If it is - work on it for a couple of days.. If you're completely satisfied - uninstall VS 2008 and feel good about it :D
+    
+    
+Answer 2: 
+
+    
+    
+Yes you can run 2010 concurrently with 2008. I wouldn't bet that every 2008 project can be opened/converted to a 2010 project otherwise Microsoft would have never spent so much time making the conversion wizard. The conversion wizard also mentions you should back up the files prior to conversion.
+    
+    
+Title: What is the closest equivalent of &ldquo;Python interpreter&rdquo; for C#?
+Description: 
+    
+    
+                    
+Here is what I mean:
+
+Python interpreter is a great tool for checking something quickly and then throwing it away.
+
+For instance, I wish to examine how NameValueCollection behaves in .Net (since the new MSDN help sucks so much).
+
+http://msdn.microsoft.com/en-us/library/system.collections.specialized.namevaluecollection.get.aspx
+
+I tried using http://www.linqpad.net/ but it barks at using statements.
+
+I am looking for something like that - a tiny IDE which has powerful code completion, where I can try things quickly. VS2008 is too bulky for that.
+
+So, any recommendations? Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+I suppose the closest one is the Mono C# interactive shell.
+    
+    
+Title: AJAX based remote Online text editor
+Description: 
+    
+    
+                    
+I'm looking to install an online text editor on my server, that I can link to svn.
+
+I would like to have some form of syntax highlighting, keyboard shortcuts, and perhaps some text complete.
+
+Languages, python, php, sql, and C++ are a minimum ...
+
+any suggestions?
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't know of any browser-based client-server editors like that, assuming I understand correctly what you are trying to do.
+
+Two things come to mind:
+
+
+Since it's a long-solved problem
+and generally fairly trivial task to
+configure a svn server
+and there are plenty of
+text editors / IDEs out there with
+svn client interfaces, why re-invent
+the wheel?
+If you must or really want to
+and have gobs of time, go wild and
+crazy perhaps by starting with a
+simple existing Python-based editor
+(Leo perhaps?) or roll you own
+and/or existing syntax highlighting
+packages, like Pygments, find a way to split it into a client-server
+architecture with some AJAX glue between them, and
+port the front-end client part to run under
+Pyjamas, a framework for
+running a subset of Python as
+JavaScript, and to use a browser as the GUI.  And let us know how it
+turns out!
+
+    
+    
+Answer 2: 
+
+    
+    
+you should have a look at https://mozillalabs.com/bespin/ 
+
+I've tried it and decided not to use it, but only because it's web-based, the same reason why I use googledocs only when I really need to. 
+
+If you don't want to build a public service, you may use the approach I like. That is to install your favourite editor/IDE at the server and start ssh server. From the client, connect with enabled X forwarding (to connect from Windows, use Xming an portablePuTTY).
+    
+    
+Title: Eclipse: Create Hello World app in C
+Description: 
+    
+    
+                    
+This seems super basic, but I'm having trouble finding documentation online to explain it.
+
+I have the Eclipse IDE for C/C++ 3.5.1. How can I create a simple Hello World program in C? (I have also downloaded cygwin.) Many tutorials online make reference to "Managed" and "Simple" types of projects, but I can't find that anywhere. Was that removed in 3.5.1?  
+    
+
+        
+Answer 1: 
+
+    
+    
+Is there a specific reason you want to use Eclipse? For a beginner, probably the easiest way to get started with C on Windows is to use the free Microsoft Visual C++ Express Edition. It's a full IDE with built in compiler and debugger, and can do everything you might need to do for learning C.
+
+Although you have Eclipse and Cygwin right now, neither of those components actually include a compiler unless you specifically download that too. With that environment, you have to manually put the pieces together before you can compile and run your code.
+    
+    
+Title: How to change Xcode&#39;s Build Results view type?
+Description: 
+    
+    
+                    
+Some day ago I've pressed a button in the Build Results window. It was located between the error list and the code subwindow.
+Pressing the button changed the view mode from error list to pure compiler output. And the button was gone!
+
+So far I've managed to live with the output, but it's getting really annoying.
+How can I switch back to the original "error list" kind of view? 
+    
+
+        
+Answer 1: 
+
+    
+    
+In previous versions of Xcode, there were two split views in the build results window: one for the editor and one for the textual build results. If you’re not using Xcode 3.2, try to drag a split view down from the top of the window.
+
+In the current version, there’s only one split view left, which reveals the editor below the graphical build results. The textual results are in expandable bubbles, so I guess that’s not what you’re talking about?
+    
+    
+Title: How do I save and restore all the vb6 ide settings?
+Description: 
+    
+    
+                    
+I've seen this tip on DevX which should 'account for most of the Visual Basic IDE settings'.
+
+Does anyone whether this is sufficient or whether there are more settings out there?
+    
+
+        
+Answer 1: 
+
+    
+    
+It looks pretty complete, however if you have custom Add-Ins this will not get them. I did a quick search of my Add-Ins and I don't see any generic way of backing them up as they have their own registry keys. The HKEY_CURRENT_USER\Software\Microsoft\Visual Basic\6.0 has an Addins sub-folder so if you have custom add-ins you should at least get a message that they can't be found. Otherwise, use Process Monitor and take note of the registry keys and files that are read when you start Visual Basic.
+    
+    
+Answer 2: 
+
+    
+    
+They are stored in these two registry keys:
+
+HKEY_CURRENT_USER\Software\Microsoft\VBA\Microsoft Visual Basic HKEY_CURRENT_USER\Software\Microsoft\Visual Basic\6.0
+
+Access them by running Regedit.
+    
+    
+Title: C/C++ editor that can create projects from lists of files
+Description: 
+    
+    
+                    
+I recently asked a question about importing from a list of source/header files in Eclipse 
+
+I haven't found a good solution to this, so I thought I'd check out other IDEs. I want an IDE that does not need to "own" everything from a top directory and down. When creating a new project I want to have a text file that lists source/header files (autogenerated by the build tool), and have the IDE create a project with those files. The only IDE I know of that does this is SlickEdit, which is great, but also rather expensive. Do you know of any other IDEs that have this feature.
+
+Eclipse wants to own everything in the directory I pointed it to, and I haven't found a way to remove subfolders afterwards (to exclude them from search, indexing and annoying me).
+    
+
+        
+Answer 1: 
+
+    
+    
+I think CMake can be helpful for you.
+    
+    
+Answer 2: 
+
+    
+    
+Emacs does all this, and more.  The desktop feature lets you store a set of files to load and save in a working directory, and the Emacs Code Browser (ECB) extension has support for browsing files and classes, and managing projects.  It doesn't own anything, Emacs just gives you lots of tools to manipulate text in godly ways.  Along with ECB, SpeedBar and a few other extensions, CEDET is an Emacs "meta"-extension which turns the venerable editor into an IDE.  It even does UML!
+
+
+Emacs IDE: CEDET
+
+    
+    
+Answer 3: 
+
+    
+    
+Code::Blocks can do this for you.
+    
+    
+Title: How can I add a new application / new file wizard to the Delphi IDE &ldquo;New &hellip;&rdquo; dialog?
+Description: 
+    
+    
+                    
+Are there examples and resources (source code and documentation) available which show how a 'New xyz Application' or 'New xyz Document' wizard can be created with Delphi which then will appear in the new project / new file dialog of the Delphi IDE?
+
+What I want to do: for some of my libraries I would like to add a new project type and a new file type to the IDE dialogs, which will guide the developer through a wizard and then create some customized auto-generated source code.
+
+So far I found this short overview:
+
+Experts and Wizards in Delphi
+
+And this article
+OTA: Visual design of Wizards 
+
+Note that this question is not about wizard or GUI creation in general but on how the Delphi IDE can be extended to include my own new project / file type dialogs. The new project and file types should appear in the new file or new project type dialog in the matching category (or even a new one).
+    
+
+        
+Answer 1: 
+
+    
+    
+The source code for the "Visual design of Wizards" article is here.
+That code in itself is an example of what you're asking for, but it can also be used to create your "creators" by writing less code and designing more in the IDE object inspector.
+
+Basically, to have a new source file item for Delphi's "New Items" dialog you need to implement IOTAModuleCreator ; for a new project item you need to implement IOTAProjectCreator. You can even implement IOTAProjectGroupCreator to add an item which will create a whole project group with several projects at once.
+
+Your implementors of these interfaces should generate the source code and return it to the IDE via an implementation of IOTAFile interface. ToolsAPI already contains TOTAFile class which you can easily use by passing it a string of the whole contents of the new file. This will create an unnamed file in memory which the user can then save to hard disk and give it a file name.
+
+You can also find more information by following the links in Zarko's article.
+
+Also see the ToolsAPI unit where the interfaces are declared. There are also some explanations in the comments.
+    
+    
+Answer 2: 
+
+    
+    
+You can try the JvWizard from the JVCL Components.
+
+you can check an example of use here (translated page)
+
+alt text http://vingrad.ru/blogs/bose/files/2008/12/image26.png
+
+Bye.
+    
+    
+Title: Programmatically make use of eclipse&#39;s merge and diff viewers
+Description: 
+    
+    
+                    
+When a text conflict occurs in Bazaar (and many other dvcs) a .BASE, .THIS and .OTHER file is produced. Its then up to the user to make use of an 3 way merge tool to merge the conflict and then mark it as resolved.
+
+I would like to get hold of all the registered merge viewers in eclipse and give the user an option to merge the conflict with any one of these. (with the TextMergeViewer being an default option). I suspect that I would need to some how programmatically provide the 3 files to these mergeviewers and maybe write some custom code to wrap the BASE, THIS and OTHER files to tell the merge viewer where the differences are. (interpret the "herringbone" markers like &lt;&lt;&lt;&lt;&lt;&lt;&lt;. etc) 
+    
+
+        
+Answer 1: 
+
+    
+    
+Not exactly an answer, but at least some starting points:
+
+You could try looking into the code of the current Compare Viewer using the Plug-in Spy (directly available with eclipse3.5)
+
+
+(source: eclipse.org)  
+
+(ALT+SHIFT+F1)
+
+Most of the eclipse sources are also available here.
+The org.eclipse.compare.CompareUI is a start, for example.
+
+Once you have a basic understanding of how the Compare mechanism works as a plugin, you can write an fragment (also illustrated here) to extend the current compare plugin.
+    
+    
+Title: How can I program software using Python for Linux/Windows?
+Description: 
+    
+    
+                    
+For example, using C# I can make software fairly easily for Windows.
+
+I downloaded Python but all I get is a terminal like window for executing single lines of code.
+
+Is there a free IDE/Visual editor for designing GUI's in conjunction with Python?
+
+Thank SO. :D
+    
+
+        
+Answer 1: 
+
+    
+    
+The character-based terminal (console) interface isn't the only one Python affords.  It is often the most visible because it is
+
+
+"built-in"
+often used in the early stages of learning the language, allowing one to focus on various idioms of the language, without the added complexity of the object model and API associated with a GUI
+quite handy for many quick jobs, script-like / awk-like type applications, whether ad-hoc or more permanent.
+
+
+GUIs for Python are aplenty, in fact overwhelmingly so, which can be handicap as people try and decide which one to use. Often, the choice may be driven by one's familiarity with these GUI frameworks, for as you can see they are not specific to Python (recognize their names, often with a Py prefix).  Another criteria may be their support (or lack thereof) on various Operating Systems. And yet another criteria may be the way these framework tie-in with broader systems such as MVC frameworks etc..
+Anyway the arguably most popular one may be:
+
+
+TkInter (tk/tcl)
+PyQT
+WxPython
+and if you want more...
+here's a "complete" list
+
+
+Similarly, there are several IDEs for developing in Python, although many of these do not include GUI designer features. Here's a representative but certainly incomplete list. They are listed in no particular order (do comment on possible significant omissions or errors with regard to features).  Most are either free or inexpensive.
+
+
+IDLE
+Eric 
+PyDev
+Wing IDE  
+Netbeans IDE
+the following have some GUI design features (underlying GUI in parenthesis)
+BlackAdder   (Qt)
+Boa Constructor  (Wx)
+Komodo      (Tk)  (I think commerical, now)
+Eclipse 
+
+
+The capabilities of these IDEs vary greatly, and some may cover some areas of development rather well (ex debugging, or unittesting) while being weak in other areas (say auto-completion).  Many Python developers also manage rather well with "plain" (but well featured) text editors and a few macros/plug-ins.
+    
+    
+Answer 2: 
+
+    
+    
+Yes, lots.
+
+http://wiki.python.org/moin/GuiProgramming
+    
+    
+Answer 3: 
+
+    
+    
+If you know .Net and C#, you could use IronPython and WPF. Then you can use Visual Studio 2010 Beta 2 as your development environment. Here's an example of how it can be done.
+    
+    
+Title: Download JSEclipse plugin stand-alone
+Description: 
+    
+    
+                    
+Is there anywhere I can download the stand-alone JSEclipse plugin, it seems like it only comes bundled with the trial edition FlexBuilder plugins.
+
+It used to be available here:
+http://www.interaktonline.com/products/eclipse/jseclipse/overview/
+
+I still find it useful to use but I'd rather not have the cruft of an expired Flex builder trial license in my Eclipse.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can download the plugin jar from here.
+
+Or you can add the update site on Eclipse.
+    
+    
+Answer 2: 
+
+    
+    
+It's not available anymore in the Adobe site, but I have it zipped, and uploaded the plugin to filefactory. Here's the link: JSeclipse. The zip has 2 folders: features and plugins. Unzip the folders into the corresponding folder in your eclipse and enjoy. I tested it in both Ganymede and Juno and it works in both.
+    
+    
+Answer 3: 
+
+    
+    
+The answer given is for version 1.5 but the current version of JSEclipse is above 1.8
+
+Does this mean that the correct answer is no? You can't get JSEclipse without FlexBuilder?
+    
+    
+Title: Any free mobile IDEs that run on a Blackberry?
+Description: 
+    
+    
+                    
+I was just wondering if there were any IDEs that I can run on my blackberry. My old Palm had on board C and a BASIC interpreter. On board C used the Palm's builtin text editor but the BASIC interpreter had its own simple editor built in.
+
+Anything like this for Blackberry or j2me in general?
+    
+
+        
+Answer 1: 
+
+    
+    
+As far as I know, there are no Basic or C interpreters or IDEs that run specifically on the BlackBerry, but there is an open source J2ME basic dialect called CellularBasic which is meant to be coded with/executed on the device itself. It targets J2ME, so it may run on the BlackBerry: http://cellbasic.sourceforge.net/
+    
+    
+Answer 2: 
+
+    
+    
+I'm working on a Hecl port for BlackBerry, but it's not quite there yet.  If you're curious, join the Google Group, where I post updates about the state of things.
+    
+    
+Title: Telerik RadControls + JetBrains Resharper = VERY SLOW, Can anyone help?
+Description: 
+    
+    
+                    
+Anyone know of a way to speed up the Visual Studio IDE when you have Telerik RadControls (either windows or web) and JetBrains ReSharper installed?  If I disable ReSharper it runs rocking fast, but I love ReSharper a bit too much to drop it.  I know it would perform better without the RadControls.  Anyone know a way to speed it up?
+    
+
+        
+Answer 1: 
+
+    
+    
+for me this is the same.
+
+I'm Working with a Dell XPS 4gb Ram Quad Core Extreme Stripped disks...
+And I also had that problem with telerik controls (mainly aspx - winform not so much).
+
+Anyhow - I had to do a project using a different suite of web controls - and it was as bad as with telerik - or even worse...
+
+What I found (maybe it helps a bit):
+
+a.) Switching to design view slows down the things a lot
+--so after doing this I restart VS
+
+b.) Small Solutions (Projects) help also (like mika wrote) --if possible split your solution to several projects (some class libs instead of one big thing)
+
+c.) Use as litte VS addins as possible --I used some nice tools - but at the moment most of them are turned of, because I made the expirience that the things are better the less addins I use.
+
+d.) Run special "resharping sessions" -- what I mean is: turn resharper off, do you normal coding - and from time to time turn it on and "resharp" your code.
+
+This problem (as well as some others) is well knwon (I guess) and I would say that neither resharper (although this tool seems to be somewhat special) nor telerik are gulty.
+
+It is VS which makes the problems - and I did a lot of searches about solutions - but finally I found nothing which really helps.
+
+Notice: I work on a pretty large project at the moment - and the use of respharper is almost impossible. I turned it off - instead I have a lot of nice snippets and macros which help me to do some of the common things.
+
+Conclusion: if telerik + reshaper is to slow for you I guess you have to decide which helps you more :)
+
+I use the telerik controls (ASPX, WPF and Silverlight) in almost every project I make. These tools fasten the things so much - I simply "need them to survive"
+    
+    
+Answer 2: 
+
+    
+    
+I switched from DevExpress CodeRush/Refactor! to Resharper (not by choice) and found the IDE became almost unusable.  I managed to persuade my boss to let me switch back (on my own personal licence) and now it's like walking back into the sunshine after months in a cold, damp cave.  
+
+I guess what I'm trying to say is that maybe you should consider switching to CodeRush and Refactor!  
+    
+    
+Answer 3: 
+
+    
+    
+This is not much help, but at least the issue is not on your machine only...
+
+Try to work with small solutions. In my machine this means solutions with less than 100k lines of code. Background compilation makes IDE sluggish with large solutions. VB has background compilation on by default, and even without add-ins it gets slower as the solution size grows.
+
+I haven't been able to use ReSharper or CodeRush/Refactor! with VB &amp; RadControls with over 100k line solutions, things just slow down too much. I'm using a Core 2 Duo, 2.4GHz, 4GB machine.
+
+See also: Visual Studio performance and add-ins 
+    
+    
+Answer 4: 
+
+    
+    
+Taken from Telerik`s forums:
+
+We are incompatible with JetBrains Resharper indeed. We are competing for the same Visual Studio resources which could potentially create a ton of trouble if you run both of the add-ins together.  I doubt that anybody managed to run them together but if you know somebody that did that I'd be really interested in all the details.
+
+So you have to disable Resharper to check out on JustCode. You could always re-enable it later, however, as long as one of them is disabled they coexist happily.
+
+Kind regards,
+Tsviatko
+the Telerik team
+
+And I am pretty sure you will be way better using only JustCode
+    
+    
+Title: Frame inheritance and duplicate files in packages
+Description: 
+    
+    
+                    
+I have been developing a number of components using TFrames and ModelMaker -- I've found the combination of visual design/development + inheritance + ModelMaker to be very compelling. I then register these TFrame descendants w/a registration unit, and they become full-fledges palette-based components from there. I'm using Delphi 2007.
+
+Early in my learning about the little "snags" of this process, I found that a number of the problems I would run into with TFrame descendants streaming incorrectly (often appearing as forms in the IDE, rather than frames) could be completely eliminated by introducing my own "TBaseFrame" class which inherits from TFrame with no chanegs, and then use THAT as the base class to develop components from (adding methods, properties, etc). If I added properties and methods, etc. to a class/frame inheriting directly from TFrame, the dfm file streaming would often get confused.
+
+So, overall it's worked great, once I got the kinks worked out.
+
+Yesterday, though, I ran into a new problem:
+
+I install the resulting components in package sets, grouped in ways that make sense (i.e. all of the "panels" for App 1 are in one package, a number of "viewers" for App 2 are in another, etc).
+
+If the TBaseFrame class is not included in the package, the inheriting TFrame-descendant component will not load in the IDE.  BUT, if I add TBaseFrame to the package, I run into the conflict Delphi reports when it has the same source PAS file in more than one package.
+
+I could put ALL of my frame=based components into one giant package, but I'd really, really prefer not to, as I can clearly see that will get too large / out of hand over time, given the nature of how many sets I plan on developing.  Is there any other way to resolve this conflict?
+
+
+
+Update -- there is a trick to getting this to work "properly" -- be sure to read the comments below.
+    
+
+        
+Answer 1: 
+
+    
+    
+Have you tried to put your TBaseFrame in one separate package that would be "required" by all other packages?
+    
+    
+Title: Is there anything I can do to make &ldquo;help&rdquo; load faster in Visual Studio 2008?
+Description: 
+    
+    
+                    
+Loading Help or clicking F1 in Visual Studio is horribly slow to load and has been on ever PC I have installed it on. Is there any optimizations that can be employed to ease this pain?
+
+This is not the same question as Visual Studio Optimizations I am just trying to solve the problem with help loading.
+    
+
+        
+Answer 1: 
+
+    
+    
+Visual Studio (at least 2005 and 2008) defaults to searching online help before local help. 
+
+Did you install help locally when you installed Visual Studio?  If you did, is it configured to search local help before searching online help?
+
+FYI, in VS2005 and VS2008 the settings are located in Tools | Options | Environment | Help | Online.
+    
+    
+Answer 2: 
+
+    
+    
+It is Microsoft's way of reminding you of Benjamin Franklin's famous quote:
+
+
+  “He that can have Patience, can have what he will.”
+
+
+... as in this case, Help.
+    
+    
+Answer 3: 
+
+    
+    
+Please refer to: Some pointers on increasing VS speed.
+
+EDIT: after re-reading the question I see you were looking for speeding up HELP, not the IDE in general.
+    
+    
+Title: Visual Studio 2008 creates useless, empty output folders
+Description: 
+    
+    
+                    
+This behavior annoys me quite a lot. I specified '....\bin\Debug\' as output folder for all projects.
+
+When opening a solution, VS creates an empty bin/debug (or /release when in release mode) folder in the parent directory or even the parent of the parent directory of the actual bin folder specified in the project files. After deleting these useless folders, they are not recreated even on a full rebuild.
+
+I'm not sure why VS acts like this. Is this a bug or is there a mistake in my configuration? If you need more information, I'd be glad to add.
+    
+
+        
+Answer 1: 
+
+    
+    
+This other post may be related to yours: wrongly-created-output-folders-with-visual-studio-2008
+    
+    
+Title: Possible to view method / function docs in NetBeans?
+Description: 
+    
+    
+                    
+NetBeans 6.5 with Python support provides the docstring documentation for a function/method in a popup when auto-completing, but is there another way to view docstrings?
+
+Perhaps achieved by mousing over a function/method name, or clicking somewhere?
+
+The best I can seem to do is "Go to source" in the right-click menu.
+    
+
+        
+Answer 1: 
+
+    
+    
+I received the following answer from Tor Norbye at Sun:
+
+
+  Hold the ctrl key (or Cmd on Mac) and then hover.
+  
+  Also, Ctrl-Shift-Space (e.g. code completion + shift) will display -just- the completion doc (which means it doesn't just look at the prefix of the caret, but the whole identifier and left hand side type if it can resolve it, to compute one specific match rather than many).
+
+    
+    
+Answer 2: 
+
+    
+    
+You can also use this keyboard shortcut on Mac. Shift + Meta + Backslash
+    
+    
+Answer 3: 
+
+    
+    
+You may be referring to the function Show Documentation Popup in Netbeans
+
+Try 
+
+Ctrl+Shift+SPACE or
+
+Ctrl+Shift+BACK_SLASH
+
+related: How to see Javadoc documentation on mouse hover in NetBeans?
+    
+    
+Title: How to set the Startup Project in VB6?
+Description: 
+    
+    
+                    
+Can you set the startup Project in the Visual Basic 6 IDE?
+
+I looked all through the Settings and can't find a way to do it.
+    
+
+        
+Answer 1: 
+
+    
+    
+Dave and OneDayWhen are correct in saying that you need to right click the desired project in the IDE and select Set as Start Up when you have multiple projects loaded and you want to choose which one is executed.
+
+
+  Anyone know how I can set the VB6 IDE
+  to load either the last project loaded
+  or change the default one loaded?
+
+
+Copy the Icon change the target to something like
+
+"C:\Program Files\Microsoft Visual Studio\VB98\VB6.EXE" "D:\MyProjects\MyOneProject\trunk\MyOneProject.vbp"
+
+Change Startup In to D:\MyProjects\MyOneProject\trunk
+
+I found it more just to change the StartupIn to my Master Project Directory rather than have icons for specific project. Like D:\MyProjects
+
+Rob Conley
+
+P.S. In case you are wondering on why you would ever select a non-EXE project as startup. You do this at times when you are debugging a non-EXE. When you startup a non-EXE you have several options. Among them you can fire up a application,or have sit there until something calls it. Useful when you are debugging a Active DLL or Control and using Excel or another 3rd party software that you don't have the source too.
+    
+    
+Answer 2: 
+
+    
+    
+I assume you have multiple projects in a Group e.g. a dll and a dependent exe and you want to set the exe as the 'start up' project. Do so this, select the exe project in the Project Explorer, right click and choose 'Set as Start Up' from the context menu. The 'start up' project's name will be shown as bold text in the Project Explorer.
+    
+    
+Answer 3: 
+
+    
+    
+I'm not aware of a "startup Project" settting in VB6, but you can select the "Startup Object" by opening the Project menu, choosing the last menu item ("X properties", where X is the name of your project), and then selecting the General tab in the Project Properties window. The selector you seek is in the upper-right corner.
+    
+    
+Title: Could &ldquo;attach source&rdquo; be made easier for popular Java libraries?
+Description: 
+    
+    
+                    
+I run into this obstacle when my debugger steps into some classfile
+without corresponding source.  Finding it is often difficult:
+
+
+You have to search for the site hosting the respective project,
+and find its ``download source'' page (for instance, last time I searched
+for the JPA API, and it took me hours to obtain the sources).  Or, you might
+be required to check it out from revision control.
+You need to know the exact version you are using.  Otherwise
+the debugger might step into comments and empty lines :)
+There is no convention for packaging source code&mdash;some
+projects include it in the jar itself; some provide a separate zip file;
+others put it in a src/ subfolder within the zip.
+
+
+I know Maven has the capability of downloading source from its repository and
+including it in the src paths when an IDE config file is generated.  But
+Maven's repo is so poor in terms of content&mdash;few libs actually have
+their source uploaded.
+
+Why is it so complicated when it can be made straightforward?  We could have
+some central repo which relates a classfile (or a hash thereof) to the source
+file it was compiled from (or a link to it).  Maybe a rather huge repo, but
+pretty simply structured.  An IDE plugin could query it to fetch what's needed automatically.
+
+Have you, guys, experienced the same?
+
+How do you obtain the sources to attach?
+    
+
+        
+Answer 1: 
+
+    
+    
+Both m2eclipse and IDEA will download the sources and javadocs for any dependencies. The m2eclipse sources can be downloaded by right-clicking on a dependency (or the whole project if you want all sources) and clicking Maven-/ppimg src="https://docs.sonatype.org/download/attachments/1999044/DownloadSources.png" alt="download sources screenshot"/pp
+Answer 2: 
+
+    
+    
+Haven't seen a satisfactory solution myself.
+
+I tend to roll my own repo, without Maven (Maven is fine, but it doesn't click with me). I run something similar to the BSD ports system, that is, one big structured tree that contains little Ant build files. These build files either checkout the source of a project, pull its dependencies from somewhere else in the tree and build it (these are for the projects I want to build- i.e., mine) or pull binaries from somewhere else (which might be an external source or my own binaries repository).
+
+The system could easily be extended to pull src jars, but I do that manually now.
+    
+    
+Answer 3: 
+
+    
+    
+it may be complicated but it is worth the initial effort.
+
+i do it the following way:
+in my project directory i have three major directories, 
+
+
+src (my own)
+lib
+suppl (sources / javadocs when no sources exist)
+
+
+i put in suppl one zip file per library, containing the sources. in intellij this gives me not only debugger superpowers, but also javadocs.
+
+you are right, obtaining the sources is a pain. sometimes the sources come deliveded in the .jar file of the lib, sometimes as a seperate download (my favorite) and sometimes i have to create a seperate cvs/svn dir where i can checkout the sources. i usually need to re-package them the way i like them, even if provided in a zip.
+
+i am sceptical about maven. i just don't like to hand over my decisions about choosing libs to a program.
+    
+    
+Answer 4: 
+
+    
+    
+we do something similar to Andreas. Our lib directory has subdirectories categorizing further. One such sub dir is source or debug which has the source JAR/ZIPs of all the jars that we want to debug. Do it once and you're good. We use an IVY repository for the jars and source jars.
+    
+    
+Answer 5: 
+
+    
+    
+This is all done automatically if you use M2eclipse (http://m2eclipse.sonatype.org). 
+    
+    
+Title: Debugging C++ language server errors: Invalid AST
+Description: 
+    
+    
+                    
+I've got a C++ project in which I can open up any .cpp or .h, and the LSP will crash/fail (I'm using emacs with lsp-mode).
+For instance if I try to open a file called IDictionary.h, clangd will fail with the following errors in the clangd::stderr buffer
+I[17:33:37.200] BeginSourceFile() failed when building AST for /home/anlsh/work/horizon-runtime/src/prod/data/IDictionary.h
+I[17:33:37.246] &lt;-- textDocument/documentHighlight(103)
+I[17:33:37.246] --&gt; reply:textDocument/documentHighlight(103) 0 ms, error: invalid AST
+
+ccls also fails (exits with signal), though its error messages aren't helpful either
+17:36:44 indexer6          indexer.cc:1302 E failed to index /home/anlsh/work/horizon-runtime/src/prod/data/IDictionary.h
+/snap/ccls/48/bin/../usr/lib/x86_64-linux-gnu/libLLVM-7.so.1(_ZN4llvm3sys15PrintStackTraceERNS_11raw_ostreamE+0x2a)[0x7f2301010e8a]
+/snap/ccls/48/bin/../usr/lib/x86_64-linux-gnu/libLLVM-7.so.1(_ZN4llvm3sys17RunSignalHandlersEv+0x34)[0x7f230100f544]
+/snap/ccls/48/bin/../usr/lib/x86_64-linux-gnu/libLLVM-7.so.1(+0x907682)[0x7f230100f682]
+/snap/core18/current/lib/x86_64-linux-gnu/libpthread.so.0(+0x128a0)[0x7f22fff5a8a0]
+/snap/ccls/48/bin/ccls(+0x24ae87)[0x5564df56ee87]
+/snap/core18/current/lib/x86_64-linux-gnu/libpthread.so.0(+0x76db)[0x7f22fff4f6db]
+/snap/core18/current/lib/x86_64-linux-gnu/libc.so.6(clone+0x3f)[0x7f22ffc78a3f]
+
+Anyways, this happens for every single file in the project, even ones as simple as
+#include &quot;stdafx.h&quot;
+using namespace Api;
+
+My assumption was that some file being pulled in by the build/compile_commands.json is screwing everything up, but I can't be sure. VSCode (which I assume is using an LSP, though I know it has its own tricks) doesn't have any issues on my project at all.
+Anyways, I was hoping that someone could point me towards some more detailed clangd or ccls logs, and maybe some commands which could get me some more informative error messages or validate files in my project
+    
+
+        
+Answer 1: 
+
+    
+    
+The issue appears to be fixed on the latest versions of clangd (11.0) and ccls (0.20190823.6-26-g141aea8a)
+Sam McCall over on the LLVM discord also had this to say
+
+You can get a bit more info by adding -log=verbose to the clangd args, and providing more of the log (things that might be relevant include version, path, preamble build, ...).
+I don't know much about windows stdafx, but I understand it pulls in a lot of stuff, some of which may have tickled a bug in that version.
+
+    
+    
+Title: IntelliJ shortcut isn&#39;t working even after setting it in the Keymap
+Description: 
+    
+    
+                    
+I've set a keyboard shortcut in Keymap to invoke &quot;Data Source from URL&quot; action. Note that I've checked that only this action has Cmd Shift S assigned to it:
+
+You can see the only shortcuts that conflict with the Mac System. And Cmd Shift S is not among them:
+
+I can't invoke this action using the keyboard shortcut. I've tried configuring other shortcuts but it didn't work. Note I can invoke it from the Action search popup:
+
+
+However, I want to do it with a keyboard shortcut.
+I am used to configure keyboard shortcuts in IDEA. Action responsiveness never happened to me when using IDEA. I am wondering why this action keyboard shorcut configuration isn't responsive?
+    
+
+        
+Answer 1: 
+
+    
+    
+It should work and seems to be a bug. Please, file a new issue and provide complete logs archive.
+    
+    
+Title: Can I run and develop a python program from another computer?
+Description: 
+    
+    
+                    
+So, I want to be able to write Python code in my Visual Studio Code on my Windows PC. On my network is a raspberry pi 4, which I would like to execute said code on and receive any errors or output from. 
+
+Is it possible for me to write some python code on my Windows PC, "run" it on the Raspberry pi, and receive any outputs of the program on my Windows PC? 
+
+The reason I wish to do this is that Visual Studio Code generally helps me write any code, and it is more time consuming for me to use other IDE's, and my code uses PyBluez, something I can't just test on my Windows PC (which has no Bluetooth module)
+
+I hope my question is in the right format and such! This is my first time posting! Any comments appreciated! 
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes you can do that, but it might not be very straight forward. In order to achieve this, you need your Raspberry Pi to be on the same network as your Windows PC (i.e. on the same WiFi network or connected via Ethernet). Then you need to get the IP address of your Raspberry Pi through the following command:-
+
+ifconfig -a
+
+
+The IP address will be of the following format: W.X.Y.Z
+
+Now from your Windows PC, you can send your python script/scripts through the following command from cmd:-
+
+scp script.py pi@W.X.Y.Z:/home/
+
+
+And then you can access your Raspberry Pi and run the program by sshing into it through the following commands from cmd:-
+
+ssh pi@W.X.Y.Z
+
+
+You'll need to enter the Raspberry Pi's password for both commands above, but after that you should have your script on your Pi and you should be able to run it there from your Windows PC. 
+
+The links below have more verbose explanation:-
+
+
+https://www.raspberrypi.org/documentation/remote-access/ip-address.md
+https://www.raspberrypi.org/documentation/remote-access/ssh/scp.md
+https://www.raspberrypi.org/documentation/remote-access/ssh/
+
+
+I hope this helps.
+    
+    
+Answer 2: 
+
+    
+    
+It seems that my answer was to use the Remote Development pack on Visual Studio Code (it's an extension) to ssh into my raspberry pi. It's worked well for me for the past few days, and I highly recommend it. It allowed me to access the entire sd card and access any files I need to, while also giving me an SSH terminal and run the program ON the other machine.
+
+For anyone who does this; set up the whole ssh key thing, to stop having to give the password to the pi so often. 
+
+The scp command would also work, I think, but is more complex than what I want to do.
+
+Thank you so much for the answer, JL Peyret!
+    
+    
+Title: Getting Minizinc output as .txt from IDE
+Description: 
+    
+    
+                    
+Imagine I ran a .mzn with .dzn and got an output in IDE as follows:
+
+Supplier01,100,100,100,100,100,100,100,100,100,100,100,100
+Supplier02,200,200,200,200,200,200,200,200,200,200,200,200
+Supplier03,40,49,359,834,1067,1377,334,516,761,1001,1251,1583
+Supplier04,500,500,500,500,500,500,500,500,500,500,500,500
+Supplier05,161,200,200,200,200,200,200,200,200,200,200,200
+Supplier06,500,500,500,500,500,500,500,500,500,500,500,500
+----------
+==========
+
+
+Is there any way that I can generate this output in a .txt or .csv file in a preferred location on my computer? I know that we can perform this in command prompt, but is there any way we can do using the IDE it self?
+    
+
+        
+Answer 1: 
+
+    
+    
+The MiniZinc IDE currently does not include functionality to export solutions for other applications.
+
+The current expectation is that if you want to integrate MiniZinc with other applications that you would use something like MiniZinc Python, iMiniZinc, or the command line tools, to facilitate the connection. In your case using MiniZinc Python or iMiniZinc might be a good solution since Python can generate csv files using the csv module. If you want to see and interact with the solution as well as outputting the csv file, then iMiniZinc can provide the right tooling in Jupyter Notebook to do both.
+
+If you are very happy with the MiniZinc IDE and you want to continue using it, then the other option would to just minimize the inconvenience. Your output statement already provides the solution in csv style. So the only remaining part is making the file. The MiniZinc IDE can open .csv files. So my suggestion would in this case be to create an empty .csv file, open it in the IDE. Once you get the solution from your instance in the output window, then you copy directly into the file.
+    
+    
+Title: What&#39;s the difference between &ldquo;keymap&rdquo; and &ldquo;shortcut&rdquo;?
+Description: 
+    
+    
+                    
+When I was using some IDEs, I found two different things that seem to mean the same thing. They are "keymap" and "shortcut", so what is the difference between them?
+    
+
+        
+Answer 1: 
+
+    
+    
+As per my understanding, Every shortcut will have keymap. To have a shortcut, you need to map one or more keys to it. Shortcut is what and keymap is how.
+
+Let us say you want to clear your terminal using Ctrl+K. Then Clear is your shortcut and Ctrl+K is your keymap.
+    
+    
+Title: Is it possible to see comments from Gerrit plugin in Android Studio?
+Description: 
+    
+    
+                    
+I have installed the Gerrit plugin to Android Studio IDE. It is useful for the code review. 
+
+But when I have my commit and someone reviews it in Gerrit, I see in the plugin, that the comment is there.
+But there is no way how to see what the comment actually says. 
+
+Is there a way, how to see the content of these comments inside the Android Studio? (either by plugin or some other way)
+
+I suppose it I the same as IntelliJ IDEA, so answers based on that are also welcomed.
+    
+
+        
+Answer 1: 
+
+    
+    
+There are ongoing activities to make this process a little better, more integrated into the editor:
+https://github.com/uwolfer/gerrit-intellij-plugin/issues/243
+https://youtrack.jetbrains.com/issue/IDEA-138302
+But yes, you can see which files has comments from Gerrit in the Gerrit plugin view, to the right.
+
+Right click file and choose Diff and you will find the comment in the diff view.
+
+Mouse-over the &quot;text&quot; icon next to the line number to see the comment.
+
+    
+    
+Answer 2: 
+
+    
+    
+Yes it is also same for IntelliJ IDEA
+    
+    
+Title: How to get IDE to recognize methods used by Laravel Routes? (PhpStorm)
+Description: 
+    
+    
+                    
+PhpStorm uses yellow font for method names if it detects that the method is in use elsewhere in the app.
+
+It uses a grey font for unused methods.
+
+This is really helpful for identifying stale code.
+
+But PhpStorm doesn't recognize my methods that I am using in the /routes directory since they are called magically from a string.
+
+For example, I am only using the sendPayout method in /routes, but the chargeCustomer is called directly from within another method.
+
+
+
+For example, this line in /routes/web.php should ideally force the sendPayout method shown in the screenshot to appear in yellow font.
+
+Route::post('/api/send-offer','StripeController@sendPayout');
+
+
+Is there any way to get PhpStorm to recognize this, either by changing settings or using a certain plugin?
+
+I am using PhpStorm 2019.3.1, MacOS Catalina version 10.15.2, and Laravel 5.8. I already have the Laravel plugin installed to PhpStorm.
+    
+
+        
+Answer 1: 
+
+    
+    
+Per @LazyOne's comments, the plugin "Laravel Idea" does solve the recognization issue for all Symfony and Laravel methods that aren't already picked up by PhpStorm's default. I definitely recommend this plugin now that I am using it.
+    
+    
+Answer 2: 
+
+    
+    
+There is special file for this called '.phpstorm.meta'. So you can "map" methods. Read more here: https://www.jetbrains.com/help/phpstorm/ide-advanced-metadata.html
+    
+    
+Title: C++ IDEs will not deduce/auto complete member access on std::array subscript expression in template class
+Description: 
+    
+    
+                    
+class A {
+    class B {
+    public:
+        int gwe = 0;
+    };
+
+    array&lt;B, 3&gt; arr;
+
+public:
+    A() {
+        arr[0].gwe; // When starting to type 'g', IDE will suggest autocompletion for 'gwe'
+    }
+};
+
+
+Now if you put on top of that: template&lt;typename T&gt;
+The IDE will not autocomplete when trying to access a member of the array element.
+Let it be Xcode, CLion, I have not tried VS but I am convinced it would also replicate the behaviour.
+I have not experienced this before using generics with other languages such as C#, Java or Swift.
+So why this has to happen to C++ exactly?
+    
+
+        
+Answer 1: 
+
+    
+    
+Parsing C++ correctly is an extremely complicated and time consuming problem.
+
+If IDEs were to do it perfectly it would take as much time as compiling the application and you would get annoyed that your IDE was unresponsive.
+
+So, to be responsive, IDEs do limited parsing in finite time, which means they don't always get it right.
+
+Autocomplete and similar features are there to assist/help, but they are not the final truth - don't expect them to be.
+    
+    
+Answer 2: 
+
+    
+    
+Not aware about this specific context. However from my experience with other IDE's, I can think of a possibility. Do check whether your IDE version supports autocomplete for C++11 features as std::array is feature which works with c++ 11 onward. 
+check whether you need to install additional plugins to enable autocomplete for c++11 features. 
+    
+    
+Title: How Do I change the jdk of the install4j 7.0.11 IDE?
+Description: 
+    
+    
+                    
+our project uses helper classes, compiled with java11, which are used in installer scripts. When running the debug installer I get messages like
+
+java.lang.UnsupportedClassVersionError: com/microsoft/sqlserver/jdbc/SQLServerDriver has been compiled by a more recent version of the Java Runtime (class file version 54.0), this version of the Java Runtime only recognizes class file versions up to 52.0
+
+
+So I think I have to change the jdk of the ide to java11, but how can I do that?
+    
+
+        
+Answer 1: 
+
+    
+    
+Ok I fgound it myself in the install4j help: https://www.ej-technologies.com/resources/install4j/help/doc/concepts/scripts.html
+There can be configured an external jdk for cscript compiling. Since install4j 7.0.7 Java-10 and Java-11 is supported.
+    
+    
+Title: How can I limit DBeaver Data Editor to limit result set size?
+Description: 
+    
+    
+                    
+How can I limit DBeaver Data Editor to limit the result set size?
+I know the default is 200 and we can configure it in settings/preferences for the &quot;Data Editor&quot; section but this filter seems to be applied after all the results are already fetched from remote DataBase to local.
+
+How can I limit this 200 before sending the request to the Database itself?
+Meaning, instead of issuing a &quot;Select * from...&quot; to the Databases and doing the 200 results set a filter on local, I want to configure DBeaver to send &quot;Select * from... LIMIT 200&quot; to remote DB.
+    
+
+        
+Answer 1: 
+
+    
+    
+By checking the "Use SQL to limit fetch size" check box you should get the effect you want.
+
+
+
+You can verify dBeaver is behaving the way you expect by taking a look at the query in the dBeaver execution log. You will see "LIMIT" has been appended to your query.
+
+
+
+https://github.com/dbeaver/dbeaver/wiki/SQL-Editor#results-panel
+
+It's probably worth noting that you may also want to consider de-selecting the "Refresh data on next page reading" option or the "Auto-fetch next segment" option if you want to guarantee LIMIT is always selecting the set amount of rows. With both of these options turned on in addition to "Use SQL to limit fetch size", dBeaver will rerun the full result set as you scroll through your data and pass the last row. For example, when you execute the query the first time it will run with "LIMIT 0, 200", returning the first two hundred rows. When you scroll past row 200, a new query will be executed, with "LIMIT 0, 400". When you pass row 400 a new query will be run with "LIMIT 0, 600" and so on.
+    
+    
+Title: Is there any sort of &ldquo;Codelet Template&rdquo; in KDevelop?
+Description: 
+    
+    
+                    
+Everytime I need to input a piece of code such as "switch .. case" or "declaring a class", I desire a way I can rapidly achieve it by hitting a shortcut.
+
+In many IDEs, we can do it by pressing some shortcut keys, and IDEs will paste  a little piece of pre-defined code at the position of the focuse.
+
+Is there any similar way in KDevelop?
+I'm not meaning the File/Project Templates here.
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, use the 'Snippets' plugin distributed with Kate.
+
+
+Install the Kate editor. Several of the plugins included can also be used in KDevelop; there's been some discussion of distributing those separately but it hasn't happened yet.
+In KDevelop, use the menu Window -&gt; Add Tool View and select 'Snippets'.
+There will be a 'Snippets' toolview. Click on entries to paste them, or you can bind a shortcut. You can add new entries and categories.
+
+
+
+    
+    
+Title: Can&#39;t find or load main class to make a Javafx jar in IntelliJ IDEA
+Description: 
+    
+    
+                    
+I made my first Javafx Application in IntellIJ IDEA it runs perfectly but i have a problem.
+
+I can't make an executable jar for this Application.
+To be more explicit whenever i try to search for the main class i can't find it in the artifact tab.
+
+I tried making a normal jar (in the artifacts menu they give you the choice between normal jar and javafx application jar) and the main is detected.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+It's a known issue. You can type the fully qualified class name manually as the workaround (foo.bar.MyClass).
+    
+    
+Title: How to really work in team on React Native project?
+Description: 
+    
+    
+                    
+How do you work in team on react native projects?
+
+I'm working in Team of 2 people and having a lot of issues with working on the same project.
+
+I don't understand how to properly create an environment so we can sync our code between each other while working on the same project. Now, we create a git repo with /ios and /android folders, but the thing is: the /ios folder always needs to be changed, because it links to the computer that was last building the project. 
+
+For example: we are working at the same time on different .js files and add a new npm dependency and we wish to sync our changes, so we commit changes to the Git repo and try to sync, this is where our pains begin.
+
+The one need downloading the changed has to go to Xcode and manually update all the Framework Search Paths, Header Search Paths, delete libraries that Xcode doesn't see and then add them again.
+
+I know it's moreof an Xcode problem, but I didn't see any detailed guide about team syncing in projects. I know that at Facebook people are doing a lot of cooperative work and I'd appreciate some input over our issues!
+    
+
+        
+Answer 1: 
+
+    
+    
+If you are using git, you can configure your .gitignore-file to prevent committing xcode-specific stuff and other configuration files.
+
+I can highly recommend gitignore.io, which is a "web service designed to help you create .gitignore files for your Git repositories"  [Source].
+
+You can for example type in XCode (or AndroidStudio, ReactNative, Gradle, etc.) and it will automagically generate a .gitignore file for you. 
+    
+    
+Title: Workflow for using command line R?
+Description: 
+    
+    
+                    
+I am used to using R in RStudio. For a new project, I have to use R on the command line, because the data storage and analysis are only allowed to be on a specific server that I connect to using ssh. This server doesn't have rstudio-server to support remote RStudio sessions.
+
+The project involves an extremely large dataset, and some pre-written code to load/format the data that I have been told to run using "source()" before I do anything else. This takes several minutes to run and load the data each time.
+
+What would a good workflow be for something like this? Editing my code in a .r file, saving, then running it would require taking several minutes to load the data each time. But just running R in an interactive session would make it hard to keep track of what I am doing and repeat things if necessary.
+
+Is there some command-line equivalent to RStudio where you can have an interactive session but be editing/saving a file of your code as you go?
+    
+
+        
+Answer 1: 
+
+    
+    
+Sounds like JuPyteR might be your friend here.
+The R kernel works great.
+
+You can use it on a remote server either with exposing an open port (and setting up JuPyteR  login credentials)
+Or via port forwarding over SSH.
+
+It is a lot like an interactive reply, except it holds state.
+And you can go back and rerun cells.
+(Of course state can be dangerous for reproduceability)
+    
+    
+Answer 2: 
+
+    
+    
+For RStudio you can launch console and ssh to your remote servers even if your servers don't use expensive RStudio for servers platform. You can then execute all commands from R Studio directly into the ssh with the default shortcut key. This might allow to continue using R studio, track what you're doing in the R script, execute interactively.
+    
+    
+Title: OPEN_CV ERROR not enough values to unpack (expected 3, got 2) [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        Want to find contours -&gt; ValueError: not enough values to unpack (expected 3, got 2), this appears
+                            
+                                (2 answers)
+                            
+                    
+                Closed last year.
+        
+
+
+    
+
+for, 
+ image, contours, hierarchy =  cv2.findContours(erosion,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
+
+
+It is showing this error:
+
+ValueError: not enough values to unpack (expected 3, got 2)
+
+
+Python version: 3.7.2
+OpenCV version: 4.0.0
+    
+
+        
+Answer 1: 
+
+    
+    
+Remove the comma after the for loop, i'm surprised you are not getting  syntax error from that. I'm not sure what you need a for loop there in the first place. If you want to iterate over each of the values that return from findContours do that after you have assigned the values to a variable. It looks like you don't pass the image as one of the values to unpack. Try rewriting the line as follows:
+From the docs  
+
+contours, hierarchy = cv2.findContours(erosion,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
+
+
+Assuming erosion is the name of the image. The reason why you are getting that error is because you are assigning 3 variables to a function and only outputs 2 (contours and the hierarchy). So python is expecting 3 outputs from findContours but only returning two, thus leading to the error you are getting. 
+    
+    
+Title: pip version in Pycharm2018
+Description: 
+    
+    
+                    
+I am having hard time to install and add "cv2" module in PyCharm2018, to my project. 
+
+When I run pip install cv2, I am notified that my pip version is 10.0.1. I have check forum how to upgrade it, which i did. But I am still prompted by same message, that my pip is version 10.0.1
+
+console
+
+Project settings are showing 18.1, and python -m pip install pip confirms same, that version is 18.1. I have restarted IDE and also computer, same story. 
+
+settings
+    
+
+        
+Answer 1: 
+
+    
+    
+There is nothing wrong with your pip, the problem is cv2, the package name is different, try this:
+
+pip install opencv-python
+
+
+So now go ahead you can import cv2.
+
+and about that warning, you can turn it off using This Link
+    
+    
+Answer 2: 
+
+    
+    
+Try using on terminal:
+
+pip3 install opencv-python
+
+
+For Python 3.6:
+
+python -m pip install opencv-python
+
+    
+    
+Title: How to add .conf files to Pycharm
+Description: 
+    
+    
+                    
+I am running a Django Project in PyCharm and deploying it to EC2 in AWS. The guide tells me to use nginx I have to create a file called nginx_someName.conf however no matter how much I try I can't get create a .conf file and write in it. I tried to download Scala to Pycharm using the question below IntelliJ IDEA plugin to fold .conf files? but somehow the Scala plugin is no longer available on Pycharm. (Scala was supposed to be a plugin that allows .conf files)
+
+However I am able to create .config files So I named my file nginx_someName.config Is it the same thing    
+
+
+  Image below in relation to @yole's solution
+
+
+
+Following @yole's advise related image Reached here now..
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Click this button as shown on the screenshot:
+
+
+    
+    
+Title: IntelliJ IDEA: How do I disable / ignore specific auto import suggestions?
+Description: 
+    
+    
+                    
+For context, I'm writing a Node-TypeScript project and using IntellIJ Ultimate 2018.1.5
+
+All was well until I started using the Node AWS SDK. Now, every time I specify a Function type, IDEA keeps pestering me to import it from aws-sdk/clients/greengrass.
+
+
+
+How do I tell IntelliJ that I just want ordinary, inbuilt, Functions, not "Greengrass" functions?
+    
+
+        
+Answer 1: 
+
+    
+    
+Such prompts may appear if you have a file in your source code/project dependencies that exports a module with a name matching built-in object name. For example, node_modules/aws-sdk/clients/greengrass.d.ts exports interface Function, so IDEA suggests importing it. For such names conflicts, excluding one of these conflicting libraries from indexing is the only way to go for now.
+For example, you can try marking the corresponding .d.ts/.js file as plain text (Mark as plain text in file right-click menu)
+
+We have a feature request to always prefer built-in types in such cases, WEB-34452, please feel free to vote for it
+    
+    
+Title: &ldquo;Preview Transform&rdquo; gives error message in VS2017
+Description: 
+    
+    
+                    
+I recently upgraded to Visual Studio 2017. For my WCF-Web-Service projects I have different config files for different publish settings.
+
+When I click on the "Preview Transform" entry in the context menu I get the error message:
+
+The assembly '' containing the transform build task could not be found.
+
+
+However, if I publish the Service, the transformation is applied.
+
+The curious thing is, I have two development PCs. I upgraded to Vs2017 on both and I get this error on BOTH.
+    
+
+        
+Answer 1: 
+
+    
+    
+I found the solution. This seems to be a Bug in Visual Studio 17 v15.8.1. Upgrading to v15.8.2 resolves this issue:
+
+https://docs.microsoft.com/en-us/visualstudio/releasenotes/vs2017-relnotes#15.8.2
+
+
+  
+  Preview Transform gives error.
+  https://developercommunity.visualstudio.com/content/problem/310891/preview-transform-gives-error.html
+  
+
+    
+    
+Title: Running Java file in IntelliJ
+Description: 
+    
+    
+                    
+I need some help with IntelliJ. I am fairly new to programming, and I have some experience with the IDE but I am by no means a know-it-all when it comes to IntelliJ. 
+
+I have 3 Java files (without their respective class files). When I open intelliJ it asks me: 
+
+
+Create New Project
+Import Project
+Open
+Check out from Version Control
+
+
+I click on open, IntelliJ opens up a file location, I click on one of the three Java files to open, and I drag the other two one by one (they open in their separate tab). 
+
+I cannot figure out how to run them. It is likely that I need to create run configuration and I don't know how to do it. I know how to create a new project and get everything working, but I don't know how I can get the files working if I just open them. Can someone tell me how to create the run configurations to run the files? Please and thank you. 
+    
+
+        
+Answer 1: 
+
+    
+    
+IntelliJ IDEA is a great IDE!
+
+This is what I would do:
+
+
+Select File/New/Project... in the menu. You will get a new modal window.
+Then select Java on the left, make sure that you have your JDK selected (top right), it not there, create it right from the window. Click 'Next'.
+Just go 'Next' on the 'create project from template' step.
+Then type your project name and select a folder for it. It will create a new project.
+After that, copy your java files into /src folder using drag-and-drop in IDEA or just a file manager you like. 
+Now you have an IDEA project with your source code in it. You might need to sync your IDEA project, use File/Synchronize for that.
+Finally, you can right click on you java file and 'Run' it from IDEA.
+
+
+It the project fails on compilation you might need to add required imports and libraries, but that depends on your code. IDEA will highlight all the errors.
+    
+    
+Title: Visual studio 2017 - IDE black parts
+Description: 
+    
+    
+                    
+Some areas in Visual Studio 2017 are black(not refreshed) when i open it or i swich tabs. Text is showed again if i select it.
+
+
+
+The biggest issue is in aspx files - it shows previous aspx file. When i hover over some menu options its fixed for that menu. Or if i change size of window its fixed but some areas stays black - line numbers.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Please try following this Microsoft thread to rectify the issues with the IDE.
+    
+    
+Title: VB6 - output versions &ldquo;Majorver minorver a zero and RevisionVer&rdquo; - how can I change that zero? [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        How to set complete build number in VB6 (Major.Minor.Build.Revision)
+                            
+                                (2 answers)
+                            
+                    
+                Closed 2 years ago.
+        
+
+
+    
+
+I've googled this. Searched here for it. Closest I came to the answer is a guy was asking the same question back in 2003 in another forum! 
+
+in the MAKE tab of the project properties in the VB6 IDE, you can set the version number of your build. Major Version, Minor Version and Revision. So say you set these three to 8, 6, and 2  - you'd expect to see your exe to have its version set to 8.6.2 - right?  
+
+NOPE. What you get is 8.6.0.2 !!
+I want to set that zero to be 2 - But I have yet to find out what that third place position is called. 
+
+Any of you long time VB6 programmers have a solution to this issue? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Thanks to @jac I found VBAdvance from the thread he pointed me to. and it does exactly what I want and more. 
+    
+    
+Title: Changing default window position in PyCharm
+Description: 
+    
+    
+                    
+How do I change the default window position? The output window when I run a script defaults to the bottom, but I prefer it to the left, so every time I need to click through this menu. I haven't been able to find such a setting, or a guide online. Any help?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You can save your current tool window layout as the default tool window layout by going to Window -/strong/ppa href="https://i.stack.imgur.com/vvJKT.png" rel="nofollow noreferrer"img src="https://i.stack.imgur.com/vvJKT.png" alt="enter image description here"/a/ppa href="https://www.jetbrains.com/help/pycharm/manipulating-the-tool-windows.html" rel="nofollow noreferrer"/a/p/div

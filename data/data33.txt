@@ -1,0 +1,1895 @@
+Title: Eclipse C++ content assist, auto activation
+Description: 
+    
+    
+                    
+I have noticed in Eclipse that content assist kicks in after inserting -/pp/pp/p/div
+Answer 1: 
+
+    
+    
+I havn't seen a setting to auto-activate the content assist, for other than . :: and -kbd/kbdkbd/kbd/p/div
+Title: To find an execution line-counter for Java IDE
+Description: 
+    
+    
+                    
+Is there any plugin to some IDE that show the number of times a line is run in the code?
+
+Eclipse's ECLemma does not seem to have a setting to show execution times at the left-hand-side bar, like in the service WebCat.
+    
+
+        
+Answer 1: 
+
+    
+    
+I think the eclipse test and performance tools plateform would be able to help you with this. It includes a profiler which will instrument your code and provide the information you want. 
+Careful with profiling, it can be a heavy performance hit depending on how many functions/classes you monitor
+    
+    
+Answer 2: 
+
+    
+    
+Have a look at the breakpoint properties in eclipse may be you can configure a variable to capture the hitcount
+    
+    
+Answer 3: 
+
+    
+    
+What's wrong with writing to a log file or to screen or using a counter?
+    
+    
+Answer 4: 
+
+    
+    
+The focus of code coverage is only if a line is executed or not. Nothing more.
+
+To get counters you would have to look at profiler software and not code coverage.
+
+There are plugins for both Eclipse and Netbeans. I am not sure if they show counters per line, but I think that they show counters per method, which might be what you want...
+
+
+(source: free.fr)  
+    
+    
+Answer 5: 
+
+    
+    
+In NetBeans 6.8 there is a nice code coverage tool which does pretty much that what you want but actually only for ruby. (right click project -/ppa href="http://java-source.net/open-source/code-coverage" rel="nofollow noreferrer"/a/p/div
+Title: Eclipse IDE fail to launch with JVM Terminated. Exit code=-1
+Description: 
+    
+    
+                    
+I was having an issue with Eclipse IDE failing to launch with following error message: "JVM Terminated. Exit code=-1"
+
+After some googling, I've semi-unintentionally found the solution and was able to get the IDE to launch correctly.  What I did was to set -Xmx JVM argument in eclipse.ini to a value that is lower than the default value specified (-Xmx512m).  Although I was able to get the IDE to launch, I was curious as to why it was happening and why this solution worked.
+
+Here are some environment info:
+Eclipse IDE: eclipse-rcp-galileo-SR1-win32
+JVM: Java(TM) SE Runtime Environment (build 1.6.0_10-b33)
+Physical Memory: 2GB
+
+Available memory at launch time for /pp/pprecode/code/prep/pp/p/div
+Answer 1: 
+
+    
+    
+Try out this one
+
+C:\dev\IDE\eclipse332\eclipse.exe -vm C:\dev\JDK\j2sdk1.4.2_06\bin\javaw.exe  -vmargs -Xmx1024M -Xms512M
+
+I also had problems with more memory. But this was working for me. 
+I am sorry, but i do not know how to configure it correctly.
+    
+    
+Answer 2: 
+
+    
+    
+I had the same problem. You must be running 64-bit Windows. For some reason Eclipse is looking for 32-bit Java Run time so you need to download and install 32 bit version. Also make sure Path Variable in Environment variables is set to 32 Bit Path
+    
+    
+Answer 3: 
+
+    
+    
+This blog mentions a similiar problem and provides a solution. And he's referring to this forum thread discussing the same exit code -1 issue with eclipse.
+
+(Looks like I'm happy that my eclipse didn't crash like this .. yet)
+    
+    
+Answer 4: 
+
+    
+    
+I managed to launch studio by editing ini and reducing XXMaxPermSize to 128m. 
+
+--launcher.XXMaxPermSize
+128m
+--launcher.defaultAction
+openFile
+-vmargs
+-Xms512m
+-Xmx1024m
+
+    
+    
+Answer 5: 
+
+    
+    
+I use the following to start eclipse. It's working:
+
+E:\tools\eclipseR30\eclipse.exe -data E:\workspaces\r30 -vm C:\Java\jdk1.5.0_16\jre\bin\javaw.exe -jvmargs –Xms512M –Xmx512M
+
+
+Or you can add -vm C:\Java\jdk1.5.0_16\jre\bin\javaw.exe in eclipse.ini.
+    
+    
+Answer 6: 
+
+    
+    
+I managed to fix this by installing 32-bit JRE. Looks like eclipse is looking for 32-bit version
+    
+    
+Answer 7: 
+
+    
+    
+i got this JVM terminated. Exit code=-1 message to, after alot of google search i found out that my eclipse was only for 32 bit(europe 3.3.2) and i had windows 64 bit, so the path to my jdk was to my 64 bit programfiles folder, not to programfile(x86) folder and i changed that in my eclipse.ini to:
+
+-showsplash
+org.eclipse.platform
+--launcher.XXMaxPermSize
+256M
+-vm
+C:\Program Files (x86)\Java\jdk1.7.0\jre\bin\server\jvm.dll
+-vmargs
+-Dosgi.requiredJavaVersion=1.7
+-Xms40m
+-Xmx256m    
+
+i dont know if its ontopic but if someone get the same message i hope this helps:)
+    
+    
+Answer 8: 
+
+    
+    
+I was also getting the same error, you can fix it by following the below steps.
+
+
+Open the 'eclipse.ini' file in the notepad
+Search for '-vm' if found change the value as '-vm C:\Program Files\Java\jdk1.6.0_23\jre\bin\javaw.exe' (depending on your java installation path)
+if you didn't find '-vm' in the 'eclipse.ini' file, then add the '-vm C:\Program Files\Java\jdk1.6.0_23\jre\bin\javaw.exe', anywhere I pasted under the '-showsplash'.
+launch the eclipse, by clicking on the 'eclipse.exe'.
+
+
+Let me know if still not working!
+    
+    
+Answer 9: 
+
+    
+    
+I had a similar issue with my Clear Case Remote Client in Windows.
+
+All I had to do is to open the "ccrc.ini" usually available at "C:\Program Files\IBM\RationalSDLC\clearcase\RemoteClient" and update the below argument to refer from JRE on my desktop
+
+OLD Entry:
+-vm
+C:\Program Files\IBM\RationalSDLC\common\JAVA5.0\jre\bin\j9vm\jvm.dll
+
+New Entry:
+-vm
+C:\Program Files\Java\jre1.6.0_17\bin\javaw.exe
+    
+    
+Answer 10: 
+
+    
+    
+With my personal experience, this issue happens for many reasons like JVM Supported version, Heap size allocation, change in eclipse ini file that doesn't match with the System configurations, etc. 
+
+I faced the same such issue for one reason, Increased my Maximum heap size to -Xmx1024m from -Xmx256m in my eclipse.ini file for some heap size issue.
+
+But after some time it started giving me issue stating "Eclipse IDE fail to launch with JVM Terminated. Exit code=-1". I think it happened because of my available heap size in my system was not sufficient to open the Eclipse due to the other processes that was running in my System. Just for a quick fix i changed the -Xmx1024m to -Xmx512m and then it started working fine.
+
+-Karthik Kornalies
+    
+    
+Answer 11: 
+
+    
+    
+i had same issue . I have 64 bit windows 7.I un-installed 64bit java and jre .
+tried with 32 bit java and jre and issue has been fixed.
+    
+    
+Answer 12: 
+
+    
+    
+Try out these things:
+
+
+First set the proper requirements as per your RAM size in the ini file.
+Check whether you have the proper version of the JVM and the class path is set correctly in your environment variables as well as the one in the ini file.
+Try running it from the command prompt rather than double clicking on the exe.
+
+    
+    
+Answer 13: 
+
+    
+    
+@blissfool: You are getting this error because available user heap might be lesser than the heap mentioned(i.e. 512 mb).
+That's why this was working when you reduced the heap size.
+    
+    
+Answer 14: 
+
+    
+    
+Verify your Java/JDK/Jre installation path.  The identical problem was resolved on Ubuntu by running:
+
+$ sudo update-alternatives --config java
+
+
+Then picking an alternate of the multiple java version installations.  Apparently one has some flaw.
+
+Ubuntu's update-alternatives sets all the needed path values automatically in Linux.  For Windows, you might have to check them manually or perform new JDK/Jre installation to ensure the installation and path integrity.
+    
+    
+Answer 15: 
+
+    
+    
+
+  cannot-run-eclipse-jvm-terminated-exit-code-13
+
+
+Above error can be resolved in simple way.
+
+1.Have a look in system variable path. We will get:
+
+C:\ProgramData\Oracle\Java\javapath; 
+
+
+2.Remove or delete from "path" and check java version on cmd prompt , it should match with your java home.
+Now start eclipse, and it will work.
+    
+    
+Answer 16: 
+
+    
+    
+I downloaded the latest visual studio redistributable package at http://www.microsoft.com/en-us/download/details.aspx?id=5555 and it seems to resolve the issue. I DL both the 32bit and 64bit for what it was worth.
+    
+    
+Answer 17: 
+
+    
+    
+It looks JVM problem. You can try to download JRockit and set your env variable to JRockit JVM. It should fix the problem.
+    
+    
+Title: Netbeans Go To File Search Dialog Is Very Slow
+Description: 
+    
+    
+                    
+The Netbeans "Go To File" feature (accessed with shift+alt+o) is extremely slow compared to the same feature in Eclipse, which is fast enough to do as-you-type matching. It seems that Netbeans is searching my entire project every time I return to this dialog. I updated to the latest Netbeans and this is still happening.
+
+Am I doing something wrong or missing an option somewhere? Is there any way to speed this up or have it be instant like the Go To File function in Eclipse?
+    
+
+        
+Answer 1: 
+
+    
+    
+From Peter Blaha, 
+
+
+  we are aware of the 'Go To file'
+  performance. Therefore, we consider
+  this improvements in our development
+  plan for NetBeans 7.0, see the section
+  Performance
+
+    
+    
+Answer 2: 
+
+    
+    
+You can have a look here too:
+http://forums.netbeans.org/post-30720.html&amp;highlight=slow
+    
+    
+Title: is there an easy way to import a black-on-white color scheme in Eclipse
+Description: 
+    
+    
+                    
+Visual Studio has a way to import, export your color settings.
+
+Does Eclipse have something similar?
+
+I'm looking for the "perfect" color scheme in Eclipse that's easiest on the eyes.  For me, that simply means a black background (so I'm not staring into a bright light bulb all day).
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+The simplest way is to change all the colors from the preferences, and then save these so they can be reused by others eclipse sessions (or in other workspaces).
+
+
+
+So a good start is to go to preferences-&gt;Editors-&gt;Text Editors.
+
+Then go towards the bottom half and you should see "Appearance color options", select "Background", uncheck "System Default" and you can pick the color you want.
+    
+    
+Answer 2: 
+
+    
+    
+The easiest way is to find a user, who uses the color schema you want to have. He can export his preferences into a file. This file you can import into your workspace.
+
+When you dont find this person, you have to create it by your own like VonC describes.
+    
+    
+Title: Extending JavaScript syntax in Monaco Editor with full integration
+Description: 
+    
+    
+                    
+I'm trying to extend Monaco Editor to allow users to write in a hybrid of JavaScript and another language, using delimiters to separate them within the same file, similarly to how Markdown allows writing multiple languages using fenced code blocks.
+
+The difference is that I want to keep all the other IDE features that Monaco has built in for JavaScript, such as linting (done via diagnostics), smart auto-completion, jump-to-definition, auto-formatting helpers, and every other IDE feature that comes with Monaco's built-in JavaScript mode. I'd like these features to still work within the JavaScript portion of the code that Monaco is editing, and be disabled for the sub-language portion.
+
+My first attempt was to call setMonarchTokensProvider, passing in a modified version of TypeScript's tokenizer rules. Specifically, I was able to add the beginning-fence delimiter to the root rule and create a new rule for the sub-language in the same way the documentation for Monarch (Monaco's syntax highligher) describes, using @nextEmbedded. (For testing purposes, I've been hard-coding CSS as the embedded language.)
+
+When I call setMonarchTokensProvider like this for the language "javascript", it completely ignores this syntax highlighting tokenizer, and colors the code-fences of CSS as invalid JavaScript, indicating that you cannot override the built-in JavaScript mode this way.
+
+When I call setMonarchTokensProvider with a new language (e.g. "mylang") and set the editor to use that language, it provides correct syntax highlighting (!) for this CSS-in-JS hybrid language. But all other advanced features that were found in the JavaScript mode are no longer present. The editor didn't have any smart auto-completion for methods defined on classes in the same file, or any in-editor error-reporting for invalid syntax, or any of its trademark JavaScript IDE features.
+
+So my next attempt was to modify the pre-bundled Monaco code's TypeScript definition to include my custom syntax highlighting rules. This correctly highlighted my CSS-in-JS code completely (!), when setting the language to "typescript", and left all the other features intact (!) including diagnostics reporting (live-validation and underlining of errors), auto-completion, all of it! (I didn't try it with "javascript" but it's safe to assume it probably works or is trivial to get it working, since JavaScript is actually implemented as a variant configuration of the TypeScript mode in Monaco.)
+
+Unfortunately, it also considered the entire CSS portion of it, including the fence around it, to be invalid JavaScript code.
+
+
+
+I know that this is theoretically doable, because within HTML mode, you can embed CSS or JS with full support for proper validation and auto-completion and every other IDE feature; basically, every sub-language in an HTML file works like it's in its own file: HTML features in the root of the file, CSS features within style tags, JS features within script tags.
+
+But digging into the TypeScript plugin's implementation inside Monaco, it's not clear where to begin editing this, either as a user of Monaco the library, or by forking it and patching it up where necessary. I started at trying to modify the DiagnostcsAdapter [sic] and tracing where it's actually implemented, but I got stuck two function-calls deep, where it seems to push a promise of syntax validation that returns a value that's used later, but the implementation of getSyntacticDiagnostics just shells the work out to some other implementation that I can't find anywhere else in the repo, nor in the monaco-languages repo or the vscode repo.
+    
+
+        
+Answer 1: 
+
+    
+    
+I make the similar thing. My solution is to place non-JS code inside a block comment:
+
+regularJsCode()
+/* 
+[your-syntax-identifying-start-token]
+place any syntax you want here
+[your-syntax-identifying-end-token]
+*/
+regularJsCode()
+
+
+Then you can process it with your tools, parsers, IDE extension etc. And the coolest part you can make VSCode to syntax-highlight it like you want so it won't seem like some hack.
+
+This approach is preferrable because your JS file still remains a 100% valid JS file.
+
+If you still don't want to put your syntax into comments, then you should create your own file extension like .jsx/.tsx. In practical, VSCode terms this means you need to create VSCode extension with language server and stuff. This is not so easy, but the documentation is good. You could assemble your own JS highlighting code inside your VSCode extension using language server: https://github.com/sourcegraph/javascript-typescript-langserver
+    
+    
+Answer 2: 
+
+    
+    
+According to the creator of Monaco:
+
+
+  Architecturally, you can do the following:
+  
+  
+  use monaco-editor-core directly
+  define a new language to the editor
+  fork monaco-typescript and change it to work with your newly defined langauge id. Then, modify the TS language host code to not pass the original models to TypeScript, but first run a preprocess which strips your custom language out of the text, and then only passes on valid TypeScript to the TS compiler. One idea is to replace each character that you remove with a space. This will leave all the position/offset computation work without any effort on your side.
+  
+  
+  Good luck!
+
+    
+    
+Title: express app.get function gives &ldquo;Argument types do not match parameters&rdquo; error
+Description: 
+    
+    
+                    
+The following code...
+
+app.get('/basic', (req, res) =&gt; {
+    res.send({message: 'hello'})
+})
+
+
+generates a message Argument types do not match parameters in WebStorm 2016.2.4
+
+
+
+The relevant dependencies section in my package.json is:
+
+"dependencies": {
+  "@types/body-parser": "0.0.32",
+  "@types/express": "^4.0.33",
+  "@types/lodash": "^4.14.34",
+  "@types/node": "^6.0.38",
+  "body-parser": "1.15.1",
+  "dotenv": "2.0.0",
+  "express": "4.13.4",
+  "lodash": "^4.13.1",
+  "typescript": "^2.0.3"
+},
+
+
+When I remove the @types/express package, WebStorm no longer gives the error message, but the TypeScript compiler gives a error TS2307: Cannot find module 'express' message.
+
+Is there a way to configure this differently or is WebStorm just playing catch-up with TypeScript 2?
+    
+
+        
+Answer 1: 
+
+    
+    
+Had the same issue. Problem is I installed the typings from dt/express via typings install dt~express and when I looked at the type definition of .get() at the express/index.ts file, there was a mismatch:
+
+get: {(name: string): any;} &amp; IRouterMatcher&lt;this&gt;;
+
+
+This was not what I wanted, and I instead did a typings install express to get the type definitions from npm/express. 
+
+My typings.json file looks like this:
+
+{
+"dependencies": {
+    "express": "registry:npm/express#4.14.0+20160925001530"
+  },
+...
+}
+
+    
+    
+Answer 2: 
+
+    
+    
+TypeScript is unable to find declarations of inner objects properly - 
+Instead of importing express in it entirety and accessing its subobjects, e.g.:
+
+import * as express from "express";
+...
+public app: express.Application;
+
+
+Do  
+
+import { NextFunction, Application, Router } from "express";
+...
+public app: Application;
+
+    
+    
+Answer 3: 
+
+    
+    
+EDIT: This solved itself in Webstorm v2016.3.1
+
+
+
+Before that, a partial solution I had discovered was adding type declarations in the following fashion:
+
+import * as express from 'express'
+
+const app : express.Application | express.Router = express()
+
+    
+    
+Title: Install Android Studio to /opt in Linux (move the 1.9 GB ~/Android/Sdk to /opt)
+Description: 
+    
+    
+                    
+I downloaded the new IntelliJ IDEA-based Android Studio - android-studio-ide-135.1641136-linux.zip.
+
+I unpacked the zip file to /opt/android-studio (it was 425 MB unpacked), and executed /opt/android-studio/bin/studio.sh, which started an Install Wizard that installed 1.9 GB worth of data to ~/Android/Sdk. After that, running studio.sh now starts the Android Studio.
+
+I want to move ~/Android/Sdk to /opt/android-sdk, so it can be shared by all users. Also, the users can't have write access to it, since it's in the root partition.
+
+So is this possible?
+    
+
+        
+Answer 1: 
+
+    
+    
+It's intended to be installed per-user, not for-all-users, the main reason being so that individual users can add/update their SDK components as they see fit -- new versions of things are released pretty regularly. It would be a pain for a user to have to ask an administrator to add a missing API level or grab an update. Also, depending on just how security paranoid you are, you may not be comfortable in general running the Android SDK manager as root.
+
+If that's not an important limitation for you, then you can copy/move the SDK directory to its final home; you don't have to run the installer to place it there. Other than for updates, the SDK doesn't write anything to its installation directory, so it should work once copied there.
+
+Having said all that, the Android tools also have a per-user .android directory in the user's home directory. These can't be shared between users, as it contains per-user preferences and AVDs and such. Because of the latter, unfortunately this directory can get quite large.
+    
+    
+Answer 2: 
+
+    
+    
+decompress Android Studio into /opt, then just do 
+
+sudo chmod 777 /opt/
+
+
+If you're the only person that uses your machine its fine.
+    
+    
+Title: Dark background of tabs in Eclipse
+Description: 
+    
+    
+                    
+I am using standalone Eclipse BIRT Designer Version 2.6.1. No matter what I try to configure in setting, there is still very dark background of all tabs in property editor (see screenshot below). 
+
+I even tried gnome-color-chooser and enabled everything I could and set red color. This changed almost everything, but tabs remained with dark grey background. Also tried to change  Ubuntu theme from Ambience to Radience.
+
+It is quite difficult to work like this. Has anyone seen this? How can I fix it?
+
+
+
+Ubuntu 13.10
+
+Eclipse IDE for Java and Report Developers
+
+Version: Juno Service Release 2
+Build id: 20130225-0426
+
+Details:
+
+  Eclipse IDE for Java and Report Developers
+    Eclipse Platform    4.2.2.M20130204-1200
+      Eclipse Platform  4.2.1.v20130118-173121
+        Eclipse Help System 1.4.1.v20120912-144938
+        Eclipse RCP 4.2.2.v20130129
+        Equinox p2 Provisioning for IDEs.   2.2.0.v20121212
+    EPP Reporting Feature   1.5.2.20130211-182
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use GTK themes. For Gnome 3 Flashback I use clearlooks, but you can use GnomishDark for dark colors.
+To make Eclipse using it, create script with name like eclisec.sh with following command:
+GTK2_RC_FILES=$HOME/.themes/&lt;your-theme-gtkrc-file&gt; exec ./eclipse
+
+and place your theme to $HOME/.themes/.
+You can see my eclipse with GnomishDark theme here.
+Also take a look at this article.
+    
+    
+Answer 2: 
+
+    
+    
+Out of the box BIRT uses grey for the tabs in property editor, most of the tab and back ground themes are controlled by the settings for computer.  I see your top bar (file, edit, etc) is black so presumably you have played with things a lot.  
+
+I use a different back ground color as as my only customization, with windows default for all the other setting. I tried altering some of the computer (my BIRT is actually on a server) settings and the tabs in property editor remained grey.
+
+
+
+The solution for your problem would be to undue whatever you did to make them black, that may mean restoring to default settings. I am not sure if there is a "restore defaults" function, I looked and did not see one. 
+    
+    
+Title: Making the php code execute in browser using PHPstorm
+Description: 
+    
+    
+                    
+So PHPstorm is running the php code fine in its console when I click run, that's great but I want to see it in the browser.
+
+So I created a new PHP web application inside PHPstorm, set up the server to "localhost:8000".
+
+
+
+Now when I click RUN it opens the browser but I get an error message: "Oops! Google Chrome could not connect to localhost:8000"
+
+What am I doing wrong??
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+You have to configure a run configuration for your project first.
+
+Go to Run -&gt; Edit Configurations, click on "PHP Built-in Web Server" and then press "+". You should see something like this:
+
+
+
+After saving the settings you can run the web server via Run -&gt; Run '&lt;project-name&gt;'. It should now serve up the pages to your browser.
+    
+    
+Title: How can I prevent Xcode 4.2 from filling my boot drive with preamble.pch files?
+Description: 
+    
+    
+                    
+There's an issue in Xcode 4.2, where Xcode will fill my boot drive with tens of GB of preamble.pch-****** files, someplace within /private/var/folders/.
+
+Does anybody know how to prevent this from happening?
+
+This means I have to manually empty these files every few hours (quitting/restarting Xcode if necessary), to prevent my boot drive from filling up. I'd (likely) rather revert to the old behavior than create some script or program to systematically remove these every hour, if possible.
+
+Misc:
+
+
+My builds do not use precompiled headers (it looks like these are being generated by Xcode's text editors, using Clang's code sense indexing).
+Tens of GB is a lot for my boot partitions; I use several small partitions.
+
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+I’m no clang expert, but a quick glance at lib/Frontend/ASUnit.cpp reveals that GetPreamblePCHPath() will use the value of three environment variables — in order: TMPDIR, TEMP and TMP — before defaulting to /tmp as the location of preamble PCH files. One (not really ideal) solution is to set one of those variables to a directory residing in another volume.
+    
+    
+Answer 2: 
+
+    
+    
+Disabling Xcode's code sense indexing is one way to work around this. Still, this is not always ideal, and I am open to other solutions.
+    
+    
+Title: Customizing Visual Studio&#39;s Intellisense
+Description: 
+    
+    
+                    
+A recent project had me working with C# again, and I noticed something I hadn't before -- C#'s Intellisense shows possible exceptions that can be thrown when calling a method
+
+
+
+Since I work mostly with VB.NET applications, it'd be really nice to have this feature in those applications as well, but it's unfortunately absent from VB's Intellisense
+
+
+
+Is there any quick and easy way I can customize Visual Studio's Intellisense to show exceptions (as well as other members from the XML comments)?  Or am I looking at a full modification using the SDK?
+
+Update: 29-Sep-2008 1:49 PM -- I figure this will be more complicated than simply changing a configuration setting.  Since the comments are XML-based, I was hoping for an XSLT file somewhere buried in the Visual Studio directory, but nothing has turned up so far.  Looks like I'm going to have to dig into the Visual Studio SDK.
+    
+
+        
+Answer 1: 
+
+    
+    
+Try going to Tool -br
+Title: Android Studio does not resolve androidTestImplementation dependencies in custom project layout
+Description: 
+    
+    
+                    
+I have a project which uses a non-standard source folder layout like this:
+
+sourceSets {
+    androidTest {
+        manifest.srcFile "/myproject/androidTest/AndroidManifest.xml"
+
+        java {
+            srcDirs = [
+                "/myproject/androidTest/java"
+            ]
+        }
+    }
+}
+
+
+Android studio shows the above source folder just fine and also tags it as "androidTest" in the tree. The problem now starts with dependencies like espresso not resolving in any of the tests (class not found in AS) - although they have been properly declared like this:
+
+ androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+
+If I change 'androidTestImplementation' to just 'implementation' Android Studio recovers and is able to resolve the dependencies (but I do not want to add test dependencies to my implementation scope!)
+
+Is this just a bug in Android Studio 3.2.1 or is there a bug in my setup? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Had the same problem. And accidentally found solution...
+
+Just use brackets... so in your case it is:
+
+androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2')
+
+    
+    
+Title: Course of action when Delphi detects recoverable files?
+Description: 
+    
+    
+                    
+My Delphi Tokyo 10.2.1 IDE just crashed. On restart I get the prompt:
+
+
+
+
+  RAD Studio has recovered the following files. Save the ones you wish to keep.
+
+
+A file compare shows that at that moment the file in __recovery is indeed the latest version, but nothing has been recovered yet
+(Note: The specific file was not re-opened in the IDE, because the crash prevented the IDE from registering that as an open file. The project that this file is part of was not even the current one in the project group, for that same reason).
+
+The dialog only has a Close button. I can select that file or not. I started testing several variations.
+
+Regardless of whether I select it, after clicking Close, Delphi asks Discard remaining recovered files?.
+
+
+If I then choose No, nothing changes. The file is not recovered, the contents of __recovery remain unchanged
+I wanted to test this also when I choose Yes, but no amount of copying the old source file plus __recovery folder now triggers the IDE warning again. I can not test further variations. The IDE now keeps clearing out the __recovery folder.
+
+
+This is a bit of a mess. Does recovery not work? Are the dialog texts so unclear?
+
+I would expect the following behavior from such a dialog:
+
+
+It presents me with the detected files. The text says: RAD Studio has discovered the following files. Select the ones you wish to keep.
+The user must select the files he wants recovered.
+If any unrecovered files remain the Discard remaining recovered files message comes up. 
+
+
+Does anyone know what (f)actually happens? What am I supposed to do (select/answer) here?
+I could not find the answer online.
+
+Because right now I am left with a not recovered file and an empty __recovery folder. Luckily I made backups.
+    
+
+        
+Answer 1: 
+
+    
+    
+Double click the list item to open it in the editor, but as the original file with unsaved changes, i.e. the same state it was at the point of the auto save.
+    
+    
+Title: Java project becoming too large
+Description: 
+    
+    
+                    
+We have a large Java 8 Spring Hibernate Maven project that is getting larger.
+
+Problems :
+
+
+Build time is 10-12 minutes at best; 3 minutes without tests
+We already have a command-line switch to skip rarely modified modules, which is the symptom of the build process reaching practical limits
+Eclipse is struggling to manage the project (although IntelliJ is ok for now)
+Things are getting worse as the project grows, and as more scenarios from the test team get incorported as integration tests in the code base.
+
+
+How we work now
+
+
+The project is configured in about 20 Maven modules, like so:
+
+
+
+    Parent
+    |--- Tier1
+    |--- Tier2
+    |--- WebTier
+         |---- ModuleA
+         |---- ModuleB
+         |---- ModuleC
+         |---- ...
+         |---- Entities
+         |---- Shared
+         |---- Batch
+         |---- IntegrationTests
+
+
+
+The application is built as a single WAR
+Developers deploy a single tier (typically WebTier) as an artefact from Eclipse or IntelliJ to their local Tomcat
+Although the project seems nicely split in modules, there are many undesired coupling points between them. Specially in Shared, where modules needing "cross-modules" access put their services
+All integration tests are in a dedicated module (no idea why)
+
+
+Ideas to make it better
+
+
+Add a MessageBroker module to allow loose coupling where relevant. Maybe JMS, or simply a dumb in-memory component for synchronous communication
+Get rid of the Shared module
+Make sure modules have coarse-grained entry-points
+Remove undesired coupling between siblings and prefer the message broker when possible
+Might keep Entities. At least the core-business entities (Customer, CustomerFile, ...). But some  entities obviously belong to a single module (a batch execution info would be in the Batch module)
+
+
+That way, anyone making a change to ModuleA would most of the time only build and run tests in that module without fearing to break the application.
+
+Questions
+
+
+Does that seem like a good plan? By good, I mean future-proof, with good chances to improve things, and not requiring an excessive amount of work given the situation
+Should we have 1 Eclipse/IJ project per tier, let the IDE build the artefact and deploy it to Tomcat, or should we have 1 project per module, and dependencies toward Nexus? Or maybe the latter option is overkill?
+Any other suggestions?
+
+
+Some metrics
+
+
+Windows 7, Java 8, Maven 3.0.3, TestNG.
+SSD or 7200rpm HDD (limited impact)
+6Gb RAM
+Heap 1Gb (maven)
+CI with Jenkins
+
+
+Thanks a bunch!
+    
+
+        
+Answer 1: 
+
+    
+    
+CI would be real answer but it looks that your project is not modular as it should be. You don't build entire project from scratch every time. You build jars, test them in different projects and then use as single items. Each project should be small enough and cover just one area. Do you think that Java builds let's say security jars when they work on io package? Divide and conquer - that's the whole idea of OOP and encapsulation. 
+    
+    
+Answer 2: 
+
+    
+    
+This might not be as bad as you think.  Involved projects with unit tests and static analysis take a while.
+
+A company I worked for had /p/div
+Title: How to customize intentions in PyCharm (e.g. modify &ldquo;After&rdquo; code)
+Description: 
+    
+    
+                    
+PyCharm (and the other IntelliJ IDEs) have the idea of intention actions. One that I want to customize is the "Insert documentation string stub" so that it includes type annotations. I can't type in the After section or find a menu that allows me to modify it at all - is that possible? If not, is there another plugin or something that will allow such a modification?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You can not customize intentions. But you may use Live Templates, they are very customizable: https://www.jetbrains.com/help/idea/2016.1/live-templates.html
+    
+    
+Title: Android Studio: ADB not responding error, and two instances of adb.exe are simultaneously running
+Description: 
+    
+    
+                    
+I am constantly getting the famous "ADB not responding. You can wait more,or kill“abd.exe” process manually and click 'Restart'" error, and when I run the Windows Task Manager to kill the process, I can see two instances of adb.exe running simultaneously. 
+
+I have Eclipse and Android Studio installed and both use the same SDK, if that matters.
+
+Now when I kill both the instances of the adb.exe the process, and then restart adb by adb start-service from command prompt and get the message something like `deamon started successfully.
+
+But then when I start Android Studio again, I face the same problem.
+
+So any suggestions for me? Does two processes of adb.exe have something to do with this?
+
+PS I am trying to use genymotion as the simulator, if that matters. And I am using Windows 7 64 bit.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+As said by AAverin, take a look here : https://stackoverflow.com/a/26431991/2046423
+
+You just need to change the adb settings (user android-sdk in place of genymotion)
+    
+    
+Answer 2: 
+
+    
+    
+You need to restart your computer once
+After this, the problem will be solved
+    
+    
+Title: How to generate c/c++ function prototypes automatically?
+Description: 
+    
+    
+                    
+It's annoying to have to type a function prototypes twice/pp/pp/polli/lili/lili/li/ol/div
+Answer 1: 
+
+    
+    
+
+  For example, how to do this in Eclipse with CDT?
+
+
+If you already declared your prototypes in a header file, choose from there with the context menu 'Source-/strong/p/div
+Title: How do I stop Visual Studio resizing the side panels when unpinned/pinned?
+Description: 
+    
+    
+                    
+My standard VS2010 setup has the Solution Explorer docked on the left-hand side, with a few other panels (Class View, Team Explorer, etc.) tabbed behind it:
+
+
+
+However, if I click the pin icon to collapse that panel (to give me more space to work on my code), then later click the pin again to re-dock it, it always appears much thinner: see the second screenshot below.
+
+Solution Explorer panel collapsed...
+
+
+And now re-docked. Gah! Thin!
+
+
+Is there any way to get Visual Studio to remember my preferred width for that panel? I'm forever re-sizing it and it drives me nuts. I've tried closing/restarting VS with the panel docked in the hope that it would persist but every time I hide/restore it it goes back to the thinner width.
+    
+
+        
+Answer 1: 
+
+    
+    
+I struggled with this very same problem which is still present in VS2013 Update 4, and found the solution.
+
+This problem only happens when the pinned tool is grouped with other tools.
+
+For me it was "Properties" and "Find and Replace" that were grouped together on the right. I could not make them retain their size while they are unpinned/pinned until I ungroup the tools.
+    
+    
+Answer 2: 
+
+    
+    
+Have you tried the Perspectives add-in? This should allow you to save and restore window layouts and may help you with this.
+    
+    
+Title: Hide non source files from the Qt Creator (4.8) file system view
+Description: 
+    
+    
+                    
+Qt Creator (4.2.1) used to do this by default. It would show the files organised in the same directory structure as they are in my file system, but it would only show files that are source or header files for the current project. It could work this out with the CMake add_executable, add_library, or add_custom_target function call.
+
+The new version of Qt Creator now shows all the files in my file system, regardless of whether they are source or header files or not. I can change it from "File System" view to "Projects" view, but this structure the files in a different way to my directory structure, i.e it organises them into "Headers", "Targets", and "CMake Modules".
+
+How can I get Qt Creator to behave more like the old version, and only show the files relevant to my project, but in the directory structure that they are actually in?
+
+Thanks.
+    
+
+        
+Title: Android Studio 3.2.1 freezes all the time
+Description: 
+    
+    
+                    
+Since I updated my Android Studio from 3.1.4 to 3.2.1, it freezes all the time and it is really frustrating. Same problem for my colleagues. Does anyone face the same problem? Is there a way to fix it? thanks
+    
+
+        
+Title: java.net.UnknownHostException: download.eclipse.org
+Description: 
+    
+    
+                    
+I can't figure out the reason for the above exception. I get this for every repository due to which I can't install new plugins to my eclipse download. I've seen many posts trying to resolve the problem but have had no luck with those solutions. My internal browser works properly and I've also disabled my anti-virus. I have tried
+
+
+Using all methods in Network Connections(Native Manual Direct)
+I've added and deleted the repositories
+I've added / at the end of the URL and also tried using HTTPS.
+I've checked and unchecked check-boxes available at in install new software
+
+
+Still no luck. I've installed a few plugins before. The exact error is given below. (I'm using google DNS if that helps) 
+
+
+  java.net.UnknownHostException: download.eclipse.org
+      at java.net.InetAddress.getAllByName0(Unknown Source)
+      at java.net.InetAddress.getAllByName(Unknown Source)
+      at java.net.InetAddress.getAllByName(Unknown Source)
+      at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:44)
+      at org.apache.http.impl.conn.DefaultClientConnectionOperator.resolveHostname(DefaultClientConnectionOperator.java:259)
+      at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:159)
+      at org.apache.http.impl.conn.ManagedClientConnectionImpl.open(ManagedClientConnectionImpl.java:304)
+      at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:611)
+      at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:446)
+      at org.apache.http.impl.client.AbstractHttpClient.doExecute(AbstractHttpClient.java:863)
+      at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)
+      at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientFileSystemBrowser.runRequest(HttpClientFileSystemBrowser.java:259)
+      at org.eclipse.ecf.provider.filetransfer.browse.AbstractFileSystemBrowser$DirectoryJob.run(AbstractFileSystemBrowser.java:69)
+      at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+
+Thanks in advance.
+    
+
+        
+Title: How to change font size in Xcode 7 IDE (NOT the editor fonts!)
+Description: 
+    
+    
+                    
+Has anyone come up with a way to change the Xcode 7 IDE (application!) font size (file lists, panels, target info, etc.)?
+
+NOT the fonts in the editors or console frames (that's trivial)!
+
+Please note:
+
+
+Writing to "defaults" does NOT work.
+Using the Edit-
+Title: Android Studio Hangs/Freezes After Building/Running
+Description: 
+    
+    
+                    
+Android Studio hangs after every build/run for at least a few minutes (sometimes it does not release).
+Also Indexing occurs quite often and takes a very long time.
+
+Have tried:
+
+
+Increasing HEAP
+working offline
+changing gradle versions (working with and without the wrapper)
+deleting cache/restarting
+reinstalling studio (and deleting everything using this guide
+syncing
+rebuilding project
+disabling unrelated plugins
+unplugging device/genymotion
+
+
+I have a Macbook Pro (2015) with 16GB i7 (turbo boosted)
+
+*Hangs/Freezes means scrolling/typing or any other action takes a while to react.
+    
+
+        
+Title: Android Studio Mac keymap doesn&#39;t work on Windows
+Description: 
+    
+    
+                    
+I use Mac at home and use Windows at work. On my Windows machine, I have tried changing my Android Studio keymap in Settings to Mac OS X 10.5+ but the Windows key is not detected as Meta. Also, when I use Mac keyboard, the command key is detected as Windows key. What key should I use as Meta key on Windows? How can I config Android Stuido or Intellij such that I can use Mac keymap on Windows?
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Have a look at this post: How to make Windows key the IntelliJ IDEA Command/Meta key under Windows?
+
+You can remap the windows key in IntelliJ/Android Studio by going to Help-/pprecode/code/prep/p/div
+Title: How to import Checkstyle rules from XML file in IntelliJ IDEA?
+Description: 
+    
+    
+                    
+I know there is QAPlug - Checkstyle and I'm trying to use it.
+
+In menu Project Settings -em/em
+Title: Possible to hide Linq and other extensions from Intellisense without removing the `using`?
+Description: 
+    
+    
+                    
+Sometimes I notice that my Intellisense gets cluttered with extension methods I don't use that often and simply want to see what's available in the current object.
+
+Is there any way I can hide extensions from intellisense? 
+
+Right now I remove the using System.Linq and other extensions when working with unfamiliar objects, and add it back in so I can compile
+    
+
+        
+Answer 1: 
+
+    
+    
+You can assign [EditorBrowsable(EditorBrowsable.Advanced)] to your own code to hide some methods. Some IDE tools (like Resharper) and some extensions in the VS Gallery can modify or replace the Intellisense menu to make them more functional.
+    
+    
+Title: How to enable the automatic asterisk in Visual Studio 2010 when adding a multi-line comment in C++?
+Description: 
+    
+    
+                    
+I've seen many people complain about Visual Studio automatically adding an asterisk in multi-line comments for C#. My question is: How do I enable this behaviour for C++?
+
+Example:
+
+/**
+ * I want
+ * my comments
+ * to look like this
+ */
+
+/**
+But,
+they look like this
+*/
+
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+I noticed in Visual Studio 2019 that if you place your text cursor just after the first asterisk in a block comment and hit enter it will automatically put an asterisk on the next line.
+
+Step 1) Place text cursor to the right of the first asterisk in a
+block comment separated by a newline.
+
+
+
+Step 2) Hit enter and Visual Studio 2019 will automatically place a
+asterisk on the next line.
+
+
+    
+    
+Title: Why do we use fixed-width fonts in our IDEs? [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                Closed 10 years ago.
+        
+
+
+    
+
+
+  Possible Duplicate:
+  Why use monospace fonts in your IDE?  
+
+
+
+
+Virtually all coders (and code editors) use fixed width fonts.  Why is this?
+    
+
+        
+Answer 1: 
+
+    
+    
+ask those guys.
+    
+    
+Answer 2: 
+
+    
+    
+Probably because it makes the code easier to scan - you have "blocks" of code, ie. text that lines up vertically far more often than you would in normal prose. If the font is not fixed width than it wouldn't be visually aligned.
+    
+    
+Answer 3: 
+
+    
+    
+It greatly enhances readability - expecially of punctuation characters which have a very important role in code and which variable width fonts often "squeeze" into minimal space.
+    
+    
+Answer 4: 
+
+    
+    
+Just try a non fixed-width font.
+    
+    
+Answer 5: 
+
+    
+    
+Because it helps with code layout and make it easier to spot errors as lines are a consistent length for a given number of characters.
+
+It is also historical as we used to use terminals with fixed width fonts.
+    
+    
+Answer 6: 
+
+    
+    
+I know I am a week late to the game but I can't believe that there is no mention of programming languages like FORTRAN that basically required fixed width fonts.  Comment chars had to go in column 1, line continuation chars in column 6 and that is not even mentioning the inherent fixed width font effect of punch cards.   Mention has been made of fixed width fonts on terminals, but programming predates even that.
+    
+    
+Answer 7: 
+
+    
+    
+I would add a few minor reasons, mainly related to the code's visual flow:
+
+
+You can align variable assignments (or not)
+One typical example would be aligning table declarations so that it will look like a table in the code.
+
+var sn        = [ 8349824, 3094230,       1]; // first table line
+var longname1 = [     421,    1324, 5382920]; // second table line
+// Try and do something as readable in variable width font!
+
+You can agree on a line-width limit that will have a consistent effect.
+Your code has the same "face" everywhere - whether you read it in a &lt;code&gt; block on the web, in your basic text editor on a remote terminal or in your graphical IDE with antialiased fonts - you will immediately recognize the code.
+More predictable behaviour when navigating code - when I go up or down, I already know exactly where the cursor will end up.
+
+
+In short, fixed-width font allows for finer grained control over source code appearance and readability, independant from the availability of any given font.
+    
+    
+Answer 8: 
+
+    
+    
+typos/missing letters can be seen clearer
+    
+    
+Answer 9: 
+
+    
+    
+It's a matter of choice. I personally prefer to use the very elegant Comic Sans or Purisa font for programming.
+    
+    
+Answer 10: 
+
+    
+    
+open some code in your favourite editor... I'm presuming by default that your text editor will have a fixed-width font set.
+
+Now change the font to Comic-Sans..... enough said!
+
+Seriously though, fixed-width is much much clearer to read.
+    
+    
+Answer 11: 
+
+    
+    
+Mostly for outlining. However it's also a habit. I come from the old school IDE's while they were still in MS-DOS.
+
+Also companies like Microsoft have made fonts to make it "easier" to code with. I prefer the Consolas font myself while coding in Visual Studio.
+
+Grz, Kris.
+    
+    
+Title: ASP.NET MVC development with Notepad?
+Description: 
+    
+    
+                    
+So do I NEED Visual Studio of some flavor to do ASP.NET MVC development or could I technically do it all with a simple text editor? If YES, please tell me the catches, like if there is anything special I would have to do besides making the folder structure right and making sure my code is solid, etc.
+    
+
+        
+Answer 1: 
+
+    
+    
+You need a compiler, but you could use Notepad as your editor if you really wanted to. However, I would recommend using Visual Studio - it has all the help and support (IntelliSense etc.) you need.
+
+You can download the Visual Studio Express edition for web development for free. The MVC extensions work with this.
+    
+    
+Answer 2: 
+
+    
+    
+Define 'NEED', technically all you need is this: 
+(source: geeks3d.com)  
+    
+    
+Answer 3: 
+
+    
+    
+oh no - please say you're joking. as said, the free version gives you sooo much more.
+
+that said, relying on basics can be very good!!
+    
+    
+Title: Python: tell my IDE what type an object is
+Description: 
+    
+    
+                    
+When I write a function in Python (v2.7), I very often have a type in mind for one of the arguments. I'm working with the unbelievably brilliant pandas library at the movemement, so my arguments are often 'intended' to be pandas.DataFrames.
+In my favorite IDE (Spyder), when you type a period . a list of methods appear. Also, when you type the opening parenthesis of a method, the docstring appears in a little window.
+But for these things to work, the IDE has to know what type a variable is. But of course, it never does. Am I missing something obvious about how to write Pythonic code (I've read Python Is Not Java but it doesn't mention this IDE autocomplete issue.
+Any thoughts?
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't know if it works in Spyder, but many completion engines (e.g. Jedi) also support assertions to tell them what type a variable is. For example:
+
+def foo(param):
+    assert isinstance(param, str)
+    # now param will be considered a str
+    param.|capitalize
+           center
+           count
+           decode
+           ...
+
+    
+    
+Answer 2: 
+
+    
+    
+Actually I use IntelliJ idea ( aka pyCharm ) and they offer multiple ways to specify variable types:
+
+1. Specify Simple Variable 
+
+Very simple: Just add a comment with the type information behind the definition. From now on Pycharm supports autcompletition! e.g.:
+
+def route():
+    json = request.get_json() # type: dict
+
+
+Source: https://www.jetbrains.com/help/pycharm/type-hinting-in-pycharm.html
+
+2. Specify Parameter:  
+
+Add three quote signs after the beginning of a method and the idea will autocomplete a docstring, as in the following example: 
+
+
+
+Source: https://www.jetbrains.com/help/pycharm/using-docstrings-to-specify-types.html
+
+(Currently on my mobile, going to make it pretty later)
+    
+    
+Answer 3: 
+
+    
+    
+If you're using Python 3, you can use function annotations. As an example:
+
+@typechecked
+def greet(name: str, age: int) -&gt; str:
+    print("Hello {0}, you are {1} years old".format(name, age))
+
+
+I don't use Spyder, but I would assume there's a way for it to read the annotations and act appropriately.
+    
+    
+Answer 4: 
+
+    
+    
+I don't know whether Spyder reads docstrings, but PyDev does:
+
+http://pydev.org/manual_adv_type_hints.html
+
+So you can document the expected type in the docstring, e.g. as in:
+
+def test(arg):
+    'type arg: str'
+    arg.&lt;hit tab&gt;
+
+
+And you'll get the according string tab completion.
+
+Similarly you can document the return-type of your functions, so that you can get tab-completion on foo for foo = someFunction().
+
+At the same time, docstrings make auto-generated documention much more helpful.
+    
+    
+Answer 5: 
+
+    
+    
+The problem is with the dynamic features of Python, I use Spyder and I've used a lot more of python IDEs (PyCharm, IDLE, WingIDE, PyDev, ...) and ALL of them have the problem you stated here. So, when I want code completion for help I just instantiate the variable to the type I want and then type ".", for example: suppose you know your var df will be a DataFrame in some piece of code, you can do this df = DataFrame() and for now on the code completion should work for you just do not forget to delete (or comment) the line df = DataFrame() when you finish editing the code.
+    
+    
+Title: alternative to visual studio 2010
+Description: 
+    
+    
+                    
+Is there any alternative to visual studio 2010 for develop with .net 4.0?
+
+thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+Considering that .NET 4.0 only just came out (at the same time as VS 2010) I would hazard a guess at "No". :)
+
+In general, Visual Studio is by far the best IDE I've ever used. Nothing else even comes close.
+    
+    
+Answer 2: 
+
+    
+    
+You can use SharpDevelop to develop .NET projects, including .NET version 4.0. SharpDevelop 4.0 final has been released 06/2011. (though the support for 4.0 is still in beta status AFAIK.)
+    
+    
+Answer 3: 
+
+    
+    
+Notepad and .net 4.0 compiler :-)
+    
+    
+Answer 4: 
+
+    
+    
+MonoDevelop is really catching up. It is not a 100% replacement of VS, because it is based on Mono. The IDE is starting to be really good (GUI designer, debugger, test framework, web and IPhone stuff etc. etc.). Supports .NET 3.5 for now.
+    
+    
+Answer 5: 
+
+    
+    
+The visual studio platform crashes frequeltly, Several times a day, especially when debugging.
+I use sharpdevelop when debugging. It does not have all the features of VS, but it doesn't crash.
+    
+    
+Answer 6: 
+
+    
+    
+If you want to do your development in the cloud, check out www.coderun.com 
+    
+    
+Title: Why use Intellij, or what to do during the evaluation
+Description: 
+    
+    
+                    
+I downloaded IntelliJ IDEA and started with the 30 day evaluation.
+
+Now I'm just wondering, why should I use IntelliJ for plain old java developement (so no Hibernate, JSP, etc)? It doesn't look that different from eclipse or NetBeans, so I hope some IntelliJ guru can give some examples of things IntelliJ can do to justify investing the money in it. I'm trying to use the evaluation to it's fullest and don't want to miss an important feature.
+
+A list of things possible in IntelliJ but not in eclipse is already available, but I'm more interested in the daily workflow than some obscure features that will be used twice a month.
+    
+
+        
+Answer 1: 
+
+    
+    
+I've been using IntelliJ for about 5 years now (since version 4.5) and I also read through most of the Manning book "IntelliJ in Action" and I still wouldn't consider myself a guru on it.  In fact, I also wanted to do "plain old Java development" with it, and honestly I have to say that it's quite good at that.  Like the other answers, I can only say that there's a definite edge in it's helpfulness that really puts it over the top.  We use Eclipse here at work also, and while I don't have as much experience, I can tell you that there are definitely a lot of basic things lacking in it.  I put in some serious time and effort to learn Eclipse, looking up how to do the everyday sorts of things I take for granted in IntelliJ, and they're mostly not there or very poorly implemented.  The refactoring stuff is definitely the thing that helps a lot.
+
+Aside from the refactoring, I think there are just a ton of small touches that really make this helpful.  I think an example might help clarify...
+
+Try this:
+
+Create a new, empty class.  Move the cursor inside the braces and do psvm and hit Ctrl-J - this expands the "psvm" into "public static void main(String[] args)".  There's a whole list of commonly-used idioms that this shortcut will handle (and it's configurable, too).  Inside the main code block, enter this code:
+
+public static void main(String[] args) {
+  int x = 1000;
+  sout
+}
+
+
+At the end of "sout", do Ctrl-J again - you'll see another popup that let's you choose from some different expansions, but in general this expands to "System.out.println("")" and helpfully puts the cursor between the double-quotes (it's small touches like this that really make it shine, I think.  Compare with Visual Studio's "IntelliSense" - a total crock if you ask me).
+
+Anyway, backspace over the first double-quote - notice it deletes the matching double-quote?  It does the same thing with braces and brackets, too.  I think there are a few corner cases where I prefer it doesn't do this, but the large majority of the time it helps a lot.  Back to the code editing: just type x so the code now looks like this:
+
+public static void main(String[] args) {
+  int x = 1000;
+
+
+  // add a few blank lines here too - the need for 
+  // this will be obvious a little later
+
+  System.out.println(x);
+}
+
+
+Now, move the cursor over to the declaration of x, and do Shift-F6 - this is the refactoring in-place dialog (I dunno what to call it, so I just made that up).  The name "x" gets a colored box around it, and you can start typing a new name for it - as you type, all uses of that name get dynamically updated too.  Another neat touch I really like.
+
+Try this:  put a really long line comment somewhere, like so:
+
+// this is a really long comment blah blah blah i love to hear myself talking hahaha
+
+
+Now say you decide the comment is too long, so you move the cursor to the middle of it somewhere and hit Enter.  IntelliJ will put the remaining portion of the comment with a "// " prepended - it "knows" this is a continuation of the previous comment, so it comments it for you.  Another neat touch.
+
+// this is a really long comment blah 
+// blah blah i love to hear myself talking hahaha
+
+
+Another big bonus I like about IntelliJ compared to Eclipse is that it's much less intrusive - I really hated how Eclipse would manage to get popups on top of popups, and mouse focus would be somewhere but keyboard focus is stuck on something underneath, etc.  I think it's possible to work in such a way that these sorts of things don't happen, but it annoyed me immensely in the first place.  That reminds me, in IntelliJ if you move the mouse cursor over the package or file navigator in the left pane, that panel gets the mouse focus automatically, so I got accustomed to using the mouse wheel immediately to look around.  In Eclipse?  You mouse over, but focus stayed on the editing pane, so you have to CLICK with the mouse to transfer focus, and then be able to use the mouse wheel to look around.  Like I said, it's a lot of small touches like that which help with productivity.
+
+As you code around, pay attention to the left gutter bar for red "light bulb" type symbols on the current line - this is IntelliJ telling you there are possible things it can do.  Use Alt-Enter to bring up a small in-place dialog box, and it will tell you what it can take care of automatically.  Say you type in a method definition named "getFoo()" and there's no foo member - it will offer to create it for you.  Or if you're using a class and call a non-existing method on it like getFoo() - it will offer to create a getter and a member, or a regular method.  It's just plain helpful.
+
+Overall, I'd say small touches are not what IntelliJ gurus will really want to talk about, but I really appreciate how these sorts of things are just "well done".  They take care of small details so you don't have to spend so much mental runtime checking your own syntax.  I think of it as a butler helping me out with my coding - it takes care of small chores for me so I don't have to.  Batman has his Alfred, and I have my IntelliJ.  All the settings are excruciatingly laid out for you to modify if you like, but it just seems like the defaults are all geared toward improving your productivity, instead of bothering you all the time with really mundane decisions (especially those which you would almost always make the same choice anyway).
+
+There are some definite drawbacks to IntelliJ - the price is a bit high, and it's quite large that it can take a while to load up on a large project.  I'm lucky in that my company pays for the license as well as a very nice workstation so it loads up reasonably quick, but your mileage will vary.
+    
+    
+Answer 2: 
+
+    
+    
+I have a day job where I use Eclipse (because that's all that is permitted). I also have my own company where I "moonlight" doing contract work and use IntelliJ.
+
+I would say their feature sets are about the same. Pretty much the same refactorings, same code assists, same style of use, etc. Eclipse arguably has better plug-ins, and probably many more, than IntelliJ. IntelliJ just "knows" things right out of the box like Spring and Hibernate, and these things are better integrated than Eclipse plug-ins of similar functionality.
+
+The reason I choose to use IntelliJ when allowed (personally purchased and upgraded several times) is that everything it does just feels cleaner. Its hard to put my finger on it, but the exact same functionality in IntelliJ feels more streamlined and easier to use than in Eclipse - enough that I would pay for it even though there is a full-featured free IDE available.
+
+So, the activities you should do to decide are this: use IntelliJ everyday for all your development tasks for 30 days. Push through the curve of learning new shortcuts and ways of searching, refactoring, etc. and I suspect you will prefer it. If not, Eclipse is still there for you.
+    
+    
+Answer 3: 
+
+    
+    
+I've just moved back to Eclipse after 2 years with Intellij (due to a client's preferences).
+
+I'm finding Eclipse to be less helpful. I know that's a nebulous term, but Intellij's feedback was clearer, the UI gave me better information on what was going on, the automatic building seemed more seamless. The project setup/configuration seems more intuitive.
+
+This is perhaps subjective, but sometimes that's why you prefer one over the over. It just feels that little bit slicker, that little bit friendlier...
+
+(I don't think the VIM plugin for Intellij is better, but that's another story!)
+    
+    
+Answer 4: 
+
+    
+    
+2weiji: use Tab instead of Ctrl+J :-) It's much handy :-))
+sout then Tab
+psvm then Tab
+iter then Tab
+etc... :o)
+    
+    
+Answer 5: 
+
+    
+    
+Why use IntelliJ? Because I find it more consistent in it's user interface and more polished. It allows you to keep your hands on the keyboard longer, rather than switching back and forth between keyboard and mouse. As other people have said, it's the little things that add up. 
+
+I found the user-intentions functionality a huge time-saver, and the way it reviews the code and suggests optimizations and corrects bad practices. That I can hit Alt-Enter in a lot of contexts and the IDE is able to figure out and insert what should be there. Pesky things like type declarations, optimizing an old-style for-loop to use the new JDK-5 type of loop, removing redundant value assignments or unused variables.
+
+Being able to first type in the usage of a method that doesn't exist, and then hitting a key combination and having the IDE write out the bare structure of the method - huge timesaver. It makes for a better workflow for me, because it allows you to first think about how you'll be using a method, what it looks like when you read it in context.
+
+Refactoring support - this was the big selling point when I first started using it in 2003, and I think it still leads the way (but I hear Netbeans is also pretty good now)
+
+Highly recommend that you have a look at the IntelliJ KeyMap Reference. 
+
+Have a look at this discussion for often-used shortcuts: What are the most useful Intellij IDEA keyboard shortcuts?
+    
+    
+Answer 6: 
+
+    
+    
+I'm not an IntelliJ IDEA guru but what the fanboys usually like about IntelliJ are the great refactoring and code assist features. They often claim this product is far superior to its competitor from this point of view. 
+
+Personally, I'm a partisan of the following principle: use the IDE with which you feel the most productive, not the one somebody else prefer.
+    
+    
+Title: Global Find and Replace in Visual Studio
+Description: 
+    
+    
+                    
+I have a solution with multiple projects and we need to do some serious global replacements.
+
+Is there a way to do a wildcard replacement where some values remain in after the replace?
+
+So, for instance if I want every HttpContext.Current.Session[“whatevervalue”] to become HttpContext.Current.Session[“whatevervalue”].ToString() the string value being passed in will be respected? I don’t want to replace “whatevervalue” I just want to append a .ToString()  where the pattern matches. 
+
+Is this possible in Visual Studio?
+    
+
+        
+Answer 1: 
+
+    
+    
+First, Backup your Projects, just in case...  Always a good idea before mass replacements.
+
+Then, in the Find/Replace Dialog, select the Use Regular Expressions checkbox:
+
+In the Find box, use the pattern:
+
+HttpContext\.Current\.Session\["{.@}"\]
+
+
+and in the Replace box, use:
+
+HttpContext.Current.Session["\1"].ToString()
+
+    
+    
+Answer 2: 
+
+    
+    
+Easy...use regular expressions and grouping.
+
+Find what:
+(HttpContext.Current.Session[“whatevervalue”])
+
+Replace with:
+\0.ToString();
+
+Remember to check the Use: and select Regular expressions
+    
+    
+Answer 3: 
+
+    
+    
+You want to open the "Find Options" expander and select the "Use Regular Expressions" option. After you've done that, you want these as your find/replace entries:
+
+Find:
+
+HttpContext\.Current\.Session\[{("([^"]|\")*")}\]
+
+
+Replace:
+
+HttpContext.Current.Session[\1].ToString()
+
+
+Additional Note:
+
+Once you've enabled regular expressions option, you'll be able to use the right-pointing triangle buttons to access snippets of Visual Studio's Regex syntax.
+
+Also note that Visual Studio's Regex syntax is pretty ghetto, as it hasn't changed since the days of Visual Studio 6 (or earlier?)--so don't take any syntax elements for granted.
+
+For example, one might expect that my find regex above is broken because the backslash before the double-quote is not properly escaped, but in reality, putting a double-backslash there will break the expression, not fix it.
+    
+    
+Answer 4: 
+
+    
+    
+None of these answers seem to work in Visual Studio 2013, as that version seems to have finally made the switch to standard RegEx.  However, those who are non-RegEx Experts or those who are used to the old VS Find/Replace RegEx syntax will find the RegEx Shortcut buttons very useful.
+
+Please see this answer for more information, including Find/Replace/Surround With examples:
+
+Visual Studio &#39;Find and Surround With&#39; instead of &#39;Find and Replace&#39;
+    
+    
+Answer 5: 
+
+    
+    
+You can use Visual Assist for tasks like this. It's a powerful tool for different kinds of refactoring.
+    
+    
+Answer 6: 
+
+    
+    
+You could also consider using the free download tool Refactor available at http://www.devexpress.com/Products/NET/IDETools/RefactorASP/
+
+It does a whole lot more than just find &amp; replace, which they call renaming members with more understandable names. Its various features will easily help you to improve your code.
+    
+    
+Title: Reductions in programming
+Description: 
+    
+    
+                    
+Sometimes to make a variable/method/class name descriptive I need to make it longer. But I don't want to, I'd like to have short names that are easy to read. So I thought of a special addin to IDE like Visual Studio to be able to write short names for class, method, field but be able to attach long names. If you need to - you can make it all long or you can make single name long. If you want to reduce it - use reduction, like two views of the same code. I`d like to know what others thinking about it? Do you think it is usefull? Would anybody use the kind of addin?
+    
+
+        
+Answer 1: 
+
+    
+    
+I never worry about long names. If a method name becomes too long, it may also indicate that the method does too much (unless it happens to include a really long word). On the other hand, I also try to avoid repeating myself. I would not have Account.AccountId for instance, but rather Account.Id. I also lean back on the namespace; if the namespace is clear about what domain I am in, I usually try to not repeat that in class- or member names.
+
+Bottom line; I can't see myself using such an addin.
+    
+    
+Answer 2: 
+
+    
+    
+Why not just use the standard XML commenting system built into Visual Studio.
+If you type /// above the Class/Method/variable etc, it creates the comment stub.
+These comments popup through Intelisense/Code Completion with extra info.
+
+This way you keep your naming conventions short and descriptive whilst commenting your code.
+You can run a process to then create documentation for your code using these comments.
+
+See: http://msdn.microsoft.com/en-us/magazine/cc302121.aspx
+    
+    
+Answer 3: 
+
+    
+    
+A variable name should be as long as required to make it identifiable, does it matter if it's a bit longer than you would prefer? As long as the code is readable and understandable, surely this makes no difference?
+
+Use comments for names that would be far too long to use as a variable/class name. This would be a lot more appropriate.
+
+If a method name is too long, then it shouldn't be a single method...
+
+I wouldn't use an addin like that.
+    
+    
+Answer 4: 
+
+    
+    
+Other programmers without this addin would find themselves in trouble because if you give too short names they will  not fully understand the code, if you give long names they will loose time reading and eventually get angry because long names are difficult to remember :P
+
+One has to find the best name for everything one writes, imho there is no need for a switch to turn on and off verbosity for identifiers.
+
+I would not use that addin.
+    
+    
+Answer 5: 
+
+    
+    
+Nor I. The fact is you are talking about VisualStudio. It takes the heavy-load of remembering most variables names (long and short) with IntelliSense. As Power said, as long as the code is readable and understandable, that's all that matters.
+    
+    
+Answer 6: 
+
+    
+    
+With ReSharper 4 and above, you can get automatic expansion of type and variable names that are camel or Pascal cased:
+
+
+(source: jetbrains.com)  
+
+So you could call your variable myExtremelyLongAndDescriptiveVariableName but then just type mELADVN to use it.
+    
+    
+Answer 7: 
+
+    
+    
+I don't think I'd want it.
+
+The overhead of switching between different views would be as much work as hitting F12 and reading the comment for the function, which will always be more descriptive than the long name.
+    
+    
+Answer 8: 
+
+    
+    
+I wont.
+
+Long function names could be handy in somecases. If you have a special case or something.
+Some examples:
+
+what would you favor for multiplication, mul or multiply ? multiply is my choice
+
+Choosing functionnames is a matter of making your code clear for using, if  you have too small names and you have to read comment to know what the function does, then youre doing it wrong
+    
+    
+Answer 9: 
+
+    
+    
+IDEs, text editors and compilers support limited (if at all limited) form of described functionality - that is source code comments. I think comments do very well and don't see any necessity of described addin. If comments are too long they can be folded. If you need source code with no comments you can easily strip them off with regex of similar stuff.
+    
+    
+Answer 10: 
+
+    
+    
+
+  Id like to have short names that are
+  easy to read.
+
+
+That is often a contradiction in terms.
+
+Take for example a name like oScBf, if you don't already know what it's for it's practically unreadable. Is it outputScreenBuffer, onlineSourceBitflag, openScannerBrowsefile, outdoorSpecialBikinifavorites...?
+
+Longer identifier names are usually preferrable. Eventhough it's more to read, it's still easier to understand.
+
+Reading code is in some ways similar to reading text. You expect it to follow a certain pattern to be easy to read, if you start to add a lot of abbrev. and non-std words in da text u hav 2 stop n think what it means, and u lose da flow. :)
+    
+    
+Answer 11: 
+
+    
+    
+It's a bad idea. Variable names don't usually need to be long to be adequately descriptive, you'll waste a lot of time writing two versions of every name, and many programmers will probably find it rather confusing to have multiple names for the same thing.
+
+With XMLDoc and intellisense help, you can add any extra detail required to fully describe a code element - the name doesn't need to describe the minutiae, only give a clear and distinctve idea of what the code element's purpose is.
+
+With name auto-completion readily available, there is no longer any reason to complain of long names requiring lots of typing.
+
+Also, good coding style is all about making code easy to read, understand and maintain, not about packing more code into a smaller space.
+
+OO design should help to break functionality down hierarchically into namespaces and classes, reducing the need for such long names at the class/method level)
+
+Lastly, if you really must shorten names, most languages most languages provide easy ways to strip off namespaces and/or add competely new aliases for names (e.g. 'typedef' and 'using' in C++, 'using' in C#), so in a localised region you can easily refer to a long name via a shortened variant or alias if you wish.
+    
+    
+Answer 12: 
+
+    
+    
+I like the idea. It's really good and I congradulate you and hope you're successful in developing it. Although I would never use such an Add-On.
+    
+    

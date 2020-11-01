@@ -1,0 +1,2141 @@
+Title: Using newest 2013 MS cc compiler into older visual studio 2010 interface?
+Description: 
+    
+    
+                    
+I wanted to know if anybody had the experience of configuring this : http://www.microsoft.com/en-us/download/confirmation.aspx?id=41151
+into visual studio 2010 ?
+
+I have only Windows Vista on some of my machines; and I'd like to code using a 2012 or 2013 compiler. I know visual studio is greatly configurable and can plug various compilers (like sony for PS Vita is providing a configuration for gcc based compiler in visual studio).
+
+VS 2012 and 2013 express cannot be installed on Vista. But I see no reason why the compiler; a purely command line tool, wouldn't work on Vista. (because it wouldn't dare to need that darn K32GetModuleInformation thingie. I bet MS called this function for purely phony purposes of forcing people to upgrade their OS)
+
+thanks !
+
+ps : of course a trick to make vs 2013 express (for desktop) installable on vista would also be appreciated.
+    
+
+        
+Title: Problems persisting dockable form layout in the Delphi IDE
+Description: 
+    
+    
+                    
+I've written a small IDE extension for Delphi. My form descends from TDockableToolbarForm. I've figured out how to get the IDE to save the form's position in the .dst and .dsk files.
+
+The form's registration looks like this:
+
+procedure Register;
+begin
+  RegisterFieldAddress('MyForm', @MyForm);
+  RegisterDesktopFormClass(TMyForm, 'My Form', 'MyForm');
+  MyForm := TMyForm.Create(nil);
+  MyForm.Show;
+end;
+
+
+and I added the following OnCreate handler to the form:
+
+procedure TMyForm.FormCreate(Sender: TObject);
+begin
+  inherited;
+  AutoSave :=True;
+  SaveStateNecessary := True;
+  DeskSection := 'My Form';
+end;
+
+
+This caused the following to be written to the dst/dsk files:
+
+[My Form]
+PercentageSizes=1
+Create=1
+Visible=0
+Docked=1
+State=0
+Left=0
+Top=0
+Width=1193
+Height=4115
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=1109
+ClientHeight=3788
+TBDockHeight=4115
+LRDockWidth=1193
+Dockable=1
+StayOnTop=0
+
+
+This allows the form's layout to persist between one run of the IDE and the next. However I'm having two problems:
+
+
+When the package is first registered with the IDE I'd like the form to be docked on the left side by default (assuming the user isn't using the 'Classic Undocked' layout). Right now it's simply showing the form undocked.
+When the package is uninstalled/reinstalled the form isn't using the previously saved layout settings. It again appears undocked.
+
+
+I suspect both problems are cause by a missed step but I'm at a loss as to what that step is.
+
+For the first problem I found TControl.ManualDock mentioned quite often in discussions about docking but it was always in reference to applications for which you have access to the source. I have no idea how to retrieve the necessary parameters from the IDE to call it.
+
+For the second problem the only thing I know for sure is that the settings in the dst file are still present after the package has been uninstalled so I would think reinstalling the package would simple using the existing settings but that doesn't appear to be the case.
+    
+
+        
+Title: Get IntelliJ to show compilation problems automatically [duplicate]
+Description: 
+    
+    
+                    
+Yesterday I switched to IntelliJ IDEA from Eclipse. 
+
+I am using JRebel with WebSphere Server 7 as well.
+
+Everything now seems to be working somewhat fine, except that when I modify a Java file, and hit save, IntelliJ does not re-compile the file, in order for JRebel to pick it up. 
+
+The Eclipse "Build Automatically" feature resolved this issue. 
+
+In IntelliJ IDEA, I have to hit CTRL+SHIFT+9 to re-compile the relevant class for JRebel to pick it up. If changes are done across two files, I have to do this on each and one of them and since IntelliJ uses the save all mechanism, its pretty hard to know what to recompile manually which I am not really interested in doing either.
+
+Isn't there a way to make IntelliJ to do this on its own?
+    
+
+        
+Answer 1: 
+
+    
+    
+UPDATED
+
+For IntelliJ IDEA 12+ releases we can build automatically the edited sources if we are using the external compiler option. The only thing needed is to check the option "Build project automatically", located under "Compiler" settings:
+
+
+
+Also, if you would like to hot deploy, while the application is running or if you are using spring boot devtools you should enable the compiler.automake.allow.when.app.running from registry too. This will automatically compile your changes. 
+
+Using Ctrl+Shift+A (or ⌘+Shift+A on Mac) type Registry once the registry windows is open, locate and enable compiler.automake.allow.when.app.running, see here:
+
+
+
+
+For versions older than 12, you can use the EclipseMode plugin to make IDEA automatically compile the saved files.
+
+For more tips see the "Migrating From Eclipse to IntelliJ IDEA" guide.
+    
+    
+Answer 2: 
+
+    
+    
+Please follow both steps:
+1 - Enable Automake from the compiler
+
+Press: ctrl + shift + A (For Mac ⌘ + shift + A)
+Type: make project automatically
+Hit: Enter
+Enable Make Project automatically feature
+
+2 - Enable Automake when the application is running
+
+Press: ctrl + shift + A (For Mac ⌘ + shift + A)
+Type: Registry
+Find the key compiler.automake.allow.when.app.running and enable it or click the checkbox next to it
+
+Note: Restart your application now :)
+Note: This should also allow live reload with spring boot devtools.
+    
+    
+Answer 3: 
+
+    
+    
+WARNING
+
+Eclipse Mode plug-in is obsolete and is not compatible with the recent IDEA 12+ builds. If you install it, IDE will hang on every file change and will respond extremely slow.
+
+
+
+IntelliJ IDEA doesn't use automatic build, it detects errors on the fly, not via compiler. Similar to Eclipse mode will be available in IDEA 12:
+
+
+
+Use Build | Make, it invokes the incremental make process that will compile only changed and dependent files (it's very fast).
+
+There is also a FAQ entry that may help.
+
+Update on the automatic make feature:
+When run/debug configuration is running, Make project automatically has no effect. Classes on disk will change only on Build | Make. It's the core design decision as in our opinion class changes on disk should be always under user's control. Automatic make is not the copycat of Eclipse feature, it works differently and it's main purpose is to save time waiting for the classes to be ready when they are really needed (before running the app or tests). Automatic make doesn't replace the explicit compilation that you still need to trigger like in the case described in this question. If you are looking for different behavior, EclipseMode plug-in linked in the FAQ above would be a better choice.
+    
+    
+Answer 4: 
+
+    
+    
+You can keymap ctrl+s to save AND compile in one step.  Go to the keymap settings and search for Compile.
+    
+    
+Answer 5: 
+
+    
+    
+There is actually no difference as both require 1 click:
+
+
+Eclipse: manual Save, auto-compile. 
+IntelliJ: auto Save, manual compile.
+
+
+Simplest solution is just to get used to it. Because when you spend most of your daytime in your IDE, then better have fast habits in one than slow habits in several of them.
+    
+    
+Answer 6: 
+
+    
+    
+I ended up recording a Macro to save and compile in one step, and keymap Ctrl+s to it.
+    
+    
+Answer 7: 
+
+    
+    
+I managed to solve this using macros.
+
+I started recording a macro:
+
+
+Click Edit - Macros - Start macro recording
+Click File - Save All
+Click Build - Make Project
+Click Edit - Macros - Stop macro recording
+
+
+Name it something useful like, "SaveAndMake".
+
+Now just remove the Save all keybinding, and add the same keybinding to your macro! 
+
+So now, every time i save, it saves and makes a dirty compile, and jRebel now detects all changes correctly.
+    
+    
+Answer 8: 
+
+    
+    
+Please follow these steps carefully to enable it. 
+
+1) create Spring Boot project with SB V1.3 and add "Devtools" (1*) to dependencies 
+
+2) invoke Help-em/em/pp
+Answer 9: 
+
+    
+    
+The only thing that worked for me in my maven project that was affected by this is to add a "test-compile" goal to the run configuration of my unit tests. Incredibly clumsy solution, but it works.
+
+
+    
+    
+Answer 10: 
+
+    
+    
+Intellij fails quietly when it encounters compile problem in other module, and then automatic build is not performed. So check your Problems window
+    
+    
+Answer 11: 
+
+    
+    
+I had the same issue.
+I was using the "Power save mode", which prevents from compiling incrementally and showing compilation errors.
+    
+    
+Answer 12: 
+
+    
+    
+Use the Reformat and Compile plugin (inspired by the Save Actions plugin of Alexandre DuBreuil):
+
+https://plugins.jetbrains.com/plugin/8231?pr=idea_ce
+
+At the moment I am only offering a jar file, but this is the most important part of the code:
+
+private final static Set&lt;Document&gt; documentsToProcess = new HashSet&lt;Document&gt;();
+private static VirtualFile[] fileToCompile = VirtualFile.EMPTY_ARRAY;
+
+// The plugin extends FileDocumentManagerAdapter.
+// beforeDocumentSaving calls reformatAndCompile
+private static void reformatAndCompile(
+        @NotNull final Project project,
+        @NotNull final Document document,
+        @NotNull final PsiFile psiFile) {
+    documentsToProcess.add(document);
+    if (storage.isEnabled(Action.compileFile) &amp;&amp; isDocumentActive(project, document)) {
+        fileToCompile = isFileCompilable(project, psiFile.getVirtualFile());
+    }
+    ApplicationManager.getApplication().invokeLater(new Runnable() {
+        @Override
+        public void run() {
+            if (documentsToProcess.contains(document)) {
+                documentsToProcess.remove(document);
+                if (storage.isEnabled(Action.optimizeImports)
+                        || storage.isEnabled(Action.reformatCode)) {
+                    CommandProcessor.getInstance().runUndoTransparentAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (storage.isEnabled(Action.optimizeImports)) {
+                                new OptimizeImportsProcessor(project, psiFile)
+                                    .run();
+                            }
+                            if (storage.isEnabled(Action.reformatCode)) {
+                                new ReformatCodeProcessor(
+                                        project,
+                                        psiFile,
+                                        null,
+                                        ChangeListManager
+                                            .getInstance(project)
+                                            .getChange(psiFile.getVirtualFile()) != null)
+                                                .run();
+                            }
+                            ApplicationManager.getApplication().runWriteAction(new Runnable() {
+                                @Override
+                                public void run() {
+                                    CodeInsightUtilCore.forcePsiPostprocessAndRestoreElement(psiFile);
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+
+            if (fileToCompile.length &gt; 0) {
+                if (documentsToProcess.isEmpty()) {
+                    compileFile(project, fileToCompile);
+                    fileToCompile = VirtualFile.EMPTY_ARRAY;
+                }
+            } else if (storage.isEnabled(Action.makeProject)) {
+                if (documentsToProcess.isEmpty()) {
+                    makeProject(project);
+                }
+            } else {
+                saveFile(project, document, psiFile.getVirtualFile());
+            }
+        }
+    }, project.getDisposed());
+}
+
+private static void makeProject(@NotNull final Project project) {
+    ApplicationManager.getApplication().invokeLater(new Runnable() {
+        @Override
+        public void run() {
+            CompilerManager.getInstance(project).make(null);
+        }
+    }, project.getDisposed());
+}
+
+private static void compileFile(
+        @NotNull final Project project,
+        @NotNull final VirtualFile[] files) {
+    ApplicationManager.getApplication().invokeLater(new Runnable() {
+        @Override
+        public void run() {
+            CompilerManager.getInstance(project).compile(files, null);
+        }
+    }, project.getDisposed());
+}
+
+private static void saveFile(
+        @NotNull final Project project,
+        @NotNull final Document document,
+        @NotNull final VirtualFile file) {
+    ApplicationManager.getApplication().invokeLater(new Runnable() {
+        @Override
+        public void run() {
+            final FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
+            if (fileDocumentManager.isFileModified(file)) {
+                fileDocumentManager.saveDocument(document);
+            }
+        }
+    }, project.getDisposed());
+}
+
+    
+    
+Answer 13: 
+
+    
+    
+Edit your Run/Debug Configuration so that Build option is selected before launching
+
+
+
+After Build option is selected
+
+
+
+The above solution worked for me while working on my JBehave test suite
+    
+    
+Answer 14: 
+
+    
+    
+It was not working for me due to having an unnecessary module in my project structure. The tests were executed using the other module, I suppose. 
+
+I don't know how it ended up like that but removing it solved the problem.
+
+Make sure your Run/Debug settings are using the module you are building with the autosave.
+
+E.g. : see the module in 
+
+
+
+You can change the modules in Project Structure - Modules
+
+
+    
+    
+Answer 15: 
+
+    
+    
+I had the same issue. I think it would be appropriate to check whether your class can be compiled or not. Click recompile (Ctrl+Shift+F9 by default). If its not working then you have to investigate why it isn't compiling.
+
+In my case the code wasn't autocompiling because there were hidden errors with compilation (they weren't shown in logs anywhere and maven clean-install was working). The rootcause was incorrect Project Structure -/p/div
+Answer 16: 
+
+    
+    
+i had same issue and also a problem file icon in intellij, so i removed the .idea folder and re import project solved my issue. 
+    
+    
+Answer 17: 
+
+    
+    
+I was getting error: some jars are not in classpath.So I just delete the corrupted jar and perrform below steps
+
+1.Project &gt;  Setting&gt;Build,Execution,Deployment&gt;Compiler&gt;check build project automatically
+2.CTRL+SHIFT+A find/search **registry** --Check for below param
+compiler.automake.allow.when.app.running
+compiler.automake.trigger.delay=500---According to ur requirement
+3.Add devtool in pom.xml
+         &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;
+            &lt;optional&gt;true&lt;/optional&gt;
+        &lt;/dependency&gt;
+4.Build ,If found any probelm while building ,saying some jar in not in class path.Just delete the corrupted jar
+and re-build the project angain after sync with maven lib
+
+    
+    
+Answer 18: 
+
+    
+    
+Not enough points to comment on an existing answer, but similar to some people above, I wound up just adding a macro &amp; keymap to Organize Imports / Format / SaveAll / FastReload(F9) / Synchronize.
+
+The synchronize is added as it seems to be the only way I can also see updates in resources modified by external build tools / watchers (i.e., webpack).
+
+The process is slower than eclipse - and for the external file refresh often have to run the command multiple times - but suppose I can live with it.
+    
+    
+Title: What&#39;s the meaning of &ldquo;Include Directories&rdquo; and &ldquo;Include Headers&rdquo; in Netbeans for C++?
+Description: 
+    
+    
+                    
+In Netbeans 8.0 for C++ there is an option in Project Properties-
+Title: Suppress &ldquo;method never used locally&rdquo; warning with JUnitParams
+Description: 
+    
+    
+                    
+I am using junitparams to write my test cases, but I don't like unnecessary warnings in my code.
+
+In case of junitparams, a method that is used as a test-data source gives following warning.
+
+
+  The method getOddNumbers() from the type XTest is never used locally
+
+
+I want to suppress this warning, but I don't want to use @SuppressWarnings("unused") because i am using this method in @Parameters(method="getOddNumbers") annotation.
+
+Please find below dummy source code and screenshot of the warning :-
+
+package com.x.test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+@RunWith(JUnitParamsRunner.class)
+public class XTest {
+
+    @Test
+    @Parameters(method="getEvenNumbers")
+    public void isEven(int value) throws Exception {
+        assertTrue(value % 2 == 0);
+    }
+
+    @Test
+    @Parameters(method="getOddNumbers")
+    public void isOdd(int value) throws Exception {
+        assertFalse(value % 2 == 0);
+    }
+
+    private static Object[] getEvenNumbers() {
+
+        return new Object[] { 
+                new Object[] { 2 },
+                new Object[] { 4 },
+                new Object[] { -6 },
+                new Object[] { -10 }
+        };
+    }
+
+    private static Object[] getOddNumbers() {
+
+        return new Object[] { 
+                new Object[] { 1 },
+                new Object[] { 3 },
+                new Object[] { -7 },
+                new Object[] { -11 }
+        };
+    }
+}
+
+
+
+    
+
+        
+Title: How do you determine the value of a return statement that isn&#39;t stored in a variable?
+Description: 
+    
+    
+                    
+The code I am working with has many recursive method calls that return the results of the method directly without storing it into a variable.
+
+public bool foo()
+{
+  return bar();
+}
+
+public bool bar()
+{
+  return infinitMethodCalls();
+}
+
+
+As a result, debugging is a pain. How can I determine the value returned by bar() without using a temp variable or following the endless method calls?
+
+temp variable example:
+
+public bool foo()
+{
+  return result = bar();
+}
+
+
+The code I am working with is mostly written this way. 
+    
+
+        
+Answer 1: 
+
+    
+    
+This depends on the version of VS you are using.
+
+For Visual Studio 2013 you can show the "Autos" window, it dynamically displays all return values of functions you step over while debugging. You can find the Autos Window here: Debug =
+Answer 2: 
+
+    
+    
+What about using a trace statement.  I'm assuming you want to know what the result of each call on the call stack is when debugging the recursion.  
+
+Note: Having the trace statement at the top of the function will order the output, to the console, from first to last.
+
+For example:
+
+void Factorial(int n) {
+
+    Trace.WriteLine(n);
+
+    if (n == 0)
+       return 1;
+    else
+       return (n * factorial(n-1));
+
+}
+
+    
+    
+Title: Xcode C++ autocomplete is fast in main function but slow in other places
+Description: 
+    
+    
+                    
+I am writing C++ on OS X, and the best IDE I've found yet is Xcode. But the automatic code completion is weird. The suggestion will appear only after two or three seconds. To be specific, while I type
+
+str
+
+
+the list that contains suggestions including string and other identifiers won't appear until I stop typing and wait for 2 or 3 seconds. So basically, the auto completion is UNUSABLE!!
+
+Strangely though, the auto code completion is super fast in the main() function.
+
+Is there any explanation to such strange behavior of the automatic code completion in Xcode when writing C++?
+
+Thanks.
+    
+
+        
+Title: Setup Jade With webstorm on MAC
+Description: 
+    
+    
+                    
+I am getting an error while compiling a jade file on my mac. I have already read too many blog posts but the problem still exits. 
+
+Here is a screenshot of the error I am getting:
+
+
+
+Can anyone tell me how i can setup jade in Webstrom MAC.
+
+In terminal when i am trying to compile using this command i got error no: 156   
+
+mandeepgill-macpro:~ mandeepgill$ cd /Applications/MAMP/htdocs
+mandeepgill-macpro:htdocs mandeepgill$ cd HTMLCodes
+mandeepgill-macpro:HTMLCodes mandeepgill$ cd Sports
+mandeepgill-macpro:Sports mandeepgill$ cd public_html
+mandeepgill-macpro:public_html mandeepgill$ jade main.jade main.html
+
+
+
+/usr/local/lib/node_modules/jade/bin/jade:156
+              if (err) throw err;
+                             ^
+Error: EISDIR, open 'main.html'
+mandeepgill-macpro:public_html mandeepgill$
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The EISDIR error is caused when a Node application expects a file, but gets a directory.
+
+This particular instance of that error was thrown by this block of code:
+
+fs.writeFile(path, output, function(err){
+          if (err) throw err;
+          console.log('  \033[90mrendered \033[36m%s\033[0m', path);
+        });
+
+
+You can tell because it's not error number 156, but the line number of the relevant code.
+
+Do you, by any chance have a directory named main.html in /Applications/MAMP/htdocs/HTMLCodes/Sports/public_html?
+
+Also, you should be able to just execute the command, jade main.jade without the second argument. That would seem to make your life easier.
+
+Though if your dead set on using Webstorm on a Mac, this configuration should work equally well, or to keep it really simple, just put $FileName$ in arguments and get rid of the output paths.
+
+This seems to have been a fairly common problem with Webstorm watchers though, so you might want to just use the command line jade --watch.
+    
+    
+Title: Extract # TODO tags from source code and convert them into Issues on Bitbucket / Github
+Description: 
+    
+    
+                    
+Some IDE's like PyCharm offer ability to mark parts of source code with # TODO tags with further ability to locate all the tags later on.
+
+Is there any way to convert them into "Issues" after commit was made to Butbucket or Github?
+
+I find it might be very useful to create TODO's on the fly while writing code, so then other contributors may view them on online repository, like Bitbucket.
+
+Bitbucket and Github have a lot of addons or "services", but I couldn't find similar functionality anywhere.
+    
+
+        
+Answer 1: 
+
+    
+    
+There is a cloud based solution called Todofy (https://todofy.org), it lists out all the todos in the repository, and keep tracking its state untill its finished (removed from code). It provides more features like adding deadline, reminders, assigning someone or bringing someone to discussion, labels etc. 
+
+Example comment with prettifiers (C++ style comment)
+
+// TODO: something has to be done quickly @deadline: 1 week
+// @assign: mebjas @priority: high
+
+
+It has an option to auto create issue for it in Github.
+    
+    
+Answer 2: 
+
+    
+    
+I have created a node module to do exactly what you needed, to adapt it to your usage, you will have to create a package.json file, in which you mention the url of your github repository, and then you will have to create a .fixme-to-issue file and include your github credentials as well as the configuration for the annotations (if the module finds a //TODO, it creates an issue with label todos for example).
+to install the module: 
+
+npm install -g fixme-to-issue
+
+    
+    
+Answer 3: 
+
+    
+    
+Here is a pretty strait forward python script. It uses Githubpy to interact with github. It goes through your current directory tree and grabs the given files (in this case *.cpp and *.h). It then goes through each one of those files finds any #TODO and creates a github issue. It then changes that line to be TODO [GH]:
+
+gh = GitHub(username=user, password=password)
+
+path = '.'
+
+configfiles = [os.path.join(dirpath, f)
+    for dirpath, dirnames, files in os.walk(path)
+    for extension in extensions
+    for f in fnmatch.filter(files, ["*.cpp", "*.h")]
+
+import fileinput
+for fileName in configfiles:
+    count = 0
+    search = fileinput.input(fileName, inplace = 1)
+    for line in search: #TODO [GH12]: to
+        line = line.rstrip()  # remove '\n' at end of line
+        if re.match("(.*)(\#)TODO:(.*)", line):
+            todoInfo= re.sub("(.*)(\#)TODO:\s","", line)
+            fileNameShort = re.sub("\.\/","", fileName)
+            subject = fileNameShort+":"+str(count)+" " + todoInfo
+            # make url that can link to specific place in file
+            url = "https://github.com/"+projectAccount + "/" + project + "/blob/master/" + fileNameShort + "#L" + str(count)
+            r = gh.repos(projectAccount)(project).issues.post(title=subject, body=url)
+            line = re.sub("(\#)TODO:","#TODO [GH"+str(r.number)+"]:", line)
+        print(line) #write line back to file
+        count = count + 1
+
+
+You can access the who script on my github. https://github.com/jmeed/todo2github
+    
+    
+Title: Eclipse: How to create Quick-Assist for If-else to Switch [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        Can Eclipse convert if-else to switch for enums
+                            
+                                (2 answers)
+                            
+                    
+                Closed 7 years ago.
+        
+
+
+    
+
+In Eclipse Juno we have a Quick-Assist for converting Switch to If-else. Is there a way to add a Quick-Fix or similar shortcut for the opposite action: converting If-else to Switch ?
+
+For example convert:
+
+if (kind == 1) {
+  return -1;
+} else if (kind == 2) {
+  return -2;
+} else {
+  return 0;
+}
+
+
+To:
+
+switch (kind) {
+  case 1: return -1;
+  case 2: return -2;
+  default: return 0;
+}
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Interesting question. If it's possible to add a quick-fix for converting if-else to switch, then how would the Assist convert if-else statements with boolean expression that contain more than one variable to switch statement ?
+
+Let's say, we want to convert this if-else statement to switch:
+
+if (x == 1 &amp;&amp; y == 1) {
+   //do something
+} else if (x == 1 &amp;&amp; y == 3) {
+   //do something else
+} else if (x == 2 &amp;&amp; y == 1) {
+   //and so on.
+}
+
+
+This would result in:
+
+switch (x) {
+   case 1 : {
+      switch (y) {
+         case 1: // do something
+         case 3: // and so on  
+      }
+      break;
+   }
+   case 2 : {
+      switch (y) {
+         case 1: //do something else
+      }
+      break;
+   }
+}
+
+
+Personally, I wouldn't like to convert if-else with more complex boolean statements to switch, because the generated code could be very difficult to read and (maybe) wouldn't meet some Good Practices conventions. In simplier cases, like the one you've posted, it's not very difficult and wouldn't take so much time and effort for you to convert it.
+    
+    
+Title: Resolving DLL paths when running Unit Tests from VS IDE
+Description: 
+    
+    
+                    
+Product: VisualStudio 2012 and its Testing infrastructure
+
+I have a solution (MySolution) with one C++ DLL project (MyClassLib.dll) and one Unit Test project (TestMyClassLib.dll)
+
+When I build the solution with the debug configuration, all the results get published to MySolution\Debug
+
+However, when I then try to run my debugging tests (Test 
+Title: A WebGL intelligent IDE/Environment/Parser
+Description: 
+    
+    
+                    
+Is there an WebGL intelligent IDE/Environment/Parser (... compiler, interpreter ...) that would go through the code and analyze it? 
+
+The analysis that I am thinking about is debugging, code interpretation, intellisense...  
+
+I know there are some extensions for VS that allow Java Script parsing, but what are your experiences and advices for the best setup?
+    
+
+        
+Answer 1: 
+
+    
+    
+If you need free one. You can use NetBeans. It can handle pretty well with JavaScript, so it should with WebGL.
+    
+    
+Answer 2: 
+
+    
+    
+For debugging WebGL I recommend WebGL Inspector Chrome extension (http://benvanik.github.io/WebGL-Inspector/). It allows you to log all the WebGL calls, see the current state of GL, look at all the buffers (including vertex buffer visualization), shaders, textures, etc. I found it helpful identifying problems with my WebGL code countless times.
+
+For debugging Javascript, you can either go for a full IDE (WebStorm, VS) and use their debugger, or just let Chrome Devtools handle it. I prefer the latter option, because it feels a bit snappier and more 'solid' for me.
+
+Also, Visual Studio Code (their new little IDE based on Atom) has some very nice Javascript Intellisense and includes a debugger. Might be a good idea to check it out.
+    
+    
+Title: trying to compile an rc file(Code::Blocks)
+Description: 
+    
+    
+                    
+Im trying to compile an rc file in code::blocks but im getting some errors. Here's the file:
+
+#include "I:/Win32/Win32_SimpleMenu/resource.h"
+
+IDR_MYMENU MENU
+BEGIN
+    POPUP "&amp;file"
+    BEGIN
+        MENUITEM "E&amp;xit", ID_FILE_EXIT
+    END
+
+    POPUP "&amp;Stuff"
+    BEGIN
+        MENUITEM "&amp;Go", ID_STUFF_GO
+        MENUITEM "G&amp;o somewhere else", 0, GRAYED
+    END
+END
+
+IDI_MYICON ICON "menu_one.ico"
+
+
+the compiler says it is compiling the rc file, but it does nothing. After cancling i get:
+
+
+  ||can't open file `prompt': No such file or directory|
+  ||preprocessing failed.|
+  ||=== Build finished: 2 errors, 0 warnings ===|
+
+
+Thanks  
+    
+
+        
+Title: How do I resolve a plugin conflict in Eclipse?
+Description: 
+    
+    
+                    
+I'd like to upgrade my Helios installation of Eclipse to Indigo.  When I do, I get the following message:
+
+Cannot complete the install because of a conflicting dependency.
+  Software being installed: Eclipse IDE for Java EE Developers 1.4.2.20120213-0813 (epp.package.jee 1.4.2.20120213-0813)
+  Software currently installed: Oracle GlassFish Server Tools 1.6.1.201009290929 (oracle.eclipse.tools.helios.glassfish.feature.group 1.6.1.201009290929)
+
+
+So my first thought was to simply uninstall GlassFish.  For the life of me, I can't figure out how and where to go to do this.  I went to Help-
+Answer 1: 
+
+    
+    
+There is no mechanism within Eclipse to permanently and physically uninstall a feature and its plug-ins. The process to physically and permanently remove an undesirable feature and its plug-ins is a manual process that should be done when Eclipse is not running. In order to do, you will have to manually remove the files there associated with the feature from the eclipse/features directory and its plug-ins from the eclipse/plugins directory. 
+
+D:\Softwares\eclipse-standard-kepler-R-win32\eclipse\plugins\eclipse\
+-plugins
+-features
+
+    
+    
+Title: Eclipse like Java development environment in Android tablets
+Description: 
+    
+    
+                    
+Can anyone tell whether Android OS for tablet would support Eclipse like Java development environment? Please help....Thanks in advance.
+    
+
+        
+Title: Inferring opening/closing parens?
+Description: 
+    
+    
+                    
+It seems like someone must have done work on figuring out how to infer or suggest where to put closing parentheses.  I mean, highlighting matching parens is great, but suggesting would be even better.  Is this a defined problem?  If so, what is its name (like, what should I Google Scholar?).  If not, why not?  Is it an obviously impossible/poorly posed question?
+
+To wit, let's say I have some malformed, ruby code:
+
+foo.all.map { |i| i.bar }).uniq.compact.reject { |j| j.match /baz/i }
+
+
+Note that I'm missing the initial parenthesis.  The problem I'm talking about is, "How do I suggest the insertion of a paren at the beginning when I move my cursor over the unpaired paren?"
+
+If this is not a poorly posed question, why hasn't someone done this yet?
+    
+
+        
+Answer 1: 
+
+    
+    
+One could keep track of "balanced" vs "unbalanced" parens as the user types. Then suggest a paren as soon as the parens become unbalanced.
+
+For example typing (something)) would suggest an opening paren before s. Correctly placing the "fix-it" paren might be challenging. For example if the user types something(else)) there's a choice: insert the fix-it opening paren after g or at the beginning of the string?
+
+Keeping track of balanced parens would be relatively simple:
+
+int parenCount = 0
+
+event keyUp(char c){
+    if(c is close-paren){
+        parenCount--;
+    }else if(c is open-paren){
+        parenCount++;
+    }
+    if(parenCount &lt; 0){
+        // missing an open-paren somewhere
+    }
+}
+
+// handle missing close-parens when user finished typing the string...
+// for example if user types "myObject.something(" and hits enter
+
+
+Might also need to look for unnecessary parens as in a.doSomethingWith((aNumber))
+    
+    
+Title: IntelliJ IDEA on osx lion - How to setup JSDK? [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                Closed 8 years ago.
+        
+
+
+    
+
+
+  Possible Duplicate:
+  IntelliJ IDEA JDK configuration on Mac OS  
+
+
+
+
+I'm currently trying to get IntelliJ to work on my osx lion. But when creating a new project the wizard shows me the following page:
+
+
+  Please select JSDK for this project
+  
+  Project JDK
+  
+  Nothing to show
+
+
+And no matter where I go with the file browser, I always get "nothing to show". Because of that I can't complete the wizard... (I tried several places I found googling)
+(Creating Java apps with Eclipse works fine by the way)
+
+What do I have to do to get this working?
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+IIRC, IDEA already preselected the correct directory when adding a new JSDK.
+    
+    
+Title: Eclipse Helios - @SuppressWarnings &ldquo;rawtypes&rdquo; doesn&#39;t work while &ldquo;unchecked&rdquo; does
+Description: 
+    
+    
+                    
+I have a problem with the @SuppressWarnings annotation when handling raw-types warnings in Eclipse Helios.
+
+According to this post and the docs, the annotation parameter rawtypes should be used instead of the old unchecked in Eclipse Helios. However, when I use the rawtypes annotation, I get following warning:
+
+Unhandled warning token rawtypes
+
+
+Even when performing a quick-fix over a raw type, Eclipse suggests me to use rawtypes. However, I have found out that the old unchecked parameter still works in my version of Helios while rawtypes doesn't, which doesn't conform to the docs. 
+
+So basically I have already "solved" this issue but the real question is why rawtypes doesn't work?
+
+My Eclipse setup:
+
+Version: Helios Service Release 2
+Build id: 20110301-1815
+
+
+Project setup:
+
+Java Build Path &gt; JRE System Library: jdk1.6.0_24
+Java Compiler &gt; JDK Compliance: 1.6
+Java Compiler &gt; Generated .class files compatibility: 1.6
+Java Compiler &gt; Source compatibility: 1.6
+
+
+From eclipse.ini:
+
+-vm
+c:/Program Files/Java/jdk1.6.0_24/bin
+-vmargs
+-Dosgi.requiredJavaVersion=1.6
+-Xms40m
+-Xmx512m
+
+
+System:
+
+Windows 7 Professional Service Pack 1
+
+
+Any help or explanation will be much appreciated, thanks!
+    
+
+        
+Title: In Visual Studio 2010, how do I quickly switch from a .h file to the corresponding .cpp file? [duplicate]
+Description: 
+    
+    
+                    
+This is a feature I have grown accustomed to in Eclipse (Ctrl+Tab). Is there an equivalent in Visual C++?
+    
+
+        
+Answer 1: 
+
+    
+    
+In Visual Studio 2013 and later there is a default keyboard shortcut for this: Ctrl+K, Ctrl+O
+(You will need to hold down Ctrl and type ko and then release Ctrl)
+
+In earlier versions, see:
+
+Visual Studio Macro to switch between CPP and H files
+
+or
+
+Open Corresponding File in Visual Assist  
+    
+    
+Answer 2: 
+
+    
+    
+In Visual Studio 2013 a default keyboard shortcut for this is Ctrl+K, Ctrl+O
+    
+    
+Answer 3: 
+
+    
+    
+You could add this macro to your VS config (via Tools -
+Answer 4: 
+
+    
+    
+Try PhatStudio.  It's free and comes with an easy installer.
+
+
+ALT + S = Switch between header/source file
+ALT + O = Open a file (supports instant search via typing, like the start menu in Windows Vista/7).
+
+    
+    
+Answer 5: 
+
+    
+    
+Try Visual Assist, which sports this very feature (amongst others):
+
+http://www.wholetomato.com/
+
+The code browsing functionality -- of which the header/cpp swap is one part -- are really good.
+
+(I also really rated its intellisense and refactoring features, but not everybody I've spoken to has agreed with me.)
+
+EDIT: just remembered, the Nifty Solution Plugin also does this -- plus another handly Visual Assist-like thing, though nothing else -- and they're free:
+
+http://code.google.com/p/niftyplugins/
+
+(The guy's perforce plugin is great, too. Much better than the default VSSCC rubbish.)
+    
+    
+Answer 6: 
+
+    
+    
+In Visual Studio 2008 and 2010, you can right click in your .cpp file and choose Go To Header File ... that will take you in one direction. For the other direction, if you right click something you're declaring in the header, and choose Go To Definition, that will take you in the other direction. You might have to go through an ambiguity resolution dialog if you choose the constructor, because the function name matches the class name, but if you choose anything else, you'll go straight where you want. I know this is a two-click approach, rather than one keystroke, but it does do what you want.
+    
+    
+Answer 7: 
+
+    
+    
+If you position your mouse over a function declaration in the header and press F12, the cpp file will be opened at the definition of the cpp file...  I use this feature extensively!
+    
+    
+Answer 8: 
+
+    
+    
+I don't see this answer here, but at least in Visual Studio 2012 (Express included!), you can just assign your own keyboard command to go to the header file (NOTE: Only goes one way -- you can't go back to the source file unfortunately...)
+
+
+Go to Tools/Options/Environment/Keyboard.
+Find the following command: EditorContextMenus.CodeWindow.GoToHeaderFile
+Assign whatever key combination you want (Alt-S works)
+Profit
+
+
+Not sure which versions of VS this works in, but it doesn't require any add-ins and seems to do the trick in at least one direction.
+    
+    
+Answer 9: 
+
+    
+    
+Try using Switch - it's an addin that lets you flick between source and header, code and designer, XAML and codebehind etc etc:
+
+http://www.dwmkerr.com/switch/ or directly from Products and Extensions for Visual Studio
+    
+    
+Answer 10: 
+
+    
+    
+I'm a fan of Visual Assist for doing this. Its not cheap but it provides a lot more functionality than switching between header and source. I also use its open file in project and class browsing features a lot.  Of course the macro is free...
+    
+    
+Answer 11: 
+
+    
+    
+There's also a macro listed on the Whole Tomato support forum which has a few more file mappings.
+    
+    
+Answer 12: 
+
+    
+    
+For Visual Studio 2013, as mentioned by others it's the command named:
+
+EditorContextMenus.CodeWindow.ToggleHeaderCodeFile
+
+
+and it has as default combination of keys: Ctrl+K,Ctrl+O, but it can be changed if you introduce the new combination of keys that you like in the 
+
+Press shortcut keys: 
+
+under
+
+Tools -
+Answer 13: 
+
+    
+    
+Visual assist also does not support Visual studio express editions.  So you are stuck with the macro if you are using that IDE/p/div
+Answer 14: 
+
+    
+    
+In Visual Studio 2008 it's Alt + O.
+    
+    
+Answer 15: 
+
+    
+    
+In their (in)finite wisdom, MS decided to remove macros in MSVS 2012, so the macro above won't work.
+
+For MSVS 2012, I found this:
+
+http://www.dwmkerr.com/switch/
+
+It's highly configurable + if you want to help improving it, you can do so on GitHub.
+    
+    
+Answer 16: 
+
+    
+    
+In Visual Studio 2013 it's ALT + O
+    
+    
+Title: Using both netbeans and eclipse to edit a netbeans project
+Description: 
+    
+    
+                    
+Hi Netbeans is the default IDE at my workplace. I want to use Eclipse to edit the Netbeans projects. How easy or difficult is it to do this. Can someone outline the steps involved for this.
+    
+
+        
+Answer 1: 
+
+    
+    
+You should be able to import an existing project into Eclipse by:
+
+File -&gt; Import -&gt; Choose General -&gt; Existing Projects into Workspace
+
+
+It won't pick up your Netbeans settings however.  You may need to set your project up manually in terms of a libraries, source location etc..  
+
+Alternatively, if you're using Maven and Eclipse m2eclipse you should be able to import a Maven project and have it pick up most of the settings.
+    
+    
+Answer 2: 
+
+    
+    
+Importing an eclipse project should be easy (for Netbeans 6.7): File-
+Title: How to configure Hibernate Tools HQL editor in Eclipse with a custom NamingStrategy
+Description: 
+    
+    
+                    
+I've installed Hibernate Tools 3.2.4.GA in Eclipse Ganymede.  The main driver for installing it was to be able to issue HQL queries interactively.  
+
+I have configured all of our mapping files, hibernate.properties, etc. and it shows all of our entities and mappings and is able to read a list of tables from the database.  It doesn't appear to use the custom naming strategy I specified in the configuration and therefore I can't query anything.  The query in the Dynamic SQL Preview is correct except for table names.
+
+The way I configured the naming strategy was to right click the hibernate configuration and select 'edit configuration'  In the 'Options' tab I 'browse' for a Naming strategy.  Eclipse is able to find the naming strategy and auto-complete it for me, which would indicate it is in the classpath.  I then hit OK and still have problems.
+
+Am I missing something in the naming strategy configuration for hibernate tools (now jboss tools it would appear) or is it broken?
+
+Optionally, is there another tool that I could use (in or out of eclipse) to issue HQL statements against my database and be able to see the results?
+
+UPDATE
+The problem was in the NamingStrategy implementation.  It prepends a string to the front of every table, and changes camel case to all lower case with underscores.  Unfortunately, in the implementation, the string is injected via spring, and there is no default set.  That spring injection wasn't happening in hibernate tools, and because there was no default, the string was empty.  It has been changed to have a default ( which matches our current spring configuration ) and it is working now.
+    
+
+        
+Answer 1: 
+
+    
+    
+I didn't use Hibernate Tools in Eclipse. But here is an alternative solution to issue HQL statements against your database.
+
+there is tool called HQE Hibernate Query Editor.
+Hibernate Query Editor (HQE) is a simple application designed to make easy the work of writting HQL/SQL queries for Hibernate.
+It has simple features like syntax highlight and other editing stuff. 
+
+more information about HQE
+ can be found here https://hqe.dev.java.net/
+    
+    
+Answer 2: 
+
+    
+    
+You might look into my plugin which can create simple hqls easily.
+http://fast-code.sourceforge.net/
+    
+    
+Answer 3: 
+
+    
+    
+Configure hibernate with myeclipse and you get can various options . This might help
+http://www.skill-guru.com/blog/tag/hibernate-and-eclipse-tutorial/
+    
+    
+Title: Netbeans 8 is doing crazy auto horizontal scroll
+Description: 
+    
+    
+                    
+Netbeans 8 is doing crazy auto horizontal scroll, how to disable this!
+When coding a long lines, netbeans automatically move horizontally and focus to your mouse pointer.
+
+To replicate :
+1. Do a long code, make sure you will have horizontal scroll visible.Sample :
+&lt;label class="labelContent"&gt;&lt;input type="text" id="holDate" name="holDate" required value="&lt;?php echo ($update["data"]["date"] ? $update["data"]["date"] : ""); ?&gt;" /&gt;&lt;/label&gt;
+2. Edit above code type="text" to hidden, you will notice that the netbeans will move your view automatically and focus to the mouse cursor!
+
+Note : Even using "Line Wrap" to anywhere, you will see this movement! this make my head break, probably same with you!!? LOL hope someone knows how to disable this.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+SOLVED * PROBLEM: In NetBeans
+Title: Will any ide warn me when I set &ldquo;Optional&lt;String&gt; optional = null;&rdquo;
+Description: 
+    
+    
+                    
+If I write something like this
+
+java.util.Optional&lt;String&gt; optional = null;
+
+
+or as a field (without init value, also not in constructors)
+
+private Optional&lt;String&gt; optional;
+
+
+or later in the code
+
+optional = null;
+
+
+I think I should get at least a warning. We had some unexpected NullpointerExceptions which were found very late because nobody expected the possibility to have a null-instance of an Optional (which was obviously a bug).
+
+I tried Eclipse and IntelliJ and both didn't mention it. I also didn't found a plugin. Is there a reason why there isn't such a check? Or is it implemented somewhere?
+    
+
+        
+Answer 1: 
+
+    
+    
+In Eclipse, you can go to your project properties and then to Java Compiler --code/codecode/codecode/codecode/codecode/code/ppimg src="https://i.stack.imgur.com/mlK2S.png" alt="Eclipse Errors/Warning --&gt; Potential programming problems"/p/div
+Answer 2: 
+
+    
+    
+If you want to see the warning for statement which may cause NullPointer exception in eclipse use findbug plugin for eclipse
+
+From FindBugs Bug Descriptions
+
+
+  NP: Possible null pointer dereference (NP_NULL_ON_SOME_PATH)
+  There is a branch of statement that, if executed, guarantees that a null value will be dereferenced, which would generate a NullPointerException when the code is executed. Of course, the problem might be that the branch or statement is infeasible and that the null pointer exception can't ever be executed; deciding that is beyond the ability of FindBugs.
+
+    
+    
+Answer 3: 
+
+    
+    
+public final class Optional&lt;T&gt; {
+....
+}
+
+
+As Optional is a class that inherits from Object (like every class in Java) it can be set to null. There is nothing wrong here.  
+
+But you should always be aware to set it to Optional.empty(), when you want to set it to an empty value.
+    
+    
+Title: Suggestion for C IDE?
+Description: 
+    
+    
+                    
+I used  to use gcc compiler on my unix machine. I am now forced to work on a windows machine. Is there any cool IDE or a simple editor for C with a unix terminal like feel (Black Screen and colored syntax on it :))
+
+What other editors/IDE are as robust as gcc for windows? Also what is your personal favorite. I would like a try a few of the those before I stick with one.
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+If you are used to a Unix-y feel and are looking for a text editor, I'd honestly avoid installing Visual Studio. It's a nice IDE, but it is very heavyweight and perhaps much more than you are asking for. That said, you might of course find that you like it, but be aware that you are potentially looking at a several-hundred-megabytes download, 2 gigs for the full package IIRC.
+
+Netbeans is good too, but fairly heavy, and a little difficult to get set up correctly with C and C++, at least last time I tried. It's a good alternative to VS, though.
+
+I'd go for a more lightweight solution, like Notepad++, vim for Windows, or my personal favourite, Geany - http://www.geany.org/
+
+Getting the black background &amp; colored syntax is possible on basically any advanced text editor/IDE nowadays.
+
+As for the compiler, MinGW is probably your best bet. Or you could nick the compiler &amp; toolset that comes with Visual Studio Express :)
+    
+    
+Answer 2: 
+
+    
+    
+Visual Studio.  You can change the fonts &amp; colors however you want.  I have been using the same coloring scheme since Borland Turbo C++ back in the 80's -- yellow text on a dark blue background.
+    
+    
+Answer 3: 
+
+    
+    
+VIM or Emacs. Though I personally will never use anything other than VS :)
+    
+    
+Answer 4: 
+
+    
+    
+Cygwin is your friend. It gives you all the nice unixy stuff that you miss! :)
+
+In terms of cool IDEs that will integrate nicely with gcc on Cygwin, you should try Netbeans, Eclipse (with CDT) - both require a decent JVM. If you do get Cygwin installed, there's xemacs and gvim I believe that you can get for it...
+
+IMHO stick with Netbeans...
+    
+    
+Answer 5: 
+
+    
+    
+Zeus is a very nice programmer's editor. I just love it's Brief keyboard emulation.
+    
+    
+Answer 6: 
+
+    
+    
+IIRC  DOS command prompt can change its color. Have you tried Cygwin and MinGW?
+    
+    
+Answer 7: 
+
+    
+    
+mingw is Minimum Gnu for Windows.  There are several add on packages to it, but it has gcc and g++.  Occasionally there is an issue with some tool not acting exactly right with executables having .exe on their end or / and \\ in output statements, but it's pretty decent.  I can't remember, but I think that there may be some reason that you can't run gdb in Windows, but I could be wrong.
+
+You can also get versions of most of the *nix text editors for Windows.  gVim is available if you like vi or vim.  Versions of vi and vim for the command line are also available, but don't always act right with resized windows.  gVim and vim can do syntax highlighting if you tell them to in the configuration file.
+
+The last couple of versions of Windows have had (or been able to freely download and install) PowerShell, which I suggest you get.  It is different from a *nix shell in many many ways, but often (not always) you can get away with using it just like a *nix shell.  If you use pipes in it you should know that it likes to turn everything into utf-16, though.  The main good thing I've found when using it as a better DOS window is that you can resize the window more freely.  You can still use old DOS windows, though.
+
+Another alternative is cygwin, which besides just the command line tools, presents more of a *nix environment for your programs.  It includes libraries that make things look more like you are running on Linux from your programs' point of view (simulating many Linux system calls, for instance).  I used this a long time ago, but it had some pretty severe problems back then.  I have heard great things about it since then, but I have not had enough of a reason to try it out again.
+    
+    
+Answer 8: 
+
+    
+    
+Visual Studio will be your best bet. Others have mentioned the free Express version which will probably be sufficient for your needs. Visual Studio is not only an IDE, it has Microsoft's compiler bundled with it. Since the choice of IDEs is vast, I'll leave it to you to choose the one you'll be comfortable with.
+
+The venerable GNU gcc compiler is also available on Windows using Cygwin or MinGW. 
+
+If you want something pretty cutting edge, compiler wise, you should check out clang. For various reasons, this is the C compiler to keep your eyes on. It's relatively new and was built with IDE support in mind.
+    
+    
+Answer 9: 
+
+    
+    
+When visual studio already being mentioned, I have to mention Slickedit, not a IDE but a fantastic editor.
+
+http://www.slickedit.com
+    
+    
+Answer 10: 
+
+    
+    
+I recommend codelite - cross platform, free IDE designed for GNU toolchain.
+    
+    
+Answer 11: 
+
+    
+    
+Visual Studio 2010 has an express edition that's doanloadable for free. 
+link text
+
+gcc via Cygwin is another awesome choice esp. if you want to use Emacs as your IDElink text. 
+
+Personally, I tend to use both. I heavily lean towards Visual Studio 2010, but occasionally compile using gcc to make sure that both compilers are working the same way. This used to be beneficial in the past (pre VS2010), but I haven't had much success in catching VS2010 make mistakes - yet. 
+
+In terms of the overall experience of integrated development, debugging etc., it's hard to beat VS2010. 
+    
+    
+Answer 12: 
+
+    
+    
+Net beans
+Code block
+Dev c++
+code lite are good IDE
+    
+    
+Title: C++ development for Linux on Windows
+Description: 
+    
+    
+                    
+I am trying to setup a development environment for Linux C++ application. Because I'm limited to my laptop (vista) which provides essential office applications, I want to program and access email, word at the same time.
+I'd prefer a local Windows IDE. SSH to a company linux server and using VI doesn't seem productive to me. Even using some IDE installed on the linux server doesn't seem good to me, because I can't do the work at home.
+So does Eclipse CDT + MinGW work for me, or is there any other choice? 
+
+Thanks.
+
+ZXH
+    
+
+        
+Answer 1: 
+
+    
+    
+Why not install a Linux virtual machine on your laptop, in VMware or similar?  That way you can test while you're developing too.
+    
+    
+Answer 2: 
+
+    
+    
+You can also try http://cygwin.com/
+    
+    
+Answer 3: 
+
+    
+    
+Is it a GUI app? And do you have to target Linux specifically? If not, Qt (http://trolltech.com/) may be something that you can use. It would allow you to more or less develop your whole application on Windows, and then spend a few hours on a linux machine getting the whole thing ported...
+    
+    
+Answer 4: 
+
+    
+    
+Qt is the best choice. I develop with tis tool for a long time. And you can develop with the same ide : QtCreator and the same framework : Qt on MacOS, Linux based or Windows plateform...
+Moreover, specifically on Linux, Qt is well integrated with Kdevelop ! 
+    
+    
+Answer 5: 
+
+    
+    
+If you have Visual Studio, which I feel is an excellent IDE, you can try to set it up to use GCC/G++.  I've done this before, back in the Visual Studio 6 days.  As long as you aren't using any Windows-specific libraries and write portable C++, you can compile and test on Windows, then periodically ensure that the code also compiles properly for Linux.
+
+Another approach, one that I actually prefer, is to host your source and make files on the Linux box, share the files through Samba, then use your Windows IDE/text editor to edit those files.  Then, you can do the compiling through an SSH terminal.  Sure, you'd lose the convenience of being able to compile through your IDE, but at least you wouldn't have to muck around getting the compiler set up on Windows.
+    
+    
+Answer 6: 
+
+    
+    
+If you have a linux server available to you, you could also use NX to log in graphically, and use a Linux IDE there like Code::Blocks, or shudder Eclipse. Of course, there's nothing unproductive about shelling in and using VIM. I find it's a good way to shake out the IDE-induced cobwebs every now and again. Happy coding however you end up doing so!
+    
+    
+Answer 7: 
+
+    
+    
+I use (and recommend) Netbeans for C/C++ Development together with Cygwin to develop POSIX applications on Windows that will run on Linux/Solaris later on.
+
+It is pretty easy to setup as long as you stick to the stable version of Cygwin.
+    
+    
+Answer 8: 
+
+    
+    
+I was in a similar position 2-3 years ago and tried several approaches, but the only one that really worked wor me was vim+ssh (+gdb, make, svn, etc). But again, I use vim even for Windows development.
+    
+    
+Answer 9: 
+
+    
+    
+This slideshow (PDF) walks through how to set up a cross compiler from Windows to Linux.
+    
+    
+Title: What non-free tools are popular amongst Java developers
+Description: 
+    
+    
+                    
+The vast majority of developers I interact with are using Eclipse (I prefer NetBeans) and will leverage many of the free plugins that are available. However, many of them are using few if any tools that require monetary payment.
+
+Have developers ever considered that this may be unwise and that they are compromising their own productivity? Are there certain types of tools that the majority of developers will pay for? Likewise, are there tools they would like to use but aren't because they aren't free?
+    
+
+        
+Answer 1: 
+
+    
+    
+Intellij is a great tool, especially compared to Eclipse IMO.
+    
+    
+Answer 2: 
+
+    
+    
+JProfiler for memory profiling etc
+
+http://www.ej-technologies.com/products/jprofiler/overview.html
+    
+    
+Answer 3: 
+
+    
+    
+Intellij is probably the most popular 'paid-for' tool that I know developers use. I've worked at client sites where they regard it as so productive that they have site-wide licenses, whereas some similar sites will use (the free) Eclipse or NetBeans.
+
+There's a huge motivation not to pay for stuff. But if doesn't have to save you that much time to be worthwhile. The per-seat/per-day developer cost in large enterprises is surprisingly high. If you claim that Intellij saves you, say, 2-3 days productivity in a man-year, then it'll have paid for itself (this is largely a subjective argument, I would say, but I know independent consultants who pay for Intellij themselves).
+    
+    
+Answer 4: 
+
+    
+    
+JIRA and FishEye improve productivity and they are not restricted to Java.
+    
+    
+Answer 5: 
+
+    
+    
+although i prefer to write software with open source libraries, i really like using IntelliJ. Having worked for about a year with eclipse, it definately boosts my productivity.
+
+I am now considering purchasing javarebel which should give another productivity boost.
+
+on the other hand, using a library where the source is not available, would feed akward, because would not know how it works, debugging would be much harder, and it could potentially contain security problems wich no chance of detection.
+    
+    
+Answer 6: 
+
+    
+    
+We have been using Jira + Fisheye + Crucible.  While the first two are just your standard tools for tracking issues and viewing/searching the repository, the third tool Crucible has been invaluable.  It is a tool to help with code reviews.
+
+http://www.atlassian.com/software/crucible/
+
+It has increased the amount of code reviews we do dramatically as well as giving us some tracking that bugs got fixed and the code was reviewed.
+
+In addition, we have some floating licenses for YourKit
+http://www.yourkit.com/
+
+That we use quite frequently to sort out memory and performance issues.
+
+We try to follow the mantra:
+First, write it so it works.
+Second, optimize only what needs optimization.
+
+In order to optimize, you need to know where the bottle necks are, and profiling is one of the best ways to find out.  You pick the slowest thing and fix it, profile again, if it's fast enough you are done.  If not, pick the slowest thing and fix it, rinse and repeat.
+    
+    
+Answer 7: 
+
+    
+    
+I like NetBeans as well, but I know many people who pay for MyEclipse, for its added features. The price it quite reasonable as well (~50$).
+    
+    
+Answer 8: 
+
+    
+    
+Many software companies will buy some code obfuscation tool, and they are usually not free (or free for trial only).
+
+Some will also buy good coverage tools.
+    
+    
+Answer 9: 
+
+    
+    
+JUnit Max for continuous testing in Eclipse.
+    
+    
+Answer 10: 
+
+    
+    
+Beyond compare is the best tool for file/folder comparison. http://www.scootersoftware.com/
+    
+    
+Title: Add two numbers instead of combining
+Description: 
+    
+    
+                    
+I am trying to create a program in which a user can enter 2 numbers and the program will take the 2 numbers and multiply them to get an answer. However, for this specific example, I am simply trying to take 2 numbers from a user and I want Java to add them. eg 1+1=2, instead of 1+1=11. 
+
+My code:
+
+import javax.swing.JOptionPane;
+
+public class MultiplicationTables {
+
+    public static void main(String args[]) {
+        //declare variables
+
+        String num1;
+        String num2;
+        int ans=0;
+
+        num1=JOptionPane.showInputDialog(null,"Enter a number");
+        num2=JOptionPane.showInputDialog(null,"Enter another number");
+
+        ans=Integer.parseInt(num1);
+        ans=Integer.parseInt(num2);
+
+
+        JOptionPane.showMessageDialog(null,"Your answer is " + (num1+num2));
+    }
+}
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You are using num1 and num2 which are Strings instead of ans which should be your sum as an int.
+Also you don't add correctly the 2 values into ans.
+
+public static void main(String args[]){
+    String num1 = JOptionPane.showInputDialog(null,"Enter a number");
+    String num2 = JOptionPane.showInputDialog(null,"Enter another number");
+
+    int ans = Integer.parseInt(num1);
+    ans += Integer.parseInt(num2);
+
+    JOptionPane.showMessageDialog(null,"Your answer is " + ans);
+}
+
+    
+    
+Answer 2: 
+
+    
+    
+num1 and num2 are String. 
+So as you write num1+num2 you get the result of their concatenation.
+
+In fact, you don't use the Integer.parseInt(); results.
+
+Instead, do it to addition two int values:
+
+int result = Integer.parseInt(num1) + Integer.parseInt(num2);
+
+
+And display result :
+
+JOptionPane.showMessageDialog(null,"Your answer is " + result);
+
+    
+    
+Answer 3: 
+
+    
+    
+Here: 
+
+num1=JOptionPane.showInputDialog(null,"Enter a number");
+num2=JOptionPane.showInputDialog(null,"Enter another number");
+
+
+The option pane returns strings, what you seem to understand, as you then go:
+
+ans=Integer.parseInt(num1);
+ans=Integer.parseInt(num2);
+
+
+But then you use the + operator on your string results:
+
+... +(num1+num2));
+
+
+But + for strings concatenates them. 
+
+So instead of "adding" strings, you want to add the numbers, as in:
+
+int1FromUser = Integer.parseInt(num1);
+int2FromUser = Integer.parseInt(num2);
+
+int sum = int1FromUser + int2FromUser;
+
+
+That is all there is to this.
+
+( and I took the freedom to use slightly better naming - keep in mind to use variable names that say something about the meaning of the thing they point to )
+    
+    
+Answer 4: 
+
+    
+    
+You are doing it wrong. You are adding Strings in the end and ignoring the parsed Integers. 
+
+And also you using the same integer variable for both inputs.
+
+So that should be 
+
+int ans1=0;
+int ans2=0;
+
+...
+
+ ans1=Integer.parseInt(num1);
+ ans2=Integer.parseInt(num2);
+
+
+And in the end 
+
+JOptionPane.showMessageDialog(null,"Your answer is " +(ans1+ans2));
+
+    
+    
+Answer 5: 
+
+    
+    
++ is used in addition when using Integer or int, and it also used to  concatenate two Strings. In your case num1 and num2 are Strings, and hence it is concatenating the result. So you will have to change your code to reflect following changes:
+
+ans = Integer.parseInt(num1);
+ans += Integer.parseInt(num2); // add the result of parseInt to ans
+//--^---------------------------
+JOptionPane.showMessageDialog(null,"Your answer is " + ans ); // another one
+
+
+Or alternatively:
+
+JOptionPane.showMessageDialog(null,"Your answer is " + (Integer.parseInt(num1) + Integer.parseInt(num2)));
+
+    
+    
+Answer 6: 
+
+    
+    
+I'd suggest you change the last line of your method to: 
+
+JOptionPane.showMessageDialog(null,"Your answer is " + (Integer.parseInt(num1) + Integer.parseInt(num2)));
+
+
+This way, you don't need the "ans" variable (which in your code doesn't really do anything) at all. Instead, you can simply parse the int values and add them on the same line as you're writing the message. 
+
+If you want to use ans, try this: 
+
+ans = Integer.parseInt(num1) + Integer.parseInt(num2);
+
+
+Then:
+
+JOptionPane.showMessageDialog(null,"Your answer is " + ans);
+
+    
+    
+Title: Favourite Features of VS 2010
+Description: 
+    
+    
+                    
+With the general public release of Visual Studio 2010 Beta 2 today, this latest version has created a lot of hype and interest.
+
+Indeed, the opinion I've gauged is that VS 2010 has resolved a great deal of the minor flaws left over from previous versions, as well as added some particularly useful new code editor and project development tools (in particular the Premium/Ultimate versions).
+
+My question here is: what are you favourite new features in VS 2010 that have really got you excited? Or similarly, what are the flaws of VS 2008 that you are most glad to have resolved?
+
+There is a wealth of changes in VS 2010, of course, but these are some of the ones that have interested me most (about which I know!).
+
+
+Integrated support for F# (with multi-targeting for .NET 2.0 - 4.0)/
+Much improved WPF designer. The VS 2008 was more than a bit buggy at times.
+Great improvements to the code editor, such as call hierarchy viewing.
+A decent add-in framework.
+A greatly expanded testing framework (now capable of database testing, for example) in Premium/Ultimate.
+Project planning and modelling features in Premium/Ultimate.
+
+
+If I could request one point/feature per post, I think that would be best, so we could vote them individually.
+    
+
+        
+Answer 1: 
+
+    
+    
+Visual Studio 2010's true Multi-Monitor Support sounds pretty fantastic.
+    
+    
+Answer 2: 
+
+    
+    
+The feature I'm most looking forward to having a decent play with is actually more .net 4 than visual studio. Parallel Extensions looks like it will be very interesting.
+    
+    
+Answer 3: 
+
+    
+    
+The new, clean web.config should make my managers happy.
+
+
+  "Just change the option in the web.config"
+  "Where is it?"
+  "Under 'AppSettings.'"
+  "Ugh ... there's so much junk in that file."
+
+    
+    
+Answer 4: 
+
+    
+    
+The built in profiler and historical debugger!
+    
+    
+Answer 5: 
+
+    
+    
+The 'Navigate To' window (Ctrl+,) is fantastic.  Eclipse has something similar, and I've always thought Visual Studio needed it.  Now if they would just add a 'Collapse All' button to the Solution Explorer...
+    
+    
+Answer 6: 
+
+    
+    
+One-click web publishing will be handy.
+    
+    
+Answer 7: 
+
+    
+    
+Favorite feature? Requiring 4 gigs of RAM to run it's bloat.
+    
+    
+Answer 8: 
+
+    
+    
+I liked many features
+
+
+Deployment
+Gated checkin
+Parallel Programming
+Faster debugging
+Separate debugger for x86 and x64
+
+
+These are just few.... The more you explore VS2010 the more you will get. Try to go through the videos by microsoft.
+
+Thanks,
+Sunil Agarwal
+    
+    
+Title: C/C++ Programming in Vista
+Description: 
+    
+    
+                    
+I'm from a Java school, but I'd like to get my hands dirty in C/C++ development as well. Can you suggest:
+
+
+a Lightweight beginner IDE [Eg: JCreator for Java] (Simple and small download)
+a full-blown advanced IDE [Eg: Eclipse for Java] (Every feature and huge download)
+should I use GCC or other compilers? 
+
+
+Thanks a lot guys!
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  1) a Lightweight beginner IDE [Eg: JCreator for Java] (Simple and small download) 
+
+
+Eclipse with CDT (~40 MB download) or Visual Studio 2008 Express edition (2.6 MB download for installer and then tons of stuff that it'll pull from the net) -- it's free. Also, get the SP1. But, I still suggest that you take a look at Visual Studio.
+
+
+  2) a full-blown advanced IDE [Eg: Eclipse for Java] (Every feature and huge download) 
+
+
+Eclipse with CDT (~40 MB download) or Visual Studio 2008 Professional (if you are going to pay).
+
+
+  3) should I use GCC or other compilers?
+
+
+Yes and no. Depends on your needs. GNU g++ is great to get started with. However, hooking up with CDT may prove to be difficult. 
+
+If you intend to do professional Windows programming in near future, it is best to buy the Visual Studio 2008 Pro (and install SP1) and get used to it.
+    
+    
+Answer 2: 
+
+    
+    
+If you have to do it in Vista and if it is Microsoft platform-specific, then there is no better full-blown IDE than Visual Studio. You can download Visual Studio Express Edition for C++ development as a lighter IDE (Not that light though but it is free). Eclipse with GCC works great as well if you want to go cross-platform.
+    
+    
+Answer 3: 
+
+    
+    
+I suggest Code::Blocks. Remember to download the codeblocks-8.02mingw-setup.exe, it includes the GCC compiler and GDB debugger. With it you're ready to start :)
+    
+    
+Answer 4: 
+
+    
+    
+I agree that there is no better Windows IDE for C++ development than Visual Studio. Apart from the free Visual Studio Express, you might also want to consider Visual Studio Standard. It costs about $200 in the US and, among other advantages, allows you to use third-party plugins such as Visual Assist. Those will help you speed up your development even further. 
+    
+    
+Answer 5: 
+
+    
+    
+For really light weight, you can go without any IDE. Grab Cygwin, install GCC and start writing code in any text editor (E.g. Crimson Editor). In fact, I suggest you try this to get an idea of how C++ programs are actually compiled behind the scene of an IDE.
+
+You can get Visual Studio Express C++, which is a good package for a beginner. Probably easiest to get started with this.
+
+You can get Eclipse with CDT and use the Cygwin GCC tools, but this is inferior to Visual Studio in certain ways.
+
+Then there's CodeBlock, which I've heard good things about, but don't know how it compares to Visual Studio or Eclipse/CDT.
+    
+    
+Answer 6: 
+
+    
+    
+Do you want to just learn C++ or use C++ to interact with Vista components?  The title of your question says Vista but your description is asking which IDE to use.  
+
+I agree using Visual Studio C++ Express is a great place to start.  It will basically give you the foundation for writing Windows Apps with C++.  You said you're from the JAVA world and if you have experience with C# or VB.NET, don't expect all the designers and wizards to be here in C++.  Anyone who had done C++ GUI work knows that this isn't always the case.  Not to discourage you, there are designers, just not for everything.
+
+If you want to learn how to interact with Windows through C++, the VC++ main site is here, and the how-do-i videos here, also download the feature pack if you haven't installed SP1 yet is here, besides ribbonizing MFC, they've included Boost in the STL, which is awesome.  And finally, the guided tours are here.
+
+Also, you don't technically need MFC to write GUI applications, you can call Win32 API functions directly, but MFC is a foundation and will help.
+
+That should get your started.  If you need more help, just post a comment.
+    
+    
+Answer 7: 
+
+    
+    
+I agree with the posters above. For microsoft platform specific development, the Visual Studio environment is by far the best. The express editions are nice, but if I remember correctly, they do't come with the win32 SDK, so you still can't make windows GUI programs with it (officially)... 
+
+If all you want is to learn C++, gcc/g++ is a great free compiler and an editor with syntax highlighting should be enough. I find an IDE only adds value for larger projects, for simple test/learning projects and IDE is not that neccessary.
+    
+    
+Answer 8: 
+
+    
+    
+You mentioned that that you know about Eclipse for Java. If you have any experience with Eclipse for Java then you can leverage most of that experience towards your C/C++ development by using Eclipse's CDT ( C/C++ Development Toolkit ) plugin.
+
+I strongly encourage using Eclipse with CDT over using Visual Studio because any time spent learning Visual Studio will be lost if you ever want to do any Linux development.
+
+... 
+
+I forgot to mention that Eclipse with CDT has all the important features that full version VS has ( and probably more ) ... but doesn't cost any money.
+    
+    
+Answer 9: 
+
+    
+    
+I am rather partial to the Code Gear (formerly Borland) C++ compiler line which I have been using for years.
+They have recently release a free 'community' addition called Turbo Explorer
+    
+    
+Answer 10: 
+
+    
+    
+Netbeans is also very good IDE with many futures in it.
+    
+    

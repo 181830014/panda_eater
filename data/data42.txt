@@ -1,0 +1,2378 @@
+Title: Ada GPS IDE can&#39;t seem to find GtkAda
+Description: 
+    
+    
+                    
+I have installed both the GNAT Programming Studio (GPS) and GtkAda. They both seem to work fine, but when I try to build the Simple Window project under New Project from Template, I get a bunch of errors saying "file gtk.ads not found." This seems to be a directory/dependency sort of problem - GPS doesn't know where to look for GtkAda. I'm running Windows 7, and have GPS installed at C:\GNAT\2011, and GtkAda installed at C:\GtkAda. I tried adding GtkAda to my PATH; at the moment my PATH user variable includes C:\GNAT\2011\bin, and my Path System variable includes C:\GtkAda\bin. Any advice on resolving this problem is greatly appreciated!
+    
+
+        
+Answer 1: 
+
+    
+    
+There are two things here.
+
+First, "project" is key. Whenever you're building something that depends
+on a library like GtkAda, it's much much easier if (a) you use GNAT
+Project to manage it, and (b) you use the GPR(s) provided by the library
+- always assuming it does, of course.
+
+In the case of GtkAda, that means that your GPR needs to "with" GtkAda;
+
+with "gtkada";
+project Tinkering is
+   ...
+
+
+Second, gnatmake or gprbuild needs to be able to find gtkada.gpr.
+
+The easiest way is to install GtkAda in such a way that gtkada.gpr is in
+the default place that gnatmake/gprbuild expect to find GPR files. This
+is $prefix/lib/gnat. GtkAda obeys this convention, so you could install 
+GtkAda under the same root as your compiler. I don't know why that's not recommended anyway.
+
+If you don't want to do that, you can add the correct location to the
+environment variable ADA_PROJECT_PATH, for example in your case set it
+to C:\GtkAda\lib\gnat.
+
+There is a lot of good stuff in the GtkAda README at libre.adacore.com, and in
+the GtkAda User's Guide which I see from the README is also included with the
+installed package at (in your case) C:\GtkAda\doc\GtkAda\gtkada_ug.
+    
+    
+Title: Are the settings in Visual Studio 2010 stored with the solution or with the IDE?
+Description: 
+    
+    
+                    
+Are the settings in Visual Studio 2010 stored with the solution or with the IDE?
+
+Is there any way to have settings that are the default with the IDE and then overriden by the project?
+    
+
+        
+Answer 1: 
+
+    
+    
+Any settings affecting the user interface, the ones you set with Tools + Options are not stored in solution or project files.  Nor is there a way to get a loaded solution to alter them.  They are stored in the CurrentSettings.vssettings file, Documents/Visual Studio 20xx/Settings subdirectory of your user folder.
+    
+    
+Answer 2: 
+
+    
+    
+They can be exported and imported.  Under the Tools menu, check out Import and Export Settings...
+    
+    
+Answer 3: 
+
+    
+    
+The VS2010 IDE settings are saved with the IDE, not with the project or solution. (Except, of course the project/solutions settings, but I assume that we're not talking about that)
+
+After reading this msdn article,it seems that the common way to have different sets of configuration is using the import/export setting option having one xml file for each configuration set.
+
+Maybe some addin could do the job, but at this time I don't know any with this features. 
+    
+    
+Title: Any windows based IDE to view objective-c code?
+Description: 
+    
+    
+                    
+I want to be able to browse through the source code of an iPhone application in windows. I do not want to compile and run the code, just need to have some kind of tool that understands the Objective-C code and iPhone application source structure. Something that view the source code as a whole (project-based) and ideally can link different classes and methods. Something more than just a plain editor with code styling and something less than a full feature IDE. Do you suggest any tools?
+    
+
+        
+Answer 1: 
+
+    
+    
+Most editors will support Objective-C syntax highlighting.  Personally I use VIM or NotePad++.  I would recommend NotePad++ for ease of use.  But as far as I know there is no 'IDE' for Objective-C for Windows.
+    
+    
+Answer 2: 
+
+    
+    
+I use jEdit if I need to see the source code in Windows. Pretty much handles all the structure and syntax highlighting of objective C.
+
+EDIT: Its an editor. Not a IDE. But with your needs of just viewing code, I guess it must suffice.
+    
+    
+Answer 3: 
+
+    
+    
+If you want a bit more than just syntax highlighting, GNUStep has an IDE called PRoject Center.  GNUStep can run on Windows, so allegedly Project Center will too.
+    
+    
+Answer 4: 
+
+    
+    
+Emacs has good syntax and indentation support for Objective-C, for example it can indent the method calls the way Xcode does (based on ':') and there's a Windows version of it available here.
+
+Though it's not an IDE, most of the time I use it for Obj-C/GNUstep without much problems.
+    
+    
+Answer 5: 
+
+    
+    
+If you use something like ctags to tag your source code you could use any editor with support for ctags.
+
+It looks like ctags does not support Objective-C directly, but it is fairly easy to add a new language configuration to ctags.
+    
+    
+Title: Simple IDE for Pascal for Linux
+Description: 
+    
+    
+                    
+I am looking for a IDE for Pascal. Something that runs under Linux, is simple and easy to run. My goal is to setup something for a kid to learn, something that wouldn't require to derive from 10 classes to make a text visible on screen.
+
+I remember DOS-based TurboPascal being very easy to use. Now I tried Lazarus, but its interface is very complex.
+
+I don't need IDE that works with multiple languages, and I won't change Pascal into another language--there's lots of good textbooks in my native language for Pascal, and very little for other.
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+What about using FreePascal with its included editor or a basic text editor, like nano or gedit?  You could also use one of the old "Borland-ish" IDEs like PENG or RHIDE.
+    
+    
+Answer 2: 
+
+    
+    
+Look here:
+
+
+http://www.freepascal.org/
+
+
+More specific:
+
+
+http://www.lazarus.freepascal.org/
+
+
+You can try Eclipse plugin, which might work better for you:
+
+
+http://www.gavab.etsii.urjc.es/wiki/pascaline/
+
+
+Also, try this one:
+
+
+http://en.wikipedia.org/wiki/Kylix_(software)
+
+
+This is not strictly Pascal, but Delphi was spun off from Pascal.
+    
+    
+Answer 3: 
+
+    
+    
+You can always run the original Turbo Pascal 7 inside Dos-Box.
+Dos-Box is available for Linux and comes with Free-Dos installed.
+Very good alternative. 
+    
+    
+Answer 4: 
+
+    
+    
+Geany is also good. It supports 
+
+
+syntax highlighting
+symbol-name auto-completion (which is akin to intellisense)
+specifying compiler options 
+integration with build tools
+
+
+Among several other features one would expect in a modern integrated development environment.
+
+Plus it's open source and runs across *nix, MacOSX and Windows.
+    
+    
+Title: Is there a reason to have both Eclipse IDE for Java and also Eclipse IDE for Java EE?
+Description: 
+    
+    
+                    
+I've recently downloaded the Eclipse IDE for Java EE developers (for web apps development). Does it make sense to delete my "regular" Eclipse IDE for Java developers? I mean, is there a feature in the regular IDE which isn't included in the EE IDE? 
+
+(I also use eclipse for Python programming with the Pydev plugin)
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse for Java EE is a superset of Eclipse for Java.
+    
+    
+Answer 2: 
+
+    
+    
+The different "editions" of the eclipse IDE are basically just a different set of plugins on top of the basic eclipse platform. So if anything is missing you can alyways install those plugins when you need them.
+    
+    
+Answer 3: 
+
+    
+    
+Yes it is a super-set. 
+Also, have you tried NetBeans? It has better GUI, better javadoc support and it is way cooler to use! (and free)
+    
+    
+Answer 4: 
+
+    
+    
+Not everyone needs the EE tools (mainly WTP - web tools platform); they may only be doing client apps or writing eclipse plugins.
+    
+    
+Title: How do you operate Delphi&#39;s macro recorder?
+Description: 
+    
+    
+                    
+I am using Delphi 2009 and I noticed that there is a macro recorder below the code editor.
+How do I use it?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+click the record button
+edit some text
+click the stop button
+click the run button
+
+
+When you have gotten the concept change step 2 to your needs.
+    
+    
+Answer 2: 
+
+    
+    
+You can also try GExperts' Macro Library expert. It makes Delphi's macros much more useful to me.
+    
+    
+Title: PyDev and Django: Autocomplete not detecting Django?
+Description: 
+    
+    
+                    
+I'm using PyDev with Django. The autocomplete works nicely in the shell - I start typing, and it suggests completions. However, this doesn't work in the main code editor window. How can I fix this?
+
+I'm using:
+
+Eclipse build #20100218-1602
+
+PyDev 1.5.6
+
+Eclipse IDE for Java Devs 1.2.2
+    
+
+        
+Answer 1: 
+
+    
+    
+You might need to set the editor code completion settings. They are under:
+
+Window-&gt;Preferences-&gt;PyDev-&gt;Editor-&gt;Code Completion
+
+You might also need to add the Django install or your Django project to your path. You can set this under:
+
+Window-&gt;Preferences-&gt;PyDev-&gt;Interpreter - Python
+
+Hope this helps.
+    
+    
+Answer 2: 
+
+    
+    
+Navigate to
+Window-
+Title: Web development tool that can comprehend the concept of more than one language in a file at once
+Description: 
+    
+    
+                    
+I currently use notepad++ on windows or gedit on ubuntu. Both of them work great with code highlighting and hinting etc. But both of them suffer from a huge flaw. I am yet to find a code editor that can handle this concept:
+
+&lt;?php
+// ooh, look I am doing some php
+?&gt;&lt;a onclick="alert('hay, some javascript in here now!')"&gt;
+This link is HTML?!&lt;/a&gt;
+&lt;?PHP
+echo("NOW we have some php as well!");
+?&gt;
+
+
+At the moment, I just have to settle for the one language. I want something that can think of a that text as a default as HTML, but notice when sections are PHP. I want those sections of PHP to have there own code hinting and highlighting. Even more, lets say in an 'if else' I exit PHP, write some HTML then back into PHP, I want it to work out how the braces ( '{' and '}' ) should match up and let me know if I have missed one. I want the sections of in-line JavaScript to be picked up as such. I want all of these languages to get checked for syntax!
+
+Damn it, I want to tool that understands more than one language at once!
+
+Extra
+
+Should point out that I am not willing to pay for such luxury :P
+
+My files are saved as '.php'.
+
+Notepad++ is able to to work out that I am using PHP but when I drop out of php and do some HTML and/or some JavaScript.
+    
+
+        
+Answer 1: 
+
+    
+    
+Try Eclipse with PDT or IDEs based on Eclipse like Aptana or Zend Studio.
+Or try Netbeans. Should all be able to do what you want.
+
+In case you cannot decide which to use, see the various Q&amp;A's on that topic
+
+
+https://stackoverflow.com/search?q=which+IDE+php
+
+    
+    
+Answer 2: 
+
+    
+    
+PHPStorm is probably the most powerful IDE for your requirements. Pricey, but give it a go. I think it's worth it...
+    
+    
+Answer 3: 
+
+    
+    
+Emacs, with the nxhtml mode.
+    
+    
+Answer 4: 
+
+    
+    
+gedit, being based on gtksourceview, absolutely does support nested language blocks. If I save your example as .php, I get syntax highlighting for both PHP and HTML.
+
+And indeed for JavaScript in &lt;script&gt; blocks, though not inline event handler attributes. (Which would be tricky because those aren't CDATA, they're HTML: the syntax highlighter would have to know what if (a&amp;amp;&amp;amp;b) represented. Anyway, you don't want to be using event handler attributes.)
+    
+    
+Title: GUI IDE with PyDev Eclipse
+Description: 
+    
+    
+                    
+I have 2 weeks to finish my final year project.I need a GUI IDE or a GUI framework compatible with PyDev and Eclipse.
+
+I cannot spend time learning something cause the functionality is yet to be completed.I'm looking for very simple GUI for a simulation game.
+    
+
+        
+Answer 1: 
+
+    
+    
+PyQt is the fastest GUI toolkit to develop with IMO, partly because you can use Qt Designer to design your GUI instead of coding it by hand.
+
+You may want to also check out pygame - http://www.pygame.org/news.html
+    
+    
+Answer 2: 
+
+    
+    
+
+  I need a GUI IDE or a GUI framework compatible with PyDev and Eclipse.
+
+
+There is no Eclipse embedded GUI editor for any of the Python GUI frameworks, but it's not so bad. Do you really need for it to be integrated on Eclipse?
+
+The closest you  can get is may be use Jython and use some swing GUI editor.
+
+Depending on the framework you want to use (GTK+/QT3/QT4/wxWidgets) you'll get to choose a graphical GUI editor.
+
+
+  I cannot spend time learning something cause the functionality is yet to be completed.
+
+
+It doesn't matter what tool we give you, you are going to have to learn to use it.
+
+
+  I'm looking for very simple GUI for a simulation game.
+
+
+If what you want is to develop is a game, you should take a look at PyGame (must read) and Cocos2D, although there a lot more others.
+    
+    
+Answer 3: 
+
+    
+    
+This page  http://wiki.python.org/moin/GuiProgramming  has a fairly complete list of gui frameworks and gui builders.  I don't have too much experience with building gui's, but I've done a little bit with WxPython and PyQt.  Both seem fairly easy to get a basic gui going quickly.
+
+I haven't used a gui builder, but hand coding a gui in python is not nearly as painful as it is in other languages in my opinion, so I don't think they are really necessary for a simple gui.
+
+Also, I think either of these frameworks would be compatible with PyDev and Eclipse.  You just have to install the library and import them into your existing code.
+    
+    
+Answer 4: 
+
+    
+    
+I just installed mine folowing this tutorial. give it a try
+    
+    
+Title: good text-based powerful java IDE that runs on linux
+Description: 
+    
+    
+                    
+The problem is - I like old goods ;)
+Having some old laptop which I just LOVE. It runs Xorg of course, and it's fast. But Intellij IDEA is still slow. 
+
+Thought about emacs, but never used. Isn't emacs too complicated?
+Going to work in text mode under X in many windows and make some scripts to automate things.
+    
+
+        
+Answer 1: 
+
+    
+    
+The big three Java/universal IDEs (IntelliJ IDEA, Eclipse &amp; Netbeans) are all written in Java and are going to be slow-ish on an old (define old?) laptop. I wouldn't want to run any of them on one of my 3-4 year old Thinkpads, but I don't mind running Netbeans on my 2 year old MacBook. I haven't tried IntelliJ on the MacBook but I use it at work on a new Thinkpad and it's not exactly fast there. It's still usable, though.
+
+There's a world of difference between a do-all IDE like IntelliJ and a text editor, even one that is extensible like Emacs is. Emacs will use fewer resources and will feel more responsive, but that's partially because it does less and partially because its core engine is native code and not Java. Plus it has 20 years of tweaking behind it.
+
+I tend to use Emacs as an editor if I just want to crank out code - once I move from writing code to the debugging, refactoring and tweaking stage, I also avail myself of an IDE because they tend to do at least some tasks like debugging better. This shouldn't really come as a surprise given that you are talking about a text editor (on steroids, admittedly) compared to a full-fledged IDE.
+
+Basic Emacs isn't that hard to learn. If you want to write scripts, learning the movement and basic text editing commands should get you up and working quite quickly; the complexity comes when you delve deeper into the editor and start making use of the multitude of add-on packages and the advanced features built directly into the editor. The learning curve is going to be steeper than, say, gedit, but it's perfectly doable if you accept that it's a completely different beast from an IDE (more powerful editor with less handholding) and it does things its own way.
+
+Is it worth learning Emacs? I don't know - if you want to, then yes. If you just want a more responsive but essentially basic text editor, have a look at the alternative programmer's editors out there. A lot of them are easier to learn than Emacs and VIM, but not necessarily as powerful either.
+    
+    
+Answer 2: 
+
+    
+    
+I've been using vim for a while now, mostly when I'm writing in Ruby (I'm also still using IntelliJ IDEA as well as Eclipse when writing AS3 or Java). Recently, I've stumbled onto a really brilliant plugins package called 'janus'. It packs all the most essentials plugins into one easy installation. The end product would be something similar to OSX' Textmate.
+
+You can get 'janus' from it's github repo here https://github.com/carlhuda/janus . Hope this helps!
+    
+    
+Answer 3: 
+
+    
+    
+When you say "text-based", do you mean "runs in the terminal"? In that case, the choice is obvious (In my opinion) -- vim is the best choice, and available on pretty much every Linux distribution in the world. It has built-in syntax highlighting and indentation for Java, and you can use plugins like Taglist and some others mentioned on SO before, to give it more of a modern-IDE feel.
+    
+    
+Answer 4: 
+
+    
+    
+You should checkout out vim + eclim (http://eclim.org/).  Eclim is a vim plugin that communicates with a headless instance of eclipse over a socket. You get the vim text editor + the augmented refactoring, completion, etc. of Eclipse. 
+    
+    
+Answer 5: 
+
+    
+    
+Let me add that an Emacs client for eclim is currently under development, but what is already available looks really nice. Check out this link for more details:
+
+http://www.emacswiki.org/emacs/EmacsEclim
+
+Cheers,
+
+
+--
+José A. Romero L.
+escherdragon at gmail
+"We who cut mere stones must always be envisioning cathedrals."
+(Quarry worker's creed)
+
+    
+    
+Answer 6: 
+
+    
+    
+If you are / want to be a professional Java programmer, I would suggest you buy a new laptop and run IntelliJ IDEA/Eclipse on it. Any modern laptop should be able to to run these IDE's.
+
+The productivity gain that you get by using the IDE's - esp with things like re-factoring - makes the money spent on the laptop worth it. 
+
+While you could use vim+ctags as a bare minimum java editor (with completions ) they will nowhere come close to the power of the IDE's while building real world applications. 
+
+IDE's offer all sorts of tooling from generating build scripts to integration hooks with frameworks ( like Spring / hibernate ) to make your life easier.
+
+Like you, i dont like starting up a big bloated IDE on my machine. But you know what? Once you do start up your big-bloated IDE which eats 300 megs of RAM, you'll find yourself working much faster.
+    
+    
+Answer 7: 
+
+    
+    
+Well, after reading some responses I decided to answer my own question and explain the idea.
+
+The main idea behind it is new way of software development. Imagine - you open the browser and load your fast, lightweight IDE. It loads in seconds, compile 300-module project in seconds on powerful server (not on your box) even provide pair-programming when both of you can edit same file in realtime.
+
+This is too complex to implement. But this is the future I believe. 
+However text-based approach is pretty simple to implement. 
+Install emacs to some powerful box and you're ready to go. Of course, few developers won't be able to edit same file at same time. But this is beginning and much simpler to implement. Compilation on multiprocessor-multicore box - will be way faster. I guess that I can assemble that myself in few hours to try. Just suggest me something really cool for text mode. Some kind of (java) development plugins for emacs/vim or at the least articles that describe something similar.
+    
+    
+Title: Is there a way to get basic PHP error underlining in VIM?
+Description: 
+    
+    
+                    
+I really like VIM but one thing I cannot do without is simple error underlying like in netbeans and Visual Studio.
+I often make silly mistakes like
+
+    if checkit($url) 
+    {
+    }
+
+
+instead of 
+
+if (checkit($url))
+{
+}
+
+
+The little squiggly red underline is a lifesaver when it comes to stuff like that. Is there a plugin for VIM that will save me from php silly mistake hell? Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+Use Syntastic
+
+To make it work efficiently you can add this one small customization to your .vimrc:
+
+function! s:SaveAll()
+    w | :Error
+endfunction
+command! -bar -narg=0 W call s:SaveAll()
+
+
+now using :W for saving your file will also show a location list with any errors.
+    
+    
+Answer 2: 
+
+    
+    
+Have a look at the CheckSyntax plugin for vim, which has support for the equivalent of the 'php -l' and 'php -f' checks.
+
+Vim doesn't have support for the squiggly underline we're all so used to but you might be able to get the "red marker in a column" effect used in Eclipse with help from this blog post.
+    
+    
+Answer 3: 
+
+    
+    
+Syntastic is my life saver. Check it out http://www.vim.org/scripts/script.php?script_id=2736
+    
+    
+Title: ReSharper-like addon for NetBeans
+Description: 
+    
+    
+                    
+is there any ReSharper-like addon for NetBeans (preferably 6.8)? I'm using NetBeans for PHP.
+
+I need following features:
+
+
+add some kind of code analysis
+add some intelligent refactoring interface
+enhance current code completion system
+add more options to code highlighting
+
+
+Currently I'm using multiple external tools, which aren't exactly user-friendly and I'd like to, preferably, have it all in one tool. Perhaps some other PHP IDE have something like this.
+
+EDIT: Bit more details in my answer to Jani Hartikainen.
+    
+
+        
+Answer 1: 
+
+    
+    
+If you like Resharper that you just should try new PHP IDE from same developers! Refactoring, static code analysis, smart completion - JetBrains WebIDE
+    
+    
+Answer 2: 
+
+    
+    
+You can run PHP_CodeSniffer with this netbeans plugin. Perhaps this will add some analysis you're missing - however perhaps you should be more specific about what kind of analysis you want?
+
+I assume you are aware of the refactoring tools builtin to NetBeans? As far as I know, they are some of the most advanced IDE-integrated ones for PHP right now.
+
+You should also describe what kind of enhancements you'd like for the code completion. NetBeans has very good completion builtin, including support for displaying PHPDoc and code templates for quick inserting of, for example, a ready for loop.
+
+I'm afraid no IDE supports changing highlighting very dramatically. Perhaps you should also explain this better? Why would you change it and how?
+    
+    
+Answer 3: 
+
+    
+    
+I agree with Alexey Gopachenko; PhpStorm has probably all of those features for Php. He works on the software and I'm a heavy user of the early access program version.
+    
+    
+Title: Visual VoiceXML/VXML development tool?
+Description: 
+    
+    
+                    
+Does anyone know of any tools out there that will let me run and debug a VXML application visually?  There are a ton of VXML development tools, but they all require you to build your application within them.
+
+I have an existing application that uses JSPs to generate VXML, and I'm looking for a way to navigate through and debug the rendered VXML in much the same way that Firebug allows one to do this with HTML.  I have some proxy-like tools that let me inspect the rendered code as it is sent to the VXML browser, but there's a ton of JS, which makes traversing the code by hand rather difficult.
+
+Has anyone worked with a product that allows for this?
+
+Thanks!
+IVR Avenger
+    
+
+        
+Answer 1: 
+
+    
+    
+
+There is JigSaw Test suite - has free trial license and reasonably priced.
+There is IBM's debugger - part of WebSphere Voice Toolkit. 
+Many other products have debuggers - a very good summary is here
+
+    
+    
+Answer 2: 
+
+    
+    
+Disclaimer: I am the development manager for Voiyager (www.voiyager.com), a VoiceXML testing tool.  It doesn't meet your criteria nor do I believe it is the type of tool you want, but I thought it was worth mentioning it.
+
+
+
+As far as I know, there isn't such a test tool for VoiceXML. In fact there are very few VoiceXML tools on the market and hardly any of them test or analysis.  The vendors that created development tools, have all been acquired by other companies.  Some of them offered did offer various forms of debugging that were specific to their tool set or stayed at the Dialog (caller input) level.  From your question, I'm assuming you need much lower level debugging capabilities.
+
+I think the alternative paths are minimal and somewhat difficult.  I believe your primary goal is to debug or rewrite an existing application, but you haven't provided any specific challenges beyond the JavaScript.  Some thoughts or approaches that may help:
+
+
+Isolate the JavaScript and place the code into a unit test harness.  That will go a long way to understanding the logic of the application.  Any encapsulation of the JavaScript you perform will probably go a long way towards better code maintainability.
+Attempt to run the VoiceXML through a translation layer to HTML so you could use FireBug.  The largest challenge would involve caller input (ie processing the SRGS grammars).  You could probably cheat this by just having the form accept a JSON string the populates the field values.  There are tools on the market to test grammars.  Depending on the nature of your problems, you could take a simple and light approach and attempt this over just the trouble areas.
+Plumb the application with a lot of logging.  This can be done through the VoiceXML LOG element, or push the variable space back to the server.  By adding intermediate forms, you may be able to provide a dump from each via the VoiceXML Data element. 
+See if your application will run in one of the open source VoiceXML browsers (not sure of the state of the open source browsers as we've built and bought for our various product lines).  If you can get it mostly working, you can use the development debugger to provide some ability to step through the logic. However, it is probably one of the more difficult paths as you'll really need to understand the browser to know when and where to stick your breakpoints and to figure out how to expose the data you want. 
+
+
+Good luck on the challenge.  If you find another approach, I would be interested in seeing it posted.
+    
+    
+Answer 3: 
+
+    
+    
+An alternative debug env is to use something like Asterisk with a voicexml browser plugin like the one from http://www.voiceglue.org/ or for a limited licence, i6net. 
+
+You can keep all the pieces separate(dynamic html and vxml application in php/jsp/j2ee/, tts processing, and optional asr processing as separate virtual machines with something like virtualbox. If the logic can be kept the same, then it is just a matter of changing the UI based on the channel. 
+
+A softphone is all you need to call a minimal asterisk machine, which has the voicexml browser with the url of the vxml in the call plan. 
+
+I just used Zend Framework as php is used in this environment, and changed view suffixes(phtml vs vxml) based on the user-agent string. 
+
+Flite for tts is fine for debugging, and when your app is ready you can either record phrases, and there was a page on the ubuntu forums with directions for how to increase flite quality with some additional sound files.
+    
+    
+Answer 4: 
+
+    
+    
+Do you have tried Eclipse VTP or InVision Studio?
+
+
+Eclipse VTP
+This is Eclipse plugin. But I feel that it is user-unfriendly a little (of Japanese viewpoint).
+InVision Studio *Required create user account*
+This is Convergys's IVR tool. It has to edit standard VXML mode. (Unfortunately, It's not exact matching.)
+
+    
+    
+Answer 5: 
+
+    
+    
+For just debugging vxml, I use Nuance Cafe's VoiceXML checker.  It doesn't give you a visual tree or anything, but it's pretty good at spotting syntax errors and is free.  I think they might also have more advanced debugging tools if you look into it, but I haven't had the need.  (Note: I have no association with them)
+http://cafe.bevocal.com/tools/vxmlchecker/vxmlchecker.jsp
+    
+    
+Answer 6: 
+
+    
+    
+I'm looking for the same problem that most of the links are down. I found a document where they propose an open source solution, which works as a plugin for Asterisk (https://www.researchgate.net/publication/228873959_Open_Source_VoiceXML_Interpreter_over_Asterisk_for_Use_in_IVR_Applications) and is available at https://sourceforge.net/projects/voxy/
+
+I would like to know if there are current options to create a VXML structure graphically, like the next image.
+
+
+    
+    
+Title: Why doesn&#39;t VS 2008 IDE remember my preferences?
+Description: 
+    
+    
+                    
+This is  a very petty question that I'm only asking while compiling... ;)
+
+For some reason my VS 2008 IDE doesn't remember my window preferences when I close &amp; reopen - it resets the window widths, locations, appearances etc.
+
+Where's the secret switch so that my IDE stays looking the way I want it?
+    
+
+        
+Answer 1: 
+
+    
+    
+Try resetting the Visual Studio
+
+Tools-&gt;Import and Export Settings-&gt;Reset All Settings
+
+
+Or
+
+devenv.exe /resetsettings
+
+    
+    
+Answer 2: 
+
+    
+    
+The window positions are stored in the following file:
+
+%APPDATA%\Application Data\Microsoft\VisualStudio\9.0\windows.prf
+
+
+I'm guessing that you don't have write access to this file, or something.
+
+Anyway if you can somehow delete this file, it will regenerate it when you next start up your VS, with the windows in their default positions.
+    
+    
+Answer 3: 
+
+    
+    
+Do you have more than one instance of VS 2008 open? The settings of the last closed instance will overwrite the ones saved before.
+    
+    
+Answer 4: 
+
+    
+    
+Does the initial VS screen come up, asking for an "environment" type? What operating system do you run VS on? More details would probably help to provide some hints...
+    
+    
+Answer 5: 
+
+    
+    
+This happened to me after installing certain plugins. Maybe try to disable your plugins and see if it still happens?
+
+Apart from that, VS itself did not cause any trouble in this aspect for me. Of course, you have to exit VS in the intended way and let it have enough time to save it's settings. Crashing or killing VS in some way naturally prevent this, but I'm sure you knew that already.
+
+Are the symptoms always visible, or is it rather randomly?
+
+Update
+
+Are only window settings affected, and other settings can still be changed without problem?
+Are you sure you still have write access where needed?
+Does it work if you switch over to a different user account (with admin privileges)?
+    
+    
+Answer 6: 
+
+    
+    
+I just had this very problem, and more or less followed demoncodes advice. Went to 
+
+%AppData\Roaming\Microsoft\VisualStudio\9.0Exp\UserSettings
+
+
+and removed the file windows.prf and backup_windows.prf (made a copy of it first of course.) Seems to have fixed my problems at least.
+    
+    
+Answer 7: 
+
+    
+    
+There is none. Loosing windows size an position has always been an illness of Windows. VS on its own is not free from it.
+
+There is more: There are settings &amp; preferences in VS, and you can export them for future use. The options for export miss some settings. There has been two years already, they haven't fixed it still.
+    
+    
+Title: How to setup SDK in IntelliJ IDEA?
+Description: 
+    
+    
+                    
+I am not finding any way to setup the SDK in IntelliJ IDEA.
+Not finding any path to setup the SDK in ubuntu 16.04 LTS for IntelliJ IDEA.
+
+
+
+I am working in this IDE for working on mongodb. But can't proceed because of this problem.
+    
+
+        
+Answer 1: 
+
+    
+    
+To find the path where java is installed on ubuntu, you can run the following command from terminal:
+
+$ whereis java
+
+
+You may get something like this:
+
+java: /usr/bin/java /etc/java /usr/share/java /usr/lib/jvm
+
+
+Which means that the java resides at one of the above paths as for example /usr/bin/java
+
+So, that directory should designate in IntelliJ. You can configure in the Project Structure, press Ctrl + Alt + Shift + S, choose Platform Settings -&gt; SDKs, click on green button (+), select the home directory for JDK.
+    
+    
+Answer 2: 
+
+    
+    
+If you don't happen to have a JDK installed you can download the latest version here
+
+You can unpack it to your home directory so that you don't need extra permissions:
+
+~/Downloads$  tar zxvf jdk-&lt;version&gt;-linux-x64.tar.gz -C ~/java/jdk/
+
+
+And finally reference your new JDK on IntelliJ:
+
+    
+    
+Answer 3: 
+
+    
+    
+Alt+ Ctrl + Shift + S  - Project
+    
+    
+Title: What is this percentage in Sublime Text 3?
+Description: 
+    
+    
+                    
+Every so often, I'll open up Sublime Text and my CPU will start going crazy, temperature goes up, and there is this percentage at the bottom right of Sublime Text that slowly updates. I've tried Googling for an answer but to no avail. Does anyone know what the percentage represents? Is it indexing my files or something? How can I update the settings for this? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, the percentage is the indexing status. This can be viewed in more detail from the Help menu -&gt; Indexing Status.... This menu item was added in build 3125.
+
+There are various settings to control indexing, all of which have to go in your User preferences - they currently don't work in Project settings.
+Related issues:
+
+
+https://github.com/SublimeTextIssues/Core/issues/1277
+https://github.com/SublimeTextIssues/Core/issues/1338
+
+
+
+
+// File indexing parses all files in the side bar, and builds an index of
+// their symbols. This is required for Goto Definition to work.
+"index_files": true,
+
+// Set the number threads to use for indexing. A value of 0 will make
+// Sublime Text guess based on the number of cores. Use the index_files
+// setting to disable all workers.
+"index_workers": 0,
+
+// index_exclude_patterns indicate which files won't be indexed.
+"index_exclude_patterns": ["*.log"],
+
+// These files will still show up in the side bar, but won't be included in
+// Goto Anything or Find in Files
+"binary_file_patterns": ["*.jpg", "*.jpeg", "*.png", "*.gif", "*.ttf", "*.tga", "*.dds", "*.ico", "*.eot", "*.pdf", "*.swf", "*.jar", "*.zip"],
+
+
+
+
+As the node_modules folder tends to be massive, this is probably the cause of your indexing taking a while and using lots of system resources. However, at the moment, index_exclude_patterns only applies to file names, so if you want to prevent indexing of the node_modules folder, you will need to add it to binary_file_patterns, which, despite it's name, also operates on folders.
+
+Example:
+
+"binary_file_patterns": ["node_modules/", "*.jpg", "*.jpeg", "*.png", "*.gif", "*.ttf", "*.tga", "*.dds", "*.ico", "*.eot", "*.pdf", "*.swf", "*.jar", "*.zip"]
+
+    
+    
+Title: &ldquo;There are no property pages for the selection&rdquo; error in Visual Studio
+Description: 
+    
+    
+                    
+When I go to edit a properties page in Visual Studio 2015 with C++, I'm always getting the error, "There are no property pages for the selection."  This usually happens when I'm switching from one Platform to another (e.g. x64 -/pp/pp/p/div
+Answer 1: 
+
+    
+    
+I think this is a bug that has been in Visual Studio since forever. Through experimentation I have discovered that you only hit this bug if you open the project properties by going to the Project menu and selecting &lt;ProjectName&gt; Properties.... Instead, if you open the Solution Explorer toolbar, and then right-click on the project and select Properties from the context menu, you will not hit this issue.
+    
+    
+Answer 2: 
+
+    
+    
+This problem seems to be linked between MSBuild tools and environment paths. On visual studio 2017 v15, after I had downloaded MSBuild tools it updated the VCTarget path to 
+
+
+  C:\Windows\Microsoft.NET\Framework64\v4.0.30319
+
+
+where it should actually point to
+
+
+  C:\Program Files (x86)\Microsoft Visual
+  Studio\2017\BuildTools\MSBuild\15.0\Bin
+
+
+In my case changing the environment path wasn't working and eventually I had to manually update the VCTargets path from regedit: HKLM\SOFTWARE\Microsoft\MSBuild\ToolsVersions
+
+also make sure the priority of path you define in environment variable is correct.
+    
+    
+Title: How to google from the context menu of the Visual Studio 2015 code editor
+Description: 
+    
+    
+                    
+how can I modify Visual Studio 2015 to be able to search the internet (my fav search engine happens to be google) from the context menu in the code editor?
+
+Ideally, I would like it to open as a new tab in my (default) external browser, because the internal web browser is still...lacking, shall we say?
+
+I found one extension "web search" for older VS, but I have found no extension that works with VS 2015. I found no article that still works.
+
+For comparison, when you're in Chrome, you can select some text, right click and say Search Google for 'what you selected'.
+
+I think this would be handy when learning new technologies from a project that uses those technologies, or just for help.
+    
+
+        
+Answer 1: 
+
+    
+    
+Ok this turned out to be fairly easy. I just added a tool to Tools, External Tools
+
+
+
+Command: C:\Program Files (x86)\Google\Chrome\Application\chrome.exe
+
+Arguments: https://www.google.com/?gws_rd=ssl#newwindow=1&amp;safe=active&amp;q=%22$(CurText)%22
+
+I enclosed the $(CurText) variable around quotes (%22) so that it would search on the exact phrase.
+
+Then, to make it more accessible and actually put it in the context menu (and other places), I clicked the Move Up button to make it the first command, then customized the Standard toolbar to include Tools.External Command 1. I also added it to Other Context Menus | Html Context and Editor Context Menus | Code Window
+
+Then I also went into Tools, Options, Keyboard and associated Tools.ExternalCommand1 with Alt+G 
+
+IMPORTANT: Because Visual Studio (still, in 2015) doesn't save some modifications to the IDE until it shuts down, you need to shut down all other instances of VS and then lastly shut down the instance that you used to enact these IDE modifications for them to "stick". And, if VS 2015 is like previous versions, be prepared for the menu / toolbar modifications to simply go away one day, at which point you'll just have to redo them.
+    
+    
+Title: Best practice for naming a thread
+Description: 
+    
+    
+                    
+Recently I worked on a high concurrent event-driven framework (Java Akka), which will create massive Actor threads. When I debug an Akka application, threads have very meaningful names. It'd really awesome. When I switch back to Delphi, I feel upset that all threads are unnamed, although they are unnamed for the past 20 years already.
+
+For all my own designed thread classes, I follow such a pattern that I define a setter SetThreadName and I call NameThreadForDebugging in the Execute method. This works fine so far. 
+
+type
+  TMyThread = class(TThread)
+  private
+    FThreadName: string;
+  protected
+    procedure Execute; override;
+  public
+    procedure SetThreadName(const ThreadName: string);
+  end;
+
+procedure TMyThread.SetThreadName(const ThreadName: string);
+begin
+  FThreadName := ThreadName;
+end;
+
+procedure TMyThread.Execute;
+begin
+  NameThreadForDebugging(FThreadName);
+  // Put normal thread execution code here
+end;
+
+
+But those instances of 3rd-party threads will stay unnamed, unless I create a descent thread class. Is there Delphi Magic to set SetThreadName to the base Thread class? I can use Detour.pas to force NameThreadForDebugging(FThreadName) be called at the first place of Execute method.
+
+Any ideas?
+
+
+
+Update 1 Thanks David for his kindly help. To help other readers to understand my question well, the question has been sightly rephrased. 
+
+
+What was wrong with my code? 
+
+The NameThreadForDebugging method is actually a static method. The second parameter ThreadId is optional and it equals the current thread id by default. If I do not give a ThreadId clearly, I might very possibly name a the current thread, not the thread I really want to name it.
+What is the solution?
+
+Call MyThread.NameThreadForDebugging('a_name', MyThread.ThreadId); anywhere or Call NameThreadForDebugging('a_name'); at the beginning of TMyThread.Execute.
+Why so confused to make things right?
+
+I do not understand, why not provide a non-static version without the second ThreadId. If there was such a non-static version, I could not have made this mistake. 
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm extemporising here, but it looks to me as though you believe that it is only possible to name a thread from code executing inside that thread. But that is not the case. In order to name a thread all you need is its ID.
+
+The documentation gives the function signature as so:
+
+class procedure NameThreadForDebugging(AThreadName: AnsiString; 
+  AThreadID: TThreadID = TThreadID(-1)); static;
+
+
+If you don't supply the optional thread ID parameter then -1 is passed which is interpreted as meaning, the executing thread. Which is how you have been using NameThreadForDebugging thus far. However, you can just pass the thread ID. Since you clearly have thread instances, you also have their IDs at hand.
+
+The interface that you have imagined involves calling an instance method of the thread passing the name of the thread. That is you imagine writing this code:
+
+Thread.SetThreadName(ThreadName);
+
+
+Instead of doing that, you can simply write:
+
+TThread.NameThreadForDebugging(ThreadName, Thread.ThreadID);
+
+
+If you want to use a class helper you can do it like this:
+
+type
+  TThreadHelper = class helper for TThread
+  public
+    procedure SetThreadName(const ThreadName: string);
+  end;
+
+procedure TThreadHelper.SetThreadName(const ThreadName: string);
+begin
+  TThread.NameThreadForDebugging(ThreadName, ThreadID);
+end;
+
+
+Frankly, I don't think I would go to such trouble. Calling NameThreadForDebugging seems perfectly adequate.
+    
+    
+Title: Emacs like line navigation in sublime text 3?
+Description: 
+    
+    
+                    
+I have been using Emacs from past few months and I like its line navigation feature a lot as it does't need you to use arrow keys.
+
+Emacs Line Navigation:
+
+C-p : go to previous line
+C-n : go to next line
+C-f : go forward one character
+C-b : go backward one character
+
+
+Is there anyway I can use this in sublime text 3 also? 
+I have read in some blogs that some people did this but I cant find instructions how to do it.
+    
+
+        
+Answer 1: 
+
+    
+    
+The sublemacspro project seems to provide what you want.
+    
+    
+Title: PhpStorm &ldquo;synchronize editor with views&rdquo;
+Description: 
+    
+    
+                    
+I recently switched from Netbeans to PhpStorm.
+
+Only thing I'm missing and can't seem to find is the function Netbeans calls "Synchronize editor with views".
+This function highlights the file you have open in your editor tab in the file tree browser.
+
+I find this very handy in projects with a lot of files such as a Drupal or Magento project, when switching between tabs. Makes it alot faster to find related files to the one you're editing.
+
+The question is, obviously, does PhpStorm have it and where do I find it?
+    
+
+        
+Answer 1: 
+
+    
+    
+There are 2 options:
+
+Alt+F1 (Select target), choose 'Project view'
+
+or enable 'Autoscroll from source' option in the Project view
+
+See Locate current file in IntelliJ
+    
+    
+Title: How to show only (src) files not (target) files by Eclipse shortcut (cntrl + alt + R)?
+Description: 
+    
+    
+                    
+By using Eclipse shortcut (CTRL+Shift+R)
+Will show both (src) files and also (target) files.
+Like that
+
+
+The problem is that
+Some times by mistake
+I select the target file then i update my changes
+After build i will NOT see the new changes !!
+Thats because i update the wrong files (target)  
+
+So any idea
+How to show only (src) files not (target) files by Eclipse shortcut (CTRL+Shift+R) ?  
+    
+
+        
+Answer 1: 
+
+    
+    
+The quick and (dirty way) :
+
+Right click on a target folder(s)
+Go to folder(s) properties,
+Mark folder as Derived like that.
+
+Derived entities are excluded from searching by default like that.
+
+
+The (safe way) :
+
+By create a working set
+
+That include only those entities you want searched and search only within that working set.
+In our case will include ALL without target folder(s).  
+
+Note : This answer is related to
+Exclude folders from Eclipse search  
+    
+    
+Answer 2: 
+
+    
+    
+In the project-settings on java build-path you'll find on source a checkbox like this:
+
+
+
+Disable it, for not getting files which are in the target folder to your view.
+So you will not find it by Eclipse shortcut (CTRL+Shift+R)
+    
+    
+Title: How to create tabbed views for RAD Studio&#39;s tool components
+Description: 
+    
+    
+                    
+tl;dr
+How can I group RAD Studio tool windows into a single tabbed container?
+
+Brace yourself. Enormous amounts of unimportant details incoming.
+Background
+In the newer RAD Studio IDEs (versions 2010, XE2, and XE3 in particular), you can have views arranged around the built-in text editor and form designer, and all of the views can be docked inside the same application window (as opposed to the floating views and tool windows from Delphi 7).
+I'm not sure what they are called (after googling, I'm now certain they aren't called &quot;views&quot;), so please let me define by example:
+
+
+Project Manager
+Structure
+Tool Palette
+Object Inspector
+Event Log
+Breakpoint List
+Call Stack
+
+
+Question
+With drag and drop I can add, remove, and relocate these views around the IDE as well as dock, undock, pin, and unpin the views wherever I choose.
+Some of the views are docked in a container group of tabbed views, and others are docked all by themselves. The resulting arrangement of views is called a &quot;Desktop&quot;.
+How can I create my own tabbed group of views with the ones docked all by themselves?
+Screenshots
+I have created an incredible, mind-blowing diagram to visually demonstrate what I mean.
+
+The screenshot on the right shows how the individual views (in orange) are collected in a group of tabs. When the user selects one of the tabs, the container contents (in red) are replaced with that selected view.
+I want to merge the view containers (in blue and purple) into a new single container. The resulting tabs (in green) would behave like the tabs in orange, but they would be in their own, new container.
+    
+
+        
+Answer 1: 
+
+    
+    
+Drag one tool window into the other. A gray window outline should appear indicating where the dragged window will go. When you're close to the point where dropping the window would dock it as another tab, the outline will appear as a box around the middle of the container.
+
+To avoid docking, hold down Ctrl while you drag. Or, if the "Auto drag docking" environment option is not activated, hold Ctrl to enable docking while you drag.
+    
+    
+Title: Sublime Text 2 and ZF2 &hellip; auto complete not works
+Description: 
+    
+    
+                    
+I installed sublime text 2 with all php dependencies.
+And also a package for code complete called sublimecodeintel.
+There is not zf2 supported auto code complete.
+For example, when I start writing 
+
+\Zend\Form\...
+
+
+at each steps CTRL+Space does not give any subclasses of Form
+or for example after this:
+
+$testimonial = new \Application\Entity\Testimonial();
+
+
+when I write this:
+
+$testimonial-&gt;
+
+
+CTRL+Space shows a list but there is no methods listed from Testimonial php class.
+
+Please help.
+    
+
+        
+Answer 1: 
+
+    
+    
+You might need to add the path to the ZF2 folder if they aren't in one of the project folders, or you could add a .codeintel/config file to your project root and add:
+
+{
+    "PHP": {
+        "php": '/usr/bin/php',
+        "phpExtraPaths": ['path/to/ZF2'],
+        "phpConfigFile": 'php.ini'
+    }
+}
+
+
+So make sure you have the paths set up correctly, and it should work.
+Also SublimeCodeIntels default mappings for autocomple is:
+
+
+Linux: shift+ctrl+space
+Mac: shift+super+space
+Windows: shift+ctrl+space
+
+    
+    
+Answer 2: 
+
+    
+    
+Sublime Text 2 is not an IDE and so does not have autocomplete. You could try installing the SublimeCodeIntel package and see if that works for you.
+
+Alternatively, consider NetBeans, PHPStorm, Zend Studio or Eclipse/PDT which are all IDEs that understand how to do auto complete with PHP.
+    
+    
+Title: Is there a workaround for &ldquo;incompatible parameter list&rdquo; message from Delphi IDE?
+Description: 
+    
+    
+                    
+Please consider this simplified example:
+
+type
+  TForm43 = class(TForm)
+    drwgrd1: TDrawGrid;
+    procedure drwgrd1DrawCell(Sender: TObject; ACol, ARow: Integer; 
+      Rect: Windows.TRect; State: TGridDrawState);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+procedure TForm43.drwgrd1DrawCell(Sender: TObject; ACol, ARow: Integer;
+  Rect: Windows.TRect; State: TGridDrawState);
+begin
+  Rect.Left := 5;
+end;
+
+
+In method drwgrd1DrawCell I've explicitly used Windows.TRect to resolve ambiguity beetween TRect defined in two different units. Everything works fine, code is compiling.
+But everytime when I save the above unit I am getting a question from the Delphi IDE which asks: "The drwgrd1DrawCell method referenced by drwgrd1.OnDrawCell has an incompatible parameter list. Remove the reference?"
+
+This is very annoying. Is there any way to turn off this message dialog or to write my code in a  way that it would not be shown? Unfortunately I can not change my TRect for TRect2 or something like that.
+    
+
+        
+Answer 1: 
+
+    
+    
+The reason you are getting the error when you save the form is because Delphi compares the declaration of all event handlers to ensure they are declare exactly the same as their inherited implementations.  Adding Windows. to the declaration makes the compare fail.
+
+You can remove the Windows. from drwgd1DrawCell() if you move the Windows unit after the other unit in the uses clause that declares TRect.  This is because Delphi processes the units in the uses clause from the last to the first.  It will use the TRect from the first instance that it finds...
+    
+    
+Answer 2: 
+
+    
+    
+You could add the following type declaration above your form declaration:
+
+    type
+      TRect = Windows.TRect;
+
+    
+    
+Title: IntelliJ Idea 11 - How to count lines of code(LOC)?
+Description: 
+    
+    
+                    
+There is an old question about it, I just tried Statics plugin as some people mentioned, but I couldn't find anything associated with it after Idea restart. Does anyone knows a way(plugin, etc..) to count lines of code(LOC) using IntelliJ Idea 11? 
+    
+
+        
+Answer 1: 
+
+    
+    
+View -
+Title: Use browser to run custom JavaScript on page (client side) to simulate clicking? How to do?
+Description: 
+    
+    
+                    
+I want to automatically grab some content from a page. 
+
+I wonder if it is possible:
+
+
+Run my own written JavaScript on the page after the page is loaded (I use FireFox. I don't have the ability to change content of the page. I just want to run JS on my browser.). The script will use getelementbyid or similar method to get the link to the next page
+Run a JavaScript to collect my interested content (some URLs) on that page and store those URLs in a local file
+Go to next page (the next page will get really loaded with my browser, but I do not need to intervene at all) and repeat step 1 and step 2, until there is no next page.
+
+
+The classic way to do this is to write a Perl script using LWP or PHP script using CURL, etc. But that is all server side. I wonder if I can do it client side.
+    
+
+        
+Answer 1: 
+
+    
+    
+I do something rather similar, actually.
+
+By using GreaseMonkey, you can write a user-script that will interact with the pages however you need.  You can get the next page link and scroll things as you like.
+
+You can also store any data locally, within Firefox though some new functions called GM_getValue and GM_setValue.
+
+I take the lazy way out.  I just generate a long list of the URLs that I find when navigating the pages.  I do a crude "document.write" method and I dump out my list of URLs as a batch file that rules on wget.
+
+At that point I copy-and-paste the batch file then run it.
+
+If you need to run this often enough that it should be automated, there used to be a way to turn GreaseMonkey scripts into Firefox extensions, that have access to more power.
+
+Another option is currently AFAIK, Chrome only.  You can collect whatever information you need and build a large file from it, then use the download attribute of a link and come up with a single-click to save things.
+
+Update
+
+I was going to share the full code for that I was doing, but it was so tied to a particular website that it wouldn't have really helped -- so I'll go for a more "general" solution.
+
+Warning, this code typed on the fly and may not be actually correct.
+
+// Define the container
+// If you are crawling multiple pages, you'd want to load this from
+// localStorage.
+var savedLinks = [];
+
+// Walk through the document and build the links.
+for (var i = 0; i &lt; document.links.length; i++) {
+  var link = document.links[i];
+
+  var data = { 
+    url: link.url,
+    desc = getText(link)
+  };
+
+  savedLinks.push(data);
+}
+
+// Here you'd want to save your data via localStorage.
+
+
+// If not on the last page, find the 'next' button and load the next page
+// [load next page here]
+
+// If we *are* on the last page, use document.write to output our list.
+// 
+// Note: document.write totally destroys the current document.  It really is quite
+// an ugly way to do it, but in this case it works.
+document.write(JSON.stringify(savedLinks, null, 2));
+
+    
+    
+Answer 2: 
+
+    
+    
+Selenium/webdriver will let you write a simple java/ruby/php app that will launch Firefox, use its JavaScript engine to interact with the page in the browse.
+
+Or, if the web page does not require JavaScript to make the content you see interested in available, you could use a html parser in your favourite language and leave the browser out of it.
+
+If you want to do it in JavaScript in Firefox you could probably do it in a greasemonkey script
+    
+    
+Title: F# intellisense in a custom editor
+Description: 
+    
+    
+                    
+is there a way to migrate F# intellisense into my own editor without having to rewrite its parser and, worst of all, its type inference mechanisms?
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+F# intellisense tool is available as an independent package including its parser and type inference mechanisms. 
+
+I believe it isn't difficult to use the tool in your own editor (see the introduction here).
+    
+    
+Answer 2: 
+
+    
+    
+See the MonoDevelop F# add-on (I believe written by Tomas Petricek).
+    
+    
+Title: Setting up eclipse for windows driver development
+Description: 
+    
+    
+                    
+I am trying to write a user-mode windows(XP, Vista &amp; 7) virtual printer driver using WDK 7.1.0 . I plan to use eclipse IDE for development, so wanted to know if I can set it up for the same. I am looking to do following:-
+
+1) Eclipse to recognize win32 apis (C and C++) and hence provide features like autocompletion for its function names
+
+2) Eclipse to use compiler provided with WDK
+
+3) Debug the code through eclipse (Not sure if this is possible or not)
+
+OR would you suggest some other development environment for windows driver development ?
+    
+
+        
+Answer 1: 
+
+    
+    
+Definitely you should use MS Visual Studio with VisualDDK addon.
+
+It allows you to compile/debug even kernel mode drivers local or remotely.
+    
+    
+Answer 2: 
+
+    
+    
+
+Run Eclipse from build environment that you need (free or checked with needed architecture)
+Create project or import C/C++ / Existing code as makefile project. Select GNU Toolchain.
+Properties -
+Title: How to compile all builds for a Delphi Project Group that has few projects in Delphi IDE?
+Description: 
+    
+    
+                    
+I am using Delphi XE.  Since Delphi 2007, it supports Project Group (.groupproj) that we may add projects into it.
+
+We may define various build configuration for projects in "Build Configurations"  e.g.: Debug and Release build.
+
+Since Delphi 2010, a runtime variable $(Config) may be used to set Output Directory like: .\$(Config)
+
+In this example, $(Config) translated to "Debug" for Debug build and "Release" for Release build respectively.
+
+When Debug build is activated in build configuration, output file will stored in ".\Debug" folder relative to the current directory.
+
+This is a nice feature so we may have output files stored in various folders for builds defined in Project's Build Configuration.
+
+Furthermore, using the "Build" menu item in context menu (pop-up menu via mouse right click) of "Build Configuration" perform compilation for all builds underneath.
+
+Unfortunately, I have more than 200 projects in my project group.  Each project has Debug and Release build defined.  I don't find any way to trigger an action to build Debug and Release build for 200 projects at once.
+
+The only solution I knew so far is using View | Configuration Manager to change the active configuration before each build.  However, that would marks all project as modified.
+
+Please share your thoughts on how to compile all builds available to a project group.
+
+Thank you.
+    
+
+        
+Answer 1: 
+
+    
+    
+I have added a item to the Explorer context menu for *.groupproj calling this *.bat:
+
+call  "C:\Program Files (x86)\CodeGear\RAD Studio\5.0\bin\rsvars.bat"
+MSBuild %1 /t:Build /p:Configuration=Release
+if errorlevel 1 goto Fehler
+
+goto :EOF
+
+:Fehler
+pause
+
+
+So I can do a release build from Explorer with two mouse clicks.
+
+
+    
+    
+Title: How to start with PHP on Ubuntu
+Description: 
+    
+    
+                    
+I am newbie in PHP. I have successfully installed PHP on Ubuntu, now I want start my first program. I am using gPHPEdit as IDE.
+Where should I save .php files that I create? And how to run/test them?
+    
+
+        
+Answer 1: 
+
+    
+    
+You should pick up a book or start following some good tutorials on the web.
+If you are just scripting using php, you can save them anywhere and run the php on the terminal using the php command line interpreter.
+If you are trying write web scripts (and I think you are), you need to install and configure a web server (typically apache) and save your scripts in the server's document root (typically /var/www). Also, I highly recommend you to read up a little about servers and HTTP and figure out how all this works on the inside before learning to building websites in php. 
+    
+    
+Answer 2: 
+
+    
+    
+Make sure you have LAMP installed.  Do a sudo tasksel and select lamp then hit enter,  its gotta be the most simple *amp install ever made.  Its a good idea to install phpmyadmin: sudo apt-get install phpmyadmin.   After that just copy the files to /var/www/ and then they will show up on http://localhost.    I recommended using Eclipse PDT or the Netbeans build for PHP.
+    
+    
+Answer 3: 
+
+    
+    
+If you cannot save or copy to var/www/html, to run your php scripts on your browser. If you are using Ubuntu 14.04. 
+I followed these steps and it worked for me.  
+
+
+Execute sudo su on the terminal.  
+Enter your password    
+Execute sudo subl /etc/apache2/sites-available/000-default.conf on your terminal to open this file. Note you can change the subl to any text editor to open the file e.g sudo nano /etc/apache2/sites-available/000-default.conf.  
+Change DocumentRoot /var/www/html to /home/user/yoursubdir  
+Save the file and close it.  
+Execute sudo subl /etc/apache2/apache2.conf on your terminal to open this file.  
+Add the following to end of the file   
+
+&lt;Directory /home/user/&gt;
+    Options Indexes FollowSymLinks
+    AllowOverride None
+    Require all granted
+&lt;/Directory&gt; 
+
+Save and Close the file.  
+Execute sudo service apache2 restart  
+Go to your browser, type the URL of your script e.g  127.0.1.1/directory/document.php.
+
+
+I hope this helps.
+    
+    
+Answer 4: 
+
+    
+    
+remove the index.html file from /var/www/
+
+$ sudo rm index.html
+
+
+create a new php file there:
+
+$ sudo gedit /var/www/index.php
+
+
+write in it:
+
+&lt;?php
+print_r(phpinfo());
+?&gt;
+
+
+Restart your Apache2 Server :
+
+$ sudo service apache2 restart
+
+
+OR
+
+$ sudo /etc/init.d/apace2 restart
+
+
+and point to yout localhost and /index.php
+
+if err arises visit : http://www.allaboutlinux.eu/how-to-run-php-on-ubuntu/
+    
+    
+Title: HTML IDE for Mac with code-folding?
+Description: 
+    
+    
+                    
+What's an IDE for Mac that deals with HTML development that has code-folding?
+
+(PHP support and auto-complete a plus)
+    
+
+        
+Answer 1: 
+
+    
+    
+BBEdit is still a decent option after all these years. And from the opposite end of the evolutionary spectrum, there's Eclipse in all its newcomer-befuddling array of versions, packages, and plugins (give Aptana a try).
+    
+    
+Answer 2: 
+
+    
+    
+Dreamweaver
+
+Definitely a very popular one that I used for a while. It a lot of features, too many for my taste, including code folding, php support, and auto complete
+
+Coda
+
+I've been using it for over a year now as an a alternative to Dreamweaver. I've heard code folding will be in the next release. So it's one you should definitely keep an eye on.
+    
+    
+Answer 3: 
+
+    
+    
+Espresso is super Mac-like and has code folding and PHP support. It autocompletes ending tags, but I think that's all. Feels clean and responsive.
+    
+    
+Answer 4: 
+
+    
+    
+Sublime Text 2 gets my vote. Really nice interface, infinitely customisable, code folding, autocomplete, and some very useful features. 
+    
+    
+Answer 5: 
+
+    
+    
+Not an IDE per-say but you can always do anything you would ever want with vim + the html5 mod. 
+    
+    
+Answer 6: 
+
+    
+    
+WebStorm (without PHP support) and PhpStorm (with PHP support) from JetBrains.
+The same support is also present in their Java IDE IntelliJ IDEA, but that's a bigger package.
+
+The auto-complete is quite good, even for JavaScript.
+There is also support for Zen Coding.
+    
+    
+Title: Keep supporting different versions of software each one built with different Delphi or component versions
+Description: 
+    
+    
+                    
+I need to maintain different versions of a software, the problem is like this:
+
+
+v 1.0 - Delphi 7 - DevExpress build 20 - TeeChart 5
+v 2.0 - Delphi 2005 - DevExpress build 40 - TeeChart 7
+v 2.1 - Delphi 2009 - DevExpress build 52 - TeeChart 8
+v 3.0 - Delphi 2009 - DevExèress build 53 - TeeChart 2010
+
+
+(of course this is an example)
+
+What solution do you suggest? What I do now is using virtual machines and taking snapshots, anyway this means having in practice one Windows version per software version.
+
+What else can be done? Typically old versions need to be maintained just for bux fix, not for new development.
+
+I added (4), this is an extra problem, maintaining same Delphi version with different versions of components. It seems that Snapshot of Virtual Machine is still the most convenient way to work with no many compromises. Of course the problem is the complexity given by the 3rd party libraries, not Delphi itself.
+    
+
+        
+Answer 1: 
+
+    
+    
+Personally I think you're already working with the best solution with your VMs.
+
+Before I started using different VMs for my projects though, I made use of the Delphi "-r" command line switch to load different component sets for different projects under the same IDE.
+
+There's also a tool Jed's Configuration Manager which simplifies doing this.
+    
+    
+Answer 2: 
+
+    
+    
+If you don't need to do much visual design in the old versions of your app you could use our approach:
+
+
+We have multiple DX installations: The current one plus the older ones we still need. Only the current one is properly installed, i.e. the IDE only "knows" the current one.
+In the current version of your project, we use the current DX installation (like in a new project).
+For older versions, we use the appropriate copy, i.e. point the project search path to one of the older copies. This means that the IDE and our source code use different versions of DX! However this has never been a big problem for us because we don't need to do much visual design on older versions of our app.
+
+
+If you visually edit a form with DX components in one of the older versions the IDE will spit out DFMs corresponding to the currently installed DX version which is not the one your old app uses. In this case I would just textually compare the DFMs before and after the edit and check if anything has been messed up. If so just fix the borken DFM using a text editor.
+    
+    
+Answer 3: 
+
+    
+    
+I typically use the JVCL tool to clean out properties added in newer TCharts, and that works fine. (mixing D7 - TD2006 - D2007 - D2009 - Delphi XE).
+
+See: 
+
+
+http://andy.jgknet.de/blog/?page_id=10 (Integrates with IDE to clean DFMs while working)
+http://cc.embarcadero.com/item/15666  (A more standalone file to do so)
+
+    
+    
+Answer 4: 
+
+    
+    
+It is technically possible to use multiple Delphi versions on a single computer. It just eats up lots of disk space, though. And you would need to make sure each version looks at it's own folder settings for the component libraries and projects. So you could keep them all installed. (Just install them in the same order as the versions, thus first Delphi 7, then 2005 and finally 2009.)Right now, I have 2005 and Delphi XE installed on a single system without any conflicts. Just as long as each Delphi version has it's own set of folders with third-party components and other stuff. (Although several add-ins like GExperts will work for any installed Delphi version.)Is there any reason why you don't want those three versions on a single computer?
+    
+    
+Answer 5: 
+
+    
+    
+To maintain different sets of libraries with the same Delphi version, you can use the -r parameter to switch the "registry root" that Delphi uses.
+
+This blog posting shows how to do that.
+
+--jeroen
+    
+    
+Title: In Eclipse, is there an equivalent to Visual Studio&#39;s &#39;Watch&#39;?
+Description: 
+    
+    
+                    
+In VS, you can 'Watch' an object and drill down into it. Is there an equivalent when programming Java in Eclipse?
+    
+
+        
+Answer 1: 
+
+    
+    
+I found what I was looking for. If anyone else is searching for it, it's called Expressions in Eclipse.
+    
+    
+Answer 2: 
+
+    
+    
+You can use the debug mode to watch objects, although it only works for local objects defined in the scope. I would recommend putting a breakpoint at the start of where you want to watch, and then stepping through the motions. In the top right corner of the debug profiler, you should be able to expand the tree of any given object that's in scope to examine it further.
+
+The basics of how to use the debugger are here.
+    
+    
+Title: Is there an IDE for PHP where you can set breakpoints and step into the code?
+Description: 
+    
+    
+                    
+Is there an IDE for PHP where you can set breakpoints and step into and render a webpage "stepwise"?
+
+And whats the "best" IDE for working with php-code?
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes there is ; there are at least two of those :
+
+
+Eclipse PDT
+netbeans
+
+
+Those can use the Xdebug extension to provide step by step debugging, breakpoints, ...
+
+
+And they are probably the two "best" free IDE out there for PHP code -- at least, if you have a powerful computer.
+    
+    
+Answer 2: 
+
+    
+    
+There are several. The kicker is you either have to run everything locally, or install a connector on the server you are developing on. Zend Studio and Komodo are two good ones. Also take a look at the Zend Debugger. 
+    
+    
+Answer 3: 
+
+    
+    
+PHPDesigner integrates breakpoints with XDebug.  I've never tried the feature, but I know it has it.
+    
+    
+Answer 4: 
+
+    
+    
+It's a text editor, not an IDE, but Notepad++ with the DBGP plugin works fine as a front-end to the Xdebug extension for step-by-step debugging of PHP code.
+
+I'm not so sure about the "stepwise rendering" on client-side - it might just work if you flush the output to the browser every couple of lines, but I guess it depends a lot on the browser. You might have more luck with the Paint Events extension to Firebug.
+    
+    
+Title: Visual Studio 2008 IDE C++: background color of current line
+Description: 
+    
+    
+                    
+I would like the line of code where the cursor is currently positioned to have a different background color (like in UltraEdit for those who know it).
+
+Is this possible?
+
+EDIT: I'm coding in C++ so ReSharper does not seem to apply (correct me if I'm wrong). I'll give "Slickedit Gadgets" a try (free, unlike "Slickedit" itself).
+
+Cheers!
+    
+
+        
+Answer 1: 
+
+    
+    
+Freeware add-on that does this and more.
+
+http://www.slickedit.com/products/slickedit-gadgets
+
+I use Resharper to do this.
+    
+    
+Answer 2: 
+
+    
+    
+No, unfortunately Visual Studio does not support this feature (although almost every other text editor available does).
+    
+    
+Answer 3: 
+
+    
+    
+Resharper can do it, check this blog post.
+    
+    
+Title: Can i use .net framework 4 with visual studio 2008 IDE [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                Closed 10 years ago.
+        
+
+
+    
+
+
+  Possible Duplicate:
+  Can I use .NET 4.0 beta in Visual Studio 2008?  
+
+
+
+
+Hot can I use visual studio 2008 IDE with .net framework 4?
+    
+
+        
+Answer 1: 
+
+    
+    
+I think the general consensus is "no"
+
+Can I use .NET 4.0 beta in Visual Studio 2008?
+    
+    
+Answer 2: 
+
+    
+    
+No, VS 2008 Multi Targeting option only support .NetFramework 3.5 , 3.0 , 2.0
+
+so it has a Backward Compatability, So You have to Use VS 2010 for .netFramework 4.0
+    
+    
+Title: How to design an IDE using Qt?
+Description: 
+    
+    
+                    
+My friends and I are working on a compiler design as a project in my university (Damascus University).
+
+We're using (Flex, C++, Bison, Qt) to do the job.
+
+I was wondering if there is a way to design an IDE to our compiler using Qt. I know how to do the job but I'm asking to find out if there is some resource to start with, or if there is a pre-built design to do that job.
+
+Thanks in advance :)
+    
+
+        
+Answer 1: 
+
+    
+    
+Start by looking at the source code of QtCreator. It is very clean and easy to read!
+    
+    
+Answer 2: 
+
+    
+    
+In addition to already suggested QtCreator you could check the qt-apps.org development environments website; a lot software there is open source
+    
+    
+Answer 3: 
+
+    
+    
+Perhaps extending KDevelop with a module would be a better idea. Qt creator is awfully focused on Qt. Other interesting starting points would be Edyuk (they've separated out their editor component from the rest of the application) or good old Scintilla (used by PyQt from Riverbank).
+    
+    
+Title: Editor for programming ML on windows?
+Description: 
+    
+    
+                    
+I know I can use Emacs but I haven't used it earlier... are there any other alternatives??
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+The Zeus programmer's editor can be easily configured for almost any programming language.
+    
+    
+Answer 2: 
+
+    
+    
+You could use the Visual Studio editor for F# - with 
+
+#indent "off"
+
+
+at the top of the file, the core of F# is largely compatible with OCaml (especially if you reference the F# PowerPack).  Not perfect, but useful...
+
+Anecdote: a friend of mine was taking a programming class that used OCaml, and he used F# inside VS (sticking to OCaml library/language) to author his homework, to have good editor/debugger support while working, and then switched to OCaml compiler for final touch-ups and compatibility fixes before submitting assignments; this seemed to work reasonably well for him.
+    
+    
+Answer 3: 
+
+    
+    
+Of course... VIM --what i use with ocaml.
+
+Aside from that, there is an eclipse plug-in for SML/NJ called ML-Dev and ODT for ocaml.
+    
+    
+Title: What&#39;s a good beginner setup for C++/Python on OSX?
+Description: 
+    
+    
+                    
+I'm looking for a good setup for learning C++ and eventually Python on Mac OSX. As I'm going use C++ I don't want to use XCode, as (I understand) this is primarily used with Objective-C. I have a small bit of experience in Java and MATLAB programming, and math is probably not going to be my main problem. I was thinking on an approach looking something like this:
+
+
+Work through Accelerated C++.
+Write a couple of small math-programs; something like the Mandelbrot set, a PDE-solver, or a graphing-app. This would be done using a widget toolkit.
+Write a small game with really crappy graphics. This is probably going to be a rip-off of Jetmen Revival or Space Invaders ;-)
+(When I'm fed up with the game not working), work my way through Core Python.
+Repeat steps 2 and 3 in Python.
+
+
+I'm thinking about going with Eclipse and GTK+ / X11. Any thoughts on IDE's and GUI toolkits? Preferably open source, and definitely free. And what do you think about the 5 steps?
+
+Any help would be much appreciated - thanks in advance!
+    
+
+        
+Answer 1: 
+
+    
+    
+When choosing an IDE, it's very much a matter of taste, so the best choice is probably to try out several for a day or two each. Eclipse and XCode are both popular choices that surely are excellent in their own ways. I can't help you with the widgets, as I know very little about that. GTK+ is a popular framework, but the native OS X support wasn't ready last time I checked, but development is ongoing so this could have changed. Qt is less popular, but is nowadays completely open source, so the licensing issues it used to have are solved now, so you might want to look into that as well. wxWidgets are popular in Python and I found it easy to use, but I don't know if it's as good as the other ones, but it may very well be.
+
+As for the five steps, it makes much more sense to do them in Python first. Python is easy to learn and master, especially if you are NOT tainted by C/C++. C/C++ programmers often has to unlearn things, as there are so many things you must do and think of that you don't have to bother with in Python. 
+
+With Python you can concentrate on learning the libraries and tools, instead of having to learn how to not shoot yourself in the foot with C++. Learn C++ afterwards, and you'll have a nicer smoother learning curve, and enjoy yourself more.
+    
+    
+Answer 2: 
+
+    
+    
+
+  As I'm going use C++ I don't
+  want to use XCode, as (I understand)
+  this is primarily used with
+  Objective-C.
+
+
+XCode is a fine choice, even for pure C++ solutions.
+
+
+  Work through Accelerated C++.
+
+
+That's the book that got me started! It's an excellent choice, but not a walk in the park. It took me a month or two, at a rate of about 1 to 2 hours a day. But after this you'll have made a MAJOR jump towards becoming a really good C++ programmer.
+
+
+  Write a couple of small math-programs;
+  something like the Mandelbrot set, a
+  PDE-solver, or a graphing-app. This
+  would be done using a widget toolkit.
+  Write a small game with really crappy
+  graphics. This is probably going to be
+  a rip-off of Jetmen Revival or Space
+  Invaders ;-) (When I'm fed up with the
+  game not working), work my way through
+  Core Python (this is a book; max. one
+  link/question for new users...).
+
+
+Fine, I did Tetris.
+
+
+  Repeat steps 2 and 3 in Python.
+
+
+I have no experience using Python, but I know it's a much easier language to master than C++. So if you can master C++, Python's won't be any problem.
+
+For GUI you could use Qt, especially now it has been made LGPL. However, Cocoa is interesting as well, if feel courageous enough to also learn Objective-C :)  (Btw, there is a Python port for Cocoa as well.)
+    
+    
+Answer 3: 
+
+    
+    
+XCode is a mature IDE well suited to almost any language.  C++ is particularly well supported.  
+
+Apparently GTK+ has native OSX widget support, though I've never used it, so you could skip the X11 stack altogether if you desired.  Other cross platform widget sets include wxWidgets, fltk and Tk.
+
+For games, though, they are less than optimal.  for this I strongly recommend LibSDL or its python binding, PyGame.  These can provide a convenient, standard interface to OpenGL if you want to use that, or you can use hardware accelerated 2d primitives if that's all you need.  
+    
+    
+Answer 4: 
+
+    
+    
+I'd definitely go GTK+. It is very easy. I'm not sure about graphics libraries on OS X. I know OS X primarily uses Objective-C, but if the native graphics library can be used from C++, use that for game graphics.
+
+As far as IDEs, I don't know. I use GNU Emacs, but I wouldn't recommend that to a beginner. Learning how to use Emacs is like learning a new programming language all by itself. I would start with a basic text editor (look up one with syntax highlighting) and compiling from the terminal for now, so you don't have to learn an IDE too. They make huge projects easier, but can be a PITA for little things.
+    
+    
+Answer 5: 
+
+    
+    
+You can use VIM with cscope and ctags plugins for C++, I personally find that to be the fastest. Eclipse for C++ is also good if you need a gui, but it is not as feature rich as it is for Java but it is a good open source IDE. 
+
+In terms of books, Effective C++ and More Effective C++ are good.
+    
+    
+Answer 6: 
+
+    
+    
+
+  
+  Work through Accelerated C++.
+  Write a couple of small math-programs; something like the
+  Mandelbrot set, a PDE-solver, or a
+  graphing-app. This would be done using
+  a widget toolkit.
+  Write a small game with really crappy graphics. This is probably
+  going to be a rip-off of Jetmen
+  Revival or Space Invaders ;-)
+  (When I'm fed up with the game not working), work my way through Core
+  Python (this is a book; max. one
+  link/question for new users...).
+  Repeat steps 2 and 3 in Python.
+  
+
+
+Might I recommend doing this in reverse order with respect to languages?  Bear in mind that GTK+ isn't trivial to learn, neither is C++.  In fact, I'd really recommend starting out with Cocoa and PyObjC first.  Cocoa is a little bit more to wrap your head around, but once you get it down, it's very easy to see its benefit.  A development setup of GTK and PyGTK can be a PITA to set up on OS X (at least it was for me).
+    
+    
+Answer 7: 
+
+    
+    
+NetBeans is another choice. Although both Python and C++ support are rather new for it. The Python works find, but I haven't tried the C support.
+    
+    
+Title: No web browser found: could not locate runnable browser. Jupyter-notebook
+Description: 
+    
+    
+                    
+Jupyter-notebook doesn't open a web browser. It worked just fine before, then after windows 10 prompted for an update it began to open in Microsoft edge. When I tried to change it to the default browser which is chrome now it won't open at all.
+
+I followed how to open Jupyter notebook in chrome on windows to try and change it back to chrome.
+
+When I try and run 
+
+jupyter notebook
+
+
+in cmd all I get is 
+
+[I 21:39:08.015 NotebookApp] JupyterLab extension loaded from C:\Users\roy\Anaconda3\lib\site-packages\jupyterlab
+[I 21:39:08.015 NotebookApp] JupyterLab application directory is C:\Users\roy\Anaconda3\share\jupyter\lab
+[I 21:39:08.015 NotebookApp] Serving notebooks from local directory: C:\Users\roy
+[I 21:39:08.015 NotebookApp] The Jupyter Notebook is running at:
+[I 21:39:08.015 NotebookApp] http://localhost:8888/?token=d0a958999d7e59da3f097809882e8f40eb5845e3a07cebe8
+[I 21:39:08.031 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[W 21:39:08.109 NotebookApp] No web browser found: could not locate runnable browser.
+
+    To access the notebook, open this file in a browser:
+        file:///C:/Users/roy/AppData/Roaming/jupyter/runtime/nbserver-1516-open.html
+    Or copy and paste one of these URLs:
+        http://localhost:8888/?token=d0a958999d7e59da3f097809882e8f40eb5845e3a07cebe8
+
+
+However when I copy and paste the url in a web browser it just works fine.
+    
+
+        
+Answer 1: 
+
+    
+    
+Solved it.
+
+I went to the 
+.jupyter folder in my Users directory 
+Answer 2: 
+
+    
+    
+This solved my similar issue when jupyter is installed under my python 2.7 directory, but is not necessary under the jupyter installed in my python 3.7 directory. Readers with a 3.7 directory may be encountering a different issue.
+    
+    
+Title: Hyperlink navigation via Ctrl+click in Eclipse Oxygen does not work
+Description: 
+    
+    
+                    
+After upgrading from Eclipse Neon to Oxygen I noticed that I can no longer navigate around the code by clicking on definitions while holding the Ctrl key down. The indexer itself works fine, and I can still jump around by pressing F3 or using the context menu.
+
+I am using Eclipse CDT with C++.
+
+The following screenshot proves that the feature is enabled:
+
+
+
+What am I missing?
+    
+
+        
+Answer 1: 
+
+    
+    
+You're probably running into bug 517610. Note the following workaround from the bug:
+
+
+  To work around the problem, you can disable the Change Log hyperlink
+  by going to Window 
+Answer 2: 
+
+    
+    
+In addition to the first solution, increase the "Maximum number of tokens per translation unit" in your Eclipse.
+
+
+    
+    
+Title: Develop jenkins groovy script in Eclipse
+Description: 
+    
+    
+                    
+Is it possible to develop a groovy script (pipeline) for Jenkins in Eclipse? 
+I want to connect to a running Jenkins instance and create / start some jobs. How can i achieve this?
+    
+
+        
+Answer 1: 
+
+    
+    
+Jenkins does not have strong IDE support in any IDE. However, Eclipse (as well as most major java IDE's) does have a groovy plugin and you can import the core jenkins jars to get some auto-completion. At the very least, the IDE gives you autoformatting, with is of some help. Once you've developed your script, you will have to copy it out to jenkins to test. 
+    
+    
+Title: In Eclipse, how do I limit the Open Type shortcut to only show source files in my current project
+Description: 
+    
+    
+                    
+I have multiple games and when I am working on these games I often use the Open Type shortcut to find my classes, however every time I use it, all classes in the workspace of the name show up. Since I have multiple games, when I want to search for the Player class, for example, multiple Player classes show up and often times the one I am looking for is not the top.
+
+Is there anyway to change this so that it only shows the files from the selected project or even to just show the ones from the current or most recent project first?
+
+All help is appreciated, thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+Create a Working Set from which to search: 
+
+
+Open the Open Type dialog.
+Click on the arrow in the upper right. 
+Choose 'Select Working Set' -/lili/li/olpa href="http://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Fconcepts%2Fcworkset.htm" rel="noreferrer"/a/p/div
+Title: Oozie: Testing workflows locally
+Description: 
+    
+    
+                    
+Ooozie XML based workflow defintions are error prone and difficult to debug at run time.  Also, running them in a production environment is a bit of a risk.
+
+1) Is there a simple way to test an  oozie based workflow / application ; via an embedded server or other mock environment?  
+
+2) Are there any polished IDE / TDD idioms around oozie development?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+MiniOozie might help.
+Also using -dryrun allows to print the resolved xml of 1 materialization and do syntax check - http://oozie.apache.org/docs/3.3.2/DG_CommandLineTool.html#Dryrun_of_Coordinator_Job
+
+    
+    
+Answer 2: 
+
+    
+    
+
+  Also, running them in a production environment is a bit of a risk.
+
+
+Not sure what the above statement means.
+
+Take a look at MiniOozie test here for unit testing Oozie workflow and coordinator.
+    
+    

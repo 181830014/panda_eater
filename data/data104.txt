@@ -1,0 +1,1509 @@
+Title: How to set CRTL+F1 to execute sp_help on the item currently selected
+Description: 
+    
+    
+                    
+I worked at a place that had this set up.  It was nice.  Highlight a table name and click ctrl+f1, and exec sp_help [this_object] was executed.  How can I set that up?
+    
+
+        
+Answer 1: 
+
+    
+    
+In the SSMS menu select Tools -&gt; Options then the Keyboard tab. 
+
+By default sp_help is already mapped to ALT+F1
+    
+    
+Title: a Java code analysis tool for intelliJ and Eclipse is needed
+Description: 
+    
+    
+                    
+Does anyone has an experience with a code analysis tool that has a working plugin for both eclipse and intelliJ?
+    
+
+        
+Answer 1: 
+
+    
+    
+Both FindBugs and CheckStyle work well with intelliJ 10 and eclipse. you may have to modify the JVM setting for the plugins to work.
+
+but it works.
+    
+    
+Answer 2: 
+
+    
+    
+have you also tried PMD? http://pmd.sourceforge.net/integrations.html
+
+I'm an intelliJ user but it works for Eclipse. I would prefer FindBugs/PMD to CheckStyle. To be honest I use intelliJ's (9 version) built in Inspection tool as well. You will find this previous thread in SO useful Checkstyle vs. PMD
+
+Found this plugin (multiple integration including PMD/FindBugs) for intelliJ this morning (yet to try) but here's the link http://plugins.intellij.net/plugin/?idea&amp;id=4596
+    
+    
+Title: Is there an Editor or IDE capable of returning external program output?
+Description: 
+    
+    
+                    
+I've got around 14 IDE's installed for testing on my WinXP box right now, from Notepad++ to Netbeans, Aptana to Zend Studio. I'm trying to find one that will do what I need, but no luck finding a solution yet.
+
+My goal is this:
+
+
+  The IDE is open and I'm working on a
+  PHP file. Click a button or hit a
+  hotkey...
+  
+  My IDE sends the file I'm working on
+  to an external app (Firefox, Lynx,
+  Chrome, etc.) with any command-line
+  parameters I specify, processes it,
+  then returns the output (HTML source,
+  in this case) back to my IDE in an
+  output window and/or new file tab.
+
+
+Seems like a simple request, right? ;)
+
+For clarity, I'm not interested in downloading Win PHP binaries and simply running the script inside my IDE. I've got a virtual server setup (Virtualbox) which perfectly mirrors my live server and really want to use that for generating output and testing. Also, I'm trying to avoid switching back and forth between IDE and browser to check the source.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can try with External Tasks in any Eclipse-based IDE. Of course, it won't read your mind, so its up to you to configure the task:
+
+
+http://help.eclipse.org/helios/topic/org.eclipse.platform.doc.user/tasks/tasks-exttools-running.htm
+
+
+Also, Zend Studio has support for Virtual Machines, though Im not sure if it's relevant to your question.
+    
+    
+Answer 2: 
+
+    
+    
+The Zeus editor can run external applications via it's tool setup and capture the application output to a tool output window.
+
+To add the name of the current file to the tool command line just use the $fn macro tag as a marker when setting up the tool command line.
+    
+    
+Answer 3: 
+
+    
+    
+Gvim, what else? Use a command like this:
+
+:r ! [some command]
+
+
+And the output from [some command] will be pasted into your current file. Or:
+
+:20,25 ! rot13
+
+
+Will take lines 20-25, run them through the external rot13 command and put the output in it's place.
+    
+    
+Title: Use database with Iphone like spinner with android
+Description: 
+    
+    
+                    
+I am new to developing anything and  want to make an Iphone like spinner that pulls information from database and return info contained in database
+
+I have checked all the spinners out on How can we create iPhone-like spinners in android? and like the I phone one it is based of off javascript and html 
+
+want my database to be similar to this
+http://www.portlandbolt.com/technicalinformation/bolt-torque-chart.html
+
+any ideas on how to accomplish this or code snippets that would help.
+
+I am also having problems setting up a database I am using Eclipse Helios and have been unable to install dbEdit and jdbc drivers tried many tutorials but no luck, would it be better to try a different IDE like netbeans?
+    
+
+        
+Answer 1: 
+
+    
+    
+Forget about JDBC when programming for Android.  Take a look at the notepad tutorial, for a decent introduction to using a database from an Android app.
+
+For a good looking spinner, take a look at http://code.google.com/p/android-wheel/
+
+I recommend that you use the standard Eclipse tooling, as it works well (in my experience), and it has a lot of community support.
+    
+    
+Title: How to set the @return value of a dynamic function?
+Description: 
+    
+    
+                    
+Say I have this function:
+
+function load_model($modelName)
+{
+   $model = new $modelName;
+   return $model;
+}
+
+
+Using it, I can do:
+
+$userModel = load_model('user');
+$forumModel = load_model('forum');
+
+
+etc. Both will be different models with different classes, different functions, etc.
+
+However, my autocomplete doesn't work, because it doesn't know what the return value of the load_model() function is going to be.
+
+Is there any way to do something like this?
+
+/**
+* @return $modelName
+*/
+
+
+That will tell the IDE that the returning value is a user model class, or a forum model class?
+    
+
+        
+Answer 1: 
+
+    
+    
+No... the best you can hope for here is that if your various kinds of model classes all implement the same interface, or perhaps all extend from the same abstract parent class, you can put the interface or abstract class name as the return type.
+
+Examples: 
+
+If 
+
+class UserModel implements ModelInterface {}
+
+Then your load_model() function can
+
+@return ModelInterface an object that implements a Model
+
+...
+
+Or, if 
+
+class UserModel extends ModelAbstractParent {}
+
+Then your load_model() function can
+
+@return ModelAbstractParent a concrete Model object
+
+...
+
+There's just no other way for phpDocumentor to decipher a return type that is dynamic at runtime, and therefore there's no way for an IDE's autocomplete to figure it out either.
+
+However, if your various concrete model classes do properly implement a top-level interface or extend from a common abstract parent class, then using the interface/abstract as the return type will allow for some level of autocomplete to work in the IDE.
+
+EDIT:  there is one other way to document the return type, but I still don't think autocomplete will work by using it -- listing multiple return types:
+
+@return UserModel|LoadModel|PlaneModel|TrainModel|AutomobileModel an object of one of the various model classes
+    
+    
+Title: Flash Builder Burrito alternatives?
+Description: 
+    
+    
+                    
+are there any alternatives for the Flash Builder Burrito IDE for mobile development based on the flash technology?
+
+Thank you very much for any information,
+Cyril
+    
+
+        
+Answer 1: 
+
+    
+    
+Flash Develop (www.flashdevelop.org) - free and open source (MIT license)
+    
+    
+Title: Visual Studio 2010 IDE - unpinning Toolbox
+Description: 
+    
+    
+                    
+Is there a way to have the Toolbox automatically pinned when I am in design mode and un-pinned when I am in code view?...or even further, can I pin/un-pin certain windows based on when I switch between design/code view?
+    
+
+        
+Answer 1: 
+
+    
+    
+Not as a standard option, I'm afraid. You can possibly write your own plugin to do this job but the time it takes may be a false economy!
+    
+    
+Title: Where can Qt Creator plugins in binary form be found?
+Description: 
+    
+    
+                    
+Where can I find plugins for Qt Creator available in binary form?
+    
+
+        
+Answer 1: 
+
+    
+    
+Because of the diversity of platforms that Qt supports you may be hard pressed to find many plugins in binary form. The Qt developer network does maintain a list of QtCreator plugins here. Some of these may be available in binary formats but since they are plugins for software designed to compile software, it shouldn't be a big problem if you have to build them yourself :)
+    
+    
+Title: Windows Ruby/Rails IDE or editor with autocompletion
+Description: 
+    
+    
+                    
+I am looking for an IDE with Ruby on Rails autocompletion on windows. Netbeans seems to be ok but he is buggy and the wizard for importing existing project does not work. RubyMine is unable to read files from a network drive (and you must pay for it!).
+
+Is there any Ruby ide autocompleting code with at least the rails API and eventually my project classes?
+    
+
+        
+Answer 1: 
+
+    
+    
+Take a look at Aptana Studio 3 Beta, that runs on Eclipse. One of it's features, RadRails, provides exhaustive support for both Ruby and Ruby on Rails.
+    
+    
+Answer 2: 
+
+    
+    
+Try e editor. The power of textmate on windows!
+    
+    
+Title: Eclipse IDE : Adding external commands to the menu bar or toolbar?
+Description: 
+    
+    
+                    
+I have some help files that I would like to integrate on the Elcipse toolbar or menu bar. Is there any way to add commands to launch local files this way?
+    
+
+        
+Answer 1: 
+
+    
+    
+What you need to do is add a custom command to your toolbar. 
+
+I think you could use this tutorial, since it describes the general approach to commands in Eclipse:
+
+http://www.vogella.de/articles/EclipseCommands/article.html
+    
+    
+Title: Should we commit IDE settings in the VCS?
+Description: 
+    
+    
+                    
+We're working mainly in Java, using both Eclipse and Intellij in the team.
+We had a discussion in the team about committing IDE settings (.iml, .project) on our git.
+
+I'm against this practice, but someone pointed me the fact that would be much easier for everyone to be aligned on the same settings like code style and warnings.
+
+Also they showed me as modern browsers do a good job of separating local machine specific stuff from project specific ones.
+
+Is there are reason why we shouldn't commit them?
+    
+
+        
+Answer 1: 
+
+    
+    
+The only reason why you could avoid version those files is if they contains developer-specific data (paths that are only valid for one developer and not others, some value which are only relevant on one workstation and not others).
+
+Any other files that:
+
+
+can be reused by any developer
+help get back an environment able to re-build the program with identical settings
+
+
+should be put in the VCS.
+And that include any IDE setting files, as I mention in "Do you keep your project files under version control?", or "Which eclipse files belong under Version Control".
+    
+    
+Title: Any plugin for c++ editor?
+Description: 
+    
+    
+                    
+I am developing a standalone java desktop application. In that application I am giving user to create his own c++ file or modify the existing ones...But currently I am using Jtextarea as an editor for editing or creating c++ file. I actually want user to give some IDE like editor(such as in Anjuta) so that it becomes more  user friendly. Is it possible to use any plugin in my app for c++ editing and if it is then which and how to use it??
+Thanks in advance.
+    
+
+        
+Answer 1: 
+
+    
+    
+Use the Eclipse framework.   It will have more features that you can include in your app then you have time to produce yourself.
+    
+    
+Title: Navigate to Event Handler Does not work in WPF Application
+Description: 
+    
+    
+                    
+I am studying a code base developed using .NET WPF. I am using Visual Studio 2008 IDE. In the XAML code, I have a line as follows:
+
+&lt;MenuItem Header="About"  Click="Main_Window_ContextMenu_About_Click"&gt; 
+
+
+Clicking right mouse button, I see a option called "Navigate to Event Handler". However, clicking it does not take me to the Event Handler definition. In fact, this action seems to have no effect.
+
+Why is this happening and how can I fix this issue?
+    
+
+        
+Answer 1: 
+
+    
+    
+If you're using ReSharper, hit F12 while the cursor is on the event handler name (assuming you're using ReSharper's default shortcuts)
+    
+    
+Answer 2: 
+
+    
+    
+That shortcut in the XAML designer isn't very reliable - it only works when the event handler method is defined in the code-behind for the XAML file. For example, if you have "Window.xaml" it will only work if the handler is in "Window.xaml.cs". 
+
+This breaks, for example, if the event handler is defined in a second partial class file like "Window_EventHandlers.cs". This particular one even generates a new blank event handler in the code-behind file which promptly fails to compile on a duplicate method definition - yuck!
+
+If you can't find it, your best bet is probably a solution or project-wide search for the method name.
+    
+    
+Answer 3: 
+
+    
+    
+This is a known issue. There are several ways to fix it, including re installation.
+    
+    
+Title: VS 2010 Floating code window NOT always on top
+Description: 
+    
+    
+                    
+Most of the time when I code, either using Visual Studio or gVim, I like to have many open windows with code files so that I can go back and forth from one to another, either to edit or just read while editing another file. 
+
+Thus I found VS 2010's feature of "floating" code windows very helpful. However, the fact that when a code window is floating, it's "always on top" is a bit annoying, because it might hide other windows, such as the "Find Results" for example.
+
+Is this something that is customizable? Is there a configuration value somewhere that either enables or disables the "always on top feature" of floating code windows in Visual Studio 2010?
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+Well, it is not a real top-most window, it is merely on top of the Visual Studio main window.  An 'owned' window.  From where it competes with other windows that VS displays for the Z-order, like the Find Results window.  You'd need to arrange these windows so they don't easily overlap and obscure each other.  That's supported, you can dock them.  Bit of a chicken-and-egg problem, isn't it?
+
+If you have concrete ideas how to improve this then you can post them to connect.microsoft.com
+    
+    
+Title: How to make sections of PHP code in eclipse
+Description: 
+    
+    
+                    
+I've really only just discovered that you can use /** @blah */ comments to specify certain things, but is it possible to create sections in code?
+
+Like:
+
+/** Start Section "Blah" **/
+$result = doSomething();
+echo $result;
+/** End Section "Blah" */
+
+    
+
+        
+Answer 1: 
+
+    
+    
+No PDT can't do that. Generally expandable code sections are identified by function and class method bodies. 
+
+If you think you need artificial sections identified by comments I recommend to rather think about reorganizing your code into more fine grained files, function, classes and methods that can be easily documented using PhpDoc (which is the standard PDT uses).
+    
+    
+Answer 2: 
+
+    
+    
+these sections
+
+ /**
+   * here goes your text
+   * @author Nanne
+   * /
+
+
+Are based on javadoc: http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html
+
+Look at this page where a documenter for PHP is described. I don't know what standard is used in Eclipse, but I'm guessing they're all rather alike:
+http://www.phpdoc.org/
+
+Is is mostly based on commenting certain parts of code, e.g. classes, functions and variables. As far as I know there is no special code for "sections". The reason I think this, is that you are 'supposed' to make a documentation from this, with classes, it's methods etc. There is no special way to represent "sections" in a documentation like that.
+
+But do read above links, it'll clear up a lot!
+    
+    
+Answer 3: 
+
+    
+    
+In PHP you can use sections to separate pieces of code. Syntax is like this:
+
+Blah:{
+   $result = doSomething();
+   echo $result;
+}
+
+
+These were used by goto style procedural programming before object oriented programming was used (classes and instances). Using these sections and goto statements is very bad practice and should be shunned by any developer. 
+
+https://www.php.net/manual/en/control-structures.goto.php
+    
+    
+Title: JavaScript inheritance with working code assistant and outlines?
+Description: 
+    
+    
+                    
+I know a plenty of different approaches to JavaScript inheritance. I think one of the most important factors is whether code assistant and outline still works with the inheritance model.
+
+For example, in ExtJS inheritance involves:
+
+MyApp.SuperWindow = Ext.extend(Ext.Window, {
+    constructor: function() {
+        this.doSomething();
+        MyApp.SuperWindow.superclass.constructor.apply(this, arguments);
+    },
+
+    doSomething: function() {
+    }
+});
+
+
+Our SuperWindow extends Ext's Window component with additional functionality of doing something. While this inheritance works, you lose code assistant and the outline in all IDEs I know (Eclipse, Netbeans, Aptana, NuSphere among others).
+
+You could, however, do something like:
+
+MyApp.SuperWindow = {
+    constructor: function() {
+        this.doSomething();
+        MyApp.SuperWindow.superclass.constructor.apply(this, arguments);
+    },
+
+    doSomething: function() {
+    }
+});
+
+MyApp.SuperWindow = Ext.extend(Ext.Window, MyApp.SuperWindow);
+
+
+But that just looks horrible. You need to type MyApp.SuperWindow thrice (not including the parent constructor call that you could write with this).
+
+How would you go about inheritance in JavaScript while maintaining code assistants and outlines?
+
+I would like to retain the concept of a parent/super with the inheritance model. Since the typical inheritance involves placing a copy of an object into one's prototype only, you get no such things as supers.
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm quite a fan of John Resig's Simple Javascript Inheritance, which is quite clean in syntax, e.g.:
+
+var Person = Class.extend({
+  init: function(forename, surname)
+  {
+    this.Forename = forename;
+    this.Surname = surname;
+  }
+});
+
+var Employee = Person.extend({
+  init: function(forename, surname, role)
+  {
+    this._super(forename, surname);
+    this.Role = role;
+  }
+});
+
+var employee = new Employee("Matthew", "Abbott", "Developer");
+console.log(employee.Forename + " " + employee.Surname + " is a " + employee.Role);
+
+console.log(employee instanceof Class);
+console.log(employee instanceof Person);
+console.log(employee instanceof Employee);
+
+    
+    
+Title: Grails. STS. Syntax highlighting problem?
+Description: 
+    
+    
+                    
+I create Grails project use STS IDE.
+And sometimes i see not correct Syntax highlighting. and this "sometimes" - very often.
+
+Some body have this problem too? or only I?
+    
+
+        
+Answer 1: 
+
+    
+    
+The syntax highlighting problems have been fixed since STS 2.5.3.
+    
+    
+Answer 2: 
+
+    
+    
+I highly recommend IntelliJ, it's the best IDE for Grails development. They have community edition and professional edition.
+    
+    
+Title: Prado &amp; NetBeans
+Description: 
+    
+    
+                    
+I have Ubuntu with NetBeans, and use it for PHP/Prado development. I installed NB because it supposedly supports Prado. To my disappointment, it seems that Prado plugin work only for older versions of NB.
+
+I tried to install the plugin, but with no success. Does anyone have NB 6.9 with Prado support?
+
+If not, I'm wondering which IDE to use for Prado under Ubuntu. I know that phpEdit works well, but it's a windows app. I'm even thinking of running it with wine :S.
+
+Thx
+    
+
+        
+Answer 1: 
+
+    
+    
+Is this what you're looking for?
+
+http://blogs.oracle.com/netbeansphp/entry/the_first_alpha_version_of
+    
+    
+Title: How to hook into Workspace-startup process in Eclipse?
+Description: 
+    
+    
+                    
+When developing an Eclipse plug-in, is there a way to hook into the workspace (not workbench) startup- or initialization process? I'd like my plug-in to be notified when all the projects belonging to the workspace are known. The project-lifecycle and resource listeners only provide callbacks for modification, creation or deletion of projects. What I need is a kind of an inverse WorkspaceSaveParticipant-mechanism.
+
+Note that this is within the context of IDE-plugins, not RCP-applications, so some of the solutions that might apply to an RCP-application are out of scope for me (I don't know whether plain RCP-apps have projects at all).
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Look at org.eclipse.ui.startup extension point.
+    
+    
+Title: Implementing a User Interface in the Style of Visual Studio 6 for a IDE
+Description: 
+    
+    
+                    
+Is there a Eclipse like tool to build IDEs to build something similar to Visual Studio 98, something looking like ? 
+I've seen a lot of IDE's similar to VS98. Are there standard controls for them?
+
+I'm exploring this technology to allow the end user like a doctor to define state-based interactive dialogue based diagnosis systems for simple diseases. Example below: 
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Not sure, but you could look at the SharpDevelop open source IDE to get some ideas
+
+    
+    
+Title: Ensime doesn&#39;t show source code of downloaded libraries
+Description: 
+    
+    
+                    
+I'm currently a happy user of emacs-ensime. Wholly it's a good IDE but there is an issue - I can't view scaladoc when I choose some method of a class in type inspector. I use ivy for dependency management, it downloads libs that I need with source code and doc jars (sometimes only with docs/sources). 
+
+According to ensime manual it should work.
+
+
+  If ENSIME cannot find the source for a type or member, it will instead try to browse to the www documentation. 
+
+
+Any suggestions why it can't find source and how to fix it?
+    
+
+        
+Answer 1: 
+
+    
+    
+Ensime is in a very early state of its development and there a lot of bugs at this point. Aemon(the lead developer) is pretty fast to respond to all problems posted on the project's issue tracker at GitHub, so I'd suggest opening an issue there.
+    
+    
+Title: An IDE in my pocket?
+Description: 
+    
+    
+                    
+Does anyone know of an IDE for editing files such as PHP, HTML, and CSS through a SFTP connection? I  have both an android device and an iOS (version  3, that is) device, and the only result I get for an application like this in both marketplaces is in the App Store. It didn't seem particularly appealing (also, it required an iOS 4 upgrade), and i'd prefer something for my android device (it has a hardware keyboard). Is there such a thing out there?
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+I realize this is pretty old now, but just in case for anyone else.  Two AndExplorer and AndFTP Pro.  You can mount a virtual SFTP site as a directory and then use whatever.  Use it on my Droid X quite a bit.
+    
+    
+Title: Manipulate VBA environment from C# .Net (VS2008)
+Description: 
+    
+    
+                    
+I need to manipulate the VBA environment of an application from a C# addin so I can add modules, event handlers etc to documents that are created by the addin.
+
+I've done it before in VB.Net but can't see how to get at the IDE object in C#. Am I just missing a reference or a Using directive? I can't see anything appropriate in the references.
+
+In VB.Net I have a reference to Microsoft.VisualBasic and I have done this:
+
+Imports System
+Imports System.Collections.Generic
+Imports System.Collections.ObjectModel
+
+
+Public Module VBA
+    Private m_VBEnv As VBIDE.VBE
+    Private m_dlg As AddInDialog
+
+    Private Structure EventHandler
+        Public objectName As String
+        Public eventName As String
+        Public action As String
+    End Structure
+    Private m_handlers As New Collection
+
+    Public Function InitVBA(ByVal app As PBObjLib.Application, ByVal dlg As AddInDialog, ByVal scrWidth As Integer, ByVal scrHeight As Integer) As Boolean
+        InitVBA = False
+        Try
+            m_dlg = dlg
+            m_VBEnv = DirectCast(app.VBE, VBIDE.VBE)
+            m_VBEnv.MainWindow.Height = 480
+            m_VBEnv.MainWindow.Width = 640
+            m_VBEnv.MainWindow.Left = (scrWidth - m_VBEnv.MainWindow.Width)
+            m_VBEnv.MainWindow.Top = ((scrHeight - m_VBEnv.MainWindow.Height) - 50)
+            m_VBEnv.MainWindow.WindowState = VBIDE.vbext_WindowState.vbext_ws_Minimize ' .vbext_ws_Normal
+            HideVBWindow()
+            InitVBA = True
+        Catch e As Exception
+            dlg.LogMessage(AddInDialog.LogLevel.Err, "Failed to initialise VBA: " &amp; e.Message)
+        End Try
+
+    End Function
+
+    ...
+
+End Module
+
+
+I have added a reference to Microsoft.VisualBasic to my C# but it does not recognise VBIDE.VBE.
+
+Also, how would I do the DirectCast bit in C#. Is it just a simple cast?
+
+Any suggestions?
+    
+
+        
+Answer 1: 
+
+    
+    
+The answer was to ensure that all references were .NET references. I had a COM one hiding in there. I removed the VB related references, reloaded the project, added the references (all .NET this time) and it all came to life.
+    
+    
+Title: Platform-independent C++ Debugger IDEs that follow pointers like Visual Studio
+Description: 
+    
+    
+                    
+Visual Studio debugger automatically recognizes the types of pointers and shows the value of the variable or object pointed to by the pointer.  Example screenshot for Ruby debugger here:  http://www.rubyinside.com/wp-content/uploads/2008/03/jruby-debugger.jpg   This applies to debugger tooltips, watch windows, etc.  I never have to see the value of a pointer.  Same thing happens for arrays.
+
+Are there platform-independent (preferably free/open source) debugger IDEs that allow this for C++?  I tried Code::Blocks, Geany, Eclipse, etc., they all just show the value of the pointer (looking like 0xE0CCDB34).  There could possibly be settings in these IDEs but I could not find it.
+
+My main interest is to be able to compile and debug C++ with GCC/MinGW toolchains.  So if no platform-independent IDE debuggers support this, are there any free ones on Windows that use GCC/MinGW toolchain?
+    
+
+        
+Answer 1: 
+
+    
+    
+The debugger included in QtCreator does this.
+    
+    
+Answer 2: 
+
+    
+    
+DDD will do what you're asking, and I believe it can be compiled for Windows using GCC. It's not an IDE, but a very capable debugger.
+    
+    
+Answer 3: 
+
+    
+    
+I use emacs + gud
+
+http://www.emacswiki.org/emacs/GrandUnifiedDebugger
+
+http://www.inet.net.nz/~nickrob/
+
+beware, emacs has a steep learning curve which never ends.
+    
+    
+Answer 4: 
+
+    
+    
+The c++ interpreter/compiler/REPL in ROOT is called cint, and has the ability to insert breakpoints (-b on the command-line or .b in the interpreter), at which time you can print the values of variables; access members; invoke functions and methods; manipulate memory; and so on very much like a traditional debugger. 
+
+And ROOT runs on many platforms.
+
+Cint is separable from ROOT and can be used in other contexts, but I have no experience with doing that.
+    
+    
+Answer 5: 
+
+    
+    
+I found that CodeLite IDE also supports this.
+    
+    
+Title: Setting up Android SDK with Netbeans or Visual Studio?
+Description: 
+    
+    
+                    
+I'd like to set up Android SDK with Netbeans or Visual Studio 2010. I am coming back to Windows programming after 3 months on Apple iMac (for iPhone programming). 
+
+Would somebody be able to explain how to set up the NetBeans environment so I can compile and test Android Apps directly form NetBeans.
+
+I will be testing on a simulator, not a real device. My platform is Windows 7 Ultimate.
+
+Thanks.
+
+EDIT: 
+
+nbandroid is proving annoying to set up. It requires platforms. How do I install those?
+It seems I can't use Eclipse even if I wanted to. It can't find the Java VM DLL... Help with that is appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+You need to install the Android SDK and a NetBeans plugin called nbandroid. There are lots of instructions here.
+
+I do recommend however using Eclipse because the plugin that you use on that is officially supported by Google, the Netbeans one is community developed I think, and a lot of the tools may be missing (like Allocation Tracker or Emulator controls. I don't know if they are in the netbeans plugin because I haven't used it but I'm guessing you wont have the full range of SDK tools available in the plugin).
+    
+    
+Answer 2: 
+
+    
+    
+Doesn't sound like nbAndroid is your problem.  No matter how you develop you need to select the Android target platforms with the AVD Manager from the Android SDK.
+    
+    
+Answer 3: 
+
+    
+    
+You should download the 'ADT' plugin it allows to kickstart android development directly by using the eclipse exe in the zip file
+    
+    
+Title: Flash CS5 projects panel totally gone?
+Description: 
+    
+    
+                    
+So, I popped open up Flash CS5 just now, and I couldn't find my projects panel. 
+I was working on a dual screen set up previously, so my windows were everywhere anyways (sans external).
+
+I switched over to a smaller screen workspace, and popped opened the projects panel. Oddly enough, the code snippets panel came up instead.
+
+So, I switched off the code snippets, and tried again.
+
+I've been trying different ways of opening this panel for about 15 minutes, and I'm totally stumped. Some thorough googling didn't present any relevant results, so, StackOverflow, I turn to you. Is this a known issue? is there a secret backdoor way to open this panel? Am I totally missing something?
+    
+
+        
+Answer 1: 
+
+    
+    
+So, just in case someone runs into this, and mostly because this is ruining my accept rate, I never figured out what the issue was that was causing this. I believe that opening a new flash file will revive the project panel, but as it currently shows up without a flash file open, the problem is resolved, but I don't have an answer to anyone with the same question. As Allan suggested, windows/workspace/reset didn't do the trick, but who knows, maybe it'll work for someone else?
+    
+    
+Title: Launching desired version of XCode from Finder
+Description: 
+    
+    
+                    
+My google-fu has failed me, and I guess this may be basic OS X/Xcode knowledge but....
+
+When I double click .xcodeproj files, I'm getting the Beta I have installed launching instead of the stable release - which is the one I actually want. 
+
+I have tried changing the launch program in the finder info window, but it always displays as "Xcode" and doesn't seem to accept that there are different versions - even though it offers them to me in the drop down list. 
+
+Is there an xcode setting for this?
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+The command-line tool xcode-select is what you want:
+
+Usage: xcode-select -print-path
+   or: xcode-select -switch &lt;xcode_folder_path&gt;
+   or: xcode-select -version
+Arguments:
+   -print-path                     Prints the path of the current Xcode folder
+   -switch &lt;xcode_folder_path&gt;     Sets the path for the current Xcode folder
+   -version                        Prints xcode-select version information
+
+
+You will have to use sudo to actually change it with -switch.
+    
+    
+Title: Delphi 2009 RAD Studio - Desktop Selector not Working
+Description: 
+    
+    
+                    
+In the Delphi 2009 RAD Studio, there is a drop-down combo box where you can select the desktop configuration, i.e. "Default Layout", "Debug Layout, "Classic Undocked", etc. This has stopped working for me, i.e. when I select a desktop, nothing happens. I think I once "customized" the toolbar, by removing the drop-down combo box, and then I added it again, and ever since it has been dead. Is this a known bug? Is there a cure?
+    
+
+        
+Answer 1: 
+
+    
+    
+Create a new user account on your computer, call it "Testing" and log in there. Now load up delphi and try this desktop layout button. If it's now working in this alternative desktop account, then it's something in your registry settings under this key:
+
+HKEY_CURRENT_USER\Software\CodeGear\BDS\6.0
+
+
+Try setting the keys named DesktopName and RuntimeDesktopName under the Session key
+
+HKEY_CURRENT_USER\Software\CodeGear\BDS\6.0\Session\DesktopName=Default Layout
+HKEY_CURRENT_USER\Software\CodeGear\BDS\6.0\Session\RuntimeDesktopName=Debug Layout
+
+    
+    
+Answer 2: 
+
+    
+    
+Is it still switching configurations when you run the project or when you go back to coding?
+Have you tried to create new custom configurations, save them and switch manually with the combo?  
+
+My guess is it's something wrong saved in the Registry. You could try (after saving your current registry) to get a (good) D2009 registry from another install where it works, and apply it to your machine. If it works again you'll have a way to figure it out by diffing the regs. If not you may have to reinstall D2009 (or at least try"repair").
+DISCLAIMER: yadda yadda about touching the Registry...
+    
+    
+Title: Silverlight IDE for latest version (May 2010)
+Description: 
+    
+    
+                    
+In 2008 Artur Carvalho asked for an Alternative IDE for Silverlight and was told to look at Visual Studio Express.
+
+Is that still the valid answer in 2010 or are there other IDEs one should consider (cost/ OS it runs on / stability)? 
+
+I'm trying to get a feel for silverlight development before commiting cash. So I don't need enterprize level tools or a license to distribute ..
+
+Would MonoDevelop and Moonlight be an option?
+    
+
+        
+Answer 1: 
+
+    
+    
+On Windows I haven't heard about anything besides Visual Studio Express 2010. On Mac you can use Eclipse for Silverlight. 
+
+As for me, I don't develop SL daily rather occasionally and starting with Blend 3 I can actually use Blend for most of my smaller personal projects and don't bother to install VS although I have a licence for it. Blend now has a decent support for Intellisense and most UI stuff is easier in Blend. Yes, Blend is not free.
+    
+    
+Title: IntelliJ IDEA structural search
+Description: 
+    
+    
+                    
+Is it possible to do a structural search on instances of a certain class in IDEA? I want to search usages of == on two instances of a given class. The instantiation is not part of my search. E.g.
+
+Currency lhs = new Currency("CHF");
+Currency rhs = new Currency("USD");
+
+...
+...
+
+
+if (lhs == rhs) {
+}
+
+
+Here I'm looking for the lhs == rhs, not the other parts of the code. At the same time I'm looking for exactly the case where lhs and rhs are instances of Currency.
+
+What I also want to achieve is to find occurencies of this pattern where rhs is a result of method calls:
+
+lhs == foo.getSomething().getCurrency()
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I got the answer myself: 
+
+In the Edit Variables frame it is possible to specify the "Text / reqular expression for java expression type". 
+    
+    
+Title: How do I track the method the user is looking at in VS 2010 IDE as an Addin
+Description: 
+    
+    
+                    
+I have been wandering around the object model for VS 2010 and haven't been able to work out the best method for watching what the user is looking at in the main edit window.
+
+I know that each Class/method/property is broken down into its own . What I would ideally like is to hook to an event which says "The user has moved the cursor onto Project.Class.Method" and ideally "and is looking at line 4".
+
+Any suggestions?
+    
+
+        
+Answer 1: 
+
+    
+    
+Have you looked at CodeModel? It can tell you what types and members are in a file. http://msdn.microsoft.com/en-us/library/ms228763(v=VS.80).aspx
+    
+    
+Title: &ldquo;Find all References&rdquo; for operator overload in visual studio or other IDE
+Description: 
+    
+    
+                    
+Im looking at some codes (in C++) and it gets quite confusing when there is operator overloading. Is there a simpler way to find out whether "()"  or any other symbol is overloaded?
+    
+
+        
+Answer 1: 
+
+    
+    
+KDevelop4 can do it. Test has a public constructor taking an int, so it shows its operator+ for all but the last use of operator+
+    
+    
+Title: More inside an IDE(eclipse cdt)
+Description: 
+    
+    
+                    
+This is what I see in the Console when I clicked Project-/strong/pprecode/code/prep/pp/ppcode/code/pprecode/code/pre/div
+Answer 1: 
+
+    
+    
+Open Debug/makefile or Release/makefile in the text editor. It contains commands that you see in the Console window. Additionaly, clean section is executed when you make Clean and not regular build. 
+
+Generally, CDT generates makefile according to the project properties, for all source files in the projects. Then it executes makefile using command make, with optional parameters. You can do the same by executing make command from the command line in Debug or Release directories.
+
+From the command line, it looks like this:
+
+
+alex@alex-linux:~/workspace/Test/Debug$ make clean
+rm -rf  ./main.o  ./main.d  Test
+
+alex@alex-linux:~/workspace/Test/Debug$ make
+Building file: ../main.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"main.d" -MT"main.d" -o"main.o" "../main.cpp"
+Finished building: ../main.cpp
+
+Building target: Test
+Invoking: GCC C++ Linker
+g++  -o"Test"  ./main.o   
+Finished building target: Test
+
+    
+    
+Title: Transitioning from FlexBuilder 3 to FlashBuilder 4 &hellip; there and back again
+Description: 
+    
+    
+                    
+It's growing pains time again. Some of our stuff requires FlashBuilder 4 and some still requires FlexBuilder 3. Both are installed OK, and no projects use both IDEs. The trouble is, when I go back to work on a FlexBuilder 3 project it takes freakin' forever to build and I get weird errors like these:
+
+
+
+
+This doesn't seem to cause any identifiable problems except to throw up a modal dialog at various points in the build process, forcing user interaction. But I do notice that memory fills up fast in FB3 and generally FB3 starts behaving strangely and ultimately quits once it gets up over 700MB. 
+
+This is only a temporary bridge situation until we get all projects into FB4, but "temporary" could mean weeks if not months. Does anyone have any advice for how to get through this bridge period? Is there anything I can do to make these two IDEs work and play well together? Failing that, does anyone know what "java.lang.String" is the "reason" for the problem? Does Eclipse have a resource bundle somewhere that is getting corrupted when i go back and forth between the two?
+    
+
+        
+Answer 1: 
+
+    
+    
+What do you need in Flex Builder 3 that means you cannot just use the project in Flash Builder 4?
+
+Is there a reason why you can't move your projects to Flash Builder 4, but specify that you want to continue using Flex 3 SDK? Have you tried that and run into issues?
+
+Thanks,
+
+Andrew
+Adobe
+    
+    
+Title: Executing a file not a project
+Description: 
+    
+    
+                    
+I use Aptana Studio for my PHP projects. I have not learned it but just used with what I was able to do in it. Many features I still don't know how to use in it.
+
+At present, I have a HTML form and I want to write a .php script for the SEND button that it has. It is a submission script for the contact form.
+
+I want a simple PHP IDE with which I can execute a single PHP file or work with at least two or three files easily, without much mess.
+
+Please suggest a simple alternative to Aptana.
+    
+
+        
+Answer 1: 
+
+    
+    
+Use netbeans for PHP, it is the best php editor ever made with lot and lots of functionality.  But you will have to spend some time with it. This case is with every editor that you choose to code in. So spent some time with netbeans and I bet you will be amazed by it's feature set.
+
+
+atleast give it a try.
+
+
+
+and if you don't want the code completion then notepad++ is a good choice, JEdit is also a good option
+    
+    
+Title: adding design packages (bpls) in delphi IDE (automatically)
+Description: 
+    
+    
+                    
+I am trying to automate Delphi Environment regeneration we have bunch of bpl-s that has to be installed in a fresh delphi.
+
+I need to automate this somehow from Delphi 5 it would be : Components-
+Answer 1: 
+
+    
+    
+The list of installed IDE packages is stored in registry, so you could update it there.
+
+The actual location depends on Delphi version, on my machine for D7 it's:
+
+HKEY_CURRENT_USER\Software\Borland\Delphi\7.0\Known Packages
+
+and for D2007 it's
+
+HKEY_CURRENT_USER\Software\Borland\BDS\4.0\Known Packages
+    
+    
+Title: Comprehensive list of Google Wave text editor clients?
+Description: 
+    
+    
+                    
+I know I'm late to the game, but 'still haven't found very many desktop-based Google Wave client text editors. Do any even exist?
+
+Do you know of a Google Wave client plugin for Eclipse, VIM, Netbeans, or any other IDE? (Doesn't have to be a complete product...alpha is fine,...just curious if there's any progress in that direction).
+
+Or do you know of a site other than these few sites that might have this kind of information?
+
+Here's a list of the sites I've already looked at:
+
+
+http://wave-samples-gallery.appspot.com/
+http://wavety.com/
+http://mywavegadgets.com
+http://www.getwaveboard.com
+http://www.chaaps.com/huge-list-of-125-google-wave-robots-add-bots-and-enjoy-wave.html
+
+
+EDIT: Not even a comment?
+    
+
+        
+Answer 1: 
+
+    
+    
+i currently implement a collaboration perspective which sync your current edited file with a wave using a robot and some server work. it should be available from my web site at http://www.devunity.com
+
+Currently i support java,python,php and syntax highlighting.
+    
+    
+Title: How do you re-arange the menus in the VB6 IDE?
+Description: 
+    
+    
+                    
+I want to move some of the menus around (especially the right-click context menu items) in the VB6 IDE.
+
+Any ideas on how to accomplish this?
+    
+
+        
+Answer 1: 
+
+    
+    
+I just discovered this:
+
+
+If you click from the VB6 IDE
+View
+Title: netbeans: the replace button is unclickable?
+Description: 
+    
+    
+                    
+i want to find and replace a string in netbeans.
+
+but the edit -/pp/p/div
+Answer 1: 
+
+    
+    
+Replace menu item is enabled only when input focus is in code area.
+
+When there are no open files or input focus is in side tabs (Project, Files, etc.) Replace menu item is not available.
+    
+    
+Answer 2: 
+
+    
+    
+Have you tried Ctrl+H? That works for me.
+
+It's odd tho, that the one in the edit menu doesn't work... What exactly are you working on when you try this?
+What are your specs? OS, Netbeans version, Java version...
+    
+    
+Title: How to link PHP library help to NetBeans?
+Description: 
+    
+    
+                    
+How can I get NetBeans to automatically detect and show help for the core PHP functions?
+    
+
+        
+Answer 1: 
+
+    
+    
+That sounds like what the PHP Manual Search plugin does.  Even if you get fed up of using Sun's IDE, and I'm sure I would in under 5 minutes, the PHP manual is there.
+    
+    
+Title: Is there such a thing as an automatic build in any IDE for .NET?
+Description: 
+    
+    
+                    
+I'm not talking about a continuous build process, but the excellent feature in Eclipse whereby any java code changes are automatically built in a background thread. With this enabled, running unit tests or applications is immediate. Going back to the 'manual' builds of VS20XX is quite painful.
+
+I've only seen this working in Eclipse for java code - does anything like this exist for .NET languages, in any IDE?
+    
+
+        
+Answer 1: 
+
+    
+    
+Actually, in Visual Studio - one of the best features in Visual Basic that is not in C# is that Visual Basic is compiled in the background as you work.  Though, I'm not sure if it speeds up your unit tests, etc.
+
+You might look into using TestDriven.NET, you can right click and execute a single unit test very quickly in most cases, and it will only compile what is needed to execute the unit test.
+    
+    
+Answer 2: 
+
+    
+    
+You could use msbuild in some background process, periodically building your solution, but this would yield to file locking issues and generally would be a crappy solution. 
+Why not set up say CruiseControl.NET? it's not complicated, doesn't need any source control (could use filesystem) and basic setup for a project is very simple.
+    
+    
+Answer 3: 
+
+    
+    
+Check out Cruise Control: http://cruisecontrol.sourceforge.net/ It does exactly what you are asking for.
+    
+    
+Title: Does Eclipse have the ability to remove all references to a class when the class is removed?
+Description: 
+    
+    
+                    
+I'm working in Java and implementing a basic tree (yes, for homework, but hear me out!).  I discovered that I made an error and had an iterator class inherit from an iterator superclass, where both needed an internal reference to the same node in the tree.  Now every time I reference the node in the subclass and make a change, I have to make the same change in the superclass, or they will be out of sync.
+
+I don't have many classes in the package and I could do it by hand; however, I wondered if Eclipse has the ability to remove references when a class is deleted from a package.  I've done something similar before and I don't think it does automatically, so perhaps the answer is simply no; however, it would be nice.  Hoping that some SO wisdom can help here.
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't see how it could remove references automatically, to be honest - if you're using a variable of that type, it would have to remove all the code using that variable, which is clearly going to affect how things work.
+
+You can just delete the class and fix up the compiler errors though :)
+    
+    
+Title: &ldquo;Missing Body Element&rdquo; with the Visual Web Pack on Netbeans
+Description: 
+    
+    
+                    
+I am currently having an issue with the JSF pages that the Visual Web Package for Netbeans 6.7 generates.
+
+When I generate a new page it produces a page with the following JSP code:
+
+    &lt;?xml version="1.0" encoding="US-ASCII"?&gt;
+&lt;jsp:root version="1.2" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:ui="http://www.sun.com/web/ui"&gt;
+    &lt;jsp:directive.page contentType="text/html;charset=US-ASCII" pageEncoding="US-ASCII"/&gt;
+    &lt;f:view&gt;    
+        &lt;ui:page id="page1"&gt;
+            &lt;ui:html id="html1"&gt;
+                &lt;ui:head id="head1"&gt;
+
+                    &lt;ui:link id="link1" url="/resources/stylesheet.css"/&gt;
+                &lt;/ui:head&gt;
+                &lt;ui:body id="body1" style="-rave-layout: grid"&gt;
+                    &lt;ui:form id="form1"&gt;
+                    &lt;/ui:form&gt;
+                &lt;/ui:body&gt;
+            &lt;/ui:html&gt;
+        &lt;/ui:page&gt;
+    &lt;/f:view&gt;
+&lt;/jsp:root&gt;
+
+
+However when I attempt to view it an error comes up with "Missing Body Element." This is quite frustrating. 
+
+I've spent many days googling for a solution for this and have run into nothing but dead ends. When Netbeans attempts to switch to design view this is logged in the error log:
+
+SEVERE [global]
+java.lang.NullPointerException
+        at org.netbeans.modules.visualweb.insync.faces.FacesPageUnit.findMarkupSectionElement(FacesPageUnit.java:665)
+        at org.netbeans.modules.visualweb.insync.faces.FacesPageUnit.newCreatedBean(FacesPageUnit.java:597)
+
+
+Does anyone have a solution for this?
+    
+
+        
+Answer 1: 
+
+    
+    
+It turns out that this is a problem that is being ignored, and won't be fixed for a while.
+    
+    
+Title: Is there an easier way to add properties to a class in XCode?
+Description: 
+    
+    
+                    
+I'm getting a bit more seasoned with my iPhone development but I still don't know everything. One thing that bugs the hell out of me is having to add properties to a class, because there are four steps involved:
+
+
+Add a class member to the Header file
+Add the property definition to the Header file
+Add a synthesize declaration to the implementation file
+Add a release statement to the dealloc method in the implementation file
+
+
+Is there any easier way to do it? A hidden feature of XCode I don't know about? A tool of some  kind maybe?
+    
+
+        
+Answer 1: 
+
+    
+    
+Accessorizer might be what you're looking for. I've never used it personally but many Mac Developer podcasts give it rave reviews.
+    
+    
+Title: How can I make MPLAB import a HEX file with comments or import a HEX file specified on a commandline?
+Description: 
+    
+    
+                    
+I'm working with the CCS c compiler which produces its object files in the Intel 32 bit HEX format, aka INHX32.  This compiler has a directive which causes it to put comments in these files. The comment lines are at the beginning of the file, and begin with a semicolon, like so:
+
+;  This is a comment
+:020000040000FA
+:1000000007EF33F0000C000C056ED8CF06F0E0CF00
+:1000100007F00001E9CF0DF0EACF08F0E1CF09F0D9
+
+
+I'd like to use this directive, as the comments would be extremely useful to those who later import the hex files into MPLAB. However, MPLAB will not import files with comments. When I try, I get an "Invalid file format, information not available" error.
+
+I realize these comment lines are not part of the original Intel spec, but some other compilers and development tools accept them.  Is there any way to make MPLAB do so?  
+
+I could write a script that would strip these lines out and then pass the resulting file to MPLAB, but as far as I can tell MPLAB can't import a file via the commandline.
+    
+
+        
+Answer 1: 
+
+    
+    
+Some versions of MPLAB accept comments and the end of the file.
+In CCS, The #HEXCOMMENT\ (with a back slash) puts the comment at the end of the hex file.
+    
+    
+Answer 2: 
+
+    
+    
+Random stuff...
+
+
+Is there a compiler flag that disables this comment in the object?  That would be the best place to start.
+If not that, does the IDE's C plug-in let you add a post-processor in it?  If it's as above, you could write a comment eater easily. 
+
+    
+    
+Answer 3: 
+
+    
+    
+It turns out MPLAB definitely doesn't do imports (or much else) from the commandline.  So I wrote an AutoIt script to strip the comments, and save the rest in a temporary file. Then it imports that file into MPLAB by controlling MPLAB's GUI.  
+
+This is actually better than getting MPLAB to import the file directly, since my script displays the comments in a dialog so there is no need for the user to open the file in an editor to read them. 
+    
+    
+Title: Eclipse (IBM AST) cannot find imports to existing files
+Description: 
+    
+    
+                    
+I am having issues with IBM's AST (which is based on Eclipse 3.2) importing files.
+For example, I have a class file named "Status" in the following package:
+com.test.model
+
+When I give another class in the project the following statement:
+
+import com.test.model.Status;
+
+
+the IDE complains that it cannot resolve the import.
+
+There are no errors on the file that is being referenced.
+
+If I remove the import statement and try to use the Status class, the IDE gives an error about the missing reference (as expected). When I click on the error icon to insert the reference to the class file, com.test.model.Status is the first selection.
+
+So, the system cannot find the file, yet it can find the file.
+
+Thoughts?
+    
+
+        
+Answer 1: 
+
+    
+    
+That does look like a metadata workspace update issue.
+This is usually taken care of with:
+
+
+a project clean operation (which you did): that is enough if it is only the incremental builds that got messed up.  
+deleting and re-importing the project (you delete only the workspace metadata of the project, not its content): that works best of the .project and .classpath are not within the workspace, but in an external (to the workspace) directory, along with the sources of the project
+re-launching eclipse with a '-clean' option to reset the workspace perspecitve (in case of a plugin side-effect)
+
+    
+    
+Title: How can I make Netbeans 6.7 recognize JSF tags in facelets?
+Description: 
+    
+    
+                    
+I would like to upgrade from Netbeans 6.5 to Netbeans 6.7.  However, I've encountered an annoyance.  Netbeans 6.5 recognizes jsf tags, but Netbeans 6.7 does not.  Here are the screenshots:
+
+
+
+
+
+Why isn't Netbeans 6.7.1 not recognizing and matching JSF tags?
+    
+
+        
+Answer 1: 
+
+    
+    
+Tools --

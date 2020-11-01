@@ -1,0 +1,1190 @@
+Title: Python beautifulsoup performance, IDE, poolsize, multiprocessing requests.get for web-crawler
+Description: 
+    
+    
+                    
+Fine fellows of stack overflow!
+
+New at python(second day), Beautiful Soup and sadly, in a bit of hurry.
+
+I've built a crawler that take street names from a file into a search engine(merinfo_url). Those companies under right conditions get further scraped then exported.
+
+I'm in a "hurry" because, despite a complete debug mess of a code everything is working! I'm itching to begin a long debug test on a remote computer today. I stopped at 5000 hits.
+
+But performance is slow. I understand I could change the parser to lxml, and open my local file only once.
+
+I hope to implement that today.
+
+Multiprocessing however confuses me. What's my best option, a pool or open several connections? Am I using two terms for the same call?
+
+How large of a pool? Two per thread seems to be frequent advise but I've seen a hundred on a local machine. Any general rule?
+
+If I change nothing in my current code, where do I implement the pool and how do you do it generally for the requests object?
+
+Finally; in terms of performance, on the top of your heads, good performing IDE to debug a crawler running on a local machine?
+
+Many thanks for any feedback offered!
+
+Code
+
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import re
+import json
+import requests
+import urllib
+from bs4 import BeautifulSoup
+from time import sleep
+from sys import exit
+from multiprocessing import Pool
+
+
+def main():
+  if __debug__:
+    print ("[debug] Instaellningar:")
+    print ("[debug]    Antal anstaellda: "+(antal_anstaellda))
+    print ("[debug]    Omsaettning: "+(omsaettning))
+
+  with open(save_file, 'wb') as filedescriptor:
+    filedescriptor.write('companyName,companySSN,companyAddressNo,companyZipCity,phoneNumber,phoneProvider,phoneNumberType\n')
+
+  lines = [line.rstrip('\n') for line in open(streetname_datfile)]
+  for adresssokparameter in lines:
+
+    searchparams = { 'emp': antal_anstaellda, 'rev': omsaettning, 'd': 'c', 'who': '', 'where': adresssokparameter, 'bf': '1' }
+    sokparametrar = urllib.urlencode(searchparams)
+
+
+     merinfo_url = merinfobaseurl+searchurl+sokparametrar
+
+    if __debug__:
+      print ("[debug] Antal requests gjorda till merinfo.se: "+str(numberOfRequestsCounter))
+    crawla_merinfo(merinfo_url)
+
+      # Crawler
+    def crawla_merinfo(url):
+
+  if __debug__:
+    print ("[debug] crawl url: "+url)
+  global numberOfRequestsCounter
+  numberOfRequestsCounter += 1
+  merinfosearchresponse = requests.get(url, proxies=proxies)
+  if merinfosearchresponse.status_code == 429:
+    print ("[!] For manga sokningar, avslutar")
+    exit(1)
+  merinfosoup = BeautifulSoup(merinfosearchresponse.content, 'html.parser')
+  notfound = merinfosoup.find(string=merinfo404text)
+  if notfound == u"Din sokning gav tyvaerr ingen traeff. Prova att formulera om din sokning.":
+    if __debug__:
+      print ("[debug] [!] " + merinfo404text)
+    return
+  for merinfocompanycontent in merinfosoup.find_all('div', attrs={'class': 'result-company'}):
+    phonelink = merinfocompanycontent.find('a', attrs={'class': 'phone'})
+    if phonelink == None:
+      # No numbers, do nothing
+      if __debug__:
+        print ("[!] Inget telefonnummer for foretaget")
+      return
+    else:
+      companywithphonenolink = merinfobaseurl+phonelink['href']
+      thiscompanyphonenodict = crawla_merinfo_telefonnummer(companywithphonenolink)
+      companyName = merinfocompanycontent.find('h2', attrs={'class': 'name'}).find('a').string
+      companySSN = merinfocompanycontent.find('p', attrs={'class': 'ssn'}).string
+      companyAddress = merinfocompanycontent.find('p', attrs={'class': 'address'}).text
+      splitAddress = companyAddress.splitlines()
+      addressStreetNo = splitAddress[0]
+      addressZipCity = splitAddress[1]
+      addressStreetNo.encode('utf-8')
+      addressZipCity.encode('utf-8')
+
+      if __debug__:
+        print ("[debug] [*] Foretaget '"+companyName.encode('utf-8')+("' har telefonnummer..."))
+      for companyPhoneNumber in thiscompanyphonenodict.iterkeys():
+        companyRow = companyName+","+companySSN+","+addressStreetNo+","+addressZipCity+","+thiscompanyphonenodict[companyPhoneNumber]
+        if __debug__:
+          print ("[debug] ::: "+thiscompanyphonenodict[companyPhoneNumber])
+        with open(save_file, 'a') as filedescriptor:
+          filedescriptor.write(companyRow.encode('utf-8')+'\n')
+  return
+
+  #telephone crawl function
+  def crawla_merinfo_telefonnummer(url):
+  global numberOfRequestsCounter
+  numberOfRequestsCounter += 1
+  if __debug__:
+    print ("[debug] crawl telephone url: "+url)
+  phonenoDict = {}
+  s = requests.session()
+  merinfophonenoresponse = s.get(url, timeout=60)
+  merinfophonenosoup = BeautifulSoup(merinfophonenoresponse.content, 'html.parser')
+  merinfotokeninfo = merinfophonenosoup.find('meta', attrs={'name': '_token'})
+  headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063',
+    'X-Requested-With': 'XMLHttpRequest',
+    'Host': 'www.merinfo.se',
+    'Referer': url
+  }
+  headers['X-CSRF-TOKEN'] = merinfotokeninfo['content']
+  headers['Cookie'] = 'merinfo_session='+s.cookies['merinfo_session']+';'
+
+  merinfophonetable = merinfophonenosoup.find('table', id='phonetable')
+  i = 0
+  for merinfophonenoentry in merinfophonetable.find_all('tr', id=True):
+    i += 1
+    phoneNumberID = merinfophonenoentry['id']
+    phoneNumberPhoneNo = merinfophonenoentry['number']
+
+    for phoneNumberColumn in merinfophonenoentry.find_all('td', attrs={'class':'col-xs-2'}):
+      phoneNumberType = phoneNumberColumn.next_element.string.replace(",",";")
+      phoneNumberType = phoneNumberType.rstrip('\n').lstrip('\n')
+
+    payload = {
+      'id': phoneNumberID,
+      'phonenumber': phoneNumberPhoneNo
+    }
+    r = s.post(ajaxurl, data=payload, headers=headers)
+    numberOfRequestsCounter += 1
+    if r.status_code != 200:
+     print ("[!] Error, response not HTTP 200 while querying AJAX carrier info.")
+     exit(1)
+    else:
+      carrierResponseDict = json.loads(r.text)
+      # print carrierResponseDict['operator']
+      phoneNoString = phoneNumberPhoneNo+','+carrierResponseDict['operator']+','+phoneNumberType
+      phonenoDict['companyPhoneNo'+str(i)] = phoneNoString
+  return phonenoDict
+
+# Start main program
+main()
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You should start to use Scrapy 
+
+One of the main advantages about Scrapy: requests are scheduled and processed asynchronously. 
+
+This means that Scrapy doesn’t need to wait for a request to be finished and processed, it can send another request or do other things in the meantime. This also means that other requests can keep going even if some request fails or an error happens while handling it.
+    
+    
+Title: I want to Datagrip IDE table row time format view as SqlDbx format
+Description: 
+    
+    
+                    
+Datagrip IDE - 
+
+Datagrip IDE - Date, Time Format
+SqlDbx : 
+SqlDb - Date Time Format
+    
+
+        
+Title: Delphi IDE disable Sync Edit Mode
+Description: 
+    
+    
+                    
+Delphi IDE has a Sync Edit button that shows when you select multiple lines of text
+Is there any way to disable this?
+
+
+
+we suspect that its making mouse scrolling while text is selected painfully slow on some machines
+
+Scrolling video example of why we think its the sync edit that's slowing down scrolling
+
+Steps to reproduce 
+1) Create a Unit in Delphi
+2) add about 100 lines with random text
+3) Have no lines selected/Highlited - Use the Mouse wheel to scroll (Should be no lag)
+3) make only one line selected/Highlited - Use the Mouse wheel to scroll (Should be no lag)
+4) make multiple lines selected/Highlited - Use the Mouse wheel to scroll (you will notice a lag in the scrolling - if you look close you notice that the sync edit appears to have reprinted making a different color where it has attempted to do this 15 secs into the video)
+
+
+
+This is the reason why i suspect the Sync edit button
+    
+
+        
+Title: Running Python Program in Linux Terminal- Unexpected EOF while parsing
+Description: 
+    
+    
+                    
+This is the last few lines of my code:
+
+except UnknownValueError as uve:
+   engine.say("Something went wrong. Please try again.")
+   engine.runAndWait()
+   wwlisten = sr.Recognizer()
+   with sr.Microphone as Microphone:
+      wakeword = wwlisten.listen(Microphone)
+
+
+My issue is this (I'm using Raspbian by the way): When I run the code in terminal, it says 'unexpected EOF while parsing'. I know what this means, but this is caused by two things: One is that whenever I save my code in a text editor or Python IDE, a new line is generated. The second is that the line really doesn't exist when after I've saved the code and I get the error anyway. Does anyone know how to resolve any of these two issues? I threw the code in just in case you guys wanted to take a look to make sure. 
+Cheers. 
+    
+
+        
+Title: In PyCharm, keeping a certain page width without constantly editing line breaks or using word wrap
+Description: 
+    
+    
+                    
+This problem has bothered me since I began programming many years ago, and I figured I would ask you all what you think. I've been told this problem is tool-specific, so this question is about doing it in PyCharm.
+
+Say you are not using word-wrap. Now you need to edit a bunch of multiline comments like:
+
+# I had some thoughts here which I thought I
+# would share. They're a bit long, so I need
+# to extend them across several lines.
+
+
+Then say you want to edit the comment. So here's your edit:
+
+# I had some thoughts here about programming best practices which I thought I
+# would share. They're a bit long, so I need
+# to extend them across several lines.
+
+
+Oops, your new text makes the first line quite long. Let's break that into a new line:
+
+# I had some thoughts here about programming 
+# best practices which I thought I
+# would share. They're a bit long, so I need
+# to extend them across several lines.
+
+
+Hmm that second line is a bit short, let's bring some text up from the third line:
+
+# I had some thoughts here about programming 
+# best practices which I thought I would share. 
+# They're a bit long, so I need
+# to extend them across several lines.
+
+
+Uh-oh, now that third line is too short, let's bring text up from the fourth line:
+
+# I had some thoughts here about programming 
+# best practices which I thought I would share. 
+# They're a bit long, so I need to extend them 
+# across several lines.
+
+
+All done. But that was annoying, right? I can't believe I took the time to post this question. But I feel like I'm spending too much time fixing comments like this, and I wonder if I'm missing a better solution. Have any editors implemented one? 
+
+The natural answer is "add word wrap." But in word-wrap, unless I'm misunderstanding it, you'd just have one really long line beginning with # per paragraph, and anybody reading your code without word-wrap capabilities will hate you.
+
+Here is how I think this question is different from the linked question: I'd like to enforce a certain width for comments, regardless of what column they happen to be on (e.g. max width 60, so comments starting on line 0 can't extend beyond line 60, but comments starting on line 30 can't extend beyond line 90, etc). This is because comment readability really has to do with how wide they are.
+
+This is different from merely wrapping at column X because then your comments will be different widths depending on how much indentation they have.
+
+Additionally, I don't really want to change the width of my code with this solution, although I'll do it if I have to.
+    
+
+        
+Title: Netbeans vs VSC
+Description: 
+    
+    
+                    
+I'm using NetBeans. 
+In NetBeans, just drag a css or js file from the file manager section and drop between head tags...
+your link and script tags are inserted.
+
+Is this feature available in VSC?
+    
+
+        
+Answer 1: 
+
+    
+    
+This is not supported as of VSCode 1.15. We are tracking the feature request here: https://github.com/Microsoft/vscode/issues/10895 
+    
+    
+Title: Xcode 9 (beta 3) / iOS: Adding files to a project - how to make it copy the files into the project&#39;s directory
+Description: 
+    
+    
+                    
+Lately I've been having to update my older 32-bit Enterprise projects to 64-bit. The easiest way for me to do it is to just start over, but copying many of the files (such as images and sound files) from the old project's folder. I'm finding that when I use the "Add files" feature, the files don't exactly copy from the older folder, they just reference from there. Because I am OCD, I'd like to keep the old and new folders separate.
+
+So my question is, is there a way to set Xcode to copy the files to the new project's folder? I know I can just copy the files from one folder to another using Finder, but I would like to have Xcode do it for me on a case-by-case basis.
+
+If I drag and drop from the finder, Xcode will ask if I want to copy the file "if necessary." I always select that option, but I don't know what "if necessary" means, and it never does that. It would be great to have the ability to force copy the file. 
+
+Thanks for any help you can give me.
+    
+
+        
+Answer 1: 
+
+    
+    
+I too faced the same issue with Xcode 9 Beta. 
+
+
+This is a bug in xcode 9 beta. 
+Just now i tried xcode 8.0. Drag and drop worked fine. You can user any other stable version of xcode to copy files.
+FYI Stable version of xcode 9 has been launched this may be fixed in that. Just take a look at it Xcode 9.
+
+    
+    
+Title: How to add an api to Visual Studio Code
+Description: 
+    
+    
+                    
+I am new at using Visual Studio Code and I am looking to add an api library that I have to VS code so that the Javascript IDE can provide intellisense code completion.
+
+In the past I used Eclipse IDE and added the file to my libs folder in my workspace. This doesn't seem to be the case for VS Code.
+
+The file is a just a .js file that contains a javascript "skeleton" for the API that is intended to be used in a Javascript IDE.
+
+Here is a link to the file.https://www.dropbox.com/s/5ywltqbi7ar0pfa/concept_api.js?dl=0
+    
+
+        
+Answer 1: 
+
+    
+    
+You can add a comment to the top of your file pointing to the "skeleton":
+
+/// &lt;reference path="./api.js"&gt;
+
+
+VS Code should even give you code completion in the path string.
+    
+    
+Answer 2: 
+
+    
+    
+Create a jsconfig.json file in the root of your Visual Studio Code project and add all files you want parsing for code completion.
+
+{
+    "include": [
+        "www/js/*.js",
+        "www/lib/*.js"
+    ]
+}
+
+    
+    
+Answer 3: 
+
+    
+    
+JavaScript Programming with Visual Studio Code
+
+As of the above page VS Code's intellisense is provided using TypeScript. It is recommended that you create Typings for your library if you are planning to ship the library.
+
+But adding a comment like
+
+///     &lt;reference path="you_file.js"&gt;
+
+will give you some help with code completion but the accuracy of the completion is a question.
+
+If you are planning to ship the library 
+
+Visit This page for more help
+    
+    
+Title: Arduino Scripting issue
+Description: 
+    
+    
+                    
+I'm currently trying to make a RC car on Arduino and facing the following issue, where I'm unable to reset the L298P Motor Driver (By Keyes) Shield to stop motor from moving (Using only one motor at Motor B port).
+
+Basically, the motor sticks to one direction rotating and not stopping when JoyStick's position is resetted.
+
+Here's the current code I'm using. (Also Includes my pathetic trials).
+
+#include &lt;Servo.h&gt;
+Servo myservo;
+
+#include &lt;LiquidCrystal.h&gt;
+LiquidCrystal lcd(2, 3, 5, 6, 7, 8);
+
+int JoyStick_X = 0; //Analog
+int JoyStick_Y = 1; //Analog
+int JoyStick_Z = 1; //Digital
+
+int SpeedPin = 11;
+int Direction = 13;
+
+void setup(void) {
+  myservo.attach(9);
+
+  lcd.begin(16, 2);
+  lcd.clear();
+
+  pinMode(JoyStick_Z, INPUT_PULLUP);
+
+  pinMode(Direction, OUTPUT);
+
+
+  Serial.begin(9600);
+}
+
+void loop(void) {
+  int x, y, z;
+  x = analogRead(JoyStick_X);
+  y = analogRead(JoyStick_Y);
+  z = digitalRead(JoyStick_Z);
+
+  lcd.setCursor(0, 0);
+  lcd.print("Car Status");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Spd:");
+  lcd.print(x);
+  /* if (z == 0) {
+     lcd.print("High");
+    }
+    else if (z == 0 &amp;&amp; x &lt; 250) {
+     lcd.print("RHgh");
+    }
+    else if (x &gt; 510 &amp;&amp; x &lt; 530) {
+     lcd.print("No  ");
+    }
+    else if (x &gt; 530 &amp;&amp; x &lt; 730) {
+     lcd.print("Low ");
+    }
+    else if (x &gt; 730) {
+     lcd.print("Med ");
+    }
+    else if (x &lt; 510 &amp;&amp; x &gt; 250) {
+     lcd.print("RLow");
+    }
+    else if (x &lt; 250) {
+     lcd.print("RMed");
+    }*/
+
+  lcd.print(" ");
+  lcd.setCursor(10, 1);
+  lcd.print("Trn:");
+
+  if (y &lt; 500) {
+    lcd.print("L ");
+  }
+  else if (525 &gt; y &amp;&amp; y &gt; 500) {
+    lcd.print("-");
+  }
+  else if (y &gt; 525) {
+    lcd.print("R ");
+  }
+
+  lcd.setCursor(11, 0);
+  lcd.print("Bst:");
+  if (z == 0) {
+    lcd.print("Y");
+  }
+  else {
+    lcd.print("N");
+  }
+
+  myservo.write(40 + y * 8.7890625 / 100);
+
+    if (x &gt; 530) {
+      digitalWrite(Direction, HIGH);
+    }
+    else if (x &lt; 510) {
+      digitalWrite(Direction, LOW);
+    }
+    if (x &gt; 510 &amp;&amp; x &lt; 530) {
+      digitalWrite(0, 0);
+    }
+
+
+  //int speed = ((0.520408 * x ) - 275.816326 );
+
+  analogWrite(SpeedPin, 255);
+
+  /*int value = 255;
+    digitalWrite(M1,LOW);
+
+    analogWrite(E1, value);*/
+
+
+/*var n;
+  switch (n)
+  {
+    case 1:
+      digitalWrite(Direction, HIGH);
+      break;
+    case 2:
+      digitalWrite(Direction, LOW);
+      break;
+    default:
+      digitalWrite(0, 0);
+  }*/
+}
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I think you're missing analogWrite(SpeedPin, 0); somewhere in your code.  Since SpeedPin seems to be how you're controlling speed, you need to write  a zero to it to stop.
+    
+    
+Title: Tweak tools at the top of the window in Eclipse
+Description: 
+    
+    
+                    
+How can I tweak tools at the top of the window in Eclipse? In particular I would like to get rid from the Eclipse User Storage symbol in my tools.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+In Oxygen 4.7, Window-
+Title: Which Version of Xcode is suitable for mac os yosemite
+Description: 
+    
+    
+                    
+I am using mac os yosemite [hackentos] 10.10. I want to install Xcode on my Mac, but the current version of Xcode 8.3.3 needs macOS Sierra, and I am not able to upgrade to Sierra. 
+
+Which version of Xcode is suitable for Mac OS X Yosemite?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  Which version of Xcode is suitable for MacOS Yosemite ...
+
+
+Use Xcode 6 for MacOS Yosemite (10.10).
+
+Xcode 6 is kind of disjoint. Its pretty typical considering Xcode supports OS X and iOS across OS releases. Xcode 6.0 - 6.2 was released for MacOS Mavericks (10.9). Xcode 6.3 - 6.4 was released for MacOS Yosemite (10.10).
+
+It looks like Xcode 7.0 - 7.2.1 is applicable as well. Also see the Xcode 5.0 - 6.x and Xcode 7.0 - 8.x support on Wikipedia.
+
+If you need to use the command line to determine versions of what you have, then see Determine xcode command line tools version on Apple Stack Exchange.
+    
+    
+Title: Xcode - find inheritance &#39;tree&#39; for an object
+Description: 
+    
+    
+                    
+Is there a way in Xcode to find out who implements or extends a given class or protocol?
+
+ex.
+
+class Car {
+     ...
+}
+class GoCart {
+    ...
+}
+extension Car: Drivable {
+    ...
+}
+extension GoCart: Drivable {
+    ...
+}
+protocol Drivable {
+    func steer(vector: Point)
+}
+
+
+I would like to search for Drivable and get Car and GoCart, possibly in the symbol navigator.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can try using the is keyword - i.e.:
+
+switch car {
+case car where car is GoCart:
+case car where car is Drivable:
+}
+
+or you can try
+
+if car is Drivable {
+
+} else if car is GoCart {
+
+}
+
+    
+    
+Answer 2: 
+
+    
+    
+It's not the approach I would have preferred, but searching in the Find Navigator using Find 
+Title: Energia IDE arduino.h not found during compilation
+Description: 
+    
+    
+                    
+I am starting my first project with an ArduCam cc3200 board. In the manual I read that I have to use the Energia IDE for this. When I installed Energia IDE and tried to compile an example sketch, I got the error message: "sketch\Sweep.ino.cpp:1:21: fatal error: Arduino.h: No such file or directory". Other example sketches give the same error. The Arduino.h file is available in the \Documents\energia-1.6.10E18\hardware\energia\msp430\cores\msp430 folder, but for some reason energia cannot find it. 
+Does anyone has an idea why energia cannot find this file and how I can solve this problem?
+
+Thank you in advance!
+    
+
+        
+Title: How do I correct PhpStorm when it guesses the wrong parameters for JavaScript functions?
+Description: 
+    
+    
+                    
+Looking around this seems to be the closest it comes to being an answer to my problem. However it causes other issues...
+
+
+
+This is my situation:
+
+$element.insertBefore($container);
+
+
+This line has a warning that insertBefore has an “Invalid number of arguments, expected 2”
+
+/** @type {function(target)} */
+$element.insertBefore;
+$element.insertBefore($container);
+
+
+These three lines have a warning, but for a different reason. The third line no longer has any warning about an invalid number of arguments; however the second line is now concerned that the “Expression statement is not assignment or call”.
+
+I tried a number of other configurations however none of them seem to affect the first warning in any way… but they don’t create new warnings.
+Some of these variations are as follows:
+
+/** @type {function(target)} */
+/* $element.insertBefore; */
+$element.insertBefore($container);
+
+
+—
+
+/** @type {function(target)}
+$element.insertBefore; */
+$element.insertBefore($container);
+
+
+—
+
+/** @type {function(target)} */
+$element.insertBefore($container);
+
+
+I was just wondering if anyone could give me pointers on what I’m doing wrong or if this warning is just an irreversible mistake for the system right now.
+
+P.S. This is actually JavaScript code… I just have a habit of prefacing variables that are instances of jQuery objects with a dollar sign. This means that the above calls to insertBefore are calls to the jQuery function not the vanilla JavaScript function.
+    
+
+        
+Answer 1: 
+
+    
+    
+Seems like insertBefore() does require 2 parameters: https://www.w3schools.com/jsref/met_node_insertbefore.asp
+    
+    
+Title: How to copy rgb from intellij color picker?
+Description: 
+    
+    
+                    
+Is there any way to copy three integer (not hex) rgb values in one time from intelij idea color picker?
+    
+
+        
+Answer 1: 
+
+    
+    
+When you open a color picker, RGB value is usually preselected, so it's enough to hit Ctrl+C to copy it to clipboard:
+
+
+    
+    
+Title: How to download an off-line installation for Microsoft Visual Basic 2017 with IDE only?
+Description: 
+    
+    
+                    
+I want to download an off-line installation for Microsoft Visual Basic 2017 for Windows Desktop with the IDE only. I do not need any of "Azure", "Android", "Cordova", "Xamarin", "PythonTools.Django" or "Apple.Sdk".
+
+I followed instructions on this page :Create a network installation of Visual Studio 2017
+
+I downloaded the vs_community.exe file.
+
+Then I ran the command:
+
+vs_community.exe --layout c:\vs2017offline --lang en-US
+
+The program launched setup.exe, which has already downloaded more than 23 GB (23 Gigabytes!) of data to the off-line folder, most of which I have no intention of ever using. And it keeps downloading without any indication as to when it is going to complete. So much data is very difficult to store, especially that I do not need most of it.
+
+How can I download only the Visual Basic part with the IDE? 
+    
+
+        
+Answer 1: 
+
+    
+    
+The command you used is to download the whole VS 2017 offline packages with English version, so it is a huge one, if you just want to use the VB.NET, you need to customize the network layout that described in your shared document. Using the command-line parameter “--add” to specify workload or component IDs. If --add is used, only those workloads and components specified with --add will be downloaded. If --add is not used, all workload and components will be downloaded.  
+
+Refer to your description, I tried open cmd and type the command: vs_Community.exe --layout C:\vs2017offline --add Microsoft.VisualStudio.Workload.CoreEditor --add Microsoft.VisualStudio.Workload.ManagedDesktop --lang en-US to download the partly offline installer and the total size as below:
+
+
+During the installation, I only checked the workload ‘.NET desktop development’ and since the workload ‘Visual Studio core editor’ is included with VS community 2017 to install. After the successful installation, I open VS community 2017 to create new project, the VB templates like the following. If you want to more VB templates like ASP.NET or Windows Universal, you can use the parameter “--add” to specific more the corresponding workload like Microsoft.VisualStudio.Workload.NetWeb, Microsoft.VisualStudio.Workload.Universal and others, it depends on your development requirement.
+
+    
+    
+Title: IDE and tooling issues developing for windows from linux
+Description: 
+    
+    
+                    
+I am trying to develop a simple windows GUI in go (first attempt).
+
+After considering a few packages to get me started, I landed on this https://github.com/lxn/walk and it seemed ideal. I cross-compiled from my ubuntu laptop and the provided demo worked on all target platforms (win7/8/10)
+
+The problems came when I tried to start developing from my linux laptop - initially in atom, but I've since tried with sublime, emacs and phpstorm and noticed an issue with go get (so I'm guessing it's the underlying go tooling that's failing)
+
+The first error I'm seeing is:
+
+
+  /../github.com/lxn/walk/tooltiperrorpresenter.go:8: undefined: ToolTip
+
+
+This affects development across all affected IDEs tested:
+
+
+disables autocomplete 
+halts linting 
+cant test
+gofmt worked in some (perhaps tool ordering)
+affecting any file referencing this lib.
+
+
+And this is the first of many errors which seem to be due to the library importing its internal win package which contains files which are marked with the flag:
+
+// +build windows
+
+
+I cunningly decided to start ripping out these tags from the lib - hoping that would at least allow me to get on with development, but then I started seeing new errors regarding too many arguments being passed to syscalls in the win package - presumably because the different platforms (win/nix) have different numbers of parameters in those syscalls.
+
+I then tried marking everything with the //+build windows flag, but the parade of errors remained unchanged.
+
+I found some issues on the project github which are related:
+https://github.com/lxn/win/issues/26 : no buildable Go source files
+and there are solutions for "go getting" the files but none so far for my IDE woes.
+
+I've also seen this type of issue in some other windows specific go libraries so I don't think it's an issue for the package author. But I would be interested to hear any solutions from a code architecture perspective if they exist
+
+I haven't actually tried doing this from a windows VM yet (I presume that would solve the issue from my end) - but its a bit of a jarring solution as I'm already juggling vms to test the app so I'm keen to find another way.
+
+TLDR:
+
+
+  Do I have to work from Windows machine / vm in order to have a fully
+  functional IDE when developing for windows from linux or is there a way to satisfy the go tooling
+
+    
+
+        
+Title: Text editor that mimics the same hotkeys as those found in JetBrains WebStorm, IntelliJ, PyCharm etc
+Description: 
+    
+    
+                    
+I would love to just replicate the same hot keys as I'm used to in WebStorm and IntelliJ, Android Studio, but just in a text editor.
+
+Anyone knows if there is a project open source or not for this?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can do this for both Atom and Sublime. You'll have to change the default keybindings for either editor but this is easy to do.
+
+For Atom here is a link that will show you how to change the default keybindings to intellij.
+
+For Sublime, this link contains the intellij keybindings. 
+
+If you want to use another IDE's keybindings besides intellij, just google sublime &lt;IDE that you want&gt; keybinding map.
+
+I hope that helps!
+    
+    
+Answer 2: 
+
+    
+    
+Take a look at Visual Studio Code. It's a great editor with loads of available extensions. You'll be able to configure the key bindings yourself or install something like IntelliJ IDEA Key Bindings for Visual Studio Code.
+    
+    
+Title: Selenium IDE Dynamic ID created by website
+Description: 
+    
+    
+                    
+I started to work with Selenium IDE 2.9.1 as a plugin connected to Firefox. What I want is to store dynamic created id of a new document and open it at the end. For example:
+
+
+I created a document, DataBase gave automatic ID: dp_137282 
+after this there is a Selenium code that doing something else, it is not important,
+But at the end Selenium should find my document by ID and open it using double click command.
+
+
+Please check code below:
+
+&lt;div id="content" style="height: 373px; width: 1324px;"&gt;
+&lt;div class="main-content" rel="kancelaria/rkp/rkp-faktury/type//rok_roboczy/2017"&gt;
+&lt;h3 class="gray"&gt;
+&lt;form class="form" action="kancelaria/rkp/rkp-faktury/type//rok_roboczy/2017" onsubmit=""&gt;
+&lt;input style="display:none;" value="asd" type="submit"&gt;
+&lt;div id="flex-list"&gt;
+&lt;table id="kancelaria-rkp-index" class="dark-gray overlap" style="width:100%;" headlines=""&gt;
+&lt;thead&gt;
+&lt;tr id="dp_137282" class="multi-selectable" style="" ondblclick="this.className += ' doubleclicked'; Load.Content('kancelaria/rkp/szczegoly-rkp-faktury/id/dp_137282')" data-b="kancelaria/rkp/szczegoly-rkp-faktury/id/dp_137282" onclick="" data-status=""&gt;
+
+
+Please click here to view picture
+
+At the end I used xpath in Target field
+
+xpath=(//td[@onclick=' '])[7]
+
+
+I found that always new document created by Selenium is on the top so this should not be a problem to open it, but I don't want to relay on this. So if someone of you know resolve and can share I will be grateful.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use storeAttribute command to store your ID attribute of &lt;td&gt; tag  and later you can use it
+
+e.g. 
+
+&lt;tr&gt;
+    &lt;td&gt;storeAttribute&lt;/td&gt;
+    &lt;td&gt;xpath=//table[@id='kancelaria-rkp-index']/thead/tr/@id&lt;/td&gt;
+    &lt;td&gt;dynamicvalue&lt;/td&gt;
+&lt;/tr&gt;
+
+
+This will store your dynamic id
+
+and after all finished you can utilize that id e.g.
+
+&lt;tr&gt;
+    &lt;td&gt;echo&lt;/td&gt;
+    &lt;td&gt;${dynamicvalue}&lt;/td&gt;
+    &lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+
+To print the id attribute value
+
+&lt;tr&gt;
+    &lt;td&gt;clickAndWait&lt;/td&gt;
+    &lt;td&gt;id=${dynamicvalue}&lt;/td&gt;
+    &lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+
+To click on element whose id has stored
+    
+    
+Title: javadoc in Groovy Grails Tool Suite
+Description: 
+    
+    
+                    
+Anyone using Groovy IDE?
+
+I can not enable javadoc in Groovy Grails Tool Suite.
+
+When I set a javadoc location in Java Build Path for groovy-all artifact it validates it, but when I press OK it does not save for the project. So if I open again Java Build Path and look for javadoc location for the same jar - there will be epmty spase for javadoc location.
+
+So how can I enable javadoc in Groovy Grails Tool Suite for Groovy-API?
+    
+
+        
+Title: Visual Studio for Mac is just Xamarin / MonoDevelop ReBranded (?)
+Description: 
+    
+    
+                    
+Is Visual Studio for Mac the full thing, or just a re-brand of MonoDevelop/Xamarin? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Visual Studio for Mac IS Xamarin Studio.
+
+If you go to Xamarin Studio's official download page, you will see that its call to action button is "Download Visual Studio for Mac".
+    
+    
+Title: Setting IAR Workbench variables in code
+Description: 
+    
+    
+                    
+I made at .bat file that modifies a .h file containing a #define BUILD_VER so that it gets incremented every time I build.
+
+There is also a #define MAJOR_VER in the same .h file that defines the version that the customers will see.
+
+I'm trying to figure out a way to get the MAJOR_VER and BUILD_VER attached the to the binary output file (I'm using MSP430's so the output is a .txt files.)
+
+So with something like this
+
+#define MAJOR_VER 22
+#define BUILD_VER 4321
+
+
+...and building "Project_A"
+
+"Project_A.txt" &lt;== current default behaviour
+
+"Project_A_V22_4321.txt" &lt;==What I'm looking for
+
+It would be nice if I could set an IDE variable using these #defines somehow.
+
+This posts answers how to create custom IDE variables, which I didn't see the last time I started looking into this IAR project variable like $PROJ_DIR$
+
+I know I could just write another .bat script to modify the file name, but this seems cleaner to me. And a little more obvious if I were new to the project.
+
+Any thoughts?
+    
+
+        
+Title: Autocomplete Pycharm Pro 2017.1
+Description: 
+    
+    
+                    
+Dev. Box: Windows 7
+Remote Box where project should be deployed: Redhat Linux
+
+Project on remote machine does not utilise pip or virtualenv  but rather an in house alternative to virtualenv. 
+
+I setup my remote interpreter in Pycharm via Ssh to the python interpreter in linux box and see all the modules on remote with version info listed. 
+
+Pycharm tries initially to upload Pycharm helpers to remote box but is I guess unable to install them as I imagine it cannot find usual python tools like pip, so I see a banner on the remote interpreter saying Setup tools not present on remote. Regardless when this preference window is closed pycharm initiates indexing I assume the remote interpreter and modules. 
+
+When I open a file in the code however after indexing completes I cannot get auto code complete to work for any module even standard library modules i.e. json, sys, os...
+
+I tried to get more info on Pycharm Helpers that try to get installed but all I found was they get used for remote debugging and "scaffolding" which I can't find additional details as to what the latter means or if it is even relevant to get autocomplete to function. 
+
+Need help really badly on this, thanks in advance to anyone who can aide me in this matter. 
+
+Some collegues got around this by having Devbox be a Mac OS or any other linux distribution, cloning the project locally and then using the local interpreter option in Pycharm but unfortunately I can't utilise local interpreter even though the project is cloned because on windows Pycharm expects the local interpreter to be a .exe
+    
+
+        
+Title: How to install Team artifacts plugins in the Eclipse IDE, such that I can import or export code from repositories?
+Description: 
+    
+    
+                    
+How to install Team artifacts plugins in the Eclipse IDE, such that I can import or export code from repositories?
+
+Team Artifacts button is not visible in my Eclipse IDE.
+
+I need this to connect the repository to fetch some code of a project.
+    
+
+        
+Answer 1: 
+
+    
+    
+"Team artifacts" is the name of an RTC Eclipse plugin view.
+See this thread for illustration:
+
+That would involve downloading the Eclipse client through the rational-team-concert/releases/6.0.3 page.
+
+As described here:
+
+
+  The Team Artifacts view is an Eclipse view within Jazz that presents a hierarchy of heterogeneous elements that are provided from contributed domains.
+  Domains can also be presented within the Artifacts part of a Project Area or Team Area editor. 
+
+
+
+    
+    
+Title: What happened to &ldquo;Apply&rdquo; and &ldquo;Apply and Close&rdquo; for styles in Delphi 10.1 Berlin?
+Description: 
+    
+    
+                    
+In Delphi 10 Seattle, when you're editing a style, there are 3 buttons on the top-right of the editor window's toolbar:
+
+
+Apply
+Apply and Close
+Cancel
+
+
+
+
+However, now that I'm using Delphi 10.1 Berlin, these buttons are no longer there: 
+
+
+
+I relied on these buttons to actually apply the styles. Since Embarcadero has removed these buttons, I now am at the mercy of just closing that tab:
+
+
+
+As you can see, this becomes annoying. I also have to count on seeing the prompt to apply the styles, so I have no sure way to apply the styles. My form(s) don't even update with the new style until I explicitly "apply" it. But, since these buttons are gone, I now am forced to close the tab in order to apply the styles. Even if I save all files, it doesn't seem to apply.
+
+How can I forcefully apply my styles while I'm editing, without closing the style editor tab? Am I missing something? I've checked all the documentation and what's new information on these changes... 
+    
+
+        
+Answer 1: 
+
+    
+    
+It would appear these buttons have been completely removed in Delphi 10.1 Berlin, and you're forced to close the style editor in order to apply them. However, in Delphi 10.2 Tokyo, these buttons are back. 
+
+So the only thing you can do is close that tab every time you want to apply your styles, until you move up to Delphi 10.2 Tokyo. 
+    
+    
+Title: Any trick in Android Studio IDE that will let you go to a method(); in the code by [CTRL]B when the //method() is in comment?
+Description: 
+    
+    
+                    
+As the topic. I'll repeat that because "As the topic." is less than 30 chars:
+
+Does anyone know the trick in Anenter code heredroid Studio IDE that will let you go to a  method(); in the code by [CTRL]B when the //method() is in comment?
+
+// List of Methods:
+// method1() this makes that
+// medhod2() that makes this
+
+private void method1(){
+   //sth
+}
+
+// I click on method1() in the List/Comment 
+// then by ([CTRL]B|Command-B) jump to the code...
+
+    
+
+        
+Answer 1: 
+
+    
+    
+There is no direct way that I know of to go to a method that is named in a comment. You can, however, do something with a macro. There may be better ways to do this, but what I have done is to record a macro that does the following after positioning the cursor on the method I want to go to:
+
+
+  
+  Uncomment the line.
+  Move cursor up. (This moves back to the method name.)
+  Go to the declaration. (Editor is now at the declaration.)
+  Jump back to the last change (ctrl-shift-backspace).
+  Undo uncomment (ctrl-z)
+  Go back to declaration. (ctrl-alt-back).
+  
+
+
+This was done with Android Studio 2.3.1 on Windows. You can assign a key to the macros from Settings-/pp/ppcode/code/pprecode/code/pre/div
+Answer 2: 
+
+    
+    
+However there is an another solution Alt+F7 which brings you all the detail even if it is used in comments. 
+    
+    
+Title: How to remove the structure bar under the file tabs in PyCharm 2017?
+Description: 
+    
+    
+                    
+I want hide the structure bar under the file tabs in PyCharm 2017.
+
+When I change my cursor position it's will be change too, and very disturbing my attention.
+
+I spent half a hour to find the setting but failed, please tell me how can I hide it.
+
+
+    
+
+        
+Title: Android Studio IDE issue (font/encoding: abcd -&gt; cdef)
+Description: 
+    
+    
+                    
+Installed Android Studio maybe week ago. All was great.
+Then yesterday have tried to open it. Something strange happened: all english letters are shifted right in alphabet (abcd -/ppa href="https://i.stack.imgur.com/g45tG.png" rel="nofollow noreferrer"/a/pp/pp/pp/pp/pp/pp/ppstronga href="https://i.stack.imgur.com/7OSlN.png" rel="nofollow noreferrer"/a/strong/p/div
+Title: Android Studio: Auto Refresh view when editing the xml for a layout
+Description: 
+    
+    
+                    
+I'd like to work with they layout.xml code open on one monitor where I am editing the code, and the layout preview running on my other monitor. I can get this setup working, but what I really want is for the layout to refresh automatically everytime the code is changed, or at least every time the code is saved. Currently, I have to click the preview, at which point it updates.
+    
+
+        
+Answer 1: 
+
+    
+    
+Jimu Mirror
+
+see this
+
+Actually I have not used this. But it might be the one you are looking for.
+
+ps - It seems that it is not free :(
+
+also you could report from here to android studio
+    
+    
+Title: IDE to run Protractor .ts files
+Description: 
+    
+    
+                    
+I want to know what is the good IDE for running protractor files (.ts) files? I was using webstrom and it worked very well for me. Since my client wants to use visual studio with typescript, i have moved to that but could not able to run .ts files.
+
+I have followed below steps:
+
+
+installed tnode js tools for vs 2013
+install typescript 1.7 for vs 2013
+create a new solution -

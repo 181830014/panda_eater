@@ -1,0 +1,2445 @@
+Title: Why is C and C++ IDE tool support behind what&#39;s available for managed platforms?
+Description: 
+    
+    
+                    
+If you have used any decent java or .net IDE you can see the abundance of features that they provide that either do not exist in c/c++ IDEs or exist in a much more limited form.
+
+I am thinking about features like:
+
+
+Code Completion
+Syntax Errors (and compilation errors with no need to compile)
+Refactoring
+Debugging (the amount of information that the debugger can show you about objects)
+Code exploration and analysis (viewing type hierarchies, who calls this function etc...)
+
+
+What is the main feature of managed languages that enables them to provide this (most would say) superior support in tooling? 
+    
+
+        
+Answer 1: 
+
+    
+    
+C++ is an extremely difficult language to parse. For the parsers that do successfully process it (compilers), they are way too slow and not flexible enough to support IDE-style code support. Unlike in a compiler, in an IDE, the parser has to be very fast and be able to process syntactically incorrect code. Until now, no one's taken the time to do it because the people with skills required to do so are focused purely on actual compilers.
+
+Visual Studio 2010 has a revamped C++ IntelliSense engine. It took them many, many years to get it done but its massively improved.
+    
+    
+Answer 2: 
+
+    
+    
+Languages like C and C++ make it harder to do completion and syntax correction because the syntaxes are more complicated than (say) Java.  For example, the preprocessor makes things a lot harder.
+
+Refactoring is harder because the C/C++'s weaker type systems make it harder to know if a refactoring would preserve the meaning of the original code.
+
+Debugging is harder because C/C++'s weaker type systems mean that it is harder to know what the "real" types of runtime values actually are.
+    
+    
+Answer 3: 
+
+    
+    
+I recently laughed at the c/c++ coders still using vim, till they challenged me to find an IDE that cleanly handles conditional compiling in a large project and links to the right instance of a multiply-defined conditionally compiled method. None came upto the challenge.
+
+Moral: Keep your design clean, vim is your IDE.
+    
+    
+Answer 4: 
+
+    
+    
+The difficulty of parsing C++ notwithstanding, I think your premise is overly broad and it's not necessarily an issue of managed vs. unmanaged.  
+
+Visual Studio, for example, has code completion, edit-and-continue (for 32-bit builds), syntax checking (as of the upcoming 2010 release), extensive debugging capabilities, and code exploration functionality for native C++ projects.
+    
+    
+Answer 5: 
+
+    
+    
+If you want open source and cross platform, the NetBeans C/C++ plugin has most, if not all, of what you desire in a C/C++ IDE.
+    
+    
+Answer 6: 
+
+    
+    
+IDEs are just crutches for programmers who don't know their craft. Get yourself a good text editor and learn to read compiler error messages.
+    
+    
+Title: Visual Studio 2008 crashes horribly
+Description: 
+    
+    
+                    
+This has happened to me 3 times now, and I am wondering if anyone is having the same problem. I am running Visual Studio 2008 SP1, and hitting SQL Server 2005 developer edition. 
+
+For testing, I use the Server Explorer to browse a database I have already created.  For testing I will insert data by hand (right click table -/pp/pp/pp/p/div
+Answer 1: 
+
+    
+    
+Just so you know, when your computer just snaps right back to the BIOS boot screen with no blue screen or other crash data, this is called a "triple fault" Basically, there was an exception (on a hardware level) whose exception handler triggered an exception whose exception handler triggered an exception. This is almost always a hardware issue since operating systems tend to be VERY careful in the double fault handler not to trigger an exception.
+
+Needless to say, it could be a software problem, but I would check your RAM, CPU and motherboard for potential issues. I had a dell which was doing this fairly randomly with Vista and a new mobo/CPU from dell solved it perfectly.
+
+EDIT: just to note, it can be very hard to convince dell that it is indeed a hardware issue, but stick with it and eventually they'll cave and fix it for you.
+    
+    
+Answer 2: 
+
+    
+    
+Test your memory, it's the most likely cause of your reboots.
+    
+    
+Answer 3: 
+
+    
+    
+Visual Studio 2008 is just an application, no application should be able to cause your machine to reboot like that.
+
+What can cause your machine to reboot like that is drivers and hardware...
+    
+    
+Answer 4: 
+
+    
+    
+Not to just jump on the bandwagon, but in the past 15 years every instance of this type of situation I have come across has been caused by hardware failure.
+
+Good news is at least that is often eaiser to fix.
+
+Are you able to swap the entire box out, even if only for a few weeks?  Often I really don't care what piece failed -- I just yank the whole thing and sort it out later.
+
+Joe
+    
+    
+Answer 5: 
+
+    
+    
+Are you overclocking the machine? Reboots like that are a sign that you have a bad overclock, ie. too high, bad voltage settings, bad memory timings.
+    
+    
+Answer 6: 
+
+    
+    
+I have the same apps running on my machine (on Vists32), and have not hit that problem.  
+
+Sounds suspiciously like a RAM problem to me, although I had a bad hard drive in a test server cause similar problems too, it even fried the motherboard, but most often this sort of thing is RAM.
+    
+    
+Answer 7: 
+
+    
+    
+I am not having a crash per se'  but when I attept to run the group expert in crystal reports VS2008 hangs and can only be closed by using the task manager.
+    
+    
+Answer 8: 
+
+    
+    
+I'm experienced (read: old) enough to know that this SHOULD be a hardware issue.  But...
+
+Another developer and myself at the company where I'm currently working installed VS2008 last week, and now we're both seeing this problem.  Every now and then, about once a day, when using the IDE the machine will reset as if someone had pushed the reset switch.  (The reset button is not expoesed on these machines.)
+
+We have identical hardware (Dell Optiplex GX620, 2GB RAM, WinXPsp2) as do the other ~20 developers here.  The other staff use VS2005.  We are the only ones having the problem.  The machines are stock (it's a stodgy corporate environment) and well-maintained.
+
+So, while this shouldn't be related to VS, it's an awful lot of circumstantial evidence.
+
+For what it's worth, I run VS2008 at home with no issues.
+    
+    
+Answer 9: 
+
+    
+    
+Do use Symantec anti-virus?  I had a situation with a new machine where just pressing the ALT-TAB combination would cause my machine to spontaneously reboot about 50% of the time.  When Windows restarted it said I had experienced an issue related to a driver.
+
+I mentioned it to our IT guy and he said that it was Symantec and that he had an update that would fix it. Needless to say it really felt like a hardware issue to me, so I was more than skeptical.  But he updated my Symantec install and the issue went away!
+
+Try disabling your anti-virus to see if it goes away for a while.  And if it does, see if there is an update from your anti-virus vendor
+    
+    
+Answer 10: 
+
+    
+    
+To check the status of your RAM or Hard drives use UBCD (link)
+    
+    
+Answer 11: 
+
+    
+    
+http://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=329016
+http://social.msdn.microsoft.com/forums/en-US/winforms/thread/879ab314-07b2-484e-989c-5661e5bc234a/
+https://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=331888
+
+I had the same problem early 2008. I believe it was a video driver problem. That a data table in a window could crash windows this way is amazing. There have been so many reports of this that I don't think it's hardware related. Microsoft won't accept it as a bug since they can't reproduce it. Still a bug though.
+    
+    
+Answer 12: 
+
+    
+    
+In house visual Studio 2008 debugger was crashing.  Symantec was the culprit.  Removal of Symantec services resolved that problem for this system. Thought this might help other developers that see strange crashes in VS2008 try disabling Symantec AV and stopping services on boot. 
+    
+    
+Title: What is the importance of an IDE when programming in Python?
+Description: 
+    
+    
+                    
+I'm a beginning Python programmer, just getting my feet wet in the language and its tools and native practices. In the past, I've used languages that were tightly integrated into IDEs, and indeed I had never before considered that it was even possible to program outside of such a tool.
+
+However, much of the documentation and tutorials for Python eschew any sort of IDE, relying instead on powerful editors and interactive interpreters for writing and teaching the language.
+
+
+How important is an IDE to normal Python development? 
+Are there good IDEs available for the language? 
+If you do use an IDE for Python, how do you use it effectively?
+
+    
+
+        
+Answer 1: 
+
+    
+    
+IDEs arent very useful in Python; powerful editors such as Emacs and Vim seem very popular among Python programmers.
+This may confuse e.g. Java programmers, because in Java each file generally requires boilerplate code, such as a package statement, getters and setters.
+Python is much more lightweight in comparison.
+
+If you're looking for an equivalent to Visual Studio or Eclipse, there is... Eclipse, with Pydev.
+
+Emacs and Vim are very powerful and general, but have a steep learning curve.
+If you want to use Emacs, I highly recommend python mode; it's much better than the default Python mode.
+    
+    
+Answer 2: 
+
+    
+    
+A matter of habit and personal preferences. Me, I use vim (I have to admit emacs is at least as powerful, but my fingers are deeply trained by over 30 years of vi, and any other editor gives me the jitters, especially when it tries to imitate vi and never really manages to get it 100% right;-), occasionally an interactive environment (python itself, sometimes ipython), and on even rarer occasions a debugger (pdb). A good editor gives me all I need in term of word completion, lookup, &amp;c.
+
+I've tried Eclipse, its plugins, eric, and Kommodo, but I just don't like them -- Wing, I think I could get used to, and I have to admit its debugger is absolutely out of this world... but, I very rarely use (or need!) advanced debugging functionality, so after every rare occasion I'd forget, and have to learn it all over again a few months later when the need arose again... nah!-)
+    
+    
+Answer 3: 
+
+    
+    
+
+How important is an IDE to normal Python development?
+
+
+Not very, IMHO. It's a lightweight language with much less boilerplate and simpler idioms than in some other languages, so there's less need for an IDE for that part. 
+
+The standard interactive interpreter provides help and introspection functionality and a reasonable debugger (pdb). When I want a graphical look at my class hierarchies, I use epydoc to generate it. 
+
+The only IDE-like functionality I sometimes wish I had is something that would help automate refactoring. 
+
+
+Are there good IDEs available for the language?
+
+
+So I hear. Some of my coworkers use Wing.
+
+
+If you do use an IDE for Python, how do you use it effectively?
+
+
+N/A. I tried using Wing a few times but found that it interfered with my normal development process rather than supporting it.
+    
+    
+Answer 4: 
+
+    
+    
+The IDE you use is a personal and subjective thing, but it definitely matters.  Personally, for writing short scripts or working with python interactively, I use PyDee available at http://pydee.googlecode.com/ .  It is well done, fairly lightweight, but with good introspection capabilities. 
+
+For larger projects involving multiple components, I prefer Eclipse with appropriate plugins.  It has very sophisticated management and introspection capabilities.  You can download it separately or get it as part of Python (X,Y) at http://www.pythonxy.com/ .
+    
+    
+Answer 5: 
+
+    
+    
+In contrast to the other answers i think that IDE's are very important especially for script languages. Almost all code is bad documentated and an IDE with a good debugger gives you much insides about what is really going on what datatypes are assigned to this values. Is this a hash of lists of hashes or a list of hashs of hashs. 
+
+And the easy documentation lookup will save you time.
+
+But this is only important for people who need to count there time, this normally excludes beginners or hobbyists.
+    
+    
+Answer 6: 
+
+    
+    
+(1) IDEs are less important than for other languages, but if you find one that is useful, it still makes things easier. Without IDEs -- what are doing? Always running Python from command line?
+
+(2-3) On my Mac there's included IDLE which I keep always open for its Python shell (it's colored unlike the one in Terminal) and I use free Komodo Edit which I consider to be well-suited for Python as it doesn't go into the language deeply but rather focuses on coloring, tab management, parsing Python output, running frequent commands etc.
+    
+    
+Title: Will using an IDE with Rails hinder me?
+Description: 
+    
+    
+                    
+I'm new to Ruby on Rails and so far, I'm having a lot of fun learning it. Coming from the .NET world, it's been quite a switch as my IDE (Visual Studio 2008) sort of handles everything for me, while in Rails everything has been done via multiple applications (Terminal, TextMate, etc).
+
+I've started taking a closer look at RubyMine as an IDE for Rails development, and as a big fan of IDEA and ReSharper, I naturally like RubyMine. It has code-completion, built-in support for RSpec, SVN integration, and so on. However, since the IDE handles so much of the "Rails experience," I wonder if should stick with the TextMate+Terminal approach.
+
+Is a Ruby/Rails IDE like RubyMine going to hinder me?
+    
+
+        
+Answer 1: 
+
+    
+    
+I would use the basics to start (terminal and a simple text editor) until you really get a good understanding of Ruby on Rails.  Then once you have that basic underlying knowledge of the framework move to an IDE.
+
+In my opinion if you want to learn use the terminal and an editor, but if you want to be productive use an IDE.
+
+At home I use the basic setup since I am in the process of learning Ruby on Rails.  However, at work, where I am a Java developer, I use an IDE.  Using the IDE allows me not worry about the small tedious tasks and just worry about programming.  Having tools like auto-completion, integrated svn, and integrated debugging tools increases my productivity.
+
+[edit] Also, I don't think the particular IDE matters.  They all have the similar functionality.  Whatever your the most comfortable with is the best.
+    
+    
+Answer 2: 
+
+    
+    
+Disclaimer: I have only used ruby for a very short period of time. But I do believe that my experience as a .NET developer learning other languages is valuable to you.
+
+I'm going to disagree with most people here and say go with the IDE. An IDE is there to make your life easier, not harder. I know that coming from a .NET background autocompletion is how I learn languages. I don't read documentation. I see what my IDE suggests and I see what it does.
+
+I really wouldn't worry too much about not knowing the full details of what goes on on the background, you will figure it out when you need to. In the meantime you will have quite enough to be getting on with learning the ins and outs of the language. You need all the help you can get, if you have written .NET in the past then an IDE will be an enourmous help.
+    
+    
+Answer 3: 
+
+    
+    
+Try Netbeans Ruby Edition. It's not quite as nice as RubyMine but it has built-in svn support and similar templates to TextMate. I like it, but then again, I also haven't released the project I'm developing yet so I can't speak much to productivity.
+    
+    
+Answer 4: 
+
+    
+    
+Just remember that the open source world is about choice, so there are tons of IDEs. A popular one is Eclipse that should include rails development as a plugin (and they are very simple to install). Netbeans also supports rails IIRC.
+
+Maybe it is time to get down and dirty with basic component tools, and then find an IDE. I always find when starting a new language that it helps to understand the raw toolchain and how things work before automating.
+
+Personally, unless it is Java development (convoluted in itself) I stay away from traditional IDES and use a modular solution of Vim/Gedit/Makefiles and other automations. 
+
+GEdit on Linux/Gnome is a great compromise. You have a basic text-editor with syntax highlighting and a terminal embedded. Then you can add in plugins for auto-completion and class browsing if you want that.
+
+Good Luck
+    
+    
+Answer 5: 
+
+    
+    
+I'm going to take a different stance than the others here. I think for most issues you'll spend a great deal of time poking your head in dark corners just trying to learn the basics when you don't use an IDE. They make your life easier and in most cases actually teach you about the software platform you're using. The code suggestions, automatic formatting, integrated help, etc. help you discover the features of the language much faster than say Notepad. 
+
+It is definitely important to know the tool chain but I prefer to examine it as I learn from the IDE. See how and why the IDE chose to do something the way it did. In many cases the IDE will use the best practices and/or most popular practices which you can learn a lot from.
+    
+    
+Answer 6: 
+
+    
+    
+When I learned on Ubuntu, I used gedit. I tried to make it like TextMate using different add-ons.
+
+I liked having to use the terminal while I was learning as it helps you to understand all the aspects of the build process. Using a heavy-duty IDE like RubyMine or Eclipse might hide all that and therefore limit your understanding of what is going on "under the covers". Usually this lack of knowledge will pose problems as you get into developing more complex applications. 
+
+In my opinion, SVN support is sort of unnecessary in an IDE. It's pretty easy just to open up the terminal to manage your repository, or to use some GUI tool like Tortoise.
+
+I think the only real benefit to using an IDE like RubyMine would be the auto/code-completion functionality. I too am a big fan of ReSharper (used it for C# development) and I would have loved to have some tool like it when I was learning Rails- but doesn't TextMate have support for auto/code-completion?
+
+I would say don't jump into using and RubyMine for at least several months, or even a year, if ever. The extra work that you have to do will pay off in the long run. Stick with TextMate.
+    
+    
+Answer 7: 
+
+    
+    
+I too was using RubyMine; it's an excellent IDE (naturally, being a JetBrains tool), but as a fairly new Rails guy, I found it doing just a bit too much for me. It tends to obscure what's really going on behind the scenes. However, for someone who has gotten accustomed to being able to step through code in a debugger and inspect variables, RubyMine was incredibly helpful and actually added to my understanding of the code (and of course Netbeans and others can do this too; I just really like how RubyMine "handles").
+
+So in general, I say what most other people say: there are facets of IDE use that make things much clearer; just make sure the IDE isn't becoming a crutch.
+    
+    
+Answer 8: 
+
+    
+    
+Whenever I attempt to learn/adopt a language/framework, I try to do things with a barebones editor... Syntax highlighting... then as I learn, I like to add things like on the fly syntax checker (netbeans is awesome at that). Then as I progress and learn the magic of the language/framework I begin to add things like snippets/code completion. At some point you might see a tool that better suits you but doesn't have something like on the fly syntax checking... but at that stage it will no longer matter due to your progression.
+
+Personally, I use netbeans with the jVi plugin... syntax highlighting, syntax checking, debugging and everything come pretty much out of the box... (the jVi plugin required a little customization though).
+
+However, I do occasionally use textmate or vim with rails.vim
+    
+    
+Answer 9: 
+
+    
+    
+If you are coming from .net/VS background, i say go with an IDE. i am a c# developer who work with ruby and rails on my free time(so i am not a 'professional ruby guy) and as Jack Ryan above said, we .net devs are used to a certain way of learning things. it is easier to learn stuff when you have an IDE showing you auto complete options and the relating documentation side by side. this way you would learn fast.
+
+But for something like running generators, rake tasks, tests...etc you can use the console in the beginning (hey you can use a console and a IDE together right? :)). that would give you an idea of whats going on 'under the hood'. later on you could use your IDE's 'runners' or whatever to run the same stuff with a GUI.
+    
+    
+Title: How is eclipse ide seen in the academic world?
+Description: 
+    
+    
+                    
+I'm just curious if anybody has an idea of how wide-spread the use of eclipse is in universities/faculties around the world. 
+
+The reason for which i'm asking this question is that i'm under the impression that  netbeans is BY FAR more used in the academic world than eclipse, yet i hear so many great things about eclipse. I would have thought that eclipse should have the upper hand in universities since it also supports swt in addition to swing. And at first-glance OO programming seems to have a greater support  in eclipse than in netbeans.
+
+Also it defines concepts like  extension points for which i can't find equivalents in netbeans.Overall it  seems more oriented towards developing "loosely-coupled"  components. Then again my experience with eclipse is close to null so it may be that i am mistaking and it really isn't that good. 
+    
+
+        
+Answer 1: 
+
+    
+    
+I am a PhD student in Budapest University of Technology and Economics. During the years of my BSc and MSC education I took several courses where we could use different IDES, such as Eclipse, Netbeans, Visual Studio or even Emacs, and there was no single IDE put forward as the future.
+
+However, the Eclipse platform as a good plug-in based modeling and programming environment is quite interesting in academic research: the well-known Mylyn project was started during PhD, half of the Eclipse Modeling projects are more or less research projects, and I am really sure that there are many more research projects based on Eclipse. And this might mean, that there is interest in knowing Eclipse more deeply.
+
+About the popularity and SWT support - I don't think that matters, but what the lecturers have actual experience in. And I think, that is the most important thing.
+    
+    
+Answer 2: 
+
+    
+    
+From my experience graduating with a PhD in CS from the University of British Columbia, I can say that Eclipse is the only IDE that is really used in undergrad classes.  Some of the more systemsy classes will use Emacs, but most will use Eclipse.  In the 4th year Software engineering course, all students are expected to create their own Eclipse plugin.
+
+Perhaps, the bias towards Eclipse comes from the fact that the grad school does get significant funding from IBM and the Eclipse Foundation.  Many grad students implement their thesis ideas as plugins for Eclipse (I was no exception).  But, more than just money, Eclipse is a very lively open-source community, it is extremely modular, and the funding the grad students get tends to be with little strings attached.  
+
+On top of that, when going to Software engineering-oriented conferences (such as OOPSLA or ICSE), you'll find that the vast majority of papers that provide IDE integration will do so with Eclipse (Visual Studio is a distant second, and I can't think of a single NetBeans-based research paper off the top of my head).  
+
+All of these things seem to show that Eclipse is a popular playground for academic research.    And this shows why it is also popular with undergrads.  Undergrads like using Eclipse because it is seen as an essential job skill, whereas NetBeans is not considered this way from what I can see.
+
+(Disclaimer- after using Eclipse to complete my PhD, I am now project lead on an Eclipse project, and contribute to several others.)
+    
+    
+Answer 3: 
+
+    
+    
+I can only offer my own experience:
+
+I'm taking the Computer Science MSc at Imperial College, London.  The only "IDE" we were taught was Emacs.  There's a strong emphasis on learning the language essentials and then it's left up to the student to choose which IDE to go for.  (We were briefly introduced to Eclipse in the 2-day "Intro to Java Course" and I think it was used in the concurrency course too, although I didn't take concurrency.)
+
+That said, I've been using Eclipse for most of my projects and many of my course mates and many of my tutors use Eclipse but a fair few use Netbeans as well.  I wouldn't want to guess which is the most used.  Both Eclipse and Netbeans are both installed on the university CS department machines.
+    
+    
+Answer 4: 
+
+    
+    
+I am taking a Computer Science BSc at University of Manchester, UK. Like Jack Kelly, we weren't shown to use IDE's as we were encouraged to use vi and others editors.
+We did have a single lab exercise using Eclipse and another using Netbeans.
+Netbeans was useful if you were creating GUI's but overall I prefer Eclipse.
+Now that IntelliJ has an open version, perhaps we will see it being used more in Academia..
+    
+    
+Answer 5: 
+
+    
+    
+NetBeans has been eclipsed by Eclipse. 
+
+Knowing Eclipse  well is a marketable skill.
+
+Well my professor swears by Eclipse - Eclipse has many books written about it. It has a huge amount of 3rd-party add-on functionality.
+
+Sure, NetBeans is a respectable and excellent IDE. But Eclipse just has more eyes scanning it and thus is updated and fixed more often too.
+    
+    
+Answer 6: 
+
+    
+    
+I can comment that it's used in CS 61B at Berkeley (the lower division Data Structures course, taught in Java). I don't really know much else, unfortunately.
+    
+    
+Answer 7: 
+
+    
+    
+Java lecturers in TAMK Polytechnic in Finland teach with Eclipse. Thatt said, I prefer Netbeans by far, and I've found it installed in most machines there.
+    
+    
+Title: The Author column in the CVS history disappeared from Eclipse
+Description: 
+    
+    
+                    
+It happened since yesterday that the Author column in the CVS history disappeared in my Eclipse IDE. I have gone through all the menus in Eclipse and all kinds of Google search but couldn't figured out how to add it back. Does anyone have a clue on it? 
+
+I am using the latest Eclipse (Helios) on 64-bit Windows 7. I used the following steps to show CVS history: right click the file name under Project Explorer =
+Answer 1: 
+
+    
+    
+This happened in my eclipse as well. Unfortunately the other answers did not help me but I was able to fix it by manually editing the cvs plugins stored preference.
+
+Close Eclipse.
+
+Go to the path $WORKSPACE/.metadata/.plugins/org.eclipse.team.cvs.ui in your filesystem. Where $WORKSPACE is the directory that has your Eclipse workspace.
+
+Edit the file dialog_settings.xml in that directory.
+
+You should see an item element with the attribute key="COL_AUTHOR" change the value attribute to be non-zero (I set mine to 100). Specifically, the Xpath for the attribute your trying to change is //section[@name="org.eclipse.team.internal.ccvs.ui.CVSHistoryTableProvider"]/item[@key="COL_AUTHOR"]/@value
+
+Start up Eclipse and the problem should be fixed.
+    
+    
+Answer 2: 
+
+    
+    
+This happened to me as well.  It turns out that the author column can be completely collapsed in between the 'Revision Time' column and the 'Comment' column.  I had to carefully put my mouse cursor on the right side of the divider between the two columns and drag to the right, in effect resizing the author column to not have 0 width.  The UI then exposes the author column, which should always be there if the Revision and Comment columns are present.
+    
+    
+Answer 3: 
+
+    
+    
+I have changed my eclipse environment, so have no way to go back to the old one to confirm that. But thanks for the help, and I will keep it in my mind in future.
+    
+    
+Title: Eclipse showing java project src folder view as all packages and subpackages
+Description: 
+    
+    
+                    
+Not sure how to really ask this question since I don't know what everything is called but I'll try to do the best I can.
+
+So as I was cleaning up my classes. I right clicked my project and selected refresh. Then all of a sudden my project view changed, the src folder shows everything as packages and '.' separated subpackages. And all my code package declarations seems now to be undiscoverable. 
+
+I've attached a photo, hopefully you can petter understand this...How can I fix this to have the correct directory view/structure. 
+
+Edit:
+
+Here is what I have linked to my JAVA build path
+
+I don't understand what is happening? How can all of a sudden my project screw up like it has? Any help will be much appreciated 
+    
+
+        
+Answer 1: 
+
+    
+    
+Look at the 'Java Build Path' in the project 'Properties' and check that you have the correct 'Source' folders. It looks like you may have just 'src' as a source folder when you should have 'src/main/java', 'src/test/java'...  
+    
+    
+Answer 2: 
+
+    
+    
+I was able to fix this by maven/p/div
+Answer 3: 
+
+    
+    
+In addition to the previous answer you also may use empty package filter:
+At the top-right of the Package Explorer view, there's a downward-pointing triangle. If you hover your mouse pointer over it you'll see View Menu.
+
+Click the View Menu, select Filters, put a check next to Empty Packages, then click OK. 
+Same way you could tune other options for Package explorer such as file types to show etc.
+    
+    
+Answer 4: 
+
+    
+    
+The following worked for me:
+Right Click on src (which is shown like empty package in my project) -strong/strong
+Answer 5: 
+
+    
+    
+Well, it seems pretty clear that your hierarchy does not match the name of your package, so just fix your hierarchy. It will be easier if you switch to the hierarchical view of the packages. To do so, go to Package explorer, View menu (arrow icon pointing to the bottom), Package presentation, Hierarchical.
+    
+    
+Title: How to remove error Eclipse project indicator if I don&#39;t have any error?
+Description: 
+    
+    
+                    
+I'm having an indication that my project has errors but I don't get any error in any file.
+That indication is as well on Java Resources folder inside the project.
+
+
+
+Error log
+
+Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+An exception stack trace is not available.
+
+
+Problems
+
+An error occurred while filtering resources
+line 1 - Maven configuration problem
+
+
+How to remove this error in Eclipse project folder?
+Any ideas!
+    
+
+        
+Answer 1: 
+
+    
+    
+Maven /pp/p/div
+Answer 2: 
+
+    
+    
+Contrary to most answers did Maven &gt; Update Project... not solve this problem. 
+
+I ended up with removing and re-importing the project.
+    
+    
+Answer 3: 
+
+    
+    
+Please try 
+Maven -/p/div
+Answer 4: 
+
+    
+    
+I just experienced the same issue. My project's pom serves as a child. maven update was the first thing I tried. I ended up deleting project from workspace, clearing .settings, .classpath, .project, reimporting and once again eclipse agreed to let maven play too :)
+    
+    
+Title: Eclipse no longer can auto import java Classes
+Description: 
+    
+    
+                    
+A few days ago my eclipse stopped being able to auto import classes. So usually when I have a class I'm using, like BufferedReader, that I need to import I simply hit ctrl+shift+O and the imports magically appear.  But now, basic imports like List or Scanner just sit there all squiggly and red.  I have the 1.6JRE included as part of my project, and when I manually import them they will then work.
+
+This is a huge annoyance and time sink now.  I'm open to any suggestions to fix the problem.
+    
+
+        
+Answer 1: 
+
+    
+    
+I have seen this behavior before. Sometimes just closing and reopening Eclipse resolves it. Sometimes I have had to recreate the project from the source, which can be painful if you have a lot of dependencies and you're not using Maven. You should also do a File/Refresh at the top level to make sure you're in sync with the filesystem
+    
+    
+Answer 2: 
+
+    
+    
+
+Try restoring the default options in 'Windows 
+Answer 3: 
+
+    
+    
+Try cleaning your project. I fixed mine by cleaning the project.
+    
+    
+Answer 4: 
+
+    
+    
+In my case, cleaning just a project didn't fix but clean all project did.
+    
+    
+Title: Handling really large multi language projects
+Description: 
+    
+    
+                    
+I am working on an really large multi language project (1000+ Classes + Configs + Scripts), with files distributed over network drives. I am having trouble fighting through the code, since the available Tools are not helping. The main problem is finding things. For the C++ Part: VS with VAX can only find files and symbols which are in the solution. A lot of them are not. Same problem with Reshaper. Right now i am stuck with doing unindexed string and file searches, which is highly inefficient on a network drive. I heared that SourceInsight would be an option since it allows you to just specify the folders that are part of the project and than indexes them, but my company wont spent money on it. 
+
+So my question ist: what Tools are there available to fight through an incredible large amount of code? And if possible they should be low cost or even free/open source.
+    
+
+        
+Answer 1: 
+
+    
+    
+Check out -
+
+
+ctags
+cscope
+idutils
+snavigator
+
+
+In every one of these tools, you would have to invest(*) some time in reading the documentation, and then building your index.  Consider switching to an editor that will work with these tools.
+
+(*): I do mean invest, because it will reap dividends once you do.
+
+hope this helps,
+    
+    
+Answer 2: 
+
+    
+    
+If you need to maintain a large amount of code, you really should have a source code managment system, a lot of them will help you find text by indexing all the files
+
+And Most of them will work with various language.
+
+Otherwise you can install some indexer like Apache Lucene and index all your files...
+    
+    
+Answer 3: 
+
+    
+    
+You should take a look at LXR. This is used by many Linux kernel source listings.
+    
+    
+Answer 4: 
+
+    
+    
+Try ndexer http://code.google.com/p/ndexer/
+
+promises to Handle extremely large codebases!
+    
+    
+Answer 5: 
+
+    
+    
+The Perl program ack is also worth a look -- think of it as multi-file grep on steroids. The new version (in what I would call late beta) even lets you specify regexes for the files to process as well as regexes to search for -- a feature I've used extensively since it came out (I've got a subproject with 30k lines in 300+ classes, where this feature has been very helpful). You can even chain the new ack with itself so you can subselect the files to process.
+    
+    
+Answer 6: 
+
+    
+    
+
+  VS with VAX can only find files and symbols which are in the solution. A lot of them are not.
+
+
+You can add all the files that are not in your solution and set them to not build in the settings. Your VS build will not be affected by this, but now VS knows about those files and you can search them along with your VS native files.
+    
+    
+Title: Pharo/Squeak - How do I quickly browse the implementation of a given method in a given class?
+Description: 
+    
+    
+                    
+Let's say I want to see how "copy" is implemented in the Dictionary class. Currently I use the system browser and manually traverse the inheritance hierarchy (bottom up) until I find the class that implements the given message. Is there a one-liner for the workspace, that would open the system browser at the right location?
+    
+
+        
+Answer 1: 
+
+    
+    
+( SomeClass whichClassIncludesSelector: #initialize ) browse
+
+
+That will browse the class that implements the message #initialize.
+    
+    
+Answer 2: 
+
+    
+    
+Personally, I just type the #selector in a workspace, highlight it, and hit alt+m to pull up all implementors of the message.  Much faster than typing all that code.
+    
+    
+Answer 3: 
+
+    
+    
+(SomeClass
+Answer 4: 
+
+    
+    
+If you are using OmniBrowser, you can use the contextual menu Implementors in Hierarchy... to only browse the implementors of a selector in the hierarchy of the Dictionary.
+
+OmniBrowser also provides an Inheritance Browser. Select any implementation of #copy and click on the Inheritance button in the toolbar. It will show you a hierarchical view of all implementors of #copy.
+    
+    
+Title: Visual Studio 2008 will not edit read only files
+Description: 
+    
+    
+                    
+So, up until today, when I tried to edit a read only file in VS2008, a dialog popped up giving me three options:
+
+
+Edit in memory
+Make writable
+Save a copy
+
+
+There was also a checkbox which read "Never allow in memory edits".
+
+Suddenly, it has stopped offering these options and simply will not accept any input in the editor window if the file is read only. I have to go into windows explorer and mark the file as not read only then reopen it in VS before I can make any changes.  I'm working on a large project, with lots of source controlled files and often need to make local only changes to files, so this is a real PITA.
+
+I'm guessing I must have checked the never allow in memory edits checkbox by mistake. 
+
+There is an option in Tools.. Options.. Environment.. Documents which reads:
+
+"Allow editing of read only files, warn when attempt to save"
+
+This checkbox is ticked, and changing its value currently as no effect. I've tried closing and opening studio, restarting my machine etc - all to no avail.
+
+Anyone know how to restore the previous behaviour?
+    
+
+        
+Answer 1: 
+
+    
+    
+In case anyone is interested, resetting the following registry entry to 0 will restore the previous behaviour: 
+
+HKCU\Sofware\Microsoft\Visual Studio\9.0\Source Control\UncontrolledInMemoryEditDialogSuppressed
+
+    
+    
+Answer 2: 
+
+    
+    
+I did the same thing in Visual Studio 2010. The dialog box is not completely clear in the wording.
+The problem (and Winston's solution) is the same in Visual Studio 2010.
+So set this to 0 in the registry:
+
+HKEY_CURRENT_USER\Software\Microsoft\Visual Studio\10.0\Source Control\UncontrolledInMemoryEditDialogSuppressed
+    
+    
+Answer 3: 
+
+    
+    
+There appear to be other registry variables in play, in the same registry location... 
+
+As before, go to HKEY_CURRENT_USER\Software\Microsoft\Visual Studio\10.0\Source Control\
+
+And reset all three of:
+
+
+AllowUncontrolledInMemoryEditing
+AllowInMemoryEditing
+UncontrolledInMemoryEditDialogSuppressed
+
+
+back to zero.
+
+(That seems to have taken my own compiler all the way back to "factory default" behaviour.)
+    
+    
+Answer 4: 
+
+    
+    
+I just had the same problem today and found the selected source control in Tools-
+Answer 5: 
+
+    
+    
+Actually, the most logical thing to do is this: 
+
+
+If A file is not intended to be edited, mark it read only 
+If A file is intended to be edited, mark it writable!
+
+
+This is in part the whole point of the read only attribute. 
+
+If you think I am somehow wrong, sure, down mod me, but everyone else logically should agree with me, because presently, its not overly clear why it is you have the need to use things the wrong way. 
+
+Until the explanation is expanded upon, your problem is on par with complaining why, when you delete something, you can't later get it back. 
+    
+    
+Title: How to fold custom region in CLion through comments?
+Description: 
+    
+    
+                    
+I read this:
+
+https://www.jetbrains.com/clion/help/folding-and-expanding-custom-blocks.html
+
+and tried following this link:
+
+https://www.jetbrains.com/clion/help/Folding_Custom_Regions_with_Line_Comments.html
+
+but it appears to be broken, since it redirects to "Meet CLion" page.
+
+How do I define custom folding regions in CLion using comments?
+    
+
+        
+Answer 1: 
+
+    
+    
+CLion is based on IntelliJ IDEA, and thus supports multiple ways, including:
+
+//region Description
+//endregion
+
+
+and
+
+//&lt;editor-fold desc="Description"&gt;
+//&lt;/editor-fold&gt;
+
+
+These can be easily accessed by selecting the code you wish to wrap in a region, and hitting Ctrl+Alt+T. You can alternatively access it by clicking Code code/code/p/div
+Title: Integration between OpenCV and QT
+Description: 
+    
+    
+                    
+I'm completely newbie to QT and OpenCV development - Acutally C++ in general. I would like to develop one application with OpenCV and create its interface with Qt. What I'm not getting is, how do I integrate both parts? 
+
+I mean, to develop java I use only eclipse which gives me JFrame and other Classes for both GUI and App development. To work with OpenCV I added the C++ IDE; But even that QT has its IDE, May I fully work with Eclipse importing Qt Libraries to develop the GUI of my application?
+    
+
+        
+Answer 1: 
+
+    
+    
+Qt and OpenCV are just C++ libraries, you can work in any C++ environment with a  C++ compiler supported by them. Eclipse with a (supported) C++ compiler of your choice would be one alternative. Visual C++ if you're on Windows is another.
+
+Qt has stand-alone tools that you can use to design the user interface in, such as Qt Designer and Qt Linguist. Qt also has an excellent C++ cross-platform development environment called Qt Creator that you may want to take a closer look at. An overview of the tools available can be found here. And just to be clear, Qt Creator is not for Qt only development, you can add any C++ library, like the OpenCV library.
+    
+    
+Answer 2: 
+
+    
+    
+Beside Daniel excellent points, there are few things you will have to take care of, such as conversion from OpenCV Mat (or IplImage if you happen to work with old code) to Qt QImage.
+
+There are simple examples of Qt+OpenCV integration around, such as Qt-OpenCV-multithreaded or even simpler isee (this one being my own little project).
+
+Cheers
+    
+    
+Answer 3: 
+
+    
+    
+If you have this kind of problem these are the steps that you must follow :
+I assume that you are starting from zero and you want to write code in MVS not Qt creator .
+
+1-Adding opencv-3.2.0-vc14 into Microsoft visual_studio 2015 Enterprise :
+
+Just see this tutorial on Youtube   https://www.youtube.com/watch?v=l4372qtZ4dc
+
+when you are done with 1 go to  2 
+
+2-download Qt from (I use 64bit 2015 version )
+
+  https://www.qt.io/download-open-source/#section-2
+
+
+to add Qt add_in into the MVS 2015 see tis tutorial on Youtube :
+
+https://www.youtube.com/watch?v=TfEttsC1vEA]
+
+When you are done with 2 go to 3 
+
+Creat a QtApplication project from MVS2015 with default properties. When you are 
+done with creating  on the solution Explorer window head to the Source File _
+main.cpp _ right click _ properties _ C/C++ _ General _ Additional include directories and add the C:\opencv\build\include in it.  Finish!
+    
+    
+Title: How can I interactively debug exceptions in Python using something besides IDLE?
+Description: 
+    
+    
+                    
+When I'm using IDLE to run a script, if the script encounters an exception and execution stops, then I'm left with a interactive shell, which I can use to investigate the application state at the time of the exception.  This is really nice, but otherwise I find IDLE lacking as an editor.  Is there a way I can get this "drop to interactive shell on exceptions" behavior without using IDLE?
+    
+
+        
+Answer 1: 
+
+    
+    
+Run your script as follows:
+
+python -m pdb myscript.py
+
+
+The console will show you:
+
+&gt; /home/user/dir/myscript.py(2)&lt;module&gt;()
+
+
+-/ppstrong/strong/pp/pprecode/code/prepa href="https://en.wikipedia.org/wiki/MUD" rel="nofollow"/a/ppstrong/strongstrong/strong/pprecode/code/prepcode/code/ppstrong/strongstrong/strong/pprecode/code/prepstrong/strongstrong/strongstrong/strongstrong/strong/ppstrong/strongstrong/strong/pprecode/code/prepstrong/strongstrong/strong/pprecode/code/prepstrong/strongstrong/strong/ppem/em/p/div
+Answer 2: 
+
+    
+    
+I suggest using eclipse with pydev. It has many debug options, I dont see any advantage in using a shell for debugging. Try it and you may, I say.
+    
+    
+Answer 3: 
+
+    
+    
+You can use the pdb module.
+
+import pdb
+try:
+    i = 0
+    i = i + 'a string'
+except Exception, err:
+    pdb.set_trace()
+
+    
+    
+Answer 4: 
+
+    
+    
+python -i yourscript will drop to an interactive shell when yourscript exits. At this point you can run:
+
+&gt;&gt;&gt; import pdb
+&gt;&gt;&gt; pdb.pm()
+
+
+...and get an interactive debugging shell.
+
+See the PDB documentation.
+    
+    
+Answer 5: 
+
+    
+    
+Run your script from inside the python command interpreter (import it), and when there is an exception do import pdb; pdb.pm() to get a debugger at the point after the exception was raised.
+    
+    
+Answer 6: 
+
+    
+    
+IMHO, If you are working in python and not using IPython you are wasting your time (in the literal sense).  
+
+In it, you can turn pdb on or off by just typeing the "magic" command pdb.  The new qtconsole (my favorite) and notebook options make this killer environment even better.
+    
+    
+Title: Where is scaffold in RubyMine
+Description: 
+    
+    
+                    
+I'm trying RubyMine, and watching this tutorial https://www.jetbrains.com/ruby/documentation/ . The author uses there project-
+Answer 1: 
+
+    
+    
+Whenever searching for something in RubyMine, a highliy recommented thing is "Search"-/pp/p/div
+Answer 2: 
+
+    
+    
+Click on File -
+Answer 3: 
+
+    
+    
+With RubyMine, I often find it easier to use the terminal for Rails commands like generating scaffolds and migrations and use the RubyMine interface for watching what's happening in the server console, raking the database or routes, etc.  It's sort of the best of both worlds.  Good luck.
+    
+    
+Title: VIM: How to move between matching tags?
+Description: 
+    
+    
+                    
+I'm a big fan of ctags, but sometimes it is hard to use it.
+
+In case when I have a few declaration of the functions with the same name - "ctrl + ]" throws you to the first occurrence - which is not always what I need.
+
+How can I see the full list of matching tags so I can choose which one to open?
+    
+
+        
+Answer 1: 
+
+    
+    
+Using gCtrl] instead of Ctrl] will show you a list of tags if there is more than one that matches the word under the cursor.
+    
+    
+Answer 2: 
+
+    
+    
+:ts shows the tags for the last tag requested, or you can give it an argument to search for a specific tag.
+    
+    
+Answer 3: 
+
+    
+    
+
+:[count]tn[ext][!]  Jump to [count] next matching tag (default 1).  See
+            |tag-!| for [!].  {not in Vi}
+
+                            *:tp* *:tprevious*
+:[count]tp[revious][!]  Jump to [count] previous matching tag (default 1).
+            See |tag-!| for [!].  {not in Vi}
+
+    
+    
+Title: Alternative to Dreamweaver?
+Description: 
+    
+    
+                    
+I'm tired of Dreamweaver overwriting wrong files on the server, 
+
+so I'm looking for an alternative.
+
+I want color-coding and possibility to open/save and edit files direct from the server, so I don't need to save files on my desktop first.
+
+I'm using Windows.
+    
+
+        
+Answer 1: 
+
+    
+    
+I switched to notepad++ when I had the same kind of problems with DreamWeaver. I tried some other programs too, but they were too complicated for my needs.
+If all you need is color-coding and ftp-support, notepad++ is a good choice.
+    
+    
+Answer 2: 
+
+    
+    
+Every web developer should be hand-writing their mark-up - all forms of automated abstraction inhibit your understanding and awareness of the code and create maintenance problems for the future. I'm quite a zealot about this, you may be able to tell.
+
+On that basis, I can heartily recommend Editplus: has code colouring, FTP and a huge amount of feature-sugar from line duplication to macros.
+    
+    
+Answer 3: 
+
+    
+    
+Notepad++ extended with some plugins is a really handy replacement. Though I can't call it IDE, it does virtually everything a developer need. In my case (a lot of repetitive code) Texter (a small app working in background) makes notepadd++ even more handy. So, my suggestion is: Notepad++ and Texter.
+    
+    
+Answer 4: 
+
+    
+    
+Visual Web Developer Express, which is the lightweight version of Visual Studio.
+
+http://www.microsoft.com/express/
+    
+    
+Answer 5: 
+
+    
+    
+If you're using a Mac you should take a look at Coda
+    
+    
+Answer 6: 
+
+    
+    
+Well personally I use Programmer's Notepad but it doesn't support the facility to upload files to the server. You could get Notepad++ and this FTP plugin. I haven't tried Notepad++ but I'm sure that it isn't WYSIWYG.
+    
+    
+Answer 7: 
+
+    
+    
+Perhaps KompoZer?  It has all the features you've asked for, and there's a Windows version (as well as Mac and Linux).
+    
+    
+Answer 8: 
+
+    
+    
+Dreamweaver... Not my cup of tea, because it lacks good support for modern web programming with Javascript or PHP.
+
+For primary design, I use WeBuilder from Blumentals. Its also a good and not expensive PHP and Javascript IDE with debugging support and also has good CSS support with a built-in CSS editor.
+I'm not a big fan of text editors like Notepad++ as an IDE replacement, because you often need a lot of additional plug-ins to have similar features like a IDE. But for some files or quick editing nothing can beat such editors (I like Notepad++ the most on Windows).
+
+So for Windows I would prefer WeBuilder for all things (design &amp; programming).
+
+You use only Windows? For Linux there are other alternatives too ;)
+    
+    
+Answer 9: 
+
+    
+    
+When I searched an alternative for the Dreamweaver for PHP, I found some IDEs and one among them is Netbeans. Soon it became my favorite for my object oriented coding.
+
+Here is the download page.
+
+This has support for Zend and Symphony frameworks.
+
+They also support File uploading.
+    
+    
+Answer 10: 
+
+    
+    
+When developping in PHP, I generally use Eclipse PDT.
+
+If you are more oriented towards HTML/CSS/Javascript, you might be interested by Aptana, which is based on Eclipse too... Which means it can use lots of plugins, including some to work directly on a server, I suppose (see TM/RSE, for instance).
+
+Note than Aptana can also be installed into an existing Eclipse installation, as a plugin.
+
+Oh, also, I almost forgot : Eclipse is free, and there are both a free and a commercial version of Aptana.
+
+(One bad thing about Eclipse being it requires a quite powerful computer -- at least 2 cores and 2 GB of RAM, if you want to use any other application at the same time...)
+    
+    
+Answer 11: 
+
+    
+    
+E Text Editor, a Textmate clone for Windows, claims to have FTP Support. But i haven't used this feature before.
+    
+    
+Answer 12: 
+
+    
+    
+
+  I want color-coding and possibility to open/save and edit files direct from the server, so I don't need to save files on my desktop first.
+
+
+The Zeus editor can highlight and fold HTML files, it integrates with HTML Tidy and can seamless edit files from the server via ftp/sftp.
+
+It also has support for a host of other languages (i.e C/C++, C#, Java, Javascript, PHP, etc etc)
+    
+    
+Title: What is the most efficient way in XCode to add a delegate&#39;s or protocol&#39;s methods to the .m file?
+Description: 
+    
+    
+                    
+When one implements an interface (equivalent to a protocol in Objective-C) in the .Net environment, the IDE automatically adds the properties and methods that need to be implemented to the class's file.  Is there a setting that will result in a similar behavior in the Xcode environment?  Will it do the same for a delegate?
+
+At this point, I find myself copying/pasting the protocol/delegate's methods from Apple's online documentation.
+    
+
+        
+Answer 1: 
+
+    
+    
+sorry for late comment,
+I use this neat trick.
+
+For example, your class is named "MyClass", you want it to have protocol NSTableDataSource. What you do is write
+
+@interface MyClass : NSObject &lt;NSTableDataSource&gt; 
+{ 
+   ... usual stuff here ...
+@end
+
+
+then, you right-click on NSTableDataSource, click on "Jump to definition".... and you can copy it from there.
+
+If you want it to be delegate of, let's say again, NSTableView, you just name the protocol NSTableViewDelegate (this is an actual protocol name!), right click on it, click on "Jump to definition" - and you have it there, you just have to ignore those preprocessor marks everywhere.
+
+It's maybe not as easy as with for example Java interfaces and NetBeans, but it's not significantly slower.
+    
+    
+Answer 2: 
+
+    
+    
+Instead of xCode, you can use appCode, "Generate" feature is usefull
+    
+    
+Answer 3: 
+
+    
+    
+Copy-and-paste is the fastest way to do it with Xcode 3.1 as available online. A little script to parse a header and spit out protocol defs would be pretty cool, though…
+    
+    
+Title: VB6 IDE is changing the case of my enumeration names
+Description: 
+    
+    
+                    
+I'm required to maintain a few VB6 apps, and I have run into a weird problem when it comes to enumeration names.  The way Intellisense in VB6 is supposed to work is that if my variable name is defined as, say, Dim Abraxis as String, and I type abraxis while coding, the IDE changes it to Abraxis on the fly as I leave the word.  However, I have found that if I have an enumeration set up like this, for example:
+
+Public Enum tiErrorEnum
+  tiNone = 0
+  tiWarning
+  tiError
+  tiDupDoc
+End Enum
+
+
+and I use one of the enums in a statement, such as
+
+ErrorNum = tinone
+
+
+expecting the casing to be fixed by the IDE, it doesn't change tinone to tiNone, but it does change the def of the enum member to tinone!  Exactly backwards!
+
+Is there a workaround?
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, there is.  It's kind of odd-looking, and you probably want to comment on why you're doing it in your code so future devs don't get perplexed about it, but here's what you want to do.  Add the enumerations as Public items inside a compiler directive code block (so the compiler can't see it, of course).  You should do this preferably right below the enumeration declaration, like this:
+
+Public Enum tiErrorEnum
+  tiNone = 0
+  tiWarning
+  tiError
+  tiDupDoc
+End Enum
+#If False Then
+  Public tiNone
+  Public tiWarning
+  Public tiError
+  Public tiDupDoc
+#End If
+
+
+Simple.  The IDE will recognize and hold the enumeration names correctly, and the compiler will ignore the block.
+    
+    
+Answer 2: 
+
+    
+    
+This is a bug in the editor. I seem to remember that if you type the name of an enum rather than use the intellisense it changes the case of the enum value name in the declaration.
+    
+    
+Answer 3: 
+
+    
+    
+The trick is to always qualify your enumerations:
+
+tiErrorEnum.tiDupDoc
+
+
+Intellisense will then correctly list the enumeration after pressing dot.  I think this will also aid code readability if you enumeration is well named. 
+    
+    
+Title: How to Autogenerate multiple getters/setters or accessors in Visual Studio
+Description: 
+    
+    
+                    
+Before I start, I know there is this post and it doesn't answer my question: How to generate getters and setters in Visual Studio?
+
+In Visual Studio 2008 there is the ability to auto generate getters and setters (accessors) by right clicking on a private variable -
+Answer 1: 
+
+    
+    
+Sorry, you really need to install Resharper to get approximately the same amount of refactoring support as you are used to in Eclipse.
+
+However, Resharper gives you a dialog very similar to the one you are used to in Eclipse:
+
+
+    
+    
+Answer 2: 
+
+    
+    
+I have an "info class generator" application that you can use an excel sheet and it will generate the private members and the public get/set methods.
+
+You can download it for free from my website.
+    
+    
+Answer 3: 
+
+    
+    
+In 2008 I don't bother with Encapsulate Field.  I use the new syntax for properties:
+
+public string SomeString { get; set; }
+
+    
+    
+Answer 4: 
+
+    
+    
+Possibly a macro. There are also addins (like ReSharper, which is great but commercial) capable of doing that quickly.
+    
+    
+Title: How do I show line numbers in CLion IDE?
+Description: 
+    
+    
+                    
+I have tried to read and follow the directions for PyCharm and IntelliJ to enable this feature, but their settings menus do not seem to be the same as CLion's.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can right click on the left of the editor (that is right to the left of the leftmost position possible for the cursor) and a menu will appear with the option of showing line numbers. Is this what you were asking? 
+
+EDIT : You can also enable this behaviour by checking "Show line numbers" under
+
+File-&gt;Settings-&gt;Editor-&gt;General-&gt;Appearance.
+
+    
+    
+Title: How to force VBA editor to enter break mode whenever code is called?
+Description: 
+    
+    
+                    
+I would like to be able to toggle on/off the option to enter break mode whenever my VBA code is called. The only way I know to do this is set breakpoints at all the "points of entry" into code or have literally every one of these methods call a separate function for purposes of debug.
+
+The "points of entry" may be button clicks or worksheet events and there are a fair number of them.
+
+For example, I could do:
+
+Private Sub bt1Click()
+    callThisOnEveryMethod
+    'other code
+End Sub
+Private Sub bt2Click()
+    callThisOnEveryMethod
+    'other code
+End Sub
+'etc, repeat 100 times
+Private Sub callThisOnEveryMethod()
+    'set breakpoint on this method
+End Sub
+
+
+This is not really ideal since I am depending on me adding that to each method and every subsequent method. I don't really trust myself to get 100% of them this way and it's a lot of clutter for debug purposes only. I can add other code here too and even wrap it in an if MY_GLOBAL_DEBUG_BOOLEAN then type statement but I still need to add this code (or the calling method) to every method I write which could start VBA execution.
+
+Imagine I might have 100 methods which could be the start of VBA code executing.
+
+It is not ideal to setup and remove break points on EVERY method each time I want to do this, either, because of the number to turn on/off.
+
+What I would like is to tell VBA somehow "whenever you start executing code, immediately break and go into debug mode regardless of breakpoints, assertions, and without requiring each method to have lots of extra code." 
+
+Is this possible?
+    
+
+        
+Answer 1: 
+
+    
+    
+There are two options to break code and go into debug mode:
+
+a) with simple Stop instruction:
+
+Sub MyProcedure()
+   '...any code here
+   Stop     'execution will stop here, debugging will start here
+   '...the rest of the code
+End sub
+
+
+b) with Debug.Assert False in this way:
+
+Sub MyProcedure()
+   '...any code here
+   Debug.Assert False     'execution will stop here, debugging will start here
+   '...the rest of the code
+End sub
+
+
+However, you could use any condition working with Debug.Assert Condition- each time condition will return False the code will stop. One sample:
+
+Dim A
+A=10
+Debug.Assert A&lt;&gt;10   'stopping execution here... entering debugging mode
+
+    
+    
+Answer 2: 
+
+    
+    
+I'm afraid the answer is no, there is no way to do this without inserting code or breakpoints in each point-of-entry procedure. 
+
+Why isn't there a way to do this? Well, the real question is, why should there be a way to do this? What's the point? Perpetual debug mode makes no sense. The idea of debug mode is to enter it if and only if you need to debug a specific procedure or error. I'm not sure what you're trying to achieve exactly?
+
+Anyhow, the way you suggest, with callThisOnEveryMethod, is probably the closest you can get. Or actually, no need to define a new procedure: just use
+
+Debug.Assert MY_GLOBAL_DEBUG_BOOLEAN
+
+
+at the top of your point-of-entry procedures, where MY_GLOBAL_DEBUG_BOOLEAN is a public module-level constant that must be set to False in order to enter debug mode. 
+    
+    
+Title: For someone coming from Visual Studio/C# background and wants to learn Java - Which should I get: Netbeans or Eclipse?
+Description: 
+    
+    
+                    
+I'm looking for the following:
+
+
+A nice debugger that allows me to easily view variable values if I use breakpoints. 
+Works very nicely in Windows 7. 
+Has something similar to the Toolbox pane in Visual Studio.
+Built in intellisense, and code completion with the TAB key. 
+Long term support. I mean something that will last and stay in active development for years. I don't want a pet project IDE that will stop developing in a year. I'm just learning so it'll be very dificult at first to switch IDE's.
+
+
+I'm new so I don't really know which IDE provides what I need between the two. Any help?
+    
+
+        
+Answer 1: 
+
+    
+    
+So you want to learn Java and your first question is about which IDE to learn ?  I suggest you look at BlueJ which is an IDE designed for people who want to learn Java.  From my, I admit limited, experience with the IDEs you mention, BlueJ is the one which gets least in one's way when trying to learn Java as opposed to learning the IDE. Once you've exhausted BlueJ's capabilities there is an easy progression to NetBeans through a plug-in but you would probably not find it too difficult to step up to Eclipse instead.
+
+Yes, I know you want to choose between Eclipse and NetBeans but BlueJ might be of interest.
+    
+    
+Answer 2: 
+
+    
+    
+Well, I switched from Eclipse to Visual Studio, and I use both just about every day.
+
+I found it hard to get used to the little differences at first, but now I am proficient in both IDEs.
+
+I can't speak to whether or not Netbeans would be easier to learn, but Eclipse shouldn't be hard at all.
+
+Both IDEs will provide all of the features that you have listed, and you should be able to customize both of them to get them to work almost exactly like Visual Studio.
+    
+    
+Answer 3: 
+
+    
+    
+This is a common debate, and there are obviously merits on both sides (this might be better served as a community wiki page). I prefer Eclipse, but to answer your questions as well as I can briefly:
+
+
+  Works very nicely in Windows 7.
+
+
+Both are fine.
+
+
+  Has something similar to the Toolbox pane in Visual Studio.
+
+
+Sorry, not familiar. Neither are short on panes, though Eclipse has a richer cache of third party plugins that might give you the experience you want.
+
+
+  Built in intellisense, and code completion with the TAB key.
+
+
+I believe both are Ctrl-Space by default. If you're working in Java in Eclipse, there's an automated pop-up after a half second delay each time you type a separator (.) character.
+
+
+  Long term support. I mean something that will last and stay in active development for 
+Answer 4: 
+
+    
+    
+Probably both will do. Personally, I'd rather use Netbeans, because it's easier to get started right-out-of-the box. Eclipse depends more on plugins.
+    
+    
+Answer 5: 
+
+    
+    
+Why not try both and see which one suits your individual tastes more?
+    
+    
+Answer 6: 
+
+    
+    
+Both are find but if you want to build GUI's, Netbeans has the edge as it has a built in GUI builder, including a toolbox of controls to use with it.
+
+
+Eclipse does not have a GUI builder. The commercial Eclipse distribution, MyEclipse does have a GUI builder - it's actually the one from Netbeans.
+    
+    
+Answer 7: 
+
+    
+    
+Neither Intellij IDEA is the Cadillac of Java IDEs
+    
+    
+Answer 8: 
+
+    
+    
+Netbeans = Great out of box experiance
+
+Eclipse = Highly customizable with plugins and (so I've heard) slightly better intellisence-like capabilities.
+
+If possible, I'd say try both (despite the bandwidth problem). If you get basic Java Development versions, the sizes aren't that big (48 MB for NetBeans and 92 MB for Eclipse)
+
+I personally prefer NetBean's in-built capabilities since I don't like having to install plugins to make my experience the way I want it (and not all Eclipse plugins are free) but most of my fellow java devs prefer Eclipse's simplicity and ease of use.
+    
+    
+Answer 9: 
+
+    
+    
+I think you should try Intellij Idea, it the most powerful-intuitive java IDE I've never seen (http://www.jetbrains.com/idea/index.html). The new Community Edition is free and more than enough for java developpement. As it is highly configurable you can choose 'TAB' for auto completion, but I think you can learn from existing combinations that are well design.
+
+Regards.
+    
+    
+Answer 10: 
+
+    
+    
+Java has some really nice IDEs available and many will do what you require.
+
+I dont know you, but I use VS with Resharper so I m very used to those shortcuts, if you do too then have a look at IntelliJ ( they have a comunity  edition)
+Otherwise you can get eclipse and get the IntelliJ keymap ( or try to get the default VS keymap)
+
+Netbeans is nice too, but I had some problems with it ( ie didnt build, rancomly crashing, etc)
+
+Also most offer Source Control integration ( in Eclipse you have many flavours of subversion for example)
+
+I guess you ll have to play around and find what suits you
+Cheers
+    
+    
+Title: Are there any good drag&amp;drop web app IDEs out there that support AJAX?
+Description: 
+    
+    
+                    
+Can anyone recommend a GUI builder tool for creating DHTML web apps using AJAX to communicate with a web service backend? I'd like to avoid having to mess around with designing HTML, marshalling/unmarshalling data, checking for browser compatibility, etc. The tool should have a library of widgets that can be put into an application and hooked up to functionality, and be extensible enough to be able to define custom widgets. Of course free and/or open source is preferrable but I would consider proprietary tools too.
+
+Also to what extent does the choice of GUI tool affect what platform or language I would use for the backend? If the GUI is just calling a web service then I should be able to use anything on the server-side to provide that interface but maybe some gui-side tools use a proprietary data exchange format that requires some specific server-side code?
+
+Edit: I don't need a widget that can be dragged, I want an IDE that allows one to build a gui easily (i.e. a RAD tool).
+    
+
+        
+Answer 1: 
+
+    
+    
+WaveMaker is open source, runs on J2EE.
+    
+    
+Answer 2: 
+
+    
+    
+If you're comfortable with Java, maybe you could try Google Web Toolkit? http://code.google.com/webtoolkit/
+    
+    
+Answer 3: 
+
+    
+    
+I'm using Wavemaker and it does exactly what are u asking...
+It is really easy to use and very perfomant....
+    
+    
+Answer 4: 
+
+    
+    
+I believe Dreamweaver does some of this, but in my opinion such editors are not a good idea. They produce horrible, unmaintainable server-side code and are quite inflexible.
+    
+    
+Answer 5: 
+
+    
+    
+Wavemaker beats everything else I have used hands down. Applications can be developed rapidly, has drag and drop, can connect to any web service, and has unmatched database management tools. The only problem with it is that it has kept changing hands/ownership so much and its future direction is not clear.
+    
+    
+Answer 6: 
+
+    
+    
+Delphi for PHP from Codegear has some of this capability, but I would agree with ceejayoz that such tools don't necessarily make for nice code.  
+    
+    
+Answer 7: 
+
+    
+    
+On Dan's suggestion I took a look at GWT. I'd heard of it before but never looked at it that closely and it seems pretty interesting. Certainly it takes away the annoyance of pixel pushing and making things work in multiple browsers. I also tried searching for "gwt rad tools" and came up with a couple of results:
+
+
+Instantiations GWT Designer (commercial, $59/year)
+Wirelexsoft Vistafei (still in beta but will have a free and a commercial version)
+
+
+I'll take a look at these but if anyone's used something else let me know.
+    
+    
+Title: Alternative to FiraCode for coding purposes
+Description: 
+    
+    
+                    
+I've looked for improving my coding experience and read blogs about ligatures like this one. While interesting as a concept, all the resources I've found are about FiraCode. The impression I've got is that it's de facto standard and virtually the only font available for ligaturing in coding context.
+
+The problem is that I find it a bit unpleasant for the eyes. It's tightened up compared to my beloved Consolas. Probably, what's so appealing is the monospace style of it, which doesn't need to collide with the ligatures. I'd like to see an extension to Consolas (or similar) that substitutes all the characters for ligatures only on the arrows, comparers etc.
+
+Is there such a thing or did I google it right, not finding jack?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Download this file https://github.com/somq/consolas-ligaturized/blob/master/Consolas-FiraCode_v2/Consolasligaturizedv2.ttf?raw=true
+Double Click on the file and press &quot;Install&quot;(Windows) or &quot;Install Font&quot;(Mac)
+In your fonts folder it will appear as &quot;Consolas Ligaturized Regular&quot;
+
+Change the font family in VSCode to &quot;Consolas Ligaturized Regular&quot; if you are using Windows, &quot;Consolas Ligaturized&quot; is sufficent if you are using Mac
+
+Windows
+
+Mac
+
+
+Turn on Ligatures
+
+
+Result
+
+Update 20/07/01
+Fixed broken link. Thanks MountainDrew for pointing out
+    
+    
+Title: jump to CSS selector in a css file from the HTML file in Vim using a single keystroke
+Description: 
+    
+    
+                    
+Please note: I have been through this link Jump to CSS definition when editing HTML in VIM, but it couldn't help me.
+
+I am looking to jump to the CSS definition or for that matter a javascript function from the html file. I would love to hit a key combo below the word to jump to its definition, not just the file in which the definition resides.
+
+I currently need to search the word in opened buffers and then reach to all the search results in the required buffer. It is very time consuming.
+
+Please help me with this very regular requirement. 
+    
+
+        
+Answer 1: 
+
+    
+    
+This quick and dirty function seems to do the trick for *.html -/pprecode/code/preullipstrong/strong/pprecode/code/pre/lilipstrong/strong/pprecode/code/pre/lilipstrong/strong/pprecode/code/pre/li/ulpcode/codecode/codecode/codecode/code/ppemstrong/em/strong/pp/pullicode/code/lilicode/code/lilicode/codecode/code/lilicode/codecode/code/li/ul/div
+Answer 2: 
+
+    
+    
+I thought this deserved to be a separate answer so, there.
+
+You can add CSS support to ctags and use it to jump to definition the same way you would do for JavaScript. It's as simple as adding the following lines to the ~/.ctags file:
+
+--langdef=css
+--langmap=css:.css
+--regex-css=/^[ \t]*\.([A-Za-z0-9_-]+)/.\1/c,class,classes/
+--regex-css=/^[ \t]*#([A-Za-z0-9_-]+)/#\1/i,id,ids/
+--regex-css=/^[ \t]*(([A-Za-z0-9_-]+[ \t\n,]+)+)\{/\1/t,tag,tags/
+--regex-css=/^[ \t]*@media\s+([A-Za-z0-9_-]+)/\1/m,media,medias/
+
+
+Once you are done, the clasic :!ctags -R . will correctly index your CSS files and you'll be able to do :tag .myClass to jump to the correct CSS definition in the correct CSS file.
+
+There's one catch, though. The classes an ids tags will include their . or # so :tag myClass won't work while :tag .myClass will. The simplest solution is to use "regexp search" instead of "whole tag search": :tag /myClass.
+
+These two mappings have worked flawlessly (for JS for a while and for CSS since a few days) :
+
+" alternative to &lt;C-]&gt;
+" place your cursor on an id or class and hit &lt;leader&gt;]
+" to jump to the definition
+nnoremap &lt;leader&gt;] :tag /&lt;c-r&gt;=expand('&lt;cword&gt;')&lt;cr&gt;&lt;cr&gt;
+
+" alternative to &lt;C-w&gt;}
+" place your cursor on an id or class and hit &lt;leader&gt;}
+" to show a preview of the definition. This doesn't seem to be
+" very useful for CSS but it rocks for JavaScript 
+nnoremap &lt;leader&gt;} :ptag /&lt;c-r&gt;=expand('&lt;cword&gt;')&lt;cr&gt;&lt;cr&gt;
+
+    
+    
+Title: Changing source files encoding in XCode 4
+Description: 
+    
+    
+                    
+We are developing primarily in C++ under Windows and write comments in Russian. So our OEM encoding is Cyrillic (Windows).
+
+XCode 4 does not ask to specify file encoding when you add existing file to the project. And you can specify your encoding in the right pannel on per file basis.
+
+How am I supposed to change encoding for more than 200 files?
+
+Thank you.
+    
+
+        
+Answer 1: 
+
+    
+    
+Select the files (one or more) in the Project Navigator. In the Utility pane, under the Text Settings group you can change the Text Encoding.
+    
+    
+Answer 2: 
+
+    
+    
+Click the file in the Project Navigator, then open the Utility pane. Choose the File Inspector tab and look under the Text Settings group to find the Text Encoding popup.
+    
+    
+Title: Java ACM package
+Description: 
+    
+    
+                    
+I'm trying to write a java application in Eclipse.
+
+I'm really wanting to use the ACM.Program package, however, my copy of Eclipse doesn't have it installed!
+
+I've looked all over the net, and I can't find a single download for the ACM package.
+
+More info:
+Whenever I try the code:
+
+package helloGeiodo;
+import acm.program.*;
+
+public class Add2 extends Program {
+
+   public void run() {
+      println("This program adds two numbers.");
+      int n1 = readInt("Enter n1: ");
+      int n2 = readInt("Enter n2: ");
+      int total = n1 + n2;
+      println("The total is " + total + ".");
+   }
+
+} 
+
+
+I get errors up and down the ying-yang, all implying that there is no such thing as "acm.program".
+
+Anyways, I need to know where to find the ACM package, and, how to install it.
+
+Thanks!
+
+--Flynn
+    
+
+        
+Answer 1: 
+
+    
+    
+You can download acm.jar from the ACM Java Task Force and then add it to your classpath.
+
+It appears that the previous link is dead. The files are still available at Eric Roberts' Stanford page.
+    
+    
+Answer 2: 
+
+    
+    
+The general answer is:
+
+
+Download the JAR files from the relevant site
+Copy (or import) them into your Eclipse project.  People often put external JARs into a lib directory, but that's just a personal choice.
+Add them to the project's build path.
+
+
+However, I wouldn't recommend using the "ACM" classes.  They were an interesting idea, but they didn't catch on.
+    
+    
+Answer 3: 
+
+    
+    
+If you follow the Stanford courses, you can import the Assignment directly (.zip files) into a new Java project. 
+    
+    
+Answer 4: 
+
+    
+    
+jtf.acm.org They let you download it there.
+    
+    
+Title: Visual Studio Vs Visual Web Developer
+Description: 
+    
+    
+                    
+I am trying to write a web application using ASP.NET MVC. I prefer C# as the programming language.
+
+Which IDE is better to use for this purpose? Visual Studio or Visual Web Developer?
+
+What are the features of the IDEs? What are the benefits of using one over the other?
+
+Thanks in advance.
+    
+
+        
+Answer 1: 
+
+    
+    
+As far as I understand, Visual Web Developer (VWD) is simply a free version of the Visual Studio components necessary to develop web based solutions.
+Here is a list of features missing from VWD that you get in a Professional edition of Visual Studio 2008 (VS2008). In short, VWD Express 2005
+
+
+is Not Extensibile with other add-ons or third party tools
+
+Only supports Web site projects (2005). You cannot add a Class
+Library project or a Web Controls
+Library project to the solution.
+
+
+UPDATED - VWD 2008 SP1 also allows Web Application and Class Library Projects in the solution.
+
+Lacks the ability to combine Source Code Control
+
+has no Accessibility checker
+
+Lacks ability for automatic generation of resources for
+localization
+
+Cannot attach debugger to a process
+
+has no Native code debugging
+
+
+
+The obvious advantage of VWD over VS2008 is that it is free and if you can work smart with it given the missing features, it may be the more pragmatic option for you. If those are features that you can't live without, VS2008 may be a wise investment - you also get all of the features missing from other Express products (Visual Basic 2008, Visual C# 2008, etc).
+Take a look at MSDN's comparison chart for Visual Studio 2005. I can't find 2008's but would suspect it to be very similar.
+    
+    
+Answer 2: 
+
+    
+    
+Visual Studio will allow you to integerate with Source control and attached debugging to IIS processes.
+
+As a lone developer knocking up some pure ASP.NET-MVC application then Web Developer would do, for serious work you really need studio.
+    
+    
+Answer 3: 
+
+    
+    
+I think you also lack the ability to publish a site without visual studio, you can certainly run a website, but it won't build the binaries for release, with web developer you have to publish the source to iis.
+    
+    
+Title: Opening Podfile in Xcode
+Description: 
+    
+    
+                    
+Such a trivial concern should show up first on google, but the answer isn't on SO.
+
+I am tired of using vim when Xcode is supposed to be an IDE (emphasis on I)
+
+How do I open a Podfile in Xcode?
+    
+
+        
+Answer 1: 
+
+    
+    
+you can open with Xcode just get into your directory on the terminal and then just type 
+
+open -a Xcode &lt;podfile&gt;
+
+    
+    
+Answer 2: 
+
+    
+    
+The Podfile is located in the root of the Pods project.
+
+
+
+An easy way to open it is via "Open Quickly" (Shift Cmd O) typing Podfile.
+    
+    
+Answer 3: 
+
+    
+    
+If it's been added to the project, you can just click on it. Otherwise, open it using the File menu or drag its icon on top of Xcode's.
+    
+    
+Title: Finding the Eclipse Project file location
+Description: 
+    
+    
+                    
+I have an android project running in Eclipse IDE. Lets say it is 'ABC Project'. Some of my collieges have made number of copies of this project, so the project files can be seen in desktop, C://, D:// and even in eclipse work space. Now I don't know project in which location I am running because they have deleted and imported the project folder to eclipse using this copies and they can't remember whether they selected the option 'make a copy to the workspace'.. How can I get this location? I tried to right click on the project and see any option is there but no. Manually finding it using java code (getAbsolutePath()) will return no good, it will return the path in the phone. 
+
+Please help.
+    
+
+        
+Answer 1: 
+
+    
+    
+Did you try right click on project -
+Answer 2: 
+
+    
+    
+Right Click on project and click on Resources.
+
+In that it shows the location where it is .
+
+Find it out dude :)
+    
+    
+Answer 3: 
+
+    
+    
+Use Alt+Enter on the project Name in Eclipse to see the complete path of the project directory where it resides.
+
+
+    
+    
+Answer 4: 
+
+    
+    
+Properties -
+Title: What is a guard block for a header file in C++?
+Description: 
+    
+    
+                    
+I'm trying to make a C++ class using the Code::Blocks IDE and there is a field called "Guard block." I've done a search and haven't been able to find any useful information. What is this field for? Thanks. 
+    
+
+        
+Answer 1: 
+
+    
+    
+Guard blocks are used to protect against the inclusion of a header file multiple times by the same compilation unit (c++ file). They look something like this:
+
+// Foo.h
+#ifndef INCLUDE_FILE_NAME_HERE_H_
+#define INCLUDE_FILE_NAME_HERE_H_
+
+class Foo
+{
+};
+
+
+#endif
+
+
+If you include the same file multiple files, you will end up with multiple definition error. Using of include guards isn't necessary in small projects but becomes critical in any medium to large sized projects. I use it routinely on any header files I write.
+    
+    
+Answer 2: 
+
+    
+    
+Guard blocks are used to prevent a header file being included multiple times in a single translation unit. This is often a problem when you include a number of header files that in turn include common standard header files.
+
+The problem with multiple inclusions of the same file is that it results in the same symbol being defined multiple times.
+
+Guard clauses can be handled with #define and #ifdef statements but are much simpler with the non-standard, but universal, #pragma once.
+
+// foo.h
+#pragma once
+
+int foo(void);
+// etc.
+
+    
+    
+Title: How to associate NetBeans IDE with certain file extensions?
+Description: 
+    
+    
+                    
+Seems like a silly question but I can't get this to work with netbeans. For any other program I would right click on the file 
+Answer 1: 
+
+    
+    
+Just found the solution.
+Open Regedit (start-&gt;run-&gt;regedit)
+
+Navigate to &quot;HKEY_CLASSES_ROOT&quot;
+Navigate to &quot;Applications&quot;
+Navigate to &quot;netbeans.exe&quot;
+
+Expand the subfolder: &quot;shell&quot; and then the subfolder &quot;open&quot;
+Then click on the final folder named &quot;command&quot;.
+In the right hand side you will see a (Default) key you need to &quot;Modify&quot; by right clicking.
+Change the location of the file to your new version of Netbeans.. Mine was pointing to the 7.0 version, and now I have 7.1beta so it was broken.
+I changed mine too :
+
+&quot;C:\Program Files\NetBeans 7.1 Beta\bin\netbeans.exe&quot; &quot;%1&quot;  (with the quotes)
+
+Now Netbeans should show up in the file associations list.
+Thanks and good luck
+    
+    
+Answer 2: 
+
+    
+    
+None of the above solutions worked for me. What did help in my case was deleting the whole key: HKEY_CLASSES_ROOT/Applications/netbeans.exe/ from Windows registry. 
+
+Now after selecting  netbeans.exe in Choose Default Program dialogue Netbeans properly appears in a list of programs and I can make it a default PHP "opener".
+
+My solution was inspired by comment to this Netbeans bug report
+    
+    
+Answer 3: 
+
+    
+    
+This is more of an windows 7 question. Anyways, I will go to Start-/p/div
+Answer 4: 
+
+    
+    
+The Default Programs control panel does not seem to offer the complete ability to edit file type associations. For example, you might not want to change an HTML file from opening by default in a browser, but you'd like to add an Edit function that opens in NetBeans.
+
+The Types app, however, supports the full-featured associations editing you're used to from Windows XP, et.al.
+    
+    
+Title: Why do keyboard and letters not match in NetBeans?
+Description: 
+    
+    
+                    
+I am a beginner programmer trying to learn PHP, but when I installed NetBeans the entire IDE produces garbled letters (ie. all the letters I type don't correspond to the ones on the keyboard) for all of my applications. For example I tried to type "/" but instead it produces ",". Anyone can tell me what is wrong with it? Many thanks in advance!
+    
+
+        
+Answer 1: 
+
+    
+    
+Use Alt+Shift key combination, that should switch the keyboard layout.
+    
+    
+Answer 2: 
+
+    
+    
+Your keyboard layout is probably not in the language you desire.  Ensure your keyboard layout matches within the OS.
+    
+    
+Title: Is there a python IDE that will tell you the type of a variable when you hover over it?
+Description: 
+    
+    
+                    
+Sometimes I write projects and don't return to them until months later.  Unfortunately for me I forget what was intended to be passed into a function.  I would like to be able to hover over an argument and see the type such as integer, string, some class, etc.  Is there an IDE out there that will do this for me?  Any help is appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+There is no way to infer the type normally, so no IDE will be able to do this. Why not just use docstrings?
+
+def foo(a, b):
+    """
+    Take your arguments back, I don't want them!
+
+    a -- int
+    b -- str
+    """
+
+    return a, b
+
+
+In Python 3 you could also take advantage of function annotations:
+
+def foo(a: int, b: str):
+    """Take your arguments back, I don't want them!"""
+
+    return a, b
+
+    
+    
+Answer 2: 
+
+    
+    
+In Python, it is not possible to generically infer the types of variables without actually running the code and seeing what they end up referencing. And even then, much Python code works on many different types, so there really is no true unique type of a variable.
+
+For example, the any builtin function iterates over its argument and returns True if any of its elements are true. Sounds like a function from list of bool to bool? Wrong. All it needs is something that can be iterated. This includes lists, tuples, dictionaries, sets, generators and more builtin types, not to mention user-defined classes that implement the iterator protocol. So there's no way you can even infer that because any is called on something that it's a list. And any python value (I believe) can be evaluated as true/false in boolean context, so the contents of the sequence don't even have to be bools.
+
+Most code doesn't use the full "dynamism" of Python, and is only expected to put values of a single type in each variable. So theoretically, you could use some annotations and heuristics to do type inference some of the time. I am not aware of any IDE that has attempted to do this, and I don't believe it's actually practical.
+
+Fundamentally, you need documentation on the way your functions/classes should be called and what kinds of things they return. If you lack this knowledge, you will make mistakes whether you have type information or not.
+    
+    
+Answer 3: 
+
+    
+    
+In PyCharm, you can hold CTRL and point at an identifier to see its inferred type. PyCharm can infer many types from assignments and return values, and  can also infer argument and return types from both docstrings and python3 function annotations.
+    
+    
+Title: eclipse manual code folding similar to visual studio region
+Description: 
+    
+    
+                    
+visual studio has an excellent feature for manual code folding by using regions. i am new to eclipse and android but cant find figure out how to do this in eclipse. i am missing this feature in eclipse desperately
+
+has anyone achieved this in eclipse
+
+thanks in advance
+    
+
+        
+Answer 1: 
+
+    
+    
+I use eclipse Coffee-Bytes plugin over a year. This eclipse folding plugin can be configured so that it was identical to visual studio folding. Lock this and this. Hope it's help you.
+    
+    
+Answer 2: 
+
+    
+    
+Manual code folding can be added by writing your own small Eclipse plug-in. What it take is implementing two classes and packing them into an Eclipse plug-in that registers onto the org.eclipse.jdt.ui.foldingStructureProvider extension-point. 
+
+This is probably not the awnser you were hoping from, but as far as I know the only way to add custom code folding to the Eclipse Java editor. From your question I see that you are mostly a visual-studio user and as such not familiar with Eclipse plug-in architecture, but depending on your experience with general plug-in architectures, extending Eclipse is (in small scale) pretty straight forward.
+    
+    
+Title: Automatically add close quote in visual studio like resharper does
+Description: 
+    
+    
+                    
+can not find this option in new studio (2010)
+    
+
+        
+Answer 1: 
+
+    
+    
+As far as I know this isn't built in to VS2010 - an add-in such as Visual Assist (and you've already mentioned Resharper yourself) will get this for you.  Of course, that won't help for the Express versions of VS2010 since add-ins aren't supported in those SKUs.
+    
+    
+Answer 2: 
+
+    
+    
+Options-
+Text Editor-
+HTML-
+Formatting-
+Insert attributes values quotes when typing
+    
+    
+Answer 3: 
+
+    
+    
+This is probably because you need to download it first, then install it. The next time you run VS2010, you should be able to start using ReSharper automatically.
+    
+    
+Title: how to debug a gsp page? (no grails, just gsp)
+Description: 
+    
+    
+                    
+I've tried with netbeans and eclipse, with no luck... (coudn't try IntelliJ idea)
+
+I gave a quick look ant the code
+
+http://kickjava.com/src/groovy/servlet/TemplateServlet.java.htm
+
+and it gives me the impression that .gsp pages are translated to .groovy servlets (groovlets) in memory (I might be wrong)...
+
+so perhaps it's not so easy to debug gsp as I though...
+
+so, can anybody tell me how to do it?
+
+pd: By debugging I mean things like browsing the code step-by-step, inspecting variables, adding watches, and all those sort of things, obviously. Not the (not so) good old printf approach...
+    
+
+        
+Answer 1: 
+
+    
+    
+Most of the logic in your GSPs should be encapsulated in TagLibs, and you can debug them (with IntelliJ at least), just as easily as any other Groovy code.
+
+If you do have a lot of scriptlet code in your GSPs (which you shouldn't), and you want to debug into it, you can't do much more than println. One other possibility is to view the source of the Groovy code generated for your GSP. This can be done by appending a showSource parameter to the URL, as described here.
+    
+    
+Answer 2: 
+
+    
+    
+I use a hack: add a method to any controller, like static def debugme(def param) { def a = param }, and call it from gsp code: &lt;% ThisController.debugme(this) %&gt;, or &lt;% ThisController.debugme(params) %&gt;
+
+(you do know you don't have to restart application after editing a controller or view, right?)
+
+I also don't think that all the logic should be in taglibs: page-specific logic should be clearly visible in a controller or a view. We have most of the logic in controllers or domain classes.
+    
+    
+Answer 3: 
+
+    
+    
+Add a setting to Config.groovy and the generated gsp-files will be written to a directory: grails.views.gsp.keepgenerateddir='/some/existing/directory'
+(the target directory has to exists and be writable)
+
+More information:
+http://jira.codehaus.org/browse/GRAILS-4422
+
+It should be possible to debug the generated groovy code with a standard Java debugger. 
+It was a long time ago when I did that (when I created the patch to grails) and I think I used jswat (http://code.google.com/p/jswat/) to debug gsps. I couldn't get eclipse to find the source files, but that's probably working in Spring Tool Suite Eclipse nowadays.
+You have to debug groovy code step-by-step/step-into and use filters, otherwise you might lose the step point (because of closures?). That's already another story...
+    
+    
+Title: Multiple Language IDE
+Description: 
+    
+    
+                    
+I've been using Notepad++ for years and although it is comfortable I am feeling the need to move up into the IDE world for various reasons, which I'll outline below. I am looking for IDE recommendations for someone who works in multiple languages on a daily basis - I am currently looking at Eclipse and Netbeans but willing to consider any option.
+
+The reason I have not made the switch to a full-fledged IDE yet is because they feel so bloated, they are slow to load and eat up a ton of memory. Recently, I have been working on an astronomical number of projects (5-6 at work, upwards of 10 personally) in a variety of languages (Python, PHP, Ruby, Java, Javascript, xHTML, CSS, TorqueScript to name a few). These are just the languages I am using on a daily basis - although I don't expect to find an IDE that will meet all the demands of these languages (especially the more obscure TorqueScript on the list).
+
+So, what would you recommend for someone who needs a fast, configurable IDE that offers support for a variety of languages, syntax highlighting (preferably with various color schemes), project organization/browsing, Intellisense-ish code completion?
+
+I forgot to mention I am primarily targetting the Windows environment here - when I'm on my Xubuntu machine (minimally) Geany works fine for what I need to accomplish.
+    
+
+        
+Answer 1: 
+
+    
+    
+I would recommend Eclipse as the closest match for the multi-language requirements. There are IDEs that possibly shine better for a given language (e.g. I prefer IntelliJ for Java), but none that have such a broad coverage of multiple languages.
+
+As far as memory/bloat, it's a price you pay for the convenience that an IDE provides.
+    
+    
+Answer 2: 
+
+    
+    
+The Zeus IDE is pretty much language neutral, meaning it can be easily configured to work with almost any programming language.
+
+It also has a lot of IDE like features (i.e project/workspace management, class browsing etc), yet still feels snappy and responsive like a light weight text editor.
+    
+    
+Answer 3: 
+
+    
+    
+Eclipse is kind of the Swiss Army knife of the programming world... With plugins, it'll handle pretty much any language you throw at it.
+    
+    
+Answer 4: 
+
+    
+    
+Well, Netbeans covers Java, Ruby and PHP which are on your list. It's definitely a bit bloated though, and I understand your pain there.
+    
+    
+Answer 5: 
+
+    
+    
+Emacs.
+
+Seriously.
+    
+    
+Answer 6: 
+
+    
+    
+With those requirements, the closest you're going to get is Eclipse.
+
+You might also want to check out SlickEdit. It won't offer you all of the features you are looking for, but it should be a hell of a lot faster than working through Eclipse.
+    
+    
+Answer 7: 
+
+    
+    
+Have you ever tried a web based one? Koding covers a whole pool of languages and above all that you get a free VM with root access. Definitely worth checking out.
+    
+    

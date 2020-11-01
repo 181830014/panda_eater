@@ -1,0 +1,1701 @@
+Title: CoffeeScript - Configuring SublimeText as a Simple IDE
+Description: 
+    
+    
+                    
+I am new to CoffeeScript and I would like to experiment with it using SublimeText.
+
+Ideally I would like to emulate the functionality of Fiddle Salad's excellent online editor - specifically I would like to see the OUTPUT - i.e. so that 
+
+console.log 'Hello World' 
+
+
+actually displays 'Hello World' in the console...
+
+I am on Windows and have followed these instructions and have used the following 'build' file:
+
+{
+"cmd": ["coffee.cmd","-c","$file"],
+"file_regex": "^(...*?):([0-9]*):?([0-9]*)",
+"selector": "source.coffee"
+}
+
+
+This gets me as far as compiling Coffee files to JavaScript, but no further.
+
+Not incidentally, I can't help wondering why this is so hard.  I am keen to learn and (until this point) I did not consider myself a moron, but it seems that web app development is almost deliberately esoteric and overwrought.  Help appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+Getting What you want working
+
+"cmd": ["coffee.cmd","-c","$file"],
+
+
+The -c in this command stands for compile.  So it is doing what you've asked it to do.  If you want live responsese, what you really want is an REPL (Run-Eval=Print Loop).  
+
+Here's a sublime text plugin that supports coffeescript: SublimeREPL
+
+You also can do the same thing on the command line by just calling the coffee executable.
+
+The bigger issues
+
+
+  Not incidentally, I can't help wondering why this is so hard. I am keen to learn and (until this point) I did not consider myself a moron, but it seems that web app development is almost deliberately esoteric and overwrought. Help appreciated.
+
+
+As far as this goes, you're trying to use a language that compiles down to another language, inside an editor that is designed to have a minimal but extensible base, and want live editing capabilities.  Thats 3 levels of complication/configuration that are not in any way required for web app development.  There's nothing wrong with that persay.  Its a totally valid setup to be developing on.  But most of your complication seems to come from these choices rather than web development in general.
+
+If you want to do some quick web development with instant feedback using coffeescript, consider using one of these online editors that allow you to ignore all this configuration/complexity
+
+
+jsFiddle
+CodePen
+
+
+If you want more IDE features without the configuration complexity consider using an IDE like Webstorm
+
+If you don't want to deal with the complication of compiling down to another language, consider starting with Javascript instead of coffeescript.
+
+You of course don't have to do any of these things, but they might reduce some of the complexity you're complaining of for your use case.
+    
+    
+Answer 2: 
+
+    
+    
+You can use Java​Script &amp; Coffeescript Build Systems plugin.
+    
+    
+Title: Eclipse: How to open an editor programmatically
+Description: 
+    
+    
+                    
+I'm wondering how I can open an editor programmatically. I first created the appropriated file and then I want to open the editor for this type of file. But I'm not able to open the editor then.
+
+...
+IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+PlcEditor editor = new PlcEditor(emfResource);
+page.openEditor(editor, "test");
+...
+
+
+I already had the following solution (which works), but here I wasn't able to call the constructr of my editor:
+
+....
+IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+IEditorPart openEditor = IDE.openEditor(page, plcFile);
+....
+
+    
+
+        
+Answer 1: 
+
+    
+    
+First you must define your editor to Eclipse using the org.eclipse.ui.editors extension point:
+
+&lt;extension
+     point="org.eclipse.ui.editors"&gt;
+  &lt;editor
+        name="Sample Multi-page Editor"
+        extensions="mpe"
+        icon="icons/sample.gif"
+        contributorClass="tested.editors.MultiPageEditorContributor"
+        class="tested.editors.MultiPageEditor"
+        id="tested.editors.MultiPageEditor"&gt;
+  &lt;/editor&gt;
+&lt;/extension&gt;
+
+
+(above is as created by the provided multi-page editor example).
+
+You can then use:
+
+IDE.openEditor(page, file, "tested.editors.MultiPageEditor");
+
+
+to open the editor on an IFile specifying your editor id, or for the extension specified the editor will be the default and you can just use 
+
+IDE.openEditor(page, file);
+
+
+You can also use the contentTypeBinding child element of editor to specify content types then editor will handle.
+    
+    
+Title: Eclipse Auto-Correct?
+Description: 
+    
+    
+                    
+Is there a way to have Eclipse auto-correct certain misspellings? For example, I tend to type "System" as "Sysetm", and Eclipse catches it. However, it only tells me it's an invalid package, and I have to manually correct it. I'm hoping there's a way like in Microsoft Word, where you can add words to be auto-corrected.
+    
+
+        
+Answer 1: 
+
+    
+    
+Trust me you don't want something like that. It would make it almost impossible to write code with it changing what it thinks you want a variable called. Also its use would be very limited.
+
+I have a hard enough time trying to convince word I mean colour and not color.
+    
+    
+Answer 2: 
+
+    
+    
+try to use "alt+/" after input 'sys'
+    
+    
+Title: How do I show Variable Bindings in SICSTUS&#39; &ldquo;SPIDER&rdquo; IDE?
+Description: 
+    
+    
+                    
+I'm using the "SPIDER" IDE for SICSTUS Prolog development, as instructed by the SICSTUS Manual and the documentation on the SPIDER IDE itself. When debugging, under the 'SICSTUS Debugging' perspective, the variables do not show on the Variables window, as can be seen in the top right in the image shown here (it's the first thing in the Spider page)
+
+I set up everything according to this guide and this is, as far as I can tell, the only thing not working. Are there any additional steps to get the variable bindings while debugging?
+
+Thanks in advance,
+
+edit: I've recently reinstalled everything in the same system after formatting a drive, and it now works perfectly. I have no idea what, but I assume I did something wrong the first time.
+    
+
+        
+Answer 1: 
+
+    
+    
+Variable bindings should work by default. However, some variables may be omitted depending on compiler optimizations and other factors. Try it with the example program shown in the SPIDER image.
+    
+    
+Title: Syntax highlighting problems in Scala Eclipse
+Description: 
+    
+    
+                    
+I'm using the Obsidian theme from Eclipse Color Themes with the Scala Eclipse IDE, and everything looks great except for some values, which show up as a horrible dark blue that's extremely hard to read. It seems to happen for certain vals and not others, but I haven't been able to figure out exactly when it happens, so I don't even know what to look for in my Eclipse setting.
+
+Here's a screenshot from an assignment I'm working on that shows some examples of the problem: 
+
+That's from a Scala JUnit test suite (obviously), where it seems to occur more often than in the main program. I've also found that it rarely occurs in a Scala worksheet, even when the worksheet is an exact copy of the main file. There are instances in the main file of the dark blue highlighting, but the same instance in the worksheet has the correct (or at least, the expected) highlighting.
+
+Any ideas? I'm guessing it might just be some incompatibility with the theme and the Scala IDE, but I really dislike the default ultra-bright theme, so I'm hoping to be able to use a darker theme without this annoying problem.
+    
+
+        
+Answer 1: 
+
+    
+    
+I could set those in Preferences 
+Title: Which IDE can refactor (rename) Zend Framework 2 classes properly?
+Description: 
+    
+    
+                    
+A classname in a zf2 application is scattered around the project in several config/autoload strings, use statements, even template_map keys, whatnot.
+
+Is there an IDE/plugin that keeps indexing these occurrences, thus can reliable refactor (I mean only rename) a Zend Framework 2 class?
+
+Considering the namespaces as well (as I can create classes of the same name under different locations).
+    
+
+        
+Answer 1: 
+
+    
+    
+NetBEANS WITHOUT a second thought not mention that it wont automatically rename line of code that is mentioned in namespaces etc as it is purely user dependent feature on what they wanna write.
+    
+    
+Title: Development oriented PostgreSQL IDE
+Description: 
+    
+    
+                    
+Could someone recommend PostgreSQL IDE oriented on developers, not on database architects or administrators. I.e. I look for an IDE that will increase my productivity in:
+
+1. Writing stored functions (code completion and syntax highlighting)
+2. Ctr+Click navigation between functions (or any other way)
+3. Finding All References (where certain function or table is used)
+4. Refactoring stored functions (renaming function or variable; extracting function etc.)
+5. Refactoring tables (if I change column name, functions and views that uses that column should be also updated)
+6. Structuring my functions during the development into kind of folders (let them be finally flatten on the database)
+
+The project that I currently working on has hundreds of tables and more than thousand of functions. Currently I work with pgAdmin and my productivity is extremely low.
+All database development tools that I checked so far from (http://wiki.postgresql.org/wiki/Community_Guide_to_PostgreSQL_GUI_Tools) do NOT cover even 10% of what I expect from a modern IDE.
+    
+
+        
+Answer 1: 
+
+    
+    
+I think the Toad plugin for Eclipse is going to be the closest thing you can find.  Unfortunately, having a totally comprehensive IDE with these features is going to be a huge project in part because PostgreSQL can use stored procedures in so many different languages, so syntax highlighting inside the stored procedure requires a vast amount of knowledge (in theory, to be considered complete, not only sql and plpgsql but also C, C++, Java, Python, Perl, TCL, R, Ruby, Lisp, various shells, PHP, Lolcode, and Brainfuck -- there are probably more but those are the ones that come to my mind).  Consequently the only hope of doing this is to tie into another IDE.
+
+This being said I, and most devs I know, tend to use bash, vim, etc.   It is a fundamentally different paradigm but it is more flexible in many ways, and the limitations you do run up against force you to design, and test, your SQL in sane ways.
+    
+    
+Title: How to set up Xcode to work with instead of Qt Creator?
+Description: 
+    
+    
+                    
+I don't make use of Qt Creator's UI design functionality.
+
+For a new project, I'd like to experience working with Xcode. This will be a regular Qt project, developed using C++ and Qt libraries just like in Qt Creator.
+
+I have no experience using OS X and especially Xcode.
+
+
+What are the steps I need to follow to set up and use Xcode to develop a Qt application with support for Qt Framework? (ie. perhaps code completion or special errors etc.)
+
+
+I have of course done my search but nothing seems to be clear about directions and not having any experience with OS X or Xcode makes it complicated so therefore I'd really appreciate your patient, step-by-step input for this. Various how-tos available online are not of satisfactory.
+
+Platform: OS X, Qt 5.1
+
+Thank you
+    
+
+        
+Answer 1: 
+
+    
+    
+You should have a look at CMake. It uses a simple language to define projects in text files and then generates the native project files for your environment (eg XCode).
+
+Assuming your project structure looks like this:
+    myproject/
+        MyProject.h
+        MyProject.cpp
+        main.cpp
+        MyGui.ui
+
+Add the following as CMakeLists.txt in the same directory:
+
+cmake_mimimum_required( VERSION 2.8)
+
+project( MyProject )
+
+find_package( Qt4 COMPONENTS QtGui &lt;insert components you need&gt; REQUIRED)
+include( ${QT_USE_FILE} )
+
+# Qt's includes are already taken care of by the previous command
+# add any additionaly include directories if required
+# include "binary" dir to make sure the automatically generated files (eg for gui class) are found
+include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
+
+# assuming MyProject contains a Q_OBJECT that needs to be processed by moc
+QT4_WRAP_CPP( MOCS MyProject.h )   
+
+QT4_WRAP_UI( UI MyGui.ui )
+
+add_executable( MyProject 
+      MyProject.cpp
+      MyProject.h
+      ${MOCS}
+      ${UI}
+)
+
+target_link_libraries( MyProject ${QT_LIBRARIES} )
+
+
+Create the "binary" directory. This directory will contain your XCode files and any files that are generated during the project (compiled objects etc). Thus, CMake allows easy separation of generated files from your source code so it doesn't mess up your source control. 
+
+In the binary directory, call:
+
+cmake -G XCode &lt;path to your source directory (where CMakeLists.txt is)&gt;
+
+
+You could also use the GUI tool CMake-Gui or console gui ccmake.
+
+After cmake finished generating the project files, open them in XCode. 
+
+For more details, check the CMake documentation
+
+Happy coding!
+
+(Disclaimer: Code is untested.)
+    
+    
+Title: Akka source code study
+Description: 
+    
+    
+                    
+After spending some time on Scala, I try to study on Akka project, find that '←' used instead of '&lt;-' in Akka, my question is how to input '←' from keyboard, the symbol seems only can be used in Akka. Another question is that, if analyze the Akka source code, which IDE is the best suitable, I have tried Eclipse and IntelliJ, both are not good.
+    
+
+        
+Answer 1: 
+
+    
+    
+Akka uses Scalariform in the build and that does the conversion between &lt;- and ← automatically. 
+    
+    
+Title: IDE With Autocompletion For Redis
+Description: 
+    
+    
+                    
+Is there any IDE which provides auto completion for Redis?
+With the ones i use currently, i need to type out everything, but it would surely be nice and time saving to have auto completion and syntax corrections?
+    
+
+        
+Answer 1: 
+
+    
+    
+[Disclaimer] I'm the founder of Redsmin
+
+Redsmin is an online Redis GUI that provides commands and keys auto-completion out-of-the-box as well as inline-documentation.
+
+Start writing what you want, hit tab 
+Answer 2: 
+
+    
+    
+The redis-cli client has tab autocompletion enabled. I'm not aware of any IDE for Redis, and am not sure how this would work, since Redis is almost always embedded in another language through some client library.
+    
+    
+Title: Importing a Java project to IntelliJ IDEA community edition
+Description: 
+    
+    
+                    
+I'm new to IntelliJ. What is the best (and recommend method) for importing project into IntelliJ. Is there a maven plugin for doing this? 
+
+More specially I'm interesting in importing this project. 
+https://github.com/nathanmarz/storm-starter?source=c
+
+Thanks. 
+
+UPDATE 1 - When I try to use File -/ppimg src="https://i.stack.imgur.com/NlN5d.png" alt="enter image description here"/p/div
+Answer 1: 
+
+    
+    
+It looks like that project has a pom file named m2-pom.xml.  You should import that as a maven project.  Assuming it's using standard repositories, you'll immediately be able to compile the code with maven.  
+
+You can select Open in the menu, and then choose that file and it should load the project.
+
+Be aware this seems to be a clojure project.  You might want to research the La Clojure plugin to see how/if it can import clojure projects with it.  It looks like the steps I gave will work, but the code may not run very easily for you without the La Clojure plugin. 
+    
+    
+Answer 2: 
+
+    
+    
+You could either import the Maven project inside of IntelliJ (File -code/codea href="http://maven.apache.org/plugins/maven-idea-plugin/" rel="nofollow noreferrer"/acode/code/ppstrong/stronga href="https://stackoverflow.com/questions/16849289/importing-a-java-project-to-intellij-idea-community-edition/16849541?noredirect=1#comment24301363_16849541"/aem/em/p/div
+Title: How to debug Node.js based web application
+Description: 
+    
+    
+                    
+I have been seeking solutions for debugging Node.js based web application from days. I had tried to debug with Eclipse + Chrome debugger plugin but failed, I posted the error in this session &#39;Failed to get tabs for debugging&#39; when trying to debug NodeJs with chrome debugger for Eclipse, but could not find an answer.
+
+However, as Node.js is so popular, I have no doubt that a lot developers have the solution for debugging Node.js server JavaScript code. I appretiate if you could share me your solution of setting up an IDE (edit and debug) for Node.js server JavaScript code, or at least how to debug it.
+    
+
+        
+Answer 1: 
+
+    
+    
+I would suggest using node-inspector.  Here is a good tutorial for setting it up.  It allows you to use a browser tab to look at your code, set breakpoints, and step through it.  Additionally, you can start node with the flag --debug-brk and it will insert a break point on the first line, if you need to debug something that happens on startup.
+    
+    
+Answer 2: 
+
+    
+    
+There are several tools to debug a node application. A great ressource has been postet on Github recently.
+
+A simple debugging setup might be just adding a breakpoint to your code and start node in debug mode like this:
+
+Example code with use of debugger, a manual breakpoint.
+
+app.get('/foo', function(req, res) {
+    var something = 123;
+    debugger; // execution stops if this point is reached
+    foo(something);
+});
+
+
+Start node in debug mode:
+
+$ node debug app.js
+
+
+Once you started the application in debug mode you use the application (e.g., navigate to the ressource with your browser) and once a breakpoint occurs, the execution stops and you have a debugger environment in your terminal.
+    
+    
+Answer 3: 
+
+    
+    
+Try to use Weinre (WEb INspector REmote). It's a node app help you debug UI, log for web app on devices.
+It hope it can help you.
+    
+    
+Title: Intellij can&#39;t compile JSP- Error: PWC6345
+Description: 
+    
+    
+                    
+I'm having a problem with my web application in INTELLIJ. I'm new to INTELLIJ so I dont really know how to fix this. Others IDEs had nevere such a problem.
+
+When I'm trying to run my web application it gets me this error:
+
+org.apache.jasper.JasperException: PWC6345: There is an error in invoking javac. A full JDK (not just JRE) is required
+
+
+The JDK is chosen and glassfish is working. Others had the same problem, some fixed it with a change in config file of glassfish. But that didnt fix my problem.
+
+Does someone actually know how I can fix that and be able to run my web applications in INTELLIJ?
+
+Thanks in advance!
+    
+
+        
+Answer 1: 
+
+    
+    
+Glassfish is using JAVA_HOME environment variable and starts under the JDK defined by this variable. On your system this variable may point to the JRE instead. You can either change it in the system settings or directly in IntelliJ IDEA (repeat the same for Debug):
+
+
+    
+    
+Title: Are there any XACML evaluation engine implementations?
+Description: 
+    
+    
+                    
+I have to evaluate XACML policies as a part of my research. I am looking for an IDE for xacml evaluation. Can anyone suggest one?
+
+I have installed wso2 identity server but when I am uploading a policy its giving an error that the policy can't be uploaded. 
+
+I also downloaded UMU-Xacml-Editor. Can any one tell me how to use that editor for evaluation?
+
+I have even downloaded several source forge engines, But I am not able to install them. can anyone kindly let me know the installation details
+
+Can you even let me know if there are any open tools for evaluating xacml policies.
+
+Thanks &amp; Regards,
+Pavani.
+    
+
+        
+Answer 1: 
+
+    
+    
+What is identity server version that you are using? In Identity Server (V 4.0.0), when you upload a policy, it would do schema validation.  If your policy is not according to the schema, policy uploading would be failed.
+
+However you can disable policy schema validation by setting following property to "false" in entitlement.properties file which can be found at /repository/conf/security 
+
+PDP.SchemaValidation.Enable=false
+
+Also you can simply create policy with WSO2 Identity Server policy editor UI. I guess this blog post [1] may be useful. But it has been written for Version 3.2.3.  May not be valid for 4.0.0. version 
+
+Sorry. I have not used UMU-Xacml-Editor.
+
+[1] http://xacmlinfo.com/2012/05/02/xacml-policy-editor-in-wso2-identity-server/
+    
+    
+Title: Automatic evaluation of the last expression in Ruby when NOT using IRB
+Description: 
+    
+    
+                    
+I'm experimenting with ruby and following some tutorials that are great for learning. When using the IRB prompt, the last expression is always evaluated in this style:
+
+"hello"
+=&gt; "hello"
+
+
+That's awesome! Now, how can i accomplish the samething when running .rb scripts? I admit it might be a bit strange to evaluate every single line in a script, but it is awesome when learning. 
+So - cannot reproduce this behaviour in other IDE's (or calling .rb scripts from a command prompt) with integrated console/terminals. I've tried Aptana, jEdit, RubyMine.
+
+I've read alot about different constants that could be set, such as $DEBUG, $VERBOSE, and calling ruby.exe with some parameters, but i don't seem to get it right anywhere.
+
+It would be awesome with an editor just like PowerShell_ISE, and it's power is its ease of use and simplicity to run the scripts.
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Decide the command name to type in the terminal in order to execute the script (suppose this is test_ruby).
+Decide the file name that you would always work on when you write your scratch code (suppose this is test_ruby_file). 
+Write a file named test_ruby with the following content:
+
+#!/usr/bin/env ruby
+
+File.open("path_to_test_ruby_file/test_ruby_file"){|io| p eval(io.read)}
+
+Give test_ruby an executable status.
+Write something in test_ruby_file.
+In the terminal, type test_ruby.
+
+    
+    
+Title: Running Scala Files in Eclipse
+Description: 
+    
+    
+                    
+I'm trying to run a scala file with Eclipse Indigo. I have installed the Scala IDE for Eclipse and am on the Scala perspective, but the option to run as a Scala application does not appear. The file that I am currently trying to run is part of an existing project that I imported into Eclipse. The Scala IDE plugin appears to be working as I can create Scala objects and run them as Scala Applications and the Scala compiler is detecting errors.
+
+How do I get the option to run a file as a Scala Application for the Scala IDE plugin for Eclipse Indigo?
+    
+
+        
+Answer 1: 
+
+    
+    
+The file you are trying to run must either be defined like this:
+
+object MyFile extends App { /* your code to run here */ }
+
+
+or:
+
+object MyFile {
+  def main(args: Array[String]) { /* your code to run here */ }
+}
+
+
+If either of these are true, you should be able to press the play button, via right click or the toolbar at the top.
+    
+    
+Title: eclipse not recognizing dependency sources and scala docs
+Description: 
+    
+    
+                    
+I have the eclipse plugin for sbt to generate eclipse project files. After the project's generated and imported, everything seems fine except for being unable to view the sources and scala docs. When I click on a reference, eclipse says the source cannot be found and I get an option to change attached source. However, the attached source is the correct file already (Ex. junit-source.jar). Eclipse still complains the class source code does not exist. Is anyone else having this problem?
+    
+
+        
+Answer 1: 
+
+    
+    
+from the Using sbteclipse documentation
+
+EclipseKeys.withSource := true
+
+    
+    
+Answer 2: 
+
+    
+    
+If you don't want to set it in the build.sbt file as @David suggests, you can do, from the command line:
+
+sbt "eclipse with-source=true"
+
+    
+    
+Answer 3: 
+
+    
+    
+Maybe your problematic dependency has been compiled with stripped debug info. Recompile sources with -g flag and check whether this work for you.
+    
+    
+Title: Getting an error when trying to create a new project in the QNX Momentics IDE (an Eclipse IDE)
+Description: 
+    
+    
+                    
+I'm attempting to create a new Blackberry Cascades C++ Project in the QNX Momentics IDE, and I was previously able to do this, but now when I attempt to do that, I get an error message dialog box up that says, "com.qnx.tools.bbt.appdescriptor.Configuration.getId()java/lang/String"
+
+I closed everything on my computer, and restarted it, and tried again, but I still get that error.
+
+I was able to create new projects before.
+
+This started happening after I tried to rename a project, but a got another error popup that said, "Resource 'MyProject' is out of sync with file system", and I restarted the QNX Momentics IDE, so I don't know if that has anything to do with it.
+
+I even tried creating a new Blackberry Cascades project in a workspace where I already created a lot of other Blackberry Cascades projects, and I got the same error.  What's going on with this?  How can I fix this?  Will I need to reinstall QNX Momentics IDE?  Or is there another way?
+    
+
+        
+Answer 1: 
+
+    
+    
+It is good to uninstall previous NDKs and then install BlackBerry Gold NDK. This issue is caused by very old IDE plugins trying to interact with each other. Please make a full install of GOLD before then run update. 
+    
+    
+Answer 2: 
+
+    
+    
+I experience the same. I tried to uninstall it and then reinstall the NDK. Currently, it works, but maybe the problem can persist in the future.
+    
+    
+Answer 3: 
+
+    
+    
+I've had the same problem after updating from an old version to the new Gold SDK's. Uninstalling and then reinstalling did the trick for me.
+    
+    
+Title: How to setup a new language IDE
+Description: 
+    
+    
+                    
+At work we are using a proprietary language and to program we are using Notepad++ with a simple code highlight. That is really annoying so, what I want to do is to invest some time to setup a text editor or an existing IDE to support my language.
+
+I've googled a lot and there are so many options and before starting to work I wanna ask to you what is the best choice.
+What I want to do is to have, like an IDE, a syntax highlight, a window with the function list tree, with the local function variables inside the same subtree, maybe text autocomplete (if I type "pro" I would like to see the suggestion "procedure" and if I press enter it will write for me something like
+
+procedure "name" {
+   --code--
+}
+
+
+with the cursor on "name" ready to change it.
+etc etc...
+
+Can you suggest me the right path to follow?
+Is it to keep using Notepad++? With sourcecookifier? functionlist?
+Or I have to change to another text editor?
+Or there is some famous IDE like Eclipse, NetBeans etc that allow to easily add my own language?
+
+PS. my language is pretty simple, I don't have complex structures, is Pascal-like. Something like that:
+
+variable int  xyz
+PROCEDURE asd
+BEGIN
+END PROCEDURE asd
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I would recommend you to stay with Notepad++ and extend it with some plugins and configuration. This would be fairly quick and easy to set up and still give a big win, even though you might not be able to get all the nice features of something like Eclipse. But since you already know the Notepad++ it wouldn't require learning an entirely new tool. 
+
+Some plugins that I have found useful
+
+
+Function List 
+Light Explorer
+XBrackets Lite
+
+
+There are probably a lot more that can be useful to you. 
+
+Notepad++ also got some built in auto-completion functionality that can be enabled in the settings.
+    
+    
+Answer 2: 
+
+    
+    
+Have you evaluated Eclipse XTEXT ?
+
+What is Xtext?
+Xtext is a framework for development of programming languages and domain specific languages.
+
+    
+    
+Answer 3: 
+
+    
+    
+The only IDE I have used for the last few years is Eclipse.  There are lots of other IDEs available, also notable and popular is Netbeans.  There are many others.  It's important to note that all IDEs have their fans, but I can only speak to Eclipse.
+
+Eclipse is a platform, which means it is an application on which you can build other applications.  Eclipse provides a framework which you can customize and extend to produce a working application.  It takes care of the user interface, preferences storage, modularisation using OSGi, and lots of other things.
+
+Eclipse has facilities to support what you're looking for:
+
+
+Syntax highlighting in the editor.
+The Outline View provides function and variable listing in a tree
+Autocompletion and Suggestions (activated by hitting ctrl-space)
+Code Templates to fill out files and procedures etc.
+
+
+The disadvantage is that customising and extending Eclipse to do what you want isn't trivial.  Having written a language debugger for Eclipse, I can tell you that leveraging Eclipse's platform helped enormously, but there's a learning curve.  You'd essentially have to be coming up with a new set of plugins to provide your highlighting, outlining, autocomplete suggestions and templates (I'm not sure if template support is built into the platform or not).
+
+So I would say, unless you can find some sort of extensible editor for Eclipse - I know Aptana is extensible for tag-based markup - you are probably as well staying with your existing tooling.
+
+Do explore the other IDEs though - I've heard good things about IDEA as well as Netbeans. :)
+
+Good luck!
+    
+    
+Answer 4: 
+
+    
+    
+I can recommend SynWrite editor. Good support for external languages, fully customizable. (Editor of new lexers is there)
+    
+    
+Title: RAD Studio IDE Keyboard Shortcuts
+Description: 
+    
+    
+                    
+I just spent 15 minutes looking for a list of default IDE keyboard shortcuts because I went completely blank on how to toggle a breakpoint using a keyboard shortcut- was driving my nuts.
+
+If anyone can find a page in the XE3 documentation wiki, I'd love to see it.
+    
+
+        
+Answer 1: 
+
+    
+    
+Would you believe I couldn't find this in the XE3 documentation wiki; I ended up with this page after a bit of googling:
+
+http://delphi.wikia.com/wiki/Default_IDE_Shortcut_Keys
+
+(F5 btw,to toggle breakpoints &lt; headslap //pp/p/div
+Title: Remote IDE on Red Hat Enterprise Linux Server release 5.5
+Description: 
+    
+    
+                    
+I have this version of Linux server:
+
+-bash-3.2$ cat /proc/version
+Linux version 2.6.18-194.11.1.el5 (mockbuild@hs20-bc2-3.build.redhat.com) (gcc version 4.1.2 20080704 (Red Hat 4.1.2-48)) #1 SMP Tue Jul 27 05:45:06 EDT 2010
+-bash-3.2$ cat /etc/*release*
+cat: /etc/lsb-release.d: Is a directory
+Red Hat Enterprise Linux Server release 5.5 (Tikanga)
+
+
+Currently, I am writing c program on the Linux side, I will need the server power to execute my program. I prefer IDE, but since my machine is Windows and what not, I have to compile the program remotely on the server. Sometimes, it's such a pain that I cannot run a stacktrace after the program crashes. And the thing is I want is to achieve higher productivity. 
+
+I can only access this server with PuTTY or the like, and I do not have the rights to install any software. And updating the software in the server is also not possible.
+
+I see that the server got programs like Matlab that can output to XMing on the client side. (Ex. I can run Matlab as a GUI from the server side and have it display on my client device) 
+
+I see that some people suggest me for Eclipse, but the IDE is way too slow. In fact, it lowers productivity.
+
+So is there any recommendation or a scheme that will allow me to compile, execute and debug my program remotely on the server with better ease-of-use, given the bold criteria above?
+    
+
+        
+Answer 1: 
+
+    
+    
+You cannot install as root, but maybe you can manually install applications in your user directory? With that and X11 forwarding you should be set (except a bit of latency).
+Also, if you have gdb on the remote (which you probably do since you also have the compiler) you can see stack traces with it after enabling core dumps (ulimit -c unlimited), by opening the binary and the core file: gdb -c  , then bt.
+    
+    
+Title: Creating new file in Aptana 3 without creating a new project
+Description: 
+    
+    
+                    
+How would I be able to create a new .php or .html (examples) in Aptana 3 without going to the process of creating a new project file in order to accomplish it.
+
+I am running on a Mac and running Aptana Studio 3.2.2
+
+If someone could lead me to the right direction with a link to how, that would be awesome. Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Every file need to be part of a project.
+
+I use to keep a spare project where I can quickly open temporary working files without the need to create a new project.
+    
+    
+Answer 2: 
+
+    
+    
+File
+Title: Is there a way to link two comments together in an IDE?
+Description: 
+    
+    
+                    
+Case: One source file has a comment in it that is directly linked to a comment in another source file (it says see line 315 in xxx.cs for more information). The problem with this approach is that the comment on line 315 may not be at that line number in the future. Is there a way to link comments together in an IDE? (currently using Visual Studio 2010, but use other IDEs from time to time)
+    
+
+        
+Answer 1: 
+
+    
+    
+You can try this addin (I haven't used this):
+
+http://hyperaddin.codeplex.com/
+
+Besides this addin, the only thing I can think of is using a file link to directly go to the linked file; something like:
+
+// ...
+// See file://path_to_file
+//...
+
+
+The link will be converted to an actual link that you can click using Ctrl+Left Click but it won't take you to a given line number - it just opens the file.
+
+The path can be a relative file path or a full file path - full paths work best if all team members use the same folder structure in the project. For example:
+
+// file://w:/projects/GUI/frmMain.cs
+    
+    
+Answer 2: 
+
+    
+    
+Referring to a particular source file and line number is never a good idea, because someone might move things around in the other file without being aware that something is pointing at it. It's better to point at the particular type/method, for example See DoThings() in the MyThing class..
+
+In Java, using Javadoc, you can use @link to do this, for instance See {@link MyThing#doThings()}. Eclipse will automatically update these when using its refactoring tools (e.g. renaming the class or the method). If the change is done manually, Eclipse will still warn that the target of the @link is invalid. (There is also @see which is more appropriate in some situations.)
+
+I'm not sure about C# and Visual Studio, but it's likely that its XML-based doc format offers similar functionality.
+    
+    
+Answer 3: 
+
+    
+    
+The only way to handle this is to put the comment in the same file. Duplicating a comment is not the same as duplicating code, although ideally the code wouldn't need too much explanation in comments.
+
+There are many, many reasons why the comment being in another file will cause pain. As you have stated, the line number may change but also it could be deleted (as they won't know another comment references it), updated in a way that changes its meaning and it is annoying to have to open another file in any case.
+    
+    
+Title: Eclipse - move statement-wise
+Description: 
+    
+    
+                    
+Is there a way to make eclipse simulate Intellij statement-wise ctrl+shift+up ctrl+shift+down line movement? (like changing indentation, or moving code blocks)? 
+
+UPD, beg my pardon, alt up/down indeed changes indentation. But what about next:
+
+@Override
+protected void onStart() {
+    super.onStart();
+    if(currentPath == null || currentPath.length() == 0) {
+        showDirectoryView(settings.getRootUri());
+    }       
+}
+
+
+cursor stands on method declaration, I use alt down
+
+@Override
+    super.onStart();
+protected void onStart() {
+    if(currentPath == null || currentPath.length() == 0) {
+        showDirectoryView(settings.getRootUri());
+    }       
+}
+
+
+Intellij just swaps this method with the next one, 
+same about code blocks
+    
+
+        
+Answer 1: 
+
+    
+    
+ALT + Up/Down Arrow - for rows indentation in Eclipse.
+
+This will select more rows and move them all.
+    
+    
+Title: Python Subprocess cannot read all outputs in shell
+Description: 
+    
+    
+                    
+I implemented a python program using subprocess.Popen to execute commands from server to Ubuntu client. The subprocess must read all outputs line by line. My program operates perfectly  in Eclipse environment. All outputs print as I expected. 
+But when I run the program under Python interactive shell (in both Windows and Linux), subprocess.Popen didnot read all command outputs. The outputs only show little and then Python crashes without any error. Here is my program codes:
+
+def execute(self, IP_Instance, command):
+
+    keypairs_directory = Config.keypairs_directory
+
+    cmd = 'ssh ubuntu@%s'%IP_Instance+' -i %s'%keypairs_directory+' %s'%command
+
+    cmd_run = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+    for line in cmd_run.stdout:
+        print line         
+    cmd_run.wait()
+
+
+For example, when I send a command:
+
+a.execute('xxx.xxx.xxx.xxx', 'ls -l')
+
+
+I have output 
+
+total 0
+
+
+It is OK. But when I send:
+
+a.execute('xxx.xxx.xxx.xxx', 'sudo apt-get update')
+
+
+The program only runs to 
+
+Fetched 8,364 kB in 6s (1,205 kB/s)
+Reading package lists...
+
+
+and then Python backs to
+
+&gt;&gt;&gt;
+
+
+I had tried communicate()[0], poll() but they did not bring effectiveness. I use Python 2.7 for all machines. What am I doing wrong? 
+    
+
+        
+Answer 1: 
+
+    
+    
+The apt-get update command returns data also in standard error, so you need to catch also stderr data:
+
+subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+
+
+and then you have to use both Popen.stdout and Popen.stderr.
+    
+    
+Title: Debug session freezes when trying to watch an array
+Description: 
+    
+    
+                    
+I am using ubuntu 12.04. I have used so far anjuta and codelite as IDE's for C++ school projects.
+However, with both of them I have encountered one problem:
+After starting the debugger, everything works fine till I try to add an array at watches' section. It does not display anything and when I try to continue debugging it freezes and I have to stop the debug session. I have to mention that watching variables works well.
+
+Thank you,
+
+LE: Actually, the debug function freezes only in case of large arrays...it may be a bug of codelite then. Any opinion?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  I have to mention that watching variables works well.
+
+
+When you set the watchpoint on a variable, GDB probably says Hardware watchpoint N (but your IDE may be hiding that message).
+
+When you set a watchpoint on anything larger than 8 bytes on x86 processor, GDB can not set a hardware watchpoint (because x86 hardware doesn't support such watchpoints). GDB sets a software watchpoint instead. Software watchpoints are implemented as follows:
+
+
+single-step the program
+did values change? No -/li/olpem/emcode/code/ppem/ema href="https://stackoverflow.com/a/12321112/50617"/a/p/div
+Title: F5 and Play button are not working, but F10/F11 do
+Description: 
+    
+    
+                    
+For a few days now the IDE has stopped responding to F5, and clicking the play button with my mouse also does nothing.  However, if I press F10 or F11 it will step into the code after which I can press F5 and then it runs just fine.
+
+Also, I can right click on the project in the solution explorer and start a new instance of it there without any trouble.
+
+
+I have a default project selected
+I have double checked the keyboard shortcuts
+I am on a laptop, but there is no F-Lock key (again, F10/F11 work fine to start the app).
+
+
+Not sure what to check next??
+    
+
+        
+Answer 1: 
+
+    
+    
+I recently had a similar issue with a WPF project after it was branched. You can try going to the solutions properties and double checking that it is set to build under either Startup Project or Project Dependency. 
+    
+    
+Title: Is there an Adobe Flash Builder counterpart IDE for HTML5?
+Description: 
+    
+    
+                    
+We use Adobe Flash Builder to create interactive web applications powered by Flex. Now we are looking for alternatives that will let us have the same ease of development with regards to UI designing plus coding catered for HTML5. Is there such an IDE? If so, what's it called?
+
+The main interest is to easily create web apps but instead of running on Flash, it will be running on HTML5 technology.RealStudio's web publishing IDE would have been nice. It almost has all, save for the fact that it requires fastCGI or CGI to run whereas our aim is to crreate PHP-based apps.
+
+The most important thing is to give the users a desktop-like experience.
+    
+
+        
+Answer 1: 
+
+    
+    
+Aptana, with Sencha ExtJS.
+
+If you simply like the Eclipse platform Flash Builder is built upon, you can use Eclipse Web Tools Platform.
+
+Adobe AIR may also package HTML / JavaScript with Dreamweaver.
+
+Or, there's Adobe Edge.
+
+
+  Adobe Edge is a powerful, intuitive tool for creating stunning
+  animated and interactive content using HTML5, CSS3 and JavaScript.
+  Edge is intuitive and has powerful features that can save time and
+  headaches. Content made with Edge runs gracefully on mobile devices
+  and desktops, expanding your reach on the modern web.
+
+    
+    
+Title: Unable to drag items from palette in window builder
+Description: 
+    
+    
+                    
+I've recently installed window builder plug-in on my Eclipse IDE. When I create a New project and add window builder or anything, I'm unable to drag even a button from the palette.I might be dragging it the wrong way or there might have been something missing in the path etc. Does anyone know the solution to it?  It'll be highly appreciated. Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+What do you mean by "I'm unable to drag even a button from the palette" - is the palette not responsible to mouse events? 
+
+Try creating File-code/code
+Title: A shortcut in the Delphi IDE triggers two actions
+Description: 
+    
+    
+                    
+Maybe this question is very specific for me, but I'll give it a try. Here's the scenario:
+
+
+In Delphi XE2 the shortcut "Ctrl+Shift+7" toggles bookmark  (likewise Ctrl+Shift+[1..9] for the other bookmarks)
+I have installed ModelMaker Tools (v. 9.1.0, but I believe I had this error earlier also), where I have assigned the shortcut "Shift+Ctrl+Alt+Y" to "Sync Declaration/Implementation".
+
+
+Whenever I use the ModelMaker shortcut I also set the bookmark (7). Why is this? Note that contrary to the "real" shortcut (Ctrl+Shift+7) the bookmark isn't toggled, only set. 
+
+This behaviour puzzles me. Does anyone have an explanation? It's not a big problem, since I rarely use that many bookmarks, but it got me curious. 
+    
+
+        
+Answer 1: 
+
+    
+    
+For a couple of refactorings, ModelMaker Code Explorer sets some bookmarks for your convenience.
+
+It is documented somewhere, but I forgot where (:
+
+Edit: it is documented here.
+
+
+  All refactoring operations that modify the IDE edit buffers
+  (optionally) drop bookmark #7 at the current cursor position. Similar
+  to how Extract Method drops bookmarks #8 at the original code and #9
+  at the extracted method. The bookmark numbers can be customized on the
+  History Tab which also allows disabling dropping specific bookmarks.
+
+    
+    
+Title: PyCharm IDE syntax colouring issue
+Description: 
+    
+    
+                    
+When setting TODO comments in the editor to use any given (ie: yellow) syntax colouring scheme, the aforementioned is also displayed in the sat colour on the console. The problem presents itself when said colour is yellow and the console is white. See image.
+
+Apologies in advance due to not 100% programming related. But this issue has been quite frustrating for a while, and I will hate to have to give up my preferred syntax customisation without first working on finding a workaround.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't think there is an easy workaround, Project View and other panels that have trees use Look&amp;Feel background colors that are not configurable from the PyCharm settings. The only way to make it dark is to use Look&amp;Feel with dark colors and it will not look native on Mac.
+
+Check IDEA-62247 and linked issues for more details.
+    
+    
+Title: How do you find variable and function definitions in Anjuta?
+Description: 
+    
+    
+                    
+Is Anjuta capable of telling you where a variable or function is first defined?
+
+If so, how do you do it?
+
+EDIT: Is there a way to hover over a symbol and jump to the definition like in other IDEs? For example, in netbeans you can ctrl+click a symbol and it takes you to the definition, and in KDevelop you can hover and and interactive tooltip helps you navigate to the definitions. Nothing like this in Anjuta? No plugins?
+    
+
+        
+Answer 1: 
+
+    
+    
+As mentioned in a comment, this seems to be the only way (unless there are unmentioned plugins):
+
+"Open the Symbols left panel, then double-clicking on your desired symbol should get you closer to you goal. It's been a while since using Anjuta, but I remember well doing this move in order to track variables and method definitions. EDIT: In the menu, follow View -/p/div
+Title: code completion with PHPStorm for Dojo (specifically for dojo.require)
+Description: 
+    
+    
+                    
+I use PHPStorm 3.0.3 and would like to ask my question regarding code completion specifically regarding the require-method in Dojo 1.6.
+
+The example code would be something like this:
+
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;script src="http://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js"&gt;&lt;/script&gt;
+        &lt;script type="text/javascript"&gt;
+            dojo.require([...]);
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+
+
+Now after reaching the second letter in require, PHPStorms suggests me a lot of methods and attributes, but not require.
+
+
+
+How do I make PHPStorm show me require? (code inspection? configure dojo as a library?)
+
+This issue I face with many Dojo-methods and attributes which I use frequently. require is more a generic choice.
+
+If this is not possible, I also accept that as an answer, as long as a technical reason is given.
+    
+
+        
+Answer 1: 
+
+    
+    
+i have never used PHPStorm, but i know that with with Eclipse or Aptana or you need to do is download the dojo.doc.sdocml and every thing will appear on your code assist and aptana studio is free just my thought.
+    
+    
+Answer 2: 
+
+    
+    
+
+Download Dojo
+File/Settings/Directories
+Add the Dojo-folder via "Add Content Root"
+Mark it as "Resource Root"
+Ok / wait until indexing is done
+
+
+that's it
+    
+    
+Answer 3: 
+
+    
+    
+File -
+Title: IntelliJ Idea broke editing after random period of time
+Description: 
+    
+    
+                    
+I have a problem with IntelliJ Idea IDE, I'm developing Java and JSF code. After I start the Intellij Idea everything is fine untill I'm not able to execute some commands (eg. Cmd + V) or enter some text (some keys just don't work inside Intellij Idea). 
+When I restart the IDE everything is back to normal but only for about a 30 minutes or so (sometimes shorter).
+
+I just bought the licence and this is really driving me crazy.
+
+My setup is Java 1.6, OSX Lion and IntelliJ IDEA 11.
+    
+
+        
+Answer 1: 
+
+    
+    
+Please contact JetBrains support with idea.log attached (Help | Reveal Log in Finder).
+
+Update: after investigating the logs, it appears to be a known issue. Two other issues are related.
+    
+    
+Title: classes.jar issue in HelloWorld : Eclipse on Mac
+Description: 
+    
+    
+                    
+When I run this HelloWorld.java program below 
+
+public class HelloWorld {
+
+     public static void main (String [] args) {
+
+
+        System.out.println("Hello World");
+
+
+    }   
+
+
+}
+
+
+after installing the latest version of Eclipse on my Mac OS 10.7.2, I get the following error:
+
+Exception in thread "main" java.lang.NoClassDefFoundError: 
+Caused by: java.lang.ClassNotFoundException: 
+    at java.net.URLClassLoader$1.run(URLClassLoader.java:202)
+    at java.security.AccessController.doPrivileged(Native Method)
+    at java.net.URLClassLoader.findClass(URLClassLoader.java:190)
+    at java.lang.ClassLoader.loadClass(ClassLoader.java:306)
+    at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:301)
+    at java.lang.ClassLoader.loadClass(ClassLoader.java:247)
+
+
+Upon clicking on the URLClassLoader exception i see this:
+
+/System/Library/Java/JavaVM.framework/Versions/1.6.0.jdk/Content/Classes/classes.jar has no source attachment
+
+
+This is a super basic program I'm trying to run and i'm having these issues with the mac...all help is appreciated!
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+This worked: Editing the buildpath for the project to use the default Mac OSX java runtime environment. Eclipse was previously pointing specifically to the java 1.6 sdk. I did not have to download and install anything.
+    
+    
+Title: Portable C# IDE?
+Description: 
+    
+    
+                    
+Are there any IDEs for C# that are portable and will work off of a flash drive? Is there a way to make Visual Studio run as a portable application? 
+    
+
+        
+Answer 1: 
+
+    
+    
+You could try the portable version SharpDevelop, PortableApps has a page here. I've not tried it myself, so I'm not very sure if this would work as advertised.
+    
+    
+Answer 2: 
+
+    
+    
+I haven't tried it with visual studio, but VMware ThinApp might be able to make a portable installation.
+
+http://hacktolive.org/wiki/Make_portable_applications_with_VMware_ThinApp
+    
+    
+Title: Is there a Visual Studio option or add-on to add an &ldquo;Open Explorer Here&rdquo; when I right click on a project in the solution folder?
+Description: 
+    
+    
+                    
+When I right click on a project in the solution explorer I'd like to be able to select an option that would open a new windows "Explorer" that lists the contents of the build directory.  I'd settle for the project directory... but getting me into /bin/x86/Debug vs /bin/x86/Release based on the active build configuration would be major bonus.
+
+I find myself manually navigating to that folder fairly often for various reasons - usually on Utility applications which don't have installers / cmd line build scripts etc
+
+I currently use 2005 express.  But, am open to upgrading.
+    
+
+        
+Answer 1: 
+
+    
+    
+A couple things that might be close enough:
+
+
+add an "external tool" to the Tools menu. In the "Tools | External Tools..." dialog:
+
+
+Click "Add" and give the new tool whatever name you want
+Command: %systemroot%\system32\cmd.exe
+Argument: /k "c:\Program Files (x86)\Microsoft Visual Studio 8\VC\vcvarsall.bat" x86
+Initial directory: $(TargetDir) // (or whatever appropriate macro)
+
+Right click on a open document's tab and select "Open containing folder"
+
+
+My VS 2005 Standard IDE already had a "Visual Studio 2005 Command Prompt" tool, but it landed the command window in the VC installation directory.  Changing the "Argument" and "Initial directory" fields as above made it land in the project's target directory.
+
+The drawbacks are they don't show up in the right menu for the project and they might not land you exactly where you want, but they should land you pretty close.
+    
+    
+Answer 2: 
+
+    
+    
+No sure this is what you want but the "Open file" icon will pop up a FileOpen dialog in the project folder. From there you can right click the Release or Debug folders to open them in an Explorer (and Cancel the dialog).
+    
+    
+Title: CodeLite build options not highlighted: can&#39;t compile and test code (Ubuntu 11.10)
+Description: 
+    
+    
+                    
+I am able to compile with gcc but not from CodeLite GUI. The build tab is not highlighted so I can't click any option. 
+
+When I open CodeLite it tells me that a new version is available. However, when I download the .deb and try to open it with Ubuntu Software Center it just hang indefinatly.
+
+How to compile and run a code within CodeLite GUI when options are all grayed out?  
+    
+
+        
+Answer 1: 
+
+    
+    
+Unlike Eclipse IDE you need to create a workspace first and a new project where you will have the actual source code of your project.
+Check this link,it will help you with configuring 
+
+http://codelite.org/LiteEditor/ProjectSettings
+    
+    
+Title: Remote development - Edit on Windows &amp; Build on Linux
+Description: 
+    
+    
+                    
+I am looking for a solution for a remote development environment as follows:
+Editor - Windows Source Insight / Visual Studio
+Source control - Clearcase
+Build server - Linux
+The above can't be modified.
+
+In my current setup, I can view and edit the sources on Windows using a Windows Cleacase client.
+My problem is mainly the build (and the later on, the debug) process.
+I need to invoke 'make' from Windows on a specific Clearcase view on the Linux Server.
+I can login in a separate process using SSH to the Linux server and run 'make', but it is a cumbersome procedure.
+I am also unable to view the 'make' results and double-lick them to go to the specific warning/errors.
+
+Is there any way to remotely bind a Windows command/batch to a Linux environment?
+Perhaps through SSH?
+Thank you for any suggestion you might have.
+    
+
+        
+Answer 1: 
+
+    
+    
+The usual solution is rather a pull strategy (where your build server fetches information on Linux, rather than trying to pilot everything from Windows.
+
+If you follow the SSH path, be aware of technote swg21351507:
+
+
+  Linux SSH connection hangs when attempting to exit after starting ClearCase.
+  
+  This can affect the use of scripts to start/stop ClearCase remotely using SSH.
+  
+  Cause
+  
+  This is a due to a OpenSSH server design, which will not close the console until all process/jobs executed by the user are completed.
+  
+  Refer to this SSH FAQ for further details, regarding background jobs.
+  
+  Resolving the problem
+  
+  Redirect the ClearCase start script to either /dev/null or to a log file.
+  
+  Example:
+
+
+/usr/atria/etc/clearcase start &lt; /dev/null &gt;&amp; /dev/null
+/usr/atria/etc/clearcase start &lt; /tmp/ccstart &gt;&amp; /tmp/ccstart
+
+    
+    
+Answer 2: 
+
+    
+    
+Try sshfs. I don't if there is a sshfs client for windows. If not, you can try NFS, or even SAMBA. Those definately work in Windows and Linux.
+    
+    
+Answer 3: 
+
+    
+    
+I just came across this and wanted to answer, even if the original poster has surely resolved their issue.  This could be quite easily resolved by installing a jenkins instance on the build machine.  You could kick off the build from the web interface and have it pull the files from clearcase and tell you the results.
+    
+    
+Title: Getting auto-completion to work in an IDE using Coffeescript and external Javascript libraries such as jQuery
+Description: 
+    
+    
+                    
+I would like to ask how other more experienced Coffeescript developers are using their respective IDE's or editors with auto-complete when developing modular libraries and / or referencing external Javascript libraries (jQuery, jQuery UI, RequireJS, Handlebars, ...).
+
+As much as I've tried various IDE's and plug-ins for Coffeescript, none of these seem to support auto-completion when the project consists of several script files. For example: in Visual Studio I can add a commented directive such as /// &lt;reference path="/js/jquery.js" /&gt;. I'd need something similar for Coffeescript.
+
+I have tried following without success:
+
+
+Visual Studio with Web Workbench by Mindscape
+Netbeans with dstepanov's Coffeescript plug-in
+Aptana with the Coffeescript ruble
+
+
+Further, I am aware of Jetbrain's WebStorm 3.x support for Coffeescript, unfortunately, my evaluation period expired before I realized I'd need this feature - can anyone confirm that setting the Javascript / Coffeescript Usage Scope works as expected with auto-complete?
+
+So effectively what I am asking: is there an IDE or plug-in, commercial or otherwise,  enabling auto-complete for Coffeescript libraries spanning multiple files?
+    
+
+        
+Answer 1: 
+
+    
+    
+Hate to answer my own question, but after giving JetBrains WebStorm 3.0.2 another demo run on another box, I figured it worked best and does have 'smarter than average' auto-complete for coffeescript projects. It simply loads all coffeescript files in to a global auto-complete context and you can add external libs (cs or js) as well using the project's scope settings. Could be better, but for now I cannot find any other IDE or tool running on PC or Linux, OSS or paid, that tops WebStorm and I don't have the fortunes to explore OSX alleys.
+
+I am sure future tools, plugins, IDE's will pop up for various platforms that do offer great coffeescript module management and proper contextual auto-completion in the editor. So please, do keep the suggestions coming.
+
+Thanks!
+    
+    
+Answer 2: 
+
+    
+    
+I personnaly use Kdevelop. I can't remember if I installed a plugins or something to get it work with coffeescript.
+But it works very well, the highlighting colors are pretty, when ctrl+d it add coffeescript commentary and so on.
+Also I do make compilation directly in KDevleop.
+
+Well also it's free, I am using it on linux debian but I think it works on most platforms.
+
+Check it there : http://kdevelop.org/
+    
+    
+Title: Will Embarcadero RadPHP XE2 scale to an e-commerce site?
+Description: 
+    
+    
+                    
+In a nutshell: is RadPHP a toy? or can you build real web sites, such as a e-commerce/shopping carts app that will:
+
+
+Support 100s of simultaneous users on a reasonably good web server, like any other PHP app 
+
+my specific concern is the RPCL library might be bloated and inefficient
+
+Be easy to assign the CSS hooks and integrate CSS files supplied by designers
+Be as easy as 'plain' PHP programming is to talk to external sites such as payment gateways
+Easily integrate third party components; Javascript and PHP e.g. Lightbox, eg CKEditor.
+
+
+I am coming from a Delphi background, not PHP, so please excuse my ignorance and trouble at evaluating RadPHP XE2's potential as an easier way to transition to web development without sacrificing potential to scale.
+    
+
+        
+Answer 1: 
+
+    
+    
+
+It has a demo app created for oscommerce the well known open source e-commerce app.
+Yes
+No appearent barrier.
+It already has components integrating 3rd party stuff such as zend, qooxdoo, jquery etc..
+
+
+I'm also coming from delphi background with almost no php. Currently I'm developing a prado framework based ERP application using eclipse as ide. On my leisure time I'm toying with radphp, and I think we could have used it as well as the eclipse-prado kit but I'm in no place to make the decision. In my experience radphp is developing well into form. The first releases / versions were really sluggish. But XE2 looks solid. If vcl for php is fine tuned for performance in the future releases, radphp will have better days.
+    
+    
+Title: Visual Studio Tool box is Empty
+Description: 
+    
+    
+                    
+I am using Visual Studio 2010 Professional. Suddenly the tool box controls are disappeared 
+
+i try right clicking in the toolbox and select 'show all' but still i dont see the asp.net controls, here is the screen shot of toolbox
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Try reseting VS settings:
+
+Devenv.exe /SafeMode
+
+
+or
+
+Devenv.exe /ResetSettings
+
+    
+    
+Answer 2: 
+
+    
+    
+ReOpen the Visual Studio 
+
+Goto SSIS tab --/pp
+Title: Why Netbeans asking login password?
+Description: 
+    
+    
+                    
+Can't understand why my Netbeans(Linux) asking login and password for something every 10-30 seconds. I don't know what login and for what thing. Im not using git/svn/mercurial. Simple local new project.
+    
+
+        
+Answer 1: 
+
+    
+    
+Do you mean it's asking you to set a master password?  If so, this is indicative that Netbeans is unable to communicate with the operating system's native keyring.  You can see what the problem is or disable that message entirely, if so.
+    
+    
+Title: How to get code completion for cappuccino and objective-j?
+Description: 
+    
+    
+                    
+Is there an IDE/Text Editor that provides robust code completion/hinting for cappuccino and objective-j? Right now I use Text Mate and it provides syntax highlighting, but no code completion/hinting using new classes created.
+    
+
+        
+Answer 1: 
+
+    
+    
+SubethaEdit or Coda you can use my bundle: https://github.com/Me1000/Objective-J-Cappuccino-Coda-SubethaEdit-bundle
+
+(Coda has a built in bundle, but mine is a little more full featured in terms of method completion). 
+
+Sublime 2: https://github.com/aparajita/Cappuccino-Sublime I hear it works very well and is maintained by another of our core team members.
+    
+    
+Title: Best way to save source functions
+Description: 
+    
+    
+                    
+Newbie question: I've been trying to complete a couple of problems from the Project Euler site, using Visual studios 2010 as my IDE.  
+
+What is the best way for me to save and store the source so that I don't have to have 500 projects created?
+    
+
+        
+Answer 1: 
+
+    
+    
+Create a function for each problem, then just change which function you call from main.
+    
+    
+Answer 2: 
+
+    
+    
+The best way to "save" source code is in a version control system. My preference is Git.
+
+I haven't used Visual Studio 2010 in anger, but I'm sure you can have multiple source files in a single project. You don't need to create one project per problem (although it may be a neat 
+    
+    
+Title: Are all GUI elements in qtcreator able to be moved around by the user? Or only some?
+Description: 
+    
+    
+                    
+Specifically:
+
+Can you drag "Compile Output" or "projects" to be at a different location than they are by default?
+
+
+
+More generally:
+
+I am very accustomed to using Eclipse IDE... where every item viewed in the default perspective can be dragged... put into a tabbed view... etc. For now I have to use qtcreator... and I can't figure out how to drag/move each GUI item. (It would help me if your answer compares to Eclipse IDE when talking about qtcreator because I understand Eclipse IDE much better.)
+
+Are all qtcreator GUI elements able to be user draggable and customized like in Eclipse IDE in a UNIFORM manner?
+
+Or are only some of the GUI elements in qtcreator able to be user draggable?
+
+(if yes for any question, please describe how to do so.)
+    
+
+        
+Answer 1: 
+
+    
+    
+As far as I know, you cannot drag / drop.
+
+Some windows can be split, you can maximize the main window etc.
+
+You can change what is being shown at the bottom by clicking buttons, but I've never seen a way to move screen real estate around, resize etc.
+    
+    
+Title: Eclipse syntax highlighting on extensionless files?
+Description: 
+    
+    
+                    
+I have a perl CGI script that needs to have a specific extensionless filename to run correctly from the software that uses it. I'm using Eclipse 3.7.0 on Ubuntu 11.04 Linux as my IDE, and it's not highlighting syntax on the file nor using the limited autocomplete features (like adding a second closing tag for things like quotes and various brackets). Right click/p/div
+Answer 1: 
+
+    
+    
+Found the solution to this, thought I might throw it in here if someone has a similar problem later and runs into this.
+
+What I did was create a link to the script, and gave the link a .pl extension. This happily caused Eclipse to parse the syntax correctly. Problem solved.
+    
+    

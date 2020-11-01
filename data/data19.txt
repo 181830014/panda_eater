@@ -1,0 +1,2606 @@
+Title: Not select dollar ($) in PhpStorm on double-click?
+Description: 
+    
+    
+                    
+I am coming from Dreamweaver into PhpStorm 8.0.2 (on Windows 8.1).
+
+How do you set it up so that when selecting a variable, you do not select the dollar ($)? This needs to include variables separated by underscores.
+
+I have tried the various settings to do with CamelHumps, and had mixed results, but still not ideal.
+
+For example, double-clicking the variable $foo_bar, I would like it to select foo_bar.
+
+
+With "Honor CamelHumps", it will select $foo_bar.
+Without "Honor CamelHumps", it will select foo or bar depending on which word you double-click on.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+It's now fixed - there is an option to allow selecting of $ in variable names - see https://stackoverflow.com/a/42624161/4879058
+    
+    
+Answer 2: 
+
+    
+    
+you should click exactly underscore sign when double clicking to select foo_bar 
+    
+    
+Title: How to integrate Behat with PHPStorm / other IDE
+Description: 
+    
+    
+                    
+Behat is the leading BDD framework for PHP.  I use PHPStorm and want to integrate Behat into the IDE as an external tool.
+
+Question: How should I set up Behat as an external tool (ie, output filters, macros, etc) in PHPStorm or any other IDE for that matter?
+
+note: PHPUnit has deprecated their BDD support and will remove it in 3.6 (in deference to Behat), so I believe the integrated PHPUnit testing in PHPStorm isn't ideal for Behavior Driven Development.
+
+update Feb 8-2012: PHPStorm's roadmap indicates Behat syntax will be integrated in the 4.0 release which is due Q1 2012! What can I say - PHPStorm rocks.
+    
+
+        
+Answer 1: 
+
+    
+    
+Here's what I came up with, if anybody else out there needs it.
+
+First, create behat-html.bat in the same folder as behat.bat (your PHP folder).  The contents of behat-html.bat should look something like this:
+
+call %PHP_PEAR_BIN_DIR%\behat.bat --out="features\support\behat_test_output.html" --colors --format="html" %*
+call features\support\behat_test_output.html
+
+
+Second, in PHPStorm setup the external tool to run Behat with whatever parameters you like (tags, scenarios, etc).  Here are my settings for a general-purpose command:
+
+Program: C:\Progz\wamp\bin\php\php5.3.5\behat-html.bat
+Parameters: $FilePath$
+Working Directory: $FileDir$\..
+
+
+Third, setup a Keymap to run the tool.
+
+Now with your .feature file in focus, press your shortcut key.  The batch file will run the scenarios, generate a pretty HTML output file, and open that file with your default browser.  Not as nice as having it integrated into PHPStorm, but it's a pretty efficient work flow nevertheless.
+
+Tip: You might also want to set up a second external-tool in order to run with --strict
+
+Hope this helps!
+    
+    
+Title: How do I run the code from a scratch file in IntelliJ 14?
+Description: 
+    
+    
+                    
+I've created a simple Java scratch file containing a class named "TestGenerics" containing some code and a main method. 
+The code seems to be fine, however when I try to run it (by right clicking em/em/strong/ppem/em/pp/p/div
+Answer 1: 
+
+    
+    
+This was previously not possible, but is now supported for some languages. such as Java and Ruby. For these languages, you should be able to run the scratch file in the same way as you run any other file.
+    
+    
+Title: Remote coding and execution with python: what IDE?
+Description: 
+    
+    
+                    
+I have been developing a project in python for the last six months, and love the language. But I have yet to find an IDE or text editor that could provide some extra functionality for me. I currently have syntax highlighting which is one of the easiest things to get, but not much more. I am dreaming of having my IDE jump to the line in my code that caused the crash instead of reading the line number from the backtrace and manually locating it in my text editor. I have been looking for something that could do this under my development constraints, but no success. My constraints are the following:
+
+
+The python code being developed rests on a remote machine, equipped with enough RAM and CPUs to run the code. That machine has no screen or keyboard.
+I code from my laptop, a macbook pro running OS X which is not meant to execute the code.
+The remote machine is running Fedora 12 and provides SSH connectivity with root access.
+My connection isn't good enough at home to run an X11 IDE on the distant machine and have the interface displayed on my machine.
+
+
+What I have been doing up to now is to log-in to the remote machine via SSH using the excellent CyberDuck client. This enables me to open a text file residing on the remote machine inside any of my local usual text editors like TextMate or TextWrangler and have changes uploaded automatically every time the file is saved. This really gives you the felling you are editing the distant file in your usual cocoa interface.
+
+Then to execute the python code, I open a second SSH connection, this time using a terminal into which I would type:
+
+$ ssh user@dns
+$ ipython -pylab
+$ execfile("/projectdir/code.py")
+
+
+Finaly, I read the backtrace and go back to my local text editor to find the correct line number. There must be a better way ! Any ideas ?
+    
+
+        
+Answer 1: 
+
+    
+    
+You may or may not like this suggestion, but I would use vim, setting makeprg and errorformat appropriately.  This way you can ssh in as you normally would, edit files directly on the remote machine, and compile/error fix using quickfix-errorlist.  It will only cost you the time to set makeprg and errorformat correctly.  If you do a little digging the info is out there.
+
+EDIT
+
+
+ssh user@intoyourbox.com
+Put the lines at the bottom of this answer in ~/.vimrc 
+vim somemodule.py
+Type ":make somemodule.py"
+Type ":cw" which may stand for c as in the language, window
+vim will popup a window [Quickfix List]
+Cursor over an error in the [Quickfix List]
+Press enter
+vim changes your cursor to the window above and places it on the error
+Fix the error using your vim skills, ":h" for help and tutorials
+Ctrl+w, j will move the cursor down a window, back to your quickfix list
+Ctrl+w, k will move the cursor up a window
+Repeat steps 7-12 as necessary
+":make somemodule.py" to make sure you fixed everything
+Welcome yourself to the darkside, vim rules.
+
+
+~/.vimrc settings:
+
+
+"python makeprg settings
+
+setlocal makeprg=python\ %
+
+setlocal errorformat=
+        \%A\ \ File\ \"%f\"\\\,\ line\ %l\\\,%m,
+        \%C\ \ \ \ %.%#,
+        \%+Z%.%#Error\:\ %.%#,
+        \%A\ \ File\ \"%f\"\\\,\ line\ %l,
+        \%+C\ \ %.%#,
+        \%-C%p^,
+        \%Z%m,
+        \%-G%.%#
+
+
+
+Setting makeprg tells vim that your "compiler" is python.  Setting the errorformat tells vim how to parse the output of your "compiler" so you can jump to error lines.  Look around on the internet, there are plenty of vimrc suggestions for programming in python.  There are makeprg/errorformat settings for Xcode/Visual C++/Perl/etc as well which really makes vim a win-win situation if you program in different languages.  There's also other fancy stuff like autoindent, code completion and syntax highlighting.  Enjoy
+
+Note: These settings were taken almost verbatim from here.
+    
+    
+Answer 2: 
+
+    
+    
+here is a good list of Python-Editors.
+
+In my opinion WingIDE (there's a free version) is very feature-rich, good and easy and supports Remote-Debugging (only in the commercial version). Also Eclipse PyDev-Plugin, which is fully free, is worth looking into it and seems to support Remote-Debugging.
+    
+    
+Answer 3: 
+
+    
+    
+You should keep your eye on PyCharm - it isn't production ready yet, but it has some real potential to be a great IDE.  I've been using it for about 7 months now - you can renew the 45 day free trial as long as you keep your build current.  I believe that remote debugging is a feature that the production version will support.
+    
+    
+Answer 4: 
+
+    
+    
+It's been years since I used it, but the commercial version of Komodo includes a remote debugger, and is generally a very competent package for Python programming.
+
+Alternatively, you might try a standalone remote debugger: WinPdb - which, despite the name, works on Mac and Linux - is very good. 
+    
+    
+Answer 5: 
+
+    
+    
+You could try the Professional version of PyCharm. It is by far the best remote debugger I have found till date.. there is full debugging functionality available for remote development. The only catch is that you might have to shell out a few dollars per year. 
+    
+    
+Title: Vim - Show data type
+Description: 
+    
+    
+                    
+I typically code most of my C projects in Vim. I am comfortable with navigation, search and replace, and indexing via Ctags/Cscope.
+
+One feature I would like to have, if possible, is a keymapping that will show the datatype for a variable under the cursor on screen.
+
+For example, if my cursor is on a variable, "test123" (ie: int test123 = 0) is there a way to have the type (int) and some other details about the variable shown in another tab within Vim? 
+
+Also, is there something similar that would do the same for a struct variable, and show a list of all its members in the descriptive tab as well as the type (ie: struct)?
+
+I've also noticed that sometimes while coding, I have a tab titled "[Scratch][Preview]" at the top of Vim that appears to fulfill this requirement, but I have no idea what triggers it (searches and Ctag searches don't seem to trigger it). It looks like so:
+
+name: myStruct::instanceOfStrct|  2 cmd: /^   int instanceOfStrct;$/
+.. (up a dir)                  |  3 kind: m
+&lt;/code/test/test.c             |  4 struct:   myStruct
+|+config/                      |  5 access:   public
+|+lib/                         |  6 filename: /code/test/test.c
+
+
+I think this is something that already exists in Vim to some extent, but I have not idea how to work with it.
+
+Thank you.
+    
+
+        
+Answer 1: 
+
+    
+    
+I do not know of any plugin that does what you want, however it should be quite possible using libclang. There is a fork of clang_complete that adds 'go to definition' functionality which is close to what you want. However development on that plugin seems to have stagnated.
+
+Also the scratch buffer appears when doing autocompletion to give more information about a specific completion. It can be enabled and disabled using the completeopt setting.
+    
+    
+Title: Generate db diagram from any sql statement
+Description: 
+    
+    
+                    
+I'm using DBArtisan 8.5.5 and it has the ability to generate Database Diagrams using Build Query, it has a nice feature that lets it autojoin, detecting potential relationships on newly added tables to the diagram. So the diagram results into a SQL statement since its a Query Builder after all.
+
+Is it possible to provide an SQL statement in DBArtisan and generate the Database Diagram? In other words, the reverse (give it the SQL to generate the diagram, instead of using diagrams to generate SQL)?
+
+If no such feature, is there a product out there for Sybase DB that will provide said feature? 
+    
+
+        
+Answer 1: 
+
+    
+    
+DbVis is an actionable choice, being open source and powerful - it's got a good amount of extra features aside from the one you need.
+
+If you're willing to pay, Aqua Data Studio is a very complete and intuitive database IDE.
+
+As a middle ground solution, disposing of both a - constantly updated - open source edition, the DBeaver Open Source IDE, and an Enterprise Edition. Both of these also offer what you need, the main differences as of now being interface, SSH algorithm support and SQL debugging framework offered in Enterprise. You can take a deeper look yourself, comparing the Open Source features with the Enterprise ones.
+    
+    
+Title: Move cursor to a new line after &ldquo;Send Selection to Terminal&rdquo; action in Geany
+Description: 
+    
+    
+                    
+I set in geany a key shortcut to Send Selection to Terminal action which send the current line (or selection) to the build-in terminal (according to: shortcut to send selection to terminal in geany). 
+
+Then I change send_selection_unsafe=false to send_selection_unsafe=true in the geany.conf file (according to: Geany: execute line in Terminal)
+
+Everything works well, I can send a line to terminal which is automatically executed. My problem is that at this point the cursor remains on the line after sending it to terminal.
+
+Maybe I miss something, but is it possible to set or configure behaviour that cursor is automatically move to next line after using Send Selection to Terminal so than I can sending lines to terminal one after another (without hitting down arrow) ?
+
+like this:
+
+print("hello world!")
+#I want cursor on this line after sending previous line to terminal, so this can be send to terminal immediately
+
+    
+
+        
+Title: In Delphi IDE, how to quickly determine the location of an open non-project-related file?
+Description: 
+    
+    
+                    
+This is probably a question that has an easy/simple/obvious answer, but I've found myself asking it many, many times, and never able to answer it:
+
+When I Ctrl-click a class name, Delphi loads up the unit that defines it (assuming it's on the browse path).  Once it's open in the IDE, is there a way to quickly find out where that PAS file resides folder-wise, on the hard drive?
+    
+
+        
+Answer 1: 
+
+    
+    
+In Delphi 2009 you can hover over the tab at the top of the code.
+    
+    
+Answer 2: 
+
+    
+    
+Erika's got a good answer.  Here's an even better one:  You can have Delphi open the Windows folder and highlight the file for you.  Here's how to set it up:
+
+Tools menu -
+Answer 3: 
+
+    
+    
+If you install CNPack, a free Delphi plugin, you can also right click on a tab and will be offered a popup menu which includes the ability to open the edited file in explorer (much like Mason's tools trick). 
+    
+    
+Answer 4: 
+
+    
+    
+Usually File-/pp
+Title: Eclipse Europa search references feature stopped working
+Description: 
+    
+    
+                    
+I'm working with Eclipse Version 3.2.1 Build M20060921-0945 on a MS-Windows 2000 SP4 using a JDK 1.5.0-12.
+I takes my locale that is es-AR and sets all menu and context in Spanish which I don't like. So I had included in eclipse.ini file one parameter "-nl en".
+Since that, "References..." feature in both "Search" and contextual menu stopped working. I removed parameter and ran eclipse with "-clean" but still not working. I don't have any other clue about what is happening. Thank you all in advance.
+Beto
+    
+
+        
+Answer 1: 
+
+    
+    
+Delete all the files in you eclipse data, eg:
+&lt;WORKSPACE&gt;/.metadata/.plugins/org.eclipse.jdt.core
+This should force eclipse to rebuild its index
+    
+    
+Answer 2: 
+
+    
+    
+I see a similar problem where search for references (Ctrl + Shift + G) stops working.  It works again if I restart Eclipse, but it's still pretty annoying.  I'm thinking maybe there's some keyboard shortcut that I hit sometimes by accident that messes up the search.
+    
+    
+Answer 3: 
+
+    
+    
+Had the same trouble with the latest Indigo release of Eclipse, searching for references of a method or class I selected invariably gave 0 results. 
+
+Stopping Eclipse, deleting all files in folder &lt;WORKSPACE&gt;/.metadata/.plugins/org.eclipse.jdt.core, and restarting Eclipse afterwards has solved it. 
+    
+    
+Answer 4: 
+
+    
+    
+After trying all of the above and nothing working, I took another look at the file name pattern I was using for file search:
+*.java *.properties, *.vm, *.xml, *.xsd
+
+I was missing the comma after .java, so Eclipse wasn't searching my .java files, it was looking for files that matched the pattern ".java *.properties".
+
+Wow did I feel dumb dumb dumb... adding the comma fixed it! Passing along my simplistic solution in case it does anybody else some good...
+    
+    
+Answer 5: 
+
+    
+    
+Go to {workspace}.metadata.plugins\org.eclipse.search and clear the History section of dialog_settings.xml , worked for me.
+    
+    
+Answer 6: 
+
+    
+    
+Strange as it sounds, it does seem that the keyboard mapping affects this. I had mapped -H to Search in Files, and the Java search started bringing up everything, rather then actual references to the method I was searching for. ~Nothing~ fix this, including the solution above. But remapping the key to Open Search Dialog DID fix it.
+    
+    
+Answer 7: 
+
+    
+    
+I've just come to experience this behaviour with Eclipse Mars 1 Release 4.5.1.
+In an specific class only. Clean and build entire workspace does not work but I've updated Maven Project containing that class [Right-click on project -
+Answer 8: 
+
+    
+    
+I've just come to experience this behavior with Eclipse Mars 1 Release 4.5.1.
+
+I tried everything mentioned above but it did not help.
+So I created new workspace, and imported the project and search started working again.
+    
+    
+Answer 9: 
+
+    
+    
+I was facing a similar issue in Eclipse 2019-09 R (4.13.0) on Linux Mint
+
+One thing that worked for me (besides closing and opening Eclipse again) was to click on the search icon and then in the Show Previous Search icon on the tab and then Open in New :
+    
+    
+Answer 10: 
+
+    
+    
+Trash your install. 
+
+Then reinstall it.
+    
+    
+Title: How to show tooltip description in Android Studio?
+Description: 
+    
+    
+                    
+The key in my Eclipse(ADT linux):
+
+'Name': 'Show Tooltip Description'
+'Description': 'Displays information for the current caret location in a focused hover'
+'Binding' : 'F2'
+
+
+Any similar key in Android Studio?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use Ctrl + Q to show the quick javadoc of current caret location.
+
+If you want it on hover go to
+
+File &gt; Settings &gt; Editor
+
+
+and tick the checkbox "Show quick doc on mouse move". You can also set the time delay after hover to make sure just moving cursor in editor doesn't show the javadocs.
+
+EDIT :
+
+As per comments 
+
+Alt + Enter can be used for Quick Fixes in Android Studio, It will give you drop down for possible fixes same like in Eclipse. 
+    
+    
+Answer 2: 
+
+    
+    
+The strange thing about Android Studio and tool tips is that Android doesn't call them tool tips. Instead "quick documentation on mouse move." Oh my.
+
+Anyways, for Android Studio 2.1.2 IDE installed on Mac OS X, enable tool tips by:
+-"Android Studio" menu
+-"Preferences..." menu item
+-open "Editor" twirl
+-Click on the "General" twirl, not to be confused with twirling open the "General" twirl (this kind of stuff is bad UX design).
+-"Other" section
+-third field down in the section which is a checkbox labeled "Show quick documentation on mouse move."
+
+Oh BTW, this setting is disabled by default which is very strange.
+    
+    
+Answer 3: 
+
+    
+    
+For Android Studio 3.6.3 IDE installed on macOS, enable tool tips by:
+
+Preferences &gt; Editor &gt; General &gt; Code Completion &gt; Show the documentation popup in 0 ms
+
+    
+    
+Title: Changing theme in Apache Netbeans 9.0
+Description: 
+    
+    
+                    
+I have installed Apache Netbeans 9.0 recently in Mac running macOS Mojave. I am trying to change the Netbeans theme to &quot;Dark Look And Feel Themes&quot; but I can't find the options.
+Previously, I have used the older versions (8.2, 8.1, 8.0.2) of Netbeans. To change the theme, I navigate to
+Tools -&gt; Plugins -&gt; Available Plugins 
+
+Install the &quot;Dark Look And Feel Themes&quot; plugin and restart the IDE to reflect the change.
+But, I don't find this plugin in the Apache Netbeans 9.0
+
+I also checked whether these plugins are available to download from online. So that I can add them using 'Downloaded' option. But, they are only available for older versions.
+http://plugins.netbeans.org/plugin/62424/darcula-laf-for-netbeans
+http://plugins.netbeans.org/plugin/52624/netbeans-dark-theme
+So, I am a bit stuck here. Any help will be much appreciated. There are few similar stack overflow questions raised earlier, but they all talk about the old version of Netbeans.
+    
+
+        
+Answer 1: 
+
+    
+    
+Updated 4/11/19:
+
+Based on a comment from @superbiji below, Darcula + Norway Today works fine with NetBeans 11.0.
+
+
+
+Updated 2/7/19:
+
+Note that the answer below applies only to NetBeans 9.0. The situation is a little different on NetBeans 10.0 where the Dark Look and Feel plugin (themes "Dark Metal" and "Dark Nimbus") also worked fine. See Projects, Files, Services, Navigator color background.
+
+
+
+I tried to download then manually install those two plugins on NetBeans 9.0, but it didn't work for me:
+
+
+Download the plugins as zip files, and unzip them.
+Tools 
+Answer 2: 
+
+    
+    
+I can recommend you to check NetBeans Themes website. It allows you to design and download your own themes.
+
+Twilight theme is a good example:
+
+    
+    
+Title: Eclipse: How can I make Ctrl+F11 work no matter which file is being edited?
+Description: 
+    
+    
+                    
+Ctrl + F11 is the "Run" keyboard shortcut in Eclipse.
+
+But for me, that only works if a Main class is active in the editor. For any of the other 100+ java files in my workspace, eclipse pops up a dialog, complaining "Editor does not contain a main type".
+
+This makes the Ctrl + F11 shortcut nearly useless. I either have to press Ctrl + Alt + T, name of main class, Ctrl + F11, or use the mouse.
+
+Do I have something misconfigured? What can I do to make Ctrl + F11 really run my program, no matter which file is active in the editor? Or is everybody using the Ctrl + F11 shortcut like that?
+
+edit: I'm using eclipse 3.5.0
+    
+
+        
+Answer 1: 
+
+    
+    
+Check the preferences, Launching section - you may want to switch from "launch selection" to "launch previously launched application".
+    
+    
+Answer 2: 
+
+    
+    
+You can configure Eclipse to always use the previously launched application: Window &rarr; Preferences &rarr; Run/Debug &rarr; Launching &rarr; Always launch the previously launched application. This almost always does what you want.
+    
+    
+Title: Instead of buying VS 2010 what options will you use for .net development in the future?
+Description: 
+    
+    
+                    
+Given the recent release of VS 2010 I was shocked to see the pricing structure for the different versions of the product. I was lucky enough to receive free versions of VS 2005 and 2008 from attending various MS events. For the hacking I do at home I'm not sure I'm going to spend the money to purchase the IDE and wanted to see what others were using. 
+
+Like 
+SharpDevelop 
+MonoDevelop
+Expess Editions
+    
+
+        
+Answer 1: 
+
+    
+    
+As you mentioned, you could always try using a copy of Visual Studio Express. That is probably your best bet for doing Windows development - why not try it out to see if it meets your needs?
+    
+    
+Answer 2: 
+
+    
+    
+Express editions for personal development.  If you're doing professional development just go through the process to become a MS certified partner and get pretty much every professional software tool MS makes for free.
+    
+    
+Answer 3: 
+
+    
+    
+If you're talking about just playing at home, then why not just get the express edition?
+    
+    
+Answer 4: 
+
+    
+    
+The express editions are intended for 'hacking at home' and will probably give you the most value for the money. 
+
+The choice for one of the others would depend on your intended platforms. 
+    
+    
+Answer 5: 
+
+    
+    
+Express editions will be the closest match to the pro versions. This is what I have been using myself for personal projects.
+    
+    
+Answer 6: 
+
+    
+    
+There's an interesting post on Rob Conery's blog about using Vim for .Net development. I'm not certain I can really recommend this, but it's food for thought all the same.
+    
+    
+Answer 7: 
+
+    
+    
+I think that Express Edition is enough to test some .NET features at home. Obviously, if you need to use it to build a commercial solution, you must buy the IDE. Note that it is very powerful and I think that it is a good investment.
+    
+    
+Title: Switching between Visual Studio windows/tabs web browser style
+Description: 
+    
+    
+                    
+So,  I'm not completely sure this is the best idea ever but I do find myself trying to switch tabs in VS 2010 using [CTRL] + [1, etc] to switch windows (tabs). Is it possible to configure VS to behave like a web browser causing CTRL+1 switch to the first open window?
+    
+
+        
+Answer 1: 
+
+    
+    
+The Visual Studio Productivity Power Tools Extension has very similar funcionality:  
+
+
+  Tab Behavior More Commands for Navigation (New!)
+  ...
+  Activate a specific pinned tab by Ctrl+Num Pad 1 through 0
+  Activate a specific regular tab by Ctrl+Alt+Num Pad 1 through 0
+  ...
+
+
+Amongst other nice features, read more below:
+
+
+http://10rem.net/blog/2010/07/26/visual-studio-productivity-power-tools-walkthrough  
+http://weblogs.asp.net/scottgu/archive/2010/06/09/visual-studio-2010-productivity-power-tool-extensions.aspx  
+
+    
+    
+Answer 2: 
+
+    
+    
+you can use ctrl + tab to switch between VS2010 windows (tabs).
+    
+    
+Title: How do I turn on syntax highlighting/coloring in Pycharm
+Description: 
+    
+    
+                    
+Basically, for whatever reason pycharm's syntax highlighting/coloring just isn't working; all of the text just appears as plain black. This is despite the fact that according to my editor settings, under IDE Settings -
+Answer 1: 
+
+    
+    
+Checkout Settings | File Types. Probably the extension of file you need to be highlighted registered as Text file.
+    
+    
+Answer 2: 
+
+    
+    
+Also advanced syntax highlighting/code inspections can appear to be broken but you will have to turn off power save to get them back :)
+
+File/p/div
+Title: Scala IDE error - &ldquo;projectname&rdquo; is not a Scala project -
+Description: 
+    
+    
+                    
+I have installed latest scala ide plugin to eclipse (Version: 3.4.2). It seems installation is ok without any errors. 
+
+I am able to create a scala project and add a package, but i couldn't add scala object, at the time it shows "projectname" is not a Scala project error message in add object dialog. 
+
+I have googled and found it could be related to JDT Weaving not enabled in eclipse. I have verified, its enabled and running in my environment.
+
+Below the screenshot of the error. 
+alt text http://a.imageshack.us/img80/3070/scala.png
+
+I just started scala.. Can someone help me to resolve this problem?
+    
+
+        
+Answer 1: 
+
+    
+    
+The error message means your project is not recognize as a Scala one (as detailed in the scala.tools.eclipse.wizards.AbstractNewElementWizardPage.scala class.
+But adding "Scala nature" to your project, as suggested by Alexey Romanov in the comments, might not be enough in this case.
+
+The requirements mentioned in scala-ide.org clearly include:
+
+
+Java Developer Toolkit 1.6
+Eclipse Classic 3.5.2
+
+
+So could you try with a more recent Eclipse version?
+See Requirements and Installation, and then the turorial:
+
+
+
+As mentioned, note the 'S' in the Scala project icon.
+    
+    
+Answer 2: 
+
+    
+    
+I had a similar error two minutes ago. Here's how I fixed it. I'm using Helios and the relevant Scala IDE version.
+
+
+  Right click on the project name --
+Title: Way to determine whether executing in IDE or not? [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        What is the best way in c# to determine whether the programmer is running the program via IDE or it&#39;s user?
+                            
+                                (2 answers)
+                            
+                    
+                Closed 7 years ago.
+        
+
+
+    
+
+In C#/VB in Visual Studio 2010, is there way in the code to determine whether the program is currently running in the IDE or not?
+
+eg. If ProgramRunningInIDE Then MessageBox.Show exc.Message
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You could check if the debugger is attached with: 
+
+System.Diagnostics.Debugger.IsAttached
+
+
+This essentially does the same thing.
+    
+    
+Answer 2: 
+
+    
+    
+There is an IsInDesignMode property you can use. In some circumstances it isn't accurate, though, so you additionally may want to check the UsageMode.
+
+public static bool IsRunningInIdeContext
+{
+    get {
+        if (DesignerProperties.IsInDesignMode)
+            return true;
+        return LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+    }
+}
+
+    
+    
+Title: Eclipse console exception color
+Description: 
+    
+    
+                    
+This seems simple enough, but I can't seem to find the setting in Eclipse to change this setting.
+
+I prefer my consoles to have dark colors with white text.  I leave the print to stderr as the red default.
+
+My problem lies in when I receive an Exception, it's set to a very dark blue, so I can't see the text of it easily without highlighting the link.
+
+I didn't see it in the console preferences, and also do not see it anywhere in the various other setting locations.
+    
+
+        
+Answer 1: 
+
+    
+    
+Changing the Hyperlink text color will do what you want, but this is used elsewhere in Eclipse so you may want to choose a colour that is reasonably legible on both light and dark backgrounds.
+
+
+    
+    
+Answer 2: 
+
+    
+    
+Does Hyperlink text color do the trick?
+    
+    
+Answer 3: 
+
+    
+    
+"General"-
+Answer 4: 
+
+    
+    
+I like this:
+
+Console Grep
+
+It allows for custom highlighting/text colors depending on what is printed. Assuming you have an idea of how regexes work (if not lots of tutorials exist) it works quite well.
+    
+    
+Title: How to deploy to Tomcat from NetBeans?
+Description: 
+    
+    
+                    
+I've added Tomcat in the "Tools /pp/pp/p/div
+Answer 1: 
+
+    
+    
+When you create a Maven based web app project, you specify the spec version  of the project as you create it.
+
+image of the Maven web App Wizard with default values http://www.freeimagehosting.net/uploads/20d7e476a5.png
+
+If you want to create a project that you can deploy with Tomcat, you need to change the value of the 'Java EE Version' field from 'Java EE 6' to 'Java EE 5', before you hit the Finish button.
+
+Note: I had hoped that there was a simple change that could be applied to your projects pom file to convert it from Java EE 6 to Java EE 5... but it turns out that it is not so easy...
+    
+    
+Answer 2: 
+
+    
+    
+Is your webapp a real Java EE 6 webapp (without web.xml or with a Servlet 3.0 web.xml)? 
+
+If yes, maybe NetBeans doesn't show Tomcat because Tomcat is not a valid runtime environment for your application (use GlassFish).
+    
+    
+Answer 3: 
+
+    
+    
+Go into your web.xml and replace the header with:
+
+&lt;web-app version="2.5" 
+xmlns="http://java.sun.com/xml/ns/javaee" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"&gt;
+
+
+Go back to properties and you will be able to pick Tomcat
+    
+    
+Answer 4: 
+
+    
+    
+If you right-click the project, select Properties and go to Run, there should be a dropdown list of servers. Is that one empty as well?
+    
+    
+Answer 5: 
+
+    
+    
+Add this to your pom.xml
+after: &lt;repositories&gt;&lt;/repositories&gt;
+
+&lt;properties&gt;
+        &lt;netbeans.hint.deploy.server&gt;Tomcat60&lt;/netbeans.hint.deploy.server&gt;
+&lt;/properties&gt;
+
+    
+    
+Answer 6: 
+
+    
+    
+I had this exact same issue, when creating a default EE project in Netbeans it does a full EE spec which Tomcat doesn't fulfill.
+
+I created manually because I couldn't find a good archetype, could you please post the place where you got the good Tomcat archetype?  
+    
+    
+Answer 7: 
+
+    
+    
+I had the same problem and solved it ;
+It was because the Java EE version was higher than the tomcat version requires.
+What to do :
+Click the files tab near projects tab. Under nbproject folder , select j2ee.platform , if you use Tomcat7 than change the platform to 1.6 for example(Tomcat6 &gt; Jave EE 1.5). than make a &quot;clean and build&quot; on the project .
+Now the server will come at Project &gt; properties &gt; Run &gt; Servers
+    
+    
+Answer 8: 
+
+    
+    
+One of the mistakes I was making when I got this problem was that I was trying to deploy EAR project to Tomcat.  Tomcat isn't an application server.  It is a web server.  It worked when I deployed the only the Web project of the EAR to Tomcat.  The ejb can only be deployed to an application server.
+I hope this helps.
+    
+    
+Answer 9: 
+
+    
+    
+A more updated "web-app" should look like this.
+
+&lt;web-app version="3.1"
+  xmlns="http://xmlns.jcp.org/xml/ns/javaee/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee/ 
+  http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/web-app_3_1.xsd"&gt;
+
+    
+    
+Title: netbeans not stopping on breakpoint
+Description: 
+    
+    
+                    
+I have xdebug running but it doesn't matter where I put my break point it never stops.
+
+php.ini
+
+[xdebug]
+zend_extension_ts = c:\wamp\bin\php\php5.2.8\ext\php_xdebug-2.1.2-5.2-vc6.dll
+xdebug.remote_enable=on
+xdebug.remote_handler=dbgp
+xdebug.remote_host=Chris-Pc
+xdebug.remote_port=9000
+
+    
+
+        
+Answer 1: 
+
+    
+    
+One more tip that's not mentioned here: make sure that you have your web root directory set correctly.
+
+Go to File -
+Answer 2: 
+
+    
+    
+I asked the same thing and got this quite good answer: How to track execution time of each line / block of lines / methods in PHP?.
+
+Some additional notes on that (stuff i've collected in other SO posts in my own research with this problem):
+
+
+The port might be also 9001 (seems to work for some people while 9000 don't).
+Switching to PHPStorm IDE is a real alternative that solves this problem (as PHPStorm has included perfectly running xdebug already).
+Download a new version of xdebug via the wizard (https://xdebug.org/wizard.php) and if you follow the instructions maybe you will be lucky.
+Switching off the firewall might help.
+Add to php.ini xdebug.idekey=netbeans-xdebug.
+Find out if you have a xdebug.ini file and add the xdebug related php.ini lines to that file.
+you have to un-comment the zend_extension line (i.e. remove the ';' at its begninning), so Xdebug is actually loaded.
+make sure Xdebug is loaded, calling phpinfo() from a PHP file (just to be sure).
+
+    
+    
+Answer 3: 
+
+    
+    
+I had a similar issue and came across a post to fix the problem.  My html form (testform.html) was calling a php script (runQuery.php) and Netbeans could not break at the set break points in my runQuery.php
+
+After checking all the configuration settings in php.ini and Netbeans by searching on forums like this one, I discovered that netbeans will only break on the break points if the Index file for the project is a PHP file.  This is very important otherwise you will spend hours trying to figure out why break points are not working. 
+
+In Netbeans go into the File/Project Properties/Run Configuration and check that the Index file is a PHP file.  In my case I changed my index file from testform.html to testform.php and it worked, I was able to break on break points. 
+
+Yasar
+    
+    
+Answer 4: 
+
+    
+    
+There are several things you can try:
+
+
+Check if the port is available (or try a diffrent port)
+Make sure the port is selected in netbeans
+Use the IP instead of the pc-name
+Use a browser extension like https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc
+Use "xdebug_break()" in your code to see if it breaks there
+Check your phpinfo() to see if xdebug is loaded
+
+    
+    
+Answer 5: 
+
+    
+    
+Make sure that your netbeans setting as follow:
+
+Tool-/p/div
+Answer 6: 
+
+    
+    
+Best is to tunnel through SSH, setting your remote host to localhost. It will prevent you from getting messed ip with firewalls, nat or port forwarding.
+    
+    
+Answer 7: 
+
+    
+    
+Please check this. In your php.ini make sure all this options are enabled. Otherwise add it in the end of your php.ini file (for example /etc/php/5.6/apache2/php.ini ).
+
+[xdebug]
+zend_extension="/usr/lib/php5/20121212/xdebug.so"
+xdebug.remote_enable=1
+xdebug.remote_autostart=1
+xdebug.default_enable=1
+xdebug.remote_handler=dbgp
+xdebug.remote_mode=req
+xdebug.remote_host=localhost
+xdebug.remote_port=9000
+xdebug.idekey="netbeans-xdebug"
+
+
+Check the path(/usr/lib/php5/20121212/) for xdebug.so in your file system accordingly change zend_extension value.
+
+1st line zend_extension value is here for ubuntu users. I think that variable no need to   change. Please uncheck the stop at First line(tools-
+Answer 8: 
+
+    
+    
+Is port 9000 available for usage, try changing it to 9001 (both Netbeans and php.ini).
+I would first try to breakpoint with xdebug_break() and see what is shown in "Variables" window. At least superglobals must be shown. 
+
+Btw: breakpoints with IDE (left side: line numbers) cannot be created on a blank line or line with comments, it has to contain some code.
+    
+    
+Title: How to undo the split view in VS2013?
+Description: 
+    
+    
+                    
+I've downloaded the VS2013 Preview (Express, Windows Desktop if you're wondering/affects this). I've got a small issue though. I have the split view. I quite like it. Sometimes I have to get back into non-split view. However, the only way to do this as far as I know (at least in the C# code editor) is to close VS and open it again. This is pretty annoying. Is there any other way of un-splitting the view?
+
+If you don't know what I'm talking about:
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Hover over the middle section and drag it all the way back to the top
+
+Where shown in image
+    
+    
+Answer 2: 
+
+    
+    
+Look near the top. The  -/p/div
+Title: PhpStorm failed to transfer files by FTP
+Description: 
+    
+    
+                    
+Would like to test the IDE PhpStorm to work with but I am already stuck at the importing
+process.. I am running a dev server with a Zend Framework 2 project I would like to add by ftp.
+
+Everything look likes to be OK, I see the project created the whole structure of my application. When I am opening a file, the file is empty. I tried to hit "Download from here" at the menu of the remote system but I get the following message in my transfer console.
+
+(just a couple of all files who failure)
+
+[15-03-14 12:47] Failed to transfer file '/var/www/vhosts/dev.site.com/composer.json': could not read from "ftp://dev.site.com/composer.json" because it is a not a file.
+[15-03-14 12:47] Failed to transfer file '/var/www/vhosts/dev.site.com/composer.lock': could not read from "ftp://dev.site.com/composer.lock" because it is a not a file.
+[15-03-14 12:47] Failed to transfer file '/var/www/vhosts/dev.site.com/composer.phar': could not read from "ftp://dev.site.com/composer.phar" because it is a not a file.
+
+
+What happens? It seems that the files are downloaded but not it's contents? permissions etc. are good, I can add/edit this project without any problem in Aptana or Zend Studio.
+    
+
+        
+Answer 1: 
+
+    
+    
+Just try to enable "passive mode":
+
+Tools -&gt; Deployment -&gt; Configuration -&gt; Advanced options -&gt; [FTP-server/FTP] -&gt; enable "Passive mode" checkbox!
+
+like at the screenshot: FTP-passive-mode-enabling
+
+(my PHPStorm build is 139.1348)
+
+That fixed my troubles with 'Failed to transfer file' using FTP.
+    
+    
+Answer 2: 
+
+    
+    
+No real clue -- but happens randomly. For me personally happened only twice since v1 .. and both of them when transferring to Linux host (my usual deployment target is running on Windows platform, IIS FTP where I never seen such problem).
+
+In any case -- known issue -- see this ticket for details: http://youtrack.jetbrains.com/issue/WI-6742
+    
+    
+Answer 3: 
+
+    
+    
+the same issue happened to me, I enabled passive mode in phpstorm and it worked. 
+
+File=&gt;Settings=&gt;Build, Execution,Deployment=&gt;Deployment=&gt;conncetion=&gt;Advanced options=&gt;passive mode
+
+    
+    
+Answer 4: 
+
+    
+    
+Fix for SFTP (there is no option to set passive mode for SFTP):
+
+
+Go to: File -
+Title: Other options for a Rebol editor|IDE?
+Description: 
+    
+    
+                    
+I currently use Programmer's Notepad with the Rebol syntax scheme.  It's not bad--does any insightful person have another suggestion?
+    
+
+        
+Answer 1: 
+
+    
+    
+For my Windows programming work I use the Zeus editor, but I'm not sure if it does Rebol?
+    
+    
+Answer 2: 
+
+    
+    
+Another windows option is TextPad. It is commercial but it is quite a useful editor.
+
+There are 2 Rebol syntax files available from the official site
+
+http://www.textpad.com/add-ons/synn2t.html
+
+I also wrote a TextPad syntax file generator uploaded it to rebol.org
+
+http://www.rebol.org/view-script.r?script=textpad-syngen.r
+
+It is probably quite easy to modify this script to support other editors.
+    
+    
+Answer 3: 
+
+    
+    
+vim.
+
+
+
+Especially with the following binding in your _vimrc/.vimrc:
+
+ nnoremap &lt;Leader&gt;fr :w&lt;CR&gt;:silent ! %&lt;CR&gt;
+
+
+
+
+In normal mode, Leaderfr saves your current file and executes it: (fr is a memo for 'fast-run')
+
+
+:wEnter save current file
+:silent execute without messages: ! open shell % paste current file name Enter
+
+
+Leader is usually \ key, I have this mapped to spacebar. In case anyone is interested on how to do that, post a comment.     
+    
+    
+Answer 4: 
+
+    
+    
+Programmer’s Notepad better than Crimson Editor with Code Folding and Great Project Management
+http://www.pnotepad.org/
+
+It's opensource so you can even modify it in C++
+    
+    
+Answer 5: 
+
+    
+    
+For Windows, there is Crimson Editor or E with the REBOL bundle.
+
+For Mac, there is TextMate.
+
+Emacs, I believe has a REBOL syntax too.
+    
+    
+Answer 6: 
+
+    
+    
+Sublime Text is a really nice Windows editor (commercial, but reasonably priced) that supports TextMate configurations (well, at least for syntax and snippets) so if you manage to get a REBOL bundle from somewhere, you can use it with this.
+
+SciTE also has REBOL syntax coloring support because the Scintilla editor component it's based on includes this. 
+
+Notepad++ should also support REBOL syntax coloring, being Scintilla based, but as it is currently distributed, the support is not compiled in. If you're so inclined, you could probably compile it yourself and add the support back in. It might be worth it because Notepad++ is quite a good editor too.
+
+I can't include proper links because I don't have enough rep, but this should do:
+  www.sublimetext.com
+  www.scintilla.org/SciTE.html
+  www.scintilla.org/index.html
+  notepad-plus-plus.org
+    
+    
+Answer 7: 
+
+    
+    
+http://rebol.wik.is/index.php?title=Notepad%2b%2b
+
+which is a REBOL plugin for Notepad++
+    
+    
+Answer 8: 
+
+    
+    
+I use JEdit which not only has REBOL syntax highlighting but also auto-indenting. It has most of the features you'd expect from a text editor (e.g. block selection, configurable keyboard shortcuts).
+
+There are versions for Windows, Mac OS X and Linux so if you choose to work cross-platform you won't need to learn a new editor. The web page is Jedit.org1
+    
+    
+Answer 9: 
+
+    
+    
+I use UltraEdit.  
+
+with its advanced project, syntax highlighting, macro, command-line control and total keyboard shortcut configuration, per language and project, you can program the editor to do just about all of what you need at a single click of the mouse, or keyboard.
+
+my setup starts rebol on any file, and assigns a launch "default project script " to a shortcut, so wherever I am in the files, I still launch the project's relevant script.  change project, it will run that new project's scripts.  another key for unit tests, another key for "find in all opened files, etc, etc..
+
+also, the actual text-exiting, when combined with a few macros which create functions, objects, and more using the clipboard and "currently highlighted" text makes it much faster than any Visual IDE including MSVC.
+
+ultra edit itself has thousands of other advanced features, and they all work... really they do.
+
+I've tried other editors and they always fall short when I start to push them.
+
+yeah, you have to buy it... but its cheap (like one or two hours of your life salary ;-)
+
+so considering you might use it for several months or years... its a cheap investment.
+
+also, ultra edit is now released on linux and the mac port is just around the corner.
+    
+    
+Answer 10: 
+
+    
+    
+I use EditPlus for several years, it is not free but not expensive. It has Rebol syntax highlighting file (downloadable from its web site).
+It is especially useful &amp; very fast if you work with huge files (over 100 mb) or with lots of files (say 300 files.), find &amp; replace takes a second.
+    
+    
+Answer 11: 
+
+    
+    
+For syntax highlighting and a simple autocomplete, you can use http://komodoide.com/komodo-edit/.
+
+It's free and open source with several nice features, including folder browsing while editing, which I personally find very useful.
+
+There is also a bunch of other languages supported in case you want to take a closer look and give this editor a chance. 
+    
+    
+Title: Importing project into Netbeans
+Description: 
+    
+    
+                    
+My client just sent me the base project for development purposes. I think he just zipped the project folder and sent to me.
+
+Now when I go to NetBeans, "New project with existing sources":
+First I see the error that "this project already contains build folder". I deleted the build folder from project and then I get the error "this project already contains a netbeans project".
+
+Any idea what I am missing. I am used to Eclipse and new to Netbeans. The project structure sent to me by client is:
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Try copying the src and web folder in different folder location and create New project with existing sources in Netbeans. This should work. Or remove the nbproject folder as well before importing.
+    
+    
+Answer 2: 
+
+    
+    
+Follow these steps:
+
+
+Open Netbeans
+Click File 
+Answer 3: 
+
+    
+    
+From Netbeans 8.1 - there is an "Import from ZIP" option.
+
+Go to Main Menu -
+Answer 4: 
+
+    
+    
+If there is already a nbproject folder it means you can open it straight ahead without importing it as a project with existing sources (ctrl+shift+o) or (cmd+shift+o)
+    
+    
+Answer 5: 
+
+    
+    
+File &gt;&gt; New Project &gt;&gt; Java Project With Existing Source&gt;Next &gt;&gt; Project Name(add a name for your project) &gt;&gt; Next&gt;&gt;Add Folder &gt;&gt; select your existing project source code from your Directory&gt;&gt;Next &gt;&gt; Finish
+
+
+
+
+
+
+Java Project With Existing Source
+    
+    
+Answer 6: 
+
+    
+    
+I use Netbeans 7. Choose menu File \ New project, choose Import from existing folder.
+    
+    
+Answer 7: 
+
+    
+    
+Since you already have all the files in a folder, say "Project", you simply have to open Netbeans and go to 
+File -&gt; Open Project (or Ctrl + Shift+ O on Windows) and then from the dialog box navigate to the folder containing the Folder "Project".
+
+You will see in the dialog box of Netbeans a 'Java cup'. Well, that's your project.
+    
+    
+Answer 8: 
+
+    
+    
+You may try creating a new project in netbeans and then copy and and paste the files into it. I usually experience this problem when the project wasn't created in netbeans.
+    
+    
+Title: Jump-To-Code-Line Eclipse Shortcuts
+Description: 
+    
+    
+                    
+is it possible, in Eclipse, to mark certain lines with Shortcuts and be able to quickly jump to those lines?
+
+Example: Let's say I have maintenanceHeavyMethod() at line 120 in my class, gameLoop() at line 800 and some listener at line 1460.
+
+I'd like to f.ex. press CTRL+SHIFT+1, 2, 3 etc. to mark those positions, and then use f.ex. CTRL+1, 2, 3 to immediately jump to them. I don't like split-screens etc, but I need to jump around when writing.
+
+Is there such a feature?
+
+I'm using latest Eclipse to write Java-programs.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can add Bookmarks in your code. Select the code fragment you want to bookmark and then go to Edit /strongstrong/strong/ppstrong/strongstrong
+Answer 2: 
+
+    
+    
+That would be best taken care by mylyn:
+
+Define a task with this three method, and you will be to see only those 3 in the package explorer view
+
+
+    
+    
+Answer 3: 
+
+    
+    
+To jump to a particular method, I use ctrl+o and then start typing the method.  If you're a proficient typist, this shouldn't take any longer; keep in mind that you only have to start typing the name of the method.
+
+Unfortunately this isn't a proper solution for jumping to a line of code within a method.
+    
+    
+Answer 4: 
+
+    
+    
+You can jump to methods by using the outline view. Outline view shows all the Methods, Fields, and Inner-Classes (and their methods and fields and inner-classes...etc) of the source file you currently have open. I personally prefer this method, unless I have a stacktrace and know which line I want to jump to, in which case I use ctrl+L.
+    
+    
+Title: Rubymine: How to jump back?
+Description: 
+    
+    
+                    
+It's really great Rubymine allows us to Cmd+Left-Click to trace where a method is defined and jump to the source file/location. 
+
+I doubt if there's a hot-key to go back, which is helpful when there're a lot of files/tabs are opened or viewing a long file
+    
+
+        
+Answer 1: 
+
+    
+    
+There is an action to go back, Navigate | Back:
+
+
+
+Hotkey would depend on your keymap and can be observed in the menu.
+    
+    
+Title: alternative IDE for squeak/pharo
+Description: 
+    
+    
+                    
+I've been using smalltalk for a while now and I love the language and the concept. What I just hate is the System browser. This tool doesn't even resemble a modern IDE. How am I supposed to code without tabs, outlines and handy shortcuts? I often find myself implementing a selector and noticing that it would be nice to isolate a piece of code in a separate (private) selector, just for readability shake, but I don't. Because it takes like 5 mouse clicks and I have to navigate away from the selector I am working at, and navigate back to it. Oh wait, I can't! Because it has syntax errors, because I haven't finished it yet! Kills me. And I don't have a 24 inch display to open 3 browsers.
+
+Sorry for a little rant. My question is, is there a real IDE (Eclipse, Net.Beans, VS) for smalltalk? Maybe for some commercial version of smalltalk?
+    
+
+        
+Answer 1: 
+
+    
+    
+Historically, the real "IDE" is the Smalltalk one, and one could claim that the others are just an adaptation to the limits of traditional textual programming languages (not rethorical, just check out the evolution of typical development environment UIs and how they are adding features that exists in Smalltalk from the very beggining, like the senders and references in VS).
+
+Just a side note: actually more than 2000 open-source projects in the SqueakSource repository were coded without tabs, outlines and shortcuts (I think still in Squeak you can cross reference any text selecting and pressing with Alt-6). I can't tell you how sad I feel when I must to go back to file based developement, still don't understand why most developers love to sweep text, mess with line numbers and page up-down files in directories. The good news for you, is that you have many options:
+
+There is an alternative browser called BobsBrowser (works in Pharo 1.3) which lets you browse
+
+
+Class hierarchy windows exploring each class
+System Category window
+Unsaved edits
+Recent classes
+Recent methods
+Method categories for instances and classes
+Unsent methods
+Driller relating every structural information
+etc.
+
+
+The advantage over the Whisker browser is that the hierarchical lists are attached to a window while in BobsBrowser you can detach them.
+
+It all depends of the different activities you're performing when you're developing. With some experience in Smalltalk you'll find that you prefer some browser for exploratory insights and others for refactorings, etc. BobsBrowser for example is good for knowledge organization or custom navigation of Smalltalk classes and categories, the hierarchies you can see are the organizations from the Smalltalk reflective meta-architecture at any level (classes, senders, implementors), and they are expandable/collapsable (in the classic system browsers you can only expand the system categories and subcategories).
+
+The instance variables were shown historically in the Smalltalk/V flavors, and there is an old goodie (from Squeak 2.7 IIRC) to enable it back again but almost nobody today maintains the classic System Browser in Squeak/Pharo. Adding that feature to OmniBrowser would be more complicated though because is a browser framework (as every serious framework, it took some time to learn it for the first time), although the effort of the Squeak/Pharo community is absolutely incredible, still the Smalltalk community needs more developers.
+
+You have also a commercial Smalltalk which isn't public (downloadable) yet but includes IDE-like features of traditional programming environments
+    
+    
+Answer 2: 
+
+    
+    
+You might want to check out tODE. It's at a very early stage, but it is an attempt to provide a Smalltalk IDE in the web-browser and is a break from the traditional Smalltalk IDE. With that said, I don't think you'd want to start using tODE right away, but you can keep an eye on it as it evolves.
+
+Dale
+    
+    
+Answer 3: 
+
+    
+    
+
+Pharo is trying to have the Nautilus Browser ready for Pharo
+1.4. I suspect there will be a flood of awesome new tools as the system stabilizes over the next few releases.
+There's the Glamorous Inspector.
+Spoon has been mounted as a WebDAV filesystem, so you can use whatever tool you like. Spoon is not another Smalltalk, but a testbed for revolutionary Smalltalk technology, which can be incorporated into any other Smalltalk (it's currently on top of Squeak)
+There is the Tiling Window Manager to help you organize
+Since Squeak and Pharo are live, dynamic, open systems powered only by volunteers, anyone sufficiently motivated can create the next generation of tools ;-)
+
+
+p.s. I feel your pain. The 20-browsers-open thing is a drag. Let's invent the future!
+    
+    
+Answer 4: 
+
+    
+    
+
+  And I don't have a 24 inch display to open 3 browsers.
+
+
+You could give the Whisker Browser a try. It lays out the methods side-by-side so that you don't have to position all these windows manually.
+
+
+
+I played with it a few years ago but I'm not sure what state it's in right now.
+    
+    
+Answer 5: 
+
+    
+    
+I don't know how mature it is, but the Etoile project has an IDE called CodeMonkey for writing Smalltalk applications.  It's not specifically for Squeak, and instead uses their own smalltalk implementation, but it may be worth looking into.  Unfortunately, it's only available in their SVN repository, so it's a pain to compile and install.
+    
+    
+Title: Why don&#39;t IDEs support dynamic formatting?
+Description: 
+    
+    
+                    
+Given all the holy wars surrounding various code formatting styles, and many companies' strict formatting requirements, why don't IDEs allow dynamic reformatting of code?
+By that I mean have the IDE format the code the way the user wants it every time, and save the code without any formatting at all. (Well maybe line breaks so that diffs are still easy)
+The user wouldn't have to worry about adhering to a coding standard, people wouldn't get bent out of shape over working in code that's not formatted just how they like it, and formatting changes wouldn't show up in repository diffs.
+There's have to be some mechanism for turning it off so it doesn't screw up old, pre-formatted code, but otherwise, what's keeping this from becoming a standard feature?
+
+Edit: I'm aware that some IDEs have an reformat feature, but that causes almost as many problems as it solves -- source control diffs become nearly useless as the actual changes are lost in a sea of insignificant formatting changes, and different tab character widths still knock things out of alignment. Also, it doesn't let programmers work with the code in their preferred format.
+    
+
+        
+Answer 1: 
+
+    
+    
+Because most people like to see the code as it will be committed. Unless all of the tools you use to view your code (diff programs, grep, web based source repository viewers, etc) understand how to dynamically format the code the same way, you're going to be confused by different formattings when you look at it in your IDE vs. the other tools.
+
+I agree it would be nice if we had more structural programming tools, rather than fixed width text tools, but it would require updating everything in your tool chain to really make it workable.
+    
+    
+Answer 2: 
+
+    
+    
+I think Eclipse allows you to format code however you like.
+
+EDIT: Yeah, the Java Code Formatter formats based on rules you set in the project.
+    
+    
+Answer 3: 
+
+    
+    
+I've thought this would be a good idea too, but as a function of the source control software rather than the IDE.
+
+Code could be stored as a list of tokens and then reconstructed when copied to the development machine. This answers aleemb's point as no white space is ever stored. There might need to be more sophisticated formatting rules to cope with all cases though.
+
+It also answers Martin Harris' concerns - the code on your machine wouldn't contain any special characters just white space between tokens.
+    
+    
+Answer 4: 
+
+    
+    
+I think that the files that live on your actual machine in most cases should be in a common text format, it is beyond useful to be able to open up any source code file that I'm working on in notepad or any other handy text editor. Because of this I wouldn't want my local copies to contain any special characters that the IDE interprets as "This is an indent, please use a tab or a space here as you feel is appropriate". My opinion is that the best point to do this kind of formatting is the source control system, you check a file in formatted as you like, I check it out formatted as I like.
+
+A while back I asked this question about source control tools not understanding code and ascalonx's answer pointing me towards source control in database. It's a shame that this idea doesn't seem to have more traction since it would solve both our problems and much more. I'm a .NET developer so I'm very much out in the cold with this at the moment, but apparently Eclipse and IntelliJ in the Java world are getting closer to this ideal (I don't know how close, since I've never used either)
+    
+    
+Answer 5: 
+
+    
+    
+I think that the biggest hurdle would be reconstructing the source code comments since they have no formal semantics - I'm not talking about JavaDocs or the like but rather the comments that are placed inline with the sources. Without semantic rules for source code comments the whole concept falls apart.
+
+Sure you can version control the AST, but how will you map the comments onto the AST nodes? 
+
+A naive approach would be to associate comments with statements in the language, but what if I have a comment that applies to "the next 3 lines" and then someone moves one of the lines somewhere else. Where does the comment go?
+    
+    
+Answer 6: 
+
+    
+    
+I am sure there are programs and scripts available that format the code in the way you specify. 
+
+While some IDE's support such reformatting of code (Eclipse, Intellij for Java, Wing for Python, VS2007? for .net), even if they dont, it should be a matter of just running those scripts on the source code.
+    
+    
+Answer 7: 
+
+    
+    
+If you can handle the following scenario I would think it's a good idea but my hunch is that it's not trivial, which means that it's not intuitive and predictable which is bad for user experience.
+
+If the code is written:
+
+if(value!=null)
+
+
+and dynamic formatter shows:
+
+if (value != null)
+
+
+and I modify it to:
+
+if ((value != null) &amp;&amp; (value.Length &gt; 0))
+
+
+and then another developer dynamically formats it to:
+
+if ( (value != null) &amp;&amp; (value.Length &gt; 0) )
+
+
+and changes some other line in the code and saves it. Does the above formatting also get saved? How do you reconcile the different formatting preferences of the two developers because his new additions will in a different format.
+
+You'd have to store in a common format but even so the line lengths would be different and the developers would break the line at different positions for 80 or 100 char wrapping and it gets quite messy.
+    
+    
+Answer 8: 
+
+    
+    
+Plagiarism would be hard to detect :)
+    
+    
+Answer 9: 
+
+    
+    
+Because most people don't care much about how the code looks as long as it is consistent.
+    
+    
+Answer 10: 
+
+    
+    
+I think it's about time that the IDEs start storing their code as XML, and then use a user-defined XSL stylesheet to format the code upon presentation.
+    
+    
+Title: python - atom IDE how to enable auto-complete code to see all functions from a module
+Description: 
+    
+    
+                    
+I am using atom IDE for my python projects.
+there are auto-complete suggestions in some cases but I'd like to know if it's possible to have a list of all possible functions that a imported module has, for instance if i import 
+import urllib
+when I type urlib. and press (ctrl+tab) would like to see a list with the possible functions/methods to use.
+
+Is that possible?
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+I found the solution for my own question.
+Actually I had the wrong plugin installed!
+
+So, in the IDE, edit-em/em/pp/p/div
+Answer 2: 
+
+    
+    
+Atom is getting various modifications. Autocomplete-python package is a handy package which helps code faster. The way to install it has changed.
+In all new Atom editor go to File-
+Title: Change font into IntelliJ 10 / 11
+Description: 
+    
+    
+                    
+I try to change font for IntelliJ IDE with another monospaced font like Inconsolota.
+
+I put Inconsolata.ttf (I use Windows) on the directory : 
+
+   C:\Program Files\Java\jdk1.7.0_01\jre\lib\fonts
+
+
+Why doesn't IntelliJ make it available ? Is it the wrong path ?
+
+(I precise that I well checked that IntelliJ uses this JDK and not another one)
+    
+
+        
+Answer 1: 
+
+    
+    
+Additionally to copying fonts in ..\jre\lib\fonts You need to change a java anti-aliasing setting.
+
+1) Add the option:
+
+-Dawt.useSystemAAFontSettings=on
+
+
+Linux
+
+&lt;&lt;jetbrains-product-dir&gt;&gt;/bin/idea.vmoptions
+
+
+There might be additional settings required for Linux and OpenJDK. Check the referenced links.
+
+Windows
+
+...\JetBrains\&lt;&lt;product-dir&gt;&gt;\bin\&lt;&lt;productname&gt;&gt;.exe.vmoptions
+
+
+
+
+2) You then need to restart the IDE. 
+
+3) When you are selecting a font (Settings&gt;Appearance&gt;Font) you
+        should uncheck "Show only monospaced fonts" in the little popup
+        window that appears.
+
+4) You'll be now able to see and choose Inconsolata or any other
+        previously hidden font. Set the font size and line-height according your preference.
+
+Reference
+
+
+How do you enable anti aliasing in arbitrary Java apps?
+http://gleamynode.net/articles/2280/
+http://youtrack.jetbrains.net/issue/IDEA-57233?query=inconsolata
+
+    
+    
+Answer 2: 
+
+    
+    
+You can actually browse for your font.
+
+
+Ctrl + Alt + S
+Under the Editor node, click Colors&amp;Fonts.
+Select the scheme you want.
+Go to Scheme Settings, Font and click the browse button  to select a new font family.
+
+
+If this is what you already did, and you couldn't find the font, even when you browsed for it, then you can install your font by running the setup.exe file that usually comes with it and try again.
+
+Source: http://www.jetbrains.com/idea/webhelp/editor-colors-and-fonts.html#scheme
+    
+    
+Answer 3: 
+
+    
+    
+I think you forgot to point out that you need to save the default scheme as something else in order to modify it.
+
+So under File -
+Title: Why bundle version a control plugin with an IDE?
+Description: 
+    
+    
+                    
+I was always wondering why it is a big deal having version control support inside an IDE.
+I always preferred to use a command-line/standalone version of the version control of choice and never found IDE integration helpful.
+I know it can be helpful sometimes, for example to automatically keep track of renames, but I was bitten by version control plugins a couple of times (especially the ClearCase Eclipse plugin) that I'm now finding it counter productive compared to the command-line version, where I have better control.
+What is your opinion?
+    
+
+        
+Answer 1: 
+
+    
+    
+Integration of the IDE with version control and, in particular, software change management (SCM) helps bringing together the philosophies of the IDE and the source control system.
+One example is temporary files and binaries, that should not be checked-in and, e.g. in Visual Studio, end up within the source directory if you're not carefully creating new project and solution templates with a non-default directory configuration.
+Another could be tracking of work items and complex bug fixes.
+Also it saves some ceremony and context-switching when editing files.
+Advanced integrations may also allow to push the change management system's concept of &quot;configuration&quot; (&quot;branch&quot;, &quot;tag&quot;, &quot;view&quot;) into the IDE.
+ClearCase integration, however, is clearly not &quot;advanced&quot;.
+    
+    
+Answer 2: 
+
+    
+    
+Integrated Source Control also helps to only keep the important files under Source control. For example, when I add a new File in Visual Studio, the Plugin (visualSVN) will allow me to add it easily without me having to remember to go outside of my IDE and run the command to add it to the repository. On the other hand, it will automatically ignore temporary files, like the obj/ and bin/ Folders.
+
+Essentially: Integrated Version Control that actually works is a great way to keep the repository clean and complete.
+    
+    
+Answer 3: 
+
+    
+    
+I like how some IDE's implement this. Ankh-SVN for Visual Studio is not that great and is a bit buggy, however Subeclipse I find to work exceedingly well when I'm using Eclipse.
+
+I think it really depends on the IDE you're using and the quality of that plug-in. It's going to work well for some setups and terrible for others.
+
+That's why I like Subversion with Tortoise SVN so much. I can choose to use the IDE integration when and where it makes sense, otherwise, just like you said, I can simply use the command line or in my case, the windows explorer based client!
+    
+    
+Answer 4: 
+
+    
+    
+A lot of it is simply the preference and comfort level of the user.  Some folks are comfortable with the command line.  Some prefer a GUI.
+
+I wouldn't make generalized assumptions that all version control within the IDE is bad or buggy based on experiences with a particular plugin which had issues.
+    
+    
+Answer 5: 
+
+    
+    
+Why even have an IDE?  Why not just do everything with a command line? ;)
+
+The answer is that having it integrated with the IDE is "better".
+
+My #1 reason:
+You can visually see if a file is checked out or not, and if you need to edit a file, you can take the action right there where you are working.
+
+There are more, but that is the big one.
+    
+    
+Answer 6: 
+
+    
+    
+It's depend on your IDE and the way you work with VCS.
+
+Me and my team using VSS plugin-ins inside Delphi IDE, it gives a lot of flexibable feature when working together for example, All our forms are check-in when you start to write a letter or move components it asked if you want to check-out the code file or form.
+
+also when some one change any code in other forms, it pop up and telling you it's already update by someone else and asking you to update current files in your H.D.
+
+and you just get everything while you are in the IDE, you don't need to move to other external file, or command prompt to do a simple task.
+
+I find most people who like to deal with command prompt working mostly in code without GUI IDE or may I be wrong.
+    
+    
+Answer 7: 
+
+    
+    
+Nearly all of my subversion needs can be handled by the IDE interface.  It's a lot faster to do 2 quick clicks than pop up a command line, cd to the right place, issue the command, etc.
+
+Command line has it's place, but with the current crop of IDEs, that place continues to shrink.
+    
+    
+Answer 8: 
+
+    
+    
+I have battle scars from using a buggy implementation of an IDE/VCS integration.  In all honesty, if it was not buggy it would have been great.  As long as there are great tools like TortoiseSVN, I don't see a need for IDE/VCS integration.  I'd rather have more tools that do their job well than a few buggy tools.
+    
+    
+Answer 9: 
+
+    
+    
+Version control support in an IDE generally gives you a better view. The IDE actually knows what type of file you are looking at when doing a diff, which means it can do context highlighting and help you do merges more effectively.
+
+I also think it saves setup time. In stead of installing all kinds of tools, a developer can download the IDE, do a checkout an be on it's way. If every developer on a project uses the same IDE, they can help eachother.
+
+"Counterproductive" is a large word. If you have serious CVS/SVN problems maybe once a month, it's still way to few to have complicated clients installed on all your dev machines.
+    
+    
+Answer 10: 
+
+    
+    
+I have both systems where there is an integrated IDE (Microsoft FrontPage against an IIS Development Web site with Visual Source Safe on all of the web content) and where there is not (java command-line development, Visual Studio Express Editions).  An intermediate case that I use is jEdit 4.x with VSS integration via plug-in.
+
+I think the integrated case is valuable for the reason it always is -- you don't have to leave your application to interact with source-control functions and you don't have to worry about remembering to add new files and to check out files before editing them.  The ability to have a smooth work process and to minimize the risk of oversights is powerful, as far as I am concerned.  Even when the IDE-plugin integration is less than perfect (the jEdit 4.x case), I still prefer it over not having it.
+
+I also agree that having explorer integration on Windows, the case for Tortoise SVN, is also a great capability, even when IDE integration is available.  This allows convenient operation without having to launch the IDE while also being able to launch from the explorer window into the IDE (depending on file type) or editor or make or whatever while operating in Windows Explorer.
+
+And yes, the command-line interfaces remain valuable, especially for scripting of recuring-operation patterns.
+
+I operate in many contexts.  Having low barriers and fluidity of operation in all of them is to be prized.
+    
+    
+Answer 11: 
+
+    
+    
+I'm not sure I understand the question. IDEs by definition are integrated, meaning that they're supposed to help you avoid the need to get out of the environment for anything project-related. Version control obviously fits the bill.
+
+If you're looking for more practical reasons, one is that IDEs can offer you awareness by the nature of their graphical presentation. Eclipse, for example, will present files and directories that have changed. With additional plugins or suites, you can ever get real-time awareness as soon as another user is editing the same file, helping you predict a merge conflict before it occurs. I'm not familiar with a commandline based mechanism.
+    
+    
+Answer 12: 
+
+    
+    
+I use intellij integrated with cvs on a regular basis and by far the best feature of the integration of version control inside the IDE is line-by-line indications of what is added, edited, or deleted along with easy access (mouse hover/tool tip) to the pre-edit changes.
+
+This is all within the source code in a non-obtrusive way. 
+
+For the nuts and bolts of version control (checkin/checkout/update/etc) I sometimes use the IDE and sometimes use the command line.
+    
+    
+Answer 13: 
+
+    
+    
+The number 1 reason for an SCM integrated with the IDE is that it makes it more effortless to use it and eliminates the need to REMEMBER to check things out. Through experience I have seen that steps that developers construe as extraneous, which often encompases anything other than writing code, don't get done. Making them do extra steps increases the odds that developers won't bother with it and will work around the source control system
+    
+    
+Title: toLowerCase or capitalize functions for Sublime Text 2 Snippets
+Description: 
+    
+    
+                    
+Is it possible to define some sort of capitalize() or toLowerCase() function when creating Sublime Text 2 Snippets?
+
+For example:
+
+&lt;snippet&gt;
+&lt;content&gt;&lt;![CDATA[
+&lt;?php
+class ${1} extends Datamapper
+{
+    var \$has_one = array();
+    var \$has_many = array();
+    var \$table = '${1}s';
+    //constructor and other stuff next...
+}
+?&gt;
+]]&gt;&lt;/content&gt;
+&lt;tabTrigger&gt;dmm&lt;/tabTrigger&gt;
+&lt;/snippet&gt;
+
+
+This particular snippet helps me create Datamapper ORM models on the fly. When I type dmm the Snippet is fired and my cursor is placed in two areas at the same time; the class's name &amp; the assignment to $table. The first cursor requires capitalization whereas the second cursor should not. Can I force the Snippet's case? Something like {1.toLowerCase}
+
+Simple example, but I can think of other times when I could use this. 
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use substitution and the Perl format string syntax
+
+I have tested this code:
+
+&lt;snippet&gt;
+&lt;content&gt;&lt;![CDATA[
+&lt;?php
+class ${1} extends Datamapper
+{
+    var \$has_one = array();
+    var \$has_many = array();
+    var \$table = '${1/(.+)/\L\1/g}s';
+    //constructor and other stuff next...
+}
+?&gt;
+]]&gt;&lt;/content&gt;
+&lt;tabTrigger&gt;dmm&lt;/tabTrigger&gt;
+&lt;/snippet&gt;
+
+
+Regards,
+Armando
+    
+    
+Title: How Can I Override Visual Studio&#39;s Menu Accelerator Shortcuts?
+Description: 
+    
+    
+                    
+I'm a Mac-based .Net developer so over the years I've got into the habit of remapping certain common functions to a more 'Macish' set of keyboard shortcuts:
+
+CUT: Ctrl + X =&gt; Alt + X
+COPY: Ctrl + C =&gt; Alt + C
+PASTE: Ctrl + V =&gt; Alt + V
+SELECT ALL: Ctrol + A =&gt; Alt + A
+SAVE: Ctrl + S =&gt; Alt + S
+
+
+and so on.
+
+with this fancy schmancy VS 2010 Premium edition we've just got we've got extra menus e.g.
+
+ Test
+ Data  
+
+
+whose menu accessor (accelerator?)shortcuts are Alt + S and Alt + A which take precedence over my user-defined shortcuts for SAVE and SELECT ALL.
+
+Is there a way of disabling these accessors so my overrides will work?
+    
+
+        
+Answer 1: 
+
+    
+    
+Here's how to change the shortcut key for a Visual Studio menu, using the 'Test' menu as an example:
+
+
+Go to Tools, Customize.
+Click the Commands tab.
+Ensure the Menu bar option is selected, and that Menu Bar is chosen for editing from the drop-down (this is the primary application menu bar).
+In the Controls section, click on the Test menu.
+Click on the Modify Selection ▼ button.
+Change the text for the Name property:
+
+
+Any letter prefixed with an '&amp;' ampersand will act as the shortcut key.
+The ampersand is not required if you don't need to reach this menu with the keyboard.
+
+Press Enter to keep the setting.
+
+
+
+  
+  
+  'Modify Selection' for the Test menu
+
+    
+    
+Answer 2: 
+
+    
+    
+Isn't this something the fault of the Windows API, not Visual Studio?  I think the Alt (and nothing else) keyboard shortcuts are directed through Windows API, so the OS will probably not let you do this; it'll select the menu with the respective mnemonic (underlined letter).  
+
+You could try using a custom keyboard layout that would swap the left ctrl and left alt keys, allowing you to use "ctrl-S" but it feels like command-S.
+
+Good Luck!
+    
+    
+Answer 3: 
+
+    
+    
+go to tools -options - keyboard(you may have to choose show all option or something like that to be able to see this one) and you can change the shortcuts
+    
+    
+Title: Netbeans scanning of project too slow
+Description: 
+    
+    
+                    
+I use netbeans 7.3.1,  i have found here one way how to make netbeans faster: How to improve Netbeans performance?, but my problem is that my netbeans is to slow by project scanning, is projectcanning important for the software netbeans? My projects are in network and not on my pc. I have also found this plugin, but there is no more available: http://wiki.netbeans.org/ScanOnDemand
+
+My CPU is Intel quad 2.40GHz.
+    
+
+        
+Answer 1: 
+
+    
+    
+Try to disable auto-scanning of sources. Make sure that you only modify the sources via Netbeans. According to the manual:
+
+Enable auto-scanning of sources
+When selected, the IDE will scan the source code of projects to detect any files that were modified externally. Scanning is triggered when the focus is returned to the IDE, for example when the user returns to the IDE from another application.
+If your sources are only modified from within the IDE, you can probably disable auto-scanning with little risk of encountering problems. Disabling auto-scanning may improve IDE performance if you are working on large projects.
+Auto-scanning is enabled by default.
+
+
+
+Other than that it the network that causes the delay. 
+    
+    
+Answer 2: 
+
+    
+    
+The previous answer didn't work for me. But if your OS is Windows, I only found one way to significantly decrease the amount of time it takes to open my remote project and hopefully it will work for you.
+
+
+Open Programs and Features.
+Select Turn Windows features on or off.
+Uncheck Remote Differential Compression.
+
+
+
+
+Beyond disabling that, depending on the size of your project, netbeans indexes your project during each launch in order to track changes that have been made. Application modules are also cached which causes a further delay as well.
+
+One more thing you can try which may help if your project or netbeans version has significantly changed, and was recommended in the comments above, is to clear the cache.
+
+You can either rename the folder, or delete it (netbeans will recreate it).
+
+Paths: http://wiki.netbeans.org/FaqWhatIsUserdir
+    
+    
+Answer 3: 
+
+    
+    
+Scanning performance of Netbeans can be improved using the following procedure :
+1) Go to Window--brbrbrbrbrbrcode/codebrcode/codebrcode/codebrcode/codebrcode/code/ppbrbrcode/codebrcode/codebrcode/codebrcode/codebrcode/code/ppbrbrcode/codebrcode/codebrcode/codebrcode/codebrcode/codebrcode/codebrcode/codebrcode/codebrcode/codebrcode/code/pp/p/div
+Title: Is it safe to remove the declaration of a form from the unit?
+Description: 
+    
+    
+                    
+When designing a TForm, a line is added to the form's unit declaring the form object...
+
+var
+  frmMyForm: TfrmMyForm;
+
+
+I don't need this form auto-created, and I intend to create multiple instances of it, and to make sure I don't make the mistake of using this declared form, I commented it out...
+
+//var
+  //frmMyForm: TfrmMyForm;
+
+
+I was wondering if this is safe to do? I don't see any problems, and the form designer still works fine. But could there be some trouble if I leave this out completely?
+    
+
+        
+Answer 1: 
+
+    
+    
+This is a very common scenario when using form inheritance. You normally don't want to instantiate derived forms from the middle of the inheritance chain.
+
+The only place where these form variables are used (besides your code perhaps) is the dpr file and that only when the form is autocreated.
+
+So, no problem to remove the declaration.
+    
+    
+Title: Tortoise SubWCRev.exe Pre-Build Event
+Description: 
+    
+    
+                    
+I run the following command as a pre-Build event in Visual Studio 2005 and it works fine:
+
+SubWCRev.exe "C:\work\subversion\aviOffline .Net\trunk" 
+"c:\test.tmpl" 
+"c:\testout.txt"C:\work\subversion\aviOffline .Net\trunk"
+
+
+So I change the command to use the in-built Visual Studio macros for better maintainability but it fails.  It appears to fail on the $(SolutionDir) macro because it appends a trailing backslash and SubWCRev.exe seems to not like the trailing backslash?
+
+"SubWCRev.exe" "$(SolutionDir)" "c:\test.tmpl" "c:\testout.txt"
+
+
+Is there a dos command or another way that removes the trailing backslash?
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+I would try putting a trailing dot:
+
+"$(SolutionDir)."
+
+    
+    
+Title: What GUI should I run with JUnit(similar to NUnit gui)
+Description: 
+    
+    
+                    
+What GUI should use to run my JUnit tests, and how exactly do I do that? My entire background is in .NET, so I'm used to just firing up my NUnit gui and running my unit tests. If the lights are green, I'm clean. 
+
+Now, I have to write some Java code and want to run something similar using JUnit. The JUnit documentation is nice and clear about adding the attributes necessary to create tests, but its pretty lean on how to fire up a runner and see the results of those tests.
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse is by-far the best I've used.  Couple JUnit with a code coverage plug-in and Eclipse will probably be the best unit-tester.
+    
+    
+Answer 2: 
+
+    
+    
+JUnit stopped having graphical runners following the release of JUnit 4.
+
+If you do have an earlier version of JUnit you can use a graphical test runner by entering on the command line[1]:
+
+
+java junit.swingui.TestRunner [optional TestClass]
+
+
+With the optional test class the specified tests will run straight away. Without it you can enter the class into the GUI.
+
+The benefits of running your tests this way is that you don't have the overhead of an entire IDE (if you're not already running one). However, if you're already working in an IDE such as Eclipse, the integration is excellent and is a lot less hassle to get the test running.
+
+If you do have JUnit 4, and really don't want to use an IDE to run the tests, or want textual feedback, you can run the text UI test runner. In a similar vein as earlier, this can be done by entering on the command line[1]:
+
+
+java junit.textui.TestRunner [TestClass]
+
+
+Though in this case the TestClass is not optional, for obvious reasons.
+
+[1] assuming you're in the correct working directory and the classpath has been setup, which may be out of scope for this answer
+    
+    
+Answer 3: 
+
+    
+    
+There's a standalone JUnit runner that has a UI, but I recommend using one of the builtin test runners in the Java IDEs (Eclipse, Netbeans, and IntelliJ all have good ones).  They all support JUnit, and most support TestNG as well.
+    
+    
+Answer 4: 
+
+    
+    
+If you want a standalone test runner (not the build-in IDE one), then for Junit3 you can use
+
+
+junit.textui.TestRunner %your_class% - command line based runner
+junit.swingui.TestRunner [%your_class%] - runner with user interface (swing-powered)
+
+
+For Junit4, the UI-powered runners were removed and so far I haven't found a convenient solution to run new Junit4 tests on old swing-powered runner without additional libraries. But you can use JUnit 4 Extensions that provides a workaround to use junit.swingui.TestRunner. More here
+    
+    
+Answer 5: 
+
+    
+    
+Why you need a GUI runner? Can't you just run the tests from the IDE itself?
+
+In .Net we have TestDriven.net, in Java there must be something equivalent. You can check out IntelliJ IDEA, it has the unit testing support built-in. 
+    
+    
+Title: Is it OK to use Android Studio for production? (License concern)
+Description: 
+    
+    
+                    
+I'm currently developing an app using Eclipse + ADT Plugin and I want to start using Android Studio. I don't mind dealing with a few bugs and similar problems; I have already tried it and it seems fine. But as far as the license concern, may I use it for a production application?
+
+I already saw this post: Is Android Studio ready for production?
+But the answer there says it's not ready because it lacks features and it's still in alpha. I don't mind using an "unfinished product", but want to ensure that I'm not going to violate the license agreement.
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  IntelliJ IDEA Community Edition is completely free and open-source, licensed under the Apache 2 license and can be used for any kind of development. Android Studio has the same licensing terms.
+  http://blog.jetbrains.com/idea/2013/05/intellij-idea-and-android-studio-faq/#comment-4939
+
+    
+    
+Answer 2: 
+
+    
+    
+Given that Android Studio is based on IntelliJ IDEA Community Edition...
+
+And IntelliJ is licensed under Apache 2.0...
+
+Then the file https://android.googlesource.com/platform/tools/idea/+/master/NOTICE.txt from the Android Studio source may help with any license concerns.
+
+This software includes code from IntelliJ IDEA Community Edition
+Copyright (C) JetBrains s.r.o.
+http://www.jetbrains.com/idea/
+
+    
+    
+Title: See inherited documentation in PHPStorm
+Description: 
+    
+    
+                    
+I usually put the documentation in the interface if I can:
+
+
+
+interface SenderInterface
+{
+    /**
+     * Sends Email to user
+     *
+     * @param UserInterface $receiver
+     * @param string $msg
+     */
+    public function sendEmail(UserInterface $receiver, $msg)
+    //...
+    {
+
+
+I then inherit the doc like this to avoid redundancy.
+
+class Sender implements SenderInterface
+{
+    /**
+     * {@inheritDoc}
+     */
+    public function sendEmail(UserInterface $receiver, $msg)
+    //...
+    {
+
+
+Is there a way to see the inherited doc directly into the Sender class without having to open the SenderInterface in PHPStorm?
+    
+
+        
+Answer 1: 
+
+    
+    
+The upcoming PhpStorm v6 has much better support of {@inheritDoc} (in comparison to v5 and earlier).
+
+The functionality you require is already working fine in EAP build (Early Access Program) -- you can try it yourself from here: http://confluence.jetbrains.net/display/WI/Web+IDE+EAP
+
+Command to view documentation is View | Quick Documentation (Ctrl+Q .. or whatever shortcut you may have there)
+    
+    
+Title: How can I implement my own custom property editor for all instances of a certain type?
+Description: 
+    
+    
+                    
+I have followed a few tutorials on creating a custom property editor dialog, but there are so many things involved that I could not get it to work right. What I am trying to accomplish is a custom form with a date picker (calendar), a time picker, and OK and Cancel buttons. The form is no problem at all, but how would I go about implementing this so that I can publish a property in any component of a certain type with a button to launch the property editor?
+
+I would like to completely override the TDateTime type and put my custom editor in its place, so wherever a TDateTime is published and visible in the Object Inspector, I can use this editor to modify both date and time together in the same window.
+
+The problem is that the documentation on creating a custom property editor is poor and although some resources are very thorough, they go into too much detail of the capabilities and lack getting to the point on the most common scenarios.
+    
+
+        
+Answer 1: 
+
+    
+    
+I did not want to ask this question here and expect anyone to answer it for me, so I did the research myself to solve my issues and I would like to share the unique experience involved in this mini project, as I'm sure others are frustrated with the same thing.
+
+There are many different possibilities with custom property editors, dialogs, and component editors. This in particular would call for a TDateTimeProperty descendant. This would allow you to be able to edit the value of the property directly in the Object Inspector as plain text (String) while keeping the DateTime formatting.
+
+I am assuming that you already have a general knowledge of creating custom components and a package in which you can publish this property editor from, because that's a lesson in its own which I will not cover. This calls for just one line of code to be placed inside the Register procedure, but we'll get to that later.
+
+First, you need to create a new form in your Design-Time package, where your components are registered. Name the unit DateTimeProperty.pas, and name the form DateTimeDialog (thus making the form's class TDateTimeDialog). Place whatever controls you need, in this case a TMonthCalendar, TDateTimePicker (with Kind set to dtkTime), and 2 TBitBtn controls, one labeled OK with ModalResult of mrOK and the other labeled Cancel with ModalResult of mrCancel.
+
+Your unit should look something like this:
+
+unit DateTimeProperty;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons;
+
+type
+  TDateTimeDialog = class(TForm)
+    dtDate: TMonthCalendar;
+    dtTime: TDateTimePicker;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+  private
+
+  public
+
+  end;         
+
+var
+  DateTimeDialog: TDateTimeDialog;
+
+implementation
+
+{$R *.dfm}
+
+end.
+
+
+And here is the DFM code behind this form:
+
+object DateTimeDialog: TDateTimeDialog
+  Left = 591
+  Top = 158
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsToolWindow
+  Caption = 'Pick Date/Time'
+  ClientHeight = 231
+  ClientWidth = 241
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  DesignSize = (
+    241
+    231)
+  PixelsPerInch = 96
+  TextHeight = 13
+  object dtDate: TMonthCalendar
+    Left = 8
+    Top = 31
+    Width = 225
+    Height = 166
+    Anchors = [akLeft, akRight, akBottom]
+    Date = 41261.901190613430000000
+    TabOrder = 1
+  end
+  object dtTime: TDateTimePicker
+    Left = 8
+    Top = 8
+    Width = 113
+    Height = 21
+    Date = 41261.000000000000000000
+    Time = 41261.000000000000000000
+    Kind = dtkTime
+    TabOrder = 2
+  end
+  object BitBtn1: TBitBtn
+    Left = 158
+    Top = 200
+    Width = 75
+    Height = 25
+    Caption = 'OK'
+    Default = True
+    ModalResult = 1
+    TabOrder = 0
+  end
+  object BitBtn2: TBitBtn
+    Left = 77
+    Top = 200
+    Width = 75
+    Height = 25
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 3
+  end
+end
+
+
+Now, add DesignEditors and DesignIntf to your uses clause. Make sure you have DesignIDE declared in the Requires of this Design-Time package. This is required for publishing any property editors.
+
+In the form, create a new public property called DateTime of type TDateTime with a property getter and setter. This property will allow you to easily read/write the full TDateTime value the selection actually represents. So you should have this in your form:
+
+private
+  function GetDateTime: TDateTime;
+  procedure SetDateTime(const Value: TDateTime);
+public
+  property DateTime: TDateTime read GetDateTime write SetDateTime;
+
+....
+
+function TDateTimeDialog.GetDateTime: TDateTime;
+begin
+  Result:= Int(dtDate.Date) + Frac(dtTime.Time);
+end;
+
+procedure TDateTimeDialog.SetDateTime(const Value: TDateTime);
+begin
+  dtDate.Date:= Value;
+  dtTime.DateTime:= Value;
+end;
+
+
+Next we need to add the actual property editor class. Create this class just beneath the {$R *.dfm} which is just under implementation:
+
+type
+  TDateTimeEditor = class(TDateTimeProperty)
+  public
+    procedure Edit; override;
+    function GetAttributes: TPropertyAttributes; override;
+    function GetValue: String; override;
+    procedure SetValue(const Value: String); override;
+  end;
+
+procedure TDateTimeEditor.Edit;
+var
+  F: TDateTimeDialog;
+begin
+  //Initialize the property editor window
+  F:= TDateTimeDialog.Create(Application);
+  try
+    F.DateTime:= GetFloatValue;
+    if F.ShowModal = mrOK then begin
+      SetFloatValue(F.DateTime);
+    end;
+  finally
+    F.Free;
+  end;
+end;
+
+function TDateTimeEditor.GetAttributes: TPropertyAttributes;
+begin
+  //Makes the small button show to the right of the property
+  Result := inherited GetAttributes + [paDialog];
+end;
+
+function TDateTimeEditor.GetValue: String;
+begin
+  //Returns the string which should show in Object Inspector
+  Result:= FormatDateTime('m/d/yy h:nn:ss ampm', GetFloatValue);
+end;
+
+procedure TDateTimeEditor.SetValue(const Value: String);
+begin
+  //Assigns the string typed in Object Inspector to the property
+  inherited;
+end;
+
+
+Finally, we need to add a Register procedure to perform the actual registration of this new property editor:
+
+procedure Register;
+begin
+  RegisterPropertyEditor(TypeInfo(TDateTime), nil, '', TDateTimeEditor);
+end;
+
+
+Now there's an important piece to understand in this call to RegisterPropertyEditor. Since the 2nd and 3rd parameters are nil and an empty string, this means the editor will apply to all instances of TDateTime. Look into this procedure for more information about making it specific to certain components and property instances.
+
+And here's the final result after installing...
+
+
+
+Some good resources for custom property editors which contributed are as follows:
+
+
+how to make custom component property?
+http://delphi.about.com/library/bluc/text/uc092501d.htm
+http://www.sandownet.com/propedit.html
+
+    
+    
+Title: Toggle between form and unit is not working in Firemonkey project
+Description: 
+    
+    
+                    
+I'm testing Delphi XE2 and I create a new FireMonkey HD  Application, but  I have an  issue  the form designer for the FireMonkey forms is not visible or Available, the option Toggle Form/unit in the View menu is disabled as well the toolbar button to switch between forms and code, even using F12 does not work. I tried the Shitf-F12 option (Forms windows) but none form is listed. I tried adding new firemonkey  forms too, but none form is shown, only the code is visible. -Any suggestion to solve this issue?
+    
+
+        
+Answer 1: 
+
+    
+    
+I had the same issue some days ago and the problem was that I disabled the Embedded designer option. So it seems that the FireMonkey form designer only works in a embedded window.
+
+Try enabling Embedded designer option in 
+
+Tools -
+Answer 2: 
+
+    
+    
+For information this is written in the readme:
+
+
+  FireMonkey Requires Embedded Designer
+  
+  FireMonkey only supports the embedded form designer. If the IDE is set
+  to use the non-embedded designer (that is, if Tools 

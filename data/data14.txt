@@ -1,0 +1,2955 @@
+Title: Eclipse optimizations
+Description: 
+    
+    
+                    
+The question dealing with Visual Studio optimizations saved me so much time firing it up and using it I have a hard time going back to Eclipse when I have to do J2EE development. Hence, I was also wondering if people have any tips or tricks to help speed Eclipse up in day to day use. 
+
+For information, I'm using the Eclipse version 3.4.1.
+    
+
+        
+Answer 1: 
+
+    
+    
+There are:
+
+
+system optimizations: eclipse.ini
+shortcuts optimizations: 
+
+
+Quick Access (Ctrl+3)
+(the mother of all shortcuts! With it, you can access almost everything in Eclipse)
+Quick Fix (you should make sure it has a convenient shortcut attached to it)
+
+(that includes Run or Debug configurations available in your workspace since 4.12)
+
+launchers optimizations : save them with your projects and do not forget to uncheck the option "Delete configurations when associated resource is deleted" in the "Run/Launching/Launch Configuration" preference panel:
+
+
+And then there are the configuration of:
+
+
+project preferences
+perspectives (which you can configure across multiple screens)
+provisioning mechanism p2 (with bundle pools to share plugins across multiple eclipse installations)
+
+    
+    
+Answer 2: 
+
+    
+    
+I think the best way to learn about eclipse shortcuts is to use MouseFeed. MouseFeed is a plugin which shows the corresponding shortcut keys whenever the user uses the mouse to perform some actions. Common tasks and the shortcuts for them can be acquired within a few days. Mousefeed can be found at http://www.mousefeed.com/. 
+Hope this helps. 
+    
+    
+Answer 3: 
+
+    
+    
+The cheapest and fastest optimization I ever did for Eclipse is to buy extra 2G of RAM for my dev machine. 
+    
+    
+Answer 4: 
+
+    
+    
+one easy thing to do is to allocate more memory to eclipse for big projects using options like:
+-J-Xms512m -J-Xmx1024m
+
+This is not eclipse specific though.
+    
+    
+Answer 5: 
+
+    
+    
+Eclipse has LOTS of shortcuts, but most of them are not straightforward.
+E.g.: shift-alt-X, then T to run a JUnit test.
+
+Sometimes you just need to try and see if it works.
+
+I found the editor arrow-key-macros particularly useful, but you need to play with them yourself to understand it: alt+shift+{left,right} to select an expression for refactoring, ctrl+alt+down to duplicate a line, ctrl-shift-{up,down} to jump to previous definition...
+
+The most powerful combinations are usually the alt-shift-something (especially for refactoring).
+
+Look for "eclipse cheat sheets" on google to find some more inspiration.
+    
+    
+Answer 6: 
+
+    
+    
+if you are looking to remove the sluggishness from the app, memory management is obviously important.  besides increasing the maximum heap settings and other command line tinkering, there have been eclipse plugins developed in the past that claim to prevent windows from swapping out eclipse RAM.  'Keep Resident' hasnt been updated since 2004, but it is still on the eclipse site and i have heard tell that it works with 3.4.
+a review is written here 
+    
+    
+Answer 7: 
+
+    
+    
+The biggest optimization I've found for Eclipse is turning off Theming. My very minimal installation was extremely slow, so I wasted a ton of time doing all the debugging steps until I finally unchecked "General 
+Title: VS Code search.exclude doesn&#39;t work
+Description: 
+    
+    
+                    
+I can't make search.exclude settings to work, so that it excludes build folder.
+
+Here's screenshot:
+
+    
+
+        
+Answer 1: 
+
+    
+    
+This looks like this bug: https://github.com/Microsoft/vscode/issues/31819 - search.exclude won't apply to open files.
+    
+    
+Answer 2: 
+
+    
+    
+Just in case this helps anyone else, here's a list of things that could be affecting whether your file/search exclusion settings are working as expected.
+
+
+Double-check whether you're using the right patterns; you can see what kinds of patterns VS Code supports here. One common problem is to not add * before an extension you want to exclude, e.g. **/.min.js will exclude all files named ".min.js", while **/*.min.js will exclude all files ending in ".min.js".
+Make sure the "Use Exclude Settings and Ignore Files" gear is toggled on (it's next to the "files to exclude" field; if you don't see it, click the little "..." under the "Replace" field). Turning it on will exclude any patterns in your search.exclude settings and patterns defined in any .gitignore files. This only affects whether your exclusion settings will be applied to your search; any pattern you put into the "files to exclude" input field will always be applied.
+If you don't want to exclude .gitignore patterns, set search.useIgnoreFiles to false (it's true by default). If a pattern is excluded in some .gitignore file and search.useIgnoreFiles is true, even if you add that pattern to your search.exclude and set it to false, it will still be ignored (see this issue).
+Any patterns in files.exclude will automatically be excluded from search results, not just from the file explorer.
+All of the default patterns will be excluded even when you create your own files.exclude or search.exclude settings field. To override the default exclusion patterns, you must copy each default pattern into your user-defined settings and set them to false, e.g. "search.exclude": {"**/node_modules": false, "**/bower_components": false}.
+As noted by the accepted answer, any currently opened files will always be included in results, even if they're excluded in your settings.
+As of now, VS Code doesn't support negated glob exclusions, so if your search.exclude has patterns like this {"**/*": true, "**/myfolder": false}, files in "myfolder" won't be included in your results. Instead, you must exhaustively list all folders you want excluded.
+Any settings in User Settings will be applied globally while Workspace Settings will only apply to the current workspace, so make sure you're placing your settings in the section you want.
+
+
+If you're still having problems, you can see which folders VS Code is excluding by setting the log level to trace and reading the output when you perform a search (see here for more instructions).
+    
+    
+Answer 3: 
+
+    
+    
+It seems that search.useRipgrep ignores the exclude settings. For me the exclude started working when I disabled search.useRipgrep.
+
+My Environment: Windows 10; VSC installed in User Directory (as recommended per last Update).
+    
+    
+Title: Rubymine - how to format the code
+Description: 
+    
+    
+                    
+I'm using JetBrains Rubymine for developing Rails applications. It's a great IDE but unfortunately I didn't find how to format the hTML or Ruby  code. 
+
+Any suggestiongs?
+    
+
+        
+Answer 1: 
+
+    
+    
+Ctrl + Alt + I for Auto-indent line(s)
+
+For more keymaps.
+    
+    
+Answer 2: 
+
+    
+    
+Code | Reformat Code... (Ctrl+Alt+L in Windows default keymap).
+    
+    
+Answer 3: 
+
+    
+    
+In OS X keymap try this one: ⌘+Alt+L
+    
+    
+Title: Netbeans: How to disable this single annoying warning?
+Description: 
+    
+    
+                    
+The same problem which is occuring in this question is happening a lot to me: Warning &quot;Do not Access Superglobal $_POST Array Directly&quot; on Netbeans 7.4 for PHP
+
+However - of course I take care with $_POST and user input etc. but I do this with custom functions which NetBeans does not understand and therefore my IDE is full of warnings.
+
+Another annoying example: "Too many nested blocks in function declaration". Of course you should avoid that, but I think this is not always possible.
+
+How can I disable single warnings in the Netbeans IDE while still keeping all other warnings?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Netbeans is not asking you to be careful.  Netbeans is asking you to use the filter_input function (PHP 5.2+) to totally replace $_XXYY.
+You can switch off individual hint types from Tools /p/li/olpa href="https://i.stack.imgur.com/ZHWPU.png" rel="noreferrer"img src="https://i.stack.imgur.com/ZHWPU.png" alt="Editor &gt; Hints &gt; Language: PHP &gt; Nested Blocks / Superglobals"/a/p/div
+Title: Utility to auto insert semicolons in JavaScript source code?
+Description: 
+    
+    
+                    
+I'm working with code from multiple developers, some of whom are inconsistent in their use of semicolons, and I just want them after every line for consistency (and to prevent any masking of errors).
+
+I use Aptana to format my source code, but it won't add semicolons for you AFAIK.
+    
+
+        
+Answer 1: 
+
+    
+    
+Ah ... just discovered YUI compressor has a preserve semicolons options that will actually add the semicolons to the appropriate lines. Then it's just a matter of sending the minified, unmunged version back thru the aptana formatter.
+
+If someone comes up with a simpler solution, please post.
+    
+    
+Answer 2: 
+
+    
+    
+I found Google's Closure-Linter, which seems to be Google's version of JSLint, to work extremely well.
+
+https://developers.google.com/closure/utilities/docs/linter_howto
+
+The webpage above not only explains how to install it on your computer, but at the bottom it explains how to run fixjsstyle which adds almost all missing semicolons as well as some other little things.
+    
+    
+Answer 3: 
+
+    
+    
+I use this online formatter: http://jsutility.pjoneil.net/
+(go to Format Tab, paste your code and click on: "format Javascript statements").
+
+As you can see, there is an option to the right: "replace missing semicolons"
+
+Sometimes, that formatter will report "too many errors" and won't do anything. If that is the case, compress your code with this utility: http://refresh-sf.com/yui/ (which will also add semicolons) and then, you can go back to the formatter to uncompress it.
+    
+    
+Answer 4: 
+
+    
+    
+I would recommend you to encourage your developers to use JSLint to improve the overall quality of your code.
+
+This tool will look for problems in your code based on a set of rules, and of course, it will detect missing semicolons.
+
+And since you are using Aptana, is fairly easy to install the JSLint Eclipse Plugin.
+    
+    
+Answer 5: 
+
+    
+    
+I use fixmyjs. It's available as a CLI and as a plugin for some editors.
+
+It automatically fixes some JavaScript errors in a non-destructive way. The semicolon fix is one of the available auto corrections.
+    
+    
+Answer 6: 
+
+    
+    
+I'm a Flash developer, and I stumbled across this while running a Google search. For fellow AS (a JS cousin) devs, if you're using Adobe Flash Professional (I'm using CS5), when you're editing an actionscript file, click "Tools" and "AutoFormat". The program will take care of the rest.
+
+(Again, this answer is for ActionScript developers, as this is a common issue for us as well. Please don't downvote for irrelevance to JS.)
+    
+    
+Title: What are the differences between android studio and the eclipse version bundled with android SDK
+Description: 
+    
+    
+                    
+I don't have experience in android development and I'd like to start writing an application.
+
+The official developer tools page contains link to two different IDEs. The first contains a bundled ADT version of Eclipse.
+Android Studio, the second IDE, is based on IntelliJ.
+
+Apart from these differences I can't get if there is anything that I can do with only one of them (I guess the answer to this question is no) and what's the point of having two distinct official IDEs.
+
+What are the differences between the two?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  The first contains a bundled ADT version of Eclipse.
+
+
+This is simply a packaging convenience. You are welcome to obtain Eclipse separately and add Android tooling to it.
+
+
+  Android Studio, the second IDE, is based on IntelliJ.
+
+
+At the present time, this is an early-access preview. IMHO, it is not suited for someone who does not have experience in Android application development.
+
+
+  Apart from these differences I can't get if there is anything that I can do with only one of them
+
+
+At the present time, Android Studio is an early-access preview, meaning that there are lots of things that it does not have integrated in. Now, by this time next year, and hopefully far sooner, Android Studio will have equivalent or superior integration than does Eclipse with the ADT plugin.
+
+
+  and what's the point of having two distinct official IDEs.
+
+
+There are an infinite number of "official" tools. You are welcome to use a plain text editor and tools outside of any IDE, for example.
+
+You are welcome to watch the Google I|O 2013 video on developer tools, where they describe a bit of the rationale behind the development of Android Studio.
+    
+    
+Answer 2: 
+
+    
+    
+Android Studio vs Eclipse – Main Differences:
+
+Build Tools
+
+
+  Android Studio utilizes the fast growing Gradle build system. It
+  builds on top of the concepts of Apache Ant and Apache Maven but it
+  also introduces a Groovy DSL (Domain-Specific Language) that allows
+  for scripted builds which opens up many automation possibilities like
+  uploading your beta .apk to TestFlight for testing. Eclipse on the
+  other hand uses Apache Ant as its main build system which a very
+  robust XML based build system that many Java developers may already be
+  familiar with.
+
+
+Advanced Code Completion/Refactoring
+
+
+  Both IDEs feature the standard Java code auto completion but in the
+  case of Android Studio, Google has baked in deeper support for
+  specific Android code and refactoring. Android Studio can refactor
+  your code in places where it’s just not possible using Eclipse and
+  ADT. In addition, in my opinion IntelliJ’s Java auto completion seems
+  more “intelligent” and predicts better what I want to do so there is
+  definitely an improvement in this area over Eclipse.
+
+
+User Interface Design
+
+
+  One of the main selling point Google used to market Android Studio
+  when it came out was its completely redesigned user interface design
+  tool. After working with it for some time, it’s clear that the new
+  tool is much better than the old. It literally crashes it. The new
+  interface design too in Android Studio is faster, responds to changes
+  more rapidly and has more customization options that with Eclipse, you
+  had to manually set in the XML.
+
+
+Project Organization
+
+
+  Both IDEs work differently in an effort to help you manage and
+  organize your projects. If you’ve used Eclipse then you must be
+  familiar with the concept of workspaces. When Eclipse starts, you
+  select the workspace that contains your projects and you can load all
+  project of that workspace in your tree navigation. If you want to
+  switch to a project in a different workspace, then you have to restart
+  the whole IDE. Android Studio treats this situation differently by
+  introducing the concept of modules. Your app could be one module, a
+  library that you just downloaded can be another and the Ad SDK you are
+  currently integrating could be a third. Each of these modules can have
+  their own Gradle build files and declare their own dependencies. To
+  me, Android Studio seems more natural but it takes some time to get
+  used to if you have been using Eclipse for a long time.
+
+
+IDE Performance/Stability
+
+
+  Eclipse is a purely Java based software, and a big one. In order to
+  run it reliably you need to have more than decent amount of RAM and
+  good CPU power to back it up. Many user who do not strictly meet these
+  criteria are reporting very bad experiences with it. It is not unusual
+  for Eclipse to crash while exporting an apk or having to restart it
+  after using it for a few hours straight. Having said that, Android
+  Studio is still in beta so it comes with its own bugs that crash the
+  IDE every now and then but in the meanwhile, the whole experience
+  feels faster and more robust.
+
+
+Conclusion
+
+
+  Having used both Android Studio and Eclipse for a while now, I would
+  personally say that Android Studio has the edge over the two. It might
+  be a bit unstable yet and some updates require a complete
+  re-installation of the software but when it eventually comes out of
+  beta, it will blow Eclipse with ADT out of the water. I especially
+  like the stability of the editor and not having to reboot every now
+  and then, the new and improved UI designer and the sexy themes that
+  make Android Studio a real eye candy. What side will you take in the
+  Android Studio vs Eclipse battle?
+
+    
+    
+Answer 3: 
+
+    
+    
+Besides the numerous points already made, while you can use the ADT tool for other projects outside Android, the Android Studio is purely dedicated to the development of Android apps.Android Studio also allows you to work faster as it gives you intelligent suggestions as you type, freeing you from the shackles of having to go back to your .java or .xml files to look up names of variable or other stuff you can't remember.I just started using Android Studio myself and i can say i am never leaving it.It is particularly good for new programmers.
+    
+    
+Title: Geany - How to execute code in terminal pane instead of external terminal
+Description: 
+    
+    
+                    
+I really like Geany for writing Python code. When I click F5, it opens system's default terminal window and executes the code there.
+
+There is also a terminal inside Geany window, the bottom pane and the last tab. What I want is the code to be executed there. Is it possible?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+After fiddling with the options, I found the way:
+
+
+Right-click on terminal area and select "Preferences". It opens the general preferences window with Terminal tab opened.
+There is an option: "Execute programs in the VTE". Checking this option does what I want.
+
+    
+    
+Answer 2: 
+
+    
+    
+if you are at the location of your file, just type python  in that terminal.
+    
+    
+Title: What is the installation directory for the Aptana Studio 3 IDE?
+Description: 
+    
+    
+                    
+Call me stupid but I just can't find the installation directory for this program. I checked both the Program Files and Program Files (x86) folders in my C drive and can't find anything with Apatana in the folder name. Anyone know where this program installs itself?
+    
+
+        
+Answer 1: 
+
+    
+    
+If you can see a shortcut or link to the Aptana program, then right click on the icon and select Properties. That should show you where it points to.
+    
+    
+Answer 2: 
+
+    
+    
+Aptana Studio 3 by default is installed in Users directory. To be precise in:
+C:/Users/Default/AppData/Local/Aptana Studio 3
+
+Remember to unhide hidden folders.
+    
+    
+Answer 3: 
+
+    
+    
+On Windows 8 it's in : 
+C:\Users[USER]\AppData\Roaming\Appcelerator\Aptana Studio
+    
+    
+Answer 4: 
+
+    
+    
+I found it here:
+
+C:\Users\[Your user name]\AppData\Roaming\Appcelerator\Aptana Studio
+
+
+Once you're there you can right-click on it and "Pin" it if you're in Win 8.
+
+I agree, the installation process doesn't clarify this.
+    
+    
+Answer 5: 
+
+    
+    
+If you have installed Aptana using your admin account and cannot see it on your normal account
+
+
+Go to C:\Users[Your admin user name]\AppData\Roaming\
+Right-click on the Appcelerator folder
+Select cut
+Go to C:\Users[Your user name]\AppData\Roaming\
+Right-click, select paste
+Go into C:\Users[Your user name]\AppData\Roaming\Appcelerator\Aptana Studio
+right click on the orange application icon
+select copy
+right-click on desktop
+select 'Paste Shortcut'
+
+
+(NB: AppData is an 'invisible' folder, so you will have to type or paste in the file path)
+    
+    
+Title: What IDE is the Delphi IDE developed in?
+Description: 
+    
+    
+                    
+Out of curiosity, does anyone know which IDE the developers of the Delphi IDE are using?
+    
+
+        
+Answer 1: 
+
+    
+    
+In Delphi (probably the previous version). The compiler itself is written in C, but the IDE is written in Delphi. Through the OTA, you can actually access the various objects, like TActions, that exist in the IDE.
+    
+    
+Title: Unity vs Torque game engines and IDE environment
+Description: 
+    
+    
+                    
+I want to get people's opinion of Torque and Unity and their IDE tools.
+
+You build Torque games using one of their engines (I'm currently interested in the iPhone engine), and Torque Game Builder  (the whole thing...engine plus TGB is ~$1000).
+
+You build Unity games using Unity (I think this is only ~$400).
+
+Would people with experience building games in these engine give me a pros/cons of the engine?  I'm a newbie and don't know what I should be looking for.  I've downloaded them and are trying to play with them now.
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+Torque: 
+
+
+Option of 2d or 3d engine (seperate products to purchase)
+3d engine based on TGB (Torque Game Builder) which is absolutely ancient. Possibly appropriate for the hardware it is targetting, but still.
+Level editor tools I think are clunky - they are built using the engine itself (like a menus of a video game would be) and it seems their skills are not really in GUI design.
+The only option for scripting is Torque's own TorqueScript language. It's useable, but like UnrealScript or any of these languages game developers come up with in a pinch, it's something extra to learn, comes with little documentation (compared with, say C#) and just feels a bit cobbled together compared to mainstream languages. It also relies or a 3rd party tool for editing and debugging.
+On the plus side you get the sourcecode so you can make changes. However, don't overestimate the usefulness of this - it's production-ready code and as such is pretty challenging to follow.
+
+
+Unity:
+
+
+Has a slick level/project editor tool. It seems more comfortable on MacOS (which is to be expected as that's where it originated). 
+Engine is 3d only, but you can of course make a 2d game with it if you want to  - there are tutorials on their website explaining how.
+Scripting can be done with Javascript or any of the .NET languages (they embedded the Mono runtime). This is a pretty big advantage in my eyes.
+Downsides are you don't get source; the pro version is rather expensive; the minimum build size of a game that uses Unity is over 10Mb which will mean less downloads (apps /li/ul/div
+Answer 2: 
+
+    
+    
+We just did a demo using torque, the experience I took away from that is that not only do you get the source for it. But you will have to start modifying the source very quickly. I don't that you can do any thing but a strict fps shooter with the torque 3d engine without changing the source. 
+
+And while there is a large community for torque out there, they are not really set up well to convey changes to the source. I.e. most of the source changes don't post patches but unwieldy instructions on how to change the source.
+
+I don't have a comparable experience with unity but before I would commit to Torque I would probably run Unity through some tests. 
+    
+    
+Answer 3: 
+
+    
+    
+I have had experience with both engines i must say unity is smoother and uses any  script
+torque on the other hand only uses there own script which u must take time learning also unity is a 2d and 3d engine but with torque both have to be bought separately. also there is an app version of unity but it needs to be purchased. unity is also very much easier as far as newcomers but better in regards to everything else.as was stated before torque is a mainly a first person shooter engine and is very hard to maneuver however it does offer the source code but but this can also be obtained if requested from the site so all together i must say i choose unity 100% and i actually sarted with torque but unity is surely better.
+    
+    
+Answer 4: 
+
+    
+    
+My class and I are currently using Torque in a Game Programming curriculum. We are confined to using TorqueScript and not allowed to mess with the source at all. The hoops we have to jump through just to get a simple (VERY simple) game off the ground are astounding.
+
+We've since convinced the instructor to switch to the UDK next semester.
+    
+    
+Answer 5: 
+
+    
+    
+I just wanted to add a note that Torque3D is a lot better than the older versions of Torque (TGE &amp; TGEA). It is now open source under MIT license, so you can try it out for free.
+    
+    
+Answer 6: 
+
+    
+    
+I published a game developed using Torque (including retail), and even had a partnership contract with GarageGames (the creators of Torque). I'm currently developing another game, using Unity.
+
+I'm not going to do a point-by-point comparison, both because it has already been done, and because it does not properly answers the question unambiguously, and leaves more uncertainty in the air than there actualy is.
+
+Unity is, ATM, hands down a better game engine, in almost all regards, then Torque.
+    
+    
+Title: How to remove the light bulb in PHPStorm?
+Description: 
+    
+    
+                    
+Every time I try to select a line (for copying it, for example) a wild light bulb appears and blocks the mouse pointer. How can I remove this feature?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Actually, you CAN disable the bulb in v6. Settings (or Preferences on Mac)-/p/div
+Answer 2: 
+
+    
+    
+Settings/Preferences | Editor | General | Appearance | Show intention bulb
+
+
+
+Please note that hiding bulb and disabling intentions (as accepted answer suggests) are different things.
+
+Yes, you may end up with hidden bulb in both cases but this way (in this answer) you can still invoke those useful intentions via keyboard shortcut (typically Alt + Enter) while in other case they will be simply unavailable.
+    
+    
+Title: Which version of Eclipse should I be downloading?
+Description: 
+    
+    
+                    
+I just want to develop some Java and Python applications on Windows XP. Which version should I be using:
+
+
+Eclipse IDE for Java Developers, 99MB
+Eclipse IDE for Java EE Developers, 206 MB
+Eclipse Classic 3.6.1, 170 MB
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse IDE for Java Developers - simply made for Java developers. If you develop standalone or similar applications, this is your choice
+
+Eclipse Classic - also has modules to develop Java applications, but also provides different other plugins (extra plugins, which may be unrelated to Java)
+
+Eclipse IDE for Java EE Developers - if you are going to develop dynamic web applications with help of Java, this is what you need.
+
+Make your choice, then in Eclipse go to "Help/Eclipse Marketplace...", type there "python" and on the top you will see PyDev (already mentioned by @cschol), click install :) Using Marketplace you can find other plugins you need for work (just tell it because new Eclipse MArketplace seems to be less known feature of Eclipse Helios platform)
+    
+    
+Answer 2: 
+
+    
+    
+The Eclipse Classic version comes with Java support out-of-the-box. The version for Java Developers might just have a couple of packages more specifically tailored to a Java development workflow.
+
+Find a comparison chart of the different versions here. 
+
+In any version you can install other packages using the built-in Eclipse installation/update system. 
+
+For developing Python applications with Eclipse you will definitely want to install PyDev.
+    
+    
+Title: How to show only message from log (hide time ,pid etc.) in Android Studio
+Description: 
+    
+    
+                    
+I haven't use Android Studio (IntelliJ IDEA) before the logcat that show in Android Studio also show time and pid etc. on the left side of logcat. I want to hide those stuff (time and pid) I wanna see only message form Log. 
+
+Is there any suggestion?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Now on Android Studio you can config the logcat
+
+
+    
+    
+Answer 2: 
+
+    
+    
+You can use PID Cat from Jake Wharton.
+
+pidcat.py com.health.main
+
+
+
+    
+    
+Answer 3: 
+
+    
+    
+Batter You can use monitor.
+.
+set the path in environment variable C:\Program Files\Android\android-sdk\tools; . and type monitor.and you can filter any type of messages however you want. :)
+    
+    
+Answer 4: 
+
+    
+    
+I'm stuck on the same problem. As you pointed out this is a missing feature, I hope that it will be added in the future.
+
+For now, I've mitigated the problem by enabling the "Use Soft Wraps" option that allow multiline logging in order to avoid the horizontal scrolling.
+
+
+
+UPDATE
+
+As reported in the official issues tracker, there should be more formatting options starting from Android Studio 1.4 beta 3
+
+
+  Good news, this should be out now with 1.4 beta 3 which we just
+  released today.
+
+    
+    
+Title: How can I stop all processes in IntelliJ?
+Description: 
+    
+    
+                    
+I am using intelliJ IDEA.
+
+When I run my programs and close the window, the process still remains. If I run a lot of programs, I need to click disconnect many times.
+
+Is there any way to stop all processes?
+
+Eclipse doesn't have this problem.
+
+
+
+ 
+    
+
+        
+Answer 1: 
+
+    
+    
+IntelliJ 2017.2 now has a "Stop All" button in the "Stop process" menu (the button on the top bar), with the default shortcut ⌘+F2 on OSX:
+
+
+
+For older versions:
+
+
+Click the Stop button from the top bar.  It will pop open a menu listing all processes.  (The stop button at the side of the debug window is per-process, as in your screenshot.)
+Hover over the first process, hold Shift, and then click on the last process.
+Press Enter.
+
+
+Screenshot showing the result of steps 1 &amp; 2:
+
+
+    
+    
+Answer 2: 
+
+    
+    
+kill $(ps aux | grep 'java' | awk '{print $2}')
+
+
+This is a nice little workaround I found on SO a while ago that will kill any process with "java" in the name.
+
+Just copy and paste into the terminal.
+    
+    
+Answer 3: 
+
+    
+    
+Not exactly perfect, but what you could do is press Ctrl + F2 (shortcut for Stop Process) and hit Enter. It's better than all that mouse clicking and gets you through a list of running processes quite fast.
+    
+    
+Title: debase LoadError when debugging in RubyMine with ruby 2.0.0 on OS X Mavericks
+Description: 
+    
+    
+                    
+After upgrading to OS X Mavericks (10.9.2), my RubyMine can no longer debug. It quits unexpectedly with the following error:
+
+Testing started at 1:37 PM ...
+/Users/vinny.ly/.rvm/rubies/ruby-2.0.0-p451/lib/ruby/gems/2.0.0/gems/ruby-debug-ide-0.4.23.beta1/lib/ruby-debug-ide.rb:8:in `require': cannot load such file -- debase (LoadError)
+
+I have the following Ruby and gems
+
+$ ruby -v
+ruby 2.0.0p451 (2014-02-24 revision 45167) [x86_64-darwin13.1.0]
+
+$ gem list debugger
+debugger-ruby_core_source (1.3.4)
+
+$ gem list ruby-debug-ide
+ruby-debug-ide (0.4.23.beta1, 0.4.22)
+
+$ gem list debase
+debase (0.0.9)
+
+
+I am running RubyMine 6.3. I have tried reverting to previous versions 6.0.3 and 5.4.3 but I get the same error.
+
+I have also tried uninstalling and re-installing the gems, which didn't help.
+    
+
+        
+Answer 1: 
+
+    
+    
+I managed to fix this problem by upgrading ruby-debug-ide from 0.4.23beta to 0.4.23:  gem install ruby-debug-ide (outside of your project directory), then restart RubyMine.
+    
+    
+Answer 2: 
+
+    
+    
+Just fixed this by messing about with the suggestions here (nothing worked), then going to the Ruby SDK and Gems settings in Rubymine and switching from the global (ruby-2.1.4) to the RVM: ruby-2.1.4 option above it.
+    
+    
+Answer 3: 
+
+    
+    
+I don't have this problem with RubyMine 6.3.3 and Ruby 2.1.2. That version of RubyMine installs the same gem versions except that debugger-ruby_core_source is now at 1.3.5.
+
+If you're not on RM 6.3.3, try upgrading. I've seen RM bugfix upgrades fix debug gem installation failures.
+    
+    
+Answer 4: 
+
+    
+    
+It seems like RubyMine 6.3.3 (and even 7.0.2) will have this problem if you are using ruby version 2.0.0.  Try using a newer version of ruby instead.
+
+Install newer ruby version using the rvm and set it to the default. 
+
+e.g. 
+
+rvm install 2.1.1
+rvm --default use 2.1.1
+
+
+Then in your project, modify your Gemfile to use 2.1.1:
+
+ruby '2.1.1'
+
+
+And then reinstall your gem bundle for the project:
+
+gem install bundle
+
+    
+    
+Answer 5: 
+
+    
+    
+The problem appeared with Ruby 2.2.2. A full update to ruby-debug-ide 0.4.28 solved the problem with Rubymine.
+    
+    
+Answer 6: 
+
+    
+    
+Open RubyMine
+
+
+Click Preferences
+Click Languages  &amp; Frameworks
+Click Ruby SDK and Gems 
+
+
+Then Change to appropriate version of ruby for your project￼
+    
+    
+Answer 7: 
+
+    
+    
+In my case I upgraded Ruby from 2.4.1 to 2.4.4 and got this error when trying to run 
+
+rails server
+
+
+and nothing previously mentioned on this article worked. After googling I found this bug report: https://github.com/ruby-debug/ruby-debug-ide/issues/71
+where they suggest to add require: false to Gemfile:
+
+  gem 'ruby-debug-ide', require: false
+
+
+After this it started to work. However, the debugging doesn't work after this unless you set require back to true.
+    
+    
+Title: Complete Class at Cursor Not Working
+Description: 
+    
+    
+                    
+I've been widely making use of the Complete Class at Cursor function in Delphi, in 2010 and in XE2. Recently, after installing Update 4 for XE2, the Complete Class at Cursor stopped working. After doing some research, I found that uninstalling "AQTime" would fix the issue. So I did that (had to re-install Delphi just to remove it) and sure enough it started working again.
+
+Except, today, it suddenly stopped again. AQTime is not installed, and I haven't done anything in the IDE at all which (as far as I know) could possibly cause this. I haven't installed/uninstalled any packages, changed any library paths, not even changing any settings. It just suddenly stopped working in the middle of my development. Was working one minute, and not the next. I've restarted Delphi, restarted my PC, and even tried in a brand new project. It just will not work anymore.
+
+Anyone know why this stopped working? How can I make it work again? It's an extremely helpful tool which I use all the time.
+    
+
+        
+Answer 1: 
+
+    
+    
+Had the exact same issue in XE2/Update 4. Did the following (without uninstalling AQTime) and it came back.
+
+Tools 
+Answer 2: 
+
+    
+    
+I had the same problem, but it was solved after uninstalling Smartbear AQTime from the windows uninstaller. (close Delphi first)
+
+No need to reinstall Delphi.
+    
+    
+Answer 3: 
+
+    
+    
+I was having the same problem in Delphi Berlin.  None of the above worked for me.  I also tried regenerating the .dproj file but that also did not help.
+
+The one thing that has worked (so far) is installing the excellent IDEFixPack for Delphi Berlin. Delphi IDE Fix Pack 
+
+Please let me take this opportunity also for a quick moan.  Code completion is an absolutely essential feature of Delphi and it is very slow and flaky at best. Embarcadero (if you are listening) - please focus on making these core features much more robust.
+    
+    
+Answer 4: 
+
+    
+    
+Unstalling the AQTime8.20 integration in the IDE solve the problem for me too - used AQtime outside the IDE anyway.
+    
+    
+Title: Setting up vim as C++ IDE
+Description: 
+    
+    
+                    
+I wish to setup vim as C++ IDE so I can do all work from it.
+
+I'm using these plugins for vim:
+
+
+Clang complete - accurate completion
+nerdtree - browse files
+snipmate - insert snippets
+AutoComplPop - omni-completion
+buffergator - buffer management
+vim-powerline - nice statusbar
+vundle - to manage plugins
+
+
+But I lack things like Jump to definition and compiling multiple files in one executable, project view...
+
+I'm using
+
+nmap &lt;F8&gt; :w % &lt;bar&gt; :!g++ -W -Wall -Wextra -pedantic -std=c++11 % -o %:t:r&lt;CR&gt; &lt;bar&gt; :!./%:t:r&lt;CR&gt;
+
+
+to compile current file, but it won't work if there are multiple file that create one executable.
+
+I know I could just use eclipse, netbeans, code::blocks and such, but I really like vim... If such thing as vim ide isn't possible do I have to learn GNU build system or some other method?
+
+Any advice is welcome.
+    
+
+        
+Answer 1: 
+
+    
+    
+You need to create a makefile which handles the build process.
+
+Then from vim just run :make, it will run the build and pop all errors in quickfix window where you can navigate and jump to error locations.
+    
+    
+Answer 2: 
+
+    
+    
+First, to jump to definitions, you might try this:
+
+
+http://www.santiagolizardo.com/article/vim-jump-to-classes-and-functions-defined-in-different-files/64003
+
+
+I haven't tested it, so I can't tell you if it works.
+
+Now, to build multiple file projects, it might be better for you to learn how to use makefiles and automake. These links might help you:
+
+
+http://homepages.gac.edu/~mc38/2001J/documentation/g++.html
+http://www.openismus.com/documents/linux/automake/automake
+
+
+Good luck.
+
+Edit: A similar question was answered on this link: https://stackoverflow.com/a/563992/1820837
+    
+    
+Answer 3: 
+
+    
+    
+"Jump to definition" is already there, it's &lt;C-]&gt; with the cursor on a keyword or :tag foo on the command line.
+
+For these to work, you need a tags file generated by exuberant-ctags and to tell Vim where to find it. See :help tags and :help ctags.
+
+Without a tags file, gd goes to the definition of the keyword under your cursor if it's in the same file. But it's not as generally useful as &lt;C-]&gt;.
+    
+    
+Answer 4: 
+
+    
+    
+For "Jump to definition" I can recommend the YouCompleteMe, plugin which is really easy to setup with vundle.
+
+Otherwise there is also ctags, but I find it less useful.
+
+To use vim as a IDE, I find this post useful.
+    
+    
+Title: Smart Indent algorithm documentation?
+Description: 
+    
+    
+                    
+I'm a big fan of documenting the proper behavior of IDE features that have a subtle but significant impact on coding flow - things like auto-completion selection and commenting/uncommenting code you might not realize you take advantage of but at the end of the day you got just a bit more done than you might have. I do so in hopes that other language services I have to use incorporate the feature(s), subsequently improving my daily coding life. "Real" Smart Indent, i.e. the Visual Studio 2008 C# editor, is one of those features.
+
+Basic block code indentation is reasonably straightforward and can be hacked together in a reasonable amount of time well enough to get the job done. True Smart Indent, on the other hand, is quite possibly the most technically challenging task I've had to implement in the IDE to date, and I've implemented my fair share. Even full-blown on-the-fly automatic code reformatting is easier; it just defers to Smart Indent for the heavy lifting.
+
+I'm looking for high-level discussions of general purpose Smart Indent algorithms. In particular, I'm looking for either research on smart indent strategies, or an objective description of all normal and "edge" cases that could be tested to ensure repeatable, bug-free results. Eventually, I'd like to provide both a detailed workflow of the functionality, a concrete foundation for actually implementing the feature, and finally assembling a language-specific version from that and integrating it into my language services.
+
+PS: Visual Studio 2010's C# editor has several small bugs in this feature. Having implemented it myself, I have a whole new respect for the work it takes to polish it.
+
+Edit (8/25): I managed to write down a draft the rules for how I think things should be handled when the smart indent is inside a code comment. I'll probably be working from a C++/C# perspective on the rules, but later they should be able to be parameterized for aspects of other languages.
+    
+
+        
+Answer 1: 
+
+    
+    
+Emacs CC Mode manual: Indentation Engine Basics.
+
+Steve Yegge blog rant: js2-mode: a new JavaScript mode for Emacs.
+
+Quote from the latter: "Amazingly, surprisingly, counterintuitively, the indentation problem is almost totally orthogonal to parsing and syntax validation."
+    
+    
+Answer 2: 
+
+    
+    
+The magic search phrase you are looking for might be "pretty print".
+    
+    
+Answer 3: 
+
+    
+    
+Like another responder, the key idea for doing this right is prettyprinting,
+that is, generating text from the abstract syntax structure of the code.
+
+Basically you take advantage of the nesting of the tree to produce nesting
+of the printed text.  Key ideas are the notion of building primitive strings from leaves of the tree, gluing horizontal boxes [rectangles of text] together from other boxes from subttrees to provide horizontal composition, and gluing boxes on top of one another to get bigger vertical boxes.
+
+Tricky parts: regenerating the langauge literals with formatting information from the tree leaves (just how many leading zeros did that binary float point number have?),
+handling right margin overflow by allowing alternative box layouts and backtracking, and pattern matching complex tree structures to prettyprint particular trees in nice ways (e.g., nested if-then-if-then-if....)
+
+Here's a research paper on the topic (Full text PDF).
+
+Here's what we did for prettyprinting with the DMS Software Reengineering Toolkit to prettyprint ASTs generated by large-scale metaprogramming.
+    
+    
+Answer 4: 
+
+    
+    
+Maybe I'm missing something, but the "smart indentation" would be entirely tied up in the grammar specification of the language. The closest thing to an academic paper I could find after a bit of google-fu was, in fact, another SO question pertaining to a particular language, here.
+
+So, I'm afraid I can't technically provide an answer, as I did not find any academic papers, but as a sort of meta-answer (sadly, in the form of a question): is it any harder than parsing the language? I use the term "harder" in a vague computability/complexity sense, not referring to the actual time/effort/tears a person would actually put in.
+
+Consider: indentation level changes, in my experience, within certain sub-clauses. If statements, loops, classes, structs, etc. etc. All of these are already detected by the parser. Just as one can decorate a parse tree to build a semantic tree (here's a shard of a random university website), can't you instead decorate the parse tree with "indent information"?
+
+I guess I just don't see what the call for academic papers is all about. Unless if, of course, there's something I'm missing. Which is quite possible, as I've certainly never dared attempt this. :) But, from my vantage point, it would seem that this smart indenting is possible simply by running a modified parser, and instead of reporting "parse errors", it automatically reformats the code so that it is valid (assuming that the "real" parser already okays the block). Real-time running would certainly cause issues, and there are ambigous levels of indentation in whitespace-dependent language (as the indent level is the end of the block).
+
+As a final (honestly, I'm almost done! :)) note: the Emacs text editory is shockingly good, in my experience. I have no idea how it works, but if I were to try this, that would be the first place I'd look... after SO, of course. :))
+    
+    
+Title: Do any R IDEs support conditional breakpoints?
+Description: 
+    
+    
+                    
+Which, if any, R IDEs (e.g. StatET, Revolution R, RStudio, ESS, NppToR, others) support conditional breakpoints?
+
+This is available via bp in the debug package, or via an additional bit of code that invokes browser() based on a condition.  However, it can be more efficient to be able to toggle a particular line # and quickly enter a conditional breakpoint for that particular line, without having additional code or console activities.
+
+
+
+Note 1.  I've searched a bit for these, and it seems that conditional breakpoints are not available in RStudio, and I think the same may be true for StatET.  There appears to be support in ESS (see this page), though I'm not yet familiar with ess-tracebug and whether it's easy to use.  It also seems that this works only for older versions of ESS; I'm not yet familiar with functionality for more recent versions.
+
+
+
+Update 1. I'm selecting an answer (the only one - Andrie's).  The question was answerable regarding whether any IDE supports conditional breakpoints, and, fortunately, Andrie has demonstrated that there exists a solution.  I remain interested in any other IDEs that support this, though Eclipse is good enough for now.  (At the moment, I prefer Rstudio, but this is already in their feature request list.)  If anyone has expertise in ESS and can demonstrate that functionality, I'm sure it will benefit others who happen upon this question.
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, this is possible with Eclipse + StatET 2.0 in R 2.14-1.
+
+Eclipse supports conditional debugging, and StatET 2.0 supports visual debugging (as long as you have a fairly recent version of R.)
+
+Assuming you know your way around Eclipse, do the following:
+
+
+Start a debugging session in Eclipse (i.e. invoke a Debug configuration, not a Run configuration)
+Set a breakpoint in your code
+Open a Debug perspective
+Run your code
+
+
+With the debug perspective open, you will have a pane that contains tabs for Variables / Breakpoints.  In the breakpoints tab, select your breakpoint, then click the Conditional / Expression tickbox and enter your condition.
+
+
+
+In searching for this answer, I found the following pages helpful:
+
+
+Download and install StatET
+How to start a debugging session in StatET
+How to set a conditional breakpoint in Eclipse
+
+    
+    
+Answer 2: 
+
+    
+    
+There is a little trick to set a conditional breakpoint in rstudio:
+
+for(i in 1:10){
+  if(i==5){
+    print("set the breakpoint at this line by shift+f9")
+  }
+  i*i
+}
+
+
+The only drawback is you need to add some extra code
+    
+    
+Answer 3: 
+
+    
+    
+The preview release of RStudio v0.98 has this feature:
+http://www.rstudio.com/ide/docs/debugging/overview
+
+Only drawback is your function should be in the same file with your main code if you want to set a breakpoint in your function.
+    
+    
+Title: How can I develop and debug Chef cookbooks and recipes in an IDE (like Eclipse)?
+Description: 
+    
+    
+                    
+I'm new to ruby and Chef. I've been developing cookbooks, committing them, uploading them to the Chef Server then deploying them to a Chef client with a role change followed by a "chef-client" run on the client. This process is slow.
+
+How can I, using an IDE (Eclipse in my case), develop cookbooks and be able to debug (set breakpoints, watch variables etc) and run them without uploading them to the Chef Server and then pulling them back down with a chef-client run?
+
+
+I'm using Eclipse 3.7 Indigo with the "Dynamic Languages Toolkit - Ruby Development Tools 3.0.0.v20110424-7Z--E_EkMYXO4k101442" plugin
+I'm developing Opscode Chef cookbooks with the 10.x Chef codeline
+I'm working on an Ubuntu 10.10 system developing cookbooks to be run on RHEL/Centos 5 servers
+We run our own Chef Server (open source)
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I was also searching for this kind of tool.
+
+Found this one that shows the shef to do it.
+
+http://stevendanna.github.com/blog/2012/01/28/shef-debugging-tips-1/
+    
+    
+Answer 2: 
+
+    
+    
+You can use Eclipse as a simple editor for Chef Cookbooks. You won't have any IDE support and debug but some people like me might prefer it anyway.
+
+If you would use a Ruby Editor on Eclipse you might get syntax highlighting for .rb Ruby files but I didn't try this yet.
+
+You can make any folder an Eclipse Project (for example the chef-repo OR a specific cookcook) by adding a .project file with inside:
+
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;projectDescription&gt;
+    &lt;name&gt;PROJECT_NAME&lt;/name&gt;
+    &lt;comment&gt;&lt;/comment&gt;
+    &lt;projects&gt;
+    &lt;/projects&gt;
+    &lt;buildSpec&gt;
+    &lt;/buildSpec&gt;
+    &lt;natures&gt;
+    &lt;/natures&gt;
+&lt;/projectDescription&gt;
+
+
+
+Then in Eclipse choose File -
+Answer 3: 
+
+    
+    
+For Eclipse Ruby Development Tools, there is no support for chef cookbooks as of 2015 May 13th, however there is proprietary alternative if you want. 
+
+RubyMine 7 IDE supports Chef with Auto complete and definition navigation for standard Chef resources and their attributes. Ruby Mine is based on Intellij IDEA.
+
+Instead of RubyMine, this feature works with Intellij IDEA if you install the Chef integration plugin on top of ruby plugin
+
+If you are student or teachers, or is for education or training, or for open source projects, you can apply for free license.
+    
+    
+Answer 4: 
+
+    
+    
+May be it is already known but currently we can use ATOM with additional packages   language-chef, linter-foodcritic, linter-ruby
+
+https://atom.io/
+    
+    
+Answer 5: 
+
+    
+    
+The answer is not so simple, as of today Opscode doesn't have an "an official plugin". 
+
+I spent the past few evenings creating a chef plugin for eclipse. It's very bare bones right now, if other people show interest in working on it I might add more as well... For now it does most of what I need (creating new cookbooks, adding recipes, attributes, lwrps, etc.), mostly I'm putting an eclipse wrapper around the chef tools (chef, berks, kitchen, foodcritic, etc)
+
+https://github.com/rleibman/chef-eclipse-plugin
+
+I have no intention of removing this plugin, unless opscode comes up with their own.
+
+I got started creating this plugin with great help from this tutorial: https://cvalcarcel.wordpress.com/2009/07/08/writing-an-eclipse-plug-in-part-1-what-im-going-to-do/.
+
+Now, having said all of this... if you're comfortable with the command line, you can do most of what you need with things that are already there: create a cookbook with either berks or chef, e.g:
+
+chef generate cookbook my_cookbook
+
+And then create a new ruby project in eclipse opened to the cookbook you just created. Once it's created, you can edit ruby files, etc. You can also use all the other chef features (e.g. chef generate recipe) as well to help you get started. 
+    
+    
+Answer 6: 
+
+    
+    
+I tend to use chef-solo on a target virtual machine.  I'll check out my cookbooks repo and iterate locally with a templated solo.rb:
+
+path File.expand_path(File.dirname(__FILE__))
+cookbook_path "#{File.expand_path(File.dirname(__FILE__))}/cookbooks"
+log_level ENV['CHEF_LOG_LEVEL'] &amp;&amp; ENV['CHEF_LOG_LEVEL'].downcase.to_sym || :info
+log_location ENV['CHEF_LOG_LOCATION'] || STDOUT
+verbose_logging ENV['CHEF_VERBOSE_LOGGING']
+
+
+Setting log_level to debug helps quite a bit when cycling with the runner.
+    
+    
+Answer 7: 
+
+    
+    
+Did some work on Kepler and found that:
+
+
+Importing Chef as a ruby project typically fails because the importer seems unable to recognize the chef-specific structures like "cookbooks", etc. as locations for source.  All you see is the ruby interpreter library
+Forcing a ruby import to see the folders as source by hand (declare source folder) also fails because the code in the folder and any subfolders are not visible
+Importing as a general project works in terms of displaying all the Chef-based structures and their code, but the code is not recognized as ruby code, and there is no syntax related capabilities
+Importing as a general project, then subsequently adding a ruby buildspec and ruby nature does work.  All files are visible, and editing with ruby editor is available with syntax highlighting.  
+
+
+In short, add this:
+
+&lt;buildSpec&gt;
+    &lt;buildCommand&gt;
+        &lt;name&gt;org.eclipse.dltk.core.scriptbuilder&lt;/name&gt;
+        &lt;arguments&gt;&lt;/arguments&gt;
+    &lt;/buildCommand&gt;
+&lt;/buildSpec&gt;
+&lt;natures&gt;
+    &lt;nature&gt;org.eclipse.dltk.ruby.core.nature&lt;/nature&gt;
+&lt;/natures&gt;
+
+
+I doubt there's any debugging, etc -- not my goal, as I run on Linux, but at least we have a decent editor and git integration!
+
+For safety, also copied the .buildpath file to the project location ... not sure its necessary.  The generic contents are:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;buildpath&gt;
+  &lt;buildpathentry kind="src" path=""/&gt;
+  &lt;buildpathentry kind="con" path="org.eclipse.dltk.launching.INTERPRETER_CONTAINER"/&gt;
+&lt;/buildpath&gt;
+
+    
+    
+Title: AlternateContent Tags causing issues with IDE, but not compiler
+Description: 
+    
+    
+                    
+I am working on a legacy product.  I need to make regions of a complex UI optional, based on build constants.  It is not feasible to move these regions into controls, so I am using AlternateContent Tags (mc:AlternateContent).
+
+This works perfectly, at compilation and the application runs as expected.
+
+However, the IDE claims one error for each AlternateContent, and enclosed Choice Tag, and will not load the Design window/preview (in VS or Blend):
+
+The name "AlternateContent" does not exist in the namespace "http://schemas.openxmlformats.org/markup-compatibility/2006"
+The name "Choice" does not exist in the namespace "http://schemas.openxmlformats.org/markup-compatibility/2006"
+
+
+I have tried, rebuilding, cleaning and rebuilding, changing build settings between release, debug, x86, x64, and rebooting.  Nothing helps.  It even give the same errors in Blend.
+
+I am hoping that this is just something stupid that I am doing, and I can fix it; or possibly a newer Namespace URI I should be using.  If I cannot resolve the errors, I am hoping someone knows a trick to suppress these errors in the IDE, so can use it.
+
+I have a fully updated VS2013 Premium installation.  However, It has the glitch on a test machine running VS14 CTP, and another running VS2012 (fully updated), both without any add-ins; so I have to assume it is not a problem with my PCs install.
+    
+
+        
+Answer 1: 
+
+    
+    
+A little late to the party, but if you add the mc tag to your Ignorable attribute the error goes away. Your content won't show in the designer but worked for me when I compiled the different flavours of my project.
+
+&lt;UserControl...
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:conditional="defined-in-assembly.cs"
+    mc:Ignorable="d mc"/&gt;
+
+    
+    
+Answer 2: 
+
+    
+    
+What about this:
+
+public class BuildConstants
+{
+    public bool IsDebug
+    {
+        get
+        {
+#if DEBUG
+            return true;
+#else
+            return false;
+#endif
+        }
+    }
+}
+
+
+and the xaml:
+
+&lt;Application.Resources&gt;
+    &lt;BooleanToVisibilityConverter x:Name="BooleanToVisibilityConverter"&gt;&lt;/BooleanToVisibilityConverter&gt;
+    &lt;l:BuildConstants x:Key="BuildConstants" /&gt;
+&lt;/Application.Resources&gt;
+
+&lt;Grid Visibility="{Binding IsDebug, Source={StaticResource BuildConstants}, Converter={StaticResource BooleanToVisibilityConverter}}"&gt;
+    &lt;TextBlock Text="This will be visible only when DEBUG build constant is present"&gt;&lt;/TextBlock&gt;
+&lt;/Grid&gt;
+
+    
+    
+Title: IntelliJ - Failed to start: 0 passed, 1 not started
+Description: 
+    
+    
+                    
+Just been playing around for the first time with IntelliJ IDEA Community edition, first time I have worked with it so if I'm missing something, please excuse me.
+
+I have a bunch of unit tests which I run, however, when running them in IntelliJ (with the standard setup out of the box), I intermittently get the following error in the console:
+
+
+  03:14:17 Failed to start: 58 passed, 1 not started
+
+
+I have searched the web but to no avail.  If I run just the test that failed, it may or may not print out a similar error:
+
+
+  03:19:54 Failed to start: 0 passed, 1 not started
+
+
+If I keep trying, eventually it works and tells me that all of my tests have passed.
+
+The image is not the error as an exclamation mark, it is a different error icon (), which I do not recognise.  The error in Event Log window appears as red text.
+
+It always appears to happen with only one test and it is always the same test for any given set of tests. I.E. In a different project, the same issue also appears, but for a different test (but its always the same one in each project or set of tests).
+
+One more thing to note is that this ONLY happens when debugging and not when running, so it may be something to do with connecting the debugger?
+
+It all works perfectly fine with Eclipse.
+
+Any ideas what could be causing this?
+
+Many thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+I got the same error. It was something weird sent to System.out that made IntellJ IDEA test "not started".
+    
+    
+Answer 2: 
+
+    
+    
+I've created a ticket for IntelliJ IDEA, you can vote for it if you still encounter this problem.
+    
+    
+Answer 3: 
+
+    
+    
+In my case problem was in pom.
+I moved from fulling working application to spring-boot implementation and only imported spring-boot-starter-test in dependency for testing.
+
+I solved by excluding junit part from spring-boot-starter-test and added junit dependency of latest version in separate block.
+    
+    
+Answer 4: 
+
+    
+    
+Looks like this may have been a bug on IntelliJ, it has been raised with them.
+    
+    
+Answer 5: 
+
+    
+    
+I had this problem (in Android Studio but its a customised IntelliJ) and the reason was WHERE the cursor was when I ran tests using CTRL-SHIFT-F10.
+
+@Parameterized.Parameters
+public static Collection data()
+
+
+Once I moved the cursor into a test method or not inside any method, it worked.
+    
+    
+Answer 6: 
+
+    
+    
+I had the same issue. Whatever be the number of scenarios, it was showing 1 extra scenario in NOT STARTED stage. I was using Scenario Outline to run tests and had commented the rows in the Example tables.
+
+I later found out that commenting the whole example table (which I didn't wanted to run) resolved the issue rather than commenting each row.
+    
+    
+Answer 7: 
+
+    
+    
+I had the same issue that cracked me up a little in IntelliJ IDEA 2017.2.1. The test case ran without any recognizable errors or irregularities, but in the end JUnit claimed the case as not started.
+
+Figured out it was caused by trying to print into a PrintWriter that has already been closed.
+    
+    
+Title: How to auto-import namespaces for whole PHP file in phpStorm?
+Description: 
+    
+    
+                    
+How can I do something like NetBeans does with "Fix Uses..." (Ctrl+Shift+I) in PHPStorm, so I can fix FCQN in my project files?
+
+What I already found is Alt+Enter on class name, but how can I do it for whole file?
+    
+
+        
+Answer 1: 
+
+    
+    
+Currently you can't do this for a whole file. You are able to import on the fly, as documented here, but not for a pre-existing file. You might consider making a feature request for this.
+    
+    
+Answer 2: 
+
+    
+    
+Its called "Optimize imports" and can be found in menu Code/p/div
+Title: jade templating syntax support for eclipse?
+Description: 
+    
+    
+                    
+I have just starting using the nodejs templating engine jade. Unfortunately my IDE eclipse doesn't seem to have support for this syntax and is not highlighting correctly.
+
+Is it possible to add support for .jade files to eclipse?
+    
+
+        
+Answer 1: 
+
+    
+    
+As current lead of Nodeclipse effort www.nodeclipse.org I announce that Nodeclipse v0.12 has added Minimalist Jade Editor, see http://www.nodeclipse.org/history. Added just before release as I got sick of .jade to be opened outside of Eclipse. 
+
+
+#134 - Minimalist Jade Editor
+idea is to define HTML tags and JavaScript keywords as words for highlight in Word.java
+and then use it together with EditBox
+
+
+Nodeclipse scope is growing, now it has Gradle for Android and JavaScript in general that I want to work on for next iteration. Also looking for developers and company willing to support the project. Raise an issue on GitHub/Nodeclipse to continue.
+    
+    
+Answer 2: 
+
+    
+    
+check if this helps
+
+Jade-syntax-highlight
+    
+    
+Answer 3: 
+
+    
+    
+Follow the pattern used for adding HAML support to an Eclipse install, and find a lexer and colorizer for Jade.
+    
+    
+Title: Hide Properties/Toolbox Pane when not in Resource View?
+Description: 
+    
+    
+                    
+Every time I view a form or dialog in Visual Studio (2005) the Properties and Toolbox panes show up on the right side of my screen.  That's good to have because they are useful for manipulating dialogs.
+
+However once I switch back to source code these panes just get in the way... is there a way to get them to go away automatically?
+    
+
+        
+Answer 1: 
+
+    
+    
+I've done something recently in VS2010 using a macro that shows and hides the Tools panel when switching back and forth from code to design view in asp.net MVC3 views. It could be easily adapted to do the same for your situation I think.
+
+This goes in the EnvironmentEvents class file in in the VS Macro IDE after the pre-generated content.
+
+&lt;System.ContextStaticAttribute()&gt; Public WithEvents CommandEvents As EnvDTE.CommandEvents
+
+
+  Public Sub DTEEvents_OnMacrosRuntimeReset() Handles _
+  DTEEvents.OnMacrosRuntimeReset
+        CommandEvents = DTE.Events.CommandEvents
+    End Sub
+
+    Private Sub DTEEvents_OnStartupComplete() Handles _
+        DTEEvents.OnStartupComplete
+        CommandEvents = DTE.Events.CommandEvents
+    End Sub
+
+    Public Sub CommandEvents_AfterExecute( _
+    ByVal Guid As String, _
+    ByVal ID As Integer, _
+    ByVal CustomIn As Object, _
+    ByVal CustomOut As Object) _
+    Handles CommandEvents.AfterExecute
+
+        If DTE.Commands.Item(Guid, ID).Name = "View.ViewDesigner" Then
+            DTE.ExecuteCommand("View.Toolbox")
+        End If
+
+        If DTE.Commands.Item(Guid, ID).Name = "View.ViewMarkup" Then
+            DTE.Windows.Item(Constants.vsWindowKindToolbox).Close()
+        End If
+
+    End Sub
+
+
+It could probably be better optimized using the guids of the event rather than the if statements. It works when you use the hot keys for switching views as well as the view menu, but not the context menu.
+    
+    
+Answer 2: 
+
+    
+    
+for vs2015:
+
+
+Menu 
+Answer 3: 
+
+    
+    
+Rather than give up the space on the right side of the screen, I dragged my properties and toolbox panes over to the left-side frame that hosts the solution explorer and class view, etc.  I'd rather have one multi-purpose box on one side of the screen than to have the code surrounded.  If you need them both, you can put the toolbox in the solution explorer pane, then stack the properties pane beneath the solution explorer, which keeps a few properties in view at all times along with the toolbox.
+
+I know it's not quite the answer you were looking for, but it's a different way of keeping that screen real estate available for code without messing with auto-hide (I find auto-hide to be really an annoyance more than a help.)
+    
+    
+Answer 4: 
+
+    
+    
+If you click the 'pin' icon on those tool windows, you can toggle whether the windows stay open all the time, or only when the mouse is near them.  Of course, sometimes my mouse strays over in that direction and they pop out when I don't want them to, but such is life...
+    
+    
+Title: Prevent PyCharm from showing builtin modules on KeyboardInterrupt and other occasions
+Description: 
+    
+    
+                    
+In PyCharm when an Error occurs the IDE opens the module that produced the Error (this is especially annoying when the Error was produced by pressing Ctrl+C).
+
+It also opens the module in which the program currently "is" when pausing in Debug mode. Is there a way to disable this behavior for built-in modules? (Preferably with a way of showing the exception anyway in case you want to see the source of the built-in module)
+    
+
+        
+Answer 1: 
+
+    
+    
+I accept the bounty as it pointed to the right direction:
+
+applying the same trick to the file pydevd.py line 1793 finally solved it for me!!
+
+        try:
+          launch(file, globals, locals)  # execute the script
+        except:
+          import traceback; traceback.print_exc()
+
+    
+    
+Answer 2: 
+
+    
+    
+As I posted later here you can Edit PyDev's source to prevent parts of this from happening:
+
+First, you have to find the source for the PyDev interactive interpreter (which is used by PyCharm). On my Windows machine it is located in C:\Program Files (x86)\PyCharm\helpers\PyDev (path my vary of course). 
+
+The problem can be fixed by editing the file _pydev_imps/_pydev_execfile.py (in the PyDev source directory). Line 18 reads 
+
+exec(compile(contents+"\n", file, 'exec'), glob, loc)
+
+
+wrap it in a try ... except block with the following code as exception handler 
+
+import traceback; traceback.print_exc()
+
+    
+    
+Title: Open sublime text editor into eclipse
+Description: 
+    
+    
+                    
+Is there a way to open the Sublime Text Editor into Eclipse to edit HTML, JavaScript and CSS?
+
+The idea is to use only the Text Editor without project explorer.
+
+If this isn't possible, is there a plugin that does what I said?
+    
+
+        
+Answer 1: 
+
+    
+    
+I would have just left this as a comment but I can't. First off, why is using the project explorer a problem? 
+
+Next, I know with Sublime Text 2 &amp; 3 you have the ability to view/edit a file in two places simultaneously, just go File &gt; New View into File. In Eclipse you can go Window &gt; New Window. Alternatively you can import a project/file into eclipse or sublime. Either of these will bring in the project explorer (unless you import one file or something).
+    
+    
+Answer 2: 
+
+    
+    
+You might want to have a look at Subclim + Eclim.
+
+I had to open the files via "Project Explorer -
+Title: Auto-sync Visual Studio&#39;s Class View
+Description: 
+    
+    
+                    
+Is it possible to have Visual Studio's Class View pane (available under View /p/div
+Answer 1: 
+
+    
+    
+See here and here.  I find your phrasing more along the lines of what I would have asked.  Not sure why you didn't get any answers.
+    
+    
+Answer 2: 
+
+    
+    
+As it seems, an automatic synchronize (without hotkey) will not be implemented.
+
+https://visualstudio.uservoice.com/forums/121579-visual-studio-ide/suggestions/15963322-sync-class-view-with-code
+
+
+  I want to personally thank you for taking the time to share this
+  suggestion. Since the suggestion you raised has not gathered many
+  votes, the Visual Studio IDE team is prioritizing other suggestions
+  and closing it at this time.
+  
+  If you would like us to reconsider this, please create a new
+  suggestion. Again, thank you for sharing with us!
+
+    
+    
+Title: What&#39;s a good development environment for Perl?
+Description: 
+    
+    
+                    
+I develop applications using PHP or Java and will study Perl for the first time.
+
+For PHP and Java, there are integrated development environments such as Eclipse, and debugging environment was regulated well, but, in the case of Perl, what kind of development environment do people use? 
+
+Is there a recommended IDE? 
+
+I would prefer a free debugging environment.
+    
+
+        
+Answer 1: 
+
+    
+    
+As Sinan stated, there are some IDEs for Perl. Padre is worth a mention. It is being actively developed by the Perl community.
+    
+    
+Answer 2: 
+
+    
+    
+Perl has very good debugging support. Read perldoc perldebug for details.
+
+There are a bunch of IDEs such as ActiveState's Komodo, EPIC etc but I prefer to combine GVim (see also .vimrc for Perl programmers) with the command line. Others prefer Emacs.
+    
+    
+Answer 3: 
+
+    
+    
+From perlfaq3: Is there an IDE or Windows Perl Editor?, where it looks much nicer.
+
+If the Padre people want their stuff in here, just add the right bits. The source lives in my perlfaq github repo. You can fork it, edit the file right in GitHub, and send me a pull request.
+
+
+
+Is there an IDE or Windows Perl Editor?
+
+Perl programs are just plain text, so any editor will do.
+
+If you're on Unix, you already have an IDE--Unix itself.  The Unix
+philosophy is the philosophy of several small tools that each do one
+thing and do it well.  It's like a carpenter's toolbox.
+
+If you want an IDE, check the following (in alphabetical order, not
+order of preference):
+
+Eclipse
+
+
+    The Eclipse Perl Integration Project integrates Perl
+    editing/debugging with Eclipse.
+
+
+Enginsite
+
+
+    Perl Editor by EngInSite is a complete integrated development
+    environment (IDE) for creating, testing, and  debugging  Perl
+    scripts; the tool runs on Windows 9x/NT/2000/XP or later.
+
+
+Komodo
+
+
+    ActiveState's cross-platform (as of October 2004, that's Windows,
+    Linux, and Solaris), multi-language IDE has Perl support, including
+    a regular expression debugger and remote debugging.
+
+
+Open Perl IDE
+
+
+    Open Perl IDE is an integrated development environment for writing
+    and debugging Perl scripts with ActiveState's ActivePerl
+    distribution under Windows 95/98/NT/2000.
+
+
+OptiPerl
+
+
+    OptiPerl is a Windows IDE with simulated CGI environment, including
+    debugger and syntax highlighting editor.
+
+
+PerlBuilder
+
+
+    PerlBuidler is an integrated development environment for Windows
+    that supports Perl development.
+
+
+visiPerl+
+
+
+    From Help Consulting, for Windows.
+
+
+Visual Perl
+
+
+    Visual Perl is a Visual Studio.NET plug-in from ActiveState.
+
+
+Zeus
+
+
+    Zeus for Window is another Win32 multi-language editor/IDE that
+    comes with support for Perl
+
+
+For editors: if you're on Unix you probably have vi or a vi clone
+already, and possibly an Emacs too, so you may not need to download
+anything. In any Emacs, the cperl-mode (M-x cperl-mode) gives you
+perhaps the best available Perl editing mode in any editor.
+
+If you are using Windows, you can use any editor that lets you work
+with plain text, such as NotePad or WordPad.  Word processors, such as
+Microsoft Word or WordPerfect, typically do not work since they insert
+all sorts of behind-the-scenes information, although some allow you to
+save files as "Text Only". You can also download text editors designed
+specifically for programming, such as Textpad 
+and UltraEdit, among others.
+
+If you are using Mac OS, the same concerns apply.  MacPerl (for Classic
+environments) comes with a simple editor. Popular external editors are
+BBEdit or Alpha. Mac OS X users can use Unix editors as well.
+
+GNU Emacs
+
+MicroEMACS
+
+XEmacs
+
+Jed
+
+or a vi clone such as
+
+Elvis FTP, WWW
+
+Vile
+
+Vim
+
+For vi lovers in general, Windows or elsewhere: vi
+
+nvi (available from CPAN in src/misc/) is
+yet another vi clone, unfortunately not available for Windows, but in
+Unix platforms you might be interested in trying it out, firstly
+because strictly speaking it is not a vi clone, it is the real vi, or
+the new incarnation of it, and secondly because you can embed Perl
+inside it to use Perl as the scripting language.  nvi is not alone in
+this, though: at least also vim and vile offer an embedded Perl.
+
+The following are Win32 multilanguage editor/IDESs that support Perl:
+
+Codewright
+
+MultiEdit
+
+SlickEdit
+
+There is also a toyedit Text widget based editor written in Perl that
+is distributed with the Tk module on CPAN.  The ptkdb is a Perl/tk based debugger that acts
+as a development environment of sorts.  Perl Composer is an IDE for Perl/Tk GUI
+creation.
+
+In addition to an editor/IDE you might be interested in a more powerful
+shell environment for Win32.  Your options include
+
+Bash from the Cygwin package
+
+Ksh from the MKS Toolkit, or the Bourne shell
+    of the U/WIN environment
+
+Tcsh, see also Using csh &amp; tcsh
+
+Zsh
+
+MKS and U/WIN are commercial (U/WIN is free for educational and
+research purposes), Cygwin is covered by the GNU Public License (but
+that shouldn't matter for Perl use).  The Cygwin, MKS, and U/WIN all
+contain (in addition to the shells) a comprehensive set of standard
+UNIX toolkit utilities.
+
+If you're transferring text files between Unix and Windows using FTP be
+sure to transfer them in ASCII mode so the ends of lines are
+appropriately converted.
+
+On Mac OS the MacPerl Application comes with a simple 32k text editor
+that behaves like a rudimentary IDE.  In contrast to the MacPerl
+Application the MPW Perl tool can make use o Shell f the MPW itself as
+an editor (with no 32k limit).
+
+Affrus is a full Perl development environment with full debugger support.
+
+Alpha is an editor, written and extensible in Tcl, that nonetheless has built in support for several popular markup and programming
+    languages including Perl and HTML.
+
+BBEdit and BBEdit Lite are text editors for Mac OS that have a Perl sensitivity mode.
+
+Pepper and Pe are programming language sensitive text editors for Mac
+OS X and BeOS respectively.
+    
+    
+Answer 4: 
+
+    
+    
+Padre is getting better, but it's currently not quite up there with Komodo or EPIC.
+
+That said, it is comparable with Ultraedit or Notepad++ at this point, less than a year after the first line of code was written.
+
+With about 30 people actively committing, 35-40 plugins either released or in development, and translations in 20 languages, it is also moving ahead incredibly quickly.
+
+So right now, I agree that EPIC is probably the way to go, since you've used Eclipse already.
+
+But by this time next year it's probably going to be a different story.
+    
+    
+Answer 5: 
+
+    
+    
+If you're already familiar with debugging in Eclipse, then the EPIC plugin is exactly what you're looking for. 
+
+It's got stepped debugging within the Debug perspective, like with other languages in Eclipse. It's not as strong as the Java support, but it's got an easier learning curve than e.g. "perl -d" (the 'standard' way to debug Perl), or even learning a new editor like Emacs, with its Perl debugging integration.
+    
+    
+Answer 6: 
+
+    
+    
+What I use -- and what I've gotten the impression that most other serious Perl developers use -- is a good text editor. The only "integration" I have is via user-defined tools. For Perl, that's these:
+
+perl -Mstrict -cw &lt;file&gt;  # Perl "lint"
+perl &lt;file&gt;               # run file
+perl -d &lt;file&gt;            # run file in debugger
+
+
+I have others for checking files in/out of version control, browsing history, etc. A good configurable editor (I'm partial to UltraEdit) will allow you to build your own environment using the tools you want instead of foisting an all-encompassing solution on you.
+    
+    
+Answer 7: 
+
+    
+    
+Komodo Edit is a free editor from Active State, probably not as feature rich as the full IDE but I find it very useful for Perl development, and it supports multiple languages.
+    
+    
+Answer 8: 
+
+    
+    
+You didn't specify which platform you're on, but on the Macintosh, TextMate is a very popular choice for Perl development. It's completely replaced Vim for me, and while it's not a full IDE, it's got alot of neat integrations in bundles specially targeted towards Perl development.
+    
+    
+Title: Registering extension EJS with visual studio and intellisense?
+Description: 
+    
+    
+                    
+does anyone know how i can map EJS to visual studio to act like a HTML file. I think i managed to do it but its got a lot of bloat in it.. Its basically an HTML file without the HTML and BODY tags.. so i selected the UserControl in VS 2008, tools, options, Text Editor, file extension and added EJS and added it as usercontrol.
+
+If i choose html then it doesn't offer intellisense until it detects a HTML and BODY  ..
+
+My question really is can i add to this list? and create my own??  It need to offer intellisense for html and javascript but nothing more.
+
+Also can i create some kind of code to install the EJS automatically on another pc?
+    
+
+        
+Answer 1: 
+
+    
+    
+For what it is worth at this point...
+
+The above solutions are still valid. However an easier solution (that I have only tested in VS 2013), is to right-click any given *.ejs file, and Select "Open With".  In the dialog that opens, select "HTML (Web Forms) Editor" and select it as default.  
+
+Now, when you open your EJS files, you will get syntax highlighting and intellisense for your HTML.  This does not give you support for EJS Code snippets. 
+    
+    
+Answer 2: 
+
+    
+    
+I was also searching for an answer to this question.  Here is what I found...
+
+
+  Source - Visual Studio 2008
+  
+  Obviously Visual Studio does not have
+  support for the .blogtemplate
+  extension. For awhile I hacked my way
+  around it by renaming the files to
+  have a html extension while editing,
+  which sort of works. The main problem
+  is that I keep forgetting to change
+  the extension back before I start
+  testing my changes - so this was
+  causing unnecessary pain... I had a
+  vague memory of configuring something
+  like this before and found these
+  instructions. For the sake of
+  completeness I include them here also:
+  
+  
+  Go to the Tools-/lili
+Answer 3: 
+
+    
+    
+This requires creating a custom intellisense and validation schema. Here are the steps on how to go about doing that.
+
+
+Creating an HTML intellisense schema file: Go to the common7\packages\schemas\html directory of your Visual Studio installation. On my machine this is: C:\Program Files\Microsoft Visual Studio 9.0\Common7\Packages\schemas\html
+Make a copy of the file html_401.xsd and name it EJS.xsd
+Open the file you just named EJS.xsd in Visual Studio or any other XML editor
+Make the following changes to the top of the file:
+
+
+Replace the 2 occurrences of the text html-401 with EJS
+Change vs:ishtmlschema to "false"
+Change vs:SuccinctFriendlyName to "EJS"
+
+Add Registry entries for this new schema - You can edit the registry directly or  create a *.reg text file. If you choose, the latter, name the file EJS.reg and add this to it:
+
+
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\9.0\Packages\{1B437D20-F8FE-11D2-A6AE-00104BCC7269}\Schemas\Schema23]
+"File"="html\\ejs.xsd"
+"URI"="http://schemas.microsoft.com/intellisense/EJS"
+"Friendly Name"="EJS"
+
+
+Visual Studio 2008 ships with 22 schemas, that's the reason why you this as "schema23", if you installed a 3rd party schema editor, that name may already exist (check that registry key if you want to be sure).
+
+Once this is done, restart Visual Studio. Associate the *.ejs extension with "HTML Editor" instead of the "User Control Editor". Now, when you open or create a file with a *.ejs extension, you should see the "Target Schema For Validation" drop down in the "HTML Source Editing" toolbar. (if you don't see that toolbar, go to View-
+Answer 4: 
+
+    
+    
+I had been having problems with ejs extesion. I solved it like this:
+- Open the menu, Tools 
+Title: How can I disable &#39;autoscroll from source&#39; in Visual-Studio-Code
+Description: 
+    
+    
+                    
+Code Version - 1.7.1
+
+I find this to be one of the most annoying parts of my day. 
+
+How can i disable 'autoscroll from source' in  Visual-Studio-Code?
+
+In Android Studio it is possible to enable/disable Auto Scroll to/from source. I'm looking for a way to disable this in Visual-Studio-Code.
+
+Thank you
+    
+
+        
+Answer 1: 
+
+    
+    
+Open your user settings and set "explorer.autoReveal": false. This setting is listed under "File Explorer" on the default settings side.
+    
+    
+Answer 2: 
+
+    
+    
+May you want to focus to "File Explorer" from "current editing file" you can set "Files: Reveal Active File in Side Bar" in Short cut setting file. after set "explorer.autoReveal": false
+    
+    
+Title: How to remove unused units from all source files on Delphi XE2?
+Description: 
+    
+    
+                    
+How to automatically remove unused units from uses section on all source files of the project on Delphi XE2?
+
+P.S. IDE will work much faster after that.
+    
+
+        
+Answer 1: 
+
+    
+    
+There is no way to fully automate this.
+
+There are a few tools I'm aware of that take a wizard approach:
+
+
+CnPack Uses Units Cleaner
+Peganza's Pascal Analyzer (and it's sidekick icarus).
+The Lazarus IDE has a "Unused Units" dialog in it's CodeTools package.  
+
+
+Peganza's tools simply show a report. CnPack will prompt to remove the unused units for you but you must confirm. Lazarus presents you with a list of unit's it thinks are unused and gives you the choice of removing some or all of them.
+
+Why isn't it automated?
+
+Because this is static analysis. Even the most sophisticated tools cannot determine with 100% certainty whether a specific line of code will be used at runtime let alone an entire unit. These tools have implemented their own parsers to accomplish this feat but they aren't fool proof.
+
+In any case the main benefit of cleaning up the uses clause is removing visual clutter from both the source itself and the code completion feature. Yes there is some performance gained during compiling and certain IDE background operations will speed up slightly but I think you'll be disappointed if you think the IDE will miraculously speed up.
+
+You'll see better IDE and compiler performance by:
+
+
+Breaking your projects into smaller pieces that can be worked on independently.
+Eliminating duplicate code.
+Disabling unneeded IDE packages.
+
+
+I'm certainly not trying to dissuade you from removing unused unit references. As I said it will help unclutter your source. Just make sure you're doing it for the right reasons.
+    
+    
+Answer 2: 
+
+    
+    
+We have a utility called the Delphi Unit Dependency Scanner (DUDS). It scans your entire project and builds a fully searchable tree of the units and dependencies. It can be very useful in finding unused units.
+
+The application is Freeware and you can find it here.
+
+Disclaimer-I am the author.
+    
+    
+Answer 3: 
+
+    
+    
+Don't think I would want a tool that would automatically rip out unnecessary units in the Uses section...
+
+but there are tools out there to identify them...look at Icarus...freeware that you can get at http://www.peganza.com/downloads.htm
+    
+    
+Answer 4: 
+
+    
+    
+CnPack has "Use Cleaner..." option that I have used unit by unit basis without a problem. It also has the ability to do the entire project - which I haven't tried due to the size of the project.
+    
+    
+Title: Hide status bar or progress bar in Eclipse
+Description: 
+    
+    
+                    
+How can I hide the status bar in Eclipse? I mean the one at the bottom, where also the "Progress" status is shown. It is very distracting because it is doing something all the time.
+
+I took a look at this question, but the answer given there and on Superuser does not show how to hide it. I also did not find anything in the preferences. I am using Eclipse 3.7.2.
+
+How can I hide the status bar, or at least, get rid of the "Progress" bar at the bottom?
+    
+
+        
+Answer 1: 
+
+    
+    
+With CSS in Eclipse Juno there are endless possibilities to style Eclipse the way you like: edit the eclipse/plugins/org.eclipse.platform_4.2.2.v201302041200/css/e4_default_mac.css (adapt it to your Eclipse version and operating system).
+
+There, add the following lines:
+
+#org-eclipse-ui-trim-status,
+#org-eclipse-ui-trim-vertical1,
+#org-eclipse-ui-trim-vertical2 {
+   visibility: hidden;
+}
+
+
+Now, not only the status bar but also the bars on the left and right are hidden. Before doing that, you might open the views you like to have and bring them to your preferred positions and assign a shortcut to them so that they will pop up whenever (and only when) you need them. Of course, you can undo that change any time.
+    
+    
+Answer 2: 
+
+    
+    
+Eclipse Oxygen (4.7)
+
+Approach 1
+
+
+Go to Quick Access (or press Ctrl + 3)
+
+
+Type "status bar"
+Choose Toggle Statusbar - Toggle the visibility of the bottom status bar
+
+
+Approach 2
+
+
+Window strong/strong
+Answer 3: 
+
+    
+    
+With the new release of Eclipse, you can use the menu to hide the status bar. 
+
+see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=501811
+    
+    
+Title: Do too many plug-ins slow down Eclipse?
+Description: 
+    
+    
+                    
+I have recently installed a new project into my Eclipse and also needed to install some plug-ins to manage it. I also installed other plug-ins which I do not need to manage the project but thought it will be nice to try out.
+
+After this, I noticed that my IDE isn’t as fast to respond as before. I’m not sure if it has something to do with the size of the new project (which is almost 8 times larger than what I had before in my workspace) or the number of plug-ins installed.
+
+Since I can’t do anything about the size of the project, and Christmas has passed and I won’t get new hardware any time soon, I was wondering if there is something I can do about the plug-ins (except uninstall them :P).
+
+Can I configure them as to be lazy loaded whenever I open an associated perspective or view? I’m not sure exactly how they work but I would imagine that this is already the case.
+
+Is there something I can do, plug-in related, to speed up my IDE?
+
+Thank you.
+    
+
+        
+Answer 1: 
+
+    
+    
+As far as I know, plugins do not impact the overall performance of eclipse unless they are activated. 
+To be sure, see this SO question
+
+You can create some custom perspective in which you explicitly do not activate some plugins, but once a plugin is used, it will stay active as long as eclipse is opened.
+
+Start first by optimizing your eclipse.ini (see this SO answer for that), and see if the issue remains.
+    
+    
+Answer 2: 
+
+    
+    
+Some plugins are loaded at startup and allow you to specify not to load them initially. They may be loaded on demand later on. 
+
+Open the Preferences and navigate to General -strong/strong/p/div
+Answer 3: 
+
+    
+    
+Not sure if the plugins are your issue, but here are two things which helped me in the past:
+
+First, I suggest you fiddle with the Xmx and Xms parameters for eclipse. Giving Eclipse the maximum memory it can take helps a lot. I set Xmx to 1024M for example, but it can go higher (it does have a cap though, but I can't remember what it is). Another parameter to look at is the launcher.XXMaxPermSize.
+
+Second, and I am not sure this applies to you - but it is worth mentioning because it is so silly it may be overlooked. I had my eclipse workspace in my home directory for a while - which was stored on the server in the next room. When I moved it to a local directory on my machine, the response time was much faster. Maybe you overlooked something like this.
+    
+    
+Answer 4: 
+
+    
+    
+Many Eclipse PlugIns add validation cycles to the build process. For example the JBoss Tools add Seam Validators that consume a lot of resources during build. You can disable some unnecessary validtors using the Eclipse preferences.
+    
+    
+Answer 5: 
+
+    
+    
+Eclipse only loads the plugin XML of your plugins at the start, so the overhead per plugin is minimal. The classes of the plugin are loaded when they needed ... at least if the plugins are programmed properly. Most likely it is not the number of plugins that causes the slowdown.
+
+It may be the size of your program (I havn't noticed a slowdown with java project with aproximatly 200.000 LOC).
+
+Or it may be one or two badly programmed plugins. You can try to deactivate one by one to find the one that causes the slowdown. Then you can decide if you can replace or remove it.
+    
+    
+Answer 6: 
+
+    
+    
+During Eclipse start-up it loads modules and plugins so it is true. Also using too many plugins will increase the RAM need of the IDE. That may be the cause.
+
+There is an Early Startup feature which allows plugins to load once Workbench is started:
+
+
+  Description: This extension point is
+  used to register plugins that want to
+  be activated on startup. The class given as the attribute on the startup element must implement the interface org.eclipse.ui.IStartup. Once the workbench is started, the method earlyStartup() will be called from a separate thread.
+  ...
+  Note that this form is deprecated and
+  should no longer be used. Its
+  functioning relies on the availability
+  of the
+  org.eclipse.core.runtime.compatibility
+  plug-in and the
+  org.eclipse.core.runtime.compatibility.registry
+  fragment. Plugins that provide an
+  extension to this extension point are
+  listed in the workbench preferences
+  and the user may disable any plugin
+  from early startup.
+
+
+Link: http://help.eclipse.org/help32/index.jsp?topic=/org.eclipse.platform.doc.isv/reference/extension-points/org_eclipse_ui_startup.html
+    
+    
+Answer 7: 
+
+    
+    
+It certainly can do. We have been using MyEclipse (which is basically Eclipse with a large number of plugins integrated together) and it runs pretty slow out of the box. You should disable any that you aren't using if you find the performance unacceptable.
+    
+    
+Answer 8: 
+
+    
+    
+Yes, if installed and not deactivated to load on startup, then surely the startup slows down. I have noticed this very concretely.
+    
+    
+Title: What is the Eclipse equivalent of IntelliJ &ldquo;Live templates&rdquo;?
+Description: 
+    
+    
+                    
+I mean stuff like typing "iter" and getting a "for" loop with a choice of what variable to iterate on , typing "soutv" to generate a "System.out.println" with the "variable=" already in ...
+
+Thanks !
+    
+
+        
+Answer 1: 
+
+    
+    
+It is called Templates and it's found under,
+
+Window → Preferences → Java → Editor → Templates
+
+
+
+The "soutv" template does not exist ("sysout" does, and it's similar), but it's easy to add. I used this pattern:
+
+System.out.println("variable=" + ${cursor}${});
+
+    
+    
+Answer 2: 
+
+    
+    
+For 'soutv' particularly, I found the following pattern worked well in Eclipse:
+
+System.out.println("${var} = ${cursor}" + ${var});
+
+
+As others have mentioned, you can add this template by navigating to Window 
+Answer 3: 
+
+    
+    
+Check under
+
+Window -&gt; Preferences -&gt; Java -&gt; Editor -&gt; Templates
+
+
+Reference:
+
+
+Template Variables
+
+    
+    
+Answer 4: 
+
+    
+    
+They are called Templates.
+
+Go to Preferences &gt; Java &gt; Editor &gt; Templates to see a list of pre-defined templates.
+
+For example, sysout is:
+
+System.out.println(${word_selection}${});${cursor}
+
+
+You can also create your own.
+    
+    
+Title: What are the Pros/Cons of Flash Builder vs. FlashDevelop?
+Description: 
+    
+    
+                    
+I want to play around a bit with FLASH for app development. I'm looking for a good IDE for that.  Someone suggested Flash Develop.
+    
+
+        
+Answer 1: 
+
+    
+    
+Major reason to use FlexBuilder: has a real debugger you can set breakpoints and single step and watch/edit variables.
+
+Unless FlashDevelop has .. developed .. don't think it got any of that yet.
+
+BTW - if you are a student/teacher FlexBuilder can be had for free
+    
+    
+Answer 2: 
+
+    
+    
+Flash Builder
+
+Pros
+
+
+better debugging and profiling 
+visual designer for MXML
+because of Eclipse: support for other languages (eg. with Aptana, PDT...) and usage of plug-ins for the Eclipse Platform with features not shipped with FlexBuilder (code snippets with CFEclipse "Dynamic Snippets", "auto-code" for getter/setters with Monkey scripts...)
+support of virtual folders/files (links to external files/folders handled intern by Eclipse, so also working on Windows)
+refactoring (renaming of classes, functions, properties with automatic changing of dependencies)
+
+
+Cons
+
+
+Commercial license
+Big and because of Eclipse problematic with newer Eclipse versions for the FlexBuilder plug-in version (eg. not working with Eclipse Ganymede 3.4.1)
+adding and configuring the missing features with Eclipse plug-ins needs time and searching in the Internet (which plug-in? settings etc.)
+Code assist only average and sometimes buggy eg. if correct imports are missing ("java.lang.NullPointerException")
+missing of a code formatter or automatic get/setters (but there are solutions with other Eclipse plugins like Monkey Scripts, CFeclipse, Flexformatter "FlexPrettyPrintCommand"...)
+sometimes a bit sluggish if background tasks in Eclipse are working
+no package explorer
+AS2 and AS3 only - no Haxe
+
+
+FlashDevelop
+
+Pros
+
+
+free and Open Source (developed with C#)
+lightweight and snappy
+best available Code Assist for ActionScript
+supports all flash languages - AS2, AS3, haxe
+"auto code" for automatic getter/setter, variables, code for event handlers
+code snippets with integrated snippet editor 
+extendible with plug-ins
+support for asdoc comments
+package explorer (show classes, symbols from a SWC file) 
+basic refactoring
+multiple source code folders per project
+useful plugins : ANT integration, SWC creation, mini map, quick navigate
+
+
+Cons
+
+
+only for Windows
+no visual designer for MXML
+no support of virtual folders/files inside the project
+weak refactoring
+changing classpaths must be done manually
+plug-ins often not working in newer versions and many plug-ins are only rarely updated
+limited support for debugging Haxe applications
+
+
+Common
+
+Pros
+
+
+projects for full range of flash apps : websites, AIR (desktop, mobile)
+debugging of FP/AIR apps with breakpoints and stepping
+debugging with watch windows and locals
+support for ASDoc comments
+automatic adding of imports and organizing of imports 
+class wizard
+SVG/GIT integration
+
+
+Cons
+
+
+no editing of graphics or animation (use Flash IDE for that)
+
+
+Summary
+
+For debugging, visual design of MXML forms : Flash Builder
+
+For coding AS2/AS3/Haxe projects under Windows : FlashDevelop
+    
+    
+Answer 3: 
+
+    
+    
+Flex builder has a design view for MXML so you can build more visually. Flashdevelop on the other hand is free!
+    
+    
+Answer 4: 
+
+    
+    
+I've been using Flash Developer. Trying now FlashDevelop. FlashDevelop is fast and light, and I'm trying to switch just because of that.
+
+I'm using HG + TortoiseHG for source control. I have 2 screens, so having external source control is not a big problem. Also the IDE stays a little cleaner by not having all the little source control icons.
+
+DesignView helps with not having integrated design.
+
+Also, I can debug with FlashDevelop and see the variables. I'm using FD3.2.1.
+    
+    
+Answer 5: 
+
+    
+    
+Along with what was already mentioned, Flex Builder has some nice tools that helps a developer to learn how to create a data enabled Flex application in form of the Data Wizards and also a nice web services introspection tool that automatically creates an ActionScript 3 client for a web service. 
+    
+    
+Answer 6: 
+
+    
+    
+I'm using the new Jetbrains IntelliJ 8, and it's great (especially if your used to java developement). Has a lot better XML/JavaScript editors that any other IDE.
+
+The latest version of IntelliJ also has a good flex/javascript debugger.
+    
+    
+Answer 7: 
+
+    
+    
+Here are two objective contrasts between FlashDevelop (with the Flex 3 SDK) and FlexBuilder. First, only FlexBuilder includes AdvancedDataGrid. Second, FlashDevelop has no source control integration.
+
+AdvancedDataGrid is not included in either the free or open source Flex 3 SDKs; if you want it, you have to buy FlexBuilder. (I assume it is probably possible to use it via another SDK if you possess FlexBuilder.)
+
+FlashDevelop doesn't have any source control integration, FlexBuilder possesses the existing, stable source control options for Eclipse. This includes Subclipse for SVN, as well as a lot of other things. As a longtime Visual Studio and Emacs user, in FlashDevelop I'm beginning to feel unsatisfied with leaving the editor to check in.
+    
+    
+Answer 8: 
+
+    
+    
+Flash Builder, even in version 4.5, has primitive, useless syntax coloring and customization features. From a 700$ package I was expecting at least what I can do with my free text editor.
+In the syntax coloring preferences, there is a total of 6 keywords, and you cannot add any custom one.
+How am I expected to code having variable names, function calls, and classes look exactly the same?
+I will stick to Flash Pro CS5.5 and SciTe.
+    
+    
+Title: Intellij IDEA red/brown highlighted file name
+Description: 
+    
+    
+                    
+I am using Intellij IDEA 12.1.6. Some of the top level or functional files names are in brick red text. For example, the manifest file and the .iml file. I am concerned about the iml file, because that is the project file.
+
+IDEA documentation says that it "highlights" text in red if there is a merge conflict in the file, however, when I open the iml file, there is no merge conflict in it. Also, the text is in red, it is not highlighted, although it is possible that by "highlighted" they mean the color of the text.
+
+Why would the text of the file name be in red? Screenshot is below:
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+A merge conflict is actually a bright red. What you have there is "brown" and indicates the file is not known to version control. You can see the colors used in the Help at References 
+Title: C++ IDE for OS X
+Description: 
+    
+    
+                    
+I am now starting to get back to C++ coding (just for fun), and would like an opinion on good IDEs for Mac. 
+
+I am currently using Xcode which seems kinda cool because it has everything built into it. 
+
+Do any of you have any other IDEs that you would suggest that O give a shot or should I just stick to Xcode?
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse and NetBeans are both capable of working with C++ and they will run on OSX (as well as other platforms). They're both free, and have large communities behind them. They can both do much more than C++ via plugin frameworks, if you want.
+
+Personally, I'd stick with Xcode - for C++ on OSX.
+    
+    
+Answer 2: 
+
+    
+    
+You have a few options:
+
+
+If you're the "full-blown IDE kind-of-person" then Xcode is the way to go. Xcode is to OS X what Visual Studio is to Windows.
+If you're the "flee market" kind of person (like me!) then MacVim with make (or any other build tool) and other tools is your thing. Of course, I heard there's also Emacs on OS X, if that's your sex-appeal, or TextMate. On the GUI text-editing scene on the Mac these are the dominating giants.
+Then there's Qt Creator, which comes with the Qt SDK. Qt Creator is an IDE, yet it's very lightweight and quite simple at first-glance. It uses the Qt SDK so your code should be cross-platform among Windows, KDE, and OS X. It will run on other Linux windowing systems given Qt is installed, but I personally think these are the three platforms on which Qt applications integrate best.
+
+
+I have experience with all three of them. I personally love the editing feeling of MacVim most, by far. On the other hand, it's hard to compare with Xcode's debugging features. Xcode is also your only option if you develop for some specific Apple platforms and frameworks — the iPhone for example. And then, Qt Creator is an IDE with all the intellisense and debugging you expect from an IDE, yet it's simple, light and fast. Beyond that (and given the just-over 0.5GB cost) Qt also gives you that write-once-compile-"everywhere" feature, which is very nice.
+    
+    
+Answer 3: 
+
+    
+    
+I like qtcreator http://qt.nokia.com/products/developer-tools
+It's quite simple but very efficient.
+
+Don't be affraid of the Qt name. You don't have to develop anything arround Qt if you use it.
+    
+    
+Answer 4: 
+
+    
+    
+As of year 2016 I have tried several free, well-known IDEs for C++ development on MAC OS X, mainly for learning/teaching/training purposes. Following are my choices in order of preference:
+
+
+Qt Creator: To me this is the best IDE not only for Qt C++ development, but also for developing non-Qt C++ programs. Just choose “Qt Console Application” when setting up a project. The set-up is minimal for creating a first, “Hello World” C++ program. You may need to open an account with Qt, and choose to download the open source version for free. This option is not adequate for those who don’t want to open an account with Qt.
+Eclipse IDE for C/C++ Developers: This IDE has a big user community and a long history. Since it is a generic IDE for programming languages other than C++, I find it less easy to use, especially when developing a first, “Hello World” C++ program. More set-up is needed, including the need to handle run configurations. However, this is my personal experience that may not apply to other users.
+Xcode: This used to be my first choice as it is part of MacOS Developer Tools that can be directly downloaded from Apple App Store. However, the most recent release does not support C++ development, or does not support it well. So I have downgraded it as my 3rd choice.
+
+
+There are also many online IDEs for C++, mainly for learning purposes. However, these simple IDEs may not offer to save your code to your machine.
+    
+    
+Answer 5: 
+
+    
+    
+If you're comfortable with Vim, then you can keep using it on the Mac: MacVim (The command-line version is also pre-installed.)
+
+Otherwise, I'd just stick with Xcode. It's the only environment Apple supports, and if you choose to develop for Apple platforms, some of them will restrict you to it.
+    
+    
+Answer 6: 
+
+    
+    
+Have a try Visual Studio Code for MAC， I have used it for a while, feels better than Eclipse and Xcode, and it support multiple languages.
+
+https://code.visualstudio.com/docs/languages/cpp
+
+
+    
+    
+Answer 7: 
+
+    
+    
+You might consider using Eclipse C/C++ Development Tooling - CDT, which is a cross-platform IDE that will run on OSX.
+    
+    
+Answer 8: 
+
+    
+    
+TextEdit is the best way to go.
+Also you can use rich-text to make your code look good.
+    
+    
+Title: What is the best alternative IDE for Delphi (.NET)
+Description: 
+    
+    
+                    
+I work in Delphi 2007 (both win32 and .Net) but the CodeGear IDE frequently annoys me, so if possible I'd like to find a replacemnt.
+
+We have a build script so I can compile from the command line and I very rarely do any GUI designing, so the only thing I need is a text editor (with syntax highlighting, Autocomplete/Intellisense ...).
+
+I would like to use Visual Studio or Emacs but don't know how feasible it is to work on Delphi code in those environments. Particularly debugging - can the Delphi IDE still act as my debugger even if I don't use it for editing?
+
+Does anyone have any experience of breaking away from RAD studio?
+
+P.S. I am aware of the new Delphi Prism but that won't solve my problems - I still need to work in vanilla Delphi and use the Delphi 2007 compiler.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can of course edit source files outside of the Delphi IDE. When you switch back to the IDE it will notice that files have been changed outside of it, and ask you whether to reload them (if they are currently opened in the editor). This is a safe thing to do if you never edit inside the IDE, but to keep the confirmations from appearing it is best to not have source files open in the Delphi editor at all while you edit them in emacs.
+
+Even if you use a custom build script and build the project from emacs you should still keep the project file up-to-date. When you use the debugger in the IDE it will usually first compile the project. To have this always work (even with visual form or frame inheritance) a correct project file is crucial. It is also important for debugging when you have several source files with the same name in different directories that are in your search / browse path, or if you have not all your source directories in the search / browse path.
+
+Whatever tools you use for editing or otherwise changing your source files, make sure that you always have DOS style CR+LF line endings (\r\n, #13#10) in all lines, as LF only (\n, #10) tends to confuse the IDE - you will notice that the blue dots in the debugger are out of sync with the source lines, and that compiler error line numbers are wrong. Using sed or awk on source files can be a big time saver, but be sure to use the tools compiled for Win32, and not those provided with (for example) the cygwin environment.
+    
+    
+Answer 2: 
+
+    
+    
+One thing you can do is to put in GExperts to make your life better.
+
+(source: gexperts.org)  
+
+
+(source: gexperts.org)  
+    
+    
+Answer 3: 
+
+    
+    
+Emacs does appear to have a Delphi editing mode, which is probably a good starting point if you're trying to get up and running.
+    
+    
+Answer 4: 
+
+    
+    
+I do know that the FreePascal editor called Lazarus can be a  nice replacement.
+
+Although it's not compatible with the VCL, so it would only be feasibly for a new project.
+    
+    
+Answer 5: 
+
+    
+    
+If your main problem is the low speed of Delphi 2007 IDE, then use DelphiSpeedUp.
+    
+    
+Answer 6: 
+
+    
+    
+I use CodeFactor, but unfortunately it's no longer available.
+
+Delphi 2009 is a pretty big improvement, even over Delphi 2007, so if you've got the means, that might help a lot.
+    
+    
+Answer 7: 
+
+    
+    
+If you have Delphi 2009 and it is not annoying to you, try Andy's IDE Compiler Plugin 1.0
+It can be used to compile a Delphi 2007 project with the Delphi 2009.
+    
+    
+Answer 8: 
+
+    
+    
+See free OPEditII, at codefactor2.com [the page is no longer available and presents spam instead]
+It sounds like the free and updated version of the late codefactor.
+Worth saying it works like a charm under Windows Seven 64 bits, and is very fast, with integrated Delphi code parser. So you have a class browser, code completion, code navigation from interface to implementation, and a lot of code refactoring tools.
+    
+    
+Answer 9: 
+
+    
+    
+Have a look at Multi Edit – It is a fantastic editor and has support for the Borland products
+    
+    
+Answer 10: 
+
+    
+    
+You should try TSEPro (aka QEdit) from Semware. It has support for the language, a very powerful macro system and supports compiling from inside the editor via bcc32.
+    
+    
+Answer 11: 
+
+    
+    
+One option is EditPad Pro. I haven't tried the product, but I know the vendor is reliable.
+    
+    
+Answer 12: 
+
+    
+    
+ConText or EditPad Pro both offer syntax highlighting for Delphi code, as do many other programmers editors (they sometimes call it Pascal though).  I've used both of those though, and they work really well.  I use them when I want to open code fragments or samples.  
+
+They both have a nice feature of being able to associate specific commands with certain file types.  So you could associate the Delphi command-line compiler or your build script with your source files to allow you to build, run unit tests, etc. from there.  I've done similar with other command line compilers, but frankly I really like the Delphi IDE so have had no need to try to replace it.
+    
+    
+Title: The content on disk is newer. Click on Compare to compare your version with the one on disk
+Description: 
+    
+    
+                    
+After update to 1.19.1 I'm getting this error constantly.
+The content on disk is newer. Click on Compare to compare your version with the one on disk.
+    
+
+        
+Answer 1: 
+
+    
+    
+VS Code will show you an error message when you try to save a file that cannot be saved because it has changed on disk. VS Code blocks saving the file to prevent overwriting changes that have been made outside of the editor.
+
+In order to resolve this issue, click the Compare action in the error message to open a diff editor that will show you the contents of the file on disk (to the left) compared to the contents in VS Code (on the right): {Refer an Image}
+
+
+
+You must either accept the changes or revert the changes. Without taking any of the mentioned actions, you cant save the file.
+
+P.S Above answer has been referred from visual studio code official documentation.
+
+you can read detailed information about this topic: [https://code.visualstudio.com/docs/getstarted/tips-and-tricks#_preventing-dirty-writes][2]
+    
+    
+Answer 2: 
+
+    
+    
+To add to this information, v1.42 has added the ability to immediately overwrite the changes made outside of vscode or prevent the notification altogether if that is your preference.  From the release notes (https://github.com/microsoft/vscode-docs/blob/vnext/release-notes/v1_42.md#ignore-save-conflicts): 
+
+
+  Ignore save conflicts
+  
+  VS Code has a built-in mechanism to show an error when you try to save
+  a dirty file that has been changed outside of VS Code or by another
+  program (for example Git):
+
+
+
+
+
+  The motivation is to inform you that saving will overwrite the
+  contents on disk even though the file was changed after the file
+  became dirty. Clicking the Compare button lets you review your change
+  along with the version on disk and either overwrite or revert the
+  file.
+  
+  In cases where you know that the changes on disk can be overwritten,
+  there is now an Overwrite button directly on the notification. You can
+  also configure files.saveConflictResolution globally or per workspace or
+  file type to disable the notification altogether.  The options are askUser (default) or overwriteFileOnDisk.
+
+    
+    
+Answer 3: 
+
+    
+    
+Click on the compare button, two screens (left and right) will be displayed, click on the tick mark which appears on the right-hand side(in my case). That's it, it will be saved.
+    
+    
+Answer 4: 
+
+    
+    
+Close all editors, when you switch the branch in GIT, then it wouldn't appear
+    
+    
+Answer 5: 
+
+    
+    
+Here is another way:
+
+
+Copy the full content of your dirty file let say abc.js to somewhere in notepad
+Delete the file: rm abc.js
+Get the file from the repository(my case its Git): git checkout abc.js
+Paste the previously copied content or paste the updated content back and save.
+
+
+Hope you won't see this issue.
+    
+    

@@ -1,0 +1,1407 @@
+Title: Android Studio 3.5 run application on several devices
+Description: 
+    
+    
+                    
+I have several devices connected to Android Studio 3.5.
+To run on all devices I need to make monkey job and all time click "Run on several device" and all time select devices one by one.
+
+Is any solution to store selected devices to start from one button as it was in Android Studio 3.4?
+    
+
+        
+Answer 1: 
+
+    
+    
+Yeah. I too faced the same problem. But I got the solution.
+You can Install a Plugin from the Marketplace - Android Studio.
+Android Run On Multiple Devices. After installation, connect all the devices you wanted to run the app. Then use CTRL+SHIFT+F10 then ENTER. it will run the app in all the devices you have connected to.
+
+    
+    
+Title: Writing gem5 configuration scripts with Pycharm
+Description: 
+    
+    
+                    
+In order to develop complex gem5 python configuration scripts with more convenient IDE the gem5 lib has to be added 
+to the project. However, for those who are not experts in python and Pycharm (Such as myself) 
+there are some difficulties. 
+
+For those who are unfamiliar with gem5, this is 
+a short explanation: 
+
+gem5 is an open source simulator that inspects hardware architecture. 
+It can be downloaded from github: link to github. 
+The installation process is described at the following link. 
+
+&lt;gem5_installation_dir&gt;/gem5/configs/learning_gem5/part1
+
+
+Inside the above path, there is a basic python script file: simple.py 
+This file contains some imports. 
+Editing this file with Pycharm requires some dependencies that are located in the gem5 installation directory. 
+The questions: 
+1) How to add those dependencies of gem5 into Pycharm? 
+2) How to config the Pycharm with gem5 execution command?  
+
+Any help would be appreciated. 
+    
+
+        
+Answer 1: 
+
+    
+    
+A few pointers from what I see at gem5 d9cb548d83fa81858599807f54b52e5be35a6b03 (May 2020) under gem5/configs/learning_gem5/part1/two_level.py:
+
+
+from common: common is at configs/common which gets found because of the above m5.util.addToPath('../../') call, so add configs/ to the PYTHONPATH as shown at: PyCharm and PYTHONPATH
+import m5 comes from src/python/m5 so add src/python to the PYTHONPATH as above
+from caches import * comes from the sibling learning_gem5/part1/caches.py, so likely this will be found automatically by PyCharm. Otherwise add that directory to the PYTHONPATH.
+from m5.objects import *: this is likely the one you are really interested in as it contains all the interesting objects, but unfortunately PyCharm simply cannot handle it I believe since the SimObjects are added dynamically to that namespace at startup in a very convoluted way via PyBind11 native modules + code generation.
+
+A description of how this works in more detail can be found here, but basically every SimObject class goes through some heavy code autogeneration to make this work, say e.g. src/cpu/simple/AtomicSimpleCPU.py  due to SimObject('AtomicSimpleCPU.py') in src/cpu/simple/SConscript.
+
+As of 2017, PyCharm said they did not have plans for a proper native C/C++ extension setup: https://intellij-support.jetbrains.com/hc/en-us/community/posts/206018984-Developing-Python-extension-in-C-using-PyCharm
+
+
+With that said, I've found that it is not worth to use an IDE for the Python part of gem5. This is because the Python tends to be very simple to understand with IPDB (or impossible to setup an IDE for), and if you just grep stuff you tend to quickly guess what is going on. For C++ though I do recommend setting up Eclipse: How to setup Eclipse IDE for gem5 development?
+
+Related: Add custom modules to PyCharm Linter
+    
+    
+Title: How can I prevent IntelliJ IDEA from reassigning file type associations at startup?
+Description: 
+    
+    
+                    
+I'm using IntelliJ IDEA Ultimate 18.1 and Jenkinsfile support is awful. Thankfully, treating the file as Groovy is a workaround I can live with.
+
+This involves
+
+
+Removing the Jenkinsfile association
+Adding Jenkinsfile under the Groovy group
+
+
+The problem is every time IDEA starts up fresh, it will remove Jenkinsfile association and, since (1) the original association has been removed, treat these files as plain text.
+
+File type recognized: File extension Jenkinsfile was reassigned to Jenkins file Revert
+
+
+
+
+How can I prevent this?
+    
+
+        
+Answer 1: 
+
+    
+    
+It's a known bug fixed in IntelliJ IDEA 2018.2. 2018.2 will be released this week.
+    
+    
+Title: Netbeans show css variables as error
+Description: 
+    
+    
+                    
+My Netbeans IDE show me error when I'm using css variables.
+For example, this lines of code will return an error:
+
+:root {
+    --main-bg-color: #dad66f;
+}
+
+.title {
+    color: var(--main-bg-color);
+}
+
+
+I found this solution online:
+https://bugzilla-attachments-262769.netbeans.org/bugzilla/attachment.cgi?id=160370
+But I don't know how to install this patch.
+Anyone have idea how I can stop showing this code as an error?
+
+Thanks :)
+    
+
+        
+Answer 1: 
+
+    
+    
+I've just checked and in the current latest Netbeans IDE version(11.3) CSS variables are working fine.
+    
+    
+Title: Implementing Atom with Python Language Server
+Description: 
+    
+    
+                    
+I am new here. I am trying to setup the python IDE on Atom following the instruction offered by Atom.io.
+
+https://atom.io/packages/ide-python
+
+There is an instruction: 
+
+"Depending on your Python setup pyls may be installed in a non default folder. In this case either add the directory to your PATH or edit the "Python Language Server Path" setting of ide-python to point to the pyls executable."
+
+I stucked here.
+What does it mean? How to add this to the PATH? 
+    
+
+        
+Answer 1: 
+
+    
+    
+In my case it was failing because pyls didn't work with Python 2.7
+Error 
+
+error in python-language-server setup command: 'install_requires' must be a string or list of strings containing valid project/version requirement specifiers; Expected version spec in configparser; python_version&lt;"3.0" at ; python_version&lt;"3.0"
+
+
+So I installed Python 3.6 and followed you note forcing 3.6
+
+python3.6 -m pip install python-language-server[all]
+
+
+That did the trick.  Thanks!
+    
+    
+Answer 2: 
+
+    
+    
+I had the same problem. My solution:
+
+
+Run from terminal to install pyls: 
+
+
+
+  pip install 'python-language-server[all]'
+
+
+
+Print out details of WHERE the python language server was installed:
+
+
+
+  pip show python-language-server
+
+
+Which gave me the path:
+
+
+  Location: /home/bad/.local/lib/python2.7/site-packages
+
+
+I browsed to that path and found the 'pyls' folder. Then I went into atom and edited the configuration to point at '/home/bad/.local/lib/python2.7/site-packages/pyls'. Specifically, if I go into EDIT/pblockquotep/p/blockquotepa href="https://stackoverflow.com/questions/7360889/adding-a-directory-to-path-in-ubuntu"/a/p/div
+Title: [PyCharm]: detach debugger from cosole
+Description: 
+    
+    
+                    
+I run a python console in PyCharm and attach the debugger to it by clicking on the green debugger button in the left pane of the console window.
+
+Debugging this way works great!
+
+But there seems not to be an option to detach the debugger from the console.
+When I change the code or stop the debugger by mistake I am not able to reattach it because the debugger button on the left pane is still pressed :(
+
+Therefore I have to run a new python console, redoing all the stuff done before (importing modules, scripts etc.), attaching the debugger.
+
+It would be nice to have an option to detach the debugger from a python console, change some code and reattach it.
+
+Does anyone have any ideas on this issue?
+
+Thanks in advance.
+Sascha
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, it is possible with some implications and somehow cumbersome user experience IMHO.
+
+Once you initiated a debug session from the Python console in PyCharm you can detach the debugger from the debugger window but you won’t see the debugger window nor be able to focus it even using Alt+5 unless you hit some breakpoint that you have to somehow set.
+
+Once you reach a breakpoint, and the debugger takes control, you can press the red × on the left panel of the debugger window.
+
+
+
+Then you will be asked:
+
+
+
+You can press the Disconnect button that will detach and terminate the debugger but the debugger button in your original console will remain pressed until you restart that console.
+
+You’re welcome to request a feature for PyCharm and I will surely give it my vote.
+    
+    
+Title: How do I ignore long lines in Sublime Text when searching
+Description: 
+    
+    
+                    
+I often use the search feature in Sublime Text to search folders - some of these folders contain extremely long lines (1000's of chars long) due to minified code, base64 encoded data or certificates.
+
+Search results often come back looking like the following (which is both annoying visually, as well as giving me accidental matches on shorter strings):
+
+
+
+Is there a way I can omit lines greater than a certain length from my search results?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can achieve what you are after (to a degree) using negative look ahead and negative look behind syntax.
+
+Just suppose you didn't want to include any lines over 50 characters long where you are searching word MATCH, the following regex would work (?&lt;!.{46})MATCH(?!.{46})
+
+Scenarios (first 4 lines produce a match, the following 3 do not)
+
+xxxxxxxxxxxxxMATCHxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx50
+MATCHxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx50
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxMATCH
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxMATCHxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx95
+
+MATCHxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx51
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxMATCH
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxMATCHxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx96
+
+
+In this example the longest line included in the returned result set will be of length 95 characters as there are 45 before and after the word MATCH. so not perfect but close, and for your purpose I'm sure it will do to exclude those super long lines of encoded data.
+
+You can tune the length of the look behind and look ahead to get the result you are after.
+    
+    
+Title: IntelliJ Auto Complete File Path?
+Description: 
+    
+    
+                    
+A laziness/productivity question... is there a feature that allow auto completion of the file path?
+
+So if I have 
+
+mainFolder
+   subFolder1
+   subFolder2
+   subFolder3
+
+
+I want it so that when I start typing path="mainFolder/ 
+
+Then at this point I would hope auto complete to start telling me I can choose between subFolder1, 2, 3 etc...
+
+Is this possible?
+
+I'm using IntelliJ Idea
+    
+
+        
+Answer 1: 
+
+    
+    
+I found that Intellij only autocomplete file paths that are a part of the project and there was no feature to autocomplete any path.
+
+File Path Autocomplete is a plugin to do just that. 
+
+Disclaimer: I'm its author.
+    
+    
+Title: How to disable the Issues pane in Qt Creator?
+Description: 
+    
+    
+                    
+I find it easier to work with compiler output but the Issues pane in the Qt Creator pops up automatically after every compilation, hiding the useful information, forcing me to hide it every time. Is there a way to disable this behavior? I don't mind the errors being collected, I just don't want this particular piece of UI to show up every time when I don't ask for it.
+
+I'm using the Qt Creator 3.5.0 but it was like that in the earlier versions, too.
+    
+
+        
+Answer 1: 
+
+    
+    
+click by last icon arrow up/down will get checked list of panes, here I can made unchecked Issues pane.
+
+https://picasaweb.google.com/lh/photo/woFGzN93FwR2gCsFM5NoZNatoZ8gbkKlwIuGeHJQvso?feat=directlink
+    
+    
+Title: Dev C++ Console Window Properties
+Description: 
+    
+    
+                    
+I am using Dev C++ v5.6.1 IDE on Windows7. 
+
+I have written a C code which has hundreds of line that are displayed as output on screen. 
+
+The buffer size of Console Windows is small and I cannot view the initial printf statements. 
+I tried it changing from "properties" option, but it didn't help.
+
+Where Can I find the option to increase the console window buffer size.
+    
+
+        
+Answer 1: 
+
+    
+    
+As you're using Windows, a simple way you can do this is by changing the console window size with the batch command: mode con: cols=150 lines=50. cols adjusts width, lines adjusts height.You may choose to call this with system to set the console size. This is considered bad, more about that here.
+
+// This is considered bad, you shouldn't use system calls.
+system("mode con: cols=150 lines=50");
+
+
+
+
+A safer way to do this, is changing the buffer and size using functions defined in &lt;windows.h&gt;.  
+Here is a small example illustrating this:
+
+#include &lt;stdio.h&gt;
+#include &lt;windows.h&gt;
+
+int main(void)
+{
+    SMALL_RECT rect;
+    COORD coord;
+    coord.X = 150; // Defining our X and
+    coord.Y = 50;  // Y size for buffer.
+
+    rect.Top = 0;
+    rect.Left = 0;
+    rect.Bottom = coord.Y-1; // height for window
+    rect.Right = coord.X-1;  // width for window
+
+    HANDLE hwnd = GetStdHandle(STD_OUTPUT_HANDLE); // get handle
+    SetConsoleScreenBufferSize(hwnd, coord);       // set buffer size
+    SetConsoleWindowInfo(hwnd, TRUE, &amp;rect);       // set window size
+
+    printf("Resize window");
+
+    return 0;
+}
+
+
+Keep in mind that the function SetConsoleWindowInfo fails if the specified window rectangle extends beyond the boundaries of the console screen buffer. More about that here.
+    
+    
+Title: Save Visual Studio Debug -&gt; Exceptions settings?
+Description: 
+    
+    
+                    
+I find that in different cases you need to have different exception classes enabled/disabled in the Debug -/pp
+Answer 1: 
+
+    
+    
+According to the following article:
+
+https://faithlife.codes/blog/2010/01/saving_debug_exceptions_settings/
+
+"These settings are stored in the SolutionName.suo file that lives alongside your .sln file. Once you’ve configured the Exceptions dialog to your liking, close all the open windows, then exit Visual Studio. Make a backup of the .suo file and restart Visual Studio. Whenever VS loses your settings, close it down, overwrite the real .suo file with your backup, restart VS, and you’re back to debugging the way you want to."
+    
+    
+Title: How do I add a new C file in Visual Studio 2013
+Description: 
+    
+    
+                    
+I am new to Visual Studio 2013, having used 2010 in the past. How do I add a C file? There only seems to be an option for C++. I do not use C++, only C, and I compile to ANSI C99. This is what the dialog box looks like when I pick &quot;Add New Item&quot;:
+
+As you can see it has choices to add a C++ file or a header file, but not a C file.
+    
+
+        
+Answer 1: 
+
+    
+    
+After adding the file to the solution, right-click on it, and in 
+C/C++-
+Answer 2: 
+
+    
+    
+Short answer: you can't.
+
+Visual C++ is a C++ IDE backed by a C++ compiler.  It supports the common subset of C and C++ (because it is also valid C++), but does not directly support C.  It only partially supports C99.  So there is no way to add a file that will be compiled as C99 to a project.
+    
+    
+Answer 3: 
+
+    
+    
+this link: http://www.swarthmore.edu/NatSci/tali/E15/Visual_C.html
+may be helpful.
+
+Here is what that link says:
+
+Using Microsoft Visual Studio for Simple C Programs
+
+A free version of Microsoft Visual C++ Express is available in: http://msdn2.microsoft.com/en-us/express/aa700735.aspx
+
+To edit your C program:
+
+From the main menu select File -&gt; New -&gt; Project
+In the New Project window:
+Under Project types, select Win32 - Win32 Console Application
+Name your project, and specify a location for your project directory
+Click 'OK', then 'next'
+In the Application Wizard:
+Select Console application
+Select Empty project
+Deselect Precompiled header
+Once the project has been created, in the window on the left hand side you should see three folders:
+Header Files
+Resource Files
+Source Files
+Right-click on Source Files and Select Add-&gt; New Item
+Select Code, and give the file a name
+The default here will be a file with a *.cpp extension (for a C++ file). After creating the file, save it as a *.c file.
+
+
+To compile and run:
+
+Press the green play button.
+By default, you will be running in debug mode and it will run your code and bring up the command window.
+To prevent the command window from closing as soon as the program finishes execution, add the following line to the end of your main function:
+getchar();
+This library function waits for any input key, and will therefore keep your console window open until a key is pressed.
+
+    
+    
+Answer 4: 
+
+    
+    
+You can create new item template (add C File plugin),
+
+You can download: Visual Studio - New Item Template.zip
+
+Extract the ZIP file to:
+
+C:\Users\USERNAME\Documents\Visual Studio 2013\Templates\ItemTemplates\
+
+
+or (for VS2012):
+
+C:\Users\USERNAME\Documents\Visual Studio 2013\Templates\ItemTemplates\Visual C++ Project
+
+
+or if you want to put it under "Code" sub category:
+
+C:\Users\USERNAME\Documents\Visual Studio 2013\Templates\ItemTemplates\Visual C++ Project\Code
+
+
+Or you can read this Tutorial to create custom item template for Visual Studio.
+
+
+    
+    
+Answer 5: 
+
+    
+    
+You cannot use Visual Studio to create C programs. You can edit an existing simple C program by creating a new project, selecting Win32 console application, add in the existing files and modify it from there. But there is no from-scratch C support. See related for more detail on how to do it.
+    
+    
+Title: Disable PhpDoc by Default in PhpStorm Extract Method Refactoring Dialogue
+Description: 
+    
+    
+                    
+I've searched PhpStorm's preferences, documentation, and Google to no avail.
+
+Is there a way to disable by default the "Generate PhpDoc" option in PhpStorm's "Extract Method" dialogue?
+    
+
+        
+Answer 1: 
+
+    
+    
+I know this is an ancient post, but I struggled with the same question today.  In PHPStorm 2017.1 the setting is here:
+
+Preferences 
+Title: GeSHi code editor for the web
+Description: 
+    
+    
+                    
+hi :) 
+(sorry if my english is not perfect :/ )
+im trying to make a code editor for my site, i want to color automatically code written by users at the some time they tape it.
+i found this php script which use GeSHi to color code . my problem is that i can't use it in textarea :/ 
+someone talked about using fieldset but i cant understand how :/  
+
+include("geshi/geshi.php");
+
+$source = $req;
+$language = 'php';
+$path = 'geshi/geshi/';
+
+$geshi = new GeSHi($source, $language, $path);
+
+echo $geshi-&gt;parse_code();
+
+
+could someone help me ? :) thank you :)
+    
+
+        
+Answer 1: 
+
+    
+    
+Geshi can't do that since it run on server side. You may use a JS code highlighter like CodeMirror or  highlight.js which run on client side.
+    
+    
+Title: JavaScript on Netbeans Scarce Code Support Features
+Description: 
+    
+    
+                    
+I have difficulties coding in JavaScript with Netbeans. I can't see beforehand:
+
+
+my mistypes,
+relations between classes, functions and variables (dependency, parents-children etc.), 
+javadocs references (both original and imported for libraries).
+
+
+THE PROBLEM is in:
+
+
+heavy debugging because of primitive mistype and the use of irrelative substances;
+time consuming browsing to find help for the context.
+
+
+I TRIED:
+
+
+Netbeans 7.4 (some basic Ctrl+Space lookup is supported, but very limited and usually useless);
+Eclipse 3.8 (no context support);
+
+
+These IDEs provide adjustable autoformatting and text mark-up (braces, clever tabs, text colors etc.) This is all very helpful, but insufficient. After having to migrate from Java to JavaScript for job routines, I now understand how much work had I automized and saved coding Java. I just feel I'm missing Ctrl+Space after a dot for Javadoc and Ctrl+LeftClick to navigate to declaration. It results in more time creating similar things in code.
+
+THE QUESTION IS:
+
+
+How to get JavaScript language docs for Netbeans?
+How to make Netbeans show relations between classes, variables and functions so that I don't see what can't be done from this context? For JavaScipt like it does for Java?
+
+
+Here are Netbeans JavaScript snapshots with everything that's needed. Where is that all? I don't see it in my IDE:
+
+
+
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I can't add comments because i haven't reputation enough...
+
+I am a Java developer since Java version 1.1, and Netbeans's truly fan since version 5.5 (Eclipse? What's that thing?).
+
+I am currently developing Javascript code in Netbeans 7.4. It offers code completion exactly as it does with Java (plus javadoc-style documentation popup, Ctrl-Space behavior, colouring code...), almost the same pros and cons as developing java, php or another language...
+
+And yes, it saves a lot of time of searching for object's methods and properties, misspelling...
+
+
+  ---- Text added since your last editing some minutes ago....
+
+
+OK, i know i'm not impartial, forgive me... Take a look to this, it may be helpful:
+
+Netbeans 7 HTML5 webapp javascript debugging
+
+Maybe I don't know really what are you looking for, but in my opinion it is a good stuff. If you can debug an HTML5 webapp to such deep level...enough for me.
+
+About the inline documentation in a javadoc-style, my NB shows a pretty nice one (bundled, i didn't plugged anything...). Of course, it could be more complete or functional... Take a look to this image:
+
+
+
+Next I'll try webstorm... Good luck!
+
+
+  ---- More Text added .... jQuery documented API integration...
+
+
+Ok, let's see how NB manages itself to show you a wonderful javadoc-style documentation popup of jQuery API...
+
+
+
+It looks so good to me... I love it :)
+
+I only added the developer version of jQuery (the one commented and uncompressed) to the src folder of my opened Java project... nothing more... I think this is some kind of magic... Maybe you can add your own commented .js libraries in the same way. Just explore the jQuery .js to learn how to comment your code. 
+
+Just one more resource for you:
+Adding jQuery to your NB project
+    
+    
+Answer 2: 
+
+    
+    
+I think, that you cannot expect the same level of tool support for Java (strongly typed, object oriented) and JavaScript (weakly typed, functional).
+Compiler for strongly typed languages knows, what is allowed in given context, but in JavaScript is the situation drastically different. Everything is dynamic and you cannot tell what is mistype.
+
+Anyway I think, that latest NetBeans 7.4 has really great support for JavaScript including code completion.
+    
+    
+Answer 3: 
+
+    
+    
+You can see here for such IDE. Also you can take PhpStorm, Idea, WebStorm.
+    
+    
+Answer 4: 
+
+    
+    
+I think the best IDE for JavaScript would be the JetBrains WebStorm. 
+The company has also made IntelliJ Idea IDE for Java, which is in my humble opinion the best one available. 
+You can download free version here: http://www.jetbrains.com/webstorm/ 
+
+I'm using it a lot myself and I can really recommend it.
+    
+    
+Answer 5: 
+
+    
+    
+Steps below helped me to partly resolve the problem:
+
+
+Changed project type from HTML5 to PHP to exclude libraries folders from code analysis as described here;
+Configured at Tools - Options - Editor - Hints - Javascript to "Suggest for current line" instead of "Warning".
+tune up and use correct tags for javadocs as described here;
+Resolved proxy connection problems to make IDE see the Internet: Tools - Options - General;
+updated Netbeans to 7.4 from 7.4RC1;
+
+
+Now you have:
+ - fast code completion popup window load,
+ - docs texts, including pop-up code completion docs for your own comments,
+ - can navigate to declarations from other files Ctrl+LeftClick,
+ - have suggestions on errors,
+ - type recognition failing if you mistype function or variable name to smth impossible. 
+    
+    
+Title: Recognizing AngularJS syntax in WebMatrix 3
+Description: 
+    
+    
+                    
+I've been using WebMatrix because of nodejs and backbonejs. I've recently started to learn angular and I want webmatrix to recognize angular's syntax and stop telling me my ng's are unknown. My code works fine but its just annoying. Any solutions? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Technically ng-* is not a valid HTML attribute per spec, so we show an error.  Luckily Angular allows you to define your attribute using data-ng-* attributes to make them valid:
+
+http://docs.angularjs.org/guide/directive
+
+You should be able to just use data-ng-* anywhere you're using ng-*.  
+
+Happy Coding!
+    
+    
+Title: Drawing in the &ldquo;margin&rdquo; as an IDE/editor feature
+Description: 
+    
+    
+                    
+I have a modest codebase (C++) that is well-documented but nonetheless very complex. I am involved in its maintenance and debugging, and I find myself drawing the same pictures over and over again, to check for wayward pointers and to look for optimizations. The pictures help a lot, as inconsistencies have crept into the code from time to time on seemingly logical optimizations.
+
+It may be too much to ask, but is there an editor that would let me draw in the margins, a la MS Paint, as auxiliary comments, and maybe even to tack the picture to a particular line? Just in case such a thing exists, I would ideally like to use it alongside Vim.
+    
+
+        
+Answer 1: 
+
+    
+    
+Such an editor would have suffered the kind of feature creep that is against the philosophy of vim (or at least vi).  You're more likely to be happy with adding your own layer of indirection between vim and an external doodling app.  As @Mats Petersson suggests, a URL is one way.  Or a filename relative to some directory, or an XML tag.
+
+A plugin for vim that recognizes your layer might automatically display your doodles.  If Clippy can be implemented as a vim plugin, surely so can this.
+
+If ascii-art suffices, try the plugin DrawIt, http://www.vim.org/scripts/script.php?script_id=40 ;  or use that webpage's search box.
+    
+    
+Title: How to improve IDEA performance?
+Description: 
+    
+    
+                    
+I like IDEs from JetBrains most of other IDEs. I often use IDEA and PyCharm And while I work with them, I spend much time on waiting IDEA's different tasks.
+So is there are any tips how to improve IDEA and PyCharm performance?
+    
+
+        
+Answer 1: 
+
+    
+    
+In case you have performance problems with IntelliJ IDEA, refer to the CPU snapshot and thread dump instructions.
+    
+    
+Answer 2: 
+
+    
+    
+Change memory sizes in 
+
+&lt;YOUR IDEA HOME&gt;/bin/idea.vmoptions
+
+
+or in
+
+&lt;YOUR IDEA HOME&gt;/bin/idea64.vmoptions
+
+
+if your IDEA is running on a 64 bit machine.
+    
+    
+Answer 3: 
+
+    
+    
+In my case, that IDE is too slow before.
+
+Then, I try to do some changes...
+
+On Setting Page : File - Settings...
+
+
+
+On Appereance, this is my configuration : 
+
+
+
+On Plugins, try deactivate unused plugins :
+
+
+
+On Updates, I turn off updates : 
+
+
+
+Configuring JVM options
+
+I use 64 Bit Windows 7.
+
+I go to : C:\Program Files\JetBrains\IntelliJ IDEA 2018.2.4\bin
+
+Open idea64.exe.vmoptions using text editor, and change values of -Xmx and -Xms
+
+This is my new idea64.exe.vmoptions config :
+
+-Xms1024m
+-Xmx2048m
+-XX:ReservedCodeCacheSize=240m
+-XX:+UseConcMarkSweepGC
+-XX:SoftRefLRUPolicyMSPerMB=50
+-ea
+-Dsun.io.useCanonCaches=false
+-Djava.net.preferIPv4Stack=true
+-Djdk.http.auth.tunneling.disabledSchemes=""
+-XX:+HeapDumpOnOutOfMemoryError
+-XX:-OmitStackTraceInFastThrow
+
+
+Description (Official): 
+
+-Xmx    Limits the maximum memory heap size that the JVM can allocate for running IntelliJ IDEA. Default value depends on the platform. If you are experiencing slowdowns, you may want to increase this value, for example, to set the value to 2048 megabytes, change this option to -Xmx2048m.
+
+-Xms    Specifies the initial memory allocated by the JVM for running IntelliJ IDEA. Default value depends on the platform. It is usually set to about half of the maximum allowed memory (-Xmx), for example, -Xms1024m.
+
+That is all for now.
+
+Thanks
+    
+    
+Title: Something to visual CSS structures and compare them
+Description: 
+    
+    
+                    
+I am looking for a tool to help with some CSS editing, but I am not planning to use it in what seems to be the normal way.
+
+I have a website that is getting a reskin, we already have the CSS files with the changes as it is already applied to a related website. 
+
+What I ideally want, is an editor of some kind that will help me to visualize the structure or hierarchy of the old CSS and the new CSS so I can more easily find the classes that will cross over nicely, the classes that require tweaking, and the classes that will need to be created from scratch.
+
+I'm not worried auto completion, or being able to view the changes instantly or anything like that, what i really want is just the easy way to view and traverse it.
+
+Does anyone know of anything that can do this? Ideally free or open source, but all suggestions welcome.
+    
+
+        
+Answer 1: 
+
+    
+    
+Try this tool: Compare CSS Stylesheet Tool
+    
+    
+Title: PHPStorm Intermittently Prompting &ldquo;File Cache Conflict&rdquo; Dialog on Save
+Description: 
+    
+    
+                    
+Using v2.1.5. About half the time I save I get the dialog below.
+
+Two questions:
+
+
+Why does this happen intermittently? Maybe because I'm using CVS and my local storage is in another drive?
+Is there a setting where I can default to "Keep Memory Changes" so that this dialog doesn't show up anymore?
+
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+It can happen if file time stamp changes externally or when you store files not on a local drive.
+    
+    
+Answer 2: 
+
+    
+    
+I'm now using version 3.0 and don't have this issue anymore.
+    
+    
+Title: How can I make Class Completion include parentheses even for empty parameter lists?
+Description: 
+    
+    
+                    
+I'm back in Delphi 2010 again after having worked several years in Visual Studio. I would like to make the IDE behave in a differnet way:
+
+I'd like the IDE's auto-completion to respect the parenthesis when I declare a function/procedure. Example: if I declare procedure x(); Id like the auto-completion to create procedure myobj.x(); and NOT procedure myobject.x; as it does. Yes, it doesn't really matter but I'm pedantic. Any ideas?
+    
+
+        
+Answer 1: 
+
+    
+    
+Delphi doesn't require the parentheses when there are no parameters; I doubt this is possible. 
+
+It shouldn't matter in the interface or implementation, where the fact that it's a method declaration is clear. 
+
+function TMyClass.IsDefaultPropValue: Boolean;
+
+
+I can see where it would matter in actual code that calls the method, where you would want to clarify that it was not a variable, as in 
+
+// Unit MyClass
+type
+  TMyClass=class(TSomething)
+  public
+    function IsDefaultPropValue: Boolean;
+  end;
+
+// In a far distant block  of code in another unit that uses the above unit, using the
+// nasty "with" (not you, of course - one of your coworkers):
+with MyClassInstance do
+begin
+  // More lines of code. FirstPass is a local boolean variable.
+  if FirstPass then
+  begin
+    if IsDefaultPropValue then
+    begin
+      // More lines of code
+    end
+    else
+    begin
+      // Alternate branch of code 
+    end;
+  end
+  else
+  begin
+    if IsDefaultPropValue then
+    //.....
+  end;
+end;
+
+
+In this case, it's not clear that IsDefaultPropValue is a function and not a Boolean variable and I'd use it as 
+
+if IsDefaultPropertyValue() then ... 
+
+// or better yet: 
+if MyClassInstance.IsDefaultPropValue() then ...
+
+
+to make it clear.
+    
+    
+Answer 2: 
+
+    
+    
+AFAIK, there's no way.  
+
+Object Pascal doesn't require parenthesis when you have (as Ken said) no parameters - so it's harmless.
+
+PS.: The need for parenthesis even for non-parameterized routines is one of the most pesky and irritant things in VS languages (particularly in VB.NET). Of course, it's just IMHO... 
+    
+    
+Title: How to write a batch file that will cause firefox to refresh each time a file is saved in my IDE?
+Description: 
+    
+    
+                    
+I am a web developer who uses netbeans IDE. I would like firefox to refresh each time I save a file in netbeans so I can see the updated changes without having to manually refresh. 
+
+I searched and there doesn't seem to be any such features built in to netbeans and third part addons avaliable for this task are either depreciated or not avaliable on windows.
+
+Can someone please think of a way to write a batch file that can do this? So when I press CNTRL + S while netbeans in open, then firefox (if open) will refresh. I know nothing about batch files or shell scripting in general so I'm at a loss here.
+
+Thanks for your help.
+    
+
+        
+Answer 1: 
+
+    
+    
+have you tried http://livejs.com?
+    
+    
+Title: How do you set up an x64 development environment based on gcc and eclipse?
+Description: 
+    
+    
+                    
+I want to create 64 bit apps for (for example) 64 bit Windows 7. I've searched the web and found some help but couldn't get it to work.
+
+
+
+Sorry I've taken so long to respond but I have tried to get the packages suggested to work but they're not easy or else I'm doing something wrong.
+
+Anyway I ran across an environment called pellesc. It consists of a development environment around a compiler which traces is roots back to a 32-bit version that was once (according to Wikipedia) used to develop Quake. From what I've seen so far it's very promising and generates good code too!
+    
+
+        
+Answer 1: 
+
+    
+    
+This Eclipse MinGW64 tutorial mentions:
+
+
+  update (Nov 9, 2010): recent MinGW-w64 versions come with 'as', 'g++', and 'gcc' commands.  This step may be unnecessary in your MinGW build.
+
+
+Meaning you won't have anymore to update the GCC assembler, C++ compiler, C compiler and C++ linker, with 'x86_64-w64-mingw32-as', 'x86_64-w64-mingw32-g++', 'x86_64-w64-mingw32-gcc', and 'x86_64-w64-mingw32-g++'.
+
+Other great source for w64 development tools:
+
+Native windows x64 software develop with Mingw-w64 on drangon.org
+    
+    
+Answer 2: 
+
+    
+    
+In spite of what other people are saying, Eclipse actually has very good support for C++, even in Windows: check out the CDT project. It's very mature and well-supported -- it works for C/C++ at least as well as Eclipse JDT works for Java.
+
+As for the compiler itself, VonC is right, MinGW-w64 (but the mingw-w64 project is moving to mingw-w64.org so i suggest to use mingw-w64.org) is the best option. Eclipse CDT has built-in support for MinGW so as long as you install MinGW first, Eclipse should automatically detect it.
+    
+    
+Answer 3: 
+
+    
+    
+A 64-bit version of GCC for Windows is available at http://tdm-gcc.tdragon.net/download. I can't see why you would want to use Eclipse for C or C++ programming - try the Code::Blocks IDE at http://www.codeblocks.org instead.
+    
+    
+Answer 4: 
+
+    
+    
+Honestly, I use cygwin. Its compatable with unix so you can easily move systems and has tons of functionality that is gcc friendly (autoconf, make, makedepends, ...). To use gcc to compile to 64 bit add the -m64 option. To compile for windows use the -mno-cygwin option. Make sure though that you're using gcc 3 and not 4 (then you'd use the mingw compiler series). Otherwise, its all the same as unix which is really useful.
+    
+    
+Title: Delphi XE IDE code parser error: &ldquo;Expected &#39;&gt;&#39; but &#39;.&#39; found.&rdquo;
+Description: 
+    
+    
+                    
+After adding a IdUDPServer to my form and trying to put some code into the OnUDPRead event, I'm not able to add any component to my form at design time, nor can I run the application.
+
+
+is there any way to solve this ?
+    
+
+        
+Answer 1: 
+
+    
+    
+There are two bugs with this event handler. To fix them, you can
+
+
+remove the System. from TArray&lt;System.Byte&gt; (in the interface and implementation)
+add IdSocketHandleto the uses list in the interface
+
+
+I have not investigated further but after these changes the code can be compiled.
+
+So the full code would like be
+
+unit Unit12;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, 
+  IdSocketHandle, // &lt;-- added
+  IdBaseComponent, IdComponent, IdUDPBase, IdUDPClient, IdUDPServer;
+
+type
+  TForm12 = class(TForm)
+    IdUDPClient1: TIdUDPClient;
+    IdUDPServer1: TIdUDPServer;
+    procedure IdUDPServer1UDPRead(AThread: TIdUDPListenerThread;
+      AData: TArray&lt;Byte&gt;; ABinding: TIdSocketHandle);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form12: TForm12;
+
+implementation
+
+{$R *.dfm}
+
+procedure TForm12.IdUDPServer1UDPRead(AThread: TIdUDPListenerThread;
+  AData: TArray&lt;Byte&gt;; ABinding: TIdSocketHandle);
+begin
+  //
+end;
+
+    
+    
+Title: &ldquo;Fix similar errors&rdquo; feature in Netbeans
+Description: 
+    
+    
+                    
+This is a question about Netbeans. In the Tasks panel, can I select some similar errors and fix them all? I remember doing this in eclipse.
+
+For example, I have a lot of warnings about not using String concatenation with a StringBuilder, and Netbeans is capable of fixing those errors replacing the String concatenations with calls to the StringBuilder.append() method. It would be nice if I could fix all those errors with just one click.
+    
+
+        
+Answer 1: 
+
+    
+    
+I am currently not aware of anything built into netbeans that does this.
+
+A macro would be best, although good old Alt+Enter does the trick.
+    
+    
+Answer 2: 
+
+    
+    
+http://wiki.netbeans.org/NewAndNoteworthyNB71#Inspect_And_Refactor
+    
+    
+Title: Can Sonatype Nexus publish indexes after a commit?
+Description: 
+    
+    
+                    
+We have a Nexus repository, that holds our software (surprise ...). In our IDEs, we added the repositories, so we can navigate them in a visual manner.
+
+Problem: the IDE uses the .index folder (with it's gz file), which is currently updated every night.
+
+What I want is: if anyone adds an artifact, the .index should be updated automatically. Is that possible?
+
+What I don't want is: make the index update itself every so many minutes.
+    
+
+        
+Answer 1: 
+
+    
+    
+Exporting the index into the consumable binary and chunking out the indexes isn't a trivial process so it's not something we've setup to allow publishing every time a release or snapshot is published. It's also a waste because it's unlikely that consumers of the index are updating every n seconds. 
+
+The internal indexes are however updated in realtime and searches against the Nexus UI will have the latest and greatest. We are working on more tightly integrating the IDE and Nexus internal indexes to eliminate the publish/consume loop.
+    
+    
+Title: Netbeans Ruby on rails autocomplete does not work as expected
+Description: 
+    
+    
+                    
+I am using Netbeans v6.8 on Ubuntu 9.10 for Ruby on Rails development.
+
+My problem is that autocomplete works very inconsistently. For example, when I hit ctrl+space after typing "File.", I get all the methods neatly defined at the top in bold that can be called on the class. This list is demarcated and followed by all the other hundreds of methods from classes/modules other than File.
+
+But if I hit ctrl+space on some other clause such as "ActionController::Base::logger.", I don't see the methods such as 'info' or 'error' at the top. I just get the generic hundreds of method listed alphabetically (info and error are from the logger class are included in this list but they are interspersed with the rest of the methods and hence not discoverable unless you know what you are looking for).
+
+I initially thought that codecomplete just works for Ruby classes and not Rails but this is not the case as I can get it to work for some Rails classes quite accurately and consistenly.
+
+This is getting very frustrating. Can someone please suggest a solution?
+
+If not, can anyone recommend a better (free) IDE that has a better code completion feature?
+    
+
+        
+Answer 1: 
+
+    
+    
+Jet Brains Ruby Mine
+    
+    
+Title: How do I get Visual Studio 2008 to ignore trailing whitespace when I press END?
+Description: 
+    
+    
+                    
+It's annoying in VS2008 when I press the END key, and my cursor jumps out to way beyond the end of the line of code, because I have trailing whitespace from a copy+paste or reformat.
+
+I would like the END key to ignore whitespace. How can I best do this?
+
+I thought of using AutoHotkey to catch END keypresses, and replace them with "CTRL+E, \, END" (That's "Delete Horizontal White Space", under Edit -/pp/p/div
+Answer 1: 
+
+    
+    
+Not the answer you want on the 'ignore' front, but you can do a ctrl + delete should delete all the white space. If not contol + shift + left arrow to highligh then del will fix it.
+
+The format selection ctrl + e, ctrl + f should remove trailing white space. As per Paul's comment
+    
+    
+Answer 2: 
+
+    
+    
+Well, here's my AutoHotkey script:
+
+SetTitleMatchMode RegEx
+#IfWinActive, .* - Microsoft Visual Studio
+End::Send {End}^e\
+
+
+Guess I'll use that until someone posts a better answer :)
+    
+    
+Answer 3: 
+
+    
+    
+Not quite what you want, but selecting the markup and doing "Format Selection" will remove the whitespace...
+    
+    
+Title: Android Studio: show compiler error immediately / not only on the right side
+Description: 
+    
+    
+                    
+By default Android Studio shows compiler errors by a red, horizontal line on the right side of the code editor. Is there any plugin to show it in the left side (where the line numbers are) or even better at the bottom in a separate view like in Visual Studio and all the other IDEs?
+    
+
+        
+Answer 1: 
+
+    
+    
+There is one plugin that shows you errors in the left side, Error item line marker from Chris Gamache , but I didnt find one plugin to show you errors at terminal like VS.
+    
+    
+Title: Android studio slow performance when working with large kotlin files
+Description: 
+    
+    
+                    
+I have a problem with Kotlin files in android studio. when the file is too large (for example more than 2000 lines), the android studio is not responding and actually, it freezes when I try to work with it.
+I should mention that I have no problem with java files it exists only with Kotlin ones. Also, I've increased the IDE RAM but no luck.
+
+I have a Kotlin file with more than 2000 lines and I cannot work it. when I open it, it stuck and freezes, I cannot even close the file anymore, I must quit the IDE and reopen it. 
+
+Is there any known issue or a way to solve this problem?
+    
+
+        
+Title: Is it possible to use Visual Studio Code as your exclusive IDE when working with Websphere Commerce?
+Description: 
+    
+    
+                    
+Can I use VSCode to start/stop the server, view live logging, debug with breakpoints, and modify code?  Or are you stuck with RAD/Intellij as your only ways to work with Websphere Commerce?
+    
+
+        
+Title: Android Studio does not show layout after updating to version 3.0.1
+Description: 
+    
+    
+                    
+I updated Android Studio to version 3.0.1, but since then I can't see the layout of my application anymore. I can run my app, so the xml file is OK.I tried adding a new Virtual Device and updating my SDK, but I still can't see my layout. Has anyone faced this issue? Can I do anything to solve it out? Thanks.
+
+
+
+2
+    
+
+        
+Answer 1: 
+
+    
+    
+Try Clean and Rebuilding the project. Worked for me
+    
+    
+Answer 2: 
+
+    
+    
+.
+change into any api level now it is in null
+
+
+
+Reference : Preview not Showing in Android 3.0
+and 
+
+Android Studio 3.0 xml-layout file's preview not showing issue
+    
+    
+Answer 3: 
+
+    
+    
+I solved the problem by clicking the button "Sinc project with Gradle files". Now I can see my layout. Thanks to those who tried helping me. 
+    
+    
+Answer 4: 
+
+    
+    
+
+Your Solution is here
+First you Sync Your Project (See in the image red highlighted circle) Click on the Icon
+See Below Image
+
+
+Your problem is now fixed.
+    
+    
+Title: qtCreator and docker best practises
+Description: 
+    
+    
+                    
+What are the best practises for using docker from within an IDE such as qtCreator?
+
+
+Should you install qtCreator within the container?
+Should you code on the host and only build within the container via a shared mounted volume? And in this case do you have to manually start the run / debug from within the container rather than running / debugging via ctrl+r or F5 within qtCreator (this would be a pain no longer being able to use shortcuts ctrl+r or F5)
+
+    
+
+        
+Title: Is there any way to auto format ( AStyle ) while typing code in Code::Blocks?
+Description: 
+    
+    
+                    
+I always format code in Code::Blocks using Source Code Formatter (AStyle) 
+plugin. I need to press short-cut keys or  right click to mouse to apply formatting. 
+Is there any better way to format code without pressing any keys or mouse clicks? 
+Thanks !!
+    
+
+        
+Title: Getting PyCharm to use ipython as the remote interpreter, including virtual environment
+Description: 
+    
+    
+                    
+I'm attempting to set up PyCharm to work with a remote interpreter. I can get the basic SSH setup to work correctly, and I point it to the python interpreter I have under a Virtual Environment: 
+
+/remote/file/directory/me/environment/bin/python
+
+1) This works and PyCharm's Python console shows the usual interpreter information and gives me a standard interpreter. However, it does not appear to be "in" the virtual environment; the package list from pip freeze corresponds to the base install on the server, NOT the packages in my virtual environment. 
+
+2) If I point PyCharm at: /remote/file/directory/me/environment/bin/ipython then PyCharm says this is an "unknown interpreter" and the Python console only shows an error and fails to load. 
+
+Is it possible to get PyCharm to work with an interpreter inside an activated virtual environment so that it can use the ipython bin (giving me access to the usual benefits of ipython)? 
+    
+
+        
+Title: Is it possible to give style to exceptions messages in Visual Studio?
+Description: 
+    
+    
+                    
+I want to know if there's some way to add style like: bold, italic, underline etc. to the exception pop-up in Visual Studio.
+
+E.g: 
+
+string keyword = "important stuff";
+string anotherKeyword = "other important stuff";
+
+throw new Exception($"My exception message with that important keyword: **{keyword}** and that other important keyword: *{anotherKeyword}*.");
+
+
+What will give us this style:
+
+"My exception message with that important keyword: important stuff and that other important keyword: other important stuff."
+
+
+
+I think it might improve a lot the readability.
+
+I'm also curious if it is possible in other IDEs, with a plugin maybe ?
+
+What do you think ?
+    
+
+        

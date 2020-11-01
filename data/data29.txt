@@ -1,0 +1,2021 @@
+Title: How do I successfully use VIM as an external editor for Code::Blocks?
+Description: 
+    
+    
+                    
+I really like Code::Blocks for its build system and step through debugging abilities - ie I really enjoy using wrappers to gcc/gdb more than using them from Makefiles or the command line. The problem is, I'm so brain damaged (or spoilt, some might say) by years of VIM use that I cannot edit in a standard Windows text editor.
+
+So, I setup Code::Blocks to use VIM as the file handler for .cpp/.c/*.h and along with VIM's --server-name and --remote-tab options can right-click files in my C::B project window and select to open them with the file extension handler and they pop up as new tabs in a single VIM window - then I switch back to C::B, hit F9 to build and run etc.
+
+I would like to improve my workflow, so the question is two-fold:
+
+
+Can I make C::B open VIM by default when I double-click a file in the project's 
+file list instead of having to right-click -/p/lilip/p/li/olp/pp/pp/pp/p/div
+Answer 1: 
+
+    
+    
+
+After digging about, I have to conclude that the answer is no. The Open option is meant to open within C::B only.
+Vim supports building projects using built-in commands. If you've got C::B generating your Makefile (which it should be - I never got it to the way I wanted), then make sure Vim's working directory (:cd), then you can simply type :make and Vim, by default will invoke make in the current directory. You can :set makeprg to run whatever script you need it to, including running any configure scripts. I also added this to my .vimrc:
+
+:map &lt;F8&gt; :make&lt;CR&gt;
+:imap &lt;F8&gt; &lt;Esc&gt;:make&lt;CR&gt;a
+:vmap &lt;F8&gt; &lt;Esc&gt;:make&lt;CR&gt;a
+
+
+It works pretty well for my purposes, as :make also puts errors and warnings from GCC's output into the check window. :cn navigates to the file containing the next error.
+
+    
+    
+Title: Visual Studio Code&gt; Python &gt; Black formatting does not run on save
+Description: 
+    
+    
+                    
+Although I seem to have configured both linitng and formatting properly, the linting runs but the black formatting does not. 
+
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Args": [
+        "--max-line-length=110"
+    ],
+    "python.linting.lintOnSave": true,
+    "python.formatting.provider": "black",
+    "python.formatting.blackPath": "/usr/local/bin/black",
+    "python.formatting.blackArgs": [
+        "--line-length",
+        "110"
+    ],
+    "editor.formatOnSave": true,
+
+
+I have checked, that black is properly configured and I can run the formatting from the command-line without issues. 
+
+But when saved in the IDE, black does not format the file. It also does not complain, there are no error-messages that pop up and nothing showing up in the logs. It just does not run the formatting at all. 
+
+I am running this insisde a docker-container using remote-editing: not sure, if this makes a difference. 
+
+The black-version is: 
+
+black&gt;=19.3b0
+
+
+and the vscode-version is 1.36.1.
+
+Thx for any help, as right now I am pretty clueless, why the black-formatting does not run...
+    
+
+        
+Answer 1: 
+
+    
+    
+According to this PR, there is functionality to set the timeout for the formatOnSave action. By default this is 750ms, which I found too short for my project. I increased it to 3 seconds by using this in my settings.json:
+
+{
+    "editor.formatOnSaveTimeout": 3000
+}
+
+    
+    
+Answer 2: 
+
+    
+    
+The line argument for black is wrong, it should be
+--line-length=120
+
+according to https://stackoverflow.com/a/58048911/4435175.
+    
+    
+Answer 3: 
+
+    
+    
+But here is a wild guess: I started the dockerd manually from the command-line using sudo: This gave me all kind of weird issues (files created from inside the container e.g. migrations or cache-files ended up being owned by root. I recently moved the dockerd into a service, now suddenly black is running on save. The root of all evil could have been rights-issues, that come from the fact that the dockerd was run as sudo and not as a service. 
+    
+    
+Title: IntelliJ project files suddenly broken
+Description: 
+    
+    
+                    
+I've been working on a project in IntelliJ IDEA for about two months now. Today, when I fired up the IDE, which would usually open project straight up, IntelliJ took unusually long time to load, and when it did open the project, the main .java file displayed a long line of spaces and nothing else, instead of the code that was there before. The .iml file, the only other thing in the project, was fine. An error message was on the top:
+
+"This document contains very long lines. Soft wraps were forcibly enabled to improve editor performance."
+
+Trying to edit the document results in the entire program freezing and becoming unresponsive. What the hell happened? It was fine one day and then just did this, how do I get my project back and how do I prevent this?
+    
+
+        
+Answer 1: 
+
+    
+    
+Solved in the comments below the question; thought I might as well post a dummy answer and mark this as resolved.
+
+EDIT: Solution written out.
+
+
+Right click on file 
+Title: Increase size of menu/toolbar icons in Eclipse [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        Eclipse: large toolbar icons
+                            
+                                (6 answers)
+                            
+                    
+                Closed 5 years ago.
+        
+
+
+    
+
+The icons on top of the java windows are too small that it is hard to see, is there any way that i can enlarge that?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  There is no support in Eclipse for large/small icons in the toolbar.
+
+
+The same question is here: Eclipse: large toolbar icons
+
+Maybe you can enable Windows compatibility for Eclipse. You can find more information in: 
+https://mcuoneclipse.com/2017/10/11/dealing-with-eclipse-and-very-small-icons-on-ultra-high-density-displays/
+    
+    
+Title: Overlay Icons in Delphi IDE
+Description: 
+    
+    
+                    
+How do you implement overlay icons in the Delphi IDE like this:
+
+
+on editor's files tabs;
+on Project Manager's tree;
+on Project Manager's popup menu?
+
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I have recently been playing around with the Project Manager's context menu and the context menu (TPopupMenu) doesn't have a TCustomImageList assigned to it.
+
+So to get images on the context menu, you will need to assign a TCustomImageList (TImageList) to it. What I have done is to create one with the same owner as the TPopupMenu component.
+
+For the others, I know very little:
+
+
+The Project Manager's tree is a virtual tree view, so it might worth playing around with it in an application to see what can be done.
+The editor tabs are a custom component, so some low level hooking maybe required. Have a look at how the Delphi IDE Colorizer handles the custom tabs; that might help with hooks.
+
+
+Plea: Since this is playing around with the internals of the IDE, please don't assume you are the first person there and start over writing everyone else's work.
+
+Edit: There is an EDN article on Extending the Project Manager Context menu
+    
+    
+Title: visual studio 2012 open files disappear
+Description: 
+    
+    
+                    
+When I am working in Visual Studio 2012 and debugging, making changes, and debugging after a while, eventually my open documents disappear. They are still open, apparently (I'd add a screenshot but I can't yet), but going to Window /pp/pulli/lili/lili/lili/lili/lili/lili/lili/lili/lili/lili/lili/lili/lili/lili/li/ul/div
+Answer 1: 
+
+    
+    
+I had the same problem, but I didn't have VSCommands.
+Instead, I removed a couple of VS 2010 (yes 2010) components recently installed.
+For now, everything seems to work.
+(There might be some versioning confusion, so 2012 picked some wrong 2010 components. Just a guess...)
+    
+    
+Answer 2: 
+
+    
+    
+The problem appears to be VSCommands for Visual Studio 2012 (early access release). I uninstalled it and stopped having the problem, then reinstalled it and the problem came back. I don't know if it is conflicting with another add-in, but I'll leave it uninstalled for now.
+    
+    
+Title: modern text editor similar to acme
+Description: 
+    
+    
+                    
+After using vi for the better part of 15 years, I tried Rob Pike's Acme on a whim while working with Go.  I really enjoyed how minimal and lightweight it is.  Modern unix-esque things don't really behave well in Acme and Ruby development is irritating at best in that environment (it works beautifully with Go and C, however).
+
+I've adapted to some of Acme's "features" in vim, but I'm groping for options right now.  Are there any text editors with the following (somewhat subjective) features and not much else?
+
+
+no syntax highlighting or line numbers
+runs on osx and maybe linux
+buffers/window splitting
+light background, dark foreground (or the ability to change this)
+little to no bloat
+ability to run open a terminal in the editor or run commands from it
+
+
+I don't know of any editor that can give me Acme's mouse support, but I'm using a magic trackpad these days, so that's not necessary.  I've tried Sublime, but it feels a little bloated and splitting windows yields wasted space.  Fullscreen mode comes close to what I'm looking for, but I can't put my finger on what's missing.  Sublime might work if I could open a terminal in the window as well.
+
+My current environment is iTerm2 full screen, utilizing vim for code editing.  This works relatively well, but using the mouse would be handy.  A huge motivator for my search is that Aqua wastes so much space with window borders/shadows and there isn't a sufficient tiling window manager available for OSX.
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm not aware of any "modern" editor mimicking Acme but everything you ask for is in Vim and Emacs but they are probably not what you might call "modern" and their operation is diametrally opposed to that of Acme.
+
+The last item in your list is easier and more natural in Emacs than in Vim, though.
+
+I understand that you want a GUI editor but you seem to complain about Mac OS X's window management. I have the impression that you would be at ease in a real tiled desktop environment. Did you try Awesome or WMII or others?
+
+Lastly, you can use the mouse for cursor positionning, visual selection, window focus and clicking on tabs in Vim, just set mouse=a in your ~/.vimrc.
+
+Beside the very special stuff I've seen done with the mouse in Acme, I think that eveything you want is there:
+
+
+    
+    
+Title: How do I search and replace structurally in Intellij
+Description: 
+    
+    
+                    
+I am migrating my Junit tests from Junit v3 to Junit v4.
+
+I was hoping to use the search and replace structurally "srs" to add an @Test annotation before all methods starting with test.* using my favorite IDE Intellij. 
+
+I just cant figura out how to do it... I can create a query that will find all methods without an annotation (there is an example bundled in Intellij) but when used to do a replace either my class gets replaced by only the method names OR nothing is found. 
+
+Maybe a regexp is easier :-)
+    
+
+        
+Answer 1: 
+
+    
+    
+It is not possible, as of now, but there are requests for class members replacements.
+
+Here is a useful link for getting started with ssr: https://www.jetbrains.com/idea/docs/ssr.pdf
+    
+    
+Answer 2: 
+
+    
+    
+I tried with the following SSR but I have the same problem than you :
+
+Search template : 
+
+public class $TestCase$ extends $TestCaseClazz$ {
+  public void $testMethod$();
+}
+
+
+Replacement template :
+
+@Test public void $testMethod$();
+
+
+And I check  "This variable is target of the search" on testMethod.
+The preview seems ok, but IntelliJ actually delete the whole method :(
+    
+    
+Answer 3: 
+
+    
+    
+Open Search -br/br/br/br/br/br//p/div
+Title: No warning at undefined variables in PyCharm Community 2017.2
+Description: 
+    
+    
+                    
+I have this piece of code in a Python module open in PyCharm Community Edition 2017.2.
+
+class Sample(object):
+    def __init__(self):
+        self.prop1 = 5
+        self.prop2 = 10
+
+    def method1(self):
+        return foo
+
+    def do_work(self):
+        not_defined_func()
+
+
+s = Sample()
+s.method1()
+
+bar = call_func
+
+
+The IDE doesn't give any warnings on some fairly serious issues:
+
+
+The returned variable foo has not been defined.
+I assign not defined variable call_func to the variable bar.
+I call not defined function not_defined_func inside the method do_work. 
+
+
+How do I enable PyCharm to highlight these things? I have a fresh installation of PyCharm and have all the Inspections enabled in File &gt; Settings &gt; Editor &gt; Inspections &gt; Python.
+    
+
+        
+Answer 1: 
+
+    
+    
+See which python interpreter is enabled go to preference 
+Title: Intellij IDEA column selection with Alt key
+Description: 
+    
+    
+                    
+In Intellij IDEA is there a way to enable column selection mode by holding down Alt, like in other IDEs (for example Visual Studio or Notepad++)?
+
+Currently when pressing Alt IntelliJ uses the multicursor feature, which always results in me having an aditional cursor somewhere where I don't want it.
+
+
+
+The middle mouse button (hold and drag) does exactly what I want, I just wished I could remap it to the Alt key
+    
+
+        
+Answer 1: 
+
+    
+    
+From the comment, I assume that it's a version issue. Updating the IDE may be solve your issue. 
+    
+    
+Title: How to change the background or foreground color of the visual studio 2010 tooltip
+Description: 
+    
+    
+                    
+I need to change the tooltip in visual studio 2010 when you hover your mouse over a code item when not debugging.
+
+
+
+Obviously I am trying to theme my VS to be dark, but I cant seem to change this setting.
+
+I have Powertools, Visual Assist X and Color Theme editor installed.
+
+I can rule out Color Theme editor colors because it has a global edit function where I can make every setting black and it does not change.
+
+I have tried 
+
+Tools-&gt;Options-&gt;Environment-&gt;Fonts and Colors-&gt;Signature Help Tooltip Background
+
+
+It has no effect.
+
+The foreground text is derived from windows window text color (i cant change this in windows as my theme relies on it)
+
+Other tooltips in VS look fine
+
+Solution explorer:
+
+
+
+Parameter help is OK because the forecolor is darker:
+
+
+
+It appears to be a WPF brush which gives me the impression that I cant change it with a simple color setting.
+
+I would be happy with either background or foreground color change.
+    
+
+        
+Answer 1: 
+
+    
+    
+I no longer have 2010, but in 2013 you change foreground here
+Tools-
+Title: Generate Sources and Update Folders For All Projects
+Description: 
+    
+    
+                    
+There's an IntelliJ command named exactly like my title: Generate Sources and Update Folders For All Projects. What does that do? I might have did a huge mistake by clicking on it before asking what that does. It's now running for more than half an hour. Wont stop and I'm too afraid to stop it.
+
+What I wanted to do is switching to another GIT branch, but the workspace crapped itself and resulted in some build errors, so I thought I would click on everything that looks like a recycle icon. So I pressed this one on the maven panel: .
+
+Does it do anything special? It clearly works much longer than an
+
+mvn clean install -DskipTests
+
+
+What anything other would I need? Actually until now I didn't even need anything other than that.
+
+ps. (It has finished now, but I'm still curious what that functionality really is.)
+    
+
+        
+Answer 1: 
+
+    
+    
+Per the IntelliJ IDEA Maven FAQ:
+
+
+  In order to get generated sources automatically imported as source
+  folders configure corresponding plugins so that they put them into
+  target/generated-sources/, where subdir is any folder name you
+  prefer. The subdir folder is necessary to distinguish sources from
+  different tools and also to exclude some special generated sources
+  (e.g. groovy stubs).
+  
+  Please note that even if you manually configure some source folders
+  under target/generated-sources of this folder itself, IDEA will
+  rewrite them according to your pom.xml.
+  
+  Any time you want to generate sources you simply execute the
+  corresponding goal, bound for generation (usually generate-sources,
+  generate-test-sources). After that IDEA will pick up new folders and
+  set them up.
+
+
+Per Maven docs:
+
+
+  Let's run though a short example to try and help. To generate sources
+  you must first have a plugin that participates in the generate-sources
+  phase like the ANTLR4 Maven Plugin.
+  
+  So this is all fine and dandy, we have a plugin that wants to generate
+  some sources from a Antlr4 grammar but how do we use it. You need to
+  specify that you want to use it in your POM: If you then type mvn
+  compile Maven will walk through the lifecycle and will eventually hit
+  the generate-sources phase and see you have a plugin configured that
+  wants to participate in that phase and the ANTLR4 Maven Plugin is
+  executed with your given configuration. Furthermore during the compile
+  you can observe that all the generated code (from your grammar files)
+  will automatically being compiled without supplemental configuration.
+
+
+As you can see Generate Sources action runs the generate-sources Maven phase for any plug-ins in your pom.xml that do generate any sources.
+    
+    
+Title: Specify library path in Visual Studio Code?
+Description: 
+    
+    
+                    
+How do I specify the library path, i.e., where to look up static/shared libraries in Visual Studio Code (C++)?
+
+I've already specified the include path (header files) as follows:
+
+   "includePath": [
+        "${workspaceRoot}",
+        "/usr/include/x86_64-linux-gnu/c++/6",
+        "/usr/include/c++/6",
+        "/usr/local/include",
+        "/usr/include/x86_64-linux-gnu",
+        "/usr/include"
+    ]
+
+
+I've been searching for a JSON property called "libraryPath", but cannot find any.
+    
+
+        
+Title: Is there a way to see background task output?
+Description: 
+    
+    
+                    
+Say I'm importing new project and it's taking way too long in my opinion. Background task is stuck for example at "Gradle: build".
+
+How can I debug (verify), if it's doing anything? Is there a way to see any specific output?
+    
+
+        
+Answer 1: 
+
+    
+    
+There is already an open feature request for that, please feel free to vote:
+
+
+IDEA-157505 View Gradle output when importing project
+
+    
+    
+Title: How can I run Processing&#39;s Python mode in non-Processing IDEs?
+Description: 
+    
+    
+                    
+The "Python mode for Processing" file Tutorials/overview/index.html states "Advanced programmers need not use the PDE, and may instead choose to use its libraries with the Python environment of choice." 
+
+Unfortunately, it doesn't say how to do this, and I can't find any additional information in their documentation, or on here, or anywhere else.
+
+My environments of choice are the PyCharm Community Edition, and Jupyter notebooks. If it's relevant, I'm on a Mac running OS X 10.11.5 (El Capitan).
+
+Can anyone please tell me what must be done so that I can write and run Python code in those environments, using the "Python mode for Processing" libraries? 
+    
+
+        
+Answer 1: 
+
+    
+    
+It's not really obvious, but you can run Processing sketches through the command line using the processing-py.jar file. Following the tutorial:
+
+Java has to be installed on your system (you can check by running java -version in the terminal).
+
+Download and extract a .tgz file for your system from the link above. Among other files it contains a processing-py.jar file.
+
+Edit your sketch in whatever editor you are used to, and when done just do: java -jar &lt;path to your processing-py.jar file&gt; &lt;path to your sketch file&gt;. This runs your sketch in a new window.
+For convenience you can can copy the jar file (or maybe make a symbolic link with ln -s &lt;source&gt; &lt;target&gt;) to your project directory, so you can just do: java -jar processing-py.jar sketch.py
+
+
+This approach is editor independent. I don't know much about pycharm, but you can just run your sketches from the pycharm terminal (View -&gt; Tool Windows -&gt; Terminal). I guess there must be a way of executing custom commands in pycharm (for example: builidng sketches in Sublime Text) but I'm not sure how to do it.
+    
+    
+Answer 2: 
+
+    
+    
+In vscode there is an extension that allows you to run custom terminal commands. You can use it with the processing-py.jar file to run processing.py sketches.
+There is a tutorial that goes through the process here.
+    
+    
+Title: WebStorm Smarty highlighting
+Description: 
+    
+    
+                    
+Is there an way to make WebStorm highlight Smarty templates? Either through plugin or some other means?
+
+Also note, I need this for WebStorm, not PhpStorm or some other version; I don't need autocomplete or anything else -- just highlights.
+
+Files have .tpl extension and so far I'm treating them as HTML files and I am looking for options to increase code readability with coloring.
+
+
+
+I have tried following based on the comments:
+
+
+
+However, resulting .tpl file still looks like
+
+    
+
+        
+Title: Delphi - identcache extension
+Description: 
+    
+    
+                    
+According to the documentation, this extension is used for refactoring. Is any possibility to physically exclude this files? 
+    
+
+        
+Answer 1: 
+
+    
+    
+NOTE: I don't know if my answer will satisfy you if you are using Windows Explorer as your main file manager.
+
+I use Total Commander as file manager. Under Total Commander you can set which files to see and which you don't want to see. Go to Configuration -
+Title: Disable adding matching square brackets in JetBrains AppCode
+Description: 
+    
+    
+                    
+How do I disable adding a matching open square bracket '[' character when typing a close square bracket ']'? 
+
+I've tried various combinations of the Smart Key options, and none of them do what I want. I am able to disable automatically adding a closing bracket ']' when I type an open bracket '[', but not the other way around. 
+
+Example:
+
+I have the following line:
+
+if ([myObject respondsToSelector:@selector(outline)])
+
+
+and my cursor is between the ')' and ']' characters. When I type ']' this is what I get:
+
+if ([myObject respondsToSelector:[@selector(outline) ]])
+
+
+I expect that the existing ']' will be overwritten by the one I type, or at least that a new '[' will not be added. 
+
+I am using AppCode 1.6.2 and the IdeaVIM plugin. 
+
+Thank you!
+    
+
+        
+Answer 1: 
+
+    
+    
+In the XCode preferences under the 'Text Editing' tab there is a 'Automatically balance brackets in Objective-C method calls option'. Uncheck that box.
+    
+    
+Title: Prevent methods with empty bodies from deletion on save
+Description: 
+    
+    
+                    
+It's quite a contradictory habit of mine to press Ctrl+S permanently. The negative side is that delphi deletes empty functions/procedures on save. 
+
+Is there a way to prevent IDE from deleting functions/procedures with empty bodies on save?
+    
+
+        
+Answer 1: 
+
+    
+    
+Converted from the comment as per OP request. My comment is too tiny for an answer, so I'm going to add few details maybe already obvious to an OP.
+
+
+  This happens with event handlers only¹. Write them without delay or
+  comment them with todo²
+
+
+¹ That is, event handlers are methods of design class and they are created, listed and deleted (if caught empty when saving or compiling) by the form designer (this include data module designer and any of other custom designers installed). Confer to delegates you probably familiar with from C# background. Any other methods are subject to "manual" management.
+
+² TODO items (Ctrl+Shift+T in default keybinding) are definitely better than just blank comments:
+
+procedure TForm1.MagicButton1Click(Sender: TObject);
+begin
+  { TODO -ctomorrow : I'm going to write the code, I promise! }
+end;
+
+
+Possible special case
+
+TAction with AutoCheck set must (see the comment from Sir Rufo below for another possibility at run time) have its OnExecute assigned in order to be Enabled. In this case it is inevitably to have such blank event handlers within design class. Example:
+
+procedure TMonitor.AutoCheckActionExecute(Sender: TObject);
+begin
+  // dummy stub
+  { DONE -crefactor : merge with other stub(s) }
+end;
+
+    
+    
+Answer 2: 
+
+    
+    
+Just add an empty comment like // 
+
+begin 
+//
+end;
+
+
+an other way would by moving the declaration to the published part
+
+type
+  TForm5 = class(TForm)
+    Button1: TButton;
+    Button2: TButton;
+    procedure Button1Click(Sender: TObject); // will be removed if empty
+  private
+    { Private-Deklarationen }
+  public
+  published
+    procedure Button2Click(Sender: TObject); // will not be removed if empty
+
+    { Public-Deklarationen }
+  end;
+
+    
+    
+Answer 3: 
+
+    
+    
+
+  Is there a way to prevent IDE from deleting functions/
+  procedures with empty bodies on save?
+
+
+There is no option in the IDE to disable this behaviour.
+    
+    
+Title: Using a pure C++ compiler versus Visual C++
+Description: 
+    
+    
+                    
+I searched around for the answers to these questions, but I have had little luck.  So, I thought I would post them here to get some clarification.  If this is a duplicate, please let me know, and I will close this.
+
+Okay, with that said, I would like to begin learning C++.  I come from a C# background and I have a great respect for Visual Studio and what it can do.  Now, my question is.  How well does Visual Studio's compiler work for C++ as opposed to a non-Microsoft version (such as MinGW)?
+
+My thing is this.  I have nothing wrong with Microsoft, but I would really like to learn C++ in a "pure" form and not scewed by any particular implementation.  How reliant is Visual C++ on the .NET Framework?  Can a "pure" C++ application be created through Visual Studio without any .NET usage or overhead?  Does the Visual Studio compiler compile C++ into CIL like it does with C#/VB, or does it compile it all the way down as others do?
+
+Thanks for any help anyone can provide!
+    
+
+        
+Answer 1: 
+
+    
+    
+The Visual C++ compiler will compile C++ code into standalone EXEs that have nothing to do with the .NET framework.
+
+The only way to get the .NET baggage thrown in is to compile the C++ as "managed".
+
+If you create a new project (File|New|New Project) Then choose "Win32" from the Visual C++ submenu in the project types and choose "Win32 Console Application" Visual studio will create a simple project with a couple of source files that will compile to a little executable.
+
+Most of the time, Visual C++ is very similar to other compilers. Avoid #pragmas, microsoft libraries (MFC, ATL) and you should be fine.
+
+Edit (thanks Cheeso) - Documentation of where Visual C++ diverges from standard.
+
+In general I would advise using boost libraries for threads and networking because they work on many platforms (i.e linux). Also if your code can compile in GCC and Visual Studio then you are doing a good job keeping it portable.
+    
+    
+Answer 2: 
+
+    
+    
+The most recent versions of VC++ have become significantly more compliant to the C++ standard, so it's not really an issue to write "pure" C++ using Visual Studio, presuming that you stay out of the Windows API, COM+ and ATL. In fact, the documentation with Visual Studio is very rich, with details on the standard libraries and the STL, so it can help you learn a great deal. It can't teach you everything, but it's certainly loaded up with a wealth of information that is portable to any compiler and it is very easily accessbible inside the IDE.
+    
+    
+Answer 3: 
+
+    
+    
+If you create a new solution you should choose new Win32 Project, or Win32 Console Application, and check the 'Empty Project' option. Then you can add a main.cpp file, and add your standard C++ code.
+    
+    
+Answer 4: 
+
+    
+    
+If you like Visual Studio, go ahead and use it to learn C++ -- I haven't used the very latest version, but even the previous one was pretty standards-compliant, C++-wise, and I assume the latest one can only have gotten better.  You can have many different kinds of project in Visual Studio, including "console apps", which are the "plain vanilla" kind you could make on any platform, and also many other kinds, such as, windows apps using the good old win32 api, ones made with MFC or other frameworks older than .NET, .NET ones using "managed code", etc.
+
+Just make sure you always work in a "console app" project, and you'll be operating pretty closely to how you would be on other platforms and/or with other C++ IDEs.
+    
+    
+Answer 5: 
+
+    
+    
+If you limit yourself to writing ANSI C++ compliant code then what you write in VS will work in other compilers, until you have to interact with a graphic interface or IO.  Then you need to make certain that you are using something that is portable, such as OpenGL, and not DirectX.
+
+To set your project the steps here may be useful:
+http://bytes.com/topic/net/answers/447572-strict-ansi-c
+    
+    
+Answer 6: 
+
+    
+    
+Microsoft Visual Studio 2005 comes with a very good, C++98 standard compliant pure C++ compiler. If you are interested in pure C++, don't forget to disable language extensions in project settings and you are good to go. Nobody is going to force you to use .NET framework, MFC or anyting like that. Just pure core C++ language and C++ standard library.
+
+Of course, just like any other compiler, it has known non-compliance issues, but in general it is, again, surprisingly good. Older versions of their compiler (MS VS 6.0 specifically) suffered from many non-compliance problems and could not even compile its own header files with language extensions disabled. In 2005 version they fixed a lot of these issues.
+    
+    
+Answer 7: 
+
+    
+    
+After creating a standard Win32 project, you can turn up the compliance a bit more. On the project properties sheet, there's a C/C++ category, with a Language entry. This lists a number of cases where VC++ can differ from the standard. Here, you'd want to turn OFF language extensions, and turn ON "wchar_t as built-in type", "for-loop conformance" and "RTTI support".
+    
+    
+Title: Check full value of a long string in the VB6 IDE
+Description: 
+    
+    
+                    
+I have a string 'sSQL' that contains a very long tsql statement. I need to check what its value is while debugging. I usually just use ?sSQL in the immediate window but this is truncating the first half and only giving me the end half.
+
+So is there an alternative way to see the full value using the vb6 sp5 dev environment?
+    
+
+        
+Answer 1: 
+
+    
+    
+If it's that long, save it to a text file. Have a debug method:
+
+sub SaveStringToDebugFile(s as string)
+  ...
+end sub
+
+
+and then call it from the immediate window:
+
+SaveStringToDebugFile sSQL
+
+    
+    
+Answer 2: 
+
+    
+    
+For debugging, Clipboard.Clear: Clipboard.SetText ssql then paste into notepad.
+    
+    
+Answer 3: 
+
+    
+    
+While execution is paused on the breakpoint you could type in the immediate window: 
+
+Debug.Print(sSql)
+
+
+;-)
+    
+    
+Answer 4: 
+
+    
+    
+One way is to use write the string out to a file. You can do this in a single line in the immediate window by using Line continuations, e.g.:
+
+Open "C:\SQL.TXT" For Append As #1: Write #1,sSQL : Close #1
+
+
+Note: You'll need to change C:\SQL.Txt to a path that you can write to depending on your OS.
+    
+    
+Answer 5: 
+
+    
+    
+Erm, the immediate window doesn't truncate (except at 200 lines of 1023 characters). Have you just tried pressing the home key or scrolling left?
+    
+    
+Answer 6: 
+
+    
+    
+Check the length of the "long" string using the Immediate:
+
+?len(sSQL)
+ 4221 
+
+
+then knowing the size you can start getting chunks of string using Mid function:
+
+?Mid(sSQL, 1, 500)
+
+?Mid(sSQL, 500, 1000)
+
+?Mid(sSQL, 1000, 1500)
+
+    
+    
+Title: What is the Keyboard shortcut to “untab” in Atom Editor?
+Description: 
+    
+    
+                    
+When we select lines and hit tab, it moves it to right.
+How do we do the opposite (move left by tab spaces) ?
+    
+
+        
+Answer 1: 
+
+    
+    
+In Atom and in most IDEs you can untab by hitting SHIFT and TAB.
+    
+    
+Answer 2: 
+
+    
+    
+Use Ctrl+[ to decrease the indentation and Ctrl+] (which is similar as tab) to increase the indentation. Same is valid in other editors as well.
+    
+    
+Title: phpStorm 7 Code completion stopped working
+Description: 
+    
+    
+                    
+I have been working with phpStorm and it had suddenly stopped showing suggestions for code completion. When i do Ctrl + space its behaving correctly by showing all the possible options in a drop down.
+
+I have followed the below link and have did invalidate cache but still of no use.
+PhpStorm code completion doesn&#39;t show core classes/extensions
+
+My Setup is:
+OS: Mac - 10.9.2 (Mavericks)
+PHPStorm: 7.1.3
+    
+
+        
+Answer 1: 
+
+    
+    
+I just had the same problem, fixed it when I realized I mistakenly put PHPStorm in Power Save Mode. Click the little fellow on the bottom right of your PHPStorm window and switch that off
+    
+    
+Answer 2: 
+
+    
+    
+Indeed, the Power saving mode (File /pp
+Answer 3: 
+
+    
+    
+Invalidating the cache did not work for me, but this did:
+
+Enable power save mode (File /p/div
+Answer 4: 
+
+    
+    
+If your are using a Linux distro (Ubuntu, Debian, Centos) etc, it is due to ibus.
+
+Just change the Shortcut (run: ibus-setup and change to Super+Ctrl+Space for instance) and everything will be fine again.
+
+Or (my favorite): uninstall ibus if you are not using it.
+In a Debian/Ubuntu distro should be:
+
+sudo apt-get remove ibus
+
+Ctrl+Space autocompletion should be back.
+    
+    
+Answer 5: 
+
+    
+    
+It was power saving mode for me too. It's an option at the bottom of the File menu.
+    
+    
+Title: IntelliJ idea stucked on &ldquo;loading project&rdquo; screen
+Description: 
+    
+    
+                    
+This is a Monday morning nightmare on top of existing bugs I have!!
+
+I have couple of projects which i open simultaneously using intellj. One of the project was not showing all directory structures inside it so i took some advice and deleted the .idea folder. Now all hell broke loose on me.
+
+I am stucked here from the dawn of mankind now
+
+
+
+Intellij logs
+
+2017-12-04 09:46:59,444 [   9036]   INFO -                git4idea.GitVcs - Git version: 2.14.3.0 
+2017-12-04 09:46:59,533 [   9125]   INFO - pl.projectlevelman.NewMappings - VCS Root: [Git] - [/codebase/plutus] 
+2017-12-04 09:47:01,309 [  10901]   INFO - tor.impl.FileEditorManagerImpl - Project opening took 6353 ms 
+2017-12-04 09:47:02,913 [  12505]   INFO - .diagnostic.PerformanceWatcher - Indexable file iteration took 4772ms; general responsiveness: ok; EDT responsiveness: 2/5 sluggish, 1/5 very slow 
+2017-12-04 09:47:05,252 [  14844]   INFO - ellij.project.impl.ProjectImpl - 18 project components initialized in 52 ms 
+
+# ----- ^^ all good till here, below is when i start open new project
+
+
+2017-12-04 09:47:26,455 [  36047]   INFO - og4jmonitor.Log4JWindowManager - creating new LoggingReceiver on port:=4454 
+2017-12-04 09:47:26,496 [  36088]   INFO - ellij.project.impl.ProjectImpl - 153 project components initialized in 165 ms 
+2017-12-04 09:47:26,497 [  36089]   INFO - le.impl.ModuleManagerComponent - 0 module(s) loaded in 0 ms 
+2017-12-04 09:47:26,645 [  36237]   INFO - CompilerBackwardReferenceIndex - backward reference index version differ due to: class java.io.FileNotFoundException 
+
+
+Two errors i see on my screen are :
+
+
+
+Intellij version 
+
+
+
+Any help would draw your chances of not having monday morning blues and nightmare like me! :) 
+Thank you!
+    
+
+        
+Answer 1: 
+
+    
+    
+So apparently, solution was simple but difficult to find.Here is how it worked :
+
+
+close all projects in intellij, don't close IDE, just all projects.
+delete the .idea/ folder from the project which was getting stucked.
+open the same project in intellij
+do File -code/code/lili/li/ol/div
+Answer 2: 
+
+    
+    
+Delete the .idea folder from project worked for me.
+    
+    
+Answer 3: 
+
+    
+    
+I think it's because of Log4JPlugin see - problem here also 
+in my case : delete this(Log4JPlugin) plugin and restart it -/p/div
+Answer 4: 
+
+    
+    
+For me it was a partly-completed Resolve Conflicts.
+
+Complete the conflict resolution using a different tool before opening the project again.
+    
+    
+Answer 5: 
+
+    
+    
+I had set the runtime version to java 8 instead of java 11 using the choose runtime plugin (for version 2020.2). Reverted it back to 11, invalidated caches and restarted, and the problem went away. (When I had this problem, wasn't able to open action pop up, so assigned a shortcut to choose runtime from preferences.)
+    
+    
+Answer 6: 
+
+    
+    
+
+Close all opened projects to startup PhpStorm window
+Open folder/project that you need
+Profit
+
+    
+    
+Answer 7: 
+
+    
+    
+When the "loading..." appears. Try to save a file. That seems to trigger a event to the file-system, and the directory is loaded.
+    
+    
+Answer 8: 
+
+    
+    
+Mine had the biggest stack trace I have ever seen in the logs:  1025 lines.
+The skinny was I had just done some Maven Archetype work and enabled the plugin.  When I found this stack trace, I disabled it and it worked fine.
+   Conflicting component name 'Archetypes.Configuration': class org.google.code.archetypes.ArchetypesConfiguration and class org.google.code.archetypes.ArchetypesConfiguration 
+
+    
+    
+Title: The tools version &ldquo;15.0&rdquo; is unrecognized - Incompatible/Unloaded project in Visual Studio 2019 (v16.0.0 Preview 5.0)
+Description: 
+    
+    
+                    
+UPDATES
+
+
+Repaired .NET Core 2.1 installed version 2.2 as well
+uninstalled VS 2019 and re installed
+it does work on another machine with VS 2017 &amp; VS 2019 installed (same versions)
+
+
+UPDATES
+
+I am facing this for quite a while and I really want to make use of the 2019 Version of VS. 
+
+When opening a VS C# MVC project that is on Azure DevOps and works on all previous versions (2015-2017) is not working in 2019.
+
+The first error I get is: 
+
+
+  .csproj : error  : The tools version "15.0" is unrecognized. Available tools versions are "14.0", "2.0", "3.5", "4.0".
+
+
+So I change the 15.0 to the suggested ones one by one and tried reloading the project, none solved the error, in fact I am getting another which is the following:
+
+
+  .csproj : error  : The application for the project is not installed
+
+
+No idea what I can/should do here.
+
+Anyone can suggest me anything, has some info about it and so on?
+    
+
+        
+Answer 1: 
+
+    
+    
+I've experienced a similar problem and one entry on ms docs:
+
+https://docs.microsoft.com/en-us/visualstudio/msbuild/updating-an-existing-application?view=vs-2017
+
+has lead me to the answer.
+
+If you ever had any older versions of visual studio installed, prior than 2017 you will have some unwanted dlls installed on the evil gac.
+You should remove it by using these steps:
+
+
+On poweshell run: gacutil.exe -l | Select-String -Pattern 'Build' | Select-String
+-Pattern 'Version=15' 
+Remove all found entries. Example:
+
+gacutil.exe /u "Microsoft.Build.Framework, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
+
+
+This will make sure that vs will use it's current version to load the projects.
+Please note that VS 2019 will always use "Current" and will ignore the ToolsVersion unless you force it to:
+
+https://docs.microsoft.com/en-us/visualstudio/msbuild/overriding-toolsversion-settings?view=vs-2019
+    
+    
+Answer 2: 
+
+    
+    
+OK FIXED THIS ...
+
+My visual studio 2017 MSBuild location:
+
+C:\Program Files (x86)\Microsoft Visual Studio\Enterprise\MSBuild\15.0\Bin
+
+
+My visual studio 2019 MSBuild location:
+
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\15.0\Bin
+
+
+I noticed that my Visual studio 2019 Bin folder was incomplete so i went on and took a back up (of course) and copied the complete Bin folder from 2017 to 2019.
+
+This fixed everything ...
+No idea what to say more here, just hopes it can help anyone!
+    
+    
+Answer 3: 
+
+    
+    
+I have had the same exact issues with my attempted upgrade to VS 2019.  However, what I have read is that the MSBuild version is supposed to correspond to the Visual Studio version. Hence, VS2017=MSBuild 15.x, VS2019=MSBuild 16.x.
+
+When I installed both VS2019 and MSBuild 16.x at no time did I see in my GAC a build version for 16.x.  For both VS2017 and VS2019 installs, the build versions were always at 15.0.
+
+So far, I have had to return to my version of VS2015, which runs all my projects as expected.  Not sure what to do since I couldn't get any help from Microsoft technical support without paying $500.00.
+    
+    
+Title: Turning public items into private items - Java, IntelliJ
+Description: 
+    
+    
+                    
+I just wonder if there is a way to make public items (fields, methods) private with a simple button or something
+
+public Group wQ;
+public Group wA1;
+public Group wA2;
+public Group wA3;
+public Group wG1;
+public Group wG2;
+public Group wG3;
+public Group wS1;
+public Group wS2;
+public Group wB1;
+public Group wB2;
+
+
+For example make all these fields private in one step, without replacing public with private. I use IntelliJ IDEA btw.
+    
+
+        
+Answer 1: 
+
+    
+    
+The function you are looking for is called Encapsulate fields.
+
+
+Right-click inside of the class you want to edit
+Select Refactor.
+Select Encapsulate Fields...
+
+Check the checkboxes next to all public fields
+
+You may then configure to provide both set/get access via accessors or just get access with the checkboxes below.
+Select Refactor.
+
+
+Note that this method generates getters (and, if you choose so, setters too) for all fields you select. If you don't want these getters, you can choose one of the other options or simply delete the generated getters. It seems like there is no way to opt out of creating getters.
+
+
+
+Alternatively, you can use multi-line selections.
+
+
+Set your cursor at the end of the first public keyword.
+Hold down your middle mouse button.
+Drag the mouse down to the end of the public block.
+Edit the lines simultaneously by using backspace/typing the new private keyword.
+
+
+
+
+
+As a third method, you may use Find and replace. It has some nifty options which give you great control over what you are doing.
+
+
+Select the menu Edit.
+Select Find.
+Select Replace.
+
+
+Select the text block with the public fields.
+Select Regex, Match Case and In Selection.
+In the upper field, enter ^(\s*)public(.*)$.
+In the lower field, enter $1private$2.
+All replacements will now be highlighted. Review them whether they are correct. You can step through them with the blue arrows next to the upper text box.
+
+
+Select Replace all.
+
+    
+    
+Answer 2: 
+
+    
+    
+In addition to @RAnders00's answer, there's another way that lets IntelliJ do it automatically without generating setters/getters whilst also checking if you would break code:
+
+
+  Rightclick on the class or package → Analyze → Run Inspection by Name → Declaration access can be weaker
+
+
+IntelliJ will search your class for members that can have a reduced visiblity based on usage. After scanning you can have it updated automatically.
+    
+    
+Answer 3: 
+
+    
+    
+I would use CTRL+R to find&amp;replace "public" by "private".
+    
+    
+Title: Eclipse Ganymede HTML editor incredibly slow when editing attributes
+Description: 
+    
+    
+                    
+I recently upgraded to Eclipse Ganymede from Europa and now I'm finding that when I'm editing JSP files the IDE crawls when editing HTML attributes (but not JSP attributes).
+
+Has anyone experienced this, or have any suggestions?
+
+Also if you can point me to a better place to ask Eclipse related questions, do tell.
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+The visual editors in Eclipse are slow. I have no idea why that is; other graphics frameworks achieve mindboggling effects in Java in real time so they shouldn't be that slow.
+
+I suggest you open a bug report against Eclipse. This way, you can give them feedback and see what they think about it plus you can track any progress if they accept it.
+
+As for asking Eclipse questions, go to the newsgroups. There are also mailing lists but those are only for developers working on Eclipse (not those who work with it). So they are only an option should you choose to work on this bug :)
+    
+    
+Answer 2: 
+
+    
+    
+For Eclipse Ganymede: You can use the following menu to disable HTML validation all together or parts of it by project.
+
+Right Click on the project | Project Properties | Validation | Enable Project Specific Settings.
+
+Then you can disable HTML Validation.
+
+Or, from Project Properties, click open Validation and select HTML Validation.  Select Enable Project Specific Settings and set any of the ten element checks to "Ignore."
+
+You can also turn these settings off for the entire workspace using the Windows (Eclipse) Preferences | Validation settings.
+    
+    
+Answer 3: 
+
+    
+    
+The problem still persist today, as it seem.
+I know the problem, but I don't know yet how to counter it...
+
+You can see that if you try to edit an attribute at the end of the document, it is not as slow as editing an attribute at the beginning of the document.
+
+Or you may see that if you try to edit attributes that have their ending-quote already in place (for example, first type in: attribute_name="" and only then type in the attribute value, it is also not slow.
+
+The problem occurs because when you type in an attribute without a value-ending quote ("), like so: attribute_name="..., the rest of the document becomes the value of that attribute and is being processed by eclipse for every keystroke you make.
+
+I have spent about half an hour looking at how to disable attribute value processing but failed (maybe I didn't look for it long enough).
+
+Ben
+    
+    
+Answer 4: 
+
+    
+    
+Try closing the overview tab
+    
+    
+Answer 5: 
+
+    
+    
+untick Enable folding in Preferences 
+Answer 6: 
+
+    
+    
+Using the eclipse update site I had previously installed Eclipse Web Developer Tools.
+It seems something included in this makes the JSP editor extremely slow.
+
+I un-installed this and installed the Web Page Editor which also includes the JSP editor and does not have the same slow issue
+    
+    
+Answer 7: 
+
+    
+    
+Here they say Eclipse Kepler will overcome this issue: Is Eclipse Too Slow Switching Tabs?. Unfortunately patch link for Eclipse Juno is now broken... so I'll wait for Kepler.
+    
+    
+Answer 8: 
+
+    
+    
+Project &gt; Properties &gt; JavaScript &gt; Include Path &gt; Source
+
+
+Delete dir with tons of js files, such as JQuery, etc...
+Eclipse gets lost with too many source code to compile.
+    
+    
+Title: Is there a C/C++ IDE that wouldn&#39;t prompt to save before compiling?
+Description: 
+    
+    
+                    
+Here's a common situation for me: I have this idea of a code in my head (in this example, it's in Python), so I open up PyScripter, write the code and then simply run it. PyScripter doesn't ask me to save the code beforehand and in a matter of seconds I happily glance at my algo's results.
+
+Now I understand that C is a compiled language and the code must be saved beforehand, et cetera, et cetera, but I was wondering if there is such an IDE that let's you simply enjoy your code without having many saved files or folders named "test1.*","test2.*", etc...
+
+One way I guess this could be done is that the IDE will manage all project files in a temp folder, up until (and if at all...) the user clicks on "save/save as"; then it will actually save the files in a desired location. So in most cases, where the user just wants to write a code and see its output, the IDE won't bother the user with save prompts.
+
+I'd be very glad if someone could recommend me of such IDEs (if they even exist). A big thanks in advance =]
+
+
+edit: @Michael Burr Yes, the intention was indeed not to come up with filenames in the first place.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can try ideone.com. I find it very convenient :-)
+
+It's online so no actual installation is required, and it supports a lot of known programming languages.
+    
+    
+Answer 2: 
+
+    
+    
+For C++, you can do this in Visual Studio. Next time you modify a file, just press F5(Run) and when the prompt comes up (asking whether you want to save the file before compiling) just check the box that says Don't ask again.
+
+For Java, Eclipse(maybe others) provides automatic compilation, but you still have to save the file. You just need to check Build Automatically.
+    
+    
+Answer 3: 
+
+    
+    
+CodePad seems to be created for just this reason. Write your code, hit the button, watch it run. No fuss, and no saving hundreds of files.
+
+http://codepad.org/
+    
+    
+Answer 4: 
+
+    
+    
+If you use emacs:
+
+   (defun my-emacs-command-save-compile ()
+    "save and compile."
+    (interactive)
+    (save-buffer)
+    (recompile))
+
+    
+    
+Title: Android Studio: &ldquo;Error initializing ADB: Android Debug Bridge not found&rdquo;
+Description: 
+    
+    
+                    
+I've installed Android Studio 3.0, and have compiled and run applications successfully.
+
+Device File explorer pane has the above error message in red, and nothing else.
+    
+
+        
+Answer 1: 
+
+    
+    
+Each Android Studio project requires information as to what SDK is to be used, and where it is located. The overall configuration defined in the SDK Manager under the tools menu is not enough, and it is used seemly to download and install the necessary SDK, so
+
+
+make sure you have Android SDK installed.
+Now opened or create a project (open an APK file for instance),
+then follow these steps to define the SDK for the project:
+
+
+Under File -/strongstrong/strongstrong/strong/lilistrong/strongcode/codestrong/strong/lilicode/code/lilistrong/strongstrong/strong/lili/lili/li/ol/li/ulpcode/code/ppstrong/strongstrong/strongstrong/strong/ppstrong/strong/ppem/em/p/div
+Answer 2: 
+
+    
+    
+You might not have installed the ADB drivers. It must be causing the IDE error to occur. 
+Try to install the ADB (Google USB Drivers from the Android SDK Manager provided in Android Studio).
+    
+    
+Title: Delphi On Windows
+Description: 
+    
+    
+                    
+I have decided (whether it's for better or for worse), to start learning Delphi. But, Is it available in Visual Studio? Or is there an IDE for it? I googled Delphi, but came up with some really weird sites.
+
+Thanks
+
+Jason
+    
+
+        
+Answer 1: 
+
+    
+    
+Nobody mentioned Lazarus which provides an IDE (very like Delphi's) so you can build windows form applications very easily. Like Free Pascal it's free, actually it uses the freepascal compiler
+    
+    
+Answer 2: 
+
+    
+    
+The official site is: at this place
+
+and you can buy Delphi here for the low low starting price of $899. 
+
+You may also want to give Free Pascal a try before you go buying stuff. The syntax is almost completely compatible except for it's free and open source. Of course, you don't get a GUI builder and all that, but if you are not sure you want to learn the language, this would be a good way to try it.
+    
+    
+Answer 3: 
+
+    
+    
+To get a real feeling for the Delphi IDE and how to program with Delphi, I'd recommend you view Nick Hodges': Thirty Camtasia Demos in Thirty Days.
+    
+    
+Answer 4: 
+
+    
+    
+Delphi is a product that competes with Visual Studio. If you Google for Delphi IDE, the results won't look so weird.
+    
+    
+Answer 5: 
+
+    
+    
+Delphi has it's own environment.  In many respects it's better than Visual Studio, although it's got it's own glitches.
+
+You'll get some strange links with general searches as Delphi is also the name of a company in the car parts business.
+    
+    
+Answer 6: 
+
+    
+    
+Delphi Prism(Delphi for .NET) 2011 will be available for Visual Studio 2010 as a plugin.It's going to be released around holiday 2010.
+    
+    
+Answer 7: 
+
+    
+    
+Try Delphi Turbo Explorer, it's free and you can use it even for commercial projects:
+http://www.video-process.com/turbodelphi_en.exe
+    
+    
+Title: How to develop C programmes without an IDE in Windows?
+Description: 
+    
+    
+                    
+I want to have a deeper understanding of how C programmes are run.
+
+But IDEs stops us from doing that.
+
+So is it possible that I manually set up the environment and write code in text editors, and finally run it in a prompt?
+
+If the answer is yes, how?
+    
+
+        
+Answer 1: 
+
+    
+    
+As others have said, install MinGW (I'm assuming you are using Windows) and put its bin directory on your path. Open a command line windows, and create a  file with a text editor, such as notepad - call it foo.c:
+
+#include &lt;stdio.h&gt;
+int main() {
+  printf( "hello world\n" );
+  return 0;
+}
+
+
+Then, use the gcc compiler to compile it, creating an executable called foo.exe:
+
+&gt; gcc foo.c -o foo.exe
+
+
+lastly, run foo.exe from the command line:
+
+&gt; foo.exe
+hello world
+
+    
+    
+Answer 2: 
+
+    
+    
+I don't see why an IDE should prevent understanding how a C program works. An IDE usually abstracts the building process, i.e. it creates build rules for you, runs the program and the debugger. This does not have any effect on the way the program itself works, it's just more "user friendly" (depending on how you define "user friendly").
+
+You can always build programs without the help of an IDE. You can even use Microsofts Visual Studio from the command line, and you won't see the GUI at all. Similar for XCode on Mac OS X.
+
+If you want to build a program without using any IDE, you basically write the source code the same way you do with IDE. You can even use the IDE as editor. Afterwards, you need to compile your program. IDEs usually have functionality that makes writing the source code easier like automatic completion of structure elements, basic syntax checking and the like. If the program consists of only one single source file this is usually rather trivial. If you have more than one source file (which should be true for almost everything other than the usual "Hello World" example) you can still do that manually. However, this is a tedious and error prone process. In the Unix world, make is the tool of choice to automate this. You can use MinGW to get such an environment on Windows. Cygwin is another alternative here. You could, however, also use nmake out of MSVC and write the input for that manually (never did that myself) -- it's basically the same a Makefile is for make.
+
+Creating a Makefile can be non-trivial. There are several generators to make that easier. That's basically the same IDEs do by abstracting the build process. Examples for Makefile generators are the autotools (sometimes also known as "GNU build system") and cmake.
+
+Building programs from the command line also does not have any effect about the program having a GUI or not. You can (assuming Windows again) run any .exe file from the command line. If it's a GUI application the GUI will show up, if it's a console application it will run in the console window.
+    
+    
+Answer 3: 
+
+    
+    
+Download Cygwin and make sure to install GCC, the GNU C compiler.
+
+You can write your C programs in a text editor, compile them with GCC, and then execute them.
+    
+    
+Answer 4: 
+
+    
+    
+Of course! There are a bunch of C compilers available for Windows, a few one to get you going:
+
+
+Visual Studio has an express edition which is free and comes with a compiler
+MinGW is the Gnu C Compiler ready-to-run for windows
+There are plenty of others, but the ones above should be .. enough for now
+
+
+As for a text editor, you might want to choose one that comes with C-syntax highlighting, like vi, Emacs or some other text editor. Mastering an editor is by the way really useful, regardless of what your language is. 
+    
+    
+Answer 5: 
+
+    
+    
+I don't know what you mean. You want to write C programs in a text editor an then, compile??
+Ofcourse, you CAN do that:
+
+1- Write a C code
+2- Get a compiler such as gcc (there is a windows version)
+3- Compile it
+4- Run it from console
+
+
+But, I am not sure if that is what you want to know.
+    
+    
+Answer 6: 
+
+    
+    
+You can compile programs for Windows (if that's what he meant) from the command line using all the available tools in the Windows SDK (formerly called the Platform SDK, I believe) which is free to download from Microsoft. I think it has all the same tools Visual Studio has if not most of them.
+    
+    
+Answer 7: 
+
+    
+    
+Of course. You'll need something like MinGW compilers set to compile your application (or you could use the IDE-provided compiler).
+Then just use CMD and execute appropriate compile commands.
+
+Actually, every IDE provides just more easier way to do the same compilation.
+    
+    
+Answer 8: 
+
+    
+    
+If you're interested in how large projects are organised, you could try downloading the source code for something like Apache httpd or PHP. These are both in C.  On Linux/Mac you can compile them from the command-line using a few simple commands (see the documentation).
+    
+    
+Answer 9: 
+
+    
+    
+If you want to see how the build works, most if not all IDE's create a build log which shows the actual command lines issued to invoke the compiler/linker etc.  Nothing prevents you from issuing these commands directly on the command line.
+
+What an IDE typically also does for you is dependency management; this is difficult to maintain manually, and best left to the IDE for large projects.
+
+You do not need to download and install any specific compiler or toolchain as some have suggested; the one you have with your current IDE will be sufficient.  For example if you have VC++2008 (or 2008 Express), the command line tools are described here.
+    
+    
+Answer 10: 
+
+    
+    
+Here is some simple step that would make you to compile and run c program without IDE
+
+1 - install the TCC (Turbo C compiler) 
+
+2- open Notepad and write C code 
+
+3 - save as a.c in C:\TC\BIN
+
+4 - then open CMD
+
+5 - compile c code by "tcc a.c"
+
+6 - finally run "a.exe"
+    
+    
+Answer 11: 
+
+    
+    
+You just need to install the MinGW compiler and set path to the gcc executable and you're ready to go. Then you can write C code in editor and compile it in command line just like you would on Linux.
+    
+    
+Title: How can I change the IDE language of Delphi XE7
+Description: 
+    
+    
+                    
+I want to change the language of the Delphi XE7 IDE from German to English. BDSSetLang.exe doesn't work for the toolbar and menu items (e.g. 'File / Open project' instead of 'Datei / Projekt öffnen').
+    
+
+        
+Answer 1: 
+
+    
+    
+Use BDSSetLang.exe in the bindirectory of your Delphi installation.
+Did you notice that there are separate settings for the IDE UI and the Library?
+    
+    
+Answer 2: 
+
+    
+    
+QUICKFIX: Move all *.de files from the folder C:\Program Files (x86)\Embarcadero\Studio\15.0\bin\ to another location (so you can move them back if it does not work). If that fixes your issue, delete them.
+
+(Or *.fr for French or *.ja for Japanese- (English is default).
+    
+    
+Title: How do I get started with developing for Android without an Android phone?
+Description: 
+    
+    
+                    
+More or less as it says on the tin.
+
+Before I even contemplate downloading the SDK, I was wondering if there was any way of testing Android apps that I'd write without an Android phone available to me? I'm unsure as to whether or not the tools that come with the SDK come with an emulator like VS does for Windows Mobile.
+
+Sorry if this is a stupid question, but maybe I'm searching for the wrong thing.
+
+Edit I don't suppose there's anything that'll let me write widgets on/for an emulated version of the interface HTC use on the Hero/G2 either is there? Not that it would matter that much.
+    
+
+        
+Answer 1: 
+
+    
+    
+There's an emulator available as part of the SDK.
+
+http://developer.android.com/guide/developing/tools/emulator.html
+    
+    
+Answer 2: 
+
+    
+    
+I'd add that the emulator is really quite comprehensive.  Things like camera previews don't actually display camera data, but they put block animations in their place.  All in all it's one of the best mobile emulators I've seen to date.  Probably better even than gasp the iPhone simulator.
+    
+    
+Answer 3: 
+
+    
+    
+As said above there's an emulator available,however with larger apps it gets fairly tedious to use the emulator.Its fine for learning the ins and outs but id suggest investing in an android phone once you've got a good grasp of the sdk,it really does make a difference!.
+    
+    
+Title: Are there any IDE&#39;s that support Python 3 syntax?
+Description: 
+    
+    
+                    
+I recently saw an announcement and article outlining the release of the first Python 3.0 release candidate. I was wondering whether there were any commercial, free, open source etc. IDE's that support its syntax.
+    
+
+        
+Answer 1: 
+
+    
+    
+Python 3 is just not that different from Python 2.x.  In terms of syntax per se, things that will actually need to be handled differently by the parser, the only major change is in the replacement of the print statement with the print function.
+
+Most of the features of Python can be easily probed via introspection (online help, method completion, function signatures, etc.), so there's no reason why any Python IDE will require major changes to work with Python 3.0.  I expect IDLE and SPE and the other open-source IDEs will be support it before the final release.
+    
+    
+Answer 2: 
+
+    
+    
+Komodo 5 beta 1 was released in October 2008 and has initial support for Python 3 but I don't think I'd be using it for production code yet.
+
+Given that Python 3 is still a very early release candidate, you may have some trouble finding mature support in IDEs.
+    
+    
+Answer 3: 
+
+    
+    
+PyDev for Eclipse does support 3.0.
+You can configure multiple interpreters in the plug-in settings.
+
+In the project properties you can set:
+
+
+Project type (Python, Jython, IronPython)
+Grammar version (2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 3.0).
+
+
+(PyDev version at time of writing: 1.4.7.)
+    
+    
+Answer 4: 
+
+    
+    
+Can get PyDev. from http://pydev.sourceforge.net. Its a plugin for Eclipse and is more than handy. Not to mention benefits of the old and trusted Eclipse.
+    
+    
+Answer 5: 
+
+    
+    
+Emacs + python.el continues to be better than anything else I've tried.
+    
+    
+Answer 6: 
+
+    
+    
+Pyscripter is the PERFECT Python IDE on windows; it's compatible even with the newly released Python 3.1.
+    
+    
+Answer 7: 
+
+    
+    
+Geany works with python 3 if you install it and then:
+
+
+  sudo gedit /usr/share/geany/filetypes.python
+
+
+change the last 2 lines with:
+
+compiler=python3 -c "import py_compile; py_compile.compile('%f')"
+
+run_cmd=python3 "%f"
+    
+    
+Answer 8: 
+
+    
+    
+I can say that at the time of posting this (Apr. 28 2009, version 0.8.4h) that SPE does not correctly handle some python3 syntax - specifically exception handling. For example, the follow code is flagged as an error (and irritatingly, is jumped to whenever the file is saved):
+
+except urllib.error.URLError as e:
+        if hasattr(e, 'reason'):
+        #...
+
+    
+    
+Title: Visual Studio 2015 - brackets not automatically formatting when pressing shift + enter
+Description: 
+    
+    
+                    
+Normally, to create a new bracket block I would type:
+
+"{" then enter
+
+This produces:
+
+{
+
+}
+
+
+however, (I have seen this on two different machines so far, it might be the default setting) if like me, you like to keep shift held down, or accidentally keep it down and instead press shift + enter, it creates a new line underneath.
+
+{ }
+//current cursor position
+
+
+Leaving the un-formatted brackets behind!
+
+This is really annoying as I nearly always do this, and have to fiddle around for a little second to get the brackets back to where I want them. What can I do to change the behavior of shift + enter?
+    
+
+        
+Answer 1: 
+
+    
+    
+We stumbled on this thread and it felt like we could make a nice improvement here to Shift+Enter (SmartBreakLine). 
+
+So, in cases where a block was opened { } and if shift was held down intentionally or unintentionally, we now do this:
+
+{
+    |
+}
+
+
+instead of 
+
+{ }
+|
+
+
+this way people who are used to using shift+enter to complete the line (in C#, it adds a semicolon to the end of line if needed, formats the line, adds a new line after current line) do not have to lose those functionalities by remapping the shortcut to BreakLine.
+
+See: https://github.com/dotnet/roslyn/pull/5790
+
+this should make it in the next update of Vs2015 and we hope you like it.
+    
+    
+Answer 2: 
+
+    
+    
+Go to Options 
+Answer 3: 
+
+    
+    
+It works well in my VS 2015. Try resetting all the settings. 
+
+Tools 
+Title: track active item in solution explorer ONLY on demand
+Description: 
+    
+    
+                    
+I'm using VS 2010, 2012 &amp; 2013.
+
+Usually I don't want the IDE to auto-focus on the item in solution explorer but sometimes it's useful.
+
+Is there any keyboard shortcut or a menu option to navigate to the file in solution explorer on demand?
+
+Thanks :)
+    
+
+        
+Answer 1: 
+
+    
+    
+For VS 2012, 2013, 2015 and 2017:
+ "Sync with Active Document" (default shortcut: Ctrl+[, S). 
+    
+    
+Answer 2: 
+
+    
+    
+I know your question refers to 2010, 2012 &amp; 2013, but VS 2017 has a button on the solution explorer to sync with active document:
+
+
+    
+    
+Answer 3: 
+
+    
+    
+Go to Tools/Options/Enviroment/keyboard look for View.TrackActivityinSolutionExplorer and assign the shortcut that you want.
+
+Here I needed to remove the shortcut first, because the ctrl+shift+t was already assigned.
+
+Of course, you can assign other shortcut.
+
+
+    
+    
+Title: Tool to put selected code in a separate function
+Description: 
+    
+    
+                    
+Is there any tool/functionality in IntelliJ/Android Studio/... to put some selected code in a separate function (Like a function builder)?
+
+I know it's a very lazy person question, but this tool could be useful sometimes.
+    
+
+        
+Answer 1: 
+
+    
+    
+I believe what you are looking for is Extract method refactoring. You can access it via Refactor/Extract/Method menu or using a keyboard shortcut:
+
+
+CTRL+ALT+M (Linux, Windows)
+⌥+⌘+M (OS X)
+
+    
+    
+Answer 2: 
+
+    
+    
+Select the code 
+Title: IntelliJ IDEA does not scan maven centralized repository for artifacts
+Description: 
+    
+    
+                    
+In eclipse the dependency artifacts can be searched from the centralized repository with maven plugin and added to the pom.xml file.  But in IntelliJ IDEA the dependency search work only in local repository.  If the searched artifact is not in local repository,  the result would be empty.
+Is there a way to search for artifacts from central repository and add it to pom.xml in IntelliJ ? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, Settings | Maven | Repositories, click on the repository and then click on Update, it will get indexed.
+    
+    

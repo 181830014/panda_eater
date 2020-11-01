@@ -1,0 +1,1384 @@
+Title: Intermittent &ldquo;Page Not Found&rdquo; when using Django through Pydev
+Description: 
+    
+    
+                    
+I recently started developing Django using Pydev in Eclipse, along with several other people I know, and I keep losing several hours of productivity a day to this error that I can't seem to debug.  Essentially, sometimes after starting up my django run configuration, I'll go to the URL http://127.0.0.1:8000/foo and it simply spits me back this response:
+
+&lt;h1&gt;Page not found: /foo&lt;/h1&gt;
+
+
+At first I could reproduce this behavior all the time; any time I had multiple workspaces of eclipse open and shut down my Django server once, the server wouldn't actually shut down, but it would just keep serving the page not founds until I shut down both instances of Eclipse.
+
+Stopping doing that and it seemed to work, but then it intermittently seemed to start back up again.  When this happens, it will literally not stop happening until I close eclipse, and the eclipse.exe process will hang (and continue to server Page not found pages) until I manually go into the process and kill it.  Sometimes, that won't even fix it, and it'll break itself the first time I try to start Django back up.
+
+I'm on the stable build of PyDev and Eclipse 3.6.1.
+
+Any idea what's going on?  This is unbelievable frustrating, especially because I tend to like the IDE with this exception.
+    
+
+        
+Answer 1: 
+
+    
+    
+Are you by any chance using a run configuration to launch your development server? Because that kept happening to me too. It seems that eclipse isn't cleanly closing django when you stop it from the IDE and it's holding on to the http port. In that sense you're sending requests to a zombie server instance, hence the not founds. I have since resorted to launching django from the command line. Not the prettiest solution, I admit.
+    
+    
+Title: Easy imports for Java IDEs?
+Description: 
+    
+    
+                    
+In Eclipse, you can press the Ctrl+Shift+O key and it'll pull in all required imports and organize them.  It generally works well.
+
+Is there anything like this for other common Java IDEs?  JCreator, NetBeans, etc?
+    
+
+        
+Answer 1: 
+
+    
+    
+Ctrl+Shift+I for netbeans for auto import.
+    
+    
+Answer 2: 
+
+    
+    
+CTRL+ALT+O for IntelliJ Optimize Imports, I believe.
+    
+    
+Title: How to export a C program that compiles from command line in Linux to an IDE?
+Description: 
+    
+    
+                    
+There are a lot of open source C/C++ projects, most of them can be compiled using "make" in Linux. Is there any easy way to export this to an IDE, for example Microsoft Visual C++, CodeBlock, or Eclipse?
+Even if it is an involved work, is there any step by step help for doing that?
+
+Thanks for the help.
+
+TJ
+    
+
+        
+Answer 1: 
+
+    
+    
+Considering that most (if not all) of the IDEs support importing a makefile or cmake based project, that should be a no-brainer.
+
+Be careful about configure scripts though, as they generally do important stuff not supported automatically by an IDE.
+In fact, build systems like cmake, premake and scons were invented because there was no standard way for an IDE to know what a script is doing. (That, while sacrificing flexibility, makes the system standard.)
+    
+    
+Title: Is there a tool or library for organizing/alphabetizing CSS, JSON objects, and so forth?
+Description: 
+    
+    
+                    
+Background
+I am working on a commercial code base that now has thousands of lines of JSON objects in the primary code (not as data) and hundreds of lines of CSS.
+Due to the size of the code, it is getting tough to manage and I would like to alphabetize the JSON objects and CSS so that elements of these items are easier to find while coding.
+I am thinking of just quickly writing a little web app or Windows forms app to do this.
+Question
+Does such a tool already exist?  I don't want to waste time coding it if the code is already out there.  If I do code it, I will be happy to share the code with anyone who is interested.
+To be clear:
+I am only looking to run a string of my primary coded (JSON, CSS, so on) through a tool to clean it up and organize it by alphabetization and maybe some formatting.  I am #NOT# looking to sort a JSON object to be displayed to the end-user.  I know how to do that.  I simply want to know if there is a pre-existing tool for this task.
+    
+
+        
+Answer 1: 
+
+    
+    
+this:
+
+http://styleneat.com/
+
+seems to allow you to sort your css alphabetically (along with some other css beautifier features that should still improve its readability) albeit it warns about using caution. hope that helps, I don't know about JSON though!
+    
+    
+Title: NetBeans IDE 7.1 restore functions/methods pane in bottom left hand corner
+Description: 
+    
+    
+                    
+For the life of me I cannot find the menu option to restore the functions/methods pane in the bottom left hand corner of the NetBeans IDE. I am using version 7.1.
+
+I have clearly closed it by accident at one point.
+    
+
+        
+Answer 1: 
+
+    
+    
+Here you go, to enable the navigator in Netbeans 7.1 :
+
+
+    
+    
+Title: Live Preview or LiveReload during editing of CSS and HTML in Komodo IDE?
+Description: 
+    
+    
+                    
+I have heard a lot about Komodo IDE. Does Komodo IDE have an extension or native support for  Live preview? Could Komodo IDE be extended to have some sort of live preview when editing CSS and HTML?
+
+I really want to try an IDE or editor with something like live preview with good code hinting when editing CSS. I know Expresso has LivePreview, but it is only for Mac and I am using Windows. Sublime Text with LiveReload is great, but the code hinting is a little poor. Are there other editors/IDE that offer this feature?
+    
+
+        
+Answer 1: 
+
+    
+    
+There is a Komodo macro which can be extended to auto reload all browser preview tabs using setInterval:
+
+function refreshViews()
+  {
+  var views = ko.views.manager.getAllViews();
+  var view;
+
+  // Loop through all open tabs to find the browser preview tabs
+  for (var i=0; i &lt; views.length; i++) 
+    {
+    view = views[i];
+    // Reload each preview tab
+    if (view.getAttribute("type") == "browser") 
+      {
+      view.reload();
+      }
+    }
+  }
+
+ setInterval(refreshViews, 2000);  // Reload every two seconds
+
+    
+    
+Title: In PHPStorm, is it neccessary to create new Run Configs for every project?
+Description: 
+    
+    
+                    
+I've been reading through the documentation, but my mind is a swirling flurry of how to approach project-creation and executing within this IDE.
+
+Ideally, I'd like to be able to write PHP code within the IDE, click "Run", and then have that code launch inside a browser (preferably with xdebug interaction). It seems that to do this, one must edit/create a new Run Configuration (using the PHP Web Application template in this case). 
+
+But does this have to be done for every project/file? Is it possible to set a default Run Config that will launch all subsequent project files in the same manner (launching in a browser with a debug session)?
+    
+
+        
+Answer 1: 
+
+    
+    
+It's not possible to create such a default for all the projects. You can also consider using zero configuration debugging so that you don't have to create the Run configuration at all.
+    
+    
+Title: What is the name of the keyboard shortcut &amp;/or method in an IDE which allows me to jump past automatically generated &lt;/endtags&gt;?
+Description: 
+    
+    
+                    
+This question relates to a prior question which was answered for all practical purposes with a fellow telling me I simply needed to press the "End" key to skip the cursor to the end of the line. But a second respondee told me of other IDE's abilities to this (his words): "In some IDE, pressing the tab key will move your cursor to the next placeholders in the currently auto replaced element, and if there is no more placeholders, brings you past the end of the auto replaced text."
+
+What is this ability called?
+
+I'll show an example very quickly, if you or I were writing some code in Aptana or RubyMine (my two favorite IDE's)...
+
+  &lt;table summary="Subject detail view"&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Name*&lt;/th&gt;**
+    &lt;/tr&gt;
+  &lt;/table&gt;
+
+
+We'd eventually run into the location(*), where the single asterisk is. We would reach this point and be forced to either use our mouse to click past the auto-generated &lt;/endtag&gt;, or our keyboard arrows, or, most recently, the "End" key which would skip our cursor to the end of the line.
+
+But can't I just do this with tab like my friend told me? In order to be able to do this I need to know what this keyboard shortcut is called. I need a searchable keyword. Any additional feedback about keyboard/IDE shortcuts etc would also be appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+RubyMine (and IntelliJ IDEA platform it's based on) doesn't have this feature yet. There is an open feature request in the YouTrack issue tracker:
+
+
+IDEA-74666 Add Eclipse Style Paren/Bracket/Quote Completiton
+
+    
+    
+Answer 2: 
+
+    
+    
+I have figured out the king of all answers for this question, which is my own.
+
+Create your own macro. It is stupid how easy this is to do (with Komodo Edit, at least).
+
+To do this in Komodo Edit, for example, first set yourself up so your cursor is a position where you need the custom command, whatever that might be.
+
+So, let's say your at the end of an xml tag with your cursor where this ("|") symbol is
+
+&lt;xmltag&gt;blahblah|&lt;/xmltag&gt;
+
+
+Now the &lt; /endtag/ppem/em/pp/pprecode/code/prep/pp/pp/pp/pp/pp/pprecode/code/prep/p/div
+Title: Getting &ldquo;The project already contains a form or module named Unit1&rdquo; error when creating new project
+Description: 
+    
+    
+                    
+I am using Delphi 2007.  When I try to create a new VCL Forms Application (File-
+Answer 1: 
+
+    
+    
+I finally stumbled up the problem.  Tools-
+Title: Move a method to another file using phpstorm
+Description: 
+    
+    
+                    
+Extract method can be used to extract a method to the same file, but if I want to move the method to another class, how would I go about doing that?
+    
+
+        
+Answer 1: 
+
+    
+    
+Updating this for anyone finding this through a search engine...
+
+
+
+As of PhpStorm 7, moving static members is supported.
+You can utilise this feature by right-clicking a static member and choosing Refactor code/code/ppa href="https://blog.jetbrains.com/phpstorm/2013/09/move-static-member-refactoring-for-php-in-phpstorm/" rel="nofollow noreferrer"/a/p/div
+Title: Code runner for Mac Code Completion
+Description: 
+    
+    
+                    
+My friend told me that code runner can auto complete your variables, I can't seem to be able to figure out how to add this setting. How can I make the application remember my variables and suggest them in the code completion tab.
+    
+
+        
+Answer 1: 
+
+    
+    
+I use Coderunner mainly for Python development, coupled with virtualenvwrapper this is a great development suite.  
+
+I am guessing that your friend was speaking of Preferences-
+Title: Editing Android Layout using Eclipse ADT
+Description: 
+    
+    
+                    
+Sorry for a noobish question,
+
+So I have eclipse, installed ADT, the sdk etc and everything is fine....I can click on an android layout xml and the ADT layout editor displays fine...so I closed eclipse
+
+A couple weeks later, I open eclipse again, but then when I open an android layout xml, the layout editor does not display and it instead displays xml...how can I get android ADT's layout editor to display? Is there a specific perspective/configuration that I must access?
+    
+
+        
+Answer 1: 
+
+    
+    
+There are two case:
+
+1) You open that file by Text Editor. That default of Eclipse (and you have it before you install ADT). This is fast but not trivial to add/edit something in Android. With this case, nothing can done. (mean you can not use ADT layout editor to fix it) Just close the tab and do other thing (That I will say later)
+
+2) You have changed to Text Mode. With your question, I think you don't know that Android layout editor has two mode: one for graphic and one for text (same with above). For this case, you should close this tab to have same case with above :D
+
+Fix:
+
+Choose your layout xml file. Right click choose open with and choose Android layout editor. 
+
+You will see :
+
+
+As you see in picture above (I color two tab), you just click to each tab and see magically. ( I think :P). (In your case, click to Graphical Layout)
+
+Notes: this trick will same with many others in Android (Android Manifest file... ) as you will see when choose open with.
+
+Hope that will help you. Before that, I have met error like you. ;)
+    
+    
+Answer 2: 
+
+    
+    
+There should be a tab on the bottom of the xml window, where you can switch between layout and xml.
+    
+    
+Answer 3: 
+
+    
+    
+
+Make sure you've opened the .xml file in the Android Layout Editor. To be certain, right-click on the file and choose Open With from the pop-up menu.
+If it's already open in the Layout Editor, look at the bottom; there are two tabs, one for Design ("visual" mode) and another for Source. You might be looking at the Source tab.
+
+    
+    
+Title: Run a project for debugging in Aptana (Eclipse)
+Description: 
+    
+    
+                    
+I have imported a google app engine project from Github.  I believe that I need to add a debug configuration for it so that I can run it locally and debug it.
+
+However, when I attempt to add the project as a debug configuration, it does not show up in dialog bow that I click to "browse" available projects even though it shows up in the pyDev package explorer.
+
+Additionally, I have no idea why the "Git project" has an asterisk (*) to the left of its name and the word "master" in brackets to the right of it [master].
+
+I apologize that this is probably a novice question.  Unfortunately, I am not very knowledgeable in using IDEs, especially Aptana (Eclipse).
+
+Below is a picture of what I think I need to do.  Thanks so much for viewing my question.  I really appreciate any help with this.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You must configure your project as a python project:
+
+right click project 
+Title: Has anyone seen a &ldquo;Platform IDE&rdquo;
+Description: 
+    
+    
+                    
+Not sure what to call it, but a combined solution for starting servers/logging/consoles/development would be really nice. Here's our situation:
+
+
+Mongo database driven by a
+Scala/Akka backend server controlled by a
+Ruby/Rails front-end client using a
+PostgreSQL database
+All connecting to Memcached and
+Passing info via Redis
+
+
+Now, in development, the low-level way to work on this is to spin up a large number of console windows. Start the Mongo database, start the backend service, start the Redis server, start the Rails client- all in different windows to pull the logs– or at least pipe their logs somewhere and tail them. Then, optionally, open any console you want, such as a Rails console and Redis console if working on the front-end.
+
+*The question is this: Is there a solution that will do all of this in a nice way? Possibly a combination of Bash, nice logging with something like Log.io, and Terminals, *
+
+And yes, I know I can script it all up myself:
+
+
+I'd rather work on my project directly right now, so may get to it eventually
+Someone who was dedicated to doing it right might actually make something nice, that does things I hadn't considered.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+ActiveState "Stackato" (CloudFoundry with some add-ons) plus Komodo IDE plus New Relic comes close, I think.
+    
+    
+Answer 2: 
+
+    
+    
+I've seen something like this on a much smaller scale done very nicely with eclipse plugins.  I know you say you want a turnkey solution, every  environment is somewhat unique so its probably best to roll your own and eclipse may be a good starting point.
+    
+    
+Answer 3: 
+
+    
+    
+Foreman
+
+Not 100% what I was looking for, but pretty darn close. Still not sure if it's designed for non-Ruby applications, like starting an Akka server or Mongo db instance, but those can be done through rake tasks and amount to the same thing.
+
+There's another piece of software called Upstart (here's a tutorial) that apparently works well with Foreman, and ensures that processes don't die on you unexpectedly.
+
+This all seems like a decent way to get all the servers spun up and logs dumping smartly. It doesn't give you an automated popup of Textmate in the directory, but that's pretty minor.
+    
+    
+Title: VS2010 add-in to format similar lines as a table
+Description: 
+    
+    
+                    
+It's probably a long shot, but is there an add-in for VS2010 that can change VS2010's default formatting rules?  In particular, I'd like to format similar lines so that the commas line up vertically, creating a tabular look.  If it could line up equal signs, that'd be better still.
+
+In this case, I'm populating a dictionary with methods to translate a flat file into an object.
+
+Parsers = New Dictionary(Of String, Action(Of String))()
+
+
+This is a pain to read:
+
+Parsers.Add("Aircraft Make and Model", Sub(value) Aircraft.Name = value)
+Parsers.Add("Words/Frame", Sub(value) Aircraft.WordsPerSubframe = Integer.Parse(value))
+Parsers.Add("Bits/Word", Sub(value) Aircraft.BitsPerWord = Integer.Parse(value))
+Parsers.Add("Parameter", AddressOf ParseParameter)
+' ...
+
+
+This is the best I've come up with:
+
+Parsers.Add("Aircraft Make and Model",
+            Sub(value) Aircraft.Name = value)
+Parsers.Add("Words/Frame",
+            Sub(value) Aircraft.WordsPerSubframe = Integer.Parse(value))
+Parsers.Add("Bits/Word",
+            Sub(value) Aircraft.BitsPerWord = Integer.Parse(value))
+Parsers.Add("Parameter",
+            AddressOf ParseParameter)
+
+
+Ideally, this is what I'd like to see:
+
+Parsers.Add("Aircraft Make and Model", Sub(value) Aircraft.Name             = value)
+Parsers.Add("Words/Frame"            , Sub(value) Aircraft.WordsPerSubframe = Integer.Parse(value))
+Parsers.Add("Bits/Word"              , Sub(value) Aircraft.BitsPerWord      = Integer.Parse(value))
+Parsers.Add("Parameter"              , AddressOf ParseParameter)
+
+
+Are there any existing add-ins for this purpose?
+    
+
+        
+Answer 1: 
+
+    
+    
+Elastic Tabstops for Visual Studio 2010:
+http://visualstudiogallery.msdn.microsoft.com/ccff2b55-201f-4263-aea5-3e66024d6c0e
+    
+    
+Title: How to setup: Cygwin + Vim = IDE for Ruby, Python and other programming languages?
+Description: 
+    
+    
+                    
+I primarily use Linux at home but I have a Windows (XP) machine at work. So now I've got Cygwin setup and I'm interested in some Ruby programming at this point in time. I also use the Vim editor on my Linux machine so I'd like to use it as the editor on Cygwin. I'd also like Vim to be my IDE when I code Ruby stuff. I've read that this can be done although I am unsure how this all can setup in Cygwin (i.e. should I just install plugins? or do I need to compile Vim in Cygwin?)
+
+Can someone help me setup Vim in Cygwin so that it can be used as an IDE for Ruby (and perhaps Python and other programming languages/pprecode/code/prepcode/codecode/code/p/div
+Answer 1: 
+
+    
+    
+You don't need to use Cygwin for all this, you can just use the native Windows versions of everything:
+
+
+Vim for Windows
+Ruby for Windows
+
+
+Then from Vim you can issue :!ruby hello.rb to execute the file (assuming the Ruby exe's are in your PATH).
+
+Since this isn't gvim/Windows-specific you should be able to also issue this command from your CLI+Cygwin Vim and it should still work.
+    
+    
+Title: python IDE for auto-complete Docstring
+Description: 
+    
+    
+                    
+I am looking for a Python IDE which can generate the docstrings framework for me automatically.
+For example:
+
+   
+   def GetTextByCtrlName(self, _hwnd, _ctrName):
+        '''
+        @desc:
+
+        @param:
+             _hwnd 
+             _ctrName  
+        '''
+          
+
+Then I can just fill the corresponding content.
+    
+
+        
+Answer 1: 
+
+    
+    
+PyCharm has supported this since version 1.5.
+
+First, configure the format you want the docstring to be generated. Hit CTRL+ALT+S (on Windows), select the format in Project Settings /pp/ppcode/codecode/code/p/div
+Answer 2: 
+
+    
+    
+You could use a tool like Sphinx. It's designed to specifically document python code, although it doesn't offer a friendly IDE integration.
+    
+    
+Title: Salesforce IDE Pluse Installer download failure
+Description: 
+    
+    
+                    
+I'm trying to install the salesforce IDE via the pulse installer it all goes swimmingly except for a final 27.8kb that is listed as 
+
+"org.eclipse.rcp.configuration_root.win32.win32.x86"
+
+I'm assuming this resource has a binary extension and is therefore being blocked by my company firewall. 
+
+I've poked around the mirror sites it tries to connect to but can't find anything with a similar name to this.
+
+Is there any way I can directly access these files and download them manually?
+
+
+
+I ended up gettting the old helios build and the plugin as suggested by mmix, sadly the firewall as still being picky about downloading them so I was able to create a mirror on a non-firewalled machine using
+
+eclipse -application org.eclipse.equinox.p2.artifact.repository.mirrorApplication -source http://www.adnsandbox.com/tools/ide/install/ -destination .\sfdcplugin
+eclipse -application org.eclipse.equinox.p2.metadata.repository.mirrorApplication -source http://www.adnsandbox.com/tools/ide/install/ -destination .\sfdcplugin
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Welcome to the wonderful world of eclipse :)
+
+Anyway, you can just download the whole enchilada from the salesforce site, its a prepackaged eclipse with everything ForceIDE might need.
+
+Choose a standalone version from here
+
+If that still leaves you in the jam, try to download rich client package externally and install it into eclipse before hand. I think this is the Helios SR2 build.
+    
+    
+Title: How to change the brightness of the mouse cursor for eclipse
+Description: 
+    
+    
+                    
+The short version is that I've turned the brightness way down on my monitor and now I'm having problems finding the mouse cursor in eclipse (the text cursor). When it's a pointer cursor it's fine, but when it goes to the text cursor I can barely see it. Half the time I'm guessing where it is. 
+
+To be quite honest this is for all of Windows, but it's really a problem for me in eclipse where I spend a lot of time.
+
+Update: I have looked at the windows settings, specifically the "Text Select" under "Pointers", but I'm not sure what to replace it with. I don't know anything about the .cur file it requires.
+    
+
+        
+Answer 1: 
+
+    
+    
+I am not sitting at a Windows box right now, so I can't try, but you can set the mouse cursor in the system settings / mouse settings. You can set specific cursors, like the text cursor. Windows ships (at least: shipped) with cursor themes that are much better visible. The same problem can occur when you need the "precision select" cursor - a small negative cross, invisible on grey background. But there are replacements with strong contours that are easily visible. So you don't have to change the whole pointer theme, if you don't want to, but can change just this one or two problematic.
+
+I did this when using Windows XP, I hope it still is valid for 7.
+    
+    
+Title: Eclipse Plugin for Tearout Panels Support
+Description: 
+    
+    
+                    
+Is there a plugin for Eclipse where I can tear panels out of the main window so I can view them on a separate monitor?
+
+Visual Studio 2010 supports this feature natively.
+    
+
+        
+Answer 1: 
+
+    
+    
+You don't need a plugin for this - Eclipse supports it by default.  You can do it with everything but the main editor window* (the Java text editor, for example).
+
+Simply right-click on any view, then click "Detached".  From there, you can move it anywhere across your desktop - including additional monitors.
+
+This will actually create a new floating panel / view group.  You can drag add or drag additional views into this same view group, if you'd prefer to have only one detached group to keep track of instead of many.
+
+*If you want to open multiple editor windows, use Window / New Window.  This will produce a new window that includes a new main editor window, as well as a default set of views that can also be customized or detached, etc.  (I agree, it's not the most ideal, but it works for my needs.)  Additional details concerning this are available at https://bugs.eclipse.org/bugs/show_bug.cgi?id=8886 - which seems to indicate that this has been further improved in 4.1 (not yet mainstream).
+    
+    
+Title: Code file templates in Visual Studio 2010
+Description: 
+    
+    
+                    
+Xcode has a feature where each type of file has a template that is filled out when that type of file is created. By default, those files are located at /Developer/Library/Xcode/Templates/File Templates.
+
+These files are used to give whatever default code you want, such as a common file header, even including things like the copyright year. I've gotten quite used to the functionality in Xcode, but I find myself missing it in Visual Studio. With VS I have to manually copy-paste the header and modify it myself for each file. Is there a way to get Visual Studio to automatically populate files (such as cpp's or .h's) with code?
+
+EDIT: I'm trying to do this with C++.
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, you can use templates with macros etc in Visual Studio as well. MSDN has an article on it, and there are various blog posts on the topic too. I know they work for C# and VB - I expect C++ works in the same sort of way, but you'll need to check of course. (Apologies if this isn't the case.)
+
+Unfortunately last time I looked it required expanding and then compressing zip files in a way that seemed a little unnecessary, but it should be doable.
+    
+    
+Title: Creating vim buffer (NarrowRegions) from multiple files
+Description: 
+    
+    
+                    
+I was wondering if there's a way to allow a buffer to edit multiple files at once. 
+
+Recently, I got vim working with eclim. But now I was wondering if I could edit multiple files at once in one buffer. For example, say I have an interface and a class file where I need to update a method signature is there a way I can load both of them into the same buffer and edit them simultaneously. Narrow region for multiple file regions. It would also be awesome to remember my settings but that could be a future iteration. 
+
+I saw this solution but it seems inconvenient to create a separate file to handle this interaction. 
+    
+
+        
+Answer 1: 
+
+    
+    
+You can open all files as split windows (so you see all of them together), and :windo, :bufdo, :argdo allow you to perform mass-operations (like a :substitute) on all of them at once. There's usually no need for such artificial concatenation schemes, and as the linked article shows, it has its downsides over keeping the files separate.
+    
+    
+Title: Linking error in Eclipse IDE
+Description: 
+    
+    
+                    
+I followed the instructions to setup Eclipse IDE to work with my Arduino UNO board from here: http://www.chipkin.com/articles/using-eclipse-with-arduino-duemilanove
+
+I successfully compiled the core library except a warning for the tone.h file. When I try to compile a blinky project which uses the arduino library, it is throwing me linking errors. I have spend my last day trying to figure out the problem but with no success. Please help me to resolve this issue.
+
+Edit: Now I successfully created a 'Template' project following instructions from here: 
+
+
+  http://www.chipkin.com/articles/using-eclipse-with-arduino-duemilanove
+
+
+But the problem is when I try to build a project which is a copy 'Template' project, compiler will start throwing linking errors. If I try to compile the same code from 'Template' project, it will compile fine. Please help me to fix this.
+    
+
+        
+Answer 1: 
+
+    
+    
+Have you checked the references are correct for your workspace? I had some issues using Eclipse templates for Arduino as the compiler threw up a lot of errors/warning due to various path issues.
+
+I've literally just gotten the blink example and arduino core library build working on my Uno. I could zip and link if you want? Might shed some light on where you're going wrong.
+    
+    
+Title: Aptana odd block coloring
+Description: 
+    
+    
+                    
+I am having an issue with Aptana that hopefully someone else has experience and solved. My code between tags is being highlighted. This is not just an Aptana problem I have tried it in Netbeans as well. 
+
+Dont have enough rep to post images here so sorry for the links.
+
+This picture is the default theme for Aptana.
+
+And this is the city lights for Netbeans.
+
+Thanks for the help.
+    
+
+        
+Answer 1: 
+
+    
+    
+This can be changed through the 'Themes' preferences.
+Locate the 'Embedded Source' item (for the 'text source' scope). In the default Aptana Studio dark theme, you'll need to match it to the background color, which is an RGB value of 20, 20, 20.
+
+Cheers
+    
+    
+Answer 2: 
+
+    
+    
+Solved
+
+Inside the themes/fonts and color there is an option that deals with javascript embedded in html. That was where the strange color came from. I switched it to inheritance and it fixed the problem.
+    
+    
+Title: Intellij Idea Ultimate shortcuts in UML
+Description: 
+    
+    
+                    
+I am trying IDEA Ultimate, but I have a problem on UML Diagrams View, I just cannot add things via shortcuts, but only with mouse.
+For example, if within the UML window I press Shift+C (should add a new class according to Idea 8 tutorial) nothing happens, plus I have noticed that when I rightclick with the mouse on "add", the word "class" got no shortcuts on its right side. 
+I am using Linux on kernel 3.0 wich XFCE as desktop manager.
+Previously i had a problem with "-" (minus) key which I resolved by changing keymap to something else, but this doesn't solve my new problem.
+    
+
+        
+Answer 1: 
+
+    
+    
+The same shortcuts work as in the Project View and Navigation Bar. In the default keymap it's Alt+Insert for the New action that will show the pop-up with choices.
+    
+    
+Title: Why does the Delphi XE2 IDE crash in msimg32.dll?
+Description: 
+    
+    
+                    
+After installation of the Update 3 for Delphi XE2 I get the following error and the IDE does not want to start.
+
+
+
+I tried installing the standard Delphi XE2 with Update 1 and the problem persists. Do you have any idea what is causing this?
+    
+
+        
+Answer 1: 
+
+    
+    
+It looks like the file got corrupted somehow. I just checked my Win 7 64-bit Pro, and there are two copies of msimg32.dll found, 1 each in System32 and SysWOW64, both dated 7/13/2009 and version 6.1.7600.16385. So it appears they haven't been updated recently. 
+
+The actual error message you're getting is related to access denied, and the second one is DLL initialization failed, which is probably a result of the first one; the IDE isn't loading because the DLL can't be loaded.
+
+My only suggestions are: 1) open a support case with Embarcadero (as an installation related problem, the support is free), or 2) reinstall Delphi from scratch, run it once to create registry entries, and then reinstall Update 3. I don't think anyone here is going to be much help; I'm not finding anything in searches related to Update 3 and this dll, so it seems to be just you having the issue.
+    
+    
+Answer 2: 
+
+    
+    
+Just delete msimg32.dll in delphi_install_dir\Embarcadero\RAD Studio\9.0\bin folder.
+This file shouldn't be there if you are doing everything correctly.
+    
+    
+Title: A Windows-compatible C IDE that will be able to compile FFmpeg?
+Description: 
+    
+    
+                    
+I want to set up an environment on my PC (Win7x64) that I will be able to combine these projects and compile them into one executable:
+
+
+FFmpeg
+AMV codec tools
+
+
+For this I need an environment that can compile/debug both the above projects (creating a Windows compatible exe).
+
+Any ideas?
+    
+
+        
+Answer 1: 
+
+    
+    
+http://ffmpeg.arrozcru.org/wiki/index.php?title=Main_Page  NetBeans can handle MinGW.  (Might be other IDEs, but I've used MinGW under NetBeans so I know it can.)
+    
+    
+Answer 2: 
+
+    
+    
+eclipse is recommended with official wiki
+    
+    
+Title: Rubymine: is it missing some key Git functionality available on Eclipse team provider?
+Description: 
+    
+    
+                    
+I am still on the lookout for a Eclipse-like ROR IDE (at least it should have the functions that I am more or less used to having), and have decided to conduct a trial of RubyMine.
+
+Unfortunately I quickly discovered two things:
+
+
+Git log/history view: There isn't an equivalent for Link with Editor and Selection (it's the function that allows the history to be updated and limited to changes applicable to the active document at any point in time)
+
+
+The closest is a per document history on separate tabs, there is no linking with editor or selection.
+
+
+There is no way to reset to a particular commit (or branch from it) by right clicking on it. Is it really worse than gitk in this regard?!
+
+
+Reset/branch at a particular commit is not possible at the Changes or the Version Control view (though possible via Checkout/Reset Head with ability to specify commit hashes). The context integration has room for improvement in this regard.
+
+I would be very glad to be proven wrong on either/both counts.
+
+Edit: Updated with input from CrazyCoder
+    
+
+        
+Answer 1: 
+
+    
+    
+
+There is no exactly this feature, but there is Show History from the file context menu. Multiple history tabs can be switched between in the Version Control panel.
+Changes | Log panel has these actions in the context menu (New Branch, Checkout Revision).
+
+    
+    
+Title: eclipse-python IDE if else matching line/indicator
+Description: 
+    
+    
+                    
+I am using eclipse pydev IDE for coding python. I found that by default I am not able to see any lines/dotted lines/indicator which basically shows which "if" statement is being matched for which "else" statement. This is usually shown as a dotted line in other IDEs. I really miss this since if the condition branches out its difficult for me to figure out the matching if else clause. Is there is an option to enable this?
+    
+
+        
+Answer 1: 
+
+    
+    
+No, eclipse/pydev do not have column pos indicators. However you can get them with the EditBox plugin for eclipse.
+I had to customize a little bit this tool because its defaults are too colourfoul. You have to eliminate everything except some of the square lines to get the typical tabulation vertical dotted line marker.
+    
+    
+Title: Debug &ldquo;Clear All&rdquo; option in VS2010 IDE?
+Description: 
+    
+    
+                    
+I am using Visual Studio 2010, and because of the amount of debug output I'm producing, and the difficulty of finding the beginning of the output for a new run, I have been manually using the Debug "Clear All" action (from the mouse right-click popup menu on the Debug output window).  Plus I have to put some kind of break or dialog box in the beginning, just so I have a chance to do this before the debug output gets going.
+
+Well after a couple of thousand times, this is getting very, very old (seriously, because its come up in almost every programming project I've done in the last five years).  But I cannot seem to find any option or simple Debug.{method} to do this automatically for me.
+
+This has been bugging me forever, and though its a simple question, I have never found an easy answer (short of writing my own listener) in any version of the .net VS IDE's.
+
+Anyone know how to do this or have any ideas?  thnx..
+    
+
+        
+Answer 1: 
+
+    
+    
+Right click the middle of the output window and turn off all but Program Output
+
+
+    
+    
+Answer 2: 
+
+    
+    
+What I do in cases like this is to use Debug View but to see the debug output in Debug view you need to detach the process from you visual studio debugger. You can do that through the Debug-/pp/pp/p/div
+Title: Building and running a java application from Netbeans
+Description: 
+    
+    
+                    
+I've recently started using NetBeans, coming from Eclipse.
+
+I have a simple implementation of SnakeYaml (a yaml parser for java) I am trying to test. It is contained in a main method.
+
+When I try to run it (F6) like I would in Eclipse, I get a successful build but no output. Instead, to run my program, I need to first build (F11), then run (F6). Is there a way for my project to be automatically built when I try to run it.
+
+Note: Netbeans actually tells me I don't have to build to run from inside the IDE, but it seems to be lying.
+    
+
+        
+Answer 1: 
+
+    
+    
+@MaxMackie not an answer
+
+1) project -
+Answer 2: 
+
+    
+    
+Use Shift+F6 or Run--&gt;Run File(when the Class with the main method is opened and in the current editor) 
+    
+    
+Answer 3: 
+
+    
+    
+
+Make Sure that the class lies in the project's package.
+main() method should be having the correct lines which are to be executed.
+
+    
+    
+Title: Project build settings in Eclipse
+Description: 
+    
+    
+                    
+Is there a way I can save the build settings for a project, and then import those settings into another project? I'm specifically interested in doing this for the C/C++ Build settings here.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The short answer is NO. Unfortunately, build details are very plugin-specific (i.e. specific to plugins offering build functionality: JDT, CDT or whatever you use).
+
+However, there is a dirty method to try to migrate build settings: just copy and then change/adjust corresponding eclipse files. Usually, build settings are scattered out in different files in '.settings' folder in you project. Keep in mind, that doing this way you need to understands how settings are stored.
+    
+    
+Title: Working remotely with an local IDE
+Description: 
+    
+    
+                    
+i am taking a course on GPU programming.
+There is no IDE on the University Computers. Only text-editors, which is kind of a pity.
+
+We are obligated to compile our code on the university machines, since they want to be able to compare the programs the students have produced with each other students code.  
+
+I want to use an IDE, because i think it makes things sooo much easier ( for example debugging )
+My actual procedure is : i copy the files to my machine (via scp), code in Xcode , save ...
+copy the files to remote machine, and compile it (via ssh)
+
+So my question is:
+Is there a way i can use an IDE like Eclipse or Xcode that can this automatically ?
+alternatively
+How would you handle the "Work locally;compile on remote machine"-problem ?
+    
+
+        
+Answer 1: 
+
+    
+    
+Consider using git (http://github.com/) to solve your work-local, compile-remote problem. You can set up a git repository on the remote machine, and push your commits to it when you're ready to try compiling it. It also means that if any change breaks the compile - you can remove it without affecting any of the other things you've changed.
+    
+    
+Title: reference for ejb jboss and eclipse development
+Description: 
+    
+    
+                    
+is there a reference or book, maybe a tutorial that can get me started with ejb using the technologies that I have mentioned above?
+
+thank you
+    
+
+        
+Answer 1: 
+
+    
+    
+You can take a look at the JBoss Tools if you're interested in developing Java EE applications in Eclipse.
+
+If you already know EJB (and if you don't there is quite good Enterprise JavaBeans 3.1 book) you know you can develop your EJB's as plain POJO's just with annotations. No need for fancy plugins here.
+
+You would, however, need a plugin to easily deploy your application to the server. In this case, take a look at these JBoss Tools and this topic.
+    
+    
+Title: How to use a Scala IDE (Eclipse or NetBeans based) to develop a Scala Lift web application with SBT?
+Description: 
+    
+    
+                    
+I've switched to a plain text editor and console SBT from NetBeans because the last was enforcing Ant and used to have some other troubles with Scala. Now, as I have to explore others code (Lift examples for now) instead of just writing my own from scratch, I feel I miss debug, refactoring and definition/type lookup facilities of a good IDE.
+
+So I am looking forward to go with some Scala IDE (Eclipse or NetBeans based) again, but I still want to use SBT as a build and dependency management tool (not Maven/Ant instead) and only use the IDE as an advanced code editor.
+
+How to achieve this?
+    
+
+        
+Answer 1: 
+
+    
+    
+No personal experience, but looks like Scala-IDE keeps improving their SBT support.
+
+http://scala-ide-portfolio.assembla.com/spaces/scala-ide/wiki/Changelog
+
+Release 2.0.0-beta11 (released: 2011-10-03) makes a few mentions of using SBT.
+
+Also, the docs at http://scala-ide-portfolio.assembla.com/spaces/scala-ide/wiki/SBT-based_build_manager show how to use SBT.
+    
+    
+Title: Netbeans: How do you remove the icons in the number lines?
+Description: 
+    
+    
+                    
+See the image for better understanding.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The light bulb icon is a hint annotation, and the hints displayed/marked are controlled in Tools em/em
+Title: Uploading images in cloud9ide?
+Description: 
+    
+    
+                    
+Anyone else can't upload via the drag and drop function images in clou9ide? The name of the image appears in the file browser in the ide, but the image is broken (displays the broken image icon, in chrome). In fifrefox I get HTTP error [24]:500 not_defined callback is not defined0.1. Ive reported it has a bug to cloud9, but no response and not a lot of other people complaining about this issue. Anyone knows if I am doing something wrong?
+    
+
+        
+Answer 1: 
+
+    
+    
+The drag and drop now works (well on the paid version). It was a un-implemented option at the time.
+    
+    
+Title: Is there a Netbeans ruler
+Description: 
+    
+    
+                    
+Heres a quick questions for all you folks out there:
+
+Is it possible in the Netbeans IDE to show a ruler on top of the coding window - like in Microsoft Word or the Context code editor? If so, how?
+
+I have tried googling it, but to no avail...
+    
+
+        
+Answer 1: 
+
+    
+    
+I am fairly certain that the answer is no, as the editor stands right now. The only thing remotely related is the right-margin line, which can be set in Options, under Editor, then Formatting. It, by no means, serves as a ruler, but at least gives you a hint that you've reached a particular column.
+
+In order to get this functionality, either a module would have to be written that adds the functionality to the editor, or the development team would have to add it to the core editor code. A feature request can be made on Netbeans.org's issues page. Be sure to search first, as someone may have already made the request.
+    
+    
+Answer 2: 
+
+    
+    
+If by ruler you mean you want to show which character/column you're on, you can get that information from the looking in the bottom right hand portion of the editor window (shown as "row | column"), but if by ruler you mean grid, it isn't doable with Netbeans out of the box.  You only get the character limit line, which is still defaulted to 80 characters for those required to print their code for review or delivery artifacts (...shiver...)  That limit line can be set in NB 7.2 (et al) from menu Tools -
+Title: To check declaration of a variable before compilation
+Description: 
+    
+    
+                    
+I code in C/C++ and use vim for editing. I have found that most of times after completing my code when I compile, I get undeclared variables error. These are variables which I forgot to declare before using them.
+
+I want to know is there any utility with vim which I can use for testing if all variables in new code are declared before use. It will save my considerable compile time.
+
+Thanks,
+    
+
+        
+Answer 1: 
+
+    
+    
+The clang-complete plugin can do this.
+
+Have a look at its clang_complete-copen and clang_complete-periodic_quickfix configuration variables to enable the checks.
+    
+    
+Title: Cross-platform C++ IDE that also supports Objective-C?
+Description: 
+    
+    
+                    
+I have a few projects where most of the code is written in platform-agnostic C++, with a relatively thin platform abstraction layer for each supported platform. For most platforms this abstraction layer is also written in C++, but for iOS and OSX it also contains some Objective-C code. For this reason, I have Xcode projects for the iOS / OSX builds, and Visual Studio projects for Windows, but I'm a bit tired of having to maintain multiple project files. 
+
+It would be so nice to only have one cross-platform IDE, one project file for that IDE, then just add all source files to that, and make some of them included in the build only in certain configurations. But for that I'd need an IDE that runs on multiple platforms (Windows, OSX, preferably linux too), and supports not only C++, but Objective-C source files as well. Is there such a thing? 
+    
+
+        
+Answer 1: 
+
+    
+    
+You can try QtCreator. It's a cross-platform IDE developed for Qt but it supports Objective-c too:
+http://qt-project.org/downloads
+    
+    
+Title: HTML5,css,Javascript,PHP Auto-complete IDE
+Description: 
+    
+    
+                    
+Is there an IDE that pops auto-complete for  HTML5 (especially canvas), Javascript,JQuery library, php and css syntax? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Try Komodo Edit:
+
+
+  PHP, Python, Ruby, JavaScript, Perl, Tcl, XML, HTML 5, CSS 3? Yes,
+  with (customizable) syntax coloring, folding, background syntax
+  checking, and excellent auto-complete and calltips (we call it "code
+  intelligence").
+
+    
+    
+Title: Selenium IDE - Verifying hidden/visible verification messages?
+Description: 
+    
+    
+                    
+There's a webpage I'm trying to test that has multiple textboxes. Each textbox has its own specific validation message that is hidden.
+
+Before an incorrect value is entered, I am use 'verifyNotVisible' in order to confirm that there is no validation message being shown to the user.  This part passes just fine.
+
+Afterwards, I have selenium type in invalid characters to make the validation message show.
+
+The problem I'm having at this point is that while the validation message is visible to me, Selenium is still failing at the 'verifyVisible' line right after entering the invalid characters.
+
+The following is what I have in Selenium:
+
+
+Full Image: http://i.stack.imgur.com/W5RrH.png
+
+Note that the validation messages are set to hidden prior to having invalid characters entered.  Additionally, both 'assertValue' and 'verifyTextPresent' are passing before and after the validation message is being shown.  
+
+Does anyone know of a way to have Selenium pass the 'verifyVisible' portion correctly?
+    
+
+        
+Answer 1: 
+
+    
+    
+You may need to insert an appropriate wait period.  If you are checking verifyVisible immediately after inserting your invalid character the modified DOM might not yet be there at the point your comparison is being made.
+
+Take a look, for example, at Selenium's clickAndWait to see how to wrap an appropriate pause.
+    
+    
+Title: How to configure stepping-into Rails&#39;s core with Vim Exuberant Tags?
+Description: 
+    
+    
+                    
+While enjoying the flexibility of Vim Exuberant Tags def navigation in Rails applications, I thought why not go deeper, and have the Rails core source as a low-level reference.
+
+How can I configure Vim to include another tag file, and what code should I map?
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+You should be able to simply pass your gems directory on the command line the ctags command. ctags takes a list of source files to examine on the command line. For instance if I was using rails 2.3.5 and running ctags from the root of my Rails application:
+
+ctags -R $GEM_HOME/gems/rails-2.3.5/lib/* ./*
+
+
+If you are using bundler, you could use bundle show to find the path for you. ctags will also let you exclude certain directories using the --exclude flag. Check out the options documentation for more info.
+    
+    
+Answer 2: 
+
+    
+    
+Vim looks for its tag files in the 'tags' option, which is a list of (absolute/relative) paths. Sou in Vim you could do
+
+:set tags+=/path/to/ror/tags
+
+
+Also see
+
+:help 'tags'
+
+    
+    
+Title: Access FTP Server like Dropbox API does
+Description: 
+    
+    
+                    
+In my quest for a suitable Cloud IDE, I came across SourceKit, a Chrome extension that lets you edit your Dropbox files using the Ace/Bespin syntax highlighter. It's great! Except I don't really use my dropbox public folder as my web server :/
+
+So I looked into the source code and it's 100% javascript -- it uses the Dropbox API to send/receive files. The Dropbox API uses REST instead of FTP.
+
+So I thought - what if I could communicate with my FTP server using REST, just like Dropbox does? Then I could just plug that into SourceKit and modify my FTP server's files from a browser tab!
+
+But after considerable googling, I've determined it's either impossible or I'm using the wrong terminology. I can't be the first person to try to do this.
+
+Anyone know if this is possible?
+    
+
+        
+Answer 1: 
+
+    
+    
+If you are the owner of the FTP Server, maybe you could implement a REST HTTP client which would, then, answer the REST calls from the client (which would be SourceKit), but for normal FTP access (which is a protocol itself, like HTTP), you can't do it via REST (REST is just HTTP), you would need to do it via FTP calls.
+
+Because Chrome plugins are written in Javascript and only Javascript, and because FTP is impossible with Javascript (all the solutions the Google Search returns use a server-side script or a Java applet), it is all impossible.
+    
+    
+Title: Development of stand-alone javascript lib
+Description: 
+    
+    
+                    
+I have a need for a calculation lib that I want to run on either client or server.  I'd like to do it like a ruby gem or java bean, with a directory of files that are packaged for deployment, as well as set of tests that of course are not deployed, but are executed in the IDE.
+
+Does anyone have any tips or links to article about this?  It seems that most tutorials or advice is geared toward developing for the browser or, (more recently) SSJS frameworks like Node.
+
+Also, are there any IDEs that have template projects that help with this?  They seem to generally set up web apps.
+    
+
+        
+Answer 1: 
+
+    
+    
+The CommonJS specification with its module and unit testing system is a step in that direction (and the only cross JavaScript engine approach I know of so far). I only used V8 (NodeJS) as an actual implementation so far, so I don't know how well the browser based ones work.
+    
+    
+Title: IDE suggestion - auto closes tags on &lt;/
+Description: 
+    
+    
+                    
+I've been using Dreamweaver CS3 for far to long, and now that most of my coding is PHP (often using CodeIgniter), I really need to find a new IDE.
+
+I've tried PHPDesigner and Aptana Studio 3, and was happy with both until I started coding in HTML and saw how they auto-close their tags as soon as one is opened, placing the cursor between them. After a lot of searching around the web, this seems to be the norm, but I've become very used to Dreamweavers style of auto-closing the most recent opened tag when I type &lt;/ and place my cursor at the end of the generated closing tag.
+
+Are there any IDEs out there that auto-close their tags on &lt;/ or am I asking too much?
+    
+
+        
+Answer 1: 
+
+    
+    
+By default, Netbeans 7 provides the behavior you observed in PHPDesigner and Aptana Studio 2. However, the behavior can be changed via Preferences -
+Answer 2: 
+
+    
+    
+I used Espresso before, it only works on Mac but it is quite good. It has auto close but I think Dreamweaver has it too.
+    
+    
+Title: What is the ideal set-up for Adobe AIR , Flash/ActionScript and SQLite development?
+Description: 
+    
+    
+                    
+I am getting into ActionScript-ing and SQLLite development.
+
+What are the essential development IDEs and utility tools I should get set up for a smooth development experience?
+It would be great if you categorize - as free and paid-for-software.
+
+I am accustomed with the  Microsoft "free" experience in terms of  - Visual Studio Express edition or SQL Server Express edition.
+
+Are there similar counter parts for this platform?
+    
+
+        
+Answer 1: 
+
+    
+    
+FlashDevelop - Open source IDE for flash but no visual designer. As far as SQLLite you can actually create and manage the databases all with actionscript but if you want to edit/create them with an IDE there are several open/free solutions, from a quick google search we have:
+
+//SQLLite DB manager/admin tool made in Adobe AIR
+http://www.dehats.com/drupal/?q=node/58
+
+//Same idea but open source made with QT so probably C/C++
+http://sourceforge.net/projects/sqlitebrowser/
+
+//FlashDevelop
+http://www.flashdevelop.org/wikidocs/index.php?title=Main_Page
+
+Flashdevelop is pretty much king when it comes to code hinting/completion, pretty much what you'd expect in features from microsoft VS IDEs. There is also a pretty good user base and thus many tutorials/documentation and project templates.
+    
+    
+Answer 2: 
+
+    
+    
+I too use the DB admin tool formerly from www.dehats.com, which has since been renamed Lita and put on GitHub . However, a significant drawback to Lita is its complete lack of runtime error reporting when executing SQL queries.
+
+Mauricio Piacentini is an excellent programmer, but Flash developers should be aware that his 
+SQLite Database Browser does not support the non-standard features added to AIR's version of SQLite, such as additional column affinity types.
+
+So, as a complement to Lita I've been using Paul Robertson's Run! app. It doesn't have as many features as Lita, but it supports AIR's version of SQLite and it does report errors in your SQL queries.
+
+Like Ascension, I'm a fan of FlashDevelop.
+    
+    
+Title: Multiple Window problem in SELENIUM IDE
+Description: 
+    
+    
+                    
+HI,
+
+I am using Selenium IDE for recording test cases. In a particular test case, I need to work on two windows simultaneously but the selenium IDE does not record when I open a new tab and work on it. Can anyone give me suggestions on this? 
+
+awaiting replies ! 
+    
+
+        
+Answer 1: 
+
+    
+    
+You can try that programmatically as suggested here 
+How to close a tab and open a new tab using Selenium RC
+
+You can open the other window (considered popup by selenium i guess) like so
+
+selenium.openWindow("http://example.com/","dev");
+selenium.selectWindow("dev");
+selenium.open("/");
+
+
+and then you switch b/w the windows . to go back to original one you will have to do 
+
+selenium.selectWindow(null);
+
+    
+    
+Title: Can you rebind the &#39;next menu element&#39; key in Eclipse?
+Description: 
+    
+    
+                    
+I use eclipse and when I do code completion, I'd really like to keep my hands on the home row and push "CTRL-N" for the next code completion suggestion, and "CTRL-P" for the previous one. I'm not seeing anything that looks like what I need in the Preferences 
+Answer 1: 
+
+    
+    
+As said in the comment above:
+
+
+  I figured out from that that the bindings I wanted were "Line Up" and "Line Down".
+
+    
+    

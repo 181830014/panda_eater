@@ -1,0 +1,2721 @@
+Title: SDL: IDE/Image Problems
+Description: 
+    
+    
+                    
+I posted a question about this earlier and realized that my problem wasn't actually solved. Anyway, my question/problem is that for some reason when I run my SDL Application through the IDE, be it Code::Blocks or Visual C++ 2010 my BMP will not load. However if I run it through the File Explorer it will show the BMPs properly. I'm not sure what the problem is, maybe it is something to do with the fact that I'm running 64-bit Windows?
+
+When I run it through Visual C++ 2010 I get the following errors:
+
+'Brain Bread.exe': Loaded 'C:\Users\UserNameHere\Desktop\Brain Bread\Debug\Brain Bread.exe', Symbols loaded.
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\ntdll.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\kernel32.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\KernelBase.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Users\UserNameHere\Desktop\Brain Bread\Debug\SDL.dll', Binary was not built with debug information.
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\advapi32.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\msvcrt.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\sechost.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\rpcrt4.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\sspicli.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\cryptbase.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\gdi32.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\user32.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\lpk.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\usp10.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\winmm.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\msvcr100d.dll', Symbols loaded.
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\apphelp.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\AppPatch\AcLayers.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\shell32.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\shlwapi.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\ole32.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\oleaut32.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\userenv.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\profapi.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\winspool.drv', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\mpr.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\imm32.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\msctf.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\ddraw.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\dciman32.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\setupapi.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\cfgmgr32.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\devobj.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\dwmapi.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Unloaded 'C:\Windows\SysWOW64\ddraw.dll'
+'Brain Bread.exe': Unloaded 'C:\Windows\SysWOW64\dwmapi.dll'
+'Brain Bread.exe': Unloaded 'C:\Windows\SysWOW64\setupapi.dll'
+'Brain Bread.exe': Unloaded 'C:\Windows\SysWOW64\devobj.dll'
+'Brain Bread.exe': Unloaded 'C:\Windows\SysWOW64\cfgmgr32.dll'
+'Brain Bread.exe': Unloaded 'C:\Windows\SysWOW64\dciman32.dll'
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\uxtheme.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\dwmapi.dll', Cannot find or open the PDB file
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\KBDUS.DLL', Cannot find or open the PDB file
+'Brain Bread.exe': Unloaded 'C:\Windows\SysWOW64\KBDUS.DLL'
+'Brain Bread.exe': Loaded 'C:\Windows\SysWOW64\KBDUS.DLL', Cannot find or open the PDB file
+'Brain Bread.exe': Unloaded 'C:\Windows\SysWOW64\KBDUS.DLL'
+The program '[4992] Brain Bread.exe: Native' has exited with code 0 (0x0).
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Probably it's because when you run your program through the IDE, the IDE sets the current working directory for the program incorrectly, so if you're using relative paths to the BMPs in your code, it won't work. Try finding out which working dir the IDE sets for your app and copy the BMPs there.  
+    
+    
+Answer 2: 
+
+    
+    
+The problem is probably the current working directory. Code::Blocks runs your application from where the *.cbp file is located. I am sure that Code::Blocks lets you change this somewhere.
+    
+    
+Title: Developing Android with other IDE rather than Eclipse
+Description: 
+    
+    
+                    
+Hi all
+I want to start Android development but I just don't like Eclipse. (Yes, I am picky. lol)
+Is there any other good IDE rather than Eclipse that really WORKS with Android SDK? (QT maybe?)
+
+Thanks in advance
+
+Ignacio
+
+UPDATE:
+I am on Mac OS X. Is there any plugin for Xcode that makes the trick of linking Android SDK with it?
+    
+
+        
+Answer 1: 
+
+    
+    
+Nope, my personal experience shows that Netbeans Android plugin (aka nbandroid) is too buggy. I'm using Intellij IDEA - which is fantastic
+    
+    
+Answer 2: 
+
+    
+    
+As for IDEs, Netbeans is pretty good for Android development.
+Basically, every text editor or IDE can be used with some amount of tweaking. See this reference as a way to get started: http://developer.android.com/guide/developing/other-ide.html
+
+Update: A page dedicated to alternative IDEs was removed from Android dev guide. A page about workflow &amp; tools has some information on the subject: http://developer.android.com/tools/workflow/index.html#ThirdParty 
+    
+    
+Answer 3: 
+
+    
+    
+Eclipse is just a terrible, buggy pile of garbage from top to bottom, and most people have told me NetBeans doesn't have a mature Android implementation.
+
+How difficult is it to setup Intellij IDEA for Android development, and what should I expect versus developing for Android on Eclipse?
+    
+    
+Answer 4: 
+
+    
+    
+I advise Android bundle for TextMate: https://github.com/nesterow/Android.tmbundle It's lightweight and easy to use. There is no intellisense, but actually it just makes you remember namespaces better. :)
+    
+    
+Title: Which parts of the Visual Studio IDE are open source?
+Description: 
+    
+    
+                    
+Which parts of the Visual Studio IDE (if any) are open source? Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Here are the components in Visual Studio that I am aware of which have some level of source accessibility.  
+
+
+MEF
+Iron Languages
+DLR
+F#
+CLR: subset of the CLR known as Rotor is open source
+BCL, WinForms an WPF: source is available under the Source Reference License
+Plugin's: Many of the Visual Studio employee plugins available on the Visual Studio gallery have source accessibility.  
+
+
+Note: I intentionally used "some level of source accessibility" instead of "open source".  The term "open source" has a very specific meaning to certain portions of the developer population which does not align with the components I've listed here.  In particular they deam it to mean source which is contributable by anyone.  There is no part of Visual Studio today (that I'm aware of) which has that level of open source about it.  
+    
+    
+Answer 2: 
+
+    
+    
+None of it, so far as I know.
+    
+    
+Answer 3: 
+
+    
+    
+AFAICT, none of it, though I can see where the confusion came frome.
+
+Microsoft did give "Visual Studio Industry Partners" access to the Visual Studio source code.  This falls under their umbrella of "shared source".
+
+But their umbrella of "shared source" is really, really wide.  Microsoft uses this term for a whole cornucopia of licenses that range from completely open-source to completely proprietary.
+
+In this case, it doesn't look like the Visual Studio IDE is available under any of the open-source licenses.
+    
+    
+Title: How do you get full support of zen coding in NetBeans 6.9?
+Description: 
+    
+    
+                    
+I'm using NetBeans 6.9 with the Zen Coding plugin.
+
+I was wondering if there is a way to get the selector support working in NetBeans.
+
+Currently typing this:
+
+ul#my-list&gt;li*3&gt;a
+
+
+Does not produce this:
+
+&lt;ul id="my-list"&gt;
+ &lt;li&gt;&lt;a href=""&gt;&lt;/a&gt;&lt;/li&gt;
+ &lt;li&gt;&lt;a href=""&gt;&lt;/a&gt;&lt;/li&gt;
+ &lt;li&gt;&lt;a href=""&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+    
+
+        
+Answer 1: 
+
+    
+    
+If you don't know yet, there is full support Zen Coding for NetBeans. lorenzos did a great job check it out if you interested https://github.com/lorenzos/ZenCodingNetBeansPlugin
+    
+    
+Answer 2: 
+
+    
+    
+I don't think it is available on Netbeans yet. Even though there is a download for Netbeans in the Zen Coding repository, it really just proivdes a list of code templates and macros to speed up coding HTML in Netbeans. This site provides a nice video tutorial on how to install and use this source in Netbeans on Windows.
+
+Until someone volunteers to write a proper plugin for Netbeans, you won't get the full Zen coding capability on Netbeans. Why don't you use another editor, such as Notepad++ (Windows)?
+    
+    
+Answer 3: 
+
+    
+    
+First of all you have to click on given below link
+
+Zen coding for netbeans 
+
+And download  .nbm file
+
+after that open your netbeans IDE
+
+go "tool menu" and select "plugins" and click on "Add plugins"
+
+Select downloaded(.nbm) file from your folder
+
+And click on install button which is given below
+
+After installation restart your netbeans IDE and you will see Z symbol on your tool bar menu
+
+type html:5 and click on Z symbol or press (ctrl+alt+N) .
+    
+    
+Title: &ldquo;Abnormal program termination&rdquo; bug in the D2007 IDE : is there any workaround?
+Description: 
+    
+    
+                    
+I face a very annoying bug in D2007 IDE :
+
+It's the second time I have this problem within one month (on two differents computers, but with the same project), and it is a very annoying bug that causes the IDE to close itself without allowing me to save any changes in the code.
+
+I tried but cannot reproduce the bug, it only appears randomly.
+
+Here's what happen exactly : 
+
+i'm changing a line of code then (when I press "enter" to go next line)
+the message 
+
+"Assertion failed: amount /strong/ppstrong/strong/pp/ppstrong/strong/pp/pulli/lili/lili/li/ulpstrongem/em/strong/pp/ppstrong/strong/pp/p/div
+Answer 1: 
+
+    
+    
+When I used 2007 and saw this, it only happened on very long units (10,000+ lines - having that many is an issue for another discussion :p)  Usually the IDE would be fine, then typing would become fairly slow - I could see the letters I typed lagging behind in the code editor. Unless I paused and let the editor catch up, I'd get that error.
+
+So, my fix was:
+
+
+If you're in a large unit and the editor starts lagging, pause, immediately.  Let it catch up, and keep going.
+
+
+This is really annoying, but worked for me.
+
+I also turned off many of the Code Insight features, but I don't know if they affected this particular issue or not.  They did help general editing speed.  Turning them off was recommended to me in the then-Codegear forums.  I can't remember who by, but I have a vague feeling it may even have been one of the Codegear QA staff who was aware of the bug but was trying to see if I could narrow down what affected or caused it.  This was a couple of years ago now though, so don't take that as gospel.
+
+Splitting your files into smaller, say &lt;5000 line units may also help.  For me it only happened on large and complex files.
+
+The issue seems to have been fixed in RAD Studio 2010.  Another way to avoid the error would be to upgrade :)  If you do, wait a few days or talk to their salespeople first.  The next version, RAD Studio XE, is due out at any moment.  I'd recommend upgrading anyway: you'll need to handle Unicode issues, but other than that the 2010 edition is the best version I've used, including its stability, and I've used Delphi since version 1.
+    
+    
+Answer 2: 
+
+    
+    
+The last time I have seen this, is when one of my source files had inconsistent line endings.
+
+Make sure all your lines in all your source files end with CRLF.
+
+--jeroen
+    
+    
+Answer 3: 
+
+    
+    
+The first thing to try is to remove both add-on packages (GExperts and Delphi Speedup).  It could be something they are doing.
+
+The second is to do your best to reproduce and submit the issue.
+
+The third is to upgrade to a new version of Delphi and hope that it solves your problems without creating new ones.
+    
+    
+Answer 4: 
+
+    
+    
+If this happens on two separate computers, but the same project on both, then the problem is most likely in the project itself and not the IDE. Of course, you didn't post any of the code that causes the error message to appear, so it's hard to help you find out what the problem is with the code. I find it very unlikely that the problem is the IDE, though, or others would have reported the same problem (D2007 has been out and in use by millions of developers for years now).
+
+If the problem is in the IDE itself, you should be able to reproduce it with a new, empty project. Copy and paste only enough of the code from the old project into the new one to allow the problem line to compile, and then replicate the same change-/pp/p/div
+Title: So much problems with Eclipse developing for Android?
+Description: 
+    
+    
+                    
+a million error per day using eclipse with the Android plug-in i tried everything uninstall plug-in ,eclipse,JDK,JRE and install them again and using different ver. also changes Workspaces , i thought the problem with the new Java and Eclipse but i solved it and still . what the alternative is there a way so it could be more stable is other IDE with Android Plugin is mature enough to use them instead of all the problem and headache that eclipse give me in my life . 
+
+Edit: i use Eclipse 3.5 and im running Win7 in 4 Gig of ram ,i read the info about the known bug with Eclipse and JDK 6 update 21 and try what they suggest but i think thats not the problem. 
+
+some of the problem that i had ,XML editor for Android also sometime the disable of the Auto-complete (i made new Workspaces now i have 10's of them ) and when i open the DDMS nothing appears even when i try to add the LogCat also alot of error msgs that prompt to me and close the IDE and sometime it just close by-itself  .
+
+Edit 2 : New Error it display to me "permGen space" ?! 
+    
+
+        
+Answer 1: 
+
+    
+    
+What version of Eclipse are you using? 
+
+The ADT Plugin for Eclipse site warns about this:
+
+
+  Caution: There are known issues with
+  the ADT plugin running with Eclipse
+  3.6. Please stay on 3.5 until further notice.
+
+
+Also, check your JDK to be the latest. If you are on Windows, there's a known bug with Eclipse and JDK 6 update 21. Check that you are using the latest version since Oracle fixed it.
+
+Must add I've used Eclipse for Java Developers version 3.5 with the ADT plugin, and haven't had any of the mentioned problems so far.
+
+EDIT: Could you be more specific with those errors? 
+
+XML editor for Android works fine with auto-complete in my case, so does the debugger. I've been able to debug applications correctly. Take in consideration when launching the emulator, it takes a few minutes for the emulated system to boot, launch your app, etc.
+
+You should copy and paste the error messages that Eclipse displays, in order to have an idea of what is happening.
+
+It could be a problem with the memory assigned to Eclipse, the JVM, or who knows what, but we need more detailed information in order to assist you.
+
+EDIT 2: This is quite a common error in Eclipse. From Eclipse's Wiki:
+
+
+  If you see java.lang.OutOfMemoryError:
+  PermGen space errors, you need to
+  increase the permanent generation
+  space available to Eclipse.
+  
+  PermGen is the permanent generation of
+  objects in the VM (Class names,
+  internalized strings, objects that
+  will never get garbage-collected). An
+  easy, if somewhat memory-hungry fix is
+  to enlarge the maximum space for these
+  objects by adding
+
+
+eclipse [normal arguments] -vmargs -XX:PermSize=64M -XX:MaxPermSize=128M [more VM args]
+
+
+
+  The arguments after -vmargs are
+  directly passed to the VM. Run java -X
+  for the list of options your VM
+  accepts. Options starting with -X are
+  implementation-specific and may not be
+  applicable to all VMs.
+  
+  You can also put the extra options in
+  eclipse.ini.
+
+
+Check the link for further information, you can find common errors and bugs in the Eclipse and Sun VMs on Windows part.
+    
+    
+Answer 2: 
+
+    
+    
+I'm truly sorry for saying this, and I'll probably will be shot to death by it... but:
+On every other development environment I've used in Python, Ruby on Rails, PHP &lt;/pp/pp/p/div
+Answer 3: 
+
+    
+    
+A million errors per day sounds like some component is severely broken.  Is the Android plugin the right version for the Eclipse version you are using.  There are many which are not yet ready for Eclipse 3.6
+    
+    
+Answer 4: 
+
+    
+    
+I did not have any problem getting the SDK up and running on ubuntu. Its free, the resources are great, and most of all its not windows. So linking libraries and stuff is not that big a headache. Also its much more light on your computer so you have all the power that your awesome pc has to test really heavy apps! Why don't you give it a shot? I bet you will not be disappointed. ;-)
+    
+    
+Title: What is the best Eclipse distribution for a mix of Java and Web?
+Description: 
+    
+    
+                    
+Basically, I want to mix in Java and Web (JavaScript, CSS, HTML, PHP, .NET, etc..) into one. So what is the best IDE for that?
+
+Since I'm a huge fan of Eclipse, I'd like to move from Dreamweaver to Eclipse for my Web Development. I love using Eclipse for Java development but I want to be able to maintain the functionality of Dreamweaver in Eclipse... so I want to incorporate the Web Tools Platform into my environment.
+
+What is the difference between Eclipse IDE for Java Developers and Eclipse IDE for Java EE Developers? Could I do Java and Web with Eclipse and if I can, is it done with either of the above 2 packages?
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  What is the difference between Eclipse IDE for Java Developers and Eclipse IDE for Java EE Developers?
+
+
+Actually, there is a comparison of all packages on Eclipse website. In short, Eclipse IDE for Java EE Developers is targeted at server side development and extends Eclipse IDE for Java Developers by including the following additional packages:
+
+
+Web Tools - server-side development support
+Java EE Tools
+RSE (Remote System Explorer) - remote (mainframe down to embedded) systems support
+EclipseLink - JPA support
+PDE - for plugin development 
+Datatools - database support
+
+
+
+  (...) so I want to incorporate the Web Tools Platform into my environment.
+
+
+It is part of of Eclipse IDE for Java EE Developers. If you decide to go for Eclipse IDE for Java Developers, you'll have to add it.
+
+
+  Basically, I want to mix in Java and Web (PHP, JavaScript, CSS, HTML, etc..) into one. Could I do that with Eclipse and if I can, is it done with either of the above 2 packages?
+
+
+I would get Eclipse IDE for Java EE Developers (for simplicity sake) and install PDT on top of it.
+    
+    
+Answer 2: 
+
+    
+    
+Eclipse PHP Development Tools has all-in-one downloads available here :) http://www.eclipse.org/pdt/downloads/
+
+Make sure to download and install the PHP debugger from that page as well to get the integrated debug working in Eclipse.
+
+I was a die-hard Eclipse fan for years.  I used Eclipse since 1.0 and on through to Eclipse 3.4.  I was obliged to switch to IntelliJ at work as part of standardization.  I have found that IntelliJ has much better support for web development.
+
+I suspect that JetBrains PHPStorm http://www.jetbrains.com/phpstorm/ is probably a very good web development environment based on my experience with IntelliJ for JSF.  The JetBrains guys know how to make a good User Experience.
+    
+    
+Answer 3: 
+
+    
+    
+You can use Yoxos - http://eclipsesource.com/en/yoxos/yoxos-ondemand/ to customize your need.
+    
+    
+Title: How do I change the file that the XSLT template is using in Visual Studio 2010?
+Description: 
+    
+    
+                    
+I have an XSLT file and the first time I ran it, it asked me for an XML file. How do I get it to let go of that setting and let me choose a new one?
+    
+
+        
+Answer 1: 
+
+    
+    
+Open the XSL file, then go to the Properties window ('View-&gt;Properties Window'/F4). The XML file to be tranformed is the Input field in that window. 
+    
+    
+Title: Could not start visual basic
+Description: 
+    
+    
+                    
+When  I try to start my visual basic to open a project it doesnt seem to be working and keep prompting a error 'VB6EXT.OLB' could not be register. What does that mean? Need helps on this matter, thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+VBE6EXT.OLB is the Visual Basic for Applications Extensibility Library.  That filename seems to indicate that you're dealing with version 5.3, which apparently shipped with Microsoft Office 2000.  It would seem your VB6 project is an Office Automation project then?
+
+Google turns up the following links, which may be helpful:
+
+
+BUG: Interface methods in the VBA Extensibility Library (VBE) are changed
+PRB: Visual Studio Setup program may include Office OLB files in setup list
+
+
+Neither seems to directly answer your question, but they seem like a good place to start.
+
+Since Visual Basic 6 (and Microsoft Office 2000 as well) hit end-of-life well before Windows Vista was released, there may be a fundamental conflict between them.  You might be better off trying to develop your application on an older version of Windows.
+    
+    
+Answer 2: 
+
+    
+    
+Just Right Click on VB6.exe and CLick On Run As Administrator..
+Hope It works
+    
+    
+Answer 3: 
+
+    
+    
+This just happened to me (literally seconds ago) and I came HERE first stop. 
+
+I was looking for THE answer. As it happened, MS-Office 2010 offered to repair the problem...
+... and, skeptically, I accepted.  
+
+To my astonishment I was soon greeted by my FAVOURITE splash screen in the world - I've got my Rubberduck
+
+Anyway, I'm relieved the Auto Fix worked...
+    
+    
+Title: How to keep IDE configuration files out of code repository?
+Description: 
+    
+    
+                    
+How can I keep IDE configuration files out of a (svn) repository? The only way I can think of is with very specific "add" and "commit" commands.
+    
+
+        
+Answer 1: 
+
+    
+    
+Add the files to the svn:ignore property.  This has the advantage of being part of the project configuration for everyone that checks it out, not just you.
+    
+    
+Answer 2: 
+
+    
+    
+Exclude (ignore) the *.suo and *.user files.
+    
+    
+Answer 3: 
+
+    
+    
+Since the question is tagged with eclipse, I'll speculate that you're perhaps using a plugin.
+
+I use Subversive, and with that, the Windows=
+Answer 4: 
+
+    
+    
+Don't check them in (svn add) in the first place.
+    
+    
+Title: eclipse+bzr (Or: DVCS + IDE)
+Description: 
+    
+    
+                    
+I have some projects on bzr code repositories shared with colleagues.
+
+Problem is, I really want to switch to eclipse in some projects, but I don't want to pollute the repository with the unnecessary metadata eclipse creates in its Workspaces.
+
+Any idea how to keep Eclipse's metadata outside my bzr repo?
+
+Adam
+    
+
+        
+Answer 1: 
+
+    
+    
+If you know the names of the meta files created, you could put them into your .bzrignore file in your repository's directory. 
+
+See this part of the bzr docs
+    
+    
+Answer 2: 
+
+    
+    
+All the main metadata in eclipse are in the workspace.
+
+You project, meaning:
+
+
+your .project file
+your .classpath file
+your .settings directory
+your source files
+
+
+should all be located elsewhere, within your main project directory.
+
+All those files (except the .class files generated by the compilation) should be versioned.
+
+See "Do you keep your project files under version control?" for more, but also:
+
+
+What to put under version control?
+When working with Eclipse, should I add the workspace to the source control?
+
+    
+    
+Title: Which IDE for C++ software can I use for targeting Windows, Linux and OSX?
+Description: 
+    
+    
+                    
+I was reading today question on IDEs fo C++, and there are very good ones like Netbeans.
+
+My question is about creating a software in C++ on Windows Environment, but let users install and run my software also on Linux and OSX. 
+
+Does netbeans has a compiler to do the job, or is there any good IDE which has a compiler for targeting my c++ code to these other environments?
+
+thank you
+    
+
+        
+Answer 1: 
+
+    
+    
+QtCreator. It's awesome, slick and everything.
+
+While it is not as feature rich as some competitors, it does many things just right that others don't.
+
+I would say it is the one truly cross-platform IDE that is competitive to single-platform solutions. And it comes with tight integration of a very powerful and clean cross-platform toolkit. Something that you need for most cross-platform applications by itself.
+    
+    
+Answer 2: 
+
+    
+    
+I use Eclipse CDT and have had some degree of success. But I'm a Java programmer, so it's what I'm used to. It's worth checking out, and the extensions are quite cool.
+    
+    
+Answer 3: 
+
+    
+    
+Many people like Code::Blocks and it is cross-platform, with integrated debugging, code completion, etc. Qt Creator is also good and at least still very minimalistic.
+    
+    
+Answer 4: 
+
+    
+    
+Without a doubt VisualStudio with gnu make.
+    
+    
+Answer 5: 
+
+    
+    
+I've found Visual Studio to have the best IDE for C++.  In addition, it's debugger and the way it handles multi-threaded applications is excellent.
+
+And you can tweak the properties for your project to use different compilers and compiler flags of your choice, so it can build to any target.  
+    
+    
+Answer 6: 
+
+    
+    
+You're talking about cross-compiling as GMan said, that's a compiler job, not IDE's and itu's kind of hard to make C++ software that runs well on Linux/Windows/MacOSX, C++ isn't a cross plataform language beacuse of its ABI, so you should try to use C++ standart code.
+If you're making a consloe application there's no much problem just be care not to use system interface, but if you're planning to do some kind of graphics app then C++ it not the better choice for your purpose. Try some design that split the view from the controller/model of the app.
+    
+    
+Answer 7: 
+
+    
+    
+You can use QtCreator or NetBeans. First on C++ secord on Java. Both use MinGW g++.
+    
+    
+Answer 8: 
+
+    
+    
+Just a thought: you don't need to use a single IDE for all platforms. It is very common, for example, to use Visual Studio on Windows and Xcode on Mac OS X for cross-platform projects. I'm not familiar with Linux IDEs thought so couldn't recommend anything there.
+    
+    
+Answer 9: 
+
+    
+    
+Write makefiles for each OS? Simple enough seems to me.
+    
+    
+Answer 10: 
+
+    
+    
+Concerning cross plattform development it doesn't make a difference which IDE you use. Just make sure you use a cross platform (and possibly IDE independent) build system like SCons or cmake.
+    
+    
+Title: How to include the lib folder in the manifest classpath in Netbeans
+Description: 
+    
+    
+                    
+A library that my java application uses needs looks for a file (log4j.xml) in the class path. I use netbeans to manage my project, but I can't find a way to include the lib/ folder.
+
+Netbeans automatically creates a MANIFEST.MF file inside the application jar and also creates a folder called lib/ which includes all dependencies. This manifest specifies a Class-Path attribute that overrides any -cp argument provided on the command line. I can select an arbitrary folder in netbeans' library panel, but it creates a sub folder in the manifest's classpath. I'd like all dependencies and the log4j.xml file inside the lib/ folder.
+
+Hopefully it's possible to do this in the IDE. I include a snippet of the auto-generated build-impl.xml file.
+
+&lt;target depends="init,compile,-pre-pre-jar,-pre-jar" if="manifest.available+main.class+mkdist.available" name="-do-jar-with-libraries"&gt;
+    &lt;property location="${build.classes.dir}" name="build.classes.dir.resolved"/&gt;
+    &lt;pathconvert property="run.classpath.without.build.classes.dir"&gt;
+        &lt;path path="${run.classpath}"/&gt;
+        &lt;map from="${build.classes.dir.resolved}" to=""/&gt;
+    &lt;/pathconvert&gt;
+    &lt;pathconvert pathsep=" " property="jar.classpath"&gt;
+        &lt;path path="${run.classpath.without.build.classes.dir}"/&gt;
+        &lt;chainedmapper&gt;
+            &lt;flattenmapper/&gt;
+            &lt;globmapper from="*" to="lib/*"/&gt;
+        &lt;/chainedmapper&gt;
+    &lt;/pathconvert&gt;
+    &lt;taskdef classname="org.netbeans.modules.java.j2seproject.copylibstask.CopyLibs" classpath="${libs.CopyLibs.classpath}" name="copylibs"/&gt;
+    &lt;copylibs compress="${jar.compress}" jarfile="${dist.jar}" manifest="${manifest.file}" runtimeclasspath="${run.classpath.without.build.classes.dir}"&gt;
+        &lt;fileset dir="${build.classes.dir}"/&gt;
+        &lt;manifest&gt;
+            &lt;attribute name="Main-Class" value="${main.class}"/&gt;
+            &lt;attribute name="Class-Path" value="${jar.classpath}"/&gt;
+        &lt;/manifest&gt;
+    &lt;/copylibs&gt;
+    &lt;echo&gt;To run this application from the command line without Ant, try:&lt;/echo&gt;
+    &lt;property location="${dist.jar}" name="dist.jar.resolved"/&gt;
+    &lt;echo&gt;java -jar "${dist.jar.resolved}"&lt;/echo&gt;
+&lt;/target&gt;
+
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+Instead of editing the build-impl.xml file you should add this entry to the build.xml file.  When you modify anything in your project pertaining to the building of that project, it will generate a new build-impl.xml file.
+
+Here is an example of what I put in my build.xml file:
+
+&lt;target depends="init" name="-do-clean"&gt;
+    &lt;delete dir="${build.dir}"/&gt;
+    &lt;delete file="${dist.jar}"/&gt;
+    &lt;delete dir="${dist.dir}/lib"/&gt;
+    &lt;delete dir="${dist.dir}/resources"/&gt;
+&lt;/target&gt;
+
+
+Since I put this in the build.xml file, it will override the "-do-clean" section of the build-impl.xml file which contains:
+
+&lt;target depends="init" name="-do-clean"&gt;
+    &lt;delete dir="${build.dir}"/&gt;
+    &lt;delete dir="${dist.dir}" followsymlinks="false" includeemptydirs="true"/&gt;
+&lt;/target&gt;
+
+
+Furthermore, since it is in the build.xml it won't be modified by Netbeans.
+    
+    
+Answer 2: 
+
+    
+    
+I found a way to acheive this modifying the build-impl.xml.
+
+I changed:
+
+&lt;attribute name="Class-Path" value="${jar.classpath}"/&gt;
+
+
+to:
+
+&lt;attribute name="Class-Path" value="${jar.classpath} /lib"/&gt;
+
+
+The problem is that netbeans will overwrite it since this file is automatically generated.
+    
+    
+Answer 3: 
+
+    
+    
+You can simply turn off project option Build/Packaging/Copy Dependent Library and manualy edit manifest.mf in root folder of your project (which is a template for manifest in jar file).
+    
+    
+Answer 4: 
+
+    
+    
+It seems that your problem is the "globmapper" that stores your log4j.xml file in /lib - you'd want it on the "/" or the jar.
+    
+    
+Title: TextPad Questions!
+Description: 
+    
+    
+                    
+Someone must know this but can anyone help me with the following please
+
+
+When I open a folder I want the default format to be 'Details' and not list!!!! (ie sorted by time modified desc) 
+When I have a doc open I want to be able to see the folder that the doc is contained inside of in the explorer window within TextPad. I use the explorer window but I cannot find a way to get the explorer to navigate to the folder that the document is inside of!! 
+XML formatting - I ve tried addin and they were useless - All I want is decent XML syntax like VS2005 + formatting capability... Why is this not present!!
+
+
+Other then that love it love it love it
+    
+
+        
+Answer 1: 
+
+    
+    
+I used to use TextPad all the time. It's a very good text editor, but it's lacking some of the features that you want. 
+
+I personally think you'll like Notepad++ a lot better. It's free and open source. Also if you download the plugin for XML Support you will get lots of features for XML editing like:
+
+
+XML syntax Check
+XML Schema (XSD) + DTD Validation
+XML tag autoclose
+Pretty print
+Linearize XML
+Current XML Path
+Conversion XML &lt;-/lili/lili/li/ul/div
+Title: Making Wing IDE wrap lines on one file
+Description: 
+    
+    
+                    
+I have one file in my project, (the readme file,) which I would like Wing IDE to display with wrapped lines. Is it possible?
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes this is possible. Here's how you would do this:
+
+Edit 
+Answer 2: 
+
+    
+    
+Source -/pp/p/div
+Answer 3: 
+
+    
+    
+It seems like it's currently not possible.
+    
+    
+Title: What windows C IDE can I use that will use gcc to compile and let me insert breakpoints just like Visual Studio would for C#?
+Description: 
+    
+    
+                    
+What windows C IDE can I use that will use gcc to compile and let me insert breakpoints just like Visual Studio would for C#?
+
+I have searched Google and cannot find anything more recent that 2005.
+
+I'm just getting back into C since graduating and would like a non MS IDE that uses GCC, but that's a versatile as Visual Studio.
+
+The thought of having to use GDB command line is not too appealing right now.
+    
+
+        
+Answer 1: 
+
+    
+    
+I successfully used Eclipse with C/C++ plugin. Matter of fact I prefer it to VS. You can download it from here it's a real beaut. If you do JNI it's simply indispensable since you can setup your project to do both C/C++ and Java
+    
+    
+Answer 2: 
+
+    
+    
+Dev-C++ http://www.bloodshed.net/devcpp.html
+GPL license
+Uses GCC
+    
+    
+Answer 3: 
+
+    
+    
+Netbeans http://www.netbeans.org/features/cpp/index.html
+    
+    
+Answer 4: 
+
+    
+    
+Code::Blocks is another free C++ IDE for Windows/Linux/MacOSX. GPL3 license.
+    
+    
+Answer 5: 
+
+    
+    
+I highly recommend Insight Debugger that is a lightweight Tk frontend to GDB by RedHat.
+
+It adds a convenient GUI to call stack display, breakpoints, watches and memory display (non exhaustive list).
+
+As it is in Tk, it both supports GNU/Linux and Windows (and probably MacOS X). For MinGW users, there is even a MinGW package to install it.
+
+Once installed, you just add the -w setting to the command line to start the GUI: gdb -w
+    
+    
+Answer 6: 
+
+    
+    
+ddd
+
+you could found it on the "development" menu.
+    
+    
+Title: Problem running a very simple Python program
+Description: 
+    
+    
+                    
+Why is my program giving me an error here?
+
+import random
+
+TheNumber = random.randrange(1,200,1)
+NotGuessed = True
+Tries = 0
+
+GuessedNumber = int(input("Take a guess at the magic number!: "))                 
+
+while NotGuessed == True:
+    if GuessedNumber &lt; TheNumber:
+        print("Your guess is a bit too low.")
+        Tries = Tries + 1
+        GuessedNumber = int(input("Take another guess at the magic number!: "))
+
+    if GuessedNumber &gt; TheNumber:
+        print("Your guess is a bit too high!")
+        Tries = Tries + 1
+        GuessedNumber = int(input("Take another guess at the magic number!: "))
+
+    if GuessedNumber == TheNumber:
+        print("You've guess the number, and it only took you " + string(Tries) + "!")
+
+
+The error is on the last line. What can I do?
+
+Edit:
+
+Also, why can;t I use Tries++ here in Python? Isn't there an autoincrement code?
+
+Edit 2: Error is:
+
+Traceback (most recent call last):
+  File "C:/Users/Sergio/Desktop/GuessingGame.py", line 21, in &lt;module&gt;
+    print("You've guess the number, and it only took you " + string(Tries) + "!")
+NameError: name 'string' is not defined
+
+    
+
+        
+Answer 1: 
+
+    
+    
+it's str, not string. but your infinite loop is a bigger problem. auto-increment is written like this:
+
+Tries += 1
+
+
+General comment: you could improve your code slightly:
+
+the_number = random.randrange(1,200,1)
+tries = 1
+
+guessed_number = int(input("Take a guess at the magic number!: ")) 
+while True:
+    if guessed_number &lt; the_number:
+        print("Your guess is a bit too low.")
+
+    if guessed_number &gt; the_number:
+        print("Your guess is a bit too high!")
+
+    if guessed_number == the_number:
+        break
+    else:
+        guessed_number = int(input("Take another guess at the magic number!: "))
+        tries += 1
+
+print("You've guessed the number, and it only took you %d tries!" % tries)
+
+    
+    
+Answer 2: 
+
+    
+    
+In your last line, replace string with str -- that should take care of the error python is complaining about, at least.
+    
+    
+Title: Debugging matchit plugin in vim (under Cygwin)
+Description: 
+    
+    
+                    
+The "matchit" plugin for vim is supposed to allow you to use the % key to jump between matching start/end tags when editing HTML, as well as /* and */ comment delimiters when editing other kinds of code.
+
+I've followed the exact instructions in ":help matchit", but % still doesn't work for me.
+
+It seems silly to ask "Why doesn't this work?" so instead I'm asking How can I diagnose the problem? Pointers to references are welcome, but specific vim-plugin-debugging techniques are preferred.
+
+Here is the ~/.vim directory:
+
+$ ls -ltaGR ~/.vim
+/cygdrive/y/.vim:
+total 0
+drwxr-xr-x 1 spause 0 Sep 17 13:20 ..
+drwxr-xr-x 1 spause 0 Sep 16 13:59 doc
+drwxr-xr-x 1 spause 0 Sep 16 13:58 .
+drwxr-xr-x 1 spause 0 Sep 16 13:58 plugin
+
+/cygdrive/y/.vim/doc:
+total 24
+-rw-r--r-- 1 spause  1961 Sep 16 13:59 tags
+drwxr-xr-x 1 spause     0 Sep 16 13:59 .
+-rw-r--r-- 1 spause 19303 Sep 16 13:58 matchit.txt
+drwxr-xr-x 1 spause     0 Sep 16 13:58 ..
+
+/cygdrive/y/.vim/plugin:
+total 32
+drwxr-xr-x 1 spause     0 Sep 16 13:58 ..
+-rw-r--r-- 1 spause 30714 Sep 16 13:58 matchit.vim
+drwxr-xr-x 1 spause     0 Sep 16 13:58 .
+
+
+I am running vim 7.2 under Cygwin (installed Fall 2008). cygcheck shows:
+
+1829k 2008/06/12 C:\cygwin\bin\cygwin1.dll
+Cygwin DLL version info:
+    DLL version: 1.5.25
+    DLL epoch: 19
+    DLL bad signal mask: 19005
+    DLL old termios: 5
+    DLL malloc env: 28
+    API major: 0
+    API minor: 156
+    Shared data: 4
+    DLL identifier: cygwin1
+    Mount registry: 2
+    Cygnus registry name: Cygnus Solutions
+    Cygwin registry name: Cygwin
+    Program options name: Program Options
+    Cygwin mount registry name: mounts v2
+    Cygdrive flags: cygdrive flags
+    Cygdrive prefix: cygdrive prefix
+    Cygdrive default prefix:
+    Build date: Thu Jun 12 19:34:46 CEST 2008
+    CVS tag: cr-0x5f1
+    Shared id: cygwin1S4
+
+
+In vim, :set shows:
+
+--- Options ---
+  autoindent          fileformat=dos      shiftwidth=3
+  background=dark     filetype=html       syntax=html
+  cedit=^F            scroll=24           tabstop=3
+  expandtab           shelltemp           textmode
+  viminfo='20,&lt;50,s10,h
+
+
+Notably, the syntax and filetype are both recognized as HTML. (The syntax colouring is just fine.)
+
+If additional info is needed, please comment.
+
+UPDATE:
+
+Per answer by too much php:
+
+After trying vim -V1, I had changed my .vimrc to include a line
+
+set nocp
+
+
+so the compatible option is not on.
+
+:let loadad_matchit
+
+loaded_matchit        #1
+
+
+:set runtimepath?
+
+runtimepath=~/.vim,/usr/share/vim/vimfiles,/usr/share/vim/vim72,/usr/share/vim/vimfiles/after,~/.vim/after
+
+
+(~ is /cygdrive/y)
+
+Per answer by michael:
+
+:scriptnames
+
+  1: /cygdrive/y/.vimrc
+  2: /usr/share/vim/vim72/syntax/syntax.vim
+  3: /usr/share/vim/vim72/syntax/synload.vim
+  4: /usr/share/vim/vim72/syntax/syncolor.vim
+  5: /usr/share/vim/vim72/filetype.vim
+  6: /usr/share/vim/vim72/colors/evening.vim
+  7: /cygdrive/y/.vim/plugin/matchit.vim
+  8: /cygdrive/y/.vim/plugin/python_match.vim
+  9: /usr/share/vim/vim72/plugin/getscriptPlugin.vim
+ 10: /usr/share/vim/vim72/plugin/gzip.vim
+ 11: /usr/share/vim/vim72/plugin/matchparen.vim
+ 12: /usr/share/vim/vim72/plugin/netrwPlugin.vim
+ 13: /usr/share/vim/vim72/plugin/rrhelper.vim
+ 14: /usr/share/vim/vim72/plugin/spellfile.vim
+ 15: /usr/share/vim/vim72/plugin/tarPlugin.vim
+ 16: /usr/share/vim/vim72/plugin/tohtml.vim
+ 17: /usr/share/vim/vim72/plugin/vimballPlugin.vim
+ 18: /usr/share/vim/vim72/plugin/zipPlugin.vim
+ 19: /usr/share/vim/vim72/syntax/html.vim
+ 20: /usr/share/vim/vim72/syntax/javascript.vim
+ 21: /usr/share/vim/vim72/syntax/vb.vim
+ 22: /usr/share/vim/vim72/syntax/css.vim
+
+
+Note that matchit.vim, html.vim, tohtml.vim, css.vim, and javascript.vim are all present.
+
+:echo b:match_words
+
+E121: Undefined variable: b:match_words
+E15: Invalid expression: b:match_words
+
+
+Hm, this looks highly relevant. I'm now looking through :help matchit-debug to find out how to fix b:match_words.
+    
+
+        
+Answer 1: 
+
+    
+    
+Thanks to this posting from the vim_use mailing list, I found a sequence of commands that works:
+
+vim -u NONE somefile.html
+
+
+(this starts vim without reading .vimrc)
+
+Then,
+
+:set nocp
+:source /usr/share/vim/vim72/macros/matchit.vim
+:filetype plugin on
+:filetype detect
+:syntax on
+
+
+It's not ideal, but it doesn't seem to work from .vimrc. And it doesn't work when syntax on precedes the filetype detection, so I suspect there's a conflict in the interaction between the syntax highlighting stuff and matching stuff.
+    
+    
+Answer 2: 
+
+    
+    
+Use the following command to see if the plugin was loaded:
+
+:let loaded_matchit
+
+
+If you get an undefined variable error, then the plugin was not loaded - you should make sure that '/cygdrive/y/.vim' is in your 'runtimepath' option (use ':set runtimepath?')
+
+Also note that the matchit plugin does not load if the 'compatible' option is turned on.
+    
+    
+Answer 3: 
+
+    
+    
+You might want to read through :he matchit . The section on configuration might help.
+
+:he matchit-debug - debugging info specific to matchit
+
+:he debug - general vim debugging (you can do all sorts of breakpoint/step through stuff)
+
+A common gotcha (not your case though) is the html filetype can be nicked if you are using a template plugin. (Eg. my html is turned into html.djangotemplate) Try :set ft? to find your filetype. you might need to copy b:match_words into the ftplugin for the template filetype.
+
+:echo b:match_words  - should give a list of html looking regex's
+
+also in case of the obvious :scriptnames should show matchit.vim somewhere
+
+Good Luck
+    
+    
+Answer 4: 
+
+    
+    
+I have no clue about vim (besides using it a lot), but I found that putting the followng two lines in my .vimrc helped a lot:
+
+:source /usr/share/vim/addons/plugin/matchit.vim
+:source /usr/share/vim/vim72/ftplugin/html.vim
+
+
+I am sure that there is a proper way, but at least this worked for me.
+
+Cheers,
+
+Joerg
+    
+    
+Answer 5: 
+
+    
+    
+I got the commands above to work in my .vimrc by removing
+most of the other crap in ~/vim, such as ~/.vim/ftdetect
+and ~/.vim/ftplugin. Start with a clean ~/.vim and only 
+copy in what's specific to you, avoiding anything that might 
+have a newer version in $VIMRUNTIME, and it should work.
+    
+    
+Title: Step through Ruby code at runtime on OS X
+Description: 
+    
+    
+                    
+I would like to step through Ruby code at runtime, but it seems difficult to find a decent Ruby IDE for OS X which allows you to do this. I would prefer one which uses the native look and feel of the OS (Cocoa).
+
+Can anyone make a suggestion?
+
+The main feature I am looking for is the ability to step through the code, not really much else. I have TextMate for editing.
+    
+
+        
+Answer 1: 
+
+    
+    
+It seems many text editors for OSX play well with Ruby and in some instances, like TextMate, were built for Ruby.
+
+But if you're shopping for an IDE, check out Netbeans.  Its Ruby support is fantastic.  Lot's of nice little features that'll make you appreciate it.
+
+As for stepping through code:
+
+
+  Single-step or run through Ruby code
+  and ERB files. Set breakpoints, look
+  at local variables, navigate the call
+  stack, switch threads. Hover the mouse
+  over a variable in the Editor to
+  evaluate the expressions and show it
+  in a tooltip. The NetBeans IDE
+  supports the Fast Ruby Debugger, which
+  also works with JRuby. You can even
+  attach the debugger to any remote
+  process started from the command line,
+  and get all the advantages of a
+  user-friendly debugger fronten
+
+
+http://www.netbeans.org/features/ruby/index.html
+    
+    
+Answer 2: 
+
+    
+    
+Personally I use TextMate which is amazing however heard good things about RubyMine from JetBrains - www.jetbrains.com/ruby/index.html
+    
+    
+Answer 3: 
+
+    
+    
+Aptana RadRails is a free one, based on eclipse does regular ruby too. you wont get the osx ui, but it will work. It's not too bad either.
+    
+    
+Answer 4: 
+
+    
+    
+You might want to try Komodo Edit, which is more in line with TextMate than say a full blown IDE like Aptana RadRails. It lacks things like debugging or interactive shells, but you can run scripts from within the editor and it has all the code auto-completing features that you'd expect from an IDE. And it looks very pretty and it's FREE. =)
+    
+    
+Answer 5: 
+
+    
+    
+I would recommend TextMate as above and also MacVim if possible. Sometimes the simplicity of a good text editor is better than an IDE.
+    
+    
+Title: Reset View in Visual Studio 2008?
+Description: 
+    
+    
+                    
+For some reason, the layout and sizes of various panels in my copy of Visual Studio 2008 has gone all wonky -- for example, the Error and Output windows appear in the same tab group as my code, and their position doesn't persist if I attempt to manually move them where I want them to go. Is there some sort of way to reset all panels to their default state?
+    
+
+        
+Answer 1: 
+
+    
+    
+I believe this will reset your settings to their factory state:
+
+devenv.exe /resetsettings
+
+
+In the future, you might want to consider exporting your settings (after you get them where you want them) using the "Tools/Import and Export Settings ..." wizard in Visual Studio.  
+
+If you reset in the future, you can then either use the wizard, or use the command
+
+devenv /resetsettings {SettingsFile}
+
+
+Where {SettingsFile} is your previously exported settings
+    
+    
+Title: Scalable PHP editor
+Description: 
+    
+    
+                    
+I work in a very large PHP codebase from a Windows box, and I'm looking for an editor with good code browsing capabilities, and one which will scale to a large codebase.
+
+I've started using Eclipse PDT for a couple days, and while I like the feature set for the most part, I've found it to be unreliable.  It randomly hangs for long periods of time, takes forever to index, runs out of memory or randomly sends error messages very often, and has some annoying behavior as files in the project change.
+
+I welcome two types of answers
+1) What is a good scalable PHP IDE?  Bonus points if it's a VS plugin, but I'm willing to learn anything.  More Bonus points if it has JavaScript support.  Non-free is okay.
+2) If anyone else has gone through growing pains with Eclipse, what advice can you give, or what settings can be tweaked to make it more reliable?
+
+Update
+I determined the source of the Eclipse hangs was an issue at the networking level, which I've fixed.  So I'm going to take another crack at this.  Thanks for all the advice, I'm sure it will come in handy.
+    
+
+        
+Answer 1: 
+
+    
+    
+NetBeans is all I use. Switched from Eclipse for similar reasons. Free. JS support (inc. jQuery and client-side debugging).
+
+Non free: Zend studio based on Eclipse.
+    
+    
+Answer 2: 
+
+    
+    
+Stackoverflow Archive:
+
+
+Which IDE (Editor) is for me?
+What is the Best IDE for PHP?
+Online PHP IDE?
+Lightweight auto-completing PHP editor?
+The Best PHP Editor for Vista
+Best IDE / Editor for PHP
+What is the Best Opensource PHP IDE out there?
+Fast Windows PHP editor with SVN and FTP support?
+
+
+External Resources:
+
+
+Wikipedia: List of PHP Editors
+Seven Great PHP IDEs Compared
+Online Reviews of PHP Editors (Select platform / license to view)
+
+    
+    
+Answer 3: 
+
+    
+    
+
+  I work in a very large PHP codebase
+  from a Windows box, and I'm looking
+  for an editor with good code browsing
+  capabilities, and one which will scale
+  to a large codebase*
+
+
+The Zeus IDE has a code navigation browser powered by the information produced by ctags and I am pretty sure ctags has support for PHP. 
+
+The tags information produced is maintained by the IDE and held in a sqlite database file and this inforamtion is fully browsable and searchable.
+
+Now I am not sure how big your very large codebase is but Zeus might/might not be able to handle it.
+
+With a very large codebase the tags database might take a several minutes to build to and maybe more than a few seconds each time the database needs to be update. 
+    
+    
+Answer 4: 
+
+    
+    
+I would recommend you Aptana!
+It's free, supports JS and is also cross platform.
+    
+    
+Answer 5: 
+
+    
+    
+I've been using Eclipse for a couple of version now.  I have found that I prefer to download the main project, and then add modules I want instead of the pre-packaged setups.  I've generally found this to be a more stable configuration than to grab pre-packaged installs.
+    
+    
+Answer 6: 
+
+    
+    
+Aptana is based upon eclipse. I like aptana but if you did not like eclipse then I think you could try netbeans php ide
+    
+    
+Answer 7: 
+
+    
+    
+I switched from Zend Studio 6 (buggy as hell) to PHPDesigner and it' is pretty great, although there is no code folding, which annoys me sometimes, but overall it's awesome. It offers debugging, built-in svn using Tortoise and Projects (including 3rd party libs). 
+    
+    
+Answer 8: 
+
+    
+    
+
+PHP and Javascript debugger - which can be used with Vim BTW.
+
+
+VCS integration (not only svn),
+not in Java: scales better for large codebases on modest hardware,
+many, many more convenient features...
+
+
+    
+    
+Answer 9: 
+
+    
+    
+I would personally recommend NetBeans, which seems to perform better than the Eclipse-based alternatives. NetBeans also has superb PHP support, quite on-par with the commercial Zend Studio.
+
+However, if you otherwise like Eclipse, I would suggest tweaking the .ini files. One of them contains how much memory it'll use, you could increase that, for example up to 2 GBs if you have enough RAM, which will make it perform better.
+
+Komodo IDE is a feasible alternative if you have a lower spec PC. As it doesn't use Java like jpic said, it'll perform better. However, it does not have nearly as good coding help features as NetBeans or Zend Studio.
+    
+    
+Title: How can I tell what monitor the Delphi IDE Object Inspector is on?
+Description: 
+    
+    
+                    
+This is a follow up to How can I get the Delphi IDE&#39;s Main Form? which I now have working. 
+
+I'd like to go one step further and place my designer on the same form as the Object Inspector, for those who use the classic undocked desktop layout and may have the Object Inspector on a different screen than the main Delphi IDE form.
+
+Any ideas on how I find which monitor the Object Inspector is on from inside my design time package?
+    
+
+        
+Answer 1: 
+
+    
+    
+This should work whether the property inspector is docked or not, since it falls back to the main form for the docked case:
+
+function EnumWindowsProc(hwnd: HWND; lParam: LPARAM): Integer; stdcall;
+var
+  ClassName: string;
+  PID: Cardinal;
+begin
+  Result := 1;
+  GetWindowThreadProcessId(hwnd, PID);
+  if PID = GetCurrentProcessId then 
+  begin
+    SetLength(ClassName, 64);
+    SetLength(ClassName, GetClassName(hwnd, PChar(ClassName), Length(ClassName)));
+    if ClassName = 'TPropertyInspector' then 
+    begin
+      PHandle(lParam)^ := hwnd;
+      Result := 0;
+    end;
+  end;
+end;
+
+function GetPropertyInspectorMonitor: TMonitor;
+var
+  hPropInsp: HWND;
+begin
+  hPropInsp := 0;
+  EnumWindows(@EnumWindowsProc, LPARAM(@hPropInsp));
+  if hPropInsp = 0 then
+    hPropInsp := Application.MainFormHandle;
+  Result := Screen.MonitorFromWindow(hPropInsp);
+end;
+
+    
+    
+Title: Can IDE code templates boost my productivity?
+Description: 
+    
+    
+                    
+I have recently tried code templates after reading http://www.symfony-framework.com/2008/06/03/speed-symfony-developing-with-eclipse-snippets-templates/ in my Eclipse IDE for PHP development.
+
+I have an idea, when such tools can benefit for developer.
+Developers are constantly learning new tools, programming languages, frameworks etc. When you work with something new to you, your productivity is usually not very high, because you don't know(or don't remember the syntax).
+
+I think that code templates can become very useful at this point.
+
+Just to give you an idea, I will make an example:
+
+Here is an code snippet of PHP Doctrine ORM finder method usage.
+
+$table = Doctrine::getTable('User');
+// find by primary key
+$user = $table-&gt;find(2);
+
+
+If I remember this snippet, just like Dfind(ctrl+space to run intellisense and code template replace later). Dfind (D - first letter in Doctrine word).
+
+So, I don't need to remember all this API syntax, and just use Dfind to run Doctrine's finder method.
+
+This is very trivial example, and maybe it is too hard to see the benefits of this approach, but you can use this feature for replacing bigger constructs(which are harder to remember).
+
+I googled on that topic before, but didn't find any information on that unusual using of this IDE feature.
+
+So, please, let me know what do you think about it?
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm using devexpress coderush and refactor in Visual Studio. I do use code templates often and I found they boost my productivity a lot. But for some it's more, for others less. It's a personal thing and depends on how you work.
+    
+    
+Answer 2: 
+
+    
+    
+I see it as a benefit. Some people are vehemently opposed to using templates and code completion for reasons that range from 'its annoying' to 'it makes programmers lazy'. I don't personally use templates, but that's just personal preference.
+
+I do agree, when working with a library that has some 200+ exposed functions, its more productive to get hints until you use it enough to just remember.
+    
+    
+Answer 3: 
+
+    
+    
+IMO it's definitely a very useful feature, especially for all of the common language features - e.g. a for loop.
+
+You save a lot of keypresses with snippets - e.g. auto-completing the snippet and allowing you to move rapidly over the changeable parts.
+
+for ( variable = value ; variable &lt; value2 ; variable++ )
+{
+
+}
+
+
+So when you change variable, all three occurrences change.
+    
+    
+Answer 4: 
+
+    
+    
+Not in the long run. It is better to improve your typing skills. Anything beyond automatically closing braces and quotes for you is treacherous. It adds stuff to your code and may lure you into using a long-winded solution to a problem that can be solved with less code and more thought.
+    
+    
+Answer 5: 
+
+    
+    
+Auto-completion is definitely useful, especially when working with big libraries. But code templates sounds like something that encourages violating DRY principles.
+    
+    
+Title: Custom Control and Visual Studio 2008 SP1
+Description: 
+    
+    
+                    
+I've created a custom control (a class that inherits from Control). When I put it on a Form I can work with it on Visual Studio IDE. It shows me an error and I don't see the form.
+
+The error message is this: La variable 'ctrlImagen' no está declarada o no se asignó nunca.
+
+It's a winform for a Compact Framework app.
+
+How can I solve this? (it the class inherits from UserControl it works perfectly)
+    
+
+        
+Answer 1: 
+
+    
+    
+Sounds crazy, but Visual Studio is selectively executing code for your control in the designer.  First thing to check is your constructors. Make sure you have an empty, default constructor, that is public, even if you never plan on using it.  After that make sure any code you have tied to layout events (such as resize) are good to go, these are likely the culprits, as thats where I always find problems when my custom controls don't work in the designer.
+    
+    
+Answer 2: 
+
+    
+    
+It sounds like you have a bug in the code for your Control. This sounds like a runtime error that is preventing the control from rendering.
+
+Re-read your code and look for potential null-pointer exceptions, unassigned variables, stack overflows, etc. The bug is lying in their somewhere.
+    
+    
+Answer 3: 
+
+    
+    
+Any chance your user control doesn't have a public default constructor?  I can get a similar error "The variable 'userControlX' is either undeclared or was never assigned' if the constructor isn't public.
+
+Would need more info, though.
+    
+    
+Answer 4: 
+
+    
+    
+It seems a design time exception has happened in initialization logic that gets executed before your form initialization logic executed. A good example would be a NullPointerException   fired by the default constructor (or one or more methods it invokes) of a user control that contained by your form.
+    
+    
+Answer 5: 
+
+    
+    
+I put this on constructor to solve the problem:
+this.ClientSize = new Size(21, 21);
+
+The beging of my class is this:
+
+
+    public class ControlMapa : Control
+    {
+        public ControlMapa()
+        {
+            this.ClientSize = new Size(21, 21);
+            ...
+
+
+
+Thank you!
+    
+    
+Title: Text editor / IDE for Ruby similar to DrScheme
+Description: 
+    
+    
+                    
+For those who haven't used DrScheme, window is split in two parts: one part is a file you're editing, and the other is interactive shell. When I run a file, it is loaded into interactive environment, so I can invoke functions I've defined etc. Interactive environment still has all the features of text editor (syntax highlighting, auto completion, etc...)
+
+So is there an IDE for Ruby that doesn't just execute script I'm making, but loads it into irb instead, with all text editor goodies?
+    
+
+        
+Answer 1: 
+
+    
+    
+This exact request (even up to the fact that Dr Scheme motivated it) is what finally pushed me to learn Emacs. 
+
+Here's what i did to install it under Windows Vista:
+
+
+Download Emacs from http://ftp.gnu.org/gnu/windows/emacs/emacs-22.3-bin-i386.zip
+Unzip it to the directory of your choice
+After unzipping it create an includes directory anywhere you wish and copy there both ruby-mode.el and ruby-inf.el (these come with the ruby distribution under the misc directory and can also be downloaded from Ruby's source 
+Modify your .emacs to tell it where to find your includes and and to use them
+
+
+
+; directory to put various el files into
+(add-to-list 'load-path "C:/emacs-22.3/includes")
+;(1)modify .emacs to use ruby-mode 
+(autoload 'ruby-mode "ruby-mode"
+  "Mode for editing ruby source files" t)
+(setq auto-mode-alist
+      (append '(("\\.rb$" . ruby-mode)) auto-mode-alist))
+(setq interpreter-mode-alist (append '(("ruby" . ruby-mode))
+                              interpreter-mode-alist))
+;(2)set to load inf-ruby and set inf-ruby key definition in ruby-mode. 
+
+(autoload 'run-ruby "inf-ruby"
+  "Run an inferior Ruby process")
+(autoload 'inf-ruby-keys "inf-ruby"
+  "Set local key defs for inf-ruby in ruby-mode")
+(add-hook 'ruby-mode-hook
+      '(lambda ()
+         (inf-ruby-keys)
+))
+
+
+
+(optional) I also installed mode-compile.el from http://perso.tls.cena.fr/boubaker/distrib/mode-compile.el and made the corresponding edits in .emacs
+
+
+; Install mode-compile
+(autoload 'mode-compile "mode-compile"
+   "Compile current buffer based on the major mode" t)
+(global-set-key "C-cc" 'mode-compile)
+(autoload 'mode-compile-kill "mode-compile"
+ "Kill compilation launched by `mode-compile'" t)
+(global-set-key "C-ck" 'mode-compile-kill)
+
+
+
+With those changes Emacs will automatically identify a .rb file as ruby and do syntax highlighting. Then with the chord \C-c\C-s (Control-c, release and then Control-s) irb will start in the box below your file, and you can use all the keys defined by inf-ruby: (\M is the Meta Key which for Windows means Alt) 
+
+  "\C-c\C-b" 'ruby-send-block
+  "\C-c\M-b" 'ruby-send-block-and-go
+  "\C-c\C-x" 'ruby-send-definition
+  "\C-c\M-x" 'ruby-send-definition-and-go
+  "\C-c\C-r" 'ruby-send-region
+  "\C-c\M-r" 'ruby-send-region-and-go
+  "\C-c\C-z" 'switch-to-ruby
+  "\C-c\C-l" 'ruby-load-file
+  "\C-c\C-s" 'run-ruby
+
+
+If you did the optional step and installed mode-compile, you can also use \C-cc to send the current file to ruby instead of irb
+    
+    
+Answer 2: 
+
+    
+    
+I haven't worked with DrScheme yet, but Netbeans 6.5 includes a full-featured IRB. Have you given it a try?
+    
+    
+Title: How often would you tolerate your IDE crashing?
+Description: 
+    
+    
+                    
+I was experimentally trying to switch from coding in vim to coding in an IDE (in this case, Anjuta on Linux), but I found that every time I crashed the IDE, my trust in it went down, until around a crash rate of once a day I trusted it so little that using it was considerably more stressful than using a simple text editor for coding.
+
+How often would your IDE have to crash, fail, or do completely unexpected things before you would stop trusting it enough to use it?
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm using Visual Studio 2008 with all the new-fangled goodness (3.5, WPF, LINQ, ...) and especially the WPF designer (which sucks anyways) crashes every other day. While this is truly annoying I've not had any mayor data loss and I try to workaround it by not using the WPF designer (which -- have I mentioned it yet? -- does suck anyways).
+
+I think it's not a matter of trust but whether the IDE (or any kind of software) really does bring enough functionality to the table to be worth the annoyance? That's a pretty personal value judgement and for me it means: Studio, yes; WPF designer, no. Pretty easy.
+    
+    
+Answer 2: 
+
+    
+    
+In a word - "never".
+
+The only time ever I use an IDE is when I'm writing code for Android.  Other than that, I use gvim and command line tools.
+    
+    
+Answer 3: 
+
+    
+    
+For me once a day is too often.
+
+Also I think this question is borderline not relevant.
+
+Edit: BTW I primarily do Python programming at the moment and I don't use an IDE, just a text editor with multiple commandlines open.
+    
+    
+Answer 4: 
+
+    
+    
+I've used a lot of the beta and CTP releases of Visual Studio over the years and since these are unfinished softwares, I couldn't expect them to run stable.
+
+In this scenario, it's important to offer a good backup strategy. Recent versions of Visual Studio allow you to save changes even for projects that are just temporary, i.e. that you've not given a name.
+
+Unfortunately, when you start the IDE anew after a crash, Visual Studio erases all temporary projects. I can see why they do it but it's a very poor decision in terms of crash recoverability.
+
+Other than that, I'm really intolerant when it comes to crashes. This is one reason why I could never work with Eclipse. The IDE has too many arbitrary bugs for my taste and it really drives me nuts.
+
+Nowadays, I mostly use (G)VIM/mvim and there's hardly ever any crash.
+    
+    
+Answer 5: 
+
+    
+    
+I swear under my breath every time Visual Studio 2003 crashes but I seem to be able to tolerate it...
+    
+    
+Answer 6: 
+
+    
+    
+I use IntelliJ IDEA and it rarely crashes on me.  If it crashed more than, say, once a month I'd be looking elsewhere and/or screaming loudly at support.
+
+At least on Intellij, it saves your work for you automatically and does local versioning so you rarely lose anything from a crash (I've never lost more work that can be measured in minutes) plus if you make a horrible mess of something you can recover an older working version easily, which I like a lot as it doesn't pollute the "common" repository with frequent check-ins that don't necessarily compile let alone work just to make sure you have a rollback position.
+    
+    
+Title: IDE, SVN and pushing to sites!
+Description: 
+    
+    
+                    
+Im thinking of updating my practices, and looking for a little help and advice!
+
+I do a lot of work on sites that run joomla, oscommerce, drupal etc and so I have created a lot of custom components/plugins and hacks etc. Currently each site has its own folder on my xampp setup.  What I would like to do is have a default setup of (for example) a Joomla setup and when I make changes updates, I can do something which updates all the other folders that contain joomla, almost like an auto update?
+
+Im also looking at using Aptana IDE more and SVN service such as unfuddle to share my work with others, but I have not used SVN before and not sure if its possible to do the above using SVN?
+
+It would be great to be able to work on a main/core item and send the updates to both local updates and to actual servers, without having to maintain lots of different individual sites.
+
+Suggestions?
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, SVN would be a great tool for this purpose. Store your code (eg: a custom Joomla component) in source control. Wherever you want to use that component, just do a checkout or export of that particular folder into your live site. Here's one way you could structure your repository:
+
+unfuddle.com/myRepo/trunk/com_myComponent
+unfuddle.com/myRepo/trunk/com_anotherComponent
+
+
+Log in to your live server via SSH and run this command:
+
+
+
+Answer 2: 
+
+    
+    
+For automating things, you could use SVN hooks for this. There is a post-commit hook, so every time you do a commit, your hook script could tell the other machines to do an SVN update to get the latest code.
+
+For more info, see Version Control with Subversion - Implementing Repository Hooks.
+    
+    
+Answer 3: 
+
+    
+    
+I don't have a good answer for your situation, but I don't think Subversion by itself is the answer.
+
+This Question addresses some of the concerns about Subversion's mechanisms for sharing across 'projects'.
+
+Subversion can certainly handle the source code management part of this puzzle.  The automated distribution, well I'd use another tool.
+    
+    
+Answer 4: 
+
+    
+    
+Look into Capistrano.  I've used it a couple of times and once you figure it out, it's pretty good.  Aimed at rails but should work for anything where you need to get code from a repository and deploy it on different servers.
+    
+    
+Title: Disable &ldquo;favorite&rdquo; (★) suggestions in IntelliSense for Visual Studio 2019?
+Description: 
+    
+    
+                    
+In Visual Studio 2019, how can someone disable the "favorite" (★) suggested names on auto-completion?. These suggestions inside the red square and ONLY these:
+
+
+
+It is the most annoying feature.
+
+If important: I need to disable it for VB.NET and then for C# too.
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  Disable “favorite” (★) suggestions in IntelliSense for Visual Studio
+  2019?
+
+
+First, thanks to Ahmed for sharing the useful suggestions and his help.
+
+★ is the feature of IntelliCode and it will put your most likely Suggestions to the top for easy use.
+
+All of them are from the extension called Visual Studio IntelliCode.
+
+You can find it under Extensions--strong/strong
+Title: c:\&hellip;\source\repos\HelloWorld\Debug\HelloWorld.exe (process 3764) exited with code 0
+Description: 
+    
+    
+                    
+I have a little issue with my first time programming.
+I get that message 
+
+is that ok to get "c:\users\amittler\source\repos\HelloWorld..."?
+
+thanks for your help
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, it's OK to get this.
+
+Your IDE is just telling you that the program finished running. And I presume that all your program does is printing "Hello World!", so it's finishing a split second after that.
+
+
+  "c:\users\amittler\source\repos\HelloWorld..."?
+
+
+This is the location of your program. When your IDE is done building it, it has to put it somewhere before it can run it, and that's where it went.
+
+
+  (process 3764)
+
+
+Your computer can do many things (seemingly) at once, and all these things running at the same time get a process number. It's basically an identification. It's telling you the process number that your program run had. Most of the time, you won't be needing this information.
+
+
+  exited with code 0
+
+
+This means that your program has ran successfully. Actually, it's dependent on what you return in your main function. The convention is that 0 stands for success and everything else denotes an error. For instance, if a different program was calling your program and got a 0 back it knows it went well, otherwise it might react accordingly.
+    
+    
+Title: Nuclide vs Atom-IDE
+Description: 
+    
+    
+                    
+What is the practical difference between the Nuclide package for Atom and the Atom-IDE package? I'm only a novice Python programmer, and all I can piece together is that Atom-IDE is built from Nuclide, but they both seem to have similar features and language support.
+    
+
+        
+Answer 1: 
+
+    
+    
+Atom IDE contains a subset of Nuclide’s functionality. Specifically, it contains the set of features needed to support language servers (https://microsoft.github.io/language-server-protocol/). It’s maintained by the Nuclide team.
+
+Source: I am a member of the Nuclide team.
+    
+    
+Title: Can scratches be shared between IntelliJ and Android Studio?
+Description: 
+    
+    
+                    
+I'm working on a project in Android Studio 3.1.  I first had to create a .jar file with dependancies in IntelliJ 2017.2.  I chose to do my programming in the IntelliJ IDE because I knew that Android Studio is based on IntelliJ.  
+
+But now I have a bunch of scratches (lots of notes and code) for my project that I assumed would be available in Android Studio, but they are  not.  
+
+Is there a way to tell Android Studio to use the scratches from IntelliJ?  I will have to be jumping back and forth more and more between IDE's in the future as the project develops.
+    
+
+        
+Answer 1: 
+
+    
+    
+It's is possible to specify a location for scratches using Help | Edit Custom Properties... and adding the following property there:
+
+idea.scratch.path=~/Scratches
+
+
+It is necessary to restart the IDE after you make changes there. You could specify the same location in both IntelliJ IDEA and Android Studio. (You can of course choose your own path/location.) In this directory two further directories will be created by the IDE, "scratches" and "consoles". You can create these directories yourself if you already have scratches you wish to use. 
+    
+    
+Title: Cannot add basic class to project from Visual Studio
+Description: 
+    
+    
+                    
+I used to be able to add basic empty classes from visual studio in my Unity solution. But that option does not even show up anymore. I updated to VS2017 a while back, maybe that is the issue or perhaps the newer Unity integrates "better" with VS nowadays. I can always add a C# script from unity but I liked adding classes from VS and would be glad if I can have that option back.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I had to open the VS installer. After it updated I could pick modify on my current VS 2017 instance and noticed the .NET package was not active and neither was any other package. Adding that solved my issue. I'm sure I have been using the basic templates in conjunction with Unity before, perhaps I uninstalled it by accident or it uninstalled along with removing VS 2015.
+    
+    
+Answer 2: 
+
+    
+    
+I had the same thing happen after a recent upgrade from VS 2017 to VS 2019. 
+I did have .NET installed.  So I used the installer to uninstall .NET, then again to reinstall .NET.  It asked for a reboot, and finally I was able to add a simple class again.
+    
+    
+Title: Auto git fetch when the Android studio (IntelliJ) is idle
+Description: 
+    
+    
+                    
+I usually use Git Fetch to have the latest information from the server.Git Fetch won't change the code base and its not take much time and network traffic. So when I go toilet or do something else it would be good to auto do Git Fetch. Is there any way to do something like this? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Enabling an automatic fetch in IntelliJ was asked before.
+See issue IDEA-24057 and IDEA-100846
+Check out GitToolBox: It has auto fetch functionality.
+That feature does not seem to be available in native IntelliJ alone (ie: you need to find a third-party plugin)
+
+It would indeed be nice if this would work because the configuration options in File | Settings | Version Control | Background are now ignored for GIT and this doesn't seem to be indicated in the UI or help.
+Also, people coming from Atlassian SourceTree expect this to happen automatically. This messes up merging remote branches because those remote branches are not up to date automatically (something SourceTree users are used to).
+This hampers (full) adoption of IDEA.
+
+    
+    
+Title: How to group the duplicated statement in .apply in Kotlin?
+Description: 
+    
+    
+                    
+Here is my code. As you can see the body of apply is exactly the same. Is there a better than use extension function?
+
+contentText?.let { 
+    contentTextView?.apply { 
+        visibility = View.VISIBLE
+        text = contentText
+    }
+}
+
+titleText?.let {
+    titleTextView?.apply {
+        visibility = View.VISIBLE
+        text = titleText
+    }
+}
+
+
+Here is my function
+
+private fun setTextAndVisiblity(textView: TextView?, newText: String?): TextView? {
+    return textView?.apply {
+        visibility = View.VISIBLE
+        text = newText
+    }
+}
+
+
+This is my code when apply function
+
+contentText?.let {
+    setVisibleText(contentTextView, it)
+}
+
+titleText?.let {
+    setVisibleText(titleTextView, it)
+}
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I would write the extension function like this:
+
+fun TextView.setVisibleIfTextNotNull(text: CharSequence?) = text?.let {
+    visibility = View.VISIBLE
+    this.text = it
+}
+
+
+Usage:
+
+contentTextView?.setVisibleIfTextNotNull(contentText)
+titleTextView?.setVisibleIfTextNotNull(titleText)
+
+
+You can either make it as an nested function or private extension function as you like. The name of the function may not be clear enough to clarify what the function does, you may think of a better one.
+    
+    
+Answer 2: 
+
+    
+    
+An extension function seems like the best choice. If you make the function return this you can use it without apply.
+
+Your other choice would be to create an ordinary function and pass it into also using method references, e.g. 
+
+fun setVisibleText(view: View) {  }
+titleTextView.also(this::setVisibleText) 
+
+    
+    
+Answer 3: 
+
+    
+    
+the cleanest for me is to declare an extension function as: 
+
+fun TextView.setVisibleWithText(text: String?){
+  text ?: return
+  visibility = View.VISIBLE
+  setText(text)
+}
+
+
+then calling it as:
+
+myTextView?.setVisibleWithText(myText)
+
+
+Anyway,remember that an extension functions it just an static util function.
+This function below: 
+
+fun TextView.setVisibleWithText(text: String){
+  visibility = View.VISIBLE
+  setText(text)
+}
+
+
+Will become something like this in java:
+
+class TextViewKt {
+  public static function setVisibleWithText(@NotNull TextView receiver, @NotNull String text){
+    receiver.visibility = View.VISIBLE
+    receiver.setText(text)
+  }
+}
+
+
+And after you can call it as:  
+
+theText?.let { theTextView?.setVisibleWithText(it) }
+
+
+You can always declare a normal funtion as:
+
+  fun setVisibleWithText(textView: TextView, text: String){
+      textView.visibility = View.VISIBLE
+      textView.text = text
+  }
+
+
+or if you want to make the check inside:
+
+  /***
+  * It makes the textview visible if text is not null (it will stay visible if it was visible before)
+  **/
+  fun setVisibleWithText(textView: TextView, text: String?){
+      text ?: return
+      textView.visibility = View.VISIBLE
+      textView.text = text
+  }
+
+    
+    
+Title: How to reset the default settings store path in Visual Studio 2017?
+Description: 
+    
+    
+                    
+With importing and exporting settings I've somehow changed the default save location for the settings in VS 2017 - they're landing on my Desktop. Also a settings reset did not help.
+
+I want it do be the default path again. Any ideas are welcome. Btw. it's VS 2017 Enterprise with all latest updates.
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+I've found it by myself. 
+
+The filename and path can be changed under "Options" -
+Answer 2: 
+
+    
+    
+When you say 'default save location', is it the location you're prompted to save when you create a solution first?
+
+If so, go to Tools 
+Title: Having trouble programming wifi on esp8266
+Description: 
+    
+    
+                    
+So I think I'm doing fairly well so far, have the arduino IDE installed, add the ESP8266 module, manage to get an LED blinking on and off. Time to connect to the WIFI and do some stuff.
+
+Unfortunately, it all falls apart then. I get errors about undefined references to wifi_set_opmode, wifi_station_set_config and wifi_station_connect. Now, this isn't my first rodeo with C so I started looking for documentation on these functions and how they are included but can find nothing except people apparently quite happily using them. I've tried adding all sorts of #includes but nothing helps so far. So time to ask for a little help.
+
+Here is the code I am trying to run (pretty uneventful)
+
+#include &lt;user_interface.h&gt;
+
+#define LED_1 13
+
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(LED_1, OUTPUT);
+  const char ssid[32] = "qqqq";
+  const char password[32] = "wwww";
+
+  struct station_config stationConf;
+
+  wifi_set_opmode( STATION_MODE );
+
+
+  os_memcpy(&amp;stationConf.ssid, ssid, 32);
+  os_memcpy(&amp;stationConf.password, password, 32);
+  wifi_station_set_config(&amp;stationConf);
+  wifi_station_connect();
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  digitalWrite(LED_1, HIGH);
+  delay(500);
+  digitalWrite(LED_1, LOW);
+  delay(500);
+}
+
+
+My board selection is "Generic ESP8266 module"
+
+Here are the errors.
+
+sketch\blinktest.ino.cpp.o:(.text.setup+0x8): undefined reference to `wifi_set_opmode(unsigned char)'
+
+sketch\blinktest.ino.cpp.o:(.text.setup+0x10): undefined reference to `wifi_station_set_config(station_config*)'
+
+sketch\blinktest.ino.cpp.o:(.text.setup+0x14): undefined reference to `wifi_station_connect()'
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You need to notice that Arduino is not C, it's based on C++. So add your inclusion like below to use C SDK based functions.
+
+extern "C" {
+  #include "user_interface.h"
+}
+
+    
+    
+Answer 2: 
+
+    
+    
+Arduino IDE has code examples on menu 
+
+File &gt; Examples
+
+
+There is also example called WiFiWebClient where you need to change only your wifi ssid and password. 
+
+Save it to a new folder and you can make http requests to any site on Internet by modifying the address on the example. 
+
+Start from the examples of the manufacturer so you don't need to rely on outdated / partial tutorials. 
+    
+    
+Title: Hide the expand/collapse buttons in PhpStorm
+Description: 
+    
+    
+                    
+Is there a way to hide the expand/collapse buttons in PhpStorm?
+
+I'm talking about these buttons:
+
+
+
+I searched for it in the settings but I can't find it.
+
+I'm trying to clean up the editor and I don't like these buttons in the gutter.
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Settings/Preferences
+Editor | General | Code Folding
+Uncheck the Show code folding outline option
+
+
+
+    
+    
+Title: How do I change the language in Spring STS Dashboard
+Description: 
+    
+    
+                    
+I downloaded the mac version here https://spring.io/tools/sts/all 
+The language in the Dashboard seems a bit off. Has anyone experienced this issue?
+Screenshot of STS with Dashboard open.
+    
+
+        
+Answer 1: 
+
+    
+    
+This is happening due to a Font rendering issue while using JavaFx. There is already an issue open to track this -  https://issuetracker.springsource.com/browse/STS-4422. 
+A simple workaround is to switch to older dashboard until the issue is fixed. You can switch to old by going to Preferences--
+Title: Where are Automatic Type Acquisition typescript definition files saved?
+Description: 
+    
+    
+                    
+I'm in environment with blocked access to github, typing and I want to have enhanced intellisense in vscode.
+
+To do so I suppose I need to copy cached typescript definitions from machine that does have it for various needed npm packages. 
+
+So question where I can find those cached ata ts files?
+    
+
+        
+Answer 1: 
+
+    
+    
+Please consider an alternative, but here are the standard locations:
+
+
+Mac: ~/Library/Caches/TypeScript
+Windows: %LOCALAPPDATA%\Microsoft\TypeScript
+Linux: ~/.cache/typescript/
+
+
+As a better solution, if you cannot rely on automatic typings acquisition, you can manually manage type typings files. Here's some documentation information. For example:
+
+$ npm install --save @types/express
+
+
+This will download a copy of the express typings files to the normal node_modules folder your project. If you can't use npm, this is a much better place to copy files between.
+
+Typings files are required to builds TypeScript projects, but are only used to enhance VSCode IntelliSense with JavaScript projects.
+
+Hope that clears things up.
+    
+    
+Title: Spacemacs: How do I navigate between folders?
+Description: 
+    
+    
+                    
+This is probably a trivial question, but I cannot find any info on this. I have never used vim nor emacs before. I have completed the evil tutorial and I have played a little bit with SPC- commands. But I couldn't find anywhere how should I navigate between folders...
+
+I tried: :! cd ... but it didn't work.
+    
+
+        
+Answer 1: 
+
+    
+    
+You go into command mode (pressing : in evil-mode) and enter
+
+edit ~/projects/foobar
+
+when it`s recognized by helm projectile (git projects are recognized automatically, otherwise you have to define a projectile file), you will be later able to switch between projects, you once have opened, by pressing
+
+SPC p p
+
+also you can switch between recent open files with 
+
+SPC b b
+
+you can search those commands by pressing M-x (M stays for alt)
+    
+    
+Title: Re-enable &ldquo;this project is out of date&rdquo; Dialog Box
+Description: 
+    
+    
+                    
+How do I re-enable the "this project is out of date" Dialog Box in Visual Studio 2013 Professional?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can switch it back on at Tools -
+Title: How to add line seperators to PhpStorm?
+Description: 
+    
+    
+                    
+Does anyone know how to add a line separator in PhpStorm?
+
+I know it can be done and I see it a lot but for some reason I can't figure it out how to add one even after researching google for a couple hours. 
+
+Check out the image below, there are two line separators, one at the top and one in the middle.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Settings 
+Title: Does Selenium WebDriver for Java require some sort of IDE like Eclipse in order to run?
+Description: 
+    
+    
+                    
+In the Selenium Tutorial on Guru99 in the WebDriver installation tab (http://www.guru99.com/installing-selenium-webdriver.html), one of the installation steps says to install the Eclipse IDE. I was wondering if I could get around that and just run Selenium WebDriver for Java without using any sort of IDE.
+    
+
+        
+Answer 1: 
+
+    
+    
+You don't require any IDE to run your selenium scripts..
+
+however using IDE like eclipse will make your work easier and faster
+    
+    
+Answer 2: 
+
+    
+    
+There are two things:
+
+
+Designing the Selenium scripts: Initially when you are developing your selenium script, the IDE will make job easier for you when you want to setup things, (like adding the Selenium server jar to your Reference libraries etc.)
+Executing the Scripts: Once you are done with the designing of the script. Since you are using Java, You can export your project into a Jar (or an Executable jar) and run it directly like any other Jar file. While exporting into Jar, don't forget to choose the option of 'Export all required libraries into Jar'.
+
+
+Allowing us to use a programming language, Java in this case, Selenium allows us to play around and do almost all the stuffs one can do with the Core programming language.
+
+Hope it helps :)
+    
+    
+Answer 3: 
+
+    
+    
+However not a requirement for Selenium, it integrates nicely with testng and with testng plugin for Eclipse, it becomes much easier to run tests. Also, if you are using Java as the language for implementing the tests, Eclipse is great tool.
+    
+    
+Title: Salesforce error &ldquo;returnFieldData Types invalid at this location&rdquo; using Eclipse
+Description: 
+    
+    
+                    
+Hi I am new to Salesforce and Apex programming. I have installed eclipse with salesforce IDE. But it gives me following error (in image) when I try to create a new project using force.com
+(click here to see error screen)
+
+Error returned: 
+Unable to fetch organization details for 'username'
+Element {urn:partner.soap.sforce.com}returnFieldData Types invalid at this location
+
+FACTS:
+
+
+I am signed up on a developer.salesforce.com free login
+I have generated new Security token and am surely using the latest
+I am adding correct credentials because when I deliberately enter wrong info it gives me username/password type of error
+I have tried changing different environments when creating new project
+Using Eclipse 4.5.1
+Salesforce 16
+Profile is "System Administrator" 
+
+
+Please help, thank you!
+    
+
+        
+Answer 1: 
+
+    
+    
+I checked my dev sandbox - it runs Winter '16, which is v.35. I assume, your version of Force.com plugin is v.36. Try to uninstall it and install v.35. It might be because of versions incapability. 
+    
+    
+Title: How to disable the Missing &ldquo;use strict&rdquo; statement by jshint in Sublime 3?
+Description: 
+    
+    
+                    
+I have added "strict": false to the default .jshintrc, yet Sublime 3 still shows the "Missing 'use strict'" In-Editor warning. 
+
+Any help how to disable this warning?
+
+Here is my complete .jshintrc:
+
+
+{
+  // Details: https://github.com/victorporof/Sublime-JSHint#using-your-own-jshintrc-options
+  // Example: https://github.com/jshint/jshint/blob/master/examples/.jshintrc
+  // Documentation: http://www.jshint.com/docs/
+  "browser": true,
+  "camelcase": true,
+  "devel": true,  // to suppress 'console' and 'alert'
+  "esnext": true,
+  //"eqnull": true,
+  "expr": true, // This option suppresses warnings about the use of expressions
+  "globals": {
+    "_": false,
+    "angular": false
+  },
+  "globalstrict": false,
+  "strict": false,
+  "predef": ["angular"],
+  "quotmark": true,
+  "smarttabs": true,
+  "trailing": true,
+  "undef": true,
+  "unused": true
+}
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You need go to sublime text3 
+Answer 2: 
+
+    
+    
+As stated by andlrc, the simpliest solution would be to specify to jshint to skip strict restriction on this file by adding at the top of it :
+
+/* jshint strict: false */
+    
+    
+Title: JDeveloper mark occurrences automatically
+Description: 
+    
+    
+                    
+I know that Oracle JDeveloper has "mark occurences" function. It's possible to highlight desired variables/methods in 2 ways:
+
+
+Ctrl + Alt + H 
+From the menu Search -/li/olp/pp/p/div
+Answer 1: 
+
+    
+    
+From "Search" menu -/p/div
+Answer 2: 
+
+    
+    
+from tools 
+Title: Intellij Idea Code Completion not working
+Description: 
+    
+    
+                    
+I just started Intellij Idea ( version 13.1.4 )today and noticed code completion with ctrl + space doesnt work anymore. 
+If i'm typing like a class the automatic popup still appears and i can autocomplete this way, but if i close the popup with esc i cannot open it with ctrl + space anymore.
+
+My settings: 
+
+
+
+So Basic Completion is activated. 
+I tryed:
+
+
+file-/p/lilip/p/li/ulp/p/div
+Answer 1: 
+
+    
+    
+I had this same problem.  Ended up being caused by me not having a directory marked as Sources Root.
+
+To fix: right click on your src directory 
+Title: What is the Emacs equivalent to Vim command z-&lt;enter&gt; (put current line on top)
+Description: 
+    
+    
+                    
+In Vim there is a command to place the line where the cursor is on the top of the window... that is:
+
+z-Enter
+
+I know there is an equivalent but C-l (L) did not do it, it did what z-z does on vim. 
+Anybody?
+
+EDIT: Specifying OS and versions
+
+I'm running GNU Emacs 22.1.1 in OS X 10.9.3 and already tried C-l repeatedly without luck.
+    
+
+        
+Answer 1: 
+
+    
+    
+Recent Emacs
+
+Since 2007-11-16 (Emacs 22.2), you need to hit C-l several times because it cycles between different positionings:
+
+
+  C-l runs the command recenter-top-bottom (found in global-map), which
+  is an interactive compiled Lisp function in `window.el'.
+  
+  It is bound to C-l.
+  
+  (recenter-top-bottom &amp;optional ARG)
+  
+  Move current buffer line to the specified window line. With no prefix
+  argument, successive calls place point according to the cycling order
+  defined by `recenter-positions'.
+  
+  A prefix argument is handled like recenter':  With numeric prefix
+  ARG, move current line to window-line ARG.  With plainC-u', move
+  current line to window center.
+
+
+Older Emacs
+
+Are you sure you want to keep using an 6+ year old release?
+    
+    
+Answer 2: 
+
+    
+    
+In evil-mode, which combines the best of both worlds, you can also use z-Enter (or z-t).
+    
+    
+Title: Compile, build and execute Qb64 code in Geany?
+Description: 
+    
+    
+                    
+Good evening,
+
+I installed Geany 1.24 in my computer and I have also installed QB64 (I don't remember which version and the official site is down). OS: Windows XP.
+
+In Geany, when I write a program in Basic it doesn't compile it (aside from returning a succesfull compiled program). However, if I have an already compiled program it still doesn't compile it again (after making any change) but it lets me to execute it.
+
+So I was wondering if anyone knows of a setup for the "Set Build Commands" to properly run QB64 in Geany. I also have Free Pascal IDE 2.6.4 installed and Geany recognized it on the first run and can compile and execute pascal code succesfully.
+
+Thanks in advance,
+    
+
+        
+Answer 1: 
+
+    
+    
+Geany is only supporting FreeBasic in its latest 1.24 version out of the box -- not sure how similar these are.  You might get QB64 running by updating/changing file definitions. A good starting point would be the manual. If this not is working, you might like to patch Geany based on the hacking guide. There is a short checklist what to do to add a new file type from scratch.
+
+If QB is quiet similar to FreeBasic, it might be enough to change filettype_extensions.conf to make your QB-scripts recognized as FreeBasic and update the build strings on menu Build- /p/div
+Answer 2: 
+
+    
+    
+You need to tell Geany to run QB64.EXE with the -x command line parameter:
+QB -x yourfile.bas
+In Geany, you need to go to the Tools menu, select Configuration files select Filetype configuration, Programming languages, filetypes.freebasic.
+In filetypes.freebasic, change
+fbc -w all "%f"
+to
+qb64 -x "%f"   
+    
+    

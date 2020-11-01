@@ -1,0 +1,1998 @@
+Title: C++ VS2010 difference between &ldquo;Multihreaded DLL&rdquo; and &ldquo;Multithreaded&rdquo;
+Description: 
+    
+    
+                    
+I created a DLL in VS2010 and used "Multithreaded" under C/C++-
+Answer 1: 
+
+    
+    
+The multithreaded option will link the CRT statically, whereas multithreaded DLL will link to a dynamic library.
+
+With the former option, you'll get a larger binary, but you won't have to install Visual Studio redistributables everywhere you use it.
+    
+    
+Title: Selenium IDE with XPath to identify cell in table based on other column
+Description: 
+    
+    
+                    
+Please take a look at the snippet of html below:
+
+&lt;tr class="clickable"&gt;
+&lt;td id="7b8ee8f9-b66f-4fba-83c1-4cf2827130b5" class="clickable"&gt;
+&lt;a class="editLink" href="#"&gt;Single&lt;/a&gt;
+&lt;/td&gt;
+&lt;td class="clickable"&gt;£14.00&lt;/td&gt;
+&lt;/tr&gt;
+
+
+I'm trying to assert the value of td[2] when td[1] contains "Single". I've tried assorted variants of:
+
+//td[2][(contains(text(),'£14.00'))]/../td[1][(contains(text(),'Single'))]
+
+I've used similar notation elsewhere successfully - but to no avail here... I think it's down to td[1] having the nested  element, but not sure. 
+
+Can someone enlighten as to what I'm getting wrong? :)
+
+Cheers!
+    
+
+        
+Answer 1: 
+
+    
+    
+What about:
+
+//tr[contains(td[1], "Single")]/td[2]
+
+
+First select the &lt;tr&gt; containing the &lt;td&gt; matching the text, and then select td[2].
+
+Then,
+
+contains(//tr[contains(td[1], "Single")]/td[2], "£14.00")
+
+
+should return True.
+
+Or, closer to the expression you tried, you could test if this matches:
+
+//tr[contains(td[1], "Single")]/td[2][contains(., "£14.00")]
+
+
+See @JensErat's answer to find xth td with td contains in same tr xpath python .
+    
+    
+Answer 2: 
+
+    
+    
+Why not make it simple on yourself, do the if statement in your code.  Psuedocode:
+
+
+Select the top level tr.
+Find first td within tr, check to see if it contains Single.
+If it does, assert that it contains £14.00
+
+
+Alternatively, you could just get the text of the top level tr and perform the checks on that text.
+    
+    
+Title: How to boost Eclipse and Glassfish speed to development?
+Description: 
+    
+    
+                    
+Recently I bought a good computer with processor i5 3570k and 16GB of RAM, I wonder if there's a way to increase my Eclipse and Glassfish speed, to they can work together to startup and do the hot deploy while I'm developing my applications.
+
+This is my eclipse.ini
+
+-nosplash
+-vmargs
+-Xincgc
+-Xss500k
+-Dosgi.requiredJavaVersion=1.6
+-Xms512m
+-Xmx1024m
+-XX:NewSize=8m
+-XX:PermSize=1024m
+-XX:MaxPermSize=1024m
+-XX:MaxPermHeapExpansion=10m
+-XX:+UseConcMarkSweepGC
+-XX:CMSInitiatingOccupancyFraction=70
+-XX:+UseCMSInitiatingOccupancyOnly
+-XX:+UseParNewGC
+-XX:+CMSConcurrentMTEnabled
+-XX:ConcGCThreads=2
+-XX:ParallelGCThreads=2
+-XX:+CMSIncrementalPacing
+-XX:CMSIncrementalDutyCycleMin=0
+-XX:CMSIncrementalDutyCycle=5
+-XX:GCTimeRatio=49
+-XX:MaxGCPauseMillis=20
+-XX:GCPauseIntervalMillis=1000
+-XX:+UseCMSCompactAtFullCollection
+-XX:+CMSClassUnloadingEnabled
+-XX:+DoEscapeAnalysis
+-XX:+UseCompressedOops
+-XX:+AggressiveOpts
+-XX:+ExplicitGCInvokesConcurrentAndUnloadsClasses
+
+
+Any recommendations about it ?
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse and Glassfish are just containers, their tuning depends heavily on how you use them (number of projects in eclipse, number of apps in glassfish, ...). However, I see some weird JVM options in your eclipse.ini. Here are the ones I would simply remove :
+
+
+-Xincgc means -XX:+UseConcMarkSweepGC which is a low pause GC that implies a high overhead compared to parallel collectors. I would switch to parallel collectors.
+-XX:NewSize=8m means that the young generation size is 8MB, this is really small and against the weak generational hypothesis. Remove this option and let the JVM adjust heap size depending on how you use the application.
+-XX:PermSize=1024m is equal to MaxPermSize. Setting min=max is a nonsense. Remove the minimum size and let the JVM manage permanent generation size.
+-XX:+UseConcMarkSweepGC, cf 1.
+-XX:CMSInitiatingOccupancyFraction=70 -XX:+UseCMSInitiatingOccupancyOnly -XX:+CMSConcurrentMTEnabled -XX:+CMSIncrementalPacing -XX:CMSIncrementalDutyCycleMin=0 -XX:ConcGCThreads=2 -XX:CMSIncrementalDutyCycle=5 -XX:+UseCMSCompactAtFullCollection -XX:+CMSClassUnloadingEnabled -XX:+ExplicitGCInvokesConcurrentAndUnloadsClasses are CMS related. Cf 1, I would switch to parallel collectors so you should get rid of those options.
+-XX:+UseParNewGC -XX:ParallelGCThreads=2 means that you were giving 2 threads for a parallel collector in the young generation (8 MB). This won't really do anything.
+-XX:GCTimeRatio=49 -XX:MaxGCPauseMillis=20 -XX:GCPauseIntervalMillis=1000 here you are saying "I want my GC to take les than 49% of my time, with a pause of maximum 20ms and at least 1 second between each pause". You are asking for very short GC that will happen very often. Probably not what you want.
+
+
+You may notice that these are almost all your JVM options. This is correct :)
+
+Try this configuration and let us know if it solved your problem :
+
+-nosplash
+-vmargs
+-Xss500k
+-Dosgi.requiredJavaVersion=1.6
+-Xms128m
+-Xmx1024m
+-XX:MaxPermSize=1024m
+-XX:+UseParallelGC
+-XX:+UseParallelOldGC
+-XX:+DoEscapeAnalysis
+-XX:+UseCompressedOops
+-XX:+AggressiveOpts
+-Xloggc:gc.log
+-XX:+PrintGCDetails
+
+
+Sources :
+
+
+http://www.oracle.com/technetwork/java/javase/gc-tuning-6-140523.html
+http://jvm-options.tech.xebia.fr/
+
+    
+    
+Answer 2: 
+
+    
+    
+Do you have an SSD? If not buying one will really improve your performance experience because development means a lot of IO.
+    
+    
+Answer 3: 
+
+    
+    
+If you want to speed up your development process, i think you are looking at the wrong place.
+The performance of your system should be more than enough. Maybe you could raise the -Xmx a bit, depending on your application. Maybe an ssd would boost the performance too.
+
+I for myself, could speed up my development with jrebel(http://zeroturnaround.com/software/jrebel/). This is a tool that allow you hot replacement of nearly any part of your application. So you do not have to redeploy the whole application every time. I know it costs money, but it paid of quickly. Maybe there are also some free alternatives i don't know yet. 
+    
+    
+Answer 4: 
+
+    
+    
+win/linux/mac: you can put JDK into read-only RAM disk and run it from there
+
+linux: you could use anything-sync-daemon to keep both Eclipse and Glassfish (and possibly maven local repository ".m2") in RAM and synchronize it into HDD/SSD periodically
+
+I also recommend reading this:
+
+Tip 1 : Always run the latest JDK and Eclipse.
+Tip 2 : Tune Eclipse Preferences
+Tip 3 : Keep your JDK on a RAM Disk
+Tip 4 : Tweak your eclipse.ini
+Tip 5: Get your anti-virus outta here
+Tip 6: Keep SVN and GIT out of Eclipse
+Tip 7: Use your keyboard
+
+
+at http://www.nicolasbize.com/blog/7-tips-to-speed-up-eclipse/
+    
+    
+Title: Retrieving location of currently opened file or project in netbeans
+Description: 
+    
+    
+                    
+I'm using a custom button in netbeans that references a file in the open project. However, I'm having an issue retrieving the location of that file based upon the open project.
+Therefore, I need something that can return the location of the project I'm working in or the location of the file I'm working with.
+In essence, I need to be able to call
+
+String projectLocation = methodOrVarToGetOpenProjectLocation();
+
+
+I can't use the current directory, because the plugin that I've created with the button doesn't live in the same place as the project I'm working in.
+
+Any thoughts?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can find the Project directory like so:
+
+Lookup lookup = Utilities.actionsGlobalContext(); 
+Project project = lookup.lookup(Project.class);
+FileObject projectDir = project.getProjectDirectory();
+String projectLocation = projectDir.getPath();
+
+
+The classes are all from the NetBeans API: Utilities, Lookup, Project, and FileObject
+
+If you don't want to just use the current Project you can use the OpenProjects class.  You can get the first open Project as follows:
+
+Project project = OpenProjects.getDefault().getOpenProjects()[0];
+
+
+Depending on what your button does it might make sense to use the Main Project:
+
+Project mainProject = OpenProjects.getDefault().getMainProject();
+
+    
+    
+Answer 2: 
+
+    
+    
+Dave Webb's answer above took care of getting the project location. However, there was an issue in that if the project desired wasn't selected directly before clicking the button, it would not consider that project to be the main project.
+For example, doing an edit in the file and then clicking the button would no longer find the project, because the project name was not the last thing clicked.
+I found some code that grabbed the open file name:
+
+TopComponent activeTC = TopComponent.getRegistry().getActivated();
+DataObject dataLookup = activeTC.getLookup().lookup(DataObject.class);
+String filePath = FileUtil.toFile(dataLookup.getPrimaryFile()).getAbsolutePath();
+
+
+I used this in an if statement in the case of project being null (after the second line of his first block of code).
+
+That gives me the path to the file I was working in, and then it took a short amount of working with the string to get the location of the project.
+    
+    
+Title: how can i find caller from specific line in trace mode in delphi?
+Description: 
+    
+    
+                    
+happy new solar year.
+
+in delphi IDE, we can put a breakpoint on specific line,
+then when run in debug mode, program stops on that.
+consider a method called by another. how we can find who calls method that we are in it by breakpoint?
+i reallize it is possible by hitting Ctrl+Alt+C and in assembly mode track back..
+is there any easier way to find out?
+
+thanks alot.
+    
+
+        
+Answer 1: 
+
+    
+    
+Use the Call Stack window. Use View-&gt;Debug Windows-&gt;Call Stack from the main menu, or press Ctrl+Alt+S
+
+
+    
+    
+Title: LiveCode IDE utility needs to complete task uninterrupted
+Description: 
+    
+    
+                    
+A utility plugin running in the LiveCode IDE needs to complete a database update task every so often.  It's important that the task isn't interrupted by the user - who may be working on another stack.  Is there a way to disable the standard ctrl + period and avoid the task being stopped half way through it's cycle?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use the global 'allowInterrupts' property for this:
+
+
+  set the allowInterrupts to false
+  ... task you don't want interrupted ...
+  set the allowInterrupts to true
+
+
+While this property is false, Ctrl-Period will have no effect.
+    
+    
+Title: which is the correct PHPdoc for methods of objects which are properties in phpstorm?
+Description: 
+    
+    
+                    
+I'm new to PHPStorm and I imported an existing project in this IDE. Now I receive many warnings like 
+
+
+  Method 'query' not found in class
+
+
+I read about using PHPDoc-blocks in order to declare the origin of variables which are not defined in the current class, but I cannot get out how I should do it for this situation:
+
+class loginModel extends Model{
+  public function checkLogin(){
+    [...]
+    if($this-&gt;db-&gt;query($sql)){[...]} //Warning as stated above
+    [...]
+  }
+}
+
+
+$this-/strong/pprecode/code/prepbr //p/div
+Answer 1: 
+
+    
+    
+class Model{
+
+    /**
+     * @var PGSQL
+     */
+    protected $db;
+
+    private function connect(){
+        $this-&gt;db = new PGSQL();
+    }
+}
+
+
+Docblocks work on properties too
+    
+    
+Title: building a project in emacs
+Description: 
+    
+    
+                    
+I'm  new to emacs and I'm trying to make it work as an IDE like code blocks which I've been using quite a lot so i downloaded and installed the cedet package and SrSpeedbar but I have no clue how to build a project in emacs the same way codeblocks or other IDEs do. so any link to a package that does that or a easy method would be very helpful. thanks in advance
+    
+
+        
+Answer 1: 
+
+    
+    
+There is the EDE package in the CEDET, that provides some functionality for building projects, but this depends on which language &amp; build tool you're using.  If you're build tool isn't supported directly by EDE, you can still use ede-generic-project, and specify compilation command in project's local variables - see EDE information on more details.
+
+You can find some information for start in my article on CEDET.
+    
+    
+Answer 2: 
+
+    
+    
+Maybe take a look at: 
+
+
+emake: https://github.com/proofit404/EMake
+quickrun: https://github.com/syohex/emacs-quickrun
+
+
+Currently I'm not using cedet and these two packages, but hope that help.
+    
+    
+Title: IDE for Objective-C and iOS Development other than XCode
+Description: 
+    
+    
+                    
+Is there an IDE which specifically supports Objective-C and has linked with Cocoa Touch (optionally Cocoa) build tools for easy writing, building and running of programs?
+
+I am looking to switch from XCode because XCode is buggy and crashes when I load files which has thousands of lines of code. Also the beautifier isn't good. It's not that performant.
+
+It doesn't need to come with Interface Builder. I just need to write Objective-C in the IDE. More like Aptana if you have been a web developer.
+    
+
+        
+Answer 1: 
+
+    
+    
+Only for writing Obj-C Code, you can use any text editor. 
+
+You can not draw any UI like IB, but you can code to construct any of the UI elements.
+
+However I would suggest to use BBEdit. 
+
+Or if you wish you can go for any C / C++ / Java IDE. But it wont compile for compiling you need to to switch back to XCode. 
+
+Or you can compile through terminal by giving the following command.
+
+xcodebuild -project "delta.xcodeproj" -target "delta" -configuration Release OBJROOT="/Users/anoop/desktop/delta" SYMROOT="/Users/anoop/desktop/delta"
+
+    
+    
+Answer 2: 
+
+    
+    
+Jetbrains have AppCode http://www.jetbrains.com/objc/. it is an IntelliJ based alternative for Xcode but depends on an installed Xcode for IB and CoreData. 
+    
+    
+Answer 3: 
+
+    
+    
+I feel your pain but even if you find an IDE other than XCode you will find yourself coming back to XCode to do something anyway such as the Interface Builder, etc.
+Also, unfortunately, AppCode also not perfect. There are scenarios it doesn't cover yet that might hinder you from migrating or cause you to do heavy hacks to get it to work.
+
+However, I have a project with hundreds of files including source files and it works fine for me. I do admit that it crashes from time to time but there is nothing you can do about it. Maybe try refactoring your project to reduce the size of your source files. I did find having large text files can cause it to go bonkers. But it is a good practice anyway to have small class files. Maybe what you are describing is a code smell of bloated classes?
+
+I'm not meaning to offend you or anything. It's just another perspective for you to look at. Use it or don't use it.
+    
+    
+Title: Any tool/IDE/script to limit my C code to a maximum of 80 characters per line?
+Description: 
+    
+    
+                    
+I have so much C code. I need to edit that code to follow some coding line tips. So I need to limit all my C code to a maximum of 80 characters per line. Instead of editing each line of code, how can I perform this transformation with a tool/IDE/script?  
+    
+
+        
+Answer 1: 
+
+    
+    
+One such tool I know of is indent on Linux. It can be used to format your code in any style. Example from the man page:
+
+
+  The  Linux style is used in the linux kernel code and drivers:
+  
+  indent test/metabolism.c -linux
+
+
+Another switch, more specific to your questions:
+
+
+  -ln, --line-lengthn
+  
+  Set maximum line length for non-comment lines to n.
+
+    
+    
+Title: VB.NET: Silently failing?
+Description: 
+    
+    
+                    
+I don't like the fact that VB.NET is silently failing on an operation if something goes wrong:
+
+    Dim n(10) As String
+    n(11) = "blah"
+
+
+I do not want to handle such situation with a Try/Catch/Finally, that would be an overkill. 
+I will stumble over such situations while testing my application during development.
+
+But the fact that VB.NET simply skips over this error is a bit annoying.
+Can I change the IDE so that it breaks in this line?
+
+Thank you very much!
+    
+
+        
+Answer 1: 
+
+    
+    
+Click Debug, Exceptions, then check all of the checkboxes.
+
+The debugger will not break whenever any exception is thrown anywhere, even if it is subsequently handled.
+    
+    
+Title: Can Sublime text do this?
+Description: 
+    
+    
+                    
+I would like to switch from Komodo IDE to Sublime Text but these two things are holding me back:
+
+
+Can I CTRL+click on a function to get to its definition?
+Is there any decent PHP/WordPress debugging within Sublime?
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Check out the ctags plugin:
+
+https://github.com/SublimeText/CTags
+
+It will give you the ability to click through the definitions and such. Rubymine and PHPStorm do this very, very well, but ctags will get pretty close.
+    
+    
+Answer 2: 
+
+    
+    
+I think the 'Goto Anything' feature of Sublime Text is what you are looking for: http://www.sublimetext.com/
+    
+    
+Answer 3: 
+
+    
+    
+Even better: SublimeCodeIntel was ported from Komodo IDE. I use it regularly and find it to be pretty good.
+
+A quick google search for "PHP debugger sublime text" yielded SublimeXdebug
+    
+    
+Answer 4: 
+
+    
+    
+YES.
+
+Please look for bendras.co.uk blog post about Sublime Text 3 as C++ IDE by Paulius Zaliaduonis. You will find how to do it for C++. I saw there are Sublime PHP Companion, and XDebug Client.
+
+All packages should work on most platforms: Windows, Linux, iOS?
+    
+    
+Title: Is there a Textmate equivalent of &ldquo;Format indenting of selected code&rdquo; in Sublime Text 2?
+Description: 
+    
+    
+                    
+In Textmate, the keyboard shortcut ⌘⌥[ properly indents all the nesting on selected code.
+
+Is there a similar option in Sublime Text 2? It's the only thing holding me back from switching and I've checked all documentation to try and find something similar.
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm not sure if Sublime Text 2 has a generic code formatter, but there are a lot of really good packages out there that will provide various formatting for different languages.
+
+Take a look at Package Control (used to manage plugins for Sublime).
+http://wbond.net/sublime_packages/community
+
+For formatting Ruby there's a pretty good package called BeautifyRuby. https://github.com/CraigWilliams/BeautifyRuby
+    
+    
+Answer 2: 
+
+    
+    
+What you are actually looking for is "reindent". It's under the Edit -
+Title: Can I make Intellij Idea 11 IDE aware of assertEquals and other JUnit methods in Grails 2.0.x unit tests?
+Description: 
+    
+    
+                    
+I find it very odd that with such excellent Grails integration, Idea does not recognize standard JUnit assertion methods in Grails unit tests.  I created a brand new project and made one domain class with corresponding test to make sure it wasn't something weird with my larger project.  Even if I add a @Test annotation, the IDE does not see any assertion methods
+
+@TestFor(SomeDomain)
+class SomeDomainTests {
+
+    @Test //thought adding this, not needed for Grails tests, would help but it doesn't
+    void testSomething() {
+       assertEquals("something", 1, 1);  //test runs fine, but IDE thinks this method and any similar ones don't exist
+    }
+}
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I have created an issue in IntelliJ bugtracker: http://youtrack.jetbrains.com/issue/IDEA-82790. It will be fixed in IDEA 11.1.0
+
+As workaround you can add "import static org.junit.Assert.*" to imports.
+
+Note: using "assert 1 == 1 : 'message'" is preferable than "assertEquals('message', 1, 1)" in groovy code.
+    
+    
+Answer 2: 
+
+    
+    
+Idea has problems if you use 'def' to define a variable (so it's type is not known) and then you try to pass it to a Java method which is strongly typed. Because it can't infer the type.
+
+So it will give a message with words to the effect of "there is no method assertEquals() that takes arguments with type String, null, null".
+
+I wouldn't expect this message in the example you give (because you are using ints directly, not a dynamically-typed variable) but I thought you might have missed it when trying to create a simple example code snippet for the question.
+    
+    
+Answer 3: 
+
+    
+    
+With the @TestFor annotation an AST will add methods to you test class and IDEA does not catch these methods. 
+
+You have two options:
+
+
+Make the test class extends GrailsUnitTestCase.
+Add dynamic method to your test class.
+ 
+
+    
+    
+Title: Editing perl scripts on one server, but executing on another
+Description: 
+    
+    
+                    
+I have a Perl script which is currently located in my home directory on a Linux machine called server1. This server does not have a GUI, and I have to use vi/vim to edit files.
+
+I am interested in using an IDE such as Padre or Eclipse instead since I have a hard time with vi/vim.
+
+I have linux virtual machine(server2) which has a GUI and IDE installed.
+
+Is it possible for me to map my home directory from server1 to server2 even if my home directory is password protected?
+
+If so, when I edit the Perl script from the IDE on server2, will it execute my script on server1?
+
+Basically, I am looking for a way to edit and launch scripts on one server(server 2),
+but execute them on another(server1). 
+    
+
+        
+Answer 1: 
+
+    
+    
+Look up mount command. You can set it up to be able to read the remote directory on your development machine. See NFS or sshfs 
+    
+    
+Answer 2: 
+
+    
+    
+Ed has already mentioned sshfs so you can mount a remote filesystem.
+
+However, consider why you think you need to edit the file remotely. Why not do the development locally and deploy when it's ready? A good development process should support that. I tend to work locally, commit to whatever version control I'm using, and when I'm ready to test remotely I checkout the latest sources. I can do whatever I like on my local machine.
+    
+    
+Title: Visualize Classes in Java Type Hierarchy, which implement different functions?
+Description: 
+    
+    
+                    
+How to easily visualize a Class in Java Type Hierarchy, which implement different functions. 
+With multiple layers of inheritence finding the correct Class which implements a function gets complicated. Ho we have a feature in eclipse to support it ? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Depending what you really need - an UML diagram, an inheritance structure?
+
+There are plenty of tools you can use, ranging from those that will create a documentation with UML diagrams for every class to plugins and some funny implementations. Take a look at those from this list:
+
+
+UDoc - dynamic visualization similar to UML diagrams.
+yWorks - doclet for JavaDoc that will output UML diagrams.
+SCG - software cartography is an amazing visualization tool with Eclipse plugin.
+
+
+But I guess what you really need, in case of Eclipse, is Implementors Plugin with a possible addition of Call Hierarchy Plugin. But it's just my guess...
+    
+    
+Answer 2: 
+
+    
+    
+UML is the usual visualization tool.  I doubt that it'll help much here.
+
+It's easy to do in IntelliJ: it shows a symbol in the left gutter that shows me all the classes that implement a given method if I click on it.
+    
+    
+Title: Dojo integration with editor for autocompletion
+Description: 
+    
+    
+                    
+I am looking for any way or any editor so that I can get auto-completion of Dojo functions in my IDE. I did not find any. I am very handy with Eclipse. But i did not find any plugin for this kind of support. If anyone know anything please let me know. or If anyone know any IDE or Editor which can support this kind of auto-completion, please let me know.
+    
+
+        
+Answer 1: 
+
+    
+    
+Komodo and Komodo Edit do : http://www.activestate.com/komodo-edit
+    
+    
+Answer 2: 
+
+    
+    
+JetBrains makes a tool called WebStorm which comes highly recommended:
+
+http://www.jetbrains.com/webstorm/
+
+If you're working in the J2EE world, you can get these features integrated with IDEA, which is their Java IDE.
+    
+    
+Answer 3: 
+
+    
+    
+I believe Aptana, which is based on Eclipse, supports it. It can be used as a standalone application or an Eclipse plugin. See the following for further guidance.
+
+https://wiki.appcelerator.org/display/tis/Using+JavaScript+Libraries
+
+https://wiki.appcelerator.org/display/tis/JavaScript+Library+Support
+    
+    
+Title: Where are all my files on eclipse? They were on the left side of the page?
+Description: 
+    
+    
+                    
+On eclipse ide i had a file system on my left. Now its just not there. How do i get it back like i dont want the folders i want the files in the folder (The whole eclipse directory set-up) thanks so much!
+    
+
+        
+Answer 1: 
+
+    
+    
+If your perspective is set correctly (i.e. the Java perspective which you can set on the top right) and it is still not showing the default view, go to Window ---/ppcode/code
+Answer 2: 
+
+    
+    
+Go to Window /p/div
+Title: C++ codeblocks ide errors?
+Description: 
+    
+    
+                    
+I have codeblocks installed on an HD, the compiler works fine. The reason its on an HD is because my school doesn't like people installing things onto the computers... 
+
+main.cpp works fine. If I coded everything in this I wouldn't run into any problems. The only problem is, if I add a class to the project I get several errors.
+
+
+
+I touched the classes at all, they compile fine on my computer at home. Is it because the project is not saved in a proper directory/folder? I have a folder for the project inside the codeblocks folder on the HD, so it should be able to find the theclass.h and theclass.cpp files.
+
+If main.cpp also didn't work, it would make more sense. But why is it that the new class won't work?
+    
+
+        
+Answer 1: 
+
+    
+    
+It looks like theclass.h is in the include directory, a sibling directory of src. You should either get both files in the same directory, or use #include "../theclass.h" if you absolutely must keep the files where they are.
+    
+    
+Answer 2: 
+
+    
+    
+yeah actually codeblocks has this error what you have to do is get the classes namely the .cpp and the .h out of the folder and get them in the root of the project so cut them and paste them where the main.cpp is and it should work also what you can do is put #include "source/theclass.cpp" and u can also solve it that way(also do the same for the .h
+    
+    
+Answer 3: 
+
+    
+    
+Codeblocks moves the files to seperate include and source directories. This is why #include "theclass.h" leads to an error.
+    
+    
+Title: Where does Eclipse install itself? - to_do
+Description: 
+    
+    
+                    
+http://www.eclipse.org/downloads/
+
+Eclipse IDE for C/C++ Developers (includes Incubating components)
+    
+
+        
+Answer 1: 
+
+    
+    
+What you downloaded is the application itself. It does not have an installer so just copy the folder you extracted to wherever you want. To uninstall it just delete the folder.
+    
+    
+Answer 2: 
+
+    
+    
+Time marches on! I just downloaded the latest (Neon) for Android for Mac and it downloaded an installer, which installed it to /Users/Willy/eclipse/android-neon by default. Super-smooth install!
+    
+    
+Title: Which Eclipse download for developing for Java ME
+Description: 
+    
+    
+                    
+I am new in Java ME. I need to download J2ME with Eclipse and follow the guide from the j4me Wiki. The problem is when I jump to the official Eclipse site, I see approximately 12 options. Which one do I need?
+    
+
+        
+Answer 1: 
+
+    
+    
+Download the Eclipse pulsar. Its mobile platform version of eclipse. Then download the sun java toolkit or Java ME SDK and install it. After that you need to integrate with that SDK with Eclipse. Just follow the following step.
+
+window -&gt; preferences -&gt; Java ME -&gt; Device Management -&gt; Manual Install -&gt; select SDK workspace -&gt; finish.
+
+
+Edit: J4ME is development framework for Java ME. If you looking for 3rd party development framework for Java ME, I suggest to use LWUIT. 
+    
+    
+Answer 2: 
+
+    
+    
+To quote from the page you linked to:
+
+
+  The base installation package for Java development is all you need.
+
+
+So the one labeled "Eclipse IDE for Java Developers" should be fine.
+    
+    
+Title: Aptana Can Not find the Ruby Executable
+Description: 
+    
+    
+                    
+When I try to run any ruby code, I get a pop up that Says "Launching differences2.rb' has encountered a problem.  Unable to find a Ruby executable.
+
+When I run 'gem environment' from inside Aptana I get this:
+
+gem environment
+RubyGems Environment:
+  - RUBYGEMS VERSION: 1.8.6
+  - RUBY VERSION: 1.9.2 (2011-07-09 patchlevel 290) [x86_64-linux]
+  - INSTALLATION DIRECTORY: /home/adamar/.rvm/gems/ruby-1.9.2-p290
+  - RUBY EXECUTABLE: /home/adamar/.rvm/rubies/ruby-1.9.2-p290/bin/ruby
+  - EXECUTABLE DIRECTORY: /home/adamar/.rvm/gems/ruby-1.9.2-p290/bin
+  - RUBYGEMS PLATFORMS:
+    - ruby
+    - x86_64-linux
+  - GEM PATHS:
+     - /home/adamar/.rvm/gems/ruby-1.9.2-p290
+     - /home/adamar/.rvm/gems/ruby-1.9.2-p290@global
+  - GEM CONFIGURATION:
+     - :update_sources =&gt; true
+     - :verbose =&gt; true
+     - :benchmark =&gt; false
+     - :backtrace =&gt; false
+     - :bulk_threshold =&gt; 1000
+  - REMOTE SOURCES:
+     - http://rubygems.org/
+
+
+When I run 'ruby -v' from inside Aptana I get this:
+
+ruby -v
+ruby 1.9.2p290 (2011-07-09 revision 32553) [x86_64-linux]
+
+
+When I run 'rvm use 1.9.2' from inside Aptana I get :
+
+rvm use 1.9.2
+Using /home/adamar/.rvm/gems/ruby-1.9.2-p290
+
+
+I restarted and tried again after each of those commands, I also tried this:
+
+rvm use 1.9.2 --default
+
+
+Can anyone make a suggestion as to what I can do?
+    
+
+        
+Answer 1: 
+
+    
+    
+It's not clear from your question which version of Aptana you're using. If you're using Aptana Studio 3.x, then it should pick up your environment setup in .bashrc and your typical shell setup. We basically just search PATH for the location of the ruby executable. It'd be useful to see the output of "echo $PATH" inside the Terminal view in the IDE and outside the IDE to see if they differ. However it seems like it's already finding it when you run the "ruby -v" command in the shell, so I'm not really clear on what the issue might be.
+
+You can try turning on debug level logging inside Preferences 
+Answer 2: 
+
+    
+    
+I had the same problem and "solved" it by removing all references to Cygwin from my PATH. It must not be parsing it correctly when Cygwin goes in and changes your path.
+    
+    
+Answer 3: 
+
+    
+    
+I had the same problem working on Ubuntu with rvm, so I created a symbolic link, like sudo ln -s ~/progs/Aptana\ Studio\ 3/AptanaStudio3 /usr/local/bin/aptana and from a terminal execute aptana &amp;
+    
+    
+Answer 4: 
+
+    
+    
+Try going to the folder where Aptana is installed and edit the file "studio3". 
+Add this in the begging
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] &amp;&amp; source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session as a function
+
+This will force it to load your rvm path when opening Aptana. You can then run open it by using ./studio3
+
+I noticed that when running 
+    
+    
+Answer 5: 
+
+    
+    
+Aptana terminal loads the .aptanarc instead of .bashrc on start up. You can adjust the path configurations for rbenv like this
+
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' &gt;&gt; ~/.aptanarc
+echo 'eval "$(rbenv init -)"' &gt;&gt; ~/.aptanarc
+
+
+I found this on another site and it helped my Apatana find the ruby executable.  I would cite the author, but there is no name.
+    
+    
+Title: A tool to format a long minified JavaScript code (jCarousel)
+Description: 
+    
+    
+                    
+I'd like to format JavaScript code of jCarousel to see what it does (to be able to debug it, and solve my problem). Visual Studio doesn't format it. Do you know any tool (free if you wish) to format long JS files?
+
+This is how jCarousel minified code looks like:
+
+
+
+
+
+this is what a formatted JS file:
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The source code is available.. reading the project website sometimes helps.
+
+https://github.com/jsor/jcarousel
+
+Besides that, the unminified version is even included in the download archive...
+    
+    
+Title: Find Visual Studio version with MFC
+Description: 
+    
+    
+                    
+Is there a Visual Studio express version (free) with MFC included ?
+    
+
+        
+Answer 1: 
+
+    
+    
+Don't think so. Sorry. I had to get the premium version when I needed MFC. Let's hope they Microsoft includes MFC in the free version of the next release.
+    
+    
+Answer 2: 
+
+    
+    
+There are no Express editions that come with MFC. You need at least Standard or above.
+    
+    
+Title: Is it possible to download Eclipse Marketplace as a plugin?
+Description: 
+    
+    
+                    
+I have installed Eclipse SDK, which doesn't come with Eclipse Marketplace. Is it possible to download Eclipse Marketplace as a plugin?
+
+From what it looks from their site, it seems as we can only get it when downloading specific versions of Eclipse.
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+See How do I install Eclipse Marketplace in Eclipse Classic?
+    
+    
+Answer 2: 
+
+    
+    
+As far as I know, the Classic distribution does not contain the Marketplace client (and that is the only such official distribution). However, it is available for download.
+
+Select Help/Install new software... from the menu, select the Juno update site (http://download.eclipse.org/releases/juno), and then look for the Marketplace client - it is in the General Purpose Tools category.
+    
+    
+Title: Working comfortably in C using Eclipse
+Description: 
+    
+    
+                    
+Umm, I've been using Eclipse for Java development and I am trying to use it now for making C apps.
+
+The problem is that I don't feel too comfortable with it. Namely:
+
+
+I need to include headers by hand, i.e. not automatically.
+I've never seen a 'quickfix' to be available for any problem.
+I can't spot the problem before it has been compiled.
+
+
+Any ideas on how I could make myself feel a bit better?
+
+Sorry if my questions are rather stupid, but getting the way down from Java to C is rather hard on me.
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Yeah its a little harder to go from Java to C, Java didn't exist when I was programming C. 
+
+Some comments:
+
+Automatically including headers is difficult in C
+See #include headers in C/C++
+
+You could use lint to catch some errors...
+http://syncor.blogspot.com/2010/03/using-lint-in-eclipse-with-netburner.html
+
+Consider doing TDD using something like gTest, and automate your build process.
+http://www.slideshare.net/amritayan/test-driven-development-in-c, might help you develop a different rhythm. 
+
+gtest in Eclipse ... https://github.com/ospector/gtest-gbar
+
+Have fun! 
+    
+    
+Answer 2: 
+
+    
+    
+On Mac OS XCode is an option.
+
+On startup:
+
+New Application -&gt;  Command Line Tool -&gt;Type C
+
+
+And Bob is your proverbial (aunty).
+
+You get all the XCode short cuts &amp; hit ESC in your editor window for code completion.
+
+Hmmm.... think I'll start using it actually.  ;-)
+    
+    
+Answer 3: 
+
+    
+    
+re: 
+
+
+  I can't spot the problem before it has
+  been compiled.
+
+
+You can get immediate feedback on syntax errors. They show up as question marks in the left gutter and yellow squiggly lines under the error. This happens immediately. Make sure under Window-
+Title: When I add a new Form in the Ide, it gets default properties, but I always use a different font and a different background color
+Description: 
+    
+    
+                    
+Adding a new Form in the project creates a default form with default properties. I have to change them manually, but in all my project I have the same properties (font, background color, etc.). 
+
+Is there a way I can change the default Ide template for Forms? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Not using inheritance as Adrian recommended is a mistake.  It is the right way to do it because you can in one fell swoop change every form in your app by editing the base form properties.
+
+But you want to change the template.  That's easy to do as well.  Start a new scratch project with one Form and change the properties you want to have customized.  Click File + Export Template.  Select Item template, Next.  Tick the form, Next.  Next.  Give it a good name and description and click Finish.  You can now select that template whenever you create a new form.
+    
+    
+Answer 2: 
+
+    
+    
+Create your own form control that is derived from the base one and has all the properties set just like you want them, then you can use this one all over your project. Also changing something will be very easy since you'll have to do it only in one place.
+    
+    
+Title: Is there an IDE for CSS with code validation?
+Description: 
+    
+    
+                    
+What's a good IDE for CSS that makes validation of the code as you type?
+    
+
+        
+Answer 1: 
+
+    
+    
+Netbeans also has that and is free. And for what its worth there is also dreamweaver but I have no idea how good it is compared to more "serious" ide's.
+    
+    
+Answer 2: 
+
+    
+    
+I would suggest Aptana or Visual Web Developer Express 2010
+
+Aptana is Eclipse-based, cross-platform, needs no installation, just JRE. Pretty neat, I use it. In CSS it even provides code completion for selectors (based on what you have in HTML). If a line is invalid an error sign appears next to it, hover your cursor and read what's wrong.
+
+Visual Web Developer is harder for me because I spent too few hours CSSing in it. From what I've seen it does a pretty decent job, but I still prefer Aptana.
+    
+    
+Answer 3: 
+
+    
+    
+All of the jetbrains IDE products (with the exception of the free CE edition) include a every good CSS editor.
+    
+    
+Answer 4: 
+
+    
+    
+If you use a Mac for any development then I would advise CSS Edit although I expect that is not the case.
+    
+    
+Title: Is there something similar to Source Code Outliner Power Toy for VS2010?
+Description: 
+    
+    
+                    
+I absolutely love the Source Code Ouliner power toy that I use in VS2005 but am upgrading to 2010 and it seems they haven't yet released a new version. Is there anything similar that shows you a basic outline of the file you are currently navigating?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+ReSharper, amongst many other features, has a File Structure window which does the same as Source Outliner.
+    
+    
+Answer 2: 
+
+    
+    
+For a free one, try the Solution Navigator in the Microsoft Productivity Power Tools.
+    
+    
+Answer 3: 
+
+    
+    
+Like you, I found this a totally great plug in that saved on the order of minutes per day.  No more searching for functions!  Luckily Source Outliner has been re-created for VS2010 and is still free.  However, sbohlen updated it and it now runs on the (free) DXCore environment.  I have been using it ever since I upgraded to VS2010.
+
+You can read along as I got this set up, downloaded all the parts and got it running.
+
+http://unhandled-exceptions.com/blog/index.php/2010/05/23/plugins-for-dxcorecoderushxpresscoderushrefactor-pro-201014-rtm-available/
+
+The download is here:
+
+http://code.google.com/p/dxsourceoutliner/downloads/list
+
+You will also need the DXCore community installer from http://www.devexpress.com
+
+But as a ReSharper user for years now, I will use the File Structure - same sort of view and already built in to R#.
+    
+    
+Title: Are alert()&#39;s the Javascript equivalent of Visual Studio IDE breakpoints?
+Description: 
+    
+    
+                    
+I'm trying to find a less haphazard way than a write-and-test way to write Javascript. I don't really use an IDE - I write, then test in browser - if anything's wrong, I then use alert()'s to try tracing. This can be a tedious process having to go back and forth from Notepad++ to the browser, so I wonder if there are better ways of doing this, whether there's a good debug-friendly IDE for Javascript / jQuery or something better than alert's to use (dynamic tracing?).
+
+Are alert()'s the Javascript equivalent of Visual Studio IDE breakpoints?
+    
+
+        
+Answer 1: 
+
+    
+    
+There are a couple of different solutions available.
+
+
+Firebug: http://getfirebug.com/doc/breakpoints/demo.html
+Venkman Debugger: https://developer.mozilla.org/en/using_breakpoints_in_venkman
+Aptana: http://docs.aptana.com/docs/index.php/Adding_a_breakpoint
+
+    
+    
+Answer 2: 
+
+    
+    
+if you're using firefox, check out firebug.  its not so much an ide as a slick debugging tool with a lot of extras.  
+
+also, if you're looking for something a little more portable, try blackbird.js  one of the coolest little debugging tools i've seen, though nowhere near as frilly as firebugs it will work in any browser and provide your log messages and profiles with a visible place on the screen.
+    
+    
+Answer 3: 
+
+    
+    
+Chrome and IE8 have built-in developer tools that you can use to debug JavaScript code. Firefox has a plug-in for that, too - called Firebug.
+    
+    
+Title: Netbeans: Navigate -&gt; Go to declaration?
+Description: 
+    
+    
+                    
+I'm finding that with Ruby or RoR code, Netbeans' "go to declaration" doesn't show as lit up. Is there some way to turn this on?
+
+Also: Eclipse with RadRails seems to have this for Ruby? RubyMine seems to as well... surely Netbeans can't be missing this normalish feature.
+    
+
+        
+Answer 1: 
+
+    
+    
+Mouse right button-
+Answer 2: 
+
+    
+    
+Also, ctl(or option in mac)-click over a method or var will browse to the declaration as well. I do it all the time in ROR project.
+    
+    
+Answer 3: 
+
+    
+    
+And for those who are looking for shortcut for going back from "goto declaration" - key combination is 
+
+alt + left
+    
+    
+Title: how to create a gui for my compiler?
+Description: 
+    
+    
+                    
+i am using flex as lexical analyzer and bison as parser generator , but the result of both is 
+console window and i want to have a gui (like ide) for it
+so how to do that .
+thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+Don't.  Leave the compiler as a command line application and instead teach some existing IDE about how to call it and parse its output.
+    
+    
+Answer 2: 
+
+    
+    
+If you leave it as a command line, you can use Open Source GUI's and plug your compiler into it -- for free you get a brilliant IDE for YOUR compiler ;).
+
+For IDE's that could go well with a custom language:
+
+
+Eclipse
+NetBeans
+Vim/Emacs ^_^
+
+
+You'll have a lot of fun writing your custom plugins anyway, but it will be a lot less than writing an IDE yourself.
+
+Another topic however, is writing an interpreter for your language, but I assume that's not what you are aiming for. If so however, you should learn about readline.
+
+And if you're really sure you want to write a simple IDE for your language (writing a complex one is a task for ages), try to at least use a language that is suited for rapid GUI development (C#, Java, others), and get a working Notepad-like application for a base. You can start from there. 
+
+Remember however, that almost every known compiler is command-line -- the IDE's just execute and parse the results. There's a reason for that, y'know.
+
+Reasons for command-line:
+
+
+easy to plug into any multi-purpose IDE 
+easy to automate compilation (makefiles, etc)
+easy to automate other tasks (batch-building, release, deployment, testing)
+
+    
+    
+Answer 3: 
+
+    
+    
+What OS are you on? I'll assume linux bc i had difficulties getting bison running on windows although i can compile my bison output in windows.
+
+I didnt have an IDE. I had linux in VMWare with unity on (so i had linux windows on or under windows7 windows) and used programmers notepad to edit the files as its my preferred simple IDE. It has some autocomplete and etc. For my windows build of my compiler i can set a batch file to pnotepad and while changing source i can press F5 which ran the bat file and compiled my source AND it had the output. However developing the compiler i used alt-tab to switch to my linux terminal and ran the build in there.
+
+When i built the compiler on linux it would run automated scripts to see if anything broke and my linux compiler build output errors in a different color. I had no need for an IDE. I do hope i can have some kind of language plugin for visual studios which i already looked into. It looks difficult but this guy has syntax highlight with php in visual studios Native PHP support in Visual Studio 2010?
+    
+    
+Answer 4: 
+
+    
+    
+Elaborating on the Eclipse part of Kornel's answer; here's a pointer to how you can teach 
+Eclipse to be the IDE for YOUR language: 
+http://www.eclipse.org/articles/article.php?file=Article-BuildYourOwnDSL/index.html 
+    
+    
+Title: Questions about IntelliJ to Eclipse transition
+Description: 
+    
+    
+                    
+I just started using eclipse for some personal projects and am finding the transition from IntelliJ (what I use at work) kind of annoying. I hope it's kosher to ask a few different questions in the same thread. Here goes:
+
+1) How do I get "views" (I'm not sure if this is the term. I mean windows such as Project Explorer, Servers, Console, etc) to stay expanded and on top even after I've clicked back on the editor or another view. I'm pretty sure that right now all of these tabs are "quick views" that I have minimized and then docked, so I may not be doing this right to begin with. In IntelliJ, I would simply just pin the tab.
+
+2) How can I open a file (for instance, an ant build.xml) without having to make it part of an eclipse project? I want the syntax highlighting and Ctrl-click ability that the IDE will give me (not to mention being able to use eclipse's built-in ant), but I don't need to associate the file with any others and so don't see the point of having to make it a part of a project.
+
+3) Is it just me (wouldn't be surprised) or does eclipse have a bug with parsing empty html tags within the body of html tags of the same type. I've only tested this in a JSP, and it doesn't happen with JSF tags. For example: &lt;div id="foo"&gt;&lt;div id="bar"/&gt;&lt;/div&gt;. Eclipse will give a warning saying the first div tag has no end tag. This is with the most recent version of eclipse for Java EE, no plugins have been installed.
+
+4) Finally, a general question: Any best practices or resources to look at for organizing the eclipse interface and perspectives/views? What about workspaces/projects? Is there some tutorial out there that would be really informative that I could read through in less than an hour?
+
+I appreciate any answers and tips/tricks.
+    
+
+        
+Answer 1: 
+
+    
+    
+First of all, please acknowledge that there are different people in the world and there are people who don't work the &quot;Eclipse way&quot;. Even if I was paid for it (and I am), I couldn't work with IDEA. So if Eclipse rubs you the wrong way, it may not be for you. That out of the way, your answers:
+
+In Eclipse, you open a view and let it stay where it is. In IDEA, the view changes all the time, things pop up and go away. Eclipse is static unless you specifically move things around. There are two ways to move things: You can minimize a part (a part is something which contains tabbed views). This moves the part into the closest border. Or you can maximize the current part (Ctrl-M). This pushes all other parts out of the way. Another Ctrl-M will restore the view.
+This is a good place to show the difference between IDEA and Eclipse. IDEA tries to anticipate what you're doing and to be helpful. For me, this means it always gets in my way. It will start to format source as I type, things move, etc. That freaks me out. Eclipse is like a toolbox. Everything is there but you have to pick it up. A toolbox doesn't move on its own accord and it doesn't try to be smart.
+
+Eclipse is based on the idea of a workspace. The workspace is the universe and nothing outside exists. If you need to go outside, you must first create a file or folder. In the &quot;New File/Folder&quot; wizard, you can open the advanced options (at the bottom) and link this resource to a real file/folder in the file system. May sound like a lot of effort but it allows Eclipse to display virtually anything in the explorer since it just shows &quot;resources&quot; in there, not actually files.
+
+Smells like a bug. Please report it at https://bugs.eclipse.org/bugs/
+
+I'm not aware of anything.
+
+
+[EDIT] 3. As cletus pointed out,  is not valid HTML. So that might cause the warning.
+    
+    
+Answer 2: 
+
+    
+    
+
+An Eclipse Perspective is a collection Views and their position. You can customize or create new perspectives, but the existing ones are good enough for a start (Java, J2EE, Java Browsing etc.). I recommend to stick with the default layout for a while until you've managed to use the quick view feature (which, personally, i find quite annoying). On small screens, i simply like to use Ctrl-M to switch the Editor to fullscreen mode and back, without the need of minimizing single views or move them around.
+Yes, you can run external build scripts as well and it's called External Tool in Eclipse. Go to Run &gt; External Tools &gt; External Tools Configurations. Create either a new Ant-based config or a native executable (Program). The location of the build script or executable can either be workspace-relative (Browse Workspace) or absolute on the file system (Browse File System)
+
+    
+    
+Title: Breakpoints in Ruby IDE?
+Description: 
+    
+    
+                    
+I currently use TextMate for Ruby/Javascript/Actionscript development and it is amazing.  But one thing I would really love to use are breakpoints so I could stop code execution and examine the state of the variables and walk through the code.  Something like what Flex Builder does.
+
+Does TextMate have this capability?  Or what do you use to do breakpoints and that sort of thing with Ruby?  How about for Javascript too?
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+There are 3 mostly-Java IDEs that run under Mac OS X yet do a good job of developing (and of course debugging) Ruby.
+
+
+Eclipse, with the Aptana plugin;
+IntelliJ IDEA (it knows lots of programming languages)
+NetBeans (I think).
+
+
+All three are free (even IntelliJ, they have an Open Source edition out now), so you can just download, play around with it, get accustomed and go to town.
+    
+    
+Answer 2: 
+
+    
+    
+Since TextMate is not an IDE but just a text editor (on steroids though!) I believe this is something totally not supported.
+
+As for the javascript, this is something you can do with firebug (at least for firefox) and similar tools are included (or can be found) for IE, Chrome and Safari :)
+    
+    
+Answer 3: 
+
+    
+    
+Eclipse with the Dynamic Languages Toolkit supports Ruby debugging.  I have used it in the past, and it supports Javascript as well.
+    
+    
+Answer 4: 
+
+    
+    
+TextMate is an editor and not a full-blown IDE, so it doesn't support debugging.
+
+If you're looking for a Ruby IDE, I highly recommend RubyMine. It's got great support for debugging, running tests, easily navigating between files, and basic refactoring. Admittedly it's a lot more heavyweight, so I tend to use it for major work (or when getting up to speed on an existing code base), and still use TextMate for quick changes.
+
+There are some open source solutions as well. In the past I've used NetBeans and RadRails, and particularly NetBeans has worked very well for me, too. Not as good as RubyMine, but well worth checking out if you're on a budget.
+
+I should also point out that you can debug Ruby apps from the command line, using the ruby-debug gem. Basically, you place a debugger call into your code to set a breakpoint, and then run the app with rdebug instead of ruby. Check out this article for an overview.
+    
+    
+Answer 5: 
+
+    
+    
+arcadia is a ruby editor written in ruby with ruby debugging support.  A little rough still, but at least you get the good feeling of running ruby :)
+-r
+    
+    
+Title: Objective-C and Windows
+Description: 
+    
+    
+                    
+I am currently in a class that is developing applications in Objective-C and Cocoa. I was wondering if there was any way to build and compile Objective-C applications on Windows Vista. During class, we are able to use the Mac machines provided to us, but I was hoping to do some work outside of class, and I only have a Windows Vista machine available to me. I have installed GNUStep. I am looking for a GUI or an IDE that I could use. I have Eclipse, and I tried to install ObjectivEClipse, but that is only for a Mac machine too. Any other suggestions? Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+GNUstep itself offers ProjectCenter, which is a take-off of Project Builder, the NeXTstep IDE that Xcode is derived from. It also maintains the Interface Builder knockoff GORM.
+
+Also, you'll want to bear in mind that GNUstep is a bit limited compared to Cocoa (just because Apple has a whole paid professional development team working on Cocoa full-time and GNUstep does not) and GORM uses a different format from Interface Builder, so if you're taking a class, there may be some Cocoa assignments you won't be able to do with it.
+    
+    
+Answer 2: 
+
+    
+    
+The compiler is no problem, since gcc includes an Objectve-C frontend.  You could simply install Cygwin and use it.  the issue is about libraries.
+
+The Cocoa system is very Apple proprietary; but it's a descendant from NeXTStep. For a while (when NeXT was even deeper in debts than Apple) it was named OpenStep, and available as a shell around the NT kernel.  Around that time, the GNUStep project was started, and it seems it's still there.
+
+Note, however, that any xxStep libraries gives only a NeXT-like GUI, very different from modern macs.  Also, a lot of the newer capabilities are not only new GUI; but new APIs too and these won't be found there.
+
+in short... it's easier to go with a mac.
+    
+    
+Answer 3: 
+
+    
+    
+Under the heading of desperation measures:
+
+It's old school but if you have a friend with a mac, you could telnet into the mac and run the dev tools there. You would code in an editor on Vista and then up load to the mac to compile.
+
+That would only let you see the results of command line apps but it would better than nothing. 
+
+If the macs in your school lab are accessible you could just screen share from your Vista box. That's another long shot. 
+
+Might be easier to beg, borrow or steal a Mac mini. 
+    
+    
+Answer 4: 
+
+    
+    
+The Cocoa frameworks are only available on Mac.  For anything else, you'll have to use GNUStep.
+    
+    
+Title: How to set print margin in Visual C# 2008
+Description: 
+    
+    
+                    
+Is there a setting in Visual C# 2008 to set a character width at which I'd like to see a margin line in the code editors? I do this in eclipse by: Window --
+Answer 1: 
+
+    
+    
+AFAIK it's impossible from menu. But ome addins enables this feature, or you can edit the registry manually (not very good, but it works):
+
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\9.0\Text Editor]
+"Guides"="RGB(212,212,212) 99, 109"
+
+
+Here RGB(212,212,212) - margin color;  99, 109 means that we want two margin guides: after 100-th and after 110-th character
+    
+    
+Answer 2: 
+
+    
+    
+I poked around but couldn't find much.  For some languages, you can specify a length that tags will wrap at.  For example, HTML:
+
+Tools &gt; Options &gt; Text Editor &gt; HTML &gt; Format &gt; Tag Wrapping
+
+
+EDIT:
+
+After reading your question more carefully, I did some more digging. Apparently there's a registry hack you can do to make Visual Studio show a margin line at a certain number of characters (you can add up to 13 "guides"), but it sounds like it won't automatically wrap at that guide line when formatting like Eclipse does.
+    
+    
+Title: Advice about J2ME for Blackberry available IDEs and documentation
+Description: 
+    
+    
+                    
+I am developing standard J2ME apps in NETbeans, but is there any specific IDE and emulator for Blackberry development? Any specific documentation about J2ME for Blackberry ?
+    
+
+        
+Answer 1: 
+
+    
+    
+There is the API Reference for every Blackberry OS. Example 4.5 (just change the Version number to 4.7 or any other version). 
+
+But you can find a lot of resources at the Developer Site of Research in Motion. Personally I use the eclipse plugin as IDE.
+    
+    
+Answer 2: 
+
+    
+    
+I developed a standard J2ME application in netbeans with about 10 UI screens and using webservices. I was quiet satisfied with the results. I then spent about a week trying to "port" this application to a blackberry. (Trying your approach of getting blackberry api working on Netbeans and trying native J2ME on the blackberry SDK) 
+
+I then only managed to get successful results by starting a fresh Blackberry application using the standard blackberry Eclipse IDE. Although I have two separate applications in different platforms I am happy with this two IDE  approach.
+    
+    
+Answer 3: 
+
+    
+    
+A note of advise when developing for the blackberry: check with the bb API before before using any of the 'advanced' features of J2ME they are far from being all implemented.
+    
+    
+Title: What is the format of a Borland 5.0 project file?
+Description: 
+    
+    
+                    
+I have an old Borland project which I would like to port to Visual&nbsp;Studio&nbsp;2008. Is there a way to dump, in a human-readable format, the source file, compile options and dependency information from a .ide file?
+
+I'd like something a bit more comprehensive than the 'Generate Makefile' option.
+    
+
+        
+Answer 1: 
+
+    
+    
+I think it will be easier just to create a new project in Visual Studio and then add all your source files and libraries into it.
+
+I don't think Visual Studio supports OWL (or any Borland libraries).
+    
+    
+Answer 2: 
+
+    
+    
+If this is a VCL application, options and settings are the least of your concerns, since the VCL API is completely different from MFC.
+A lot of the Borland compiler options are actually to provide compatibility with MFC. Other than that there isn't actually much overlap in the compiler options.
+
+I occasionally provide Visual Studio 'solution' versions of my Borland projects to colleagues, and normally is simply a matter of selection the .cpp files in the solution and setting any global defines (these is console mode programs mind you, no GUI).
+
+The greater issue is minor inconsistencies in stream classes,
+values.h and deprecated functions that Microsoft has dropped.
+That is, _stricmp(), _chdir(), _mkdir() _getcwd() instead of stricmp() chdir() mkdir() getcwd(), etc...
+
+I have generally not found the various Borland generated makefiles very compatible with any other compiler (or even with the Borland compiler for that matter).
+    
+    
+Answer 3: 
+
+    
+    
+I don't know about Borland 5, 6 or latest compilers (latest version I've used is Borland C++ 3.1 back in 1994/95 ...), but if you have the chance to generate a Makefile maybe the best solution is to use that Borland makefile to write a NMAKE compatible makefile by hand, if it's not too large. 
+
+Another option is to manually import the header, source files and edit the project (compatibilize source and compilation settings) until the build is successful. I think this can be achieved in a short time. 
+
+To what dependencies is your project tied to? VCL? MFC? Just standard libs?
+    
+    
+Title: Can VS be configured to automatically remove blank line(s) after text is cut?
+Description: 
+    
+    
+                    
+Is there a way (or shortcut) to tell VS 2008 that it cuts a line like this:
+
+Before:
+
+Some Text here  
+This gets cut  
+Some Code there
+
+
+After:
+
+Some Text here
+
+Some Code there
+
+
+What I want:
+
+Some Text here  
+Some Code there  
+
+
+PS: I don't want to select the whole line or something like this... only the text I want to cut.
+    
+
+        
+Answer 1: 
+
+    
+    
+Unless I misunderstood you:
+Just place cursor on the line you want to cut (no selection) and press Ctrl + x. That cuts the line (leaving no blanks) and puts the text in the Clipboard. (tested in MS VC# 2008 Express with no additional settings I'm aware of)
+
+Is that what you want?
+    
+    
+Answer 2: 
+
+    
+    
+Shift+Delete also works.
+Select a line and hit Shift-Delete it will remove the line and place that line in your clipboard.
+    
+    
+Answer 3: 
+
+    
+    
+Don't select anything, just hit ctrl+x when the cursor is on the line.
+    
+    
+Title: How to edit a function signature at the same time
+Description: 
+    
+    
+                    
+I'm using VScode as my IDE, IN my college we require to write our codes using TopDown Design.
+like this example:
+
+void sum(int a, int b);
+int main()
+{
+    int a=2, int b=3;
+    sum(a,b);
+    return 0;
+}
+void sum(int a, int b)
+{
+    printf("%d", a+b);
+}
+
+
+My problem is that a lot of time while editing my function at the "Down LVL" I also need to edit the signature for adding or removing arguments, is there add-in or some key bind in VScode that can edit both signatures at the same time while I only edit one of them?
+
+    
+
+        
+Answer 1: 
+
+    
+    
+If you place the cursor over the signature and press CTRL + D you can select all the signatures, one at a time, then you can change them all in one go.
+
+sample
+    
+    
+Answer 2: 
+
+    
+    
+You can simply alt + left click to add a cursor in visual studio code.
+    
+    
+Title: Windows IDE for Haskell
+Description: 
+    
+    
+                    
+I need to setup a simple and compelling dev environment for small proyects written in Haskell in Windows machines for freshmen.
+
+I have tried several ways to integrate Haskell into VSCode in Windows with no success. 
+
+I had a nice setup a few years ago, but I´m finding problems with dependencies recreating that environment:
+
+
+Editor: Atom
+Global binaries build using: stack with ghc-mod hlint stylish-haskell
+Atom plugins: language-haskell, ide-haskell, ide-haskell-repl, haskell-ghc-mod
+
+
+It seems that the "cool" way right now is Language Server Protocol + VScode. ghc-mod seems not to be mantained anymore, Intero has reached EOL, HEI is merging with another project... Having a stable and updated dev environment looks like a moving target.
+
+So, the question is: does anyone have reproducible step-by-step instructions for having VSCode working with Haskell in Windows?
+
+I will test any suggestion in a fresh Windows 10 64bits VM and report the results.
+
+Note: VSCode + Docker container is not an option. Most of the student´s machines have 4GB RAM.  
+
+Thanks in advance.
+    
+
+        
+Answer 1: 
+
+    
+    
+There's a tool called ghcid (not to be confused with ghcide) that, while nowhere near a full-blown IDE, is pretty robust and provides some niceties like re-compiling on save and showing compile errors. It doesn't support go-to-definition though. It has a VSCode plugin.
+
+Here's a possible way of setting up things in Windows:
+
+
+Download the GHC 8.8.3 binaries for Windows from here.
+Download the cabal-install 3.0.0.0 binaries for Windows from here.
+Decompress them in some folder.
+Add entries to your PATH environment variable so that it has access to the /bin folder of the GHC installation and to the folder containing the cabal executable. 
+Open a Powershell console.
+Run cabal udpate
+Run cabal install --install-method=copy --installdir=somefolder ghcid to install the ghcid executable, where "somefolder" is the destination folder. (If the installation fails, try running the command from a Git Bash or Cygwin terminal as a workaround.) Put the destination folder in PATH.
+Open (or restart) VSCode and install the "Haskell Syntax Highlighting" and haskell-ghcid plugins.
+Go to an example cabal project, use the Ctrl-Shift-P shortcut, and execute the Start ghcid action. The ghcid terminal will appear.
+
+
+Example of a ghcid session showing an error:
+
+
+
+The haskell-ghcid plugin can read a .ghcid file in the project root containing flags that should be passed to the ghcid command.
+
+
+
+Extra instructions to set up code formatting:
+
+
+Install the ormulu formatter by running cabal install  ormolu  --install-method=copy --installdir=somefolder. Again, make sure that the destination folder in in PATH.
+Open (or restart) VSCode and install the ormulu plugin.
+
+
+Now the "Format Document" and "Format Selection" actions in VSCode will use ormulu.
+
+
+
+Another way of installing GHC and getting to ghcid and ormulu could be by using the stack tool, which handles GHC installation by itself.
+    
+    
+Title: How to hide non-visual components names?
+Description: 
+    
+    
+                    
+Does Delphi XE7 have an option for hiding the non visual components names?
+
+I don't want to completely hide the non-visual components but I would like to hide the label with their names. It was the default appearance of non visual components in Delphi 2007 designer:
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I found the option in Tools -&gt; Options -&gt; Environment Options -&gt; Form Designer -&gt; Show component captions
+
+
+    
+    
+Title: Is there a way to create a JFrame in an online compiler?
+Description: 
+    
+    
+                    
+I have used NetBeans IDE 8.2 for a while to create Java programs, and have had no trouble with it. I was trying to find an online compiler that will allow me to create a JFrame, but I usually get the error saying
+
+No X11 DISPLAY variable was set, but this program performed an operation which requires it.
+    at java.awt.GraphicsEnvironment.checkHeadless(GraphicsEnvironment.java:204)
+
+
+I have tried several different online compilers, as well as researching the X11 DISPLAY, but I haven't found anything useful.
+
+import java.awt.Canvas;
+import javax.swing.JFrame;
+
+public class Main {
+
+    public static JFrame frame;
+    public static Canvas canvas;
+
+    public static void main(String[] args) {
+        createDisplay("Display", 500, 500);
+    }
+
+    public static void createDisplay(String title, int w, int h) {
+        frame = new JFrame(title);
+        frame.setSize(w, h);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(true);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        canvas = new Canvas();
+        canvas.setSize(w, h);
+        canvas.setFocusable(false);
+
+        frame.add(canvas);
+        frame.pack();
+    }
+}
+
+
+Is there a way to set the X11 DISPLAY variable to make it work on an online compiler?
+    
+
+        
+Answer 1: 
+
+    
+    
+Repl.it allows you to create JFrames
+See here
+
+    
+    
+Answer 2: 
+
+    
+    
+You can run Java in headless mode:
+
+java -Djava.awt.headless=true ...
+
+
+Use cases: unit testing, server side graphics operations.
+
+You can also set it programmatically (must be set before performing any AWT calls that require a display):
+
+System.setProperty("java.awt.headless", "true"); 
+
+
+See: https://www.oracle.com/technetwork/articles/javase/headless-136834.html
+    
+    
+Title: VS 2019 Ctrl + , is not behaving as VS 2017
+Description: 
+    
+    
+                    
+I remember if I typed Ctrl + , in VS 2017 I could navigate to almost everything that had the typed characters, But in VS 2019 it searches only files.
+Here is what 2019 looks like
+
+
+
+But in 2017 it suggest the UserController file because it contains that method!
+
+How can I have that feature back? 
+    
+
+        
+Answer 1: 
+
+    
+    
+The new Visual Studio 2019 header search box, seen at the top of the screen, is designed to find anything in Visual Studio — including menu items, settings,tool windows and more. The tool uses fuzzy search that return the correct information even if you make a typo.
+
+
+    
+    
+Answer 2: 
+
+    
+    
+As stated in this blog post:
+
+
+  It turned out the issue was related to NuGet; what I needed to do was
+  delete the contents of the packages folder.  For completeness's sake,
+  here's the steps to do what I did.
+  
+  Close all instances of Visual Studio 2019. Delete the contents of the
+  packages folder at the root of your solution on your local machine.
+  Open Visual Studio 2019 again. This final solution worked for me.  I
+  am including the potential solutions in this post in the hopes that
+  one of them (actual or potential) works for you, dear reader.  Let me
+  know if you have any other solutions in the comments!
+
+
+Deleting local nuget packages worked for me.
+    
+    
+Title: How to change the size of the Intellij Idea menu lines?
+Description: 
+    
+    
+                    
+I would like to know how to change the space between lines of the menu (width). My menus having lines too big. There is image to show it.  
+
+ 
+    
+
+        
+Answer 1: 
+
+    
+    
+Like yole said, the Material Theme Plugin change the space between each line in menu.
+
+To fix it:
+
+
+Open IntelliJ settings (Ctrl + Alt +S)
+Appearance &amp; Behavior 

@@ -1,0 +1,3271 @@
+Title: Error when run Android studio IDE
+Description: 
+    
+    
+                    
+When I launch Android studio I encounter this Error:  
+
+  
+
+    The following SDK components were not installed: build-tools-21.1.1, source-21, sys-img-x86-addon-google_apis-google-21, 
+    extra-android-m2repository, android-21, extra-google-m2repository, addon-google_apis-google-21, tools, platform-tools
+
+
+And when I click retry, it gives me the same error:  
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Configure a proxy for Android studio by modifying other.xml file at:
+
+
+  C:\Users\"Your account"\.AndroidStudio\config\options\other.xml
+
+
+Then change the proxy configurations as follows:
+
+&lt;option name="USE_HTTP_PROXY" value="true" /&gt;
+&lt;option name="USE_PROXY_PAC" value="false" /&gt;
+&lt;option name="PROXY_HOST" value="your_proxy_server" /&gt;
+&lt;option name="PROXY_PORT" value="your_proxy_port" /&gt;
+
+    
+    
+Answer 2: 
+
+    
+    
+code.google.com/p/android/issues/detail?id=82789
+
+
+download build-tools21.1.1 google link or dehkadeco.ir link
+sdk will be located under C:\Users\&lt;/p/lilip
+Answer 3: 
+
+    
+    
+Try to rename folder 21.1.2 inside Android SDK build-tools folder (in my case it was c:\Users\prokofyev\AppData\Local\Android\sdk\build-tools\21.1.2) to android-5.0  (in my case it became c:\Users\prokofyev\AppData\Local\Android\sdk\build-tools\android-5.0). This way I fixed similar error on new Android Studio installation.
+    
+    
+Answer 4: 
+
+    
+    
+Android Studio was not able to connect to internet in my work PC due to Intranet Proxy/Firewall settings, changing the proxy settings didnt help me either.
+
+Android studio was failing to run as it requires to install the above mentioned packages. As a work around I installed the packages from Android SDK Manager and it solved it.
+
+You can find the SDK Manager under C:\Users\&lt; UserName/strong/pulli
+Answer 5: 
+
+    
+    
+Adding to answer by @Erfan , If you are using automatic configuration script instead of a proxy server , Change the settings as below :
+
+
+  C:\Users\"Your account".AndroidStudio\config\options\other.xml
+
+
+Then change the line about proxy configurations like this:
+
+&lt;component name="HttpConfigurable"&gt;
+        &lt;option name="PROXY_TYPE_IS_SOCKS" value="false" /&gt;
+        &lt;option name="USE_HTTP_PROXY" value="false" /&gt;
+        &lt;option name="USE_PROXY_PAC" value="true" /&gt;
+        &lt;option name="PROXY_HOST" value="" /&gt;
+        &lt;option name="PROXY_PORT" value="80" /&gt;
+        &lt;option name="PROXY_AUTHENTICATION" value="true" /&gt;
+        &lt;option name="PROXY_LOGIN" value=" your User Name" /&gt;
+        &lt;option name="PROXY_PASSWORD_CRYPT" value=" Your Domain Password " /&gt;
+        &lt;option name="KEEP_PROXY_PASSWORD" value="false" /&gt;
+        &lt;option name="myGenericPasswords"&gt;
+          &lt;map /&gt;
+        &lt;/option&gt;
+        &lt;option name="myGenericCancelled"&gt;
+          &lt;set /&gt;
+        &lt;/option&gt;
+        &lt;option name="PROXY_EXCEPTIONS" value="" /&gt;
+        &lt;option name="USE_PAC_URL" value="true" /&gt;
+        &lt;option name="PAC_URL" value=" Put Pac Url Here mentioned in Auto Config Script " /&gt;
+      &lt;/component&gt;
+
+    
+    
+Answer 6: 
+
+    
+    
+I had the same problem, But when I opened the studio "as administrator" error has gone!!! And my problem solved!!!! In my case I have installed the sdk in different location since I don't want install anything on my user folder.
+
+
+
+There is one more thing I have done that is I made the folder as writable from read access. (But I don't think this step is necessary)
+    
+    
+Answer 7: 
+
+    
+    
+This usually happens when you can not download sdk from google, try to download it manually.
+
+You can get the build you mentioned at google or bellow link:
+
+this link
+
+Unzip it in \sdk\build-tools
+    
+    
+Answer 8: 
+
+    
+    
+Some tools are missing.
+
+Download build-tools_r21.1.1-windows.zip and unzip it. Run Android Studio again.
+
+If you get similar error again Check this for missing android tools.
+
+Enjoy coding..:)
+    
+    
+Answer 9: 
+
+    
+    
+For Ubuntu users, check that the folder where the SDK will be installed has permissions.
+    
+    
+Answer 10: 
+
+    
+    
+I also had the same problem. See the picture below: 
+
+
+
+Solution: Run it as an administrator.
+
+
+    
+    
+Answer 11: 
+
+    
+    
+If you are getting UnknownHostException the the problem lies in the proxy - click the close icon (the X in the upper right corner) and agree to start setup next time again. Then in the Studio itself go to Configure -
+Answer 12: 
+
+    
+    
+download build-tools:21.1.1 from build-tools_r21.1.1-windows.zip
+
+and unzip, it will extract the entire folder to copy or move your sdk /build-tools folder.
+name folder must be build-tools_21.1.1
+    
+    
+Title: How to detect that code is running inside eclipse IDE
+Description: 
+    
+    
+                    
+How to  detect that code is running inside eclipse IDE
+    
+
+        
+Answer 1: 
+
+    
+    
+I am not aware of a generic way to get this kind of information.
+
+One suggestion:
+
+When you start a Java program (or a web server) inside Tomcat, simply add an argument that will indicate that this program is launched by Eclipse.
+
+You can do that by opening the "Open Run Dialog" ("Run" menu), then select your type of application and add in the "Arguments" tab a -DrunInEclipse=true.
+
+In your Java code, you can check the value of the property:
+
+String inEclipseStr = System.getProperty("runInEclipse");
+boolean inEclipse = "true".equalsIgnoreCase(inEclipseStr);
+
+
+This way, if the program is not running inside Eclipse (or unfortunately if you forgot to set the property) the property will be null and then the boolean inEclipse will be equal to false.
+    
+    
+Answer 2: 
+
+    
+    
+1) Create a helper method like:
+
+public boolean isDevelopmentEnvironment() {
+    boolean isEclipse = true;
+    if (System.getenv("eclipse42") == null) {
+        isEclipse = false;
+    }
+    return isEclipse;
+}
+
+
+2) Add an environment variable to your launch configuration:
+
+
+
+
+
+3) Usage example:
+
+if (isDevelopmentEnvironment()) {
+    // Do bla_yada_bla because the IDE launched this app
+}
+
+    
+    
+Answer 3: 
+
+    
+    
+The following should work.
+
+Although I agree that having the code detecting a single IDE as the dev env is not an optimal solution. Using a flag at runtime is better.
+
+public static boolean isEclipse() {
+    boolean isEclipse = System.getProperty("java.class.path").toLowerCase().contains("eclipse");
+    return isEclipse;
+}
+
+    
+    
+Answer 4: 
+
+    
+    
+Actually the code is not being run inside Eclipse, but in a separate Java process started by Eclipse, and there is per default nothing being done by Eclipse to make it any different than any other invocation of your program.
+
+Is the thing you want to know, if your program is being run under a debugger?  If so, you cannot say for certain.  You CAN, however, inspect the arguments used to invoke your program and see if there is anything in there you do not like.
+    
+    
+Answer 5: 
+
+    
+    
+If your workspace matches some pattern like "/home/user/workspace/Project" you can use the code below:
+
+Boolean desenv = null;
+
+boolean isDevelopment() {
+    if (desenv != null) return desenv;
+
+    try {
+        desenv = new File(".").getCanonicalPath().contains("workspace");
+    }
+    catch (IOException e) {
+        e.printStackTrace();
+    }
+
+    return desenv;
+}
+
+    
+    
+Answer 6: 
+
+    
+    
+A more generic and precise way, that can be used on any IDE would be loop at:  
+
+ManagementFactory.getRuntimeMXBean().getInputArguments()
+
+looking for "-Xdebug" || (starting with) "-agentlib:jdwp=".
+
+I came with this from @saugata comment here.
+
+This is excellent if you want to throw a conditional exception preventing the application from simply exiting. Use a boolean like "ideWait" and add it to Eclipse watch expressions as ideWait=false, so whenever you stop at that throw, and "drop to frame" you can continue debugging happily (I mean it!)
+    
+    
+Answer 7: 
+
+    
+    
+I don't think there is any way to do this.  But what I would suggest is just a command line argument such as 'debug'.  Then in your main method just do 
+
+if (args.length &gt; 0 &amp;&amp; args[0].equalsIgnoreCase("debug")) {
+  // do whatever extra work you require here or set a flag for the rest of the code
+}
+
+
+This way you can also get your extra code to run whenever you want just by specifiying the debug parameter but under normal conditions it will never execute.
+    
+    
+Answer 8: 
+
+    
+    
+This might work if your alternative execution work flow provides a different set of dependencies:
+
+boolean isRunningInEclipe = false;
+try {
+    Workbench.getInstance();
+    isRunningInEclipe = true;
+} catch (NoClassDefFoundError error) {
+    //not running in Eclipse that would provide the Workbench class
+} 
+
+    
+    
+Answer 9: 
+
+    
+    
+You could detect if you're inside a JAR or not, as per Can you tell on runtime if you&#39;re running java from within a jar?
+
+Eclipse will run your app from the classes/ dir, whereas most of your end users will be running the app from a JAR.
+    
+    
+Answer 10: 
+
+    
+    
+You may try something like this:
+
+if (ClassLoader.getSystemResource("org/eclipse/jdt/core/BindingKey.class")!=null){ 
+    System.out.println("Running within Eclipse!!!"); 
+} else {
+    System.out.println("Running outside Eclipse!!!");
+}
+
+    
+    
+Title: Does Google Apps Script support external IDEs?
+Description: 
+    
+    
+                    
+I am using Google Apps Script and was wondering if I could use any sort of editor outside of the one Google provides. (I purchased Sublime Text and would like to use that.)
+The one Google provides is disgusting, with tiny text even though I have a giant screen and syntax colors that I find a bit difficult to distinguish on a white background with small text, and I don't have the beauties of Sublime like tons of custom keyboard shortcuts, all of my packages, etc.
+    
+
+        
+Answer 1: 
+
+    
+    
+Google has dropped support for Apps Script inside Eclipse but you can set up a local development environment inside VS Code using the Apps Script Starter kit and CLASP. 
+
+Here's a video tutorial to help you get started.
+    
+    
+Answer 2: 
+
+    
+    
+As of today (May 2018), every scripts that you add on Google App Scripts (including scripts on Google Drive like spreadsheets) will get accessible through https://script.google.com and will have a specific id that you can get through the url by opening it.
+
+By using clasp which handle a project (like git), you can do:
+
+clasp clone {id}
+
+
+to have your script in a local folder.
+Then, after editing your file with your favorite text editor, upload it back with :
+
+clasp push
+
+    
+    
+Answer 3: 
+
+    
+    
+
+The eclipse plug-in is migrated now. You should install many
+files. lastly it couldn't import my google script files.
+nod-google-apps-script is depercated.
+gdrive can't handle google scripts beyond exporting the project in single json file. issue issue 
+sublime-editor-plug-in has n't worked for me (I read the whole documents &amp; issues)
+
+
+The only working solution for me (ubuntu xenial) is clasp.
+
+According to doc it can :
+
+
+  Develop Locally: clasp allows you to develop your Apps Script projects locally. That means you can check-in your code into source control, collaborate with other developers, and use your favorite tools to develop Apps Script.
+  
+  Manage Deployment Versions: Create, update, and view your multiple deployments of your project.
+  
+  Structure Code: clasp automatically converts your flat project on script.google.com into folders. For example:
+  
+  On script.google.com:
+         tests/slides.gs
+         tests/sheets.gs
+  
+  locally:
+         tests/
+             slides.js
+             sheets.js
+
+
+N.B:. The fature of 'Manage Deployment Versions' isn't supported by eclipse plug in. 
+
+It give the following commands:
+
+
+clasp login [--no-localhost]
+clasp logout
+clasp create [scriptTitle] [scriptParentId]
+clasp clone &lt;scriptId&gt;
+clasp pull
+clasp push
+clasp open
+clasp deployments
+clasp deploy [version] [description]
+clasp redeploy &lt;deploymentId&gt; &lt;version&gt; &lt;description&gt;
+clasp version [description]
+clasp versions
+
+
+
+By using it; you can use your favorite script editor; then push the changes. 
+
+Edit
+GAS Editor Autocomplete
+
+Thanks to @tehhowch comment.
+
+Auto complete of google objects is almost exclusive for online GAS editor, If you use any external editor , you will only get auto complete for the functions &amp; variables of your own script (I am not sure about eclipse).
+
+But online editor provides autocomplete which reveals the global objects as well as methods and enums that are valid in the script's current context.
+
+
+  To show autocomplete suggestions, select the menu item Edit /pulli/lili/lili/li/ul/blockquote/div
+Answer 4: 
+
+    
+    
+You can use node-google-apps-script to edit scripts locally (described in this blog post from the google apps developer blog on 2015-12-17). This way you can use a more comfortable editor, version control and build scripts.
+
+Caveats: 
+
+
+Like the eclipse plugin, node-google-apps-script requires that your add-on is a standalone script.
+Debugging still requires google's script editor. With some additional setup you could run functions via the Execution API
+It would be awesome if there was a Sublime Text plugin for code completion of google library methods, but I haven't found one (I don't think their default browser editor even offers this, though)
+
+    
+    
+Answer 5: 
+
+    
+    
+This is an answer for basic/beginner users of Intellij that are looking for code completion when writing Google App Scripts apps. Most of the answers above were helpful for getting me going, especially with Clasp.  But none of them actually got Intellij to do the code complete. But this does:
+Select File, Settings, Languages &amp; Frameworks, JavaScript, Libraries.
+Then on the right select Download, the scroll down to 'google-app-scripts'. (Lots of scrolling) Download and install and you're done. Almost so easy that it really shouldn't have been so hard to find.
+
+    
+    
+Answer 6: 
+
+    
+    
+Another option to contemplate: using "AppsScript Color" Google Chrome plugin and GAS editor shortcuts.
+
+Here you have a list of most useful shortcuts:
+https://opensourceseo.org/useful-tips-for-using-the-google-apps-script-editor/
+    
+    
+Answer 7: 
+
+    
+    
+You can just install a Google Drive command line client (e.g. https://github.com/prasmussen/gdrive) and edit .gs scripts directly.
+
+There's also a way to edit Google Apps Scripts in Eclipse, which may be interesting. https://developers.google.com/eclipse/docs/apps_script
+    
+    
+Title: Step-by-step: How to do Xdebug troubleshooting connection to client IDE
+Description: 
+    
+    
+                    
+BACKGROUND
+
+Using Xdebug with PHP and Komodo IDE, and Eclipse PDT.
+
+Xdebug is installed on the server and working properly. This is confirmed because the Xdebug code commands work as expected when inserted into PHP files on the server.
+
+PROBLEM
+
+Connecting to the client workstation is not working, and it is difficult to determine why because it fails with multiple IDEs.
+
+QUESTION
+
+It would be nice to have a step-by-step checklist to troubleshoot the case where you know Xdebug is installed and working on the server, but the client does not connect.
+
+Can anyone help add to this to make a comprehensive troubleshooting checklist?
+
+Specifically, is there any bare-bones way to make sure the network traffic is reaching the client, and is correctly formatted in the way the IDE expects to see the data?
+
+
+SSH into web host and try to reach the client:
+
+
+can host reach client at all? (ping -c 5 xxx.xxx.xxx.xxx )
+can host reach port 9000? (nmap -p 9000 xxx.xxx.xxx.xxx)
+if the above two succeed, what should the output be?
+if the above two fail, what is the next troubleshooting step?
+
+Verify settings of software-based firewall on client 
+Verify settings of iptables on linux host
+Verify hardware firewall b/t client and host
+
+
+GOAL
+
+The goal is to find some solution where the person on the client machine can at least confirm that something is reaching the client without having to determine whether the IDE is the problem, since IDE is another level of complexity that may be introducing problems.
+    
+
+        
+Answer 1: 
+
+    
+    
+This is something I would definitely want to include in the Xdebug documentation. I think it would work best to have many people collaborate on this, so I've created a file in the xdebug.org github repository (https://github.com/derickr/xdebug.org/blob/master/html/docs/tutorials/troubleshooting.rest) to collect tips. Feel free to fork and extend!
+
+On the Xdebug side, in the upcoming version (2.2) it already dumps in its xdebug.remote_log file a couple of extra diagnostics such as whether it tried to connect and whether the connection was accepted or denied.
+    
+    
+Answer 2: 
+
+    
+    
+You can use the debugclient utility to determine if the client can receive Xdebug connections, as you can read in the Xdebug documentation:
+
+
+  Before you start your script you will need to tell your client that it
+  can receive debug connections, please refer to the documentation of
+  the specific client on how to do this. To use the bundled client
+  simply start it after compiling and installing it. You can start it by
+  running "debugclient". If you want to use the GDB commandset to debug
+  your scripts, make sure you use a debugclient as bundled with Xdebug
+  1.3 as the one bundled with Xdebug 2 only works with the DBGp commandset.
+  When the debugclient starts it will show the following information and
+  then waits until a connection is initiated by the debug server:
+
+
+Xdebug Simple DBGp client (0.10.0)
+Copyright 2002-2007 by Derick Rethans.
+- libedit support: enabled
+Waiting for debug server to connect.
+
+
+
+  After a connection is made the output of the debug server is shown:
+
+
+Connect
+&lt;?xml version="1.0" encoding="iso-8859-1"?&gt;
+&lt;init xmlns="urn:debugger_protocol_v1"
+      xmlns:xdebug="http://xdebug.org/dbgp/xdebug"
+      fileuri="file:///home/httpd/www.xdebug.org/html/docs/index.php"
+      language="PHP"
+      protocol_version="1.0"
+      appid="13202"
+      idekey="derick"&gt;
+  &lt;engine version="2.0.0RC4-dev"&gt;&lt;![CDATA[Xdebug]]&gt;&lt;/engine&gt;
+  &lt;author&gt;&lt;![CDATA[Derick Rethans]]&gt;&lt;/author&gt;
+  &lt;url&gt;&lt;![CDATA[http://xdebug.org]]&gt;&lt;/url&gt;
+  &lt;copyright&gt;&lt;![CDATA[Copyright (c) 2002-2007 by Derick Rethans]]&gt;&lt;/copyright&gt;
+&lt;/init&gt;
+(cmd)
+
+
+You can find more information about the Xdebug 2 initialization protocol here.
+A further reference: Howto check xdebug installation.
+Unfortunately the debugclient utility is provided only in source form, so you have to build the executable by yourself; this can be done either on Linux (see INSTALL) and Windows (with Visual Studio - see debugclient.dsp).
+XAMPP includes a compiled version in xampp/php/debugclient.exe.
+    
+    
+Answer 3: 
+
+    
+    
+Netbeans has a very thorough documentation that also covers how to troubleshoot such problems:
+
+http://wiki.netbeans.org/HowToConfigureXDebug
+    
+    
+Answer 4: 
+
+    
+    
+Windows users disable your firewall and then try again.
+If it works, allow Java(TM) Platform SE binary through firewall then enable it again.
+It will work just fine!
+
+Thank you for the commands, they were very useful on debugging.
+    
+    
+Answer 5: 
+
+    
+    
+be careful about firewalls for remote debug sessions. I diagnosed my problem by using telnet to checkout 9000 port status and found that preventations by firewall.
+    
+    
+Title: Visual Studio : exclude outlining from undo/redo stack
+Description: 
+    
+    
+                    
+There's something really annoying in Visual Studio : when I expand or collapse a method or code region, this action is pushed on the undo stack. So if I edit some code in a method, then collapse that method, and then want to undo my change, I have to undo twice : once for the collapse action, and once for the change in code. This can be VERY confusing if you expanded or collapsed several things after editing the code, the editor keeps jumping to different places and you don't know whether your changes have been undone or not...
+So my question is : is it possible to disable that behavior ? i.e., that only changes in code are taken into account in the undo stack ?
+PS: I'm using Visual Studio 2008
+
+If this behavior annoys you too, please vote to fix it on UserVoice!
+    
+
+        
+Answer 1: 
+
+    
+    
+I've created the Disable Outlining Undo extension that excludes expanding and collapsing operations from recording to the undo/redo stack in Visual Studio 2017/2019.
+
+Thanks to Rick Sladkey for the idea!
+    
+    
+Answer 2: 
+
+    
+    
+I did a little poking around and discovered that there is in fact an option in Visual Studio to disable this behavior, and yet it does not seem to be exposed anywhere in the user interface. However, you can set it programmatically, and I tested that it does work, so it is (technically) possible.
+
+The options is:
+
+DefaultTextViewOptions.OutliningUndoOptionId
+
+and you set it like this:
+
+textView.Options.SetOptionValue(DefaultTextViewOptions.OutliningUndoOptionId, false);
+
+
+With this information a very simple Visual Studio extension could be written to toggle this setting for all new ITextView instances.
+    
+    
+Answer 3: 
+
+    
+    
+You can vote for fixing it in Visual Studio UserVoice.
+    
+    
+Answer 4: 
+
+    
+    
+I don't believe there is a way to disable this behavior.  
+
+As alternatives, the undo and redo toolbar icons have history dropdowns that allow you to visually see a summary of what the recent changes were that you would be undoing or redoing.  That can sometimes help to ensure you're undoing (or redoing) what you're expecting.
+
+Since that isn't always enough to know exactly what the changes are (the undo history only displays a summary), the solution I occasionally use to address this is to combine undo (ctrl-z), redo (ctrl-y), and undo again.  The first undo moves to where the change happened (and undoes that change).  The redo will undo the undo (which essentially repeats the last change made). And the last undo will perform the undo again with the window scrolled to the location where I can actually see the undo happening and can confirm whether that's the change I was expecting to undo.  It's not very efficient, but it can be very effective to ensure the code is in state that's really expected.
+    
+    
+Answer 5: 
+
+    
+    
+First, it seems that not all outlining operations are recorded in the undo/redo stack.
+
+Toggle Outlining Expansion (CTRL+M/CTRL+M) is recorded in the stack
+Toggle All Outlining (CTRL+M/CTRL+L) is recorded in the stack
+Collapse to definitions (CTRL+M/CTRL+O) is NOT recorded in the stack
+
+So, as far as I know, it is not possible to avoid the recording of Toggle operations in the undo/redo stack in Visual Studio 2008.
+The only option you have it to enable/disable outlining for each source type. For C#, outlining can be enabled/disabled in Tools → Options → Text Editor → C# → Advanced with the Enter outlining mode when files open checkbox.
+    
+    
+Answer 6: 
+
+    
+    
+The best solution I can propose is to disable outlining using CTRL+M, then CTRL+P.
+    
+    
+Title: How do I get list of recent files in GNU Emacs?
+Description: 
+    
+    
+                    
+When I use Emacs I want to be able to easily display and navigate through a list of files I worked on from not just the current session but from previous sessions. (BTW, running Emacs 22.2 on Windows)
+    
+
+        
+Answer 1: 
+
+    
+    
+From Joe Grossberg's blog (no longer available):
+
+
+  But if you're using GNU Emacs 21.2
+  (the latest version, which includes
+  this as part of the standard distro),
+  you can just put the following lines
+  into your .emacs file
+
+;; recentf stuff
+(require 'recentf)
+(recentf-mode 1)
+(setq recentf-max-menu-items 25)
+(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+
+  
+  Then, when you launch emacs, hit
+  CTRL-X CTRL-R. It will show a list of
+  the recently-opened files in a buffer.
+  Move the cursor to a line and press
+  ENTER. That will open the file in
+  question, and move it to the top of
+  your recent-file list.
+  
+  (Note: Emacs records file names.
+  Therefore, if you move or rename a
+  file outside of Emacs, it won't
+  automatically update the list. You'll
+  have to open the renamed file with the
+  normal CTRL-X CTRL-F method.)
+  
+  Jayakrishnan Varnam has a page
+  including screenshots of how this
+  package works.
+
+
+Note: You don't need the (require 'recentf) line.
+    
+    
+Answer 2: 
+
+    
+    
+Even if you don't have recentf turned on, Emacs is saving a list of files entered via the minibuffer in the variable file-name-history. Also, executing (savehist-mode 1) in your .emacs file makes that variable persist across invocations of Emacs.
+So here's a little function that displays the files that actually exist from that list (anyone is welcome to use/build on this):
+(defun dir-of-recent-files ()
+  &quot;See the list of recently entered files in a Dired buffer.&quot;
+  (interactive)
+  (dired (cons
+      &quot;*Recent Files*&quot;
+      (seq-filter
+       'file-exists-p
+       (delete-dups
+        (mapcar (lambda (s) (string-trim-right s &quot;/*&quot;))
+            file-name-history)
+        ))))
+  )
+
+I find this quite useful and have it bound to one of those little special function keys on my desktop keyboard. (And so I have not seen the point of turning on recentf...)
+    
+    
+Title: Javascript, SublimeCodeIntel and hinting Code Intelligence auto-completion
+Description: 
+    
+    
+                    
+Are there any tips or tutorials to set-up Javascript auto-completion with Sublime Text 2 and SublimeCodeIntel? 
+
+
+What are the limitations of Code Intel auto-completion (modules inside wrapper functon, etc.)
+How Javascript namespace tree is build and can you give manual hints for the Code Intel when it fails to guess correctly (e.g. give somekind of @class my.module.Foobar hint in comments)
+
+
+The problem is that SublimeCodeIntel itself does not describe the process and the orignal authors of Code Intelligence assume you use it with Komodo IDE (where it works fine what I have heard)
+
+Also here goes forum thread without answers
+    
+
+        
+Answer 1: 
+
+    
+    
+I had a look at SublimeCodeIntel (SCI) source codes and my understanding is that lang_javascript.py describes what SCI is capable of. A simple grep of the file shows that it relies on its own implementation and it does not use external JavaScript lexer. It tries to check JSDoc to some point but the implementation looks rather like an ad-hoc one to me.
+
+The JavaScript lexer does not seem to have any tests so it's hard to know what it can do exactly but there are logging commands so you enable them and give it a go what it does. Personally, I have rather bad experience with SCI (it was slow for me and not accurate enough), so I would try to use something more robust - it's old now as the question is two years old.
+
+This is not a direct answer to your questions, it's just an analysis and you'll have to contact the author or dig some more in the source code (which is fairly easy since it's written in Python), if you are still interested.
+
+
+
+There are hidden gems in the source code though:
+
+
+  # Everything is JS is an object.... MUMUHAHAHAHAHAHAAAA.......
+
+
+:-)
+    
+    
+Answer 2: 
+
+    
+    
+This is a good question. However, your answer is not something that is attainable via this forum. Since the SublimeCodeIntel project is open-source, your best resource is to simply read the code. This may be time-consuming especially if the documentation is weak, but it's ultimately the best way to go when using open-source products. The nice (and, IMO, cool) thing is that you can easily contribute to making it a better product, if so inclined.
+
+You're obviously familiar enough with Sublime Text 2 and it's code completion plugin to the point in which you feel comfortable positing this question. Someone could read through the code and spoon-feed you an answer, but that would help no one, especially you, given your interest. I've personally experienced issues regarding a few Sublime Text plugins and just learn to ignore them blissfully while evangelizing the fundamental merits of this IDE.
+
+I look forward to the possibility (at this point) of seeing someone post a listing summarizing your questions -- I would find it helpful too ... but, only for a week. It's open-source and as such changes rapidly. Your question can ultimately only be answered within the context of the effort you wish to put into contributing to it's further development.
+
+https://github.com/Kronuz/SublimeCodeIntel
+    
+    
+Title: Tired of Java IDEs, Need simple and basic alternative
+Description: 
+    
+    
+                    
+I am really happy that I got my work in Java programming, and I am doing it since last 3 yrs.
+And I am netbeans user, and worked on eclipse for sometime (4 months)..
+Now I am tired on IDE's and its issues..  
+
+few issues are:  
+
+
+Doesn't work on slow computers - sometimes i have to work on slow computer..  
+You can't work without them, like I am trying to work on javascript, but it was hard for me because of no code-completion support  
+Many times does not support all the features, but other IDE does, which will make you to try other IDE and results in spending lots of time behind tooling... like I started using AspectJ but there is not much aspectJ support on netbeans.. so decided to try eclipse..  but changing IDE is another pain point.. 
+
+
+I heard that many programmers does not use IDE's they just need text-editors (code-coloring/navigation), And i think its cool, and productive (overall), as their need of tooling is not much, so able to adopt new technologies/frameworks fast..
+
+So, what should i do to shift from Java IDE's to text-editor only world.. ?
+And what are famous advanced text-editor (free/open-source) available ?? 
+
+Few steps towards console-world I have already taken..  
+
+
+Now using Maven, and running from console always.. 
+Doing SVN checkin/checkout from console.. But still it hard to resolve conflict
+
+
+EDIT: I am using Linux &amp; (sometimes Windows).  
+
+Cheers,
+    
+
+        
+Answer 1: 
+
+    
+    
+Emacs. You can take a look at JDEE to get started.
+    
+    
+Answer 2: 
+
+    
+    
+Look no further, embrace vi ( you can start using gvim  - graphic vi improved - ) 
+    
+    
+Answer 3: 
+
+    
+    
+I took the Pragmatic Programmer's advice of learning one editor well (Tip 22: Use a Single Editor Well. The editor should be an extension of your hand; make sure your editor is configurable, extensible, and programmable.) an applied it to IDEs. I'm very happy with sticking to Eclipse, in particular since it's very extensible, so whenever I need tooling for something new, it's mostly available in Eclipse, and my keyboard shortcuts etc. work.
+    
+    
+Answer 4: 
+
+    
+    
+If you are using Linux, then have a look:
+
+
+Vim + eclim (see Tips for using vim as a Java IDE?, Vim Java code completion?)
+Emacs + JDEE (see Is Emacs useful compared to Eclipse programming Java?)
+Geany (see Fast, powerful Geany editor offers IDE features)
+Gedit (see Java compile and run, HOWTO: Set gedit to compile and run Java source code and also Pimp my Gedit (Was: Textmate for Linux) to get some Textmate features)
+JEdit (see Configuring Jedit for Java development by newbe)
+
+
+But I can't suggest one in particular, this is subjective and a matter of personal preference/taste. And, to be honest, I still think that you should use an IDE when doing Java development, text-editors won't solve all your issues and you'll loose very important features (e.g. refactoring). Seriously, when working with a given technology, get the right tool (and computer). With Java, this means using an IDE. And if you want AspectJ support, use Eclipse; if you want good Grails + Groovy support, NetBeans is a good choice; etc etc. Using several IDE is actually the norm for me.
+
+Just for the record, check out what James Gosling says in Don't use Emacs, says Java's father (which applies to all text-editors IMO, not only Emacs).
+    
+    
+Answer 5: 
+
+    
+    
+Notepad++ is another good alternative for windows. It is a very light-weight editor which has syntax highlighting for a variety of programming languages (including java). Notepad++ also supports multiple tabs.
+    
+    
+Answer 6: 
+
+    
+    
+I can appreciate you concerns and I felt similar until I found IntelliJ Idea. I realize you were asking about text editor alternatives but you didn't mention whether or not you'd tried Idea so I thought I'd mention it. I found it to be a breath of fresh air. Its fast, easy to use, and easy to configure. I love using it and it really felt like they had me personally in mind when they designed it. Unfortuantly, its not free, but you can do a trial and see if you like it at http://www.jetbrains.com/idea/download/
+
+If you really must use text editors, I can second recomendations for Notepad++ and Textpad, both of which I've enjoyed at one time or another.
+
+I am now using Flex Builder 3 for some flex work and I hope you are never subjected to that abomination or you may give up IDEs forever :)
+
+Anyway, best of luck!
+    
+    
+Answer 7: 
+
+    
+    
+some update: take a look at http://www.sublimetext.com/2 it's commercial, but this one supports all platforms, not java based, uses own interface. I know at least 4 vim guys who already migrated to this one probably because you can write plugin in almost any language! =)  there's repository for plugins. I think this is really something new and worth to have. If you develop for a company money is not a problem in here =)
+    
+    
+Answer 8: 
+
+    
+    
+I would vouch for Netbeans. It has been my favourite IDE since the last 5 years. It has excellent code completion support for almost all the languages. It also has added extensive support for Javascript and Maven in its latest releases.
+
+I would definately recommend it to everyone. It can be found at www.netbeans.org. Do check out the site to see list of all the features.
+
+Available for both linux and windows. And is much ligther on system resources then eclipse.
+    
+    
+Answer 9: 
+
+    
+    
+Maven and SVN are a good start.  Other than that, you will probably just want to master the shortcuts of a good text editor.  There are the two holy choices: vim and emacs.  I prefer neither, and usually go with textmate for mac.  
+
+Even though IDE's can be a pain in some regards there is a lot of stuff you give up without them.  For example, I am not a gifted enough Java developer to have memorized the Java and Spring API's, so code complete is huge for me.  Also, having the IDE flag compiler errors on the spot is a huge time saver.  Adding TODO's to my code and coming back to them is handy.  Do you think your overall time will be saved without these features? If so, then definitely give the vim/emacs approach a try.  
+    
+    
+Answer 10: 
+
+    
+    
+I would suggest either Emacs or vim (in GUI mode) as an editor, as they are de-facto standards on Unix in general.  Then use ant to build your code using javac.
+    
+    
+Answer 11: 
+
+    
+    
+The Text-editor of choice for many developers is Emacs. It's amazingly powerful, sophisticated and extensible but it's also entirely keystroke oriented and once you get used to the keystroke combinations they are great but for a while you feel a bit lost trying to work out how to do everything. Also by default the keystrokes it uses are different from the ones you may be familliar with elsewhere, which is fine once you have learned them but sometimes you end up using the wrong key combinations for the program you are using and doing different things. For example in Emacs "Save file" is CTRL-x CTRL-s which means then when I open up Visual Studio I tend to cut whatever I have currently selected out of the file before saving it. Of course, that is configurable, I just have never got around to configuring it...
+
+Because it has been around for a while and is the choice of a lot of elite developers, Emacs has different plugins available for most languages and development tasks, making it very flexible and well equipped to do more or less anything you ask of it. You can also get hold of it for most platforms and it will run fine on older or more limited systems or on a terminal if you're logging in to remote machines.
+    
+    
+Answer 12: 
+
+    
+    
+Like @darren said, you give up a lot of comfort especially with code completion when switching to a pure text editor.
+
+Perhaps you give Java-Editor a try. It's a java IDE, but it's very light, running even on slow computers.
+
+From the description of Java-Editor:
+
+
+  Integrated Java development environments set high requirements on the computer equipment. These requirements are not always met in schools. If the students shall work at home with these development systems, only freely available systems come into question. There are hardly any systems left which actually can be used for teaching. This was the reason for me to develop the Java-Editor which is described below. 
+
+    
+    
+Answer 13: 
+
+    
+    
+I know someone who uses vim + cscope and he says it works pretty well. 
+    
+    
+Answer 14: 
+
+    
+    
+Textpad is a good choice if you're running on Windows.
+    
+    
+Answer 15: 
+
+    
+    
+Just for interest: Why do you develop on a slow machine? Usually developers get decent developing-machines.
+
+For scripts or some configuration files I love to use text-style editor vim. But I cannot imagine to go for java-developing without an IDE. Main reason: Better support of automated refactorings, which are a killing feature to me.
+
+Maybe have a try on Intellij. At some point I also got annoyed with eclipse and switched IDE.  Some while ago I posted a blog-entry, it shows you a direction of eclipse vs. intellij. Some details though are a bit outdated (it discusses IntelliJ 7, current IntelliJ 9 in my view now has better maven support as eclipse). The Ultimate edition costs money, but this is OK (if I compare the costs saved on better productivity).
+    
+    
+Answer 16: 
+
+    
+    
+You can use Visual Studio Code + Language Support for Java | Java Language Support as a lightweight cross-platform alternative to Java IDEs.
+    
+    
+Answer 17: 
+
+    
+    
+I would recommend BlueJ, its a very nice simple Java IDE.
+It is interactive and innovative, available for Windows, Mac and Ubuntu/Debian.
+Features include:
+
+
+Code Scope Highlighting
+ 
+Code Auto Indent
+Object Inspection &amp; Method Invokation
+ 
+
+
+There's also a Tutorial in English and Tutorial in Japanese
+And the bird "bluejay"
+
+
+
+Other Recommendations: jEdit &amp; Geany
+    
+    
+Answer 18: 
+
+    
+    
+gedit (gnome) or kate(kde) + ant.
+
+People who suggest emacs forget that, while it is a great OS, it really needs a decent text editor. Learning vi, while useful if you actually have to use a cli editor, is about as much a pain in the ass as learning an IDE. Both kate and gedit are about as hard to learn as notepad.exe except they support syntax highlighting. 
+
+Ant is easier to learn than make IMO (probably due to the way c/c++ compiling works), but takes longer to write (it's xml). I guess you could use make to compile java. I've been told that maven2 replaces ant, but have never used it. If it does, you could use it instead of ant.
+
+As for svn merging, there are a variety of tools ranging from diff (cli, produces difference files) to meld python gui that gives you side-by-side diff. On windows, tortoisesvn ships with tortoisemerge, which does 2 and 3-way diffs graphically.
+    
+    
+Answer 19: 
+
+    
+    
+Try gedit or the powerful jEdit.
+    
+    
+Answer 20: 
+
+    
+    
+if you using mac then Coda IDE or TextMate is your friend. Coda supports svn and sftp, have great syntax completion and highlighting. Such things as  code sharing, snippets collection and some other nifty stuff really gives of IDE feeling, although many eclipse guys says that this is just a simple text editor. 
+
+Gurus sticks to VIM or EMACS which requires lots of learning in fact (two different religions, vim is command based, and emacs is shortcut based). personally I like emacs more because of funcionality and faster learning process (mac have more complicated shortcuts then windows, it's kind of more easier to use emacs for me)
+
+on windows notepad++ already have intergrated sftp, that's would be enough for me. for svn mostly tortoiseSVN is used.. 
+
+Maybe few software instead of one, seems to messy for developing - but it's not. Infact because software usability is high, workflow is really faster then with eclipse or netbeans.
+
+Personally I stick to Coda IDE a lot. Because of text editor inverted colors, minimalism of interface, speed of actions you need to do, not-aliased fonts (like monaco 10px)... best software I've used in my life.. but it's for mac only =) I feel so comfortable with it, that I decided to buy a macbook finally (migrated from hackintosh). I'm happy more then ever was =) I wanna code so hard when I just opening this software and see my code on black background - magic feeling! =)
+
+Cheers
+    
+    
+Answer 21: 
+
+    
+    
+Use VS Code and install Java extension
+    
+    
+Title: Django templates syntax highlighting in Eclipse
+Description: 
+    
+    
+                    
+I use Eclipse and pydev for django development. This has worked more or less ok, including debugging. Syntax highlighting doesn't seem to work everywhere though. I couldn't get any highlighting for the templates thought. Is there a way to get the highlighting and code suggestions for the templates?
+    
+
+        
+Answer 1: 
+
+    
+    
+The latest PyDev versions include a Django template editor, but it's not compatible with vanilla Eclipse. You have to use Aptana Studio instead.
+
+Just use http://pydev.org/nightly as update URL, the PyDev and Django template editor packages should be there.
+    
+    
+Answer 2: 
+
+    
+    
+Django Editor Plugin for Eclipse
+    
+    
+Answer 3: 
+
+    
+    
+For clarity
+
+Django Templates Editor is only available with Aptana 3.0 and later.  Pydev in eclipse alone does not support it.  Aptana is available as an eclipse plugin or stand alone.
+
+As mentioned by mcoconnor Window -
+Answer 4: 
+
+    
+    
+The current recommended way of having a Django Templates Editor with PyDev is by using LiClipse: http://www.liclipse.com (which is a commercial counterpart made to keep PyDev supported -- as such it has PyDev standalone and a bunch of other goodies builtin).
+
+Note that by default the html editor in LiClipse is bound to .html and the django templates to .djhtml, so, you can either:
+
+
+open with /lili
+Answer 5: 
+
+    
+    
+If you install the Eclipse Web Tools Platform (WTP), it bundles a nice HTML editor, which does 95% of the syntax highlighting you'd want in a Django template.  It also includes editors for other common web types, like JS and CSS, which are often nice when working with Django projects.  This will also give you code completion and automatic tag closing for the HTML elements, at least.
+
+If you use a .html extension on your template files, you'll probably get the right editor by default when you open them up, but if not, you can associate the HTML Editor with whatever extension you use in the Window -
+Title: ML IDE and Compiler for Windows or Linux or Mac
+Description: 
+    
+    
+                    
+I have to write some code in ML and it is my first time I`m going to use the language.
+Is there any Development Environment for Standard ML? (preferably under Windows). I tried googling (and stackOverFlowing ! ) but all I found was plain compilers for Linux (at most with an interactive console), but no IDE nor Eclipse/NetBeans plugin.
+Any suggestions ?
+    
+
+        
+Answer 1: 
+
+    
+    
+How to Configure SML with Sublime Text 2
+
+For those who prefer Sublime Text instead of Emacs as the editor of choice to program SML, the following guide describes how to configure Sublime Text to work with SML.
+
+For this guide to work for you, you must already have installed smlnj.
+
+Step 1: Install Sublime Text and Package Control
+
+Start by Downloading Sublime Text 2. Make sure to download version 2, because the SML syntax support does not yet work with version 3. 
+
+Sublime Text supports an amazing set of packages (i.e. plugins) that you can install separately. One of those packages is called Package Control. You must first Install Package Control to be able to install other packages directly from the editor. The provided link explains what you need to do to install this package.
+
+Step 2: Install SML and Sublime REPL
+
+Now that you have Package Control installed it is going to be really easy to install other packages. There are two packages that we must install now: SML to support syntax highlighting features for the programming language and SublimeREPL which, as you might guess, is a package that adds REPL capabilities for many different programming languages to Sublime Text.
+
+To install these packages you must go to the menu and look for Tools -/pp
+Answer 2: 
+
+    
+    
+You can use Isabelle/jEdit as IDE for Isabelle/ML or official Standard ML (SML'97).  The underlying ML system is Poly/ML, which is notable for its support for multicore-hardware.
+
+Strictly speaking the Isabelle environment is for interactive and automated theorem proving, but its SML IDE support is quite sophisticated: source files are statically checked and semantically evaluated while the user is editing.  The annotated sources contain markup about inferred types, references to defining positions of items etc.
+
+As a quick start, see the Documentation panel, section Examples, entry src/Tools/SML/Examples.thy (as of Isabelle2014).
+
+
+    
+    
+Answer 3: 
+
+    
+    
+When working with SML on Windows, I've been using SML/NJ for compiling and Notepad++ for editing (Notepad++ has syntax coloring for Caml, which should be identical to SML for your needs).
+
+As mentioned, for ML a simple editor should be enough.
+    
+    
+Answer 4: 
+
+    
+    
+For SML a few Emacs modes exist. Check http://mlton.org/Emacs for more information.
+
+The sml-mode should provide you a good environment for writing SML code. Eclipse &amp; Co. were developed due to the fact that java requires a lot of boilerplate stuff like accessors, adapters and so on. If you require same features for ML then you should double-check whether you are not over-engineering.
+
+Edit: and by the way, SMLNJ ships with an eclipse plugin. I can't post a link though, just google for smlnj eclipse .
+    
+    
+Answer 5: 
+
+    
+    
+I'm developing Scheme IDE for Windows. It's called "Babbage" . It has also mode for OCaml and SML. It is like a minimum Emacs. Babbage is very simple and has windows like key assign. Babbage is Unicode editor. 
+
+http://homepage1.nifty.com/~skz/Entry/babbage.html
+    
+    
+Answer 6: 
+
+    
+    
+Eclipse can be set up to get much useful functionality, without having an sophisticated specific language plug-in.
+
+I maintain a guide for setting up Eclipse for new languages. Some highlights from that document:
+
+
+Syntax colors can be added with either the Eclipse Colorer. They are plug-ins that provides syntax colors for a large number of languages, including SML and OCaml. New languages can be added easily using custom color files.
+To build using an external compiler from inside Eclipse the standard Program Builder feature can be used. The builder is run when the normal Build Project command is issued. To set up a new builder: Project Properties -
+Title: Disable spell check on field names in Android Studio
+Description: 
+    
+    
+                    
+I have been using Eclipse/ANT for 5 years now. Android Studio is out of beta so I am starting to get myself familiar with it. Android Studio seems to be spell checking field names. Why on earth would any IDE do that?
+
+I still want spell check enabled, but not on any field names. I would expect spell check to only check comments or javadoc. How can I fix this?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  Why on earth would any IDE do that?
+
+
+I think because people can make typos in field names as well.
+
+
+  I still want spell check enabled, but not on any field names. I would
+  expect spell check to only check comments or javadoc. How can I fix
+  this?
+
+
+I'd say it's not even broken ;) Check out the preferences, you'll find that you can define the scope of spell checking. (Editor / Inspections / Spelling)
+
+
+  Android Studio is out of beta 
+
+
+Final. Since yesterday.
+    
+    
+Answer 2: 
+
+    
+    
+If your using Android Studio 1.1.0, then spell check can be customized/disable via:
+
+File -
+Title: A good development environment setup for Web2Py
+Description: 
+    
+    
+                    
+Have been trying out Web2Py for a couple of days now and I decided it to be a keeper. But there is one thing that concerns me a lot and that might be a showstopper in the end. I need a nice development environment &amp; setup I can trust and be productive with. Coming from the MS Visual Studio world I'm looking for something with good autocomplete / intellisense + functions for versioning and deployment.
+
+I did some attempts to edit my code in Eclipse but it needs additional setup to run with autocomplete, and for debugging I dont know if it's possible. (Noticed there was a Django project template in Eclipse which is a bit tempting I must say.)
+
+Wing Ide has a instruction on how to get web2py up and running and I am up to testing that one. Not free, but very cheap compared to much in the Windows world.
+
+I also want a good versioning (hg) setup, and preferably a semi-automatic FTP-deployment-method.
+
+What IDE do Web2Py developers use, and how do your setup look like? 
+
+A complete setup script for a project in a good IDE would be awesome! (Just like the installation is, one click to get it running 100%).
+
+Pycharm looks good, perhaps that one can add web2py support  http://youtrack.jetbrains.net/issue/PY-1648
+
+Thanks a lot!
+    
+
+        
+Answer 1: 
+
+    
+    
+
+OS: Windows 7/Windows XP
+IDE: NetBeans
+Version control: TortoiseHg/NetBeans
+Debugger: winpdb
+Shell: IPython
+Publish: WinSCP/PuTTY/TortoiseHg
+
+
+Scripts
+
+Once I create a new project in web2py I add a few scripts to my main app folder:
+
+web2py\applications\myapp\DebugWinpdb.bat:
+
+C:\Python25\Scripts\winpdb.bat ..\..\web2py.py -i 127.0.0.1 -p8000 -mypassword
+
+
+web2py\applications\myapp\DebugShell.bat:
+
+C:\Python25\Scripts\winpdb.bat ..\..\web2py.py -S myapp -M
+
+
+web2py\applications\myapp\Shell.bat:
+
+python ..\..\web2py.py -S myapp -M
+
+
+IDE
+
+As others have stated you need to do some extra stuff to get autocomplete/intellisense for web2py no matter what IDE you use.
+
+For me NetBeans was a good compromise between does-everything-if-only-you-can-figure-out-how (Eclipse/PyDev) and does-the-basics-but-few-extras (PyScripter).
+
+NetBeans Setup (Project Properties):
+
+
+Python Category
+
+
+Python Platform: Python 2.x (default is Jython)
+
+Run Category
+
+
+Main Module: web2py.py
+Application Arguments: -i 127.0.0.1 -p 8000 -a mypassword
+
+
+
+NetBeans Pros:
+
+
+Tight Mercurial integration
+
+
+Highlights which lines have been added, changed, or deleted in your source file as you edit it
+Selective rollback of individual changes you've made since your last commit
+One of the nicest visual diff viewers I have used
+
+Python PEP8 style hints (fully customizable)
+
+
+Name "foo" is not a valid class name according to your code style (CapitalizedWords)
+Name "Bar" is not a valid function name according to your code style (lowercase_with_underscores)
+Auto-format hotkey (corrects spacing around operators, etc)
+
+Navigation within source file
+
+
+semantically indexes current source file
+organizes alphabetically by type (Class, method, attribute, etc)
+makes even enormous style sheets manageable
+
+
+
+NetBeans Cons:
+
+
+Integrated Debugger doesn't work with web2py (that one really hurts)
+Long startup time (but acceptably snappy for me once up and running)
+
+
+Version Control
+
+I use and highly recommend Mercurial for source control.  As mentioned earlier, NetBeans has great support for Mercurial but there are some things I'd just rather do in TortoiseHg.
+
+TortoiseHg Pros:
+
+
+Shell overlay icons
+Repository Explorer
+
+
+view repos history with graphical display of branching/merging
+one stop shop for Incoming, Outgoing, Push, Pull, Update, etc with button for Commit tool
+
+Commit tool
+
+
+Hunk Selection: cherry pick changes from within a file for more focused Commits
+Add, Remove, Diff, Revert, Move, Remove, Forget
+
+
+
+TortoiseHg Cons:
+
+
+No easy way to drop directly into a command line
+Bug that regularly prevents files from being removed during commit (waits indef for a lock to be released; running hg addremove from command line is a reliable workaround)
+
+
+Publishing
+
+I use a combination of WinSCP (for browsing), PuTTY (for terminal commands), and TortoiseHg (for push/pull of my repos) to work with my shared hosting account on Webfaction.  
+
+The first thing I do is set up public/private key encryption.  If you are having trouble getting this set up between Windows and Linux, try these instructions from Andre Molnar.  Short story is you need to generate your private key using ssh-keygen on Linux, copy it down to your Windows machine using WinSCP, then convert it for use with WinSCP and PuTTY.
+
+Then add the following lines to your global mercurial.ini file:
+
+[ui]
+ssh = "C:\Program Files\TortoiseHg\TortoisePlink.exe" -ssh -2 -i "c:\path\to\your\privatekey.ppk"
+
+
+Even if you have to connect to multiple servers, you need only copy your public key to each of the different servers.  You'll also want to let WinSCP and PuTTY know where your private key is located, but those are fairly easy to figure out.
+    
+    
+Answer 2: 
+
+    
+    
+Try the new web2py admin interface in trunk. It has a web based mercurial interface and a google deploy interface. 
+
+In web2py you can edit applications/admin/models/0.py and set
+
+TEXT_EDITOR = 'amy'
+
+
+And you will get the web based Amy editor with autocompletion. It is not default because because it does not work with some browsers and because autocompletion is not as good as eclipse. It may work for you.
+
+You can use web2py with Eclipse but you need a minor workaround to let Eclipse know about the web2py environment. It is explained here.
+
+I know other users have used other IDEs with web2py, for example WinIDE and pyCharm. I suggest you ask on the web2py mailing list where people are very helpful.
+    
+    
+Answer 3: 
+
+    
+    
+I'm pretty sure that the 'one-click setup script' to do all that you are looking for does not exist (at the moment).  But don't be put off - you can achieve a nice development environment to suit your needs and there are lots of choices.
+
+Although I develop on Windows, I like the setup I have as it's more of a 'Unixy' way of thinking whereby I have a number of tools each doing a specific task.  Once you get a workflow setup you can be very productive - although I realise it may look a bit confusing initially coming from a Visual Studio world.
+
+Below I outline what I've settled on.  I'm sure others will have their own recommendations.  Pick the options you like best.
+
+(There should be hyperlinks to useful software below but I don't have enough reputation to include more than 1 link...)
+
+For developing on Windows I'm enjoying using Pyscripter.  It's free, fast (compared to Aptana / Eclipse / Netbeans etc) and has some nice features (dark theme, integrated python console and code explorer to name a few).
+
+To get code completion / intellisense to work for web2py you need to add some code to your model / controller files because of the way web2py works.  There are some instructions in this discussion topic on the web2py group.
+
+web2py has a great error ticketing system built in (see the web2py book chapter 3).  For more comprehensive debugging, pydb seems to be the way to go.  Just put the code below as a breakpoint:
+
+import pydb 
+pydb.debugger()
+
+
+and it'll take you to the debugger.
+
+I use TortoiseHg for Mercurial integration and it works wonderfully. Combine that with winscp and you can deploy easily.
+    
+    
+Answer 4: 
+
+    
+    
+Caveats: I work in OS X, and do most of my coding in BBEdit. 
+
+That said, I've used both Wing and Komodo IDE for web2py debugging, and they've both worked quite well for me. I haven't tried NetBeans in a while now; when I did the Python support seemed a little rough around the edges. And I've never had the time or patience to come up to speed with Eclipse; it's filed  in my mental file cabinet with Emacs, no doubt unjustly to Eclipse and/or Emacs.
+
+(And I'll echo mdipierro's recommendation to try the web2py mailing list; it's really indispensable--one of web2py's strongest points.)
+    
+    
+Answer 5: 
+
+    
+    
+Have you considered using fewer tools? Both Python and web2py don't require a whole lot of code to get a lot accomplished. web2py only adds 10 or 15 new function calls (besides the HTML helpers and validators). You might find that Eclipse and other IDEs actually get in the way. Setting up new apps in web2py is simple through the admin system. Since the new app scaffolding copies the welcome app, you can customize new app setup by editing the welcome app. With Mercurial (or Git, Subversion or Bazaar) you can set up a server on your machine or with one of the public sites and either push or pull updates to your production server. Keep it simple, I say.
+    
+    
+Answer 6: 
+
+    
+    
+we are using web2py framework for all our web application needs and this is our setup :
+
+OS - Ubuntu up-to-date
+IDE - Aptana Studio 3.0 with pyDev
+Version Control - git
+Python  2.7
+Browser for developing phase : Chrome
+    
+    
+Answer 7: 
+
+    
+    
+I've found the Wing IDE debugger to be very useful.  It's a powerful debugger across the board, and also can be configured to do remote debugging, which is really important when you are running web2py on a no-GUI remote machine (e.g. at Amazon Web Services).
+    
+    
+Title: Describe your customized Vim editor for Python/Django development?
+Description: 
+    
+    
+                    
+I've recently switched entirely to Vim for all my Python/Django development. It took me a lot of time to customize it to the point it is today, and God knows how hard it was for me to find help regarding the best vim plugins out there suited for Python/Django development.
+
+I decided to ask this question so people like me could benefit directly from your experience:
+You've built the perfect Python/Djangoish Vim editor? Describe it for us (plugins, scripts, customized .vimrc, colorschemes ..etc).
+
+Thanks
+
+My Configuration
+
+Ok, this is my own configuration. actually I've chosen to create a simple Vim configuration so I can master the little number of plugins I've chosen to install instead of make a big stack of plugins that I'll never master nor use. This is the list of the plugins I use the most:
+
+
+NERDTree for file management,
+SnipMate which is an implementation of TextMate's snippets feature,
+Code Completion is handled with Omnicompletion which come by default in Vim,
+Pydoc to integrate the Python Documentation into Vim,
+TagList for source code browsing, very useful in large files.
+Pyflakes script to highlight Python code on the fly with warnings
+
+
+Also I've created a python.vim file in $HOME/.vim/ftplugin/ containing this script so I can run python code from Vim just by running Shift+e:
+
+" Execute file being edited with &lt;Shift&gt; + e:
+map &lt;buffer&gt; &lt;S-e&gt; :w&lt;CR&gt;:!/usr/bin/env python % &lt;CR&gt;
+
+
+Also I've collected some useful .vimrc customizations:
+
+set nocompatible    " use vim defaults
+set number          " show line numbers
+colorscheme desert
+set tags=tags;$HOME/.vim/tags/ "recursively searches directory for 'tags' file
+set expandtab       " tabs are converted to spac
+set tabstop=4       " numbers of spaces of tab character
+set shiftwidth=4    " numbers of spaces to (auto)indent
+set showcmd         " display incomplete commands
+set hlsearch        " highlight searches
+set incsearch       " do incremental searching
+set ruler           " show the cursor position all the time
+set numberwidth=4   " line numbering takes up 5 spaces
+set ignorecase      " ignore case when searching
+set nowrap          " stop lines from wrapping
+filetype plugin indent on " turn on the indent plugins
+syntax on                 " syntax highlighing
+" TagList Plugin Configuration
+let Tlist_Ctags_Cmd='/usr/bin/ctags'       " point taglist to ctags
+let Tlist_GainFocus_On_ToggleOpen = 1      " Focus on the taglist when its toggled
+let Tlist_Close_On_Select = 1              " Close when something's selected
+let Tlist_Use_Right_Window = 1             " Project uses the left window
+let Tlist_File_Fold_Auto_Close = 1         " Close folds for inactive files
+" Omnicompletion functions
+autocmd FileType python set omnifunc=pythoncomplete#Complete
+autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+au FileType py set expandtab
+au FileType py set foldmethod=indent
+map &lt;F2&gt; :previous&lt;CR&gt;                  " map F2 to open previous buffer
+map &lt;F3&gt; :next&lt;CR&gt;                      " map F3 to open next buffer
+map &lt;F4&gt; :NERDTreeToggle&lt;CR&gt;            " map F4 to open NERDTree
+map &lt;F5&gt; :TlistToggle&lt;CR&gt;               " map F5 to toggle the Tag Listing
+map &lt;silent&gt;&lt;C-Left&gt; &lt;C-T&gt;              " taglist - map Ctrl-LeftArrow to jump to the method/property under your cursor
+map &lt;silent&gt;&lt;C-Right&gt; &lt;C-]&gt;             " taglist - map Ctrl-RhitArrow to jump back to your source code
+map &lt;silent&gt;&lt;A-Right&gt; :tabnext&lt;CR&gt;      " map Alt-RightArrow to jump to the next tab
+map &lt;silent&gt;&lt;A-Left&gt; :tabprevious&lt;CR&gt;   " map Alt-LeftArrow to jump to the previous tab
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't really have much Django specific mods, although I have given the jinja2 syntax a higher priority than the django template syntax.
+
+For Python specifically:
+
+
+For Python syntax checking I use PyFlakes with highlight SpellBad ctermbg=darkred
+Sometimes (rarely) I feeld the need for autocompletion and in that case I use Eclim
+For the rest, the default stuff. Tab size 4, soft tabs, etc...
+
+
+Vim Settings:
+
+
+256 Color scheme desert256
+
+if ((&amp;term == 'screen') || (&amp;term == 'screen-bce') || (&amp;term == 'xterm')) 
+    set t_Co=256                                                          
+    set t_Sb=^[[4%dm                                                      
+    set t_Sf=^[[3%dm                                                      
+    colo desert256                                                        
+endif
+
+Lots of tabs (tabe, tabn)
+Lots of splits (both vertical and horizontal)
+
+    
+    
+Answer 2: 
+
+    
+    
+I am not going to post my whole .vimrc file here, but I have a similiar setup as you. This is less Python/Django specific though, except for some custom snippets for snipMate and python-mode. Here the vim plugins I am using:
+
+
+Pathogen: better organized vim plugin structure in .vim dir
+comments.vim: faster language specific commenting with ctrl-c and ctrl-x 
+NERDTree
+NERDTree tabs
+syntastic: Syntax checking plugin (for me mainly used for non-python code)
+surround.vim and autoclose.vim: Easier handling of brackets, opening and closing tags etc.
+matchit: extends the % command to also match and circle through for example html tags. For circling through Python code statements (eg. if-elif-else) you can download python_match.vim and put it into your ftplugin/python/ dir. I put it into ~/.vim/bundle/matchit/ftplugin/python/
+python-mode: Great plugin for Python editing. Has automated pyflakes/pep8 checking (or pylint if you want) on file save. I deactivated the auto complete via let g:pymode_rope = 0 in my .vimrc file though, since it lagged for me on each file save. Also the syntax highlighting is extended for python code.
+snipMate (custom snippets for python follow below)
+tagBar: I can't live without an outline for huge code files.
+
+
+Some custom python snippets I use quite frequently:
+
+snippet #utf
+    # -*- coding: utf-8 -*-
+
+snippet ds
+    """
+    ${1: }
+    """
+# just the first (or last) three quites for the docstring
+snippet dss
+    """${1: }
+# For file headers
+snippet dsfile  
+    """
+    :File: ${1:`Filename('$1.py', 'foo.py')`}
+    :Author: ${2:`g:snips_author`}
+    :Description: ${3}
+    """
+snippet pdb
+    import pdb
+    pdb.set_trace()
+
+    
+    
+Title: How to Display Current Function in Eclipse
+Description: 
+    
+    
+                    
+I miss a certain functionality in Eclipse. I would like to know the name of the current function the cursor is currently inside. This is useful when browsing unknown code using the search function, for example.
+
+Any idea how to show it? Maybe a plugin?
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm using the "Toggle Breadcrumb" option from toolbar:
+
+
+
+It shows a nice breadcrumb, ending with current function name.
+
+It's quite handy for me, as Outline becomes cumbersome to use if you have zilions of functions.
+
+It produces the following structure above your Java Editor (truncated at the picture below):
+
+
+    
+    
+Answer 2: 
+
+    
+    
+The &quot;Outline&quot; view shows the current function.
+
+It may be necessary to enable the 'Link to Editor' option in the Outline View dropdown menu. This might be off by default for CDT.
+    
+    
+Answer 3: 
+
+    
+    
+I was looking for something similar (Xcode-like bar at the top showing the current function, where you can also go to another function by clicking on it to open a popup list of functions). Here is what I settled on with Eclipse 3.5.1 CDT:
+
+I moved the Outline view to the top, resized it to make it a 1-line horizontal strip (don't make it too narrow), and selected "Link With Editor" in its menu, so that it always shows the current function. However, this doesn't open a popup list like Xcode. For that functionality, I assigned a shortcut to the "Show Outline" command which does open a popup list of all functions.
+    
+    
+Answer 4: 
+
+    
+    
+The Eclipse function 'show outline' will pop up a list of outline objects, and it will highlight the object your cursor is inside in grey. It's typically bound to 'ctrl-o' (the letter 'o', not zero), but you can re-bind it as you see fit. I'm running Eclipse with the CDT plugin and it works pretty well for me.
+    
+    
+Answer 5: 
+
+    
+    
+To enable the breadcrumb invoke Toggle Java Editor Breadcrumb in the toolbar or press Alt+Shift+B in the Java editor.
+    
+    
+Answer 6: 
+
+    
+    
+You can also display the Quick Outline (ctrl+o). This way you see the context quickly without having to have a permanent Outline Window linked to the Editor.
+    
+    
+Answer 7: 
+
+    
+    
+Use the "Link With Editor" option on the outline menu
+    
+    
+Answer 8: 
+
+    
+    
+Press  Ctrl+o   (cursor is currently inside a function at a particular line).
+
+It highlights the current method, or name of the class if the cursor is outside the method body. 
+You can click on highlighted method.
+
+It has got inline search feature ...start typing name of the method to navigate to the specified method or method with matching search pattern.
+
+If you press again Ctrl+o to shows the inherited members/methods.
+    
+    
+Answer 9: 
+
+    
+    
+Using outline with "link with editor" option worked also for me, thanks!
+Just an addition, you can move outline pane in to the same window group as search, progress etc. saves the space in your perspective instead of keeping it at another group.
+    
+    
+Title: Curly braces autocomplete in Visual Studio 2012
+Description: 
+    
+    
+                    
+Just migrated from vs10 to vs12 and it seems like the curly braces is completely broken along side with some other features like indentation in C# (?)
+for example type:
+
+public static void myFunc() {
+
+
+In visual studio 10 it would automatically add the closing curly brace for it.
+Is there some power tool or something that can fix this and give the same behavior? 
+the Brace Completer requires to hit Enter after the function for it to add the closing braces.
+
+Also in tools-
+Answer 1: 
+
+    
+    
+Visual Studio 2010 doesn't do that by default (at least not in my case). Are you sure you weren't using an extension like Productivity Power Tools
+
+This one supports VS2012:
+http://visualstudiogallery.msdn.microsoft.com/0e33cb22-d4ac-4f5a-902f-aff5177cc94d
+    
+    
+Answer 2: 
+
+    
+    
+If anyone is having this issue with VS 2013, there is a setting for this now. I just reset my VS settings and it started to complete my braces again. For me, it wasn't productivity power tools. You can turn it on/off here:
+
+
+    
+    
+Answer 3: 
+
+    
+    
+Productivity Power Tools for 2012 are available now which has auto-brace completion, OP was almost definitely using the 2010 version.
+
+Productivity Power Tools for 2013
+
+If you haven't used it before, you can turn on/off pretty much every feature it adds in options/p/div
+Answer 4: 
+
+    
+    
+Here's the code to create Auto Complete Brackets for RichTextBox using C#.
+
+using System;  
+using System.Collections.Generic;  
+using System.ComponentModel;  
+using System.Data;  
+using System.Drawing;  
+using System.Windows.Forms;  
+
+namespace Auto_Complete_Brackets  
+{  
+    public partial class Form1 : Form  
+    {  
+        public Form1()  
+        {  
+            InitializeComponent();  
+        }  
+
+        //declare  isCurslyBracesKeyPressed variable as Boolean and assign false value  
+        //to check { key is pressed or not  
+        public static Boolean isCurslyBracesKeyPressed = false;  
+
+        //richTextBox1 KeyPress events  
+
+        // if key (,{,&lt;,",',[ is pressed then insert opposite key to richTextBox1 at Position SelectionStart+1  
+        // add one line after inserting, e.Handled=true;  
+        //finally set SelectionStart to specified position  
+
+        private void richTextBox1_KeyPress(object sender, KeyPressEventArgs e)  
+        {  
+            String s = e.KeyChar.ToString();  
+            int sel = richTextBox1.SelectionStart;  
+            if (checkBox1.Checked == true)  
+            {  
+                switch (s)  
+                {  
+                    case "(": richTextBox1.Text = richTextBox1.Text.Insert(sel, "()");  
+                        e.Handled = true;  
+                        richTextBox1.SelectionStart = sel + 1;  
+                        break;  
+
+                    case "{":  
+                        String t = "{}";  
+                        richTextBox1.Text = richTextBox1.Text.Insert(sel, t);  
+                        e.Handled = true;  
+                        richTextBox1.SelectionStart = sel + t.Length - 1;  
+                        isCurslyBracesKeyPressed = true;  
+                        break;  
+
+                    case "[": richTextBox1.Text = richTextBox1.Text.Insert(sel, "[]");  
+                        e.Handled = true;  
+                        richTextBox1.SelectionStart = sel + 1;  
+                        break;  
+
+                    case "&lt;": richTextBox1.Text = richTextBox1.Text.Insert(sel, "&lt;&gt;");  
+                        e.Handled = true;  
+                        richTextBox1.SelectionStart = sel + 1;  
+                        break;  
+
+                    case "\"": richTextBox1.Text = richTextBox1.Text.Insert(sel, "\"\"");  
+                        e.Handled = true;  
+                        richTextBox1.SelectionStart = sel + 1;  
+                        break;  
+
+                    case "'": richTextBox1.Text = richTextBox1.Text.Insert(sel, "''");  
+                        e.Handled = true;  
+                        richTextBox1.SelectionStart = sel + 1;  
+                        break;  
+                }  
+            }  
+        }  
+
+
+        // richTextBox1 Key Down event  
+        /* 
+         * when key  {  is pressed and {} is inserted in richTextBox 
+         * and isCurslyBracesKeyPressed is true then insert some blank text to richTextBox1 
+         * when Enter key is down 
+         * it will look like this when Enter key is down 
+
+             { 
+                   | 
+             }         
+
+         * */  
+
+        private void richTextBox1_KeyDown(object sender, KeyEventArgs e)  
+        {  
+            int sel = richTextBox1.SelectionStart;  
+            if (e.KeyCode == Keys.Enter)  
+            {  
+                if(isCurslyBracesKeyPressed==true)  
+                {  
+                    richTextBox1.Text = richTextBox1.Text.Insert(sel, "\n          \n");  
+                    e.Handled = true;  
+                    richTextBox1.SelectionStart = sel + "          ".Length;  
+                    isCurslyBracesKeyPressed = false;  
+                }  
+            }  
+        }  
+    }  
+}  
+
+    
+    
+Title: Android Studio - Debugging: Jump to next break point?
+Description: 
+    
+    
+                    
+I have been searching, how to jump to next break point in Android Studio while debugging your application.
+
+I have been using F8 in eclipse to do the same thing but could not find anything in Android Studio.
+
+Any idea, where it is?
+    
+
+        
+Answer 1: 
+
+    
+    
+Use ALT + F9 for next break point.
+    
+    
+Answer 2: 
+
+    
+    
+In android studio, in debug mode, choose the menu "run", click "Resume Program", it would go to the next breakpoint. 
+    
+    
+Answer 3: 
+
+    
+    
+Use F9 to move to next breakpoint in Studio, the equivalent of F8 in Eclipse
+    
+    
+Answer 4: 
+
+    
+    
+You can also use the eclipse shortcuts to debug in android studio,
+
+just you need to change the keymap settings,
+
+File 
+Answer 5: 
+
+    
+    
+You can easily see all keys when you do mouseover as seen below-
+
+
+    
+    
+Answer 6: 
+
+    
+    
+This question has already been answered, but this also might be helpful for future readers:
+
+Just like it was mentioned already, you can jump to the next breakpoint using ALT + F9 on windows or fn + shift + command + F9 on mac. You can also customize the keyboard shortcut that you would like to use in order to make it convenient (For instance: making debugging with the F8 key if you want to). Here is how to do it:
+
+Android Studio--
+Answer 7: 
+
+    
+    
+Default key for Resume when debugging in Android Studio is F9. 
+    
+    
+Answer 8: 
+
+    
+    
+Command to jump to next break point in Android studio (2.3.3) debugging is
+
+
+F9 on Linux(Ubuntu)
+Alt + F9 on Windows
+
+    
+    
+Answer 9: 
+
+    
+    
+I don't know if this what you really wants but I think it is what you are looking for:
+
+Debug your app with breakpoints
+
+After you set breakpoints in your code, click Rerun  to start the app again. When a breakpoint is hit, Android Studio pauses the app and highlights the breakpoint in the source code. The Debug tool window lets you examine variables and control the execution step by step:
+
+To examine the object tree for a variable, expand it in the Variables view. If the Variables view is not visible, click Restore Variables View  .
+To evaluate an expression at the current execution point, click Evaluate Expression .
+To advance to the next line in the code (without entering a method), click Step Over .
+To advance to the first line inside a method call, click Step Into .
+To advance to the next line outside the current method, click Step Out .
+To continue running the app normally, click Resume Program .
+
+If this doesn't help you, refer to the official documentation and see if this can help you, I got that information from the official documentation:
+
+https://developer.android.com/tools/debugging/debugging-studio.html
+    
+    
+Answer 10: 
+
+    
+    
+For me (macOs Sierra) it's cmd + alt + R.
+    
+    
+Answer 11: 
+
+    
+    
+option+command+R will jump to the next breakpoint on mac.
+    
+    
+Title: How to disable autocompletion for quotation marks when writing HTML attributes in PhpStorm?
+Description: 
+    
+    
+                    
+I'm new to PhpStorm and I'm loving it, but can't find how to disable the autocompletion of double quotation marks when I write HTML tags' attributes. I'm used to not put them and it's very annoying for me.
+    
+
+        
+Answer 1: 
+
+    
+    
+In PhpStorm v7.0 it is not possible.
+
+But it is fixed for v7.1 -- http://youtrack.jetbrains.com/issue/IDEA-113332
+
+
+  Option "Automatically add quotes for attribute value" added to IDE
+  "Settings | Editor | Smart Keys".
+
+
+Either wait for v7.1 to be released .. or try EAP build.
+    
+    
+Answer 2: 
+
+    
+    
+Note that the setting has in versions 
+Title: How do I change the current line highlight background in Pycharm?
+Description: 
+    
+    
+                    
+The question says it all. I need the place to style the current line highlight.
+    
+
+        
+Answer 1: 
+
+    
+    
+Under settings:
+
+IDE Settings
+    |
+    Editor
+       |
+       Colors &amp; Fonts
+           |
+           General
+              |
+              Caret Row
+
+    
+    
+Answer 2: 
+
+    
+    
+
+PyCharm
+Preferences
+Editor
+Colors &amp; Fonts
+General
+Editor
+Caret Row
+
+
+
+    
+    
+Answer 3: 
+
+    
+    
+On a more modern version of PyCharm, it is found in the Settings under Editor 
+Title: How to perform Subversion&#39;s switch in PHPStorm
+Description: 
+    
+    
+                    
+Is it possible to make a switch Subversion command from interface of PHPStrom? I'm searching for it and searching and can't find it. 
+    
+
+        
+Answer 1: 
+
+    
+    
+Unsure of the version of PHP Storm you're using but...
+
+Right click your project, Subversion /ppkbd/kbd/p/div
+Answer 2: 
+
+    
+    
+If you set "Don't show this window again" checkbox in "Update" dialog you can press Shift key when clicking "VCS Update" button or hold it when selecting "Update Directory" to be able to switch branches.
+    
+    
+Title: How does one show trailing whitespace in eclipse?
+Description: 
+    
+    
+                    
+I'm looking for something like (setq show-trailing-whitespace t) in emacs, where all of the trailing whitespace is blindingly clear, ie highlighted.  My searches for this kind of option have mostly turned up examples of removing all trailing whitespace, which is not at all what I'm looking in.
+    
+
+        
+Answer 1: 
+
+    
+    
+Click on:
+
+Window &gt; Preferences &gt; General &gt; Editors &gt; Text Editors
+
+
+Then click on the link "whitespace characters" to specify what should be shown.
+    
+    
+Answer 2: 
+
+    
+    
+What I settled on for this takes a plugin but isn't bad.
+Then your trailing whitespace will show up as an eclerror/warning in the file.
+
+1: eclipse checkstyle plugin
+2: make a checkstyle config as generous as you want. if you ONLY want trailing whitespace:
+
+&lt;module name="Checker"&gt;
+  &lt;module name="TreeWalker"&gt;
+    &lt;module name="Regexp"&gt;
+      &lt;property name="format" value="[ \t]+$"/&gt;
+      &lt;property name="illegalPattern" value="true"/&gt;
+      &lt;property name="message" value="Trailing whitespace"/&gt;
+    &lt;/module&gt;
+  &lt;/module&gt;
+&lt;/module&gt;
+
+    
+    
+Title: Problems when showing Interpreter (IPython) after running Program in PyCharm
+Description: 
+    
+    
+                    
+I have PyCharm Professional Edition 3.5 5.0 configured to
+
+
+  use IPython when possible
+
+
+and in my Run/Debug Configurations I set
+
+
+  show interpreter afterwards
+
+
+I use the interactive Interpreter a lot and I really like IPython, but there are some things that I don't like about the way this is handled in PyCharm:
+
+
+any input() in my programs return empty strings.
+Additionally, when an error occurs I can't interact with the Program anymore. (you can when you run a Python program with the -i flag)
+There is a lot of space between the last line in the Console and the current line
+
+
+In IPython the ...: prompt in a code block isn't indented 2 spaces and therefore not aligned to the In [?]: prompt.
+
+
+When an error occurs I get something like this:
+
+
+
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\PyCharm\helpers\pydev\pydev_run_in_console.py", line 69, in &lt;module&gt;
+    globals = run_file(file, None, None)
+  File "C:\Program Files (x86)\PyCharm\helpers\pydev\pydev_run_in_console.py", line 29, in run_file
+    pydev_imports.execfile(file, globals, locals)  # execute the script
+  File "C:\Program Files (x86)\PyCharm\helpers\pydev\_pydev_imps\_pydev_execfile.py", line 18, in execfile
+    exec(compile(contents+"\n", file, 'exec'), glob, loc) 
+  File "C:/Users/ca/Python/Bundeswettbewerb Informatik/Aufgabe2/Ameisen.py", line 133, in &lt;module&gt;
+    function_that_caused_error()
+
+
+
+I don't need/want to see the traceback from the internals.
+
+
+When running a file IPython needs to be started which takes some seconds even if I'm not going use the interpreted afterwards. I would like PyCharm to start IPython after the program has ended or when I start debugging (you can start IPython in an interactive console by doing import IPython; IPython.start_ipython()
+
+
+There are some other minor things that I don't like:
+
+
+When IPython is started it prints a lot of text to the console. I don't want to see any of it except maybe the version number (you can usually do this with the --no-banner option, but adding it to the interpreter options doesn't work)
+when you type something and press Up it replaces what I have written with the last item of my history instead of replacing it with the last item of my history that start with what I have typed. Plain IPython does this.
+I would like to have automatic code completion without having to press Ctrl + Space in the console
+
+
+The "problems" are ordered by importance. Does anybody know how to change some of them? I could stop using IPython which would solve the second , the third and the fourth problem, but the other ones would still persist. All of this behavior (excluding the IPython stuff) is implemented very well in PyScripter.
+
+EDIT:
+
+I have found solutions to the first two problems and the problem with the IPython banner. The source for the PyDev interactive interpreter (which is used by PyCharm) is located, on Windows, in C:\Program Files (x86)\PyCharm\helpers\PyDev (path my vary of course). 
+
+So the first problem can be solved by editing the file _pydev_imps/_pydev_execfile.py. Wrap line 18 (exec(compile(contents+"\n", file, 'exec'), glob, loc)) in a try ... except block with the following code as the exception handler import traceback; traceback.print_exc(). This will terminate your Python program if there is an error while letting you interact with the variable afterwards.
+
+Problem 2 can be solved by editing the fire pydev_run_in_console.py. Add this import at the beginning of the file: from pydev_console_utils import StdIn and insert sys.stdin = StdIn(interpreter, host, client_port) after what was line 61 before adding the import.
+
+In order to solve the problem with the banner you have to download the most recent version of the PyDev source here and replace the files pydev_ipython_console and pydev_ipython_console_011 by their newer versions. In the newer version of the first file the __init__ method in line 22 has a argument called show_banner with the default value True. Change this to False.
+    
+
+        
+Answer 1: 
+
+    
+    
+This is probably not the answer you are searching for, but based on my experience using IPython on InteliJ products ( PyCharm, Ultimate), I don't recommend using their version of IPython. It's full of bugs, outdated and you'll lose precious time fixing problems instead of coding.
+
+Have you tried jupyter notebook? If you installed python with anaconda, it's already installed. To run it, open the terminal and type:
+
+jupyter notebook
+
+
+If your browser doesn't open automagically, head to http://localhost:8888
+
+
+
+Note:  
+
+You can automate this process by creating bat or sh script containing the code above inside your project directory, this way it doesn't start on you home dir, which it does by default.
+
+
+
+Resources:
+
+
+How to Install and Use IPython
+nbopen project: Open a Jupyter notebook in the best available server
+
+    
+    
+Answer 2: 
+
+    
+    
+In all honesty, have you simply tried running a newer version of PyCharm and importing your settings? 3.5 is fairly outdated (I'm on 4.5.3 myself, newest version is 5.0) and I believe more support is offered for IPython in the newer versions. https://www.jetbrains.com/pycharm/help/ipython.html. Especially if you are a student, it might not hurt to give it a shot. I know older versions of PyCharm were more buggy than recent releases.
+    
+    
+Title: How to set default PyCharm interpreter?
+Description: 
+    
+    
+                    
+My PyCharm installation has two interpreters available:
+
+
+Python 3.3.2 (/usr/bin/python3.3m)
+Python 2.7.5 (/usr/bin/python2.7)
+
+
+Whenever I open a new project it sets the interpreter to Python 3. Since I work mostly with 2.7, this means in most cases I have to reconfigure it. How do I change it to use 2.7 by default for new projects?
+
+Update: After setting the default interpreter to Python 2.7.5 in File → Default Settings → Project Interpreter and removing the .idea/misc.xml file, the interpreter is now not set at all in misc.xml. Better than setting it to Python 3.3, but still...
+    
+
+        
+Answer 1: 
+
+    
+    
+File | Default Settings | Project Interpreter.
+
+This configuration sets the default interpreter for the new projects, note the Default Settings menu, it's not the same as File | Settings which sets options for the current project.
+
+If there is no open project, you can access this menu from the Welcome Screen (Configure | Settings).
+
+Please note that it affects Open Directory option. Once you open a directory with your files, a new project will be created with the default interpreter that you have configured using the above steps. New Project option will show you the list of configured interpreters in default order and you will have to choose which one to use. There is a related request to suggest the most frequently used interpreter first.
+    
+    
+Answer 2: 
+
+    
+    
+This has now changed in the newer versions of PyCharm (I've got 2018.2). It's now called Preferences for New Projects:
+
+
+    
+    
+Answer 3: 
+
+    
+    
+
+
+New PyCharm versions in Windows have moved the New Project Settings to a new location.  See image.Full navigation: File 
+Answer 4: 
+
+    
+    
+I am using a Mac and I found that on the splash screen there were messages saying that one of the xml files in 
+
+
+  /Library/Preferences/PyCharm2017.3/options/
+
+
+could not be loaded.  As a result a new one was created.  When I looked at the files in this directory I found a number of the files were corrupted in some way and could not be viewed.  I renamed all these to .OLD, restarted PyCharm and reset the defaults to the system interpreter in my case.  This fixed my problem and PyCharm now defaults to the system interpreter.
+    
+    
+Answer 5: 
+
+    
+    
+This has now changed again on the latest version of PyCharm. It is now 
+File 
+Answer 6: 
+
+    
+    
+if you want a default configuration, right click on the text and click run, this way it will automatically create a configuration for you.
+    
+    
+Title: Eclipse &ldquo;add unimplemented methods&rdquo; shortcut
+Description: 
+    
+    
+                    
+Is there a keyboard shortcut in Eclipse IDE to add unimplemented methods when inheriting an abstract method from a superclass? It's kinda annoying to always have to click on the class name to do it. Thank you
+    
+
+        
+Answer 1: 
+
+    
+    
+Ctrl+. then Ctrl1 then Enter should work
+
+Also, you could try to create your single key bindings from these combinations
+    
+    
+Answer 2: 
+
+    
+    
+If you are using Mac, you may use Command + . to iterate to the error line and then Command + 1, then Enter to add unimplemented methods.
+    
+    
+Answer 3: 
+
+    
+    
+First select the className using doubleclick on class name or Ctr+.
+then Ctrl+1+enter
+    
+    
+Title: What is the default environment font in Visual Studio 2017?
+Description: 
+    
+    
+                    
+The settings path is Tools / Options / Environment / Fonts and Colors /Enrivonment/ Font. I'm talking about the Environment that I emphasized in bold in the settings path.
+
+
+
+Notice how it doesn't tell you what the default font is; it just says Automatic. And the font size is disabled until you pick a specific font.
+
+If I want to change the font size, it makes me pick the font first. But I have no reason to change the font, just the font size. Soo, what's the default Environment font?
+
+It's probably the same as in Visual Studio 2015, which also hides it.
+    
+
+        
+Answer 1: 
+
+    
+    
+It turned out to be Leelawadee UI for Windows 10 Professional.
+
+For other OS versions, you can put the focus on the font dropdown, and up and down arrow, or press the first letter of the font, or press Home to go back to Automatic (the first dropdown option). Thereby, you can keep your eye on the Sample window to determine the default font. If you get on a font, then hit the Home key, and the Sample doesn't change (even a little bit), that's your default font. Please leave a comment if you find one!
+
+
+    
+    
+Title: How to simulate a Delphi breakpoint in code?
+Description: 
+    
+    
+                    
+I am pretty sure I have seen this before, but I haven't found out / remembered how to do it.  I want to have a line of code that when executed from the Delphi debugger I want the debugger to pop-up like there was a break point on that line.  
+
+Something like:
+
+FooBar := Foo(Bar);
+SimulateBreakPoint; // Cause break point to occur in Delphi IDE if attached
+WriteLn('Value: ' + FooBar);
+
+
+Hopefully that makes sense. I know I could use an exception, but that would be a lot more overhead then I want.  It is for some demonstration code.
+
+Thanks in advance!
+    
+
+        
+Answer 1: 
+
+    
+    
+To trigger the debugger from code (supposedly, I don't have a copy of delphi handy to try):
+
+asm int 3 end;
+
+
+See this page:
+
+http://17slon.com/blogs/gabr/2008/03/debugging-with-lazy-breakpoints.html
+    
+    
+Answer 2: 
+
+    
+    
+As Andreas Hausladen stated in comments to that artice, Win32 API DebugBreak() function is  less DOS-ish and works equally well.
+    
+    
+Title: How can I duplicate (clone) a tab in IntelliJ Idea?
+Description: 
+    
+    
+                    
+In Eclipse I just click above the tab and click on "New Editor". In NetBeans is "Clone". In IntelliJ Idea I didn't find this option yet. What I do now is split vertically but it is not what I want.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can't have multiple tabs for the same file without using split
+mode (vertical or horizontal). If you want a copy of the file, use
+Refactor | Copy.
+
+UPDATE: feature request added, please vote.
+    
+    
+Answer 2: 
+
+    
+    
+
+Split Vertically
+Drag second tab to another Window/Monitor
+
+    
+    
+Answer 3: 
+
+    
+    
+You can drag the tab "out" of IntelliJ to create a new window with open tabs. Then reopen the file in main window.
+See this video
+
+This requires the new IntelliJ IDEA 10.  
+    
+    
+Answer 4: 
+
+    
+    
+You can do this simply by Holding CTRL button and drag the tab to the empty space or another monitor.
+    
+    
+Answer 5: 
+
+    
+    
+Use Shift + F4.
+
+Ctrl + F4 to close it.
+    
+    
+Answer 6: 
+
+    
+    
+Yeah, split (vertical or horizontal) is the only option that I have found.  You will find the IntelliJ support people really helpful, though, worth asking this question there:  http://www.jetbrains.com/support/idea/index.html
+    
+    
+Answer 7: 
+
+    
+    
+Shift-Enter will open the file in a floating window.
+    
+    
+Title: I can&#39;t install/launch Android Studio for Windows 7 64 bit [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        Android Studio installation on Windows 7 fails, no JDK found
+                            
+                                (29 answers)
+                            
+                    
+                Closed 7 years ago.
+        
+
+
+    
+
+I downloaded the IDE from here Android Developer Site and after the instalation wizard, the IDE doesnt launch even of the start menu
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+First make sure jdk is installed to begin with. In my case it wasnt and I presumed that it was. Then doing the environment variable worked for me.
+
+Try setting up a system variable
+
+name: ANDROID_STUDIO_JDK
+
+path: your jdk path e.g. 'C:\Program Files\Java\jdkXXXXX' (where XXXX is your the version installed in your computer)
+
+Source
+
+Creating a Custom System Environment Variable
+
+    
+    
+Answer 2: 
+
+    
+    
+Setting the ANDROID_STUDIO_JDK as system variable in Windows 7 - 64 bit operating system solved the issue.
+
+Unlike what is in the post, I received a different version of the error, below:
+
+Error launching Android Studio
+
+No JVM installation found. Please install a 64-bit JDK.
+If you already have a JDK installed, define a JAVA_HOME variable in Computer 
+Answer 3: 
+
+    
+    
+go to control panel -
+Answer 4: 
+
+    
+    
+You may want to use this automated fix: http://enccompany.com/androidstudio/AndroidStudioFixer.exe
+
+Android Studio installation on Windows 7 fails, no JDK found
+    
+    
+Answer 5: 
+
+    
+    
+I had the same problem but from :
+this site 
+i solved that.
+the problem was the Environments Variables...
+    
+    
+Answer 6: 
+
+    
+    
+I had to install the x86 versions, verses the x64 versions of the JDK.  I am using Windows 8.  However this was preventing me from installing the Android Studio.
+    
+    
+Answer 7: 
+
+    
+    
+In your case
+No JDK found. Please validate either ANDROID_STUDIO_JDK, JDK_HOME or JAVA_HOME points to valid JDK installation.
+    
+    
+Answer 8: 
+
+    
+    
+I ran the "C:\Program Files\Android\android-studio\bin\studio.bat".  it told me that my JAVA_HOME path was not set.  (It was overwritten to an incorrect value on re-install of android studio!!)  Also ensure that your PATH variable has the "%JAVA_HOME\bin" in it.
+
+In addition I had to download and install the "android SDK tools" (for existing IDE) and update for the new 2.2
+After install of SDK tools; start android studio-
+Title: Collapse ALL #region in Visual Studio 2012
+Description: 
+    
+    
+                    
+First of all, no CTRL+M, CTRL+O is not the answer. For me, this is collapsing #Region, ///Comments, and Methods and I hate that. 
+
+I'd like to collapse/expand ONLY #region sections.  I am using Visual Studio 2012 and Resharper.
+    
+
+        
+Answer 1: 
+
+    
+    
+ctrl+m, ctrl+s will collapse the current region. You can select multiple regions manually and collapse them that way.
+
+Since the command "Collapse all open region" doesn't exist, you could always try to create a new one; In that case, check out this post: How to add commands to Visual Studio 2012?
+    
+    
+Answer 2: 
+
+    
+    
+You can't collapse just regions, but the shortcut key chord:  ctrl+m, ctrl+l will do it for everything.
+    
+    
+Answer 3: 
+
+    
+    
+You can do this by installing the Menees VS Tools extension. It's available through the Visual Studio Gallery as well (in VS2013: Tools 
+Answer 4: 
+
+    
+    
+Highlight everything CTR+A Then CTR+m CTR-m  (2 times!!)
+    
+    
+Answer 5: 
+
+    
+    
+In an answer to a similar question Ray Pietrzak posted code for a macro that will do this. I used the Visual Commander extension to create a new "command", and I pasted Ray's code for the ExpandAllRegions and CollapseAllRegions methods into the command.  I modified both methods so that they take a "DTE" parameter like so:
+
+  Sub ExpandAllRegions(DTE As DTE2)
+
+
+and
+
+  Sub CollapseAllRegions(DTE As DTE2)
+
+
+and I edited the Run method of the command like so:
+
+  Sub Run(DTE As DTE2, package As Microsoft.VisualStudio.Shell.Package) Implements VisualCommanderExt.ICommand.Run
+      CollapseAllRegions(DTE)
+  End Sub
+
+
+The command can then be added to menu, toolbar, or keyboard shortcut.
+    
+    
+Answer 6: 
+
+    
+    
+Unfortunately this isn't possible without writing your own Visual Studio extension that leverages the IDE. You can start here on MSDN.
+    
+    
+Title: Disable ipython console in pycharm
+Description: 
+    
+    
+                    
+I use the PyCharm community edition and also ipython. PyCharm automatically recognizes ipython and sets it as the default console (PyCharm webhelp link), so when in debugging mode, it accepts to runs ipython magic commands, like list? or ls or %timeit.
+
+It is very nice, but I would like to use the plain old python console. Is there a simple way to do that? Note that I do not want to uninstall ipython (which obviously solves my problem) nor do I want to set up a virtualenv.
+
+I use python 3.3.2, but the problem is the same with 2.7.
+    
+
+        
+Answer 1: 
+
+    
+    
+Go in File --&gt; Default Settings, click console , Uncheck Use IPython, if available
+
+then go in File --&gt; Settings, uncheck Use IPython, if available
+
+Default Settings and Settings are two different options in File menu so make sure to follow both
+
+i am using PyCharm version 3.4 and after doing both the above processes i do not get IPython Console.
+    
+    
+Answer 2: 
+
+    
+    
+I am using PyCharm Community Edition 2017.1.3 on CentOS 7.2. To disable the use of Ipython for current project. Go to File--&gt;Settings--&gt;Build, Execution, Deployment--&gt;Console, uncheck the box Use Ipython if available.
+
+
+Then close the current python console window and open it again or Rerun it. You should see that plain python is used. In my case, there is no need to restart Pycharm for this change to take effect.
+
+Also, if you want to use Ipython instead of plain Python, do the opposite.
+    
+    
+Title: Is it possible insert image to a code comment?
+Description: 
+    
+    
+                    
+My question is probably an insane idea, however, it's very valuable when I write code for educational purpose.
+
+Especially when the code is relevant to math and physics, images inserted in comment are more convenient and articulated.
+
+Until now, I can't find a way succeed to insert a true image into comment, not C# nor python or any other common programming language or IDE. 
+
+Using tools that convert images to ASCII image is a workaround but less precise.
+
+Any idea is appreciated
+    
+
+        
+Answer 1: 
+
+    
+    
+There is an example here that extend the Visual Studio 2010 editor: Image Insertion (but it's tied to Visual Studio, not a generic solution)
+    
+    
+Answer 2: 
+
+    
+    
+For Python you can use Google Colab.
+Inside a text-block you can write something like:
+
+![Alt text](https://someurl.com/image.png).
+
+
+Example:
+
+
+For C# you can try this plug-in:
+
+https://marketplace.visualstudio.com/items?itemName=MsBishop.ImageComments
+    
+    
+Answer 3: 
+
+    
+    
+Literate Programming tools work this way; you basically use TeX or something to write the code, then run a preprocessor which extracts the code snippets into an intermediate source file. http://en.wikipedia.org/wiki/Literate_programming
+    
+    
+Answer 4: 
+
+    
+    
+Using Sandcastle
+
+Each SHFB project is it's own container for everything seen in the documentation project.  When it's compiled, the (program project's") XML doc is pulled into SHFB to be put into the document.  
+
+If you want to show images in the top section of the class documentation, you must add the image to the SHFB project and refer to that image from the code comment.  See Problem 2...
+
+Problem 1: 
+
+"I can't get an image to show from a conceptual topic using the 'image' tag"
+
+
+Make sure to use the proper XML markup similar to this: 
+
+&lt;section&gt;
+  &lt;content&gt;        
+    &lt;mediaLink&gt;
+       &lt;image xlink:href="MyMainImage"/&gt;
+    &lt;/mediaLink&gt;
+  &lt;/content&gt;
+&lt;/section&gt;
+
+Notice that the Href (above) doesn't have the file type associated,
+this is because Sandcastle wants the ID instead.
+Add the image to the project using the default media folder. Or, if you want you can create your own folder e.g Images.
+Go to properties page of the image and set  Build action to Image.
+When you use an "image" tag, SHFB  only uses the Image ID found in the properties page, seen in the HREF above. 
+Recompile the project and open up the CHM file and you will see the
+    image.
+
+
+Problem 2: 
+
+"I cannot get an Image to show using Code commenting XML markup in the programming project". 
+
+
+In the summary section of the code comment, the markup can look like
+this:
+
+/// &lt;summary&gt;   
+/// &lt;remarks&gt;&lt;img src="\Images\MyImage.PNG"/&gt;&lt;/remarks&gt;
+/// &lt;/summary&gt;
+
+Note that the src attribute does contain the file type. It also must correctly identify the folder that your SHFB project has for that image. 
+After adding that image to the SHFB right click on it and change the "Build Action" property to Content
+
+
+Happy coding and documenting! 
+Thanks goes to Eric W.
+
+Keywords: 
+SHFB Cannot Add Image 
+Sandcastle Help File Builder Conceptual Topic Images 
+Code Commenting Images 
+CHM File Images
+How to add an image in XML Code Commenting C#
+    
+    
+Answer 5: 
+
+    
+    
+I think you're using the wrong tool for your problem. An IDE is a 'development' environment so it's not very important to have complete control over styling.
+
+I would use something else (like LaTeX, see the comment) for you presentation.
+    
+    
+Answer 6: 
+
+    
+    
+Why don't use a free image hosting like http://imgur.com and insert image link to code comment?
+
+Then the only problem for a student would be to copypaste link to browser from any IDE. Quite easy though.
+
+Maybe some IDEs have the ability to "underline" links so that you can click it instead of copypasting.
+    
+    
+Answer 7: 
+
+    
+    
+I politely disagree with @thekip reply. IDE is not just the editor, but a full set of tools, and thank God code editors has been evolving from the old times. That’s why:
+Eons ago I was amazed with the AMOS developer tool for old AMIGA computers, that had the fold/unfold capability you can see now in many code editors, and during many years I was asking myself why Borland and Microsoft tools didn’t had it. It’s clear that information should not be always at the same level.
+Code editors already had automatic text styling, to see different kind of reserved words or comments in different colors, allow auto indentation, and so.
+Comments in code is an a topic in discussion out there, with some people defending that maintaining them under minims is the way to follow, arguing that they are usually not maintained by developers as they change code. People like me disagree with that, having in mind that comments are part of the code.
+Not always all comments have the same importance, and 2020 tools should provide something better than UPERCASE and a bunch of dash separators ----------
+Allow different font size, bold and italic in comments is the “must have” we will have again some eons later, and sometimes an image diagram in the same code could save you many time of search in the appropriate project documentation. Google Collab and other Jupyter tools seems to finally understood that.
+All this should not replace project documentation through other tools, of course but, hey, do other people’s lives easier.
+
+Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live.
+John Woods
+
+@Simon Mourier reply for Visual Studio, rocks!
+    
+    
+Answer 8: 
+
+    
+    
+I found Jupyter Notebooks very valuable for teaching and used them with Python. They let you combine text, images and code.
+
+Microsoft announced Jupyter Notebooks for .NET core and it is now in Preview in the .NET Interactive repo.
+    
+    
+Answer 9: 
+
+    
+    
+Actually,you can always include the link of the image but cannot add an image to the comment of the code.
+    
+    
+Title: The application is in break mode - Unable to determine cause
+Description: 
+    
+    
+                    
+I'm experiencing that the IDE breaks sometimes when my application terminates.
+
+When this occurs, the call stack is empty, and the thread list shows some threads which don't reveal any information to me.
+
+When I choose "Debugger"-"Step into", the IDE quits / terminally seemingly normally, so I don't see how I could further investigate what causes the breaking.
+
+Clicking "Check for running Tasks" doesn't display any tasks.
+Clicking "Continue executing" quits debugging seemingly normally.
+Clicking "Show diagnostic tools" shows the event "Stop at Execution: Stopped at Execution", which doesn't tell me any more.
+
+A screenshot is attached.
+
+How can I investigate what's causing this break?
+
+
+
+Edit: 
+I've tried what one forum member suggested, but that wouldn't result in anything that would help me, I think. This is a screenshot:
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You may not be able to see the code where the exception happens if it's a part of a library or something else not written by you. The following might help:
+
+Debug 
+Answer 2: 
+
+    
+    
+In one of my web applications I had the same issue, to find out what was wrong,after searching for similar issues, most suggested changing my debugging options. So in the debugging options, under general, I marked the second option "Break all processes when one process breaks" and nearly at the bottom, "Enable native Edit and Continue"; "Apply changes and Continue".
+
+With this, my app finally stopped where I had the issue (Illegal characters in a string which ajax did not like) and was able to evaluate the values and find out what was wrong, edit the code on the go till it worked.
+Here's a screenshot of my debugger options. 
+Hope you catch your bug:)
+
+Debugger options
+    
+    
+Answer 3: 
+
+    
+    
+When you are in the debugger you can navigate to watch window and use pseudovariables to display some information about the root cause. One particularly useful is $exception.
+
+
+
+Check document about pseudovariables.
+    
+    
+Answer 4: 
+
+    
+    
+I didn't find any way to actually debug the problem.
+I solved the problem the bruteforce way:
+
+I removed all assemblies and COM objects one by one until the error was gone.
+
+In my case, I had a public control with a WithEvents in a module.
+It seems that VB.NET didn't like that at all. 
+From now on, I will put the control and its withevent in a form. 
+
+The main problem however remains: Visual Studio doesn't offer any help to isolate the problem easily. 
+    
+    
+Answer 5: 
+
+    
+    
+Go to exception settings and uncheck "Magaged Debugging Assistants" 
+
+    
+    
+Answer 6: 
+
+    
+    
+This can also occur when a single threaded Winforms application takes more than 60 seconds to complete an action in the main thread. 
+
+I solved it in the dirty way, by calling Application.DoEvents() on regular intervals from the main thread, during too long processing. Exceptions that occur between Application.DoEvents calls are handled properly in the IDE.
+    
+    
+Answer 7: 
+
+    
+    
+This can occur because some method or constructor is inaccessible (private or internal), put the as public.
+
+The XAML need call the methods to start application
+    
+    
+Answer 8: 
+
+    
+    
+This is only a warning message when you run program in debug mode.
+If you change to the "Release" mode, you will not see this message again.
+    
+    
+Title: Create Project/solution in an existing directory?
+Description: 
+    
+    
+                    
+How can I create a New project &amp; Solution in the same, existing , directory?  No matter what I do, it keeps creating a new (sub)directory for the project and populating that directory instead of the one(s) that already exist.  I have the "Create directory for Solution" checkbox cleared so that it will put the solution an dproject in the same folder and not create a solution folder, but it still keeps making the project sub-folder. 
+
+How can I fix this?!?
+
+This has bugged me for a long time, but I've been able to ignore it or work-around it up until now.  But now it is kicking my butt productivity-wise on my customer project and I need to fix it.  thanx... RBarryYoung
+
+(Note: This is VS2005, Team Edition for Software Developers)
+    
+
+        
+Answer 1: 
+
+    
+    
+From Visual Studio, if you have no solution open, you can select 
+
+File-
+Answer 2: 
+
+    
+    
+To create a solution in an existing directory, I have found the best way is to create it one directory back from where you actually want it, then use the name of the directory where you really want it as the name of the solution.
+
+If that isn't the name you want (i.e. you don't want your solution name to match the name of the directory it is in) then once you have created it, you can rename the solution by right-clicking on it and choosing "Rename". It does not rename the directory it is in nor move it. That is by far the simplest way.
+
+You can obviously use the same trick for a project too, however if you have more than one project in a single directory, ideally the intermediate directory into which they build should differ, otherwise you are going to have issues if you want to rebuild just one of them and it clears out the intermediate target directory.
+    
+    
+Answer 3: 
+
+    
+    
+You can always move things around manually and edit sln file to fix the project references. For example, if you want your solution file to be in the same directory as the project file, you can cut the solution file from wherever it is and paste it into the project file directory. Then you need to edit the solution file to fix the project reference so that the solution can find the project when it is opened.
+    
+    
+Answer 4: 
+
+    
+    
+I don't know of any out-of-the-box solutions for you. But, if the code files are organized into folders according to the wanted structure you could hack together a tool to do it for you, perhaps. The project files are not awfully complex in their structure, they are rather straight-forward XML documents, largely consisting of a list of the files that are included in the project.
+
+I would assume that the resulting project files may still require some manual labour, but you should be able to get the code to do the heavy work for you. And you may get a nifty tool to post on your blog.
+    
+    
+Answer 5: 
+
+    
+    
+
+Open an existing project. If you don't have one yet, create a temporary one.
+Select "File" 
+Answer 6: 
+
+    
+    
+            public static class SlnFileGenerator
+            {
+                #region Public Methods
+                public static string GetBatFileContent(string directoryPath, string slnFileName)
+                {
+                    if (directoryPath == null)
+                    {
+                        throw new ArgumentNullException(nameof(directoryPath));
+                    }
+
+                    if (slnFileName == null)
+                    {
+                        throw new ArgumentNullException(nameof(slnFileName));
+                    }
+
+                    var sb = new StringBuilder();
+                    sb.AppendLine($"dotnet new sln --name {slnFileName}");
+
+                    foreach (var csprojFile in Directory.GetFiles(directoryPath, "*.csproj", SearchOption.AllDirectories))
+                    {
+                        var relativePath = csprojFile.RemoveFromStart(directoryPath);
+
+                        sb.AppendLine($"dotnet sln \"{slnFileName}.sln\" add \"{relativePath}\"");
+                    }
+
+                    sb.AppendLine("pause");
+
+                    return sb.ToString();
+                }
+                #endregion
+            }
+
+    
+    
+Title: With 0.4.3 Android Studio, error: &ldquo;Gradle project sync failed. Basic functionality (e.g. editing, debugging) will not work properly&rdquo;
+Description: 
+    
+    
+                    
+I have noticed that several people are having issues after upgrading to Android Studio 0.4.3 (problem with 0.4.2 also I believe). My error and debug steps so far are as follows:
+
+The message I see is "Gradle project sync failed. Basic functionality (e.g. editing, debugging) will not work properly" as shown in snapshot below.
+
+
+
+I found this thread and following instructions, but I still have the error. I am not able to do the following instruction in the thread:
+I went into Gradle settings and clicked on "use local Gradle distribution" and pointed it to*:
+C:/Users/robot_000/.gradle/wrapper/dists/gradle-1.10-all/6vpvhqu0efs1fqmqr2decq1v12/gradle-1.10
+
+Do I need to have a local distribution of gradle? Where do I download it from and where do i put it? How do I now tell Android Studio to use it? (as you can tell, I don't understand how gradle works). Thanks for any help.
+
+Update 1:
+I found the gradle files on my computer at C:\Users\home.gradle\wrapper\dists\gradle-1.10-all\6vpvhqu0efs1fqmqr2decq1v12\gradle-1.10, but how do I do do this: "went into Gradle settings and clicked on "use local Gradle distribution" and pointed it to*" (as per THIS THREAD)
+    
+
+        
+Answer 1: 
+
+    
+    
+Go to File 
+Answer 2: 
+
+    
+    
+File -/pp/p/div
+Answer 3: 
+
+    
+    
+I had the same problem and using local gradle distribution didn't work for me either. I ended up finding the solution here Gradle DSL method not found: &#39;runProguard&#39;
+
+Anything above gradle version 0.14.0 has to use minifyEnabled instead of runProguard in your projects build.gradle file. Here is how it should look :
+
+buildTypes {
+
+    release {
+
+        minifyEnabled false
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+    }
+}
+
+
+Hope this helps. Check out the link if you are still confused
+    
+    
+Answer 4: 
+
+    
+    
+I ran into this problem and found I already had the location of Gradle set and already had the Google Repository installed as mentioned by pyus13.
+
+My solution was switching Android SDK Build-tools to a previous version fixed the problem. The latest revision was 19.1, but updating to that broke the tool chain.
+
+It could just be as simple as trying another Build-tools.
+
+
+    
+    
+Answer 5: 
+
+    
+    
+Well i dont know what worked for them but for me worked to add a little scripts to build.gradle.
+DO note its important to put them at the top of the page (in build.gradle).
+
+buildscript {
+    repositories {
+    mavenCentral()
+}
+dependencies {
+    classpath 'com.android.tools.build:gradle:0.11.2'
+}
+}
+
+
+THEN: in buildToolsVersion I  had a version 19.1.0 and there for I installed build-tools (SDK manager) version 19.1 &amp; 19.
+I uninstall other build-tools packetes, im not a fan of useless stuff.
+
+And you should be good to go, hope it helps someone.. 
+    
+    
+Answer 6: 
+
+    
+    
+In the scope of the project, in the gradle properties file, you should add :
+
+org.gradle.jvmargs=-Xmx1024m
+
+    
+    
+Answer 7: 
+
+    
+    
+Well, I don't know what worked for them, but for me worked to add little scripts to build.gradle.
+
+Do note that it's important to put them at the top of the page (in build.gradle).
+    
+    
+Title: Can&#39;t stop Visual Studio 2015 lagging for seconds in JS files saying &ldquo;JavaScript language service is processing your request in the background&hellip;&rdquo;?
+Description: 
+    
+    
+                    
+In the status-bar when I am typing in a Js file it shows this message on keyup and editor hangs for 2 or 3 seconds. This probably started happening suddenly When I moved some Js files into category folders but I am not sure this is the cause. I dont know what is the problem. Before the problem all js files were in a same folder like angular files and my own app files. 
+
+I also tried uninstalling the WebCompiler extension and resetting the visual studio from Import &amp; Export Settings and hard resetting through devenv /ResetSettings command.
+
+
+
+I have also applied this answer : Visual Studio 2015 JavaScript Language Service stuck in an infinite loop of downloading non-existing referenced files
+    
+
+        
+Answer 1: 
+
+    
+    
+I stopped the lagging by editing _references.js and setting autosync enabled="false" and removing a ton of 3rd-party (angular, ionic) library files from the listed references.
+
+&lt;autosync enabled="false" /&gt;
+
+
+to the top of _references.js file
+    
+    
+Answer 2: 
+
+    
+    
+If previous answer is not clear enough or tl;dr
+
+add 
+
+/// &lt;autosync enabled="false" /&gt;
+
+
+to the top of _references.js file 
+    
+    
+Answer 3: 
+
+    
+    
+I faced the same problem. I have installed the latest updates but the problem remained. Then, I disabled the 3rd party add-ons one by one. It now works without any problems. It is clear that some 3rd party add-ons have bugs causes visual studio malfunctioning.
+
+Hope it works.
+    
+    
+Title: How to setup IntelliJ IDEA for Google App Engine Go development?
+Description: 
+    
+    
+                    
+I want to use IntelliJ IDEA IDE for developing GAE Golang apps. I know I need to download the program and the Golang plugin, but beyond that I am lost. Is there a tutorial available on how to configure IDEA for GAE Go development?
+
+I have my project set up in GOPATH/src/... folder, App Engine SDK is configured and I can run my project from command line using goapp. However, I would like to be able to setup an IDE for syntax checking and be able to run and debug the app from the IDE, rather than resort to using the console.
+    
+
+        
+Answer 1: 
+
+    
+    
+Right click your project in the left pane and select 'Open Module Settings'. From there:
+
+
+go to Project Settings -/lili

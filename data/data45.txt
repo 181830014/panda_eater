@@ -1,0 +1,2304 @@
+Title: Is there no closing tag matchig in Eclipse IDE?
+Description: 
+    
+    
+                    
+I am a web developer and need closing tag matching for HTML. I always use Netbeans but a giving Eclipse a try for the first time. By default it seems to have closing brace matching for PHP/javascript, etc. But I don't see the closing tag matching when I clock on an opening tag. Is there some way to turn this feature on or does it not exist?
+
+Also how does one change syntax colors in Eclipse, I don't see those options in Windows 
+Answer 1: 
+
+    
+    
+Do you mean this effect?
+
+
+
+It should be enable by default .
+
+To change the color syntax ,  go to Window --&gt; Preferences and  type color in the top left search box  .Then all the setting about color will be filtered out.
+
+You can change the color of the matching tags in the General ---&gt; Editor ---&gt; Text Editors ----&gt; Annotation.
+
+
+
+You can also try this Eclipse Color Theme plugin which has already includes many popular color themes.  
+
+P.S All the settings are based on the eclipse 3.7 Indigo Version.
+    
+    
+Title: Delphi IDE - Command line switches and explanation
+Description: 
+    
+    
+                    
+where I can get a Delphi XE list of command line switches to startup bds (delphi) ?  
+
+For the moment, I know this:  
+
+-pDelphi -br
+Answer 1: 
+
+    
+    
+These switches are documented: http://docwiki.embarcadero.com/RADStudio/en/IDE_Command_Line_Switches_and_Options
+    
+    
+Title: Is there an official interface to TOrderedListEditDlg?
+Description: 
+    
+    
+                    
+In an expert, I'd like to re-use the dialog that Delphi displays to edit a project's library path and for similar purposes:
+
+
+
+I found a hack for using it (look for TOrderedListEditDlg on the page). As I think the guy who wrote the linked article knows what he does I don't have too much hope for a less hacky solution, but who knows... So: Do you know an official interface (most probably OTA) to TOrderedListEditDlg?
+
+PS: I'm aware that it's probably trivial to recreate the whole dialog but I like consistency and the DRY principle.
+    
+
+        
+Answer 1: 
+
+    
+    
+You're right, I couldn't find an official way, that's the only reason I used this hack.
+
+BTW, check out the INTAEnvironmentOptionsServices and INTAAddInOptions interfaces mentioned here. You can incorporate your configuration in Delphi's Environment Options treeview. But TOrderedListDlg still doesn't seem to be exposed officially.
+    
+    
+Title: Netbeans insert code
+Description: 
+    
+    
+                    
+How would one go about creating a plugin or something of the like that would add to the 'insert code' dialog of the context menu the ability to create a copy constructor?
+    
+
+        
+Answer 1: 
+
+    
+    
+Maybe this tutorial will help you:
+
+http://platform.netbeans.org/tutorials/nbm-code-generator.html
+    
+    
+Title: Ctrl+Backspace/Option+Delete fails to delete previous word in MATLAB IDE
+Description: 
+    
+    
+                    
+I've noticed that Ctrl+Backspace/Option+Delete doesn't delete the word to the left of cursor in the MATLAB editor, as it does in many (most?) other editors and programs. This is intensely annoying, as I often will want to change a function name or small section of code. Currently I am forced to hold shift, use option+left, and then press delete to perform what should be a two keystroke operation.
+
+Is there a way to enable it, or is a similar shortcut available? I found this unanswered question on MATLAB Central, but no further joy.
+
+Edit:
+Running R2010a on OSX
+    
+
+        
+Answer 1: 
+
+    
+    
+Are you on R2010b?
+
+At least on Windows, this is supported starting in R2010b. All the keyboard shortcuts are in File 
+Title: space after function in visual studio ide
+Description: 
+    
+    
+                    
+How can I set up the designed in visual studio to put a space after my javascript functions?
+
+At present when I press the return key I get this
+
+var myfunc = function() { .... };
+
+
+When I want this
+
+var myfunc = function () { .... };
+
+
+Know its a setting somewhere but cant find it - will help with my JSlinting!
+    
+
+        
+Answer 1: 
+
+    
+    
+In VS 2010 you can't.
+
+The options you have are found at "Options-
+Answer 2: 
+
+    
+    
+You can't do it with VS. I am using VS 2010 and it permit you to write formatting rules going on Tools -/pp/p/div
+Title: Tips on troubleshooting an EStackoverflow exception in the Delphi IDE
+Description: 
+    
+    
+                    
+I'm running Delphi 2009. When I try to view a form in the form editor I keep getting a stack overflow. So I did what anyone else would do. I used Delphi to debug itself or rather another instance of the IDE.
+
+So I know where the overflow is occuring I just don't know what to do about it. There is a custom component on this form that is intercepting calls to TForm.WindowProc so it can respond to certain winapi messages. The stack overflow is occuring when the component invokes the real WindowProc.
+
+When I break on the exception the call stack is filled with hundreds of calls to:
+
+delphicoreide120.@Comppalmgr@TComponentPalettePageItemDelegate@CheckValid
+
+
+So far I haven't had any luck tracking down the actual message being passed to WindowProc.
+
+Any help would be appreciated.
+
+Update
+
+I've made some progress. Tracked down the message that appears to be setting this off. It's WM_CHILDACTIVATE. When this message gets passed to the form's WindowProc it sets off a series of calls within the IDE that ends with a stack overflow. Now I just need to figure out why.
+    
+
+        
+Answer 1: 
+
+    
+    
+Can you break when the EStackOverflow exception itself is being generated (i.e. in the MapFault or ErrorHandler functions of the SysUtils unit) or only when the EStackOverflow already has been raised? 
+
+When you can't break: the stack might already be partially corrupted when the debugger kicks in.
+
+If you can break there, do it, then try to browse up the stack (newer Delphi versions are better at that) to find the offending parameter in the WindowProc.
+
+When debugging the Delphi form designer; it is very convenient to have a dual monitor or large screen setup: you can run the offending instance of Delphi on one (side) of your monitors, the debugging Delphi instance on the other.
+
+Edit: though I mentioned large screen and side in my answer, to make the debugging steps even clearer:
+
+
+Start by make sure that the debugging and offending instance of Delphi do not overlap visually.
+Then slowly overlap more and more of the offending Delphi instance more and more until you get the stack overflow.
+
+
+--jeroen
+    
+    
+Answer 2: 
+
+    
+    
+Ugh! It wound up being a third party component package I had recently installed and was completely unrelated to where the exception was occurring. Tried viewing a blank form in a new project with the same results.
+
+Something went wrong either with the compilation or installation of the package. Rebuilding/reinstalling it made the exception disappear.
+    
+    
+Title: In a Maven project, what are reasons for either a nested or a flat directory layout?
+Description: 
+    
+    
+                    
+As my Maven project grows, I'm trying to stay on top of the project structure. So far, I have a nested directory layout with 2-3 levels, where there's a POM on each level with module entries corresponding to the directories at that level. POM inheritance (parent property) does not necessarily follow this, and is not relevant for the purpose of this question.
+
+Now, while the nested structure seems pretty natural to Maven, and it's nice and clean as long as you are on one particular level, I'm starting to get confused by what I look at in my IDE (Eclipse and IntelliJ IDEA).
+
+I had a look at the Apache Felix sources, and they have a pretty complex project in what seems to be a flat directory structure, so I'm wondering if this would be a better way to go. 
+
+What are some pros and cons for either approach that you have experienced in practice?
+
+Note that this question (which I found meanwhile) seems to be very similar. I'll leave it to the community to decide whether this should be closed as a duplicate.
+    
+
+        
+Answer 1: 
+
+    
+    
+I use a kind of mixed approach. Things with distinct lifecycle (from a release and thus VCS point of view) are flat, things with the same lifecycle are nested. And I use svn:externals for the checkout. I wrote about this approach in this previous answer.
+    
+    
+Answer 2: 
+
+    
+    
+I vote for nesting. I'm using IDEA 9 which shows the nesting in the project pane, so the presentation mirrors your logical project structure. (This wasn't the case in 8.1 - it was flattened out.)
+
+I prefer keeping things nested, especially if the names are very similar - makes navigation much easier when using a command prompt. I have a project with names like myapp-layer-component, so they all start with the same prefix, and many have the same -layer-, so using autocomplete on the commandline is next to useless. Separating these out into a nested structure is then much easier because each part of the name (appname, layer or component) is repeated just once at each level in the directory structure.
+
+If building from the command line, it's much easier to build a subset of the project, e.g. if I'm working on the db model, then often I need to build all projects in that area. This is tricky to do when the files are flattened out - the only way I know is to use the -pl argument to maven and specify the proejcts to build. With the nested directories, I just cd to the db directory and run mvn. 
+
+For example, instead of
+
+myapp-web-gui1
+myapp-web-gui2
+myapp-web-base
+myapp-svc-clustered
+myapp-svc-clustered-integrationtest
+myapp-svc-simple
+myapp-db-model
+myapp-db-hibernate
+
+
+We have the structure
+
+\myapp
+   \web
+     \gui1
+        pom.xml
+     \gui2
+        pom.xml  (other poms omitted to keep it short)
+     \base
+   \svc
+      \clustered
+      \clustered-it
+      \simple
+   \db
+      \model
+      \hibernate      
+
+
+You could also add nesting for the integration tests, but this seems like driving the point too far.
+
+With nesting, you also get all the benefits of inheritance (and some of it's pains...)
+
+The only issue I've had with this is that the directory name doesn't match the artifact id. (I'm still using full artifactIds.) And so each project must explicitly define SCM paths, since these can no longer be inferred from the parent pom. Of course, each directory can be made the same as the artifactId, and then the SCM details can be inferred from the parent, but I found the long directory names a bit unwieldy.
+    
+    
+Title: Is it possible to use Visual Studio 2010 to edit Visual Studio 2008 solutions without conversion?
+Description: 
+    
+    
+                    
+I just downloaded the Visual Studio 2010 trial. It would be nice if I could try it out by doing some real work on some real projects, but I can't convert these projects to 2010 format, because then noone else could open them unless they also install VS2010.
+
+Is there any way around this?
+    
+
+        
+Answer 1: 
+
+    
+    
+There isn't a great way to do this, unless you make a separate copy of your project a work on that.  It modifies a lot of files (solution, project, and depending: possibly your configs), that's just how it is at the moment.  
+
+The Visual Studio team is discussing fixing this for the next release, they refer to the concept as "round-tripping", making one set of solution/project files support multiple versions of visual studio.  Seeing as they have yet to do this though...that term may change :)
+    
+    
+Answer 2: 
+
+    
+    
+You can use this tool to switch.
+    
+    
+Answer 3: 
+
+    
+    
+When you convert, it creates a backup. All that's really changed is the .sln file anyway, so if you take a copy of the 2008 .sln file other users can just use that to open it.
+
+This is of course assuming you stick with .net3.5
+
+edit - my bad, this is wrong. 
+    
+    
+Answer 4: 
+
+    
+    
+It may depends on what type of projects you are creating.  I have experienced it working, but then I have only done it with 1 solution which contained a WPF and a Class library.
+
+I wanted to do something similar, see here in my project on codeplex
+
+Like I said not sure if this will work for you, but it did for me.
+
+I was working on this at home and at work (not work related just for fun) I had a copy of 2010 beta at home and 2008 at work.
+
+I initially started at work using vs2008, so when I went to open my project it brought up the upgrade wizard.
+
+When I got to work the next day I chanced my arm and created a blank solution included the existing projects into this and saved the solution out (calling it something slightly different)
+
+So when I was at work I was able to run the vs2008 solution file make some changed update those to codeplex and the when at home I could get the latest changes and open them using the 2010 solution file.
+    
+    
+Title: How can I download sources for particular Maven artifact in IDEA?
+Description: 
+    
+    
+                    
+In Eclipse there is an opportunity to select a Maven artifact you have a dependency on and download sources or documentation only for it. 
+
+Now I am struggling to find that functionality in IDEA. But seems to be it provides only opportunity to download sources for ALL dependencies.
+
+Or I am wrong?
+    
+
+        
+Answer 1: 
+
+    
+    
+A Jira issue was raised against IDEA to achieve this. However it was closed as a duplicate of this issue. I think they may have misinterpreted the requirement to download particular sources as being the same as downloading all sources (I think the highlighted button downloads all sources?).
+
+This indicates that there isn't a means to download an individual artifact's sources, sorry.
+
+download sources screenshot http://jetbrains.net/jira/secure/thumbnail/22603/22603_button.png
+    
+    
+Title: Can Netbeans handle both 32-bit and 64-bit version of Java?
+Description: 
+    
+    
+                    
+I'm running 64-bit version of Vista on my notebook with 4G of RAM, the Ram is maxed out at 1.5G on the 32-bit version of Java. But if I move completely to 64-bit version of Java, the JDIC part won't work, so my question is : if I install both 32 and 64 bit versions of Java, can Netbeans easily switch between the two ? So if I run out of ram at 1.5G, I switch to the 64-bit, but if I need to develop JDIC part, I switch back to the 32-bit, is this possible with Netbeans ?
+
+========================================================================
+
+I've just realized I asked half a question, since which version(32/64 bit) of Netbeans also matters. So my question should be : If I run 64-bit of Neatbeans(assume it's available), and have both versions of Java installed, can I switch between the two Java versions for my projects in Netbeans ?
+    
+
+        
+Answer 1: 
+
+    
+    
+NetBeans does work with both 64-bit and 32-bit JVM.  Eclipse can only work with 32-bit JVM.  I have a script for launching Eclipse with installed 32-bit JVM and NetBeans for the 64-bit or 32-bit JVM.
+    
+    
+Answer 2: 
+
+    
+    
+You cannot switch JVMs in a running app. You'll have to restart it, but you should certainly be able to run Netbeans in both JVMs.
+    
+    
+Title: &ldquo;Copy to Output Directory&rdquo; in a C++/CLI Project
+Description: 
+    
+    
+                    
+How do I get the "Copy to Output Directory" property for content files in a C++/CLI Windows Forms Project?
+
+
+
+Edit: I am presently using the post-build event to copy my content files.
+    
+
+        
+Answer 1: 
+
+    
+    
+In the projects property pages, use the post build events to trigger a bat or command file to copy the file(s) to the output directory.
+
+See here MSDN article on Build Events
+
+Edit
+
+Have you checked out this question Visual studio custom build step rule?
+Sounds like it might work for you, setup a custom build step (i.e. file copy) and associate it with the file types of your custom content files.
+
+Then when you add another file you don't need to modify the post build step.
+I don't do much C++ any more and I didn't know you could do this, nice to know it's there though.
+
+Hope this helps,
+    
+    
+Title: What are the IDE advantages of recorded macros?
+Description: 
+    
+    
+                    
+Just as the title says, I see a lot of editors touting macro recording as a feature but cannot find a way to take advantage of these functions myself.  So what can you use it for?  The type where you can record mouse movement and/or keystrokes?  Is it really that helpful to people out there?  Specifically, I deal with Eclipse which has a number of built in "fill in" functions, so I really don't see what the advantages could be.
+    
+
+        
+Answer 1: 
+
+    
+    
+I use them all the time.  Say, for example, I want to go down a list, indenting by 4 and adding a "|* ".  In EMACS, I hit C-x ( to start recording, do one example line to see that it's what I want, ending with C-n C-a to move to the next line, and end the macro with C-x ).  Then C-x e repeats it line by line, and C-u number C-x e does it many times.
+    
+    
+Answer 2: 
+
+    
+    
+Depends on what you are doing and what language you are work with. As a simple example, right now I am working with a Visual Basic .NET application that has a number of queries in it. I generally do all of my work with queries in Toad, but Visual Basic .NET has an annoying syntax when it comes to long strings, namely:
+
+Public Const SelectData As String = _
+"SELECT * " &amp; _
+"FROM myTable " &amp; _ 
+"WHERE myField = :SOMETHING"
+
+
+Since I really don't like editing the queries when I copy them out of the code or pasting them back in, I have some macros that will automatically format or strip the formatting from them.
+
+Also, some of the macros can be used to automate common tasks that you need to do around the IDE while you are working. Any sequence of commands that you see yourself doing often is something that you can turn into a macro and do with just a single click.
+    
+    
+Answer 3: 
+
+    
+    
+Waaaay back I used a macro to make function header/comments.  Other than that I have not used them.  
+
+Basically you can "automate" tedious things you do often that do not have built in ways to do the tasks you do frequently.  It is a flexible way to give lots of power to people so they can work more efficiently.
+    
+    
+Answer 4: 
+
+    
+    
+I find it very useful in microsoft excel. Rather then having to look through documentation to find every object and function I need to call I can record a macro that does most of what I want, take that code and modify it to give me finer control.
+    
+    
+Answer 5: 
+
+    
+    
+In Visual Studio, I use macros for many different purposes.  One of the most valuable comes when debugging Windows service.  I can use the macro engine to start and then attach to the Windows service which just a click of a button.
+
+Also, sometimes I use custom DEFINES that need to be exploded into code--sort of like C/C++ macros.  
+
+Colby Africa
+    
+    
+Answer 6: 
+
+    
+    
+I don't use them in Eclipse either. 
+Here's why:
+
+
+Eclipse has many powerful built-in functions and refactorings. So with code, its not necessary. 
+Eclipse macros aren't that great. You can record them, but its hard to tweak them and do exactly what you want. 
+Macros become more useful in things like modifying files that aren't code. For that I tend to use something like vim. Also, you have to actually practice using macros to recognize when they will help.
+
+    
+    
+Title: How to synchronize code files on windows with WSL/linux?
+Description: 
+    
+    
+                    
+Basically I have some C/C++ code that I need to build and debug on a Linux machine. Unfortunately, my windows laptop doesn't have enough free hard space to install some Linux dist nor does it have enough free RAM to comfortably run VM.
+
+Until now, I dealt with it rather comfortably using WSL, but the scale was rather small. It was easy to edit and debug 2-3 .c files through CLI and gdb, but it became really annoying on a large scale projects.
+
+I want something simple as "edit code in windows IDE [X], compile it on remote Linux/WSL (the project uses Makefiles), and preferably debug it via gdb".
+
+VS has something close to what I want, but it can't deal with existing Linux projects. It needs to create a new configuration which is alien to the project's Makefile.
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm unsure about C and C++ but it sounds like this is exactly the same as how i work in node and javascript every day.
+
+I checkout my code using git inside WSL to a location like /mnt/c/code/myproject. Then using sublime/VS code/webstorm i edit the files in windows in the location c:\code\myproject this works really well and have been doing this every day for over a year.
+
+Things to be aware of are that you need to ensure that your editor of choice saves files with linux line endings and that all command line operations are done inside WSL.
+
+Please see this article to see the differences between windows and linux files and how this works inside the WSL.
+    
+    
+Answer 2: 
+
+    
+    
+
+I want something simple as &quot;edit code in windows IDE , compile it on remote linux/WSL
+
+You will have something as simple as that.
+Only with Windows 19.03 though:
+See &quot;Updated WSL in Windows 10 version 1903 lets you access Linux files from Windows&quot;
+
+Microsoft's Craig Loewen says:
+In the past, creating and changing Linux files from Windows resulted in losing files or corrupting data. Making this possible has been a highly requested and long anticipated feature. We're proud to announce you can now easily access all the files in your Linux distros from Windows.
+So how does this work? He goes on to explain:
+To put it briefly: a 9P protocol file server facilitates file related requests, with Windows acting as the client.
+We've modified the WSL init daemon to include a 9P server. This server contains protocols that support Linux metadata, including permissions.
+There is a Windows service and driver that acts as the client and talks to the 9P server (which is running inside of a WSL instance).
+Client and server communicate over AF_UNIX sockets, since WSL allows interop between a Windows application and a Linux application using AF_UNIX as described in this post.
+
+Warning:
+
+The old rules still apply, you should NOT access your Linux files inside of the AppData folder!
+If you try to access your Linux files through your AppData folder, you are bypassing using the 9P server, which means that you will not have access to your Linux files, and you could possibly corrupt your Linux distro.
+
+    
+    
+Answer 3: 
+
+    
+    
+I know this question is a bit old, but I think the solution is to make a symlink between your WSL folder and the Window's folder. This is how I handled it for a Ubuntu-20.04 WSL:
+
+Access PowerShell in Administrator mode
+Type cmd.exe in the PowerShell
+Once cmd.exe is opened, type mklink /d C:\&lt;path_to_your_Windows_folder&gt; \\wsl$\Ubuntu-20.04\home\&lt;your_user&gt;\&lt;path_to_your_WSL_folder&gt;
+
+EDIT
+This was tested under Windows 10 Version 2004 with WSL2
+    
+    
+Title: CMake: CMakeLists for C11
+Description: 
+    
+    
+                    
+cmake_minimum_required(VERSION 3.6)
+project(Example)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_COMPILER_IS_GNUCC TRUE)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+
+set(SOURCE_FILES main.c)
+add_executable(Example ${SOURCE_FILES})
+
+
+I'm learning C11 and I'm using CLion IDE.
+In this IDE only possible option is use of CMake for projects, and I read a few manuals of CMake (in stack overflow, too), and I don't find ready solution to write correct CMakeLists for C11 projects.
+
+set(CMAKE_C_STANDARD 11)
+
+
+This line set C11 standard.
+
+set(CMAKE_COMPILER_IS_GNUCC TRUE)
+
+
+This line set gcc as compiler.
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+
+
+This line set compilation flags to default of IDE. 
+
+Is my CMakeLists.txt correct? 
+    
+
+        
+Answer 1: 
+
+    
+    
+set(CMAKE_COMPILER_IS_GNUCC TRUE)
+
+
+CMAKE_COMPILER_IS_GNUCC should only be read to test what compiler correspond to your current generator, something like:
+
+if(CMAKE_COMPILER_IS_GNUCC)
+    # do something special for GNU C compiler
+endif()
+
+
+Just remove it. You may want to read this, if you need to specify your compiler (but you should not need to).
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+
+
+This line does absolutely nothing: you set CMAKE_C_FLAGS with its own content. Just remove it.
+
+
+  Is my CMakeLists.txt correct?
+
+
+When building, does CLion tell you it isn't?
+    
+    
+Title: PyCharm - always show inspections
+Description: 
+    
+    
+                    
+PyCharm displays little bars on the scroll bar for things like code warnings. This feature is called "inspection".
+
+If you move the mouse cursor over a bar, it shows a preview of the code annotated with the inspection.
+
+I find this really fiddly, and I'd actually like full inspection notices to be displayed all the time in the normal editor, just like it appears in the small preview.
+
+Is there any way I can achieve this?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Using the default keymap, you can use F2 to jump to the next highlighted error and then Ctrl+F1 to show the tooltip.
+    
+    
+Answer 2: 
+
+    
+    
+According to this PyCharm's documentation there seems to be an Inspection Tool Window which displays inspection results on separate tabs..
+
+You can access the tool window through menu Code | Inspect Code.
+
+I just tried it and it showed a tab like this:
+
+
+    
+    
+Title: WebStorm &amp; Ionic 2: ram and performance issue
+Description: 
+    
+    
+                    
+I'm working on an hybrid application using Ionic 2 and webstorm. I usually work on Windows 7, Windows 10 and sometimes with ubuntu 16.04 (but only windows matters here). I code with WebStorm 2016.1.3 on a 64bits machine.
+
+All my non-ionic projects work very well but when I play with Ionic,
+webstorm has problems with RAM. Some very basic actions take several seconds to finish (moving the cursor, save, edit...). I often have a popup popup which tells me to add memory space for WS. But even if I give webstorm more ram, nothing changes. I've switched from 512Mo to
+1024Mb, then to 2048Mo and I'm going to give 4096Mo. It's insane.
+
+I've tried to use ionic only directly on my smartphone via ionic run
+(instead of ionic serve) in case ionic runs a kind of VM or
+whatever, but that doesn't work.
+
+I can't try with another IDE right now but with enhanced notepads, I don't have any issue (Sublime Text, Notepad++...).
+
+I work on different machines and the same issue comes accross all these machines.
+
+(I'm well stuffed, have a lot of ram, ssd etc. So it can't be a hardware issue).
+
+DDo you have any idea ? Did you face a similar issue ?
+    
+
+        
+Answer 1: 
+
+    
+    
+I had the same issue and the problem was the indexing process. 
+
+Solution: exclude the folder "www".
+Righ click -
+Title: How can I see the global environment in pycharm similar to Rstudio?
+Description: 
+    
+    
+                    
+I have been work with R in Rstudio since 2013, but now I decide to move to Python and I have been used Pycharm IDE. This IDE is very stable and friendly, but I can't see the objects and the results of the code processing.
+
+My question is: How can I see the global environment (like Rstudio). It's important to see what my code has doing. 
+
+Any idea to solve this problem?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use the Python Console (Tools --/ppa href="https://www.jetbrains.com/pycharm/help/debugging.html" rel="nofollow"/a/p/div
+Answer 2: 
+
+    
+    
+Maybe a bit too late, but for those who just see this, pycharm now supports the scientific mode, which for me is even better compare to Rstudio(R) 
+    
+    
+Title: Is there a debugging feature in any IDE that lets you see what &ldquo;path&rdquo; your code took?
+Description: 
+    
+    
+                    
+So I'm debugging a huge piece of code, and it's a huge task. The code involves many conditional (if/else) statements, and to make this debugging job easier, I would like to see what "path" the interpreter took through all the if/elses.
+
+For example:
+
+if stuff:
+    x = "stuff"
+elif otherstuff:
+    x = "otherstuff"
+else:
+    x = "evenmorestuff"
+return x
+
+
+My actual code is much more complex than this, and putting returns instead of the xs isn't an option. But I hope you get the idea.
+
+I would like to see what "path" through the ifs, elifs and elses my code takes when it crashes. For example:
+
+|  if stuff:
+&gt;      x = "stuff"            (ran this line)
+ |     if morestuff:
+ |         y = "morestuff"    (skipped this line)
+ |     else:
+ &gt;         y = "nostuff"      (ran this line)
+  |elif otherstuff:
+  |    x = "otherstuff"       (skipped this line)
+  |else:
+  |    x = "evenmorestuff"    (skipped this line)
+  &gt;return x                   (ran this line)
+
+
+Is there any feature, in any IDE, that could do this? (I'm using Visual Studio Community 2015 with PTVS and Python, so if there's a solution for that, that would be great as I wouldn't have to switch IDEs.) I just have no idea what it would be called, and a google search yielded no results when I searched something similar to this title, so I decided to ask here.
+
+Thanks :)
+    
+
+        
+Answer 1: 
+
+    
+    
+The verb you're looking for is "tracing".
+
+Python has a trace module which can do this. I found articles on 
+tracing in general and the module itself which look useful.
+
+
+  The trace module helps you understand the way your program runs. You can trace the statements executed, produce coverage reports, and investigate the relationships between functions that call each other.
+
+
+You might find that refactoring the code into smaller functions makes it easier to comprehend and/or trace its execution.
+    
+    
+Title: PHPStorm &ldquo;Collecting files&rdquo; for ages on deploy
+Description: 
+    
+    
+                    
+All of a sudden my PHPStorm has started to collect files extremely slow. It's impossible for me to deploy using PHPStorm now. It just stays "Collecting files" for 5-10 minutes every time I deploy anything. Even if it's just one file
+
+
+
+I asked on the forums, but no answer. It has been reported as a bug by someone but nothing happens there. It's a Laravel project, don't know if that has any effect.
+
+It just started out of nothing.
+Here's my Deployment options (nothing is changed)
+
+
+My connection is 100mbit and healthy, the server I'm uploading to is quick. No problem there.
+
+Anyone know how to solve this?
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm using 2016.1 and have the same issue.  It's not any particular file/directory that I've noticed but what fixed it for me is changing the 'compare by' method in the 'Diff Between' window from 'content' to 'size and timestamp'.
+    
+    
+Answer 2: 
+
+    
+    
+I got some increase in the speed of connection/checking/collecting files by activating the Passive mode in the Advanced options window in the Deployment/FTP server options:
+
+
+(source: erenor.net)  
+    
+    
+Title: Why Unity3D Use Monodevelop(4.0.1) not the latest Xamarin(5.9)
+Description: 
+    
+    
+                    
+I use Unity 4.6.3 and Monovelop 4 is installed by default. It seems Monodevelop 4 has many bugs.  
+
+I see the lastest Monovelop is Xamarin(5.9) http://www.monodevelop.com/download/. 
+Why Unity did't use Xamarin as its default IDE?
+
+If I want to use Xamarin as Unity's default IDE , do you have some tips or document for me.
+
+By the way, I know I can change the default IDE by Edit=
+Answer 1: 
+
+    
+    
+You're totally right, I've been working with this old and buggy MonoDevelop version way too long.
+
+But there didn't seem to be a real alternative, at least until last week a colleague of mine found some nice Add-Ins, that make Xamarin 5.9 working quite well with Unity.
+
+Note:
+This only works for Unity starting from 4.6.5p2. 
+But I'd recommend to update Unity to the latest version anyway, as there are a lot of bugfixes (especially for IL2CPP, if you're doing iOS).
+
+Add-Ins
+
+The Xamarin Add-Ins can be found here: http://files.unity3d.com/lukasz/Unity-Addins-5.9.0.zip
+
+Requirements
+
+
+Xamarin 5.9: http://www.monodevelop.com/download
+Unity 4.6.5p2 or above: 
+
+releases: http://unity3d.com/get-unity/download/archive
+patch releases: http://unity3d.com/unity/qa/patch-releases
+
+
+
+Installation
+
+
+Unpack the zip file. You will now have 4 files with an .mpack extension.
+Open MonoDevelop/Xamarin Studio.
+Open Add-In Manager
+
+OS X: Xamarin Studio ➔ Add-in Manager.
+Windows: Tools ➔ Add-in Manager
+
+Click "Install from file" and select the 4 .mpack files.
+Restart MonoDevelop/Xamarin Studio.
+You should now be able open, build and debug any Unity generated solution/projects.
+
+
+Make it the default Script Editor in Unity
+
+
+Open Unity
+Go to Preferences (OS X: CMD + ,)
+External Tools ➔ External Script Editor
+Use Browse to select your Xamarin installation
+
+
+Source
+
+The complete guide can be found here:
+http://forum.unity3d.com/threads/unity-add-ins-for-monodevelop-xamarin-studio-5-9.329880/
+    
+    
+Answer 2: 
+
+    
+    
+you can just set it as default editor. Edit=
+Answer 3: 
+
+    
+    
+What's problematic is that you can open CSharp Projects in it, but when you have UnityScript projects in your Solution file it won't open correctly in Xamarin. It says could not load project "Your project.unityproj". So Assembly-CSharp* works, but not Assembly-UnityScript*.
+
+That's the reason I can think of so far!
+    
+    
+Title: Sublime Text as an external editor for IAR EWB
+Description: 
+    
+    
+                    
+I've been using IAR EWB for ARM quite a some time now, despite its fiddly IDE features such as code completion and jump to definitions etc. Sometimes they work in IAR editor but most of the times no. GCC+Eclipse is not an option for me as I'm using some pre-compiled library binaries that are only working with IAR. However, I noticed that it is possible to use an external editor with IAR. 
+
+For notepad++, the settings are,
+
+In Embedded Workbench open this settings dialog - Tools 
+Answer 1: 
+
+    
+    
+Based on this link, "$FILE_PATH$":$CUR_LINE$ should work for the arguments.
+
+Whether Sublime starts a new instance is probably an application setting/preference.
+    
+    
+Title: Documentation window blank in Android Studio
+Description: 
+    
+    
+                    
+Android studio shows blank documentation window like this. Is there any solution to get documentation. I am suffering from this problem after updating the android studio to latest version 1.0.1 Any help would be appreciated. 
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Can you resize the window by dragging down on the bottom part of the bar?
+    
+    
+Title: IDE for Grinder scripting
+Description: 
+    
+    
+                    
+I'm looking for a IDE for the Grinder framework 3.11. 
+Can someone please suggest me an IDE to develop and run Grinder(3.11) scripts. 
+Grinder-stone for eclipse is no longer supported. 
+    
+
+        
+Answer 1: 
+
+    
+    
+Unfortunately there are no good IDE options today for doing fully-integrated Grinder script development.  Nothing has come along to fill Grinderstone's shoes.  Your best bet is to go with a decent Java/Python/Jython development tool such as PyDev or PyCharm or IntelliJ.  It won't have the Grinder integration, but any of these tools will be helpful for everything else.
+    
+    
+Answer 2: 
+
+    
+    
+I was in your shoes few days back however you need to configure pydev which will save a lot of time . You can integrated Grinder on your own by creating a bat file and giving the path of scripts to the one in eclipse . This worked for me.
+    
+    
+Title: SuperCollider not audible on headphone
+Description: 
+    
+    
+                    
+I am just beginning to learn audio programming using supercollider. 
+When I play a sound I am able to hear it on speakers but not headphone. 
+
+I get the following message on starting server - 
+
+
+  booting 57110
+  localhost
+  JackDriver: client name is 'SuperCollider'
+  SC_AudioDriver: sample rate = 48000.000000, driver's block size = 1024
+  JackDriver: connected  system:capture_1 to SuperCollider:in_1
+  JackDriver: connected  system:capture_2 to SuperCollider:in_2
+  JackDriver: connected  SuperCollider:out_1 to system:playback_1
+  JackDriver: connected  SuperCollider:out_2 to system:playback_2
+  SuperCollider 3 server ready.
+  JackDriver: max output latency 42.7 ms
+  Receiving notification messages from server localhost
+  Shared memory server interface initialized  
+
+
+I went through some forums and they suggested to look for output devices options and set them, I did a - 
+
+ServerOptions.devices;
+
+
+to look for device list but I got the following error in the post window - 
+
+
+  ERROR: A primitive was not bound. 0 676
+  Instance of Method {    (0x21199c0, gc=01, fmt=00, flg=11, set=04)
+    instance variables [15]
+      raw1 : Float 0.000000   00000000 0080000C
+      raw2 : Float 0.000000   00000300 03020003
+      code : instance of Int8Array (0x2119cc0, size=4, set=2)
+      selectors : nil
+      constants : nil
+      prototypeFrame : instance of Array (0x2119c00, size=3, set=2)
+      context : nil
+      argNames : instance of SymbolArray (0x2119b40, size=3, set=2)
+      varNames : nil
+      sourceCode : nil
+      ownerClass : class Meta_ServerOptions (0x21113c0)
+      name : Symbol 'prListDevices'
+      primitiveName : Symbol '_ListAudioDevices'
+      filenameSymbol : Symbol '/usr/share/SuperCollider/SCClassLibrary/Common/Control/Server.sc'
+      charPos : Integer 4025
+  }
+  ERROR: Primitive 'none' failed.
+  Failed.
+  RECEIVER:
+     nil
+  CALL STACK:
+      MethodError:reportError   0x3601498
+          arg this = 
+      Nil:handleError   0x1f730f8
+          arg this = nil
+          arg error = 
+      Thread:handleError   0x35fcfd8
+          arg this = 
+          arg error = 
+      Object:throw   0x3980c58
+          arg this = 
+      Object:primitiveFailed   0x33395a8
+          arg this = nil
+      Interpreter:interpretPrintCmdLine   0x3d061e8
+          arg this = 
+          var res = nil
+          var func = 
+          var code = "ServerOptions.devices;"
+          var doc = nil
+          var ideClass = 
+      Process:interpretPrintCmdLine   0x3443c08
+          arg this = 
+  ^^ The preceding error dump is for ERROR: Primitive 'none' failed.
+  Failed.
+  RECEIVER: nil
+  booting 57110
+  localhost
+  JackDriver: client name is 'SuperCollider'
+  SC_AudioDriver: sample rate = 48000.000000, driver's block size = 1024
+  JackDriver: connected  system:capture_1 to SuperCollider:in_1
+  JackDriver: connected  system:capture_2 to SuperCollider:in_2
+  JackDriver: connected  SuperCollider:out_1 to system:playback_1
+  JackDriver: connected  SuperCollider:out_2 to system:playback_2
+  SuperCollider 3 server ready.
+  JackDriver: max output latency 42.7 ms
+  Receiving notification messages from server localhost
+  Shared memory server interface initialized
+  ERROR: A primitive was not bound. 0 676
+  Instance of Method {    (0x21199c0, gc=01, fmt=00, flg=11, set=04)
+    instance variables [15]
+      raw1 : Float 0.000000   00000000 0080000C
+      raw2 : Float 0.000000   00000300 03020003
+      code : instance of Int8Array (0x2119cc0, size=4, set=2)
+      selectors : nil
+      constants : nil
+      prototypeFrame : instance of Array (0x2119c00, size=3, set=2)
+      context : nil
+      argNames : instance of SymbolArray (0x2119b40, size=3, set=2)
+      varNames : nil
+      sourceCode : nil
+      ownerClass : class Meta_ServerOptions (0x21113c0)
+      name : Symbol 'prListDevices'
+      primitiveName : Symbol '_ListAudioDevices'
+      filenameSymbol : Symbol '/usr/share/SuperCollider/SCClassLibrary/Common/Control/Server.sc'
+      charPos : Integer 4025
+  }
+  ERROR: Primitive 'none' failed.
+  Failed.
+  RECEIVER:
+     nil
+  CALL STACK:
+      MethodError:reportError   0x35be518
+          arg this = 
+      Nil:handleError   0x1ee0b78
+          arg this = nil
+          arg error = 
+      Thread:handleError   0x3470ab8
+          arg this = 
+          arg error = 
+      Object:throw   0x3636a78
+          arg this = 
+      Object:primitiveFailed   0x3cd86c8
+          arg this = nil
+      Interpreter:interpretPrintCmdLine   0x3d44b98
+          arg this = 
+          var res = nil
+          var func = 
+          var code = "ServerOptions.devices;"
+          var doc = nil
+          var ideClass = 
+      Process:interpretPrintCmdLine   0x37c8708
+          arg this = 
+  ^^ The preceding error dump is for ERROR: Primitive 'none' failed.
+  Failed.
+  RECEIVER: nil  
+
+
+I am new to supercollider and I having a hard time figuring the reason for the error. Please suggest me how to resolve this.
+
+Thanks in Advance. 
+    
+
+        
+Answer 1: 
+
+    
+    
+I had the same problem. I discovered the solution by using Catia from KXStudio. See Catia
+Catia is a JACK Patchbay. (Other patchbays are available. QJackctl and Patchage are examples). On my system (Ubuntu 14.04 on a  Dell Studio laptop), SuperCollider maps its first 4 outputs to the 4 system playbacks. The first 2 system playbacks are the speakers, system playbacks 3 and 4 are the headphones. By remapping out1 and out2 from SC to playback_3 and playback_4, I hear it through the headphones. So, get hold of a patchbay for JACK, and see what you see.
+Hope this helps.
+    
+    
+Answer 2: 
+
+    
+    
+I was having a similar problem (no output from supercollider at all, just complete and total silence), and this post ultimately led me to the right solution. I think it will be helpful to you and others.
+
+From the ServerOptions documentation, I found that I could configure how SC talks to jack with environment variables.
+
+In my case, I start scsynth with the relevant environment variables like so:
+
+  SC_JACK_DEFAULT_INPUTS="system:capture_1" SC_JACK_DEFAULT_OUTPUTS="system" scsynth -u 57110 &amp;
+
+
+It seems this can also be done from within sclang like so:
+
+  "SC_JACK_DEFAULT_INPUTS".setenv("system:capture_1");
+  "SC_JACK_DEFAULT_OUTPUTS".setenv("system");
+
+
+In your case, where you are connecting to the wrong outputs, you might want to start scsynth like this:
+
+   SC_JACK_DEFAULT_OUTPUTS="system:playback_3,system:playback_4" scsynth -u 57110 &amp;
+
+
+Another alternative that will let you play with these connections and find what works for you is to use the jack_lsp, jack_connect, and jack_disconnect commands.
+
+To see all of the ins/outs of your jack server as well as the current connections, run
+
+   jack_lsp -c
+
+
+From your post, I think you will see something like
+
+system:capture_1
+    SuperCollider:in_1
+system:capture_2
+    SuperCollider:in_2
+system:playback_1
+    SuperCollider:out_1
+system:playback_2
+    SuperCollider:out_2
+system:playback_3
+system:playback_4
+SuperCollider:out_1
+    system:playback_1
+SuperCollider:out_2
+    system:playback_2
+
+
+To make SuperCollider output to your headphones and speakers, you could conect out_1 and out_2 to playback_3 and playback_4 (assuming those are your headphones) like so:
+
+jack_connect SuperCollider:out_1 system:playback_3
+jack_connect SuperCollider:out_2 system:playback_4
+
+
+To disconnect from the speakers, you could do 
+
+jack_disconnect SuperCollider:out_1 system:playback_1
+jack_disconnect SuperCollider:out_2 system:playback_2
+
+
+Run jack_lsp -c again to see if your system is setup how you want!
+    
+    
+Answer 3: 
+
+    
+    
+After struggling countless times with this issue I managed to get it working with:
+
+
+Add your user to the audio linux group.
+Use cadence to start jack
+
+
+Additional resource that could be helpful: https://wiki.archlinux.org/index.php/JACK_Audio_Connection_Kit
+    
+    
+Answer 4: 
+
+    
+    
+Firstly: the big long error message saying "A primitive was not bound" is unpleasant but in this case it just means you typed the wrong command. I don't know where you got that command ServerOptions.devices from but it's just wrong. Maybe the message was intended to tell you to type s.options.device which is more sensible but it's NOT what you need to do. Forget that and forget that long error message.
+
+Secondly: the message you see when you boot the server is good, it tells you that the server has booted and connected to jack. SuperCollider is happy. If you hear sound out of the speakers but not from the headphones (I take it you mean when you plug the headphones in!), this is NOT a supercollider problem but just a standard operating-system issue about setting the volume on your headphones.
+
+It appears that you're using linux so run the command alsamixer in a terminal, that's a good way to check whether the headphone output is muted. Use man alsamixer to understand how to use it, if it's not familiar to you.
+    
+    
+Title: Is there a tool for identifying outdated/inconsistent JavaDoc comments?
+Description: 
+    
+    
+                    
+I'm looking for a tool (or IDE feature) that can point out incorrect JavaDoc comments. That is, comments that have missing arguments, have the wrong name for arguments, don't document thrown exceptions, etc.
+
+I'm aware that there wouldn't be a perfect tool, since a tool can't tell us if the documentation is correct, but I'm hoping that identifying more obvious errors can at least help catch some incorrect JavaDoc comments.
+
+Preferably this tool would have the means of ignoring simple getters and setters (I often don't include a @returns on getters, for example, because their summary details everything you'd need to know).
+    
+
+        
+Answer 1: 
+
+    
+    
+With Eclipse it's possible to mark missing or wrong JavaDoc.
+Look at Window-
+Title: Android Studio new installation and new project fails
+Description: 
+    
+    
+                    
+I just installed Android Studio 0.3.6 and it fails to create a new project with all default options.  The error message is: 
+
+Cause: unexpected end of block data
+
+
+
+I don't have any projects, so there is no way to even access the Help menu. How do I fix this so I can start the IDE?
+
+I'm adding the error log from idea.log
+
+2013-11-22 22:47:01,686 [  86851]   INFO - s.impl.stores.FileBasedStorage - Document was not loaded for $WORKSPACE_FILE$ file is null 
+2013-11-22 22:47:01,699 [  86864]   INFO - ij.components.ComponentManager - com.intellij.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl initialized in 12 ms 
+2013-11-22 22:47:01,699 [  86864]   INFO - ij.components.ComponentManager - com.intellij.ui.EditorNotifications initialized in 12 ms 
+2013-11-22 22:47:01,700 [  86865]   INFO - s.impl.stores.FileBasedStorage - Document was not loaded for $PROJECT_CONFIG_DIR$/encodings.xml file is null 
+2013-11-22 22:47:01,709 [  86874]   INFO - s.impl.stores.FileBasedStorage - Document was not loaded for $PROJECT_CONFIG_DIR$/modules.xml file is null 
+2013-11-22 22:47:01,744 [  86909]   INFO - s.impl.stores.FileBasedStorage - Document was not loaded for $PROJECT_CONFIG_DIR$/vcs.xml file is null 
+2013-11-22 22:47:01,747 [  86912]   INFO - ij.components.ComponentManager - com.intellij.openapi.vcs.changes.ChangesViewManager initialized in 21 ms 
+2013-11-22 22:47:01,775 [  86940]   INFO - ij.components.ComponentManager - com.intellij.openapi.vcs.changes.ChangeListManagerImpl initialized in 53 ms 
+2013-11-22 22:47:01,778 [  86943]   INFO - ij.components.ComponentManager - com.intellij.openapi.vcs.changes.VcsDirtyScopeManagerImpl initialized in 56 ms 
+2013-11-22 22:47:01,790 [  86955]   INFO - ij.components.ComponentManager - com.intellij.codeInsight.daemon.impl.DaemonListeners initialized in 75 ms 
+2013-11-22 22:47:01,807 [  86972]   INFO - ij.components.ComponentManager - com.intellij.codeInsight.navigation.CtrlMouseHandler initialized in 12 ms 
+2013-11-22 22:47:01,832 [  86997]   INFO - ij.components.ComponentManager - com.intellij.packaging.impl.artifacts.ArtifactManagerImpl initialized in 11 ms 
+2013-11-22 22:47:01,833 [  86998]   INFO - s.impl.stores.FileBasedStorage - Document was not loaded for $PROJECT_CONFIG_DIR$/compiler.xml file is null 
+2013-11-22 22:47:01,838 [  87003]   INFO -                  TestNG Runner - Create TestNG Template Configuration 
+2013-11-22 22:47:01,839 [  87004]   INFO -                  TestNG Runner - Create TestNG Template Configuration 
+2013-11-22 22:47:01,877 [  87042]   INFO - ij.components.ComponentManager - com.intellij.framework.detection.impl.FrameworkDetectionManager initialized in 13 ms 
+2013-11-22 22:47:01,900 [  87065]   INFO - ij.components.ComponentManager - com.intellij.xdebugger.impl.XDebuggerManagerImpl initialized in 22 ms 
+2013-11-22 22:47:01,915 [  87080]   INFO - s.impl.stores.FileBasedStorage - Document was not loaded for $PROJECT_CONFIG_DIR$/dynamic.xml file is null 
+2013-11-22 22:47:01,973 [  87138]   INFO - ij.components.ComponentManager - org.jetbrains.idea.maven.tasks.MavenTasksManager initialized in 54 ms 
+2013-11-22 22:47:01,976 [  87141]   INFO - ij.components.ComponentManager - org.jetbrains.idea.maven.navigator.MavenProjectsNavigator initialized in 57 ms 
+2013-11-22 22:47:02,034 [  87199]   INFO - ij.components.ComponentManager - com.intellij.designer.DesignerToolWindowManager initialized in 53 ms 
+2013-11-22 22:47:02,064 [  87229]   INFO - ij.components.ComponentManager - com.intellij.designer.palette.PaletteToolWindowManager initialized in 30 ms 
+2013-11-22 22:47:02,080 [  87245]   INFO - s.impl.stores.FileBasedStorage - Document was not loaded for $APP_CONFIG$/vcs.xml file is null 
+2013-11-22 22:47:02,116 [  87281]   INFO - ij.components.ComponentManager - git4idea.repo.GitRepositoryManager initialized in 51 ms 
+2013-11-22 22:47:02,152 [  87317]   INFO - ij.components.ComponentManager - org.zmlx.hg4idea.HgRepositoryWatcher initialized in 30 ms 
+2013-11-22 22:47:02,157 [  87322]   INFO - ellij.project.impl.ProjectImpl - 138 project components initialized in 713 ms 
+2013-11-22 22:47:02,157 [  87322]   INFO - le.impl.ModuleManagerComponent - 0 module(s) loaded in 0 ms 
+2013-11-22 22:47:02,162 [  87327]   INFO - s.impl.stores.FileBasedStorage - Document was not loaded for $PROJECT_CONFIG_DIR$/gradle.xml file is null 
+2013-11-22 22:47:02,181 [  87346]   INFO - i.vcs.changes.ChangeListWorker - default list not found when copy 
+2013-11-22 22:47:02,181 [  87346]   INFO - i.vcs.changes.ChangeListWorker - default list not found when copy in original object too 
+2013-11-22 22:47:02,258 [  87423]   INFO - napi.vfs.newvfs.RefreshSession - [CR-IC-2706] [] 
+2013-11-22 22:47:02,273 [  87438]   INFO - napi.vfs.newvfs.RefreshSession - [CR-IC-2706] [] 
+2013-11-22 22:47:02,307 [  87472]   INFO - s.plugins.gradle.GradleManager - Instructing gradle to use java from C:/Program Files/Java/jdk1.6.0_32 
+2013-11-22 22:47:02,312 [  87477]   INFO - s.plugins.gradle.GradleManager - Instructing gradle to use java from C:/Program Files/Java/jdk1.6.0_32 
+2013-11-22 22:47:02,314 [  87479]   INFO - dle.util.AndroidGradleSettings - Found Android SDK home at 'C:/Program Files (x86)/Android/Android Studio/sdk' (from local.properties file) 
+2013-11-22 22:47:09,282 [  94447]   INFO - ject.ProjectImportErrorHandler - Failed to import Gradle project at 'C:\Users\Marcin\AndroidStudioProjects\MyApplicationProject' 
+org.gradle.tooling.GradleConnectionException: Could not run build action using Gradle distribution 'http://services.gradle.org/distributions/gradle-1.8-bin.zip'.
+    at org.gradle.tooling.internal.consumer.ResultHandlerAdapter.onFailure(ResultHandlerAdapter.java:55)
+    at org.gradle.tooling.internal.consumer.async.DefaultAsyncConsumerActionExecutor$1$1.run(DefaultAsyncConsumerActionExecutor.java:57)
+    at org.gradle.internal.concurrent.DefaultExecutorFactory$StoppableExecutorImpl$1.run(DefaultExecutorFactory.java:66)
+    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+    at java.lang.Thread.run(Thread.java:724)
+    at org.gradle.tooling.internal.consumer.BlockingResultHandler.getResult(BlockingResultHandler.java:46)
+    at org.gradle.tooling.internal.consumer.DefaultBuildActionExecuter.run(DefaultBuildActionExecuter.java:43)
+    at com.android.tools.idea.gradle.project.AndroidGradleProjectResolver.resolveProjectInfo(AndroidGradleProjectResolver.java:167)
+    at com.android.tools.idea.gradle.project.AndroidGradleProjectResolver$1.fun(AndroidGradleProjectResolver.java:148)
+    at com.android.tools.idea.gradle.project.AndroidGradleProjectResolver$1.fun(AndroidGradleProjectResolver.java:135)
+    at org.jetbrains.plugins.gradle.service.project.GradleExecutionHelper.execute(GradleExecutionHelper.java:157)
+    at com.android.tools.idea.gradle.project.AndroidGradleProjectResolver.resolveProjectInfo(AndroidGradleProjectResolver.java:135)
+    at com.android.tools.idea.gradle.project.AndroidGradleProjectResolver.resolveProjectInfo(AndroidGradleProjectResolver.java:77)
+    at org.jetbrains.plugins.gradle.service.project.GradleProjectResolver.resolveProjectInfo(GradleProjectResolver.java:83)
+    at org.jetbrains.plugins.gradle.service.project.GradleProjectResolver.resolveProjectInfo(GradleProjectResolver.java:42)
+    at com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolverImpl$1.produce(RemoteExternalSystemProjectResolverImpl.java:41)
+    at com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolverImpl$1.produce(RemoteExternalSystemProjectResolverImpl.java:37)
+    at com.intellij.openapi.externalSystem.service.remote.AbstractRemoteExternalSystemService.execute(AbstractRemoteExternalSystemService.java:59)
+    at com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolverImpl.resolveProjectInfo(RemoteExternalSystemProjectResolverImpl.java:37)
+    at com.intellij.openapi.externalSystem.service.remote.wrapper.ExternalSystemProjectResolverWrapper.resolveProjectInfo(ExternalSystemProjectResolverWrapper.java:49)
+    at com.intellij.openapi.externalSystem.service.internal.ExternalSystemResolveProjectTask.doExecute(ExternalSystemResolveProjectTask.java:53)
+    at com.intellij.openapi.externalSystem.service.internal.AbstractExternalSystemTask.execute(AbstractExternalSystemTask.java:130)
+    at com.intellij.openapi.externalSystem.service.internal.AbstractExternalSystemTask.execute(AbstractExternalSystemTask.java:120)
+    at com.intellij.openapi.externalSystem.util.ExternalSystemUtil$3.execute(ExternalSystemUtil.java:422)
+    at com.intellij.openapi.externalSystem.util.ExternalSystemUtil$4$1.run(ExternalSystemUtil.java:475)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl$TaskRunnable.run(ProgressManagerImpl.java:464)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl$6.run(ProgressManagerImpl.java:274)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl$2.run(ProgressManagerImpl.java:178)
+    at com.intellij.openapi.progress.ProgressManager.executeProcessUnderProgress(ProgressManager.java:209)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl.executeProcessUnderProgress(ProgressManagerImpl.java:212)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl.runProcess(ProgressManagerImpl.java:171)
+    at com.intellij.openapi.application.impl.ApplicationImpl$10$1.run(ApplicationImpl.java:657)
+    at com.intellij.openapi.application.impl.ApplicationImpl$8.run(ApplicationImpl.java:435)
+    at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+    at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)
+    at java.util.concurrent.FutureTask.run(FutureTask.java:166)
+    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+    at java.lang.Thread.run(Thread.java:724)
+    at com.intellij.openapi.application.impl.ApplicationImpl$1$1.run(ApplicationImpl.java:152)
+Caused by: org.gradle.internal.UncheckedException: java.io.StreamCorruptedException: unexpected end of block data
+    at org.gradle.internal.UncheckedException.throwAsUncheckedException(UncheckedException.java:39)
+    at org.gradle.tooling.internal.provider.PayloadSerializer.deserialize(PayloadSerializer.java:152)
+    at org.gradle.tooling.internal.provider.ProviderConnection.run(ProviderConnection.java:108)
+    at org.gradle.tooling.internal.provider.ProviderConnection.run(ProviderConnection.java:100)
+    at org.gradle.tooling.internal.provider.DefaultConnection.run(DefaultConnection.java:134)
+    at org.gradle.tooling.internal.consumer.connection.ActionAwareConsumerConnection.run(ActionAwareConsumerConnection.java:38)
+    at org.gradle.tooling.internal.consumer.DefaultBuildActionExecuter$1.run(DefaultBuildActionExecuter.java:53)
+    at org.gradle.tooling.internal.consumer.connection.LazyConsumerActionExecutor.run(LazyConsumerActionExecutor.java:82)
+    at org.gradle.tooling.internal.consumer.connection.ProgressLoggingConsumerActionExecutor.run(ProgressLoggingConsumerActionExecutor.java:58)
+    at org.gradle.tooling.internal.consumer.connection.LoggingInitializerConsumerActionExecutor.run(LoggingInitializerConsumerActionExecutor.java:44)
+    at org.gradle.tooling.internal.consumer.async.DefaultAsyncConsumerActionExecutor$1$1.run(DefaultAsyncConsumerActionExecutor.java:55)
+    at org.gradle.internal.concurrent.DefaultExecutorFactory$StoppableExecutorImpl$1.run(DefaultExecutorFactory.java:66)
+    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+    at java.lang.Thread.run(Thread.java:724)
+Caused by: java.io.StreamCorruptedException: unexpected end of block data
+    at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1370)
+    at java.io.ObjectInputStream.defaultReadFields(ObjectInputStream.java:1989)
+    at java.io.ObjectInputStream.defaultReadObject(ObjectInputStream.java:499)
+    at java.lang.Throwable.readObject(Throwable.java:913)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:606)
+    at java.io.ObjectStreamClass.invokeReadObject(ObjectStreamClass.java:1017)
+    at java.io.ObjectInputStream.readSerialData(ObjectInputStream.java:1891)
+    at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1796)
+    at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1348)
+    at java.io.ObjectInputStream.defaultReadFields(ObjectInputStream.java:1989)
+    at java.io.ObjectInputStream.defaultReadObject(ObjectInputStream.java:499)
+    at java.lang.Throwable.readObject(Throwable.java:913)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:606)
+    at java.io.ObjectStreamClass.invokeReadObject(ObjectStreamClass.java:1017)
+    at java.io.ObjectInputStream.readSerialData(ObjectInputStream.java:1891)
+    at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1796)
+    at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1348)
+    at java.io.ObjectInputStream.readObject(ObjectInputStream.java:370)
+    at org.gradle.tooling.internal.provider.PayloadSerializer.deserialize(PayloadSerializer.java:150)
+    ... 13 more
+2013-11-22 22:47:09,284 [  94449]   WARN - nal.AbstractExternalSystemTask - Cause: unexpected end of block data 
+com.intellij.openapi.externalSystem.model.ExternalSystemException: Cause: unexpected end of block data
+    at org.jetbrains.plugins.gradle.service.project.GradleExecutionHelper.execute(GradleExecutionHelper.java:160)
+    at com.android.tools.idea.gradle.project.AndroidGradleProjectResolver.resolveProjectInfo(AndroidGradleProjectResolver.java:135)
+    at com.android.tools.idea.gradle.project.AndroidGradleProjectResolver.resolveProjectInfo(AndroidGradleProjectResolver.java:77)
+    at org.jetbrains.plugins.gradle.service.project.GradleProjectResolver.resolveProjectInfo(GradleProjectResolver.java:83)
+    at org.jetbrains.plugins.gradle.service.project.GradleProjectResolver.resolveProjectInfo(GradleProjectResolver.java:42)
+    at com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolverImpl$1.produce(RemoteExternalSystemProjectResolverImpl.java:41)
+    at com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolverImpl$1.produce(RemoteExternalSystemProjectResolverImpl.java:37)
+    at com.intellij.openapi.externalSystem.service.remote.AbstractRemoteExternalSystemService.execute(AbstractRemoteExternalSystemService.java:59)
+    at com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolverImpl.resolveProjectInfo(RemoteExternalSystemProjectResolverImpl.java:37)
+    at com.intellij.openapi.externalSystem.service.remote.wrapper.ExternalSystemProjectResolverWrapper.resolveProjectInfo(ExternalSystemProjectResolverWrapper.java:49)
+    at com.intellij.openapi.externalSystem.service.internal.ExternalSystemResolveProjectTask.doExecute(ExternalSystemResolveProjectTask.java:53)
+    at com.intellij.openapi.externalSystem.service.internal.AbstractExternalSystemTask.execute(AbstractExternalSystemTask.java:130)
+    at com.intellij.openapi.externalSystem.service.internal.AbstractExternalSystemTask.execute(AbstractExternalSystemTask.java:120)
+    at com.intellij.openapi.externalSystem.util.ExternalSystemUtil$3.execute(ExternalSystemUtil.java:422)
+    at com.intellij.openapi.externalSystem.util.ExternalSystemUtil$4$1.run(ExternalSystemUtil.java:475)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl$TaskRunnable.run(ProgressManagerImpl.java:464)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl$6.run(ProgressManagerImpl.java:274)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl$2.run(ProgressManagerImpl.java:178)
+    at com.intellij.openapi.progress.ProgressManager.executeProcessUnderProgress(ProgressManager.java:209)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl.executeProcessUnderProgress(ProgressManagerImpl.java:212)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl.runProcess(ProgressManagerImpl.java:171)
+    at com.intellij.openapi.application.impl.ApplicationImpl$10$1.run(ApplicationImpl.java:657)
+    at com.intellij.openapi.application.impl.ApplicationImpl$8.run(ApplicationImpl.java:435)
+    at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+    at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)
+    at java.util.concurrent.FutureTask.run(FutureTask.java:166)
+    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+    at java.lang.Thread.run(Thread.java:724)
+    at com.intellij.openapi.application.impl.ApplicationImpl$1$1.run(ApplicationImpl.java:152)
+com.intellij.openapi.externalSystem.model.ExternalSystemException: Cause: unexpected end of block data
+    at com.android.tools.idea.gradle.project.ProjectImportErrorHandler.createUserFriendlyError(ProjectImportErrorHandler.java:204)
+    at com.android.tools.idea.gradle.project.ProjectImportErrorHandler.getUserFriendlyError(ProjectImportErrorHandler.java:146)
+    at com.android.tools.idea.gradle.project.AndroidGradleProjectResolver$1.fun(AndroidGradleProjectResolver.java:157)
+    at com.android.tools.idea.gradle.project.AndroidGradleProjectResolver$1.fun(AndroidGradleProjectResolver.java:135)
+    at org.jetbrains.plugins.gradle.service.project.GradleExecutionHelper.execute(GradleExecutionHelper.java:157)
+    at com.android.tools.idea.gradle.project.AndroidGradleProjectResolver.resolveProjectInfo(AndroidGradleProjectResolver.java:135)
+    at com.android.tools.idea.gradle.project.AndroidGradleProjectResolver.resolveProjectInfo(AndroidGradleProjectResolver.java:77)
+    at org.jetbrains.plugins.gradle.service.project.GradleProjectResolver.resolveProjectInfo(GradleProjectResolver.java:83)
+    at org.jetbrains.plugins.gradle.service.project.GradleProjectResolver.resolveProjectInfo(GradleProjectResolver.java:42)
+    at com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolverImpl$1.produce(RemoteExternalSystemProjectResolverImpl.java:41)
+    at com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolverImpl$1.produce(RemoteExternalSystemProjectResolverImpl.java:37)
+    at com.intellij.openapi.externalSystem.service.remote.AbstractRemoteExternalSystemService.execute(AbstractRemoteExternalSystemService.java:59)
+    at com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolverImpl.resolveProjectInfo(RemoteExternalSystemProjectResolverImpl.java:37)
+    at com.intellij.openapi.externalSystem.service.remote.wrapper.ExternalSystemProjectResolverWrapper.resolveProjectInfo(ExternalSystemProjectResolverWrapper.java:49)
+    at com.intellij.openapi.externalSystem.service.internal.ExternalSystemResolveProjectTask.doExecute(ExternalSystemResolveProjectTask.java:53)
+    at com.intellij.openapi.externalSystem.service.internal.AbstractExternalSystemTask.execute(AbstractExternalSystemTask.java:130)
+    at com.intellij.openapi.externalSystem.service.internal.AbstractExternalSystemTask.execute(AbstractExternalSystemTask.java:120)
+    at com.intellij.openapi.externalSystem.util.ExternalSystemUtil$3.execute(ExternalSystemUtil.java:422)
+    at com.intellij.openapi.externalSystem.util.ExternalSystemUtil$4$1.run(ExternalSystemUtil.java:475)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl$TaskRunnable.run(ProgressManagerImpl.java:464)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl$6.run(ProgressManagerImpl.java:274)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl$2.run(ProgressManagerImpl.java:178)
+    at com.intellij.openapi.progress.ProgressManager.executeProcessUnderProgress(ProgressManager.java:209)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl.executeProcessUnderProgress(ProgressManagerImpl.java:212)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl.runProcess(ProgressManagerImpl.java:171)
+    at com.intellij.openapi.application.impl.ApplicationImpl$10$1.run(ApplicationImpl.java:657)
+    at com.intellij.openapi.application.impl.ApplicationImpl$8.run(ApplicationImpl.java:435)
+    at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+    at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)
+    at java.util.concurrent.FutureTask.run(FutureTask.java:166)
+    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+    at java.lang.Thread.run(Thread.java:724)
+    at com.intellij.openapi.application.impl.ApplicationImpl$1$1.run(ApplicationImpl.java:152)
+
+
+2013-11-22 22:47:09,285 [  94450]   WARN - .project.GradleProjectImporter - com.intellij.openapi.externalSystem.model.ExternalSystemException: Cause: unexpected end of block data
+    at com.android.tools.idea.gradle.project.ProjectImportErrorHandler.createUserFriendlyError(ProjectImportErrorHandler.java:204)
+    at com.android.tools.idea.gradle.project.ProjectImportErrorHandler.getUserFriendlyError(ProjectImportErrorHandler.java:146)
+    at com.android.tools.idea.gradle.project.AndroidGradleProjectResolver$1.fun(AndroidGradleProjectResolver.java:157)
+    at com.android.tools.idea.gradle.project.AndroidGradleProjectResolver$1.fun(AndroidGradleProjectResolver.java:135)
+    at org.jetbrains.plugins.gradle.service.project.GradleExecutionHelper.execute(GradleExecutionHelper.java:157)
+    at com.android.tools.idea.gradle.project.AndroidGradleProjectResolver.resolveProjectInfo(AndroidGradleProjectResolver.java:135)
+    at com.android.tools.idea.gradle.project.AndroidGradleProjectResolver.resolveProjectInfo(AndroidGradleProjectResolver.java:77)
+    at org.jetbrains.plugins.gradle.service.project.GradleProjectResolver.resolveProjectInfo(GradleProjectResolver.java:83)
+    at org.jetbrains.plugins.gradle.service.project.GradleProjectResolver.resolveProjectInfo(GradleProjectResolver.java:42)
+    at com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolverImpl$1.produce(RemoteExternalSystemProjectResolverImpl.java:41)
+    at com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolverImpl$1.produce(RemoteExternalSystemProjectResolverImpl.java:37)
+    at com.intellij.openapi.externalSystem.service.remote.AbstractRemoteExternalSystemService.execute(AbstractRemoteExternalSystemService.java:59)
+    at com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolverImpl.resolveProjectInfo(RemoteExternalSystemProjectResolverImpl.java:37)
+    at com.intellij.openapi.externalSystem.service.remote.wrapper.ExternalSystemProjectResolverWrapper.resolveProjectInfo(ExternalSystemProjectResolverWrapper.java:49)
+    at com.intellij.openapi.externalSystem.service.internal.ExternalSystemResolveProjectTask.doExecute(ExternalSystemResolveProjectTask.java:53)
+    at com.intellij.openapi.externalSystem.service.internal.AbstractExternalSystemTask.execute(AbstractExternalSystemTask.java:130)
+    at com.intellij.openapi.externalSystem.service.internal.AbstractExternalSystemTask.execute(AbstractExternalSystemTask.java:120)
+    at com.intellij.openapi.externalSystem.util.ExternalSystemUtil$3.execute(ExternalSystemUtil.java:422)
+    at com.intellij.openapi.externalSystem.util.ExternalSystemUtil$4$1.run(ExternalSystemUtil.java:475)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl$TaskRunnable.run(ProgressManagerImpl.java:464)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl$6.run(ProgressManagerImpl.java:274)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl$2.run(ProgressManagerImpl.java:178)
+    at com.intellij.openapi.progress.ProgressManager.executeProcessUnderProgress(ProgressManager.java:209)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl.executeProcessUnderProgress(ProgressManagerImpl.java:212)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl.runProcess(ProgressManagerImpl.java:171)
+    at com.intellij.openapi.application.impl.ApplicationImpl$10$1.run(ApplicationImpl.java:657)
+    at com.intellij.openapi.application.impl.ApplicationImpl$8.run(ApplicationImpl.java:435)
+    at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+    at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)
+    at java.util.concurrent.FutureTask.run(FutureTask.java:166)
+    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+    at java.lang.Thread.run(Thread.java:724)
+    at com.intellij.openapi.application.impl.ApplicationImpl$1$1.run(ApplicationImpl.java:152)
+
+
+2013-11-22 22:47:09,285 [  94450]   INFO - .project.GradleProjectImporter - Cause: unexpected end of block data
+
+Consult IDE log for more details (Help | Show Log) 
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The problem seems to be the version of gradle used to compile. ThePatio gives a helpful response in this SO question. 
+
+
+  I am not sure if this will help you but here is what fixed it for me:
+  
+  Open up this file in your project:
+  
+  /gradle/wrapper/gradle-wrapper.properties
+  
+  Edit the distributionUrl line and set it too:
+  
+  distributionUrl=http://services.gradle.org/distributions/gradle-1.8-all.zip
+  
+  Rebuild your project.
+
+    
+    
+Title: Tooltips for the netbeans IDE
+Description: 
+    
+    
+                    
+How do I get tooltip help from Netbeans 7.3?
+And side-by-side dropdown boxes which divert me to the correct classes and methods?
+Thanks
+Jack
+    
+
+        
+Answer 1: 
+
+    
+    
+You can get tooltip help from the IDE by hovering a line that has some sort of light bulb on the left of your code like below:
+
+
+
+Then Pressing Alt-Enter the IDE will give you a list of suggestions of how you can improve/modify your code.
+
+Also you can get the auto complete functionality by pressing CTRL+SPACE in the code editor. This will bring up any javadoc information about the Method/Object/etc like below:
+
+ 
+    
+    
+Title: Navigate to a specific module in PyCharm
+Description: 
+    
+    
+                    
+I use PyCharm as my IDE for working with Django. So far, it's navigation shortcuts have proven very useful. I can go to a specific (project) file with Ctrl+Shift+N, I can go to any class definition with Ctrl+N and can go to any symbol with Ctrl+Shift+Alt+N.
+
+This is great, but lately I've seen that it would be very useful too to have a shortcut to move to a specific external (or project) module.
+
+Is there any shortcut where I can pass for example: django.contrib and show the modules for inside django.contrib package or base64 and show me the modules match for base64, just as easy as I can go to a specific, symbol, class, file?
+
+Thanks in advance
+    
+
+        
+Answer 1: 
+
+    
+    
+I feel your problem. All you have to do is Ctrl + CLICK on the definition. Please note, however that this does not provide the actual files. What I mean by this is that it does not re-direct you to the actual function, but rather a skeleton of the function.
+
+If you want to go to the actual function, you will need to go it it my clicking on external libraries on your sidebar and do a search.
+
+Hope this helps.
+    
+    
+Title: Sublime Text 2 plugin for REBOL
+Description: 
+    
+    
+                    
+Are there any up to date REBOL plugins for Sublime Text 2?  I'm using a TextMate one from http://www.ross-gill.com/page/TextMate_and_REBOL, but it's pretty old.  Also, for learning REBOL/Red what's a good interactive, learning environment?
+    
+
+        
+Answer 1: 
+
+    
+    
+I use SciTe  (http://www.scintilla.org), it's ready for Rebol syntax, and all configuration files are very simple text files.
+    
+    
+Answer 2: 
+
+    
+    
+The latest version of the TextMate bundle is here: https://github.com/rgchris/rebol-tmbundle I'd welcome contributions.
+
+Not certain why age is a problem when the highlighter works (and has been tested to work with Sublime Text). Could you elaborate on what has broken over time?
+    
+    
+Answer 3: 
+
+    
+    
+There is a new one, based on rgchris' work, which is compatible with Sublime Text 3:
+
+rebol-red-sublime
+
+I'm using it with success.
+    
+    
+Title: Is there a way to setup a Netbeans HTML5 and Web application project?
+Description: 
+    
+    
+                    
+The new Netbeans 7.3 Beta 2 adds a really nice feature for creating an HTML5 application.  It also provides a great way to create a Java Server based Web Application.  But there does not appear to be any way, within the Netbeans IDE, to take advantage of both technologies in one project.
+
+Is there a way combine these two type of projects, so there is only one web directory structure with both the HMTL5, js, and web services files?
+    
+
+        
+Answer 1: 
+
+    
+    
+This is definitely planned for the next release, but it is not yet possible in NetBeans 7.3. You can follow this enhancement request to see progress in this area: http://netbeans.org/bugzilla/show_bug.cgi?id=222236. If you'd like to experiment with this, you can build NetBeans with the patch attached to that issue.
+    
+    
+Title: How to clear Eclipse internal web browser history or browser preference?
+Description: 
+    
+    
+                    
+I am using Eclipse Helios (Service Release 2). I want to clear Eclipse internal web browser history. 
+
+I try following path
+
+metadata\.plugins\org.eclipse.core.runtime\.settings\org.eclipse.ui.browser.prefs
+
+
+but it's not working.   
+    
+
+        
+Answer 1: 
+
+    
+    
+Here is the path where eclipse store URL prefrence, so go there and clean this file and restart you eclipse. 
+
+WORKSPACE\.metadata\.plugins\org.eclipse.core.runtime\.settings\org.eclipse.ui.browser.prefs
+
+
+note:- in this path "WORKSPACE" is your current workspace
+
+For more info click here
+    
+    
+Answer 2: 
+
+    
+    
+Eclipse is using some browser wrapper to get access to the system browser features. Try to clear your Internet Explorer history on the Windows system instead.  
+    
+    
+Answer 3: 
+
+    
+    
+I am copy pasting the content from the link in the selected answer so that it remains even if that obscure blog goes away.
+
+
+  Trimming the history list in Eclipse's internal web browser
+  
+  I use the internal web browser quite a bit when I'm developing - if
+  nothing else, it's a handy place to test out the GET requests for
+  RESTful web services. I also use Eclipse for HTML writing, and again
+  the internal browser is a useful first test of "does this look right
+  yet?". This means I build up quite a long history list, and the most
+  recent entries – the ones I'm mostly likely to be looking for –
+  require scrolling to find and re-use them. I have not, to date, found
+  a setting inside Eclipse (I'm using 3.3.2 at the time of writing this)
+  to edit the internal browser history. I'd be delighted to be proved
+  wrong. 
+  
+  In the meantime, the workaround is to close Eclipse, then edit the
+  file
+  $WORKSPACE/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.browser.prefs
+  where $WORKSPACE is your Eclipse workspace root directory. This is a
+  plain text file: my preferred text editor on Linux and Windows is
+  SciTE but it doesn't actually matter which one. This file has a
+  preference key internalWebBrowserHistory, with the format:
+  
+  internalWebBrowserHistory=url|*|url|*| ...
+  
+  Removing stale entries is straightforward; modifying or adding new
+  entries is perfectly doable, noting that colon characters (:) are
+  escaped with a preceding backslash (\:). Save changes, restart
+  Eclipse, done. Hopefully there will be an internal preference editor
+  to make this easier inside Eclipse in future (or, someone will point
+  out to me that I've been unobservant and that it's already there).
+  
+  Written by Ian, 4/25/2008 10:47:00 am 
+
+    
+    
+Title: debugging c++ in codelite
+Description: 
+    
+    
+                    
+i am setting a break point beside the int x , and setting the ide to the debug mode,but nothing appear in the debugging window when i start debugging ???
+
+should i do something more ? 
+
+#include &lt;iostream&gt;
+
+int main()
+{
+    using std::cin;
+    using std::cout;
+    using std::endl;
+
+
+    int x;
+    cout&lt;&lt;"X = "&lt;&lt;x&lt;&lt;endl&lt;&lt;"enter new x \n X = ";
+    cin&gt;&gt;x;
+
+    cout&lt;&lt;endl&lt;&lt;"New X = "&lt;&lt;x&lt;&lt;endl;
+
+
+}
+
+    
+
+        
+Answer 1: 
+
+    
+    
+There can be several reasons for codelite not stopping:
+
+1) Did you build your project with debugging information enabled? Make sure you select the 'Debug' configuration, this makes sure that -g is passed to gcc / g++
+
+2) Try enabling the debugger log from: settings -
+Answer 2: 
+
+    
+    
+It is your ide forbids you to read uninitiated value 'int x'.
+I debugged it under vs2008, and the break point will automatically be removed to cout line.
+and continue debugging will get this :
+
+ 
+
+Press 'continue' will get output in cmd window.
+
+
+
+I hope this bring some help to you.
+    
+    
+Title: Strange Visual Studio Behavior
+Description: 
+    
+    
+                    
+my computer started doing something strange the other day and its seriously annoying. I haven't made any changes to the system but for some reason now when I double click on a visual studio solution file, it won't open. The only way I am able to open projects is to open the program and then go to file -/pp/p/div
+Answer 1: 
+
+    
+    
+
+Turn off UAC
+Test
+The solution can be to change the Microsoft Visual Studio Version
+Selector to run as an admin. To do so navigate to
+%ProgramFiles%\Common Files\Microsoft Shared\MSEnv or
+%ProgramFiles(x86)%\Common Files\Microsoft Shared\MSEnv (64-bit),
+right click on VSLauncher.exe and select Properties. Go to the
+Compatibility tab and check “Run this program as an Administrator”.
+Test
+If the above didn't work try to also remove remove the contents of
+C:\Users\UserName\AppData\Roaming\Microsoft\VisualStudio\10.0. If you have any precious settings backup the folder before deleting it.
+
+    
+    
+Answer 2: 
+
+    
+    
+You have probably lost the file association. Right click on a solution file and click open with and then select VS2010 from the list and ensure the checkbox is ticked to make it the default.
+
+As to opening VS2010 as Admin I use a trick (read it somewhere, but can't remember where).
+
+I have a separate admin Icon on my desktop (etc) with the following:
+
+C:\Windows\System32\schtasks.exe /run /tn "VS2010 - Admin"
+
+
+Then in Task Scheduler I have a task: 
+
+Name: VS2010 - Admin
+Location: \
+Desc: Runs VS2010 with Admin privileges
+Action: Start a Program
+Run with Highest Priveleges checked
+Program: "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe"
+Allow to be run on demand
+
+
+Then when you run the icon, it will trigger the schedule which will launch VS as admin :D
+    
+    
+Title: Change all font sizes in Eclipse
+Description: 
+    
+    
+                    
+Is there a way to change all fonts at once in Eclipse?
+
+I have a very large monitor, so my system fonts are quite small (40" screen, size 4 pt on it looks like size 16 on a 19" screen).
+
+The problem is that on my Linux box, Eclipse's fonts are all huge. I changed the key ones (console font, system dialog font), but there are the odd occasions where I have a dialog box or open a certain type of file and the fonts are huge.
+
+Is there a way to set all fonts to a specific size in Eclipse?
+    
+
+        
+Answer 1: 
+
+    
+    
+There's a post about doing it for the Java editor here: How can I change font size in Eclipse for Java text editors?
+
+Window -
+Title: IDE Tool choice - cross platform x86 ASM debugging
+Description: 
+    
+    
+                    
+I'm writing a teaching tutorial to teach university students and programming enthusiasts Compilation concepts on an x86.  
+
+I want an IDE tool like WinASM for them to be able to debug their work, but am aware that they may not all run Windows at home. 
+
+Is my best choice to target Jasmin? (Or have you got a better suggestion - and why?)
+    
+
+        
+Answer 1: 
+
+    
+    
+Another approach I've seen is to use a common teaching architecture (such as MIPS) and run it under emulation. For MIPS in particular, there are lots of interactive simulators (like SPIM), as well as full system emulators (like QEMU). The fact that the MIPS architecture is considerably simpler (and less register-starved!) than x86 is definitely a plus as well -- it means you can spend more time focusing on interesting compilation topics, rather than teaching the architecture.
+    
+    
+Answer 2: 
+
+    
+    
+
+This is another approach (although poor for debugging) - executing assembler inline in C++
+A C repl that generates ASM - for learning about the assembler generated. 
+Also you could just rely on old gdb.
+
+    
+    
+Answer 3: 
+
+    
+    
+Have you ever considered an online debugging tool? There are a few of them out there. I personally like this asm debugger.
+    
+    
+Title: Print all code listings from a C++ project
+Description: 
+    
+    
+                    
+I need to print the source code of a project that consists of a bunch of .h and .cpp files (I need to hand it in to my teacher). Is there an IDE or a program that lets you print (or export to PDF or Latex) all the files at once, possibly keeping the syntax highlighting? I tried with XCode and Visual Studio but they just allow to print one file at a time.
+    
+
+        
+Answer 1: 
+
+    
+    
+GNU tools like a2ps or enscript can convert source code into postscript files that you can then print or convert to pdf.  They support syntax highlighting for various languages, and they can bundle up multiple files into the same document.
+    
+    
+Answer 2: 
+
+    
+    
+With the linux box you may try:
+
+grep '#include &lt;' *.{hpp,h,cpp,c} | uniq &gt; output.cpp
+grep -v '#include' *.{hpp,h} &gt;&gt; output.cpp # This line may cause problem if .h relies on each other and you maybe will have to list files manually
+grep -v '#include' *.{cpp,c} &gt;&gt; output.cpp
+
+
+And than open output.cpp in editor which supports exporting of hilighted code (vim, gedit...) or paste it on portal like pastebin :P
+    
+    
+Title: Visual Studio - Auto Hide/Show Toolbox in Code/Designer modes
+Description: 
+    
+    
+                    
+I know I can manually pin and unpin the Visual Studio Toolbox, but what I would like to do is have it pinned when viewing the designer and automatically hide when I view the code. Is this possible?
+
+Thanks, Jamie
+    
+
+        
+Answer 1: 
+
+    
+    
+Not as far as I know; I don't think the toolbox can differentiate between code and design views.
+
+It's possible you could write an extension with the Visual Studio SDK that does what you're asking but I don't think it is possible otherwise.
+    
+    
+Answer 2: 
+
+    
+    
+Maybe Perspectives extension can help you. After installing you can save your current layout as perspective (just like in Eclipse) in Visual Studio 2010 and then switch between them.
+    
+    
+Title: C++14 supporting editor/IDE
+Description: 
+    
+    
+                    
+I'm looking for some powerful programming environment for C/C++. In fact the only think i need is powerful source navigating + creating tool. Doesn't matter if its free or commercial. I prefer some linux tool, but it doesn't have to be necessary linux app.
+
+What i need is some kind of editor with following capabilities:
+
+
+more open files + tabs/buffers switching
+highlighting (+ bracket matching, folding, etc...)
+save sessions
+preview window(when the cursors stops on some symbol, i have also an preview window, that shows me the definition of that symbol)
+searching for uses of the symbol through code
+intelligent completion (must support c++ 14!)
+
+
+What would be nice:
+
+
+code beautifizier or something similar
+utf-8 support
+editor templates(for example automatic comment header for modules, functions...)
+other editor scripting
+a terminal/console accessible from program || compiling debugging capabilities(just for to be able to compile the whole project without switching extensively to command line)
+program flow visualization
+
+
+Please do anyone around the whole world knows anything, that knows all of that?
+
+I've tried several editors/IDEs, but all of them misses something. I've decided to emphasise missing support for new c++14 - it's now probably the biggest problem:
+
+
+VIM
+
+
+Amazing scripting capabilities  
+4 and 6: i've tried to use vim+ctags+cscope and vim+gtags + omnicomplete. But its not that usable. This doesn't work properly. Vim doesn't know c++ and it does not know the symbol context. Though i've been able to achieve basically the desired behaviour after hours of learning vim scripting, i'm not able to use it in even a little more complicated manner.(Lets say i have global variable and local variable with same names and different types - vim ofc does not recognize if im seeing now global or local only variable. And i'm not even talking about namespaces, etc....). Actually VIM now support c++14 with the help of clang(libclang) and there is awesome plugin called YouCompleteMe, that can use libclang, and its auto-complete really workds with c++14 code! And it makes the vim the only editor supporting c++14.. This plugin is now more or less usable in more editors(vim, emacs, sublime). It adds autocomplete, jump to definition and error messages.
+c++14 supported
+
+Source Insight
+
+
+Amazing highlighting capabilities(different font for highlighting is amazing(especially for function names in function defintion header for example), also there is possibility to assign keyboard shortcut to cancel font differences, and leave only color highlighting(when you are bothered with different code alignment(due to different fonts) 
+Problems with 1) (though a hacked library for this called TabsSiPlus exists)
+no terminal/console
+Software is not maintained anymore, its not open source(and even not free) :(((
+c++14 support missing
+
+SlickEdit
+
+
+Amazing customizing possibilities, can emulate vim editing style(WOW!)
+no terminal/console(actually there is one, but not that good, however it has builtin compiling capabilities
+it has strange GUI - a lot of space is occupied by scrollbars, different window captions, etc.. 
+its kinda expensive(comparing to others)
+c++14 support missing
+
+Kdevelop4
+
+
+Very pleasant GUI, nice console, very fast, can emulate vi editing style(not too well though)
+miss force rescan/retag project (sometimes there are wrong symbol references, especially in bigger projects - this bugs me a lot)
+its preview window doesn't show definition, only reference to definition, the definition then is showed in main editing window.. - cannot see actual code and the symbol definition at once :((
+c++14 support missing
+
+Eclipse
+
+
+nice environment with lots of functionality.
+don't have ad4), however it has some sort of preview bubble. When you hover mouse cursor upon symbol, it will show a bubble with symbol definition. Its nice functionality, but unfortunately you need to use mouse, and its noway that user friendly as separate preview window.
+also its a little slow, but i think its due to realtime syntax checking, and it probably will be disablable.
+c++14 support missing
+
+Emacs
+
+
+Support c++14 by similar plugins as vim(YouCompleteMe)(see in Vim section).
+Please can some proficient Emacs user fill in this section?
+c++14 supported
+
+Sublime Text 3
+
+
+Not free
+Support c++14 by similar plugins as vim(YouCompleteMe)(see in Vim section). Though i had some problems with it. Plugin was more unstable than in Vim for me.
+Through different plugins it support more or less the same functionality(from user view) as vim.
+c++14 supported
+
+
+
+Do any of you use some different editor, that can do anything from the list above, or maybe some plugins/scripts that can achieve the demanded functionality?
+    
+
+        
+Answer 1: 
+
+    
+    
+Regarding VIm and your point 6, I have heard that clang_complete, which is leveraging clang from LLVM compiler was quite accurate but I have not yet tested myself.
+    
+    
+Answer 2: 
+
+    
+    
+Try Eclipse, can handle almost everything (from Java to C with GNU Tools)
+    
+    
+Answer 3: 
+
+    
+    
+Eclipse supports c++14, all you need to do is to add -std=c++1y in your prefrences-
+Title: Code completion for CakePHP in IDE
+Description: 
+    
+    
+                    
+Someone recommended I "use code completion" and I realized that while my IDE has code completion, it doesn't recognize the large majority of methods and variables inherited from CakePHP's framework, most notably the Helper methods for views. I'm using PhpED but it seems like it's code completion is supposed to work just as it does in eclipse and other editors.
+
+I followed this advice to no avail; I created a helpers.php file with definitions of all the helpers and included it in the project but the code completion still doesn't work with the Helpers.
+
+I think part of the problem is Mark Story's post is from an old version of cake (I am on Cake 1.3) so I updated the definitions of the Helpers to look like this:  
+
+$this-&gt;Form = new FormHelper();
+
+
+But there's still no code completion for any of the views. Is there any way to make this work? In addition to the Helpers I'd really like completion for functions like Model-/p/div
+Answer 1: 
+
+    
+    
+For PhpED you have to do the following to enable Autocompletion for $this.
+
+Lets say you want to use $this in a Controller for something like this
+
+
+  $this-
+Answer 2: 
+
+    
+    
+as you might have noticed from several working code completion scripts out there you always need to put them into scope.
+meaning:
+you need to wrap them with the class they should be used in.
+at least for components and models etc.
+for helpers this is more difficult since they would be in the View scope which is not directly  available/visible for IDEs in the views/layouts.
+i use the app helper as scope. works for me anyway. more correct would be View class. 
+
+either way there is probably not a foolproof method for helpers. most IDE should pick it up, though.
+
+e.g. mine (for phpdesigner):
+http://www.dereuromark.de/tag/code-completion/
+
+but the others are similar.
+    
+    
+Answer 3: 
+
+    
+    
+This is not an answer to your question.
+
+I would recommend gedit, with the word completion plugin. While not an IDE-level "Code Completion" plugin, it does an awesome job at picking up words from your source files and using those to populate its word list. It "just works" for nearly any framework, any language, because of that organic approach to building the word list. (Shameless plug to my blog, with lots of tips and tricks for how gedit can be the best editor out there: http://davidsouther.com/2011/08/gedit-tips-tricks/)
+    
+    
+Title: Plugin with javascript intellisense and autocomplete support?
+Description: 
+    
+    
+                    
+I know this question has been asked previously, but they were asked a long time ago and answers to those questions weren't satisfactory. So I am asking it again - what is the best eclipse plugin available out there that can provide basic javascript as well as jquery auto-completion and intellisense if possible. I am looking for something other than Aptana Studio here.
+
+I am using eclipse for J2EE developers version 3.6 Helios package (probably it has WTP installed from the start).
+    
+
+        
+Answer 1: 
+
+    
+    
+In term of pure auto-completion, bugs like 159508, 121871 or 125088 seem to suggests it already exists, even though it doesn't have all the options of a Visual Studio IntelliSense.
+
+However, a more complete version of IntelliSense was available with Aptana (as I reported in 2008), was still the best (in Eclipse world) in 2009, and can be installed as a plugin in an Eclipse (using the p2 update site http://update.aptana.com/install/studio):
+
+See blog post jQuery IntelliSense (code assists) on Eclipse 3.5 (late 2010).
+
+
+    
+    
+Answer 2: 
+
+    
+    
+I was going to suggest the WTP - does it lack the features you need?  It usually works pretty well for basic Javascript.
+    
+    
+Title: The idea of text highlighting, code completion, etc in programming
+Description: 
+    
+    
+                    
+I wanna know the idea of advanced text editors features like text highlighting, code completion, automatic indentation etc.
+
+To make my idea clear I imagine that text highlighting is reading the entire text into a string then do regular expression replacement of keywords with keywords + color codes and replace the text again. That looks logical but it would be so inefficient to do that with every keystroke when your file is 4000 lines for example ! So I wanna know the idea of implementation of such thing in C# for example (any other language would be fine also but that's what i am experimenting with right now).
+    
+
+        
+Answer 1: 
+
+    
+    
+Syntax highlighting:
+This comes to mind. I haven't actually tried the example, so I cannot say anything about the performance, but it seems to be the simplest way of getting basic syntax highlighting up and running.
+
+Auto-completion:
+Given a list of possible keywords (that could be filtered based on context) you could quickly discard anything that doesn't match what the user is currently typing. In most languages, you can safely limit yourself to one "word", since whitespace isn't usually legal in an identifier. For example, if I start typing "li", the auto-completion database can discard anything that doesn't start with the letters 'l' and 'i' (ignoring case). As the user continues to type, more and more options can be discarded until only one -- or at least a few -- remains. Since you're just looking at one word at a time, this would be very fast indeed.
+
+Indentation:
+A quick-and-dirty approach that would (kind of) work in C-like languages is to have a counter that you increment once for every '{', and decrement once for every '}'. When you hit enter to start a new line, the indentation level is then counter * indentWidth, where indentWidth is a constant number of spaces or tabs to indent by. This suffers from a serious drawback, though -- consider the following:
+
+if(foo)
+    bar(); // This line should be indented, but how does the computer know?
+
+
+To deal with this, you might look for lines that end with a ')', not a semicolon.
+    
+    
+Answer 2: 
+
+    
+    
+An old, but still applicable resource for editor internals is The Craft of Text Editing. Chapter 7 address the question of redisplay strategies directly.
+    
+    
+Answer 3: 
+
+    
+    
+In order to do "advanced" syntax highlighting -- that is, highlighting that requires contextual knowledge, a parser is often needed.  Most parsers are built on some sort of a formal grammar which exist in various varieties: LL, LALR, and LR are common.
+
+However, most parsers operate on whole files, which is quite inefficient for text editing, so instead we turn to incremental parsers.  Incremental parsers use knowledge of the language and the structure of what has been previously been processed in order to re-do the least amount of work possible.
+
+Here's a few references to incremental parsing:
+
+
+Language Design Patterns and incremental parsing
+Incremental Parsing
+Incremental Parsing in the Yi Editor and the presentation on Vimeo
+
+    
+    
+Title: A good editor/add-on for Sproutcore?
+Description: 
+    
+    
+                    
+Is there a good editor/ide/add-on for sproutcore out there?
+    
+
+        
+Answer 1: 
+
+    
+    
+TextMate has a SproutCore bundle which is helpful - at the very least it runs JSLint on your .js files at save time, which stops a lot of basic syntax errors.
+    
+    
+Answer 2: 
+
+    
+    
+I use Jetbrains WebStorm.
+
+Good support for js, not SC specific, but somehow it does very good highlighting for SC as wel and syntax errors.
+
+Also not heavyweight (read slow).
+
+I like it very much, tried a couple of other before.
+
+Intype is also nice, less syntax help and other features.
+E-text editor is windows version of Textmate with less features, more mature then Intype.
+    
+    
+Answer 3: 
+
+    
+    
+I use intellij.  you can ctrl-click into most methods, and the warnings that it provides are close to what jslint will give you.  You can also autocomplete.
+    
+    
+Answer 4: 
+
+    
+    
+I'm using JetBrains Ruby Mine. It's pretty smart. Coding hinting has built in integration got GitHub and from what I can tell pretty light weight. Refactoring is pretty awesome too. One of the best I've seen.
+    
+    
+Title: Code Syntax Highlighting in Delphi 6 (to highlight syntax and ifdef blocks)
+Description: 
+    
+    
+                    
+Delphi 6 is pretty old, I know.  Unfortunately there are reasons why I can't upgrade which I don't want to get into here.  
+
+My problem is that it's hard to read code.  I have the Castalia plugin which helps a bit (parenthesis matching, shows blocks of if, else, end) but it doesn't highlight the syntax like other IDEs do (variables, constants, procedures, etc.) in different colors.  It also doesn't show the IFDEF blocks which can be very confusing at times.  
+
+For Delphi 6 what plugins can do some or all of these features?
+    
+
+        
+Answer 1: 
+
+    
+    
+CnPack will work on Delphi6, and it highlights {$whatever} symbols. 
+http://www.cnpack.org/index.php?lang=en
+    
+    
+Title: How do I change ColdFusion Help to show ColdFusion 8 Documentation, instead of ColdFusion 9 Documentation?
+Description: 
+    
+    
+                    
+I love ColdFusion Builder. But I don't like that the help only has CF9 Documentation. Is there any way to change this to have ColdFusion 8 Documenation?
+    
+
+        
+Answer 1: 
+
+    
+    
+http://livedocs.adobe.com/coldfusion/8/htmldocs/index.html
+
+Or I don't understand the question.
+    
+    
+Answer 2: 
+
+    
+    
+If you're talking about "Code Assist", you can find that under
+
+Windows | Preferences | ColdFusion | Profiles | Editor | Code Assist
+
+Change the "Code Assist Dictionary Version" to the version you want. Versions 7 through 10 are available.
+
+(This is ColdFusion Builder 2 Update 1)
+
+If you're content with online help, I find CF Quick Docs more useful than the official Adobe Livedocs.
+    
+    
+Title: What is everything involved from typing in code to executing a program?
+Description: 
+    
+    
+                    
+I realized, when just asking a question, I don't understand all the components that are part of the coding process.
+
+This seems a silly question, but I can't find a definitive answer on Google, Wiki, nothing.
+
+What exactly are all the parts called, and how do they work and intertwine? I'm talking whatever you type code into, whatever checks that for errors, compiles it, and runs it.
+
+I'd appreciate any links, repeats, etc. I apologize for such a bland, stupid question.
+
+EDIT: Well, I'm trying to start Perl, so anything about Perl would help. Like, how to use Notepad++ and eventually compile Perl.
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Write code
+Run code in one of two ways[*]
+
+
+Compiled languages (C, C++, D, Java, C#)
+
+
+Compile the code into an executable file with the compiler tool.
+Run the executable
+
+Interpreted languages (Perl Python Ruby Lua Haskell Lisp &amp; more)
+
+
+Run the code in an interpreter, e.g., perl foo.pl
+
+
+Debug code. 
+
+
+edit: Since the question was refined to be the Perl development cycle...
+
+You will need an editor and a 'shell', which is used to command the system with. In particular, you want a 'command-line interface'. On Windows, you start this with running cmd.exe on the Run dialog (Windows + R is the shortcut).
+
+You see a strange black and white box with a blinking cursor, reminding you of ancient systems redolent of gurus and wizards. You panic and refer to Google, getting a web page. Finding the command to change directory and list files is recommended...
+
+Upon arriving at the directory where you stored your Perl file, you issue the command perl myfilename.pl, where myfile.pl is the file you saved. As is common for programming, you find some errors that appear to be incomprehensible, and you refer to Stackoverflow.com once again...
+
+* I have elided, glossed, and moved past many of the details, as this is an introductory question. A full discussion is known as "senior-level course on compilers".
+    
+    

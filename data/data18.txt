@@ -1,0 +1,3000 @@
+Title: JQuery intellisense in Visual Studio Code
+Description: 
+    
+    
+                    
+I decided to jump in Visual Studio Code to create an app.
+Now I can't seem to get intellisense working for both JQuery and JQuery Mobile.
+
+My VSC version is 0.10.1
+
+I tried adding a reference.d.ts file with this contents
+
+/// &lt;reference path="js/jquery.d.ts"/&gt;
+/// &lt;reference path="js/jquerymobile.d.ts"/&gt;
+
+
+(files downloaded from https://github.com/DefinitelyTyped/DefinitelyTyped)
+
+I tried opening a .js file, add a $(this) and hitting ctrl+period but it
+says 'No suggestions'.
+
+Something I missed?
+
+UPDATE:
+
+Tried adding a jsconfig.json file following https://code.visualstudio.com/docs/languages/javascript#_javascript-projects-jsconfigjson
+
+{
+    "files": [
+        "js/jquery.d.ts",
+        "js/jquerymobile.d.ts"
+    ]
+}
+
+
+Restarted, nothing...
+
+UPDATE 2:
+
+added a .js file, typed $ and clicked on the lightbulb to download jquery.d.ts file. It warns me about adding this file to the jsconfig.json file.
+After doing all this, restarted still not working.
+
+jsconfig.json file contents:
+
+{
+    "files": [
+        "typings/jquery/jquery.d.ts"
+    ]
+}
+
+
+Nothing!
+    
+
+        
+Answer 1: 
+
+    
+    
+Latest (as of April 2017) suggested approach to do this is to use automatic type acquisition by adding jsconfig.json file in the root of your project with the following contents:
+
+{
+ "typeAcquisition": {
+     "include": [
+         "jquery"
+     ]
+   }
+}
+
+
+Then, in your editor you will see:
+
+
+
+For more information, check official documentation
+    
+    
+Answer 2: 
+
+    
+    
+If you are already familiar with npm (if not you should) 
+
+I suggest you install typings which is a typeScript definition manager that work very well with Visual Studio Code (Tested on Mac and Windows)
+
+Simply run 
+
+npm install typings --global
+
+
+Of course you must need to have npm already installed on your local pc/mac.
+
+After that, move to the command line (terminal or cmd) and run
+
+typings install dt~jquery --global --save
+
+
+It will create the typings directory and all required files (not need to restart Visual Studio Code) and you are ready to go!.
+
+If you want to know more about typings just follow the typings link above.
+    
+    
+Answer 3: 
+
+    
+    
+step 1 : 
+make sure you have the definition files in your project
+if you got npm installed then run 
+
+npm i --save-dev @types/jquery
+
+
+it will install jQuery definition file in node_modules/@types/jquery
+else :
+download it. and put it in any folder 
+then ,
+step:2 
+create a jsconfig.json file
+
+$ touch jsconfig.json
+
+
+and put this code in the jsconfig.json file
+
+{
+    "include": [
+        "./node_modules/@types"
+    ],
+    "exclude": [
+        "./node_modules"
+    ]
+}
+
+
+that's it . 
+
+**
+
+
+  note : i am excluding ./node_modules in case you have it in your
+  project if not then just include the jquery.d.ts file .
+
+
+**
+
+thanks 
+    
+    
+Answer 4: 
+
+    
+    
+I had a little bit problem with it, so I would like to share the solution that worked for me.
+At first you need in project root package.json if you don't have it in console simply type:
+
+$ npm init
+
+
+this command should create a package.json with necessary content in it.
+Then run this command in console:
+
+$ npm install --save @types/jquery
+
+
+and like @oldbam said before use automatic type acquisition:
+by creating jsonconfig.json with code below:
+
+    {
+ "typeAcquisition": {
+     "include": [
+         "jquery"
+     ]
+   }
+}
+
+    
+    
+Answer 5: 
+
+    
+    
+under typings/ directory create a file called "tsd.d.ts"  with the following content:
+
+/// &lt;reference path="js/jquery.d.ts"/&gt;
+/// &lt;reference path="js/jquerymobile.d.ts"/&gt;
+
+
+jsconfig.json need not contain the files attribute:
+
+{
+    "compilerOptions": {
+        "target": "ES5",
+    }
+}
+
+    
+    
+Answer 6: 
+
+    
+    
+if you are using typings 1.x, you should use:
+
+typings install dt~jquery --global
+
+in typing 1.x, there's much changes .
+    
+    
+Answer 7: 
+
+    
+    
+You shouldn't forget to add the reference to the d.ts file in your scripts. For eg. add this reference /// &lt;reference path="js/jquery.d.ts"/&gt; at the top of the script you want to see the jquery suggestions as you type.
+    
+    
+Title: C++ IDE with repl?
+Description: 
+    
+    
+                    
+I'm looking for a good C++ IDE with a REPL. The one in visual studio isn't... well lets say most of the time if I copy/paste a line in source the REPL rejects it even if its the line I put a breakpoint or step over.
+
+Are there any good IDEs or REPLs for C++?
+    
+
+        
+Answer 1: 
+
+    
+    
+Cling
+What is Cling?
+Cling is an interactive C++ interpreter, built on the top of LLVM and Clang libraries. Its advantages over the standard interpreters are that it has command line prompt and uses just-in-time (JIT) compiler for compilation. Many of the developers (e.g. Mono in their project called CSharpRepl) of such kind of software applications name them interactive compilers.
+One of Cling's main goals is to provide contemporary, high-performance alternative of the current C++ interpreter in the ROOT project - CINT. The backward-compatibility with CINT is major priority during the development.
+http://root.cern.ch/drupal/content/cling
+    
+    
+Answer 2: 
+
+    
+    
+CINT
+What is CINT?
+CINT is an interpreter for C and C++ code. It is useful e.g. for situations where rapid development is more important than execution time. Using an interpreter the compile and link cycle is dramatically reduced facilitating rapid development. CINT makes C/C++ programming enjoyable even for part-time programmers.
+CINT is written in C++ itself, with slightly less than 400,000 lines of code. It is used in production by several companies in the banking, integrated devices, and even gaming environment, and of course by ROOT, making it the default interpreter for a large number of high energy physicists all over the world.
+http://root.cern.ch/drupal/content/cint
+    
+    
+Answer 3: 
+
+    
+    
+CLing should be independant of Clang and abble to compile on any platform, recent works of CERN tend to separate Cling from Clang and it's good trends.
+
+What I don't under is mostly the existence of Clipp in C++ allowing to parse javascript embedded in my C++ code and can't find a version of Clipp for just C++ / Boost / Eigen / Quantlib.
+
+Another thing I don't understand is why TinyCC with a 200ko size is abble to parse windows.h without a problem and LLVM team complaining about Clang on windows.H detonate on tarmac.
+
+All in all, with fusion, spirit, wave and the so many people wishing for a C++ REPL, why after 2 decade there is not even small version of it.
+
+Here is my solutions
+
+Forget about REPL C++ and stick to REPL C, use tinyCC and expose only the functionnal action of method by using pointer function A.function(toto t) -/pp/pp/pp/p/div
+Title: Import existing project
+Description: 
+    
+    
+                    
+I created a Django project with just a text editor and the command line, now I have installed Aptana Studio but I cannot import that project. I can create a new django project, pydev is correctly installed and it works. 
+
+In Aptana, I tried Import Projects, but it doesnt recognize my project's root directory "No projects are found to import".
+before replacing settings, models, views, etc,.. with the contents of my project (what I dont like), I want to ask: 
+
+Is there a better way to import the project??
+
+You can find a more complete answer Here.
+    
+
+        
+Answer 1: 
+
+    
+    
+It's a bit dirty but you can do the following. Create two files in your project directory called .project and .pydevproject.
+
+.project should contain:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;projectDescription&gt;
+    &lt;name&gt;YOUR_PROJECT_NAME&lt;/name&gt;
+    &lt;comment&gt;&lt;/comment&gt;
+    &lt;projects&gt;
+    &lt;/projects&gt;
+        &lt;buildSpec&gt;
+        &lt;buildCommand&gt;
+            &lt;name&gt;org.python.pydev.PyDevBuilder&lt;/name&gt;
+            &lt;arguments&gt;
+            &lt;/arguments&gt;
+        &lt;/buildCommand&gt;
+    &lt;/buildSpec&gt;
+    &lt;natures&gt;
+        &lt;nature&gt;org.python.pydev.pythonNature&lt;/nature&gt;
+    &lt;/natures&gt;
+&lt;/projectDescription&gt;
+
+
+and .pydevproject should contain:
+
+&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;?eclipse-pydev version="1.0"?&gt;
+
+&lt;pydev_project&gt;
+&lt;pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH"&gt;
+&lt;path&gt;\PATH\TO\THE\PROJECT&lt;/path&gt;
+&lt;/pydev_pathproperty&gt;
+&lt;pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION"&gt;python 2.6&lt;/pydev_property&gt;
+&lt;pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER"&gt;Default&lt;/pydev_property&gt;
+&lt;pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH"&gt;
+&lt;path&gt;\PATH\TO\EXTERNAL\SOURCES\IF\USED&lt;/path&gt;
+&lt;/pydev_pathproperty&gt;
+&lt;/pydev_project&gt;
+
+
+when you've got those two files in your project dir you can use Import/strong/p/div
+Answer 2: 
+
+    
+    
+This question is answered on the PyDev FAQ page. "How do I import existing projects/sources into PyDev?"
+
+The easiest way seems to go through the File 
+Answer 3: 
+
+    
+    
+Vanja's answer solved my problem... :-)
+
+How do I import existing projects/sources into PyDev?
+
+If the project was already in Eclipse (i.e.: has the .project and .pydevproject files), use File 
+Answer 4: 
+
+    
+    
+If you are using the subclipse (svn) or egit (git) plugins, you may try to create a new project and checkout your code via the git/subclipse wizard.  Might be less trouble than trying to import it. 
+
+For example, if using svn:
+
+
+"File 
+Title: How do I change XML indentation in IntelliJ IDEA?
+Description: 
+    
+    
+                    
+By default IntelliJ IDEA 7.0.4 seems to use 4 spaces for indentation in XML files.  The project I'm working on uses 2 spaces as indentation in all it's XML.  Is there a way to configure the indentation in IntelliJ's editor?
+    
+
+        
+Answer 1: 
+
+    
+    
+Sure there is. This is all you need to do:
+
+
+Go to
+
+
+File -
+Answer 2: 
+
+    
+    
+In IntelliJ IDEA 10.0.3 it's 
+File 
+Answer 3: 
+
+    
+    
+Note: make sure to not use the same file in two project, or your settings might revert to the default (4 spaces), instead of the custom XML tab indent size.
+
+See bug IDEA-130878, for the latest IntelliJ IDEA 14 (Oct 2014)
+    
+    
+Title: How to compile a C project with more than one main function?
+Description: 
+    
+    
+                    
+I am new to C, and now read some textbook and going to apply its examples.
+
+The problem is, whenever I creates a new project and try to put more than one file that contains a main function, the linker (as I thougt0 explains saying:
+
+/home/mohammed/tmp/abcd/main.c:4: multiple definition of `main'
+
+
+(BTW, I used many IDEs, MonoDevelop, QT creator, VS2010, Codebloks, ...)
+I am currently uses QT Creator, It seems to be a very nice IDE.
+
+So, there's not a workaround to solve such problem??
+
+EDIT:
+
+I am asking because I am in the learning stage, and not do real programming right now.
+I just need a simple way to create programs in C without have to create a separate project per book example.
+At the same time, I don't want to use Gedit/VI + commandline.
+
+So, Isn't there any way such as cleaning the project, then compile the - just - one file that I need to run ???
+BTW, In JAVA we can run a program that cotains more than one main (the IDE give me the choice among them)
+    
+
+        
+Answer 1: 
+
+    
+    
+What are you trying to do with the multiple main functions?
+
+If you are trying to compile multiple different programs at once, you need to compile each one separately (i.e. only one main per program).
+
+If you are trying to compile one program and want the multiple main functions all to run, you can't. You need to specify only one main and rename the others to something else (and call them from the single main in the order you want them to run).
+
+If you are trying to use just one of the main functions as the single entry point to your program and ignore the others, then you should not include the files with the other mains when you are linking. I suggest placing each main in a separate file if you wish to keep them, and only include one of these main-files when you link/compile.
+
+If you get this error by mistake, then you are probably doing something wrong with the project in your IDE. Perhaps you are accidentally trying to compile multiple different programs into one? You might need to specify each file containing a main as a separate build product. C is not like Java where you can put a main method inside every class and specify which one to call; the main in C is a global name.
+    
+    
+Answer 2: 
+
+    
+    
+You can't possibly have more than one entry points in your application.
+When the final executable is started, the entry point function (main) is called. And this one can't be ambiguous.
+
+So if you wanted to call them one by one you could chain them like this:
+
+void main1() {} /* Note that these aren't called main. */
+void main2() {}
+...
+
+int main(int argc, char* argv[]) {
+    main1();
+    main2();
+    return 0;
+}
+
+
+You could even call them using threads (e.g. boost.Thread), so that they run parallel.
+But you can't have multiple functions namedmainlinked together.
+
+If you instead want them to be separate programs each, you will have to link them separately.
+    
+    
+Answer 3: 
+
+    
+    
+You can have more than one main in the same project, if to each main will correspond a different executable in the build directory tree.
+
+The following example is using CMake, I don't know if it can be done with other build-process manager software.
+
+Store the following two .cpp files in a folder called source, and name them square_root.cpp, and power_of_two.cpp:
+
+square_root.cpp:
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;math.h&gt;
+
+int main (int argc, char *argv[])
+{
+
+  if (argc &lt; 2) {
+    fprintf(stdout,"Usage: %s number\n",argv[0]);
+    return 1;
+  }
+
+  double inputValue = atof(argv[1]);
+  double outputValue = sqrt(inputValue);
+  fprintf(stdout,"The square root of %g is %g\n",
+          inputValue, outputValue);
+
+  return 0;
+}
+
+
+power_of_two.cpp:
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;math.h&gt;
+
+int main (int argc, char *argv[])
+
+{
+  if (argc &lt; 2) {
+      fprintf(stdout,"Usage: %s number\n",argv[0]);
+      return 1;
+  }
+
+  double inputValue = atof(argv[1]);
+  double outputValue = inputValue*inputValue;
+
+  fprintf(stdout,"The power of two of %g is %g\n",
+          inputValue, outputValue);
+
+  return 0;
+}
+
+
+Note that they both contains a method main.
+Then, in the same folder, add a .txt called CmakeLists.txt: it will tell the compiler the number of executable, how to call them and where to find the main(s).
+
+CmakeLists.txt:
+
+cmake_minimum_required (VERSION 2.6)
+project (Square_and_Power)
+add_executable(Square2 square_root.cpp)
+add_executable(Power2 power_of_two.cpp)
+
+
+Create a new folder called build in the same root of the source, and then use cmake to coufigure and generate. Take a look at the structure of folder created into the folder build.
+Open a terminal in the build and type make.
+
+ →  make
+[ 50%] Built target Power2
+Scanning dependencies of target Square2
+[ 75%] Building CXX object CMakeFiles/Square2.dir/square_root.cpp.o
+[100%] Linking CXX executable Square2
+[100%] Built target Square2
+
+
+If no errors occur you will have two executables: Square2 and Power2. 
+
+→  ./Square2 5
+The square root of 5 is 2.23607
+ →  ./Power2 5
+The power of two of 5 is 25
+
+
+So you have the same project with two mains that compiled two different applications. The two cpp files can then share the same header and additional methods in other .cpp or .h files in the project.
+I suggest to take a look as well at the cmake tutorial https://cmake.org/cmake-tutorial/ 
+There may be other methods to have similar if not the same results but I do not know any. Hope other user will contribute to this thread!
+    
+    
+Answer 4: 
+
+    
+    
+Each program must have exactly one main function.  However, main can call any function you want (including itself, though this can be confusing).  Thus, you should break the program up into logical parts.
+    
+    
+Answer 5: 
+
+    
+    
+As many have said, you can only have one main per program.  You don't want to go through the hassle of creating a new project for each example as you go through a book.  That's understandable, but you'll have to do basically that.  I see two alternatives:
+
+
+Use the new project function in your IDE (like VS2010).  This will do all the hard work for you.  You can always delete them later.
+If you don't care to keep the code around, just empty the file (or even the main() function) and re-use it.  With book examples, you probably will never revisit the code anyway so just deleting it should be fine.
+
+    
+    
+Answer 6: 
+
+    
+    
+Actually, I find Dev-C++ supports working on multiple main files that are not part of any project, so I can create an run as many files as I need.
+
+Thanks all who corporate here :)
+Gook luck for all.
+
+Also, for Linux/win I  found Code::Blocks do that trick. thanks.
+    
+    
+Answer 7: 
+
+    
+    
+I'm guessing one of your IDEs automatically creates a file with a main function. Check around to see if one has already been created.
+    
+    
+Answer 8: 
+
+    
+    
+You cannot have multiple definitions of main. The "main" function is what, in essence, defines what your program does. If you had more than one copy of main, which one would you expect to be executed?
+
+The solution to your problem is to use libraries; if you want to reuse functionality, then you should create a library, which is basically identical to a program except that while it has functions and data (like a program), it doesn't have a special function called "main", and hence has no "entry point" where execution should begin when it would be double-clicked or otherwise loaded by the OS. Libraries come in two variants: shared/dynamic and static. Either one should do. Each program that you create will have its own main function, but you can reuse your library without any problems in different programs.
+
+Now as to the practical element of creating a library... see my C++ Library Project Template.
+    
+    
+Answer 9: 
+
+    
+    
+As others have said, your project may only have a single main function. 
+
+Why are you trying to have more than one main function? Is it because you are putting multiple small example programs into one project and each of these has a main? If that is the case you may need to create a separate project for each example so that your IDE won't ask the compiler to compile/link source from multiple examples into one program. Your IDE might also support a concept like a target, that allows you to keep code for multiple, related programs in one project and than choose which program (target) to actually build. The IDE will then compile/link only the files in that target.
+    
+    
+Answer 10: 
+
+    
+    
+try using static keyword e.g.:
+
+file1.cpp:
+
+#ifdef RUN_FILE1
+#define STATIC static
+#else
+#define STATIC
+#endif
+
+int STATIC main(int argc, char **argv(){}
+
+
+file2.cpp:
+
+#ifdef RUN_FILE2
+#define STATIC static
+#else
+#define STATIC
+#endif
+
+int STATIC main(int argc, char **argv(){}
+
+
+for compilation add /DRUN_FILE2 or /DRUN_FILE1.
+
+Just an idea.
+    
+    
+Answer 11: 
+
+    
+    
+IF you're using MS linker, use the /FORCE:MULTIPLE linker option. The first main symbol encountered will win. Not sure what the option is for other linkers.
+    
+    
+Answer 12: 
+
+    
+    
+Well i think that QtCreator is a great IDE.
+
+For learning and testing out it would be nice to be able to have multiple
+mains for ease of use, however as explained before you can only have one main
+because thats the way a project is defined in QTcreator / .pro qmake files.
+
+You could create multiple targets in pro or make / CMAKE files.
+
+But for testing i did this in the .pro file for the project.
+
+
+
+MAIN = simpletree_test.c
+
+SOURCES += \
+    $$MAIN \
+    simpletree.c \
+    graph_tree.c \
+    redblacktreenode.c \
+    redblacktree.c \
+    redblack.c \
+    pointers.c
+
+HEADERS += \
+    simpletree.h \
+    graph_tree.h \
+    redblacktreenode.h \
+    redblacktree.h \
+    redblack.h \
+    pointer_manipulator.h
+
+message("The project contains the following files:")
+message($$SOURCES)
+
+
+
+
+So i just exchange the main file name in the variable called MAIN in the pro file.
+the use it in the SOURCES variable.
+
+As you can see i test several implementations of trees.
+Right now testing a simple variation of trees where i test out new implementation for finding a specific node, before testing them on the balanced tree.
+
+The method is however not perfect, since you cannot have same names for functions etc.
+And after a while i can be tough to come up with new names for find_node() or traverse_tree()
+    
+    
+Answer 13: 
+
+    
+    
+In QtCreator, you can right click a file and select the "Compile" option, which compiles only the selected file, and the required dependencies. So if you compile one of your main files like that and that file doesn't include any other main file, this should work.
+    
+    
+Answer 14: 
+
+    
+    
+The best solution I could find was on Eclipse creating projects every time to run a single file? it has some alternatives than creating a new project for each program.
+    
+    
+Title: Is there a way to maximise the current tab in Visual Studio?
+Description: 
+    
+    
+                    
+I sometimes need to use Visual Studio when I have limited screen real estate (remote desktopping from a laptop for example).  It would be really useful to be able to make the currently selected code tab maximise to take the whole screen for a limited time.  
+
+Is that possible?  Is there a keyboard shortcut?
+    
+
+        
+Answer 1: 
+
+    
+    
+View-/pp/p/div
+Answer 2: 
+
+    
+    
+I use Shift-Alt-Enter to activate full screen mode.
+    
+    
+Title: How to create an auto-property faster in Delphi IDE?
+Description: 
+    
+    
+                    
+I need to create and manage many simple published properties. I call them auto-properties if they look like that:
+
+private
+  FTitle: string;
+published
+  property Title: string read FTitle write FTitle;
+
+
+Usually I create them next way:
+
+
+Adding property name and type:
+
+property Title: string
+Selecting and copying property name Title to clipboard.
+Appending the line with read F Ctrl+V write F Ctrl+V ;
+Pressing Ctrl+Shift+C and this will generate the private field
+
+
+Is there any way to exclude steps 2 and 3 to add properties faster? Maybe it is possible to create some macro for this?
+    
+
+        
+Answer 1: 
+
+    
+    
+Since Delphi 2006 you can use LiveTemplates.
+
+In Delphi XE for example:
+
+
+type propf and hit Ctrl + J keystroke
+write the property name and hit TAB key
+write the property type name, hit TAB or ENTER key and you are done
+
+
+You can find more information on how to write your own Live Templates here:
+
+
+Delphi Live Templates - http://delphi.wikia.com
+Creating Live Templates - http://docwiki.embarcadero.com
+
+    
+    
+Answer 2: 
+
+    
+    
+I use macros for that purpose.
+
+For example I have model with fields
+
+private
+  FTitle: string;
+  FName: string
+  FAge: Integer
+
+
+then I copy-paste the fields into published section and create macro
+
+
+Goto first field and hit Home
+Hit Ctrl + Shift + R to start recording macro
+Use Crtl + -/kbdkbd/kbdkbd/kbdstrong/strong/lilikbd/kbd/lilikbd/kbd/lilikbd/kbd/li/olp/p/div
+Answer 3: 
+
+    
+    
+In XE7 type prom and hit enter. It seems faster.
+    
+    
+Title: Change auto import format in WebStorm
+Description: 
+    
+    
+                    
+I'm using WebStorm 2016.3 and currently working on typescript based project.
+
+Right now auto import will generate something like this:
+
+import {xxx} from "yyy"
+
+
+I want to change the format to 
+
+import { xxx } from 'yyy'
+
+
+How do I do this?
+    
+
+        
+Answer 1: 
+
+    
+    
+2016.3.*: 
+
+
+in Settings | Code Style | Typescript | Spaces, enable Within / ES6 import/export braces
+in Settings | Code Style | Typescript | Other, set Quote marks: to Single quotes
+
+
+2017.1.*:
+
+
+in Settings | Code Style | Typescript | Spaces, enable Within / ES6 import/export braces
+in Settings | Code Style | Typescript | Punctuation, set Use to single
+
+    
+    
+Answer 2: 
+
+    
+    
+You can change this in:
+
+
+  Settings | Code Style | Typescript | Other
+
+
+Select Single quote for Quote marks in Generated code section
+    
+    
+Title: Can you batch select text between quotes in IntelliJ IDEA?
+Description: 
+    
+    
+                    
+Given the following Java code
+
+
+
+On the MacBook in IntelliJ IDEA, I can hold the option key and mouse click 'n drag to select a block of text.
+
+
+
+Is it possible to batch select just the text between the quotes all at once within a specific block of code, similar to Option+MouseClickAndDrag feature above, like this?
+
+
+
+
+
+Notes added based on comments below
+
+Cmd+W doesn't work since it expands the selection to highlight the full line, and eventually the entire code block.  It does not select just the strings.
+
+Shift+Alt+double-click is a closer solution, but requires you to manually double-click each string.  I'd like a solution that selects them all at once.
+    
+
+        
+Answer 1: 
+
+    
+    
+If you use CMD/CTRL + W multiple times, you can expand your selection from the current cursor word to the enclosed string, to current line, depending on how many times your press it. This is depending on where your cursor is, at the time, unfortunately.
+
+This tripped me up when I first started, because I always thought I was closing a tab
+    
+    
+Answer 2: 
+
+    
+    
+You can use a regex search to achieve this fairly easily.
+
+
+
+If you are looking to find and replace you can go select regex searching and search for this Regular Expression:
+
+(?&lt;=").*(?=")
+
+
+This will select all text between double quotes.
+    
+    
+Answer 3: 
+
+    
+    
+Use column select
+You can cleverly get three cursors on the variable names, CTRL arrow over to start of strings, hold SHIFT + END, and then move the cursor back using the arrow keys.
+For getting the column:
+Windows: CTRL + CTRL(Hold) + ↑ / ↓
+Mac: ⌘ + ⌘(Hold) + ↑ / ↓.
+To place caret at the end of rows: move caret to top row, clone down to bottom, and click END.
+Change Multi-caret Hotkey
+To add a custom Keymap, CTRL+SHIFT+A, type keymap and click on the one with Settings as subtext. Search for Clone Caret Above and Clone Caret Below.
+I mapped mine to ALT+SHIFT+↑ / ↓ on Windows and ⌘+↑ / ↓ on Mac.
+Bonus
+Try holding combinations of CTRL, SHIFT, and arrows for improved selection power.
+    
+    
+Answer 4: 
+
+    
+    
+This is the best result I have reached by now.
+
+You can divide in two steps:
+
+
+Select opening or closing quote:
+
+
+If line structure is identical before or after your strings you can place multiple cursors before or after your string, very fast with MIDDLE MOUSE CLICK + DRAG or MIDDLE MOUSE CLICK + DRAG. Then CTRL + LEFT/RIGHT ARROW to reach the double quote: After Example
+Then you select the quotes with SHIFT + LEFT/RIGHT ARROW. Important you have to end with cursor inside quotes, otherwise future shrink selection will fail.
+
+CTRL + W to extend selection to quotes and inner text. 
+CMD/CTRL + SHIFT + W to shrink selection to only the string contained.
+
+
+Note. Unfortunately by now in Intellij IDEA you can't find into selection, otherwise there would be many tricks to achieve the same result.
+    
+    
+Title: reuse vim instance from linux terminal
+Description: 
+    
+    
+                    
+By making use of the remote feature in vim, is it possible to reuse an instance of vim to load up multiple files as needed.
+
+It will be nice to have that facility from within the same terminal instance.
+
+I am more keen to have a tab based interface, which available in vim 7+
+The scenario should be
+
+
+Open terminal
+vim file1.cpp
+Edit - Save - Ctrl+Z to get to prompt
+open another file
+
+
+vim file2.cpp
+
+Now we have file1.cpp and file2.cpp open in the same editor
+
+
+Is that possible?!
+    
+
+        
+Answer 1: 
+
+    
+    
+I have a couple suggestions for you, though neither is exactly what you're talking about.  The first is NERD Tree, which gives you a nice tree-based file browser for opening other files.  Very handy.  I also set up a hot key (ctrl+o) to open NERD Tree for me.  I keep an alias of whatever project I'm on in ~/curr/trunk, so this always works for me:
+
+map &lt;C-O&gt; :NERDTreeToggle ~/curr/trunk/&lt;CR&gt;
+
+
+The other thing that I would suggest is to do away with ctrl+z.  It's somewhat clunky, and everyone I know who uses that method tends to get lost and end up with 3 or 4 vim's running in the background.  Take a look at how to open a shell for yourself.  I use a map for ;s to execute a shell script:
+
+map ;s :!~/.vim/shell.sh&lt;CR&gt;
+
+
+Which executes:
+
+#!/bin/sh
+/usr/local/bin/bash -l;
+
+
+I also have a bit of magic in my .profile for making it obvious I'm in VIM:
+
+if [ "$VIMRUNTIME" != "" ] ; then
+    export PS1="\u@\h \W \t$ vim&gt; "
+fi
+
+
+&lt;/2 cents&gt;
+    
+    
+Answer 2: 
+
+    
+    
+I'm not sure if this can be done in exactly the manner that you're specifying, but something very similar can probably be done using a vim server running on your local machine.
+
+Look into the :help remote.txt in Vim.
+
+If your version of vim was compiled with +clientserver you can use vim to create a vim server, and then execute commands on it, e.g. opening another file.
+The --servername switch can create a new server, and the --remote switch can send additional commands or files to it.
+
+e.g.
+
+vim --servername test file1.txt
+vim --servername test --remote file2.txt
+
+
+I've had a look, and the vim I'm using as standard on xubuntu on one of my computers doesn't have it, but there are some instructions here that may help if yours has it compiled. If it isn't, installing gvim and symlinking is apparently an option (as gvim has it included by default), or compiling the binaries from source.
+
+Edit:
+I've had more of a play with gvim and this doesn't look possible to do this within the terminal. Control-Z suspends the job at the process level. I thought it might work with screen, but no communication seems to take place unless gvim has launched in a graphical window,
+    
+    
+Answer 3: 
+
+    
+    
+This is easy to do if you compiled VIM with +clientserver, as Andy suggested in a previous answer.
+
+I did the following:
+
+I started up VIM as a server:
+
+vim --servername abc
+
+
+I suspended it with CTRL+Z and did:
+
+vim --servername abc --remote ~/.cshrc
+fg 
+
+
+Now VIM had ~/.cshrc open.
+
+Then I did:
+
+vim --servername abc --remote ~/.aliases
+fg 
+
+
+Now VIM had one buffer with ~/.cshrc and another with ~/.aliases.
+
+Then I did:
+
+vim --servername abc --remote-tab ~/foo_bar
+fg 
+
+
+And now I VIM had one tab with the two previous buffers open and another tab with ~/foo_bar open.
+
+In call cases VIM was running in the terminal, not as a GUI.
+    
+    
+Answer 4: 
+
+    
+    
+You can split the current screen and open two (or more) files in the following way:
+
+For a horizontal split, do:
+
+:sp 'filename'
+
+
+and for a vertical split, do:
+
+:vsp 'filename'
+
+
+To tab between the two, hit ctrl+w, then use an arrow key to navigate to whichever file you want to edit.
+
+Also, if you want to just switch files (and only have one open), you can do this:
+
+:e 'filename'
+
+    
+    
+Answer 5: 
+
+    
+    
+G'day,
+
+Or if you want to have multiple files but use the whole vim window for one file at a time you can just enter
+
+:e 'filename'
+
+
+to open the new file. You can do this multiple times. To see what you've currently got open, enter
+
+:ls
+
+
+To bounce between the files you've got open you can use cntl-^ (shift-cnt-6) and that will alternate between the main and secondary files (shown with a % and # in the file list)
+
+Or you can enter
+
+:n b
+
+
+where n is the number at the beginning of the file you want in the list shown by the 'ls'command.
+
+HTH
+
+cheers,
+    
+    
+Answer 6: 
+
+    
+    
+You can set the hidden feature on vim, to allow it to have multiple files open:
+
+:set hidden
+
+
+Then you can open as many files as you want, without bothering to save them every time you want to switch a "buffer":
+
+:e 'filename'
+
+
+You have several commands to navigate the buffers:
+
+:bnext
+:bprev
+:buffers
+
+
+Of course, as mentioned by samoz, you can split your screen to see multiple buffers on the same window.
+
+I'd suggest to read this for a good introduction about vim, it will save you a lot of time.
+
+Good luck!
+    
+    
+Title: Android Studio is not selecting text properly
+Description: 
+    
+    
+                    
+I guess accidentally pressing a key or a combination changed a setting in Android Studio after which android studio is acting weird and won't let me select code properly.
+
+Look at following image.
+
+
+
+I have checked Android Studio setting and couldn't find anything related to it.
+
+P.S I am using Windows 10.
+    
+
+        
+Answer 1: 
+
+    
+    
+In 3.3.1 column select mode is under the Edit menu
+    
+    
+Answer 2: 
+
+    
+    
+To enter/exit column selection mode, press alt+shift+insert.
+
+After deactivating, you can still do column selection with using alt + left click drag.
+    
+    
+Title: Intellij idea, detach editor window
+Description: 
+    
+    
+                    
+I have recently removed tabs from my Intellij setup, because with all the features available to navigate between files, who needs them?
+
+The issue is, the normal way of detaching an editor window would be to drag the tab onto another screen (or area). There doesn't appear to be anything in the key mappings for detaching an editor window. Is there a way of doing this via the keyboard?
+    
+
+        
+Answer 1: 
+
+    
+    
+The keyboard shortcut your are looking for is SHIFT+F4 (the action assigned to this shortcut is called Open Source in New Window. When you invoke this action the currently opened tab (file) will be opened in new editor window. However the file will remain opened in the main window too, but I believe that this is as close as you can get to the functionality you describe, at least for now.
+Option 2
+Open the &quot;Open class&quot; dialog using CTRL+N search for a class you want to open in detached window and hit CTRL+SHIFT+ENTER. That will open the class in a new editor window.
+Unfortunately this seems to work only for Java classes and not for other files (CTRL+SHIFT+N dialog). I created a bug report for the last problem, so if you think it might be useful, feel free to vote for it.
+    
+    
+Title: How do I stop wrapping code when reformat code in phpstorm?
+Description: 
+    
+    
+                    
+If my code reaches the right magin and I reformat code (Ctrl + Alt + L), PHPStorm automatically wrap code. How do I stop this (reformatting code with wrapping)?
+I'm working with php and other languages for web development
+    
+
+        
+Answer 1: 
+
+    
+    
+See under Preferences /pp
+Answer 2: 
+
+    
+    
+I found this worked for me for the auto format wrapping issue:
+Preferences &gt; Editor &gt; Code Style &gt; HTML 
+From there, change the Wrap Attributes dropdown select to Do not wrap and I also unchecked the box Wrap Text. See below: 
+
+
+Edit: I should add that I have the PhpStorm version 2018.2 
+    
+    
+Answer 3: 
+
+    
+    
+In newer PhpStorm (and other IntelliJ IDEA based IDEs) versions option is renamed to Wrap on typing and moved to Preferences -&gt; Editor -&gt; Code Style.
+
+
+    
+    
+Title: Android studio can&#39;t connect through ADB on OSX
+Description: 
+    
+    
+                    
+I've been working a bit with Android Studio on OSX 10.7.5 and it looks very promising. I've run into a problem when trying to launch an application on my device however.
+
+When clicking the run button, AS claims to be "waiting for ADB". After a while it times out and says that "ADB is not responding...".
+
+I've tried rebooting and restarting adb with adb-killserver and adb-startserver many times but it won't connect. When running adb devices or launching through eclipse, all works fine.
+
+Anyone got ideas, I would be very grateful!
+    
+
+        
+Answer 1: 
+
+    
+    
+On the OS X the following steps solved my problem:
+
+
+Disconnect your Android devices;
+Quit Android Studio;
+Force Quit process 'adb' from the Activity Monitor;
+Start Android Studio.
+
+    
+    
+Answer 2: 
+
+    
+    
+I found the problem when I using the genymotion. At last, I realized the problem is that the adb location is not the same as the android studio. So you should update the adb of your genymotion.
+The step: Genymotion settings -
+Answer 3: 
+
+    
+    
+I just had the same problem with Android Studio 0.5.3. I would recommend restarting your computer, if the adb kill-server, adb start-server method doesn't work. 
+    
+    
+Answer 4: 
+
+    
+    
+I just had this happen on my Mac Mini and it ended up working (recognizing the Nexus 5) when I plugged the cable into a different USB port on the back...
+    
+    
+Answer 5: 
+
+    
+    
+In order to get my application running on a device, I needed to edit the run configuration for the app by going into the Run menu and selecting Edit Configurations.
+
+I selected the configuration that had my app's name and changed the Target Device to USB Device which then allowed me to run the app from a device. Beforehand I was getting similar behavior to what you describe. It is possible yours is an entirely different issue :(
+    
+    
+Answer 6: 
+
+    
+    
+I had the same thing happen. As soon as I unplugged my device, the "Waiting for ADB" notification disappeared and it worked. I guess you can't start AS when a device is plugged in.
+    
+    
+Answer 7: 
+
+    
+    
+Span said that you should do strange things, but sometimes it works (strange = reinstall, reboot using word 'maybe'). We should understand that it could be, because of some bad settings in OS which had been changed, but you do not remember about it.
+
+But my case was even stranger! :)
+
+Cause Windows do not limit you to have many Firewalls it could be the key! Firewalls might not permit some apps to connect withother, you should check also it.
+
+I described it in:
+here
+
+Assuming the crash course to start Android Studio:
+
+
+disable connection to internet (for security),
+uninstall Android Studio,
+remove .gradle and .AndroidStudio folder from your home directory,
+remove all firewalls right way, reinstall &amp; set them up to allow,
+remove all av's the same as above,
+check Windows internal firewall (or iptables in Linux :) ),
+install Android Studio.
+
+
+If it do not work and you want to have your OS not reinstalled - make VM with Windows and try. If not work - reinstall system :(
+
+Regards.
+    
+    
+Answer 8: 
+
+    
+    
+EDIT: This actually solved my issue so this is the accepted answer. It seems this answer also helps alot of people but it did not work for me.
+
+Here's what I did to finally make it work. No idea which of these steps triggered my working copy as it seemed very random but I will put them in order.
+
+
+Uninstall AS
+Remove old path to adb from bash
+Turn off firewall (or at least monitor which connections are being made by AS and various USB drivers and allow them)
+Install AS
+Change target device under Run -/lili/lili/lili/lili/lili/lili/lili/li/ol/div
+Title: In Eclipse, is it possible to find all methods in project that take a certain parameter type?
+Description: 
+    
+    
+                    
+So that's basically my question.  I'm converting all methods  ArrayLists to HashMaps in parameterized methods, but I don't want to convert all ArrayLists to HashMaps since there are a few that are used locally. This is more of a curiosity than anything, but it would be useful.
+
+So, in Eclipse, is it possible to find all methods in project that take a certain parameter type?
+    
+
+        
+Answer 1: 
+
+    
+    
+Press Ctrl+H or from menu bar Search - Search ..., then choose Java Search:
+
+
+Then click Limit To - Match locations (x of 15 selected):
+
+
+This should give what you want.
+    
+    
+Title: IDE for XSLT stylesheets
+Description: 
+    
+    
+                    
+What is the best IDE for creating and debugging complex XSLT stylesheets? 
+
+For debugging, the ability to set breakpoints and step through the source would be great.
+
+I am interested in all options both commercial and free.
+    
+
+        
+Answer 1: 
+
+    
+    
+Editors worth checking out:
+
+
+Visual Studio 
+Altova's StyleVision/XMLSpy
+Oxygen 
+StylusStudio
+
+
+All have their specific advantages, so just check them out. If you already have Visual Studio, I'd suggest you just getting started with this one.
+    
+    
+Answer 2: 
+
+    
+    
+I use Visual Studio. It lets you set breakpoints (conditional or otherwise) and establish watches on whatever XPath expression you can come up with. It also supports XSLT right out the box and colours it differently than regular XML so developing in it is very easy.
+    
+    
+Answer 3: 
+
+    
+    
+My recommendation is XMLSpy, but isn't free - http://www.altova.com/products/xmlspy/xmlspy.html
+
+If you looking for free, you can try NetBeans - http://www.netbeans.org/
+    
+    
+Answer 4: 
+
+    
+    
+I got a recommendation from someone here for Altova XMLSpy, and it was pretty nice for the few days I used it.
+    
+    
+Answer 5: 
+
+    
+    
+I've been happy with using XML Cooktop for light XSL development. It's free and has been fairly reliable for me.
+    
+    
+Answer 6: 
+
+    
+    
+XML Spy is the best I've used, without question.  But it's very expensive.
+
+I think XSLT debugging and single-stepping is really overrated.  Granted, when I started using XSLT there were no debuggers, so I might just be identifying with my torturers here.  But the same things that make writing XSLT often feel as difficult as driving a car while wearing a straitjacket (e.g., variables don't) also make using a debugger not a whole lot more useful than the insert-print-statement paradigm.
+    
+    
+Answer 7: 
+
+    
+    
+I recommend Liquid Studio.
+
+For XSLT transformations you can even go for their quite functional Community Edition. It lacks many features present in commercial editions like:
+
+
+Diagram View
+Graphical View
+Web Services Tools
+XPath Tools
+Debuggers
+Refactoring
+XML Schema Documentation and XML Document Generator
+Visual Studio Extension
+XML Differencing, etc.
+
+
+BUT still Community Edition is cool enough as an editor for XML (WSDL, XSLT, XQuery, DTD, CSS, XDR, XML Schema, JSON) with:
+
+
+Autocompletion (based on schema)
+Code colouring
+Collapsible sections
+Spellchecker (grammar and XML validation)
+
+
+Community edition also starts as a 15-days trial so you can evaluate those paid features before deciding on edition.
+
+If you really need XSLT debugging then your option would be XML Editor Edition. Though Community Edition still allows for smooth transformations while being able to work with source, target and style files in the same IDE.
+
+You can find more details here.
+
+Hope this helps.
+    
+    
+Title: How can i disable Cider (WPF Gui Editor) within VS2008?
+Description: 
+    
+    
+                    
+when developing wpf applications i never use the graphical editor ( aka cider). only the xaml editor. as "cider" needs quite some resources when loaded i wonder if there is a way to completely disable it. This may speed up loading xaml files. 
+i heard that this is possible, but as google does not return what i`m looking for, i want to ask the SO community.
+any ideas?
+
+regards
+    
+
+        
+Answer 1: 
+
+    
+    
+It's quite simple! 
+
+At the Tools menu, chose Options, and chose "Text Editor" at the left pane. Expand it, and chose "XAML" sub node. Expand the "XAML" sub node, and check the check box of "Always open documents in full XAML view".
+
+Let me know if it doesn't work for you. :)
+    
+    
+Answer 2: 
+
+    
+    
+For even better performance, map the .xaml extension to the XML Editor in Tools/Options/Text Editor/File Extension. Your .xaml files will then open much faster. You will lose intellisense, but this is a great option if you can live without it.
+    
+    
+Answer 3: 
+
+    
+    
+This is possible.
+
+See this blog post for specific instructions.  Just turn on "Always open documents in full XAML view."
+    
+    
+Answer 4: 
+
+    
+    
+You can perform the steps suggested above but be ready to get VS crashes after you will install Silverlight 2.0 Tools for Visual Studio or sometimes Expression Blend. If you will start experiencing crashes just try switching back to default settings.
+    
+    
+Title: Change color of spelling errors in eclipse
+Description: 
+    
+    
+                    
+This there a way to change the color of spelling errors in Eclipse (Galileo)? The default red underlining is indistinguishable from the normal error underlining.  
+    
+
+        
+Answer 1: 
+
+    
+    
+As mentioned in bug 157283, you can change the spelling error link:
+
+Editors &gt; Text Editors &gt; Annotations, line "Spelling Errors"
+
+
+The color you will choose for the "Native Problem Underline" will be different from the one used for regular "Errors".
+    
+    
+Answer 2: 
+
+    
+    
+There is guide, how to do programmatically in RCP plugin. Java Code Examples for org.eclipse.jface.text.source.ISharedTextColors The color is not possible to set up in Marker (IMarker interface) nor in IPreferenceStore. It must be done due
+
+ISharedTextColors sharedColors = EditorsPlugin.getDefault().getSharedTextColors();
+
+    
+    
+Title: Disable Eclipse plugins per workspace
+Description: 
+    
+    
+                    
+I use Eclipse for different projects, each with its own workspace. They need quite a different set of plugins (SVN vs hg vs git, AppEngine vs Tomcat vs OSGi, and so on), and I have all those plugins installed and active all the time, which clutters the workspace quite a bit. I'd like to selectively disable plugins for each workspace.
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse (3.6/3.7) has a UI for disabling some plugins. It's under Window-
+Answer 2: 
+
+    
+    
+Another solution would be to define a perspective for each workspace, and customize that perspective.
+
+
+
+In each one, you can deactivate menu and commands of plugin you do not want, even though those plugins remains loaded.
+That help removing some of the "GUI cluttering" caused by the various plugin.
+
+When you switch workspace, you will restore the perspective you were using with the new workspace.
+    
+    
+Answer 3: 
+
+    
+    
+Eclipse has a notion of local and global configuration that might help you.  When you start Eclipse with the -local {localDir} argument, Eclipse uses a writable local configuration in {localDir} and treats the (global) install configuration as read-only.  Thus, you can install common features in the global configuration (when not using the -local flag), and install local features into the local configuration.  In your case, to get per-workspace configurations, you can adopt the convention that the local configuration is inside or beside your workspace directory (though if inside, not managed as an eclipse resource or project), and then always launch pointing at that directory (e.g., eclipse -data {workspaceDir} -local {workspaceDir}/localConfig).
+    
+    
+Answer 4: 
+
+    
+    
+I solved that problem by having two separate eclipse "installations". It isn't the most beautiful solution, but does the job.
+
+Here it is suggested to use General -&gt; Capabilities, but that doesn't seem to exist in 3.5
+    
+    
+Title: What IronPython IDE should I use?
+Description: 
+    
+    
+                    
+This question probably looks a lot like IDE for ironpython on windows question here on stackoverflow.  But I read the answers on that question I still have no idea what IDE I should use.  What I'm looking for is to know pros and cons of a specific IDE.
+
+I recently started learning IronPython.  The only IDE I used so far is IronPython Studio that integrates with Visual Studio.  It was a logical choice for me because I use Visual Studio when I work with C#.
+
+One of the problem I have with IronPython Studio is that I cannot change the default colors.  I have a dark gray background color and black Python code doesn't look very good on that background.  I looked in Environment-/pp/pp/pp/p/div
+Answer 1: 
+
+    
+    
+Michael Foord has compared different IDEs for IronPython. You can find it here.
+    
+    
+Answer 2: 
+
+    
+    
+Most of the time I use Scite for my IronPython scripting -- since I'm normally using it as a scripting language for build process rather than anything else, one page of syntax highlighting is usually enough.
+
+As a general purpose Python IDE I use NetBeans Python EA, which treats CPython, Jython and IronPython pretty much as equals, so I can just set it to the platform I want to use today, and everything else remains the same.
+    
+    
+Answer 3: 
+
+    
+    
+You now have a good Visual studio 2010 integration with IronPython Tools.
+    
+    
+Title: How can I clear the interpreter screen in Dr. Racket IDE?
+Description: 
+    
+    
+                    
+Just starting into The Little Schemer, and have a very basic Dr. Racket IDE question:
+
+
+How can I clear the interpreter screen?
+How can I set the up arrow to display the previously-typed items (like in Bash) rather than the current behavior of scrolling up the screen?
+
+
+My searches are coming up blank, possibly because I don't know the technical term for these actions.
+    
+
+        
+Answer 1: 
+
+    
+    
+Here's how:
+
+
+Click on the "run" button, as you discovered
+Press Esc  + p
+
+
+And this is the relevant page in the documentation.
+    
+    
+Answer 2: 
+
+    
+    
+1 clear interactions window
+As you found out, pressing RUN |&gt; starts up a new instance of the selected language, runs everything in the definition window and clears everything you've done in interactions window (repl).
+2 get previous entries like in a shell
+a) In the Racket IDE you can hold CTRL with arrow keys to get to previously written statements in the interactions window.
+b) Racket can be run from terminal too. When in CLI you type racket it starts up the read-eval-print loop with racket loaded and if you enter (require xrepl) as the first statement you have similar to readline capabilities with up-arrow to get previous, CTRL+r to search history and REPL-commands like ,apropos, ,help  and so on. It's called eXtended REPL
+    
+    
+Title: Delphi predefined environment variables
+Description: 
+    
+    
+                    
+Can anyone tell me where to find a list of the "pseudo" environment variables available in RAD Studio? The ones like $(Platform), $(Config), and so on. Specifically, I want one which gives me the RTL version, so that I can put my compiled units (*.dcu) into the correct directory, ie. D15 for XE, D16 for XE2, etc.
+
+I was hoping that there would be one of these which corresponds with the "RTLVersion" compiler conditional definition, but $(RTLVersion) doesn't work.
+    
+
+        
+Answer 1: 
+
+    
+    
+There is not a RTLVersion variable but you can create easily using the option Enviroment variables
+
+
+
+or the windows registry. 
+
+For Delphi XE Check this entry
+
+HKEY_CURRENT_USER\Software\Embarcadero\BDS\8.0\Environment Variables 
+
+
+Then you can create a new variable called RTLVersion
+
+
+
+And then from the Delphi IDE you can use like so
+
+
+    
+    
+Answer 2: 
+
+    
+    
+Have you tried $(ProductVersion)?
+this will not give you D16, but contains the BDS product version 9.0 for XE2. 
+
+Unfortunately my XE2 Demo version is expired so I can't verify myself if it works.
+You'll find the definition bin\CodeGear.Common.Targets
+
+Update: 
+The ProductVersion define is new in XE2, so it won't work in older versions, but since its newly added, the possibility is high that it will be maintained by embarcadero in future versions.
+    
+    
+Answer 3: 
+
+    
+    
+There is no environment variable for the RTL version. You will have to create a separate project for each version and then tweak the output folders as needed. 
+    
+    
+Title: I cannot disable a (ghost) breakpoint
+Description: 
+    
+    
+                    
+I have an IDE break point (delphi-xe) that keeps reappearing every time I compile and run the program.
+How do I get rid of it. Where does Delphi keep the information about breakpoints?
+
+Updates:
+1. The break point is not listed in 'Breakpoints' panel.
+2. I have disabled the breakpoint (it is not gray) using right click but the program still stops on that 
+line.
+3. I have deleted the line and the breakpoint moved above.
+
+
+
+Update
+It happens when you edit files outside the IDE. I do this a lot in BeyondCompare. 
+    
+
+        
+Answer 1: 
+
+    
+    
+This has been a bug in Delphi since at least Delphi 7.  
+
+Workaround: Delete all breakpoints or disable breakpoint from breakpoint window.
+
+Workaround 2: Delete .dsk files and .local files.
+    
+    
+Answer 2: 
+
+    
+    
+I had this problem before and I found out that a file with the same filename was being referenced by the IDE that had break points. So do a search for your file and make sure that another file with the same name is not being referenced also.
+    
+    
+Answer 3: 
+
+    
+    
+AFAIR breakpoints are stored in the project's .dsk file. So deleting that file should solve the issue.
+(I seem to remember that .dsk are in .ini Format so you might even be able to find out what causes the behaviour.)
+    
+    
+Answer 4: 
+
+    
+    
+I know its an old thread, but I found a workaround which might help and which is not directly  mentioned here.
+If its a INT 3-Problem take a look at Embarcadero Quality Central Report #:  2030 (http://qc.embarcadero.com/wc/qcmain.aspx?d=2030). This problem is still not solved in Rad studio XE !!
+    
+    
+Title: IdeaVim plugin in pycharm doesn&#39;t support continuous scroll for long press?
+Description: 
+    
+    
+                    
+The IdeaVim plugin in pycharm doesn't support continuous scroll as nor Vim or MacVim does. When you press "j" to move or any other key to move, it acts just once, instead of scrolling continuously when long pressed.
+Any suggestions ?
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, it's an OS problem; key repeat works fine in IdeaVIM if the OS is configured  to support it.
+
+There's a thread discussing a change in Mac OS X Lion (10.7) that disabled key repeat, along with workarounds to turn it back on.  You can either re-enable key repeat globally or per-application; the thread contains commands for both.
+
+To set it globally:
+
+defaults write -g ApplePressAndHoldEnabled -bool false
+
+
+To set it for IntelliJ Community Edition:
+
+defaults write com.jetbrains.intellij.ce ApplePressAndHoldEnabled -bool false
+
+
+IntelliJ Ultimate Edition:
+
+defaults write com.jetbrains.intellij ApplePressAndHoldEnabled -bool false
+
+
+AppCode:
+
+defaults write com.jetbrains.appcode ApplePressAndHoldEnabled -bool false
+
+
+PhPStorm:
+
+defaults write com.jetbrains.phpstorm ApplePressAndHoldEnabled -bool false
+
+
+Android Studio:
+
+defaults write com.google.android.studio ApplePressAndHoldEnabled -bool false
+
+
+PyCharm:
+
+defaults write com.jetbrains.pycharm ApplePressAndHoldEnabled -bool false
+
+    
+    
+Title: Spring IDE plugin vs STS: feature comparison for version 3.3.0
+Description: 
+    
+    
+                    
+Does anyone know where I can find the most recent feature comparison document for Spring IDE plugin vs SpringSource Tool Suite STS (version 3.3.0)? 
+
+I believe Eclipse made some good progress in Kepler release, (for example Maven support being shipped in) so was wondering if the feature gap between Eclipse+Spring IDE plugin and STS highlighted in 2.9.2 Feature Comparison were reduced in Eclipse Java EE Kepler.
+    
+
+        
+Answer 1: 
+
+    
+    
+There is not much difference now between Eclipse + Spring-IDE and STS.  The main difference is that when you download STS, you are guaranteed that all the bits and pieces work together.  When you install Eclipse + Spring-IDE, you may have some compatibility problems and trouble installing or upgrading.
+
+My advice is this: if you already have an Eclipse that has custom plugins installed, then go with Eclipse + Spring-IDE and if you are starting from scratch, go with STS.
+    
+    
+Title: PHPStorm unable to make external connection with xdebug
+Description: 
+    
+    
+                    
+My OS is Mac Mountain lion.
+
+My PhpStorm version is 5.0.4.
+
+Here is my php xdebug info:
+
+
+xdebug.remote_autostart =
+Answer 1: 
+
+    
+    
+It's possible that port 9000 is being used by some other process. 
+
+
+In php.ini set xdebug.remote_port=9001 or another unused port of your choosing.
+In PHPStorm go to Settings-
+Answer 2: 
+
+    
+    
+After checking all the configuration in php.ini file and the IDE, do not forget to add the browser-specific extension that basically communicates via the IDE via IDE Key.
+
+Please refer to this link 
+    
+    
+Title: Error occurred during installing VS 2017
+Description: 
+    
+    
+                    
+I can't install Visual Studio Community 2017 RC
+
+
+
+The log:    
+
+
+  [1a48:0007][2016-12-09T16:08:29] Error 0x80131509: 
+  
+  at
+  Microsoft.VisualStudio.Setup.Engine.VerifyInstallationPath(IServiceProvider
+  services, String installationPath, IInstance instance, IQuery query)
+  
+  at Microsoft.VisualStudio.Setup.Engine.Install(Product product, String
+  destination, CancellationToken token)The specified instance '5d0b6377'
+  cannot be installed to the same location or child directory of
+  existing instance 'f8835dde'.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+From https://developercommunity.visualstudio.com/content/problem/3379/install-failed-and-cant-reinstal.html:
+
+Added a solution by David Walker · Nov 20 at 09:52 PM
+I searched hard drive and deleted folders that contained the instance
+'key' - '478ecff' than reran installer.
+c:\dir 478ecff /s .. showed me folders to delete/empty.... once I did
+that installer would run again without throwing above error.
+Hope this helps someone else.
+
+In your case substitute 478ecff with your own instance - f8835dde
+    
+    
+Answer 2: 
+
+    
+    
+Refer to the error message, you can try to perform a complete uninstall of any existing VS 2017 RC or VS ‘15’ preview if you have installed before.
+
+Firstly, go to Control Panel—Programs and Features and uninstall the existing Microsoft Visual Studio Installer.
+
+Secondly, try to delete the following installed folders: (you can back up those folders before any modification, in case we need to roll back)
+
+
+Go to the folder: %ProgramData%\Microsoft\VisualStudio and delete the Packages folder
+Go to the Visual Studio installation folder (normally under %ProgramFiles(x86)%\Microsoft Visual Studio) and delete the folders: 2017 or VS15Preview
+
+
+After that, reboot the computer and re-run the VS 2017 RC installer as administrator again.
+    
+    
+Answer 3: 
+
+    
+    
+I found in below location
+1. C:\Users[your account]\AppData\Local\Microsoft\VisualStudio\ to 
+check the folder name start with 15.0_
+2. C:\ProgramData\Microsoft\VisualStudio\Packages_Instances
+
+if you still have problem, you can have a search in register
+
+hope this can help to find the locaiton quickly
+    
+    
+Answer 4: 
+
+    
+    
+Make Sure to turn off your Antivirus.
+Deactivating McAfee(Company Policy) solved the Problem for me.
+Before that I was getting all kind of errors from the setup, including the one described.
+    
+    
+Title: Can I automatically refactor an entire java project and rename uppercase method parameters to lowercase?
+Description: 
+    
+    
+                    
+I'm working in a java project where a big part of the code was written with a formatting style that I don't like (and is also non standard), namely all method parameters are in uppercase (and also all local variables).
+
+On IntellJ I am able to use "Analyze -/pp
+Answer 1: 
+
+    
+    
+Use a Source Parser
+
+I think what you need to do is use a source code parser like javaparser to do this.
+
+For every java source file, parse it to a CompilationUnit, create a Visitor, probably using ModifierVisitorAdapter as base class, and override (at least) visit(MethodDeclaration, arg). Then write the changed CompilationUnit to a new File and do a diff afterwards.
+
+I would advise against changing the original source file, but creating a shadow file tree may me a good idea (e.g. old file: src/main/java/com/mycompany/MyClass.java, new file src/main/refactored/com/mycompany/MyClass.java, that way you can diff the entire directories).
+    
+    
+Answer 2: 
+
+    
+    
+I'd advise that you think about a few things before you do anything:
+
+
+If this is a team effort, inform your team.
+If this is for an employer, inform your boss.
+If this is checked into a version control system, realize that you'll have diffs coming out the wazoo.
+If it's not checked into a version control system, check it in.
+Take a backup before you make any changes.
+See if you have some tests to check before &amp; after behavior hasn't changed.
+
+
+This is a dangerous refactoring.  Be careful. 
+    
+    
+Answer 3: 
+
+    
+    
+I am not aware of any direct support for such refactoring out of the box in IDEs. As most IDEs would support name refactoring (which is regularly used). You may need to write some IDE plugin that could browse through source code (AST) and invoke rename refactoring behind the scene for such parameter names matching such format.
+    
+    
+Answer 4: 
+
+    
+    
+I have done a lot of such refactorings on a rather large scale of files, using TextPad or WildPad, and a bunch of reg-ex replace-all. Always worked for me!
+
+I'm confident that if the code is first formatted using an IDE like Eclipse (if it is not properly formatted), and then a reg-ex involving the methods' signature (scope, return-type, name, bracket, arg list, bracket) can be devised, your job will be done in seconds with these tools. You might need more than one replace-all sets of reg-ex.
+
+The only time-taking activity would be to come up with such a set of reg-ex.
+
+Hope this helps!
+    
+    
+Title: Eclipse jumps to definition while copy/pasting
+Description: 
+    
+    
+                    
+Hopefully this is a quickie: I've been doing a lot of Java/Google Web Toolkit work in Eclipse lately and while I've liked it so far I've had one reoccurring issue that is starting to drive me batty. It seems pretty random, but frequent enough to be annoying: If I am doing a lot of copy/pasting I will suddenly find myself being whisked away to a function or variable definition by the IDE, often in a completely different file, at which point I usually end up accidentally copying over code I didn't intend to and needing to undo and reposition myself back to where I wanted. I'm pretty certain that it's a "jump to definition" shortcut that I keep hitting by accident, but I'm not certain what the shortcut is, what exactly triggers it, and most importantly how to turn it off!
+
+Typically when this happens I am going through the following motions:
+
+
+Double click on a word to highlight it
+Press Ctrl + C to copy (seems like it may happen here)
+Double click on another word
+Press Ctrl + V to paste (happens here frequently)
+
+
+The definition that I am sent to is not always the double-clicked word, but may be the last word that the cursor was on before the double click. My biggest issue is that I'm usually working fast enough that I don't catch exactly what actions just triggered the behavior.
+
+I would really like to just kill off whatever is doing this (If I want to jump to definition I'll the context menu). Any hints as to how?
+
+Using: 
+
+
+Eclipse 3.5 (Galileo)
+Windows XP
+
+    
+
+        
+Answer 1: 
+
+    
+    
+If you press Ctrl and click on a token in your code (like a variable or method name), Eclipse will take you to the token's definition.
+
+I think you might be double-clicking and pressing Ctrl + C / Ctrl + V too fast.
+
+To turn if off:
+
+
+  Window -
+Title: C++ IDE that can build over SSH
+Description: 
+    
+    
+                    
+We are moving our development for C to C++, but all build servers run Linux and development happens on Windows machines. Our C editor does not do C++ very well so we are looking at alternatives.
+
+The code itself lives on the build server connected by \\opt\code... type link in Windows.
+
+We need SSH as that is the normal connection to the build servers. We would like an integrated solution for errors/warnings being able to opened in the editor. We do not care about running the code.
+
+Are there any free editors that can execute builds over SSH? 
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+NetBeans allows to build over ssh. We are using this from Linux development computers to linux build machines. I am not sure if this is possible from Windows to Linux. Here is a tutorial: Tutorial
+    
+    
+Answer 2: 
+
+    
+    
+This link suggest this should be possible using plink and any editor that can run plink as a compile and capture the resulting stdio and stderr output.
+    
+    
+Answer 3: 
+
+    
+    
+You can use Visual Slick Edit it has a scripting language which can be used to spawn commands. Btw, if your build is linux based I suggest you to edit on linux (there're various programmers editors there available for free).
+
+In windows almost every editor worth being calling editor has the power to manage builds (often via make), so even VIM or Emacs can be productivity choices (yeah I'm not a big fans of IDEs, my actual editor is VIM with a good tons of vimscripts and yeah, I've got code navigation, error browsing and the speed of light while typing - and the same is possible with emacs).
+
+Ultraedit is another editor able to Edit file over ftp (and maybe over SSH), but I doubt it can spawn a remote make and fetch results.
+
+If you're not reliyng on builds, but just compiling, maybe is worth checking the Cygwin porject and see if you can arrange a compilation under Windows, then for the build manually resort to the Linux box, this would probably remove the compilation problem (every programmer will compile on his box, and only builds (compile+link) would be left on the linux box.
+    
+    
+Answer 4: 
+
+    
+    
+You might use X forwarding and run any linux IDE on the Linux side, while operating it via Windows machines. See http://www.math.umn.edu/systems_guide/putty_xwin32.html for an example.
+
+Or even setup a VNC remote desktop connection.
+    
+    
+Answer 5: 
+
+    
+    
+I never tried this, but it looks like that using Code::Blocks and Xming you can do this.
+Here is tutorial http://wiki.codeblocks.org/index.php?title=Using_Xming_for_remote_compilation
+    
+    
+Answer 6: 
+
+    
+    
+You could try using Dokan SSHFS to mount the code as a drive on each Windows machine.  Then developers are free to use whatever IDE they choose.
+    
+    
+Title: Visual Studio locking files while debugging
+Description: 
+    
+    
+                    
+I have a VS solution containing several projects. While debugging a particular project all the source files are locked by VS. I would like to unlock sources that the debugee doesn't have dependency on. Is there any way to do this within one solution?
+
+UPDATE:
+
+I'm using Win XP SP3 32bit. Visual Studio 2010, C#. Edit and Continue is enabled. The solution contains 6 projects (number in not important actually), 5 of them depend on the data access layer project which uses Entity Framework. None of the 5 have any mutual dependencies. They are WinForms and Console applications. I would like to be able to run one of the projects and make changes to others without stopping the first. The problem is starting and stopping the project take considerable amount of time.
+    
+
+        
+Answer 1: 
+
+    
+    
+The Edit and Continue feature is preventing you from editing files if the debugger hasn't stopped the program.  The simple workaround is Debug + Break All, you should then be able to edit the files, your changes will be immediately effective provided your changes do not violate the restrictions imposed by E+C.  This is the most efficient work flow.
+
+The heavy-handed approach is to disable Edit and Continue.  Tools + Options, Debugger, Edit and Continue, uncheck the Enable check box.
+    
+    
+Answer 2: 
+
+    
+    
+I don't think that there is a way to avoid that. While debugging Visual Studio lock all files to prevent any change on them, including those on other projects.
+You can try to open the project which you are interested on with another Visual Studio instance to make changes to your files or open files singularly with another editor.
+    
+    
+Answer 3: 
+
+    
+    
+This doesn't quite answer the OP's question per se, but for anyone who has stumbled upon this page in the same (very frustrated) boat as I am, this might help.
+
+The solution: start without debugging.
+
+It was driving me absolutely crazy that Visual Studio would not let me edit files while the app was running. My typical workflow is:
+
+
+Make some changes
+Run the app to see the effects of those changes
+Based on the results, make more changes, etc. etc.
+
+
+The problem is Visual Studio was preventing me from step 3. It demands that you STOP running the app before you can even make any changes (including to a XAML file or adding a file to the project), which also means that you can't go back to the app to double-check something while you are actually programming it at the same time (which is how I work, bro).
+
+Thank god I finally discovered if I run without debugging it doesn't impose this ridiculous limitation. It's still a pain in the butt if you actually need to debug something you have to re-run the app in debug mode, but it sure beats having to kill the app before it will even let you edit a file.
+    
+    
+Title: How to manage IDE files in a git repository?
+Description: 
+    
+    
+                    
+The application is developed using Sencha Architect, which uses a host of auxiliary files for managing various IDE-related things (export paths, versioning of the IDE etc.).
+
+Some of these files will change every time a team member just opens a project in the Sencha Architect IDE.
+
+To give an example of a particularly annoying change, consider the property exportPath in the Architect-generated *.xds files. I will have a server of choice which I publish to, to a specific path, and other team members will have different server/path configurations.
+
+In our code-base, I would very much like to either have the IDE files:
+
+
+in a separate repository,
+in a sub-module (yes, git-specific, I know) or
+reside on the user machine, with the VCS oblivious to changes in them.
+
+
+The key thing to note here is, that Sencha Architect expects the files to be in certain places relative to the projects, so the IDE files must be available at the same place as the normal source files.
+
+Also, using .gitignore is not an option, since Sencha Architect will write information in some of them that are vital for other team-members opening them correctly. E.g. when opening a project, Sencha Architect could decide to upgrade the project to a newer version (its non-optional, if you want to open the project at all), and in the course of updating, the IDE will modify some of the source-code files. The other team members must be aware of the version upgrade in order to be able to open the project correctly.
+
+This SO question gives some background to the convoluted format that Sencha uses. I pardon for the negative tone in my assessment of the architecture of Sencha Architect, but it seems that they took a good idea (using metadata and code generation) a bit too far (invalidating the use of all good unix tools, including git).
+
+what would be the preferred approach here? And why?
+    
+
+        
+Answer 1: 
+
+    
+    
+IDE files should not be versioned unless you have a pretty compelling reason. Perhaps your project only builds using a plugin in a particular IDE and you need to version those settings. If you don't need those files to build or run your project, you probably shouldn't version them.
+
+You can ignore those files using Git. In particular, IDE files are good candidates for the global gitignore as each user will use whatever IDEs they want and those settings should be applied to all of their repositories.
+    
+    
+Answer 2: 
+
+    
+    
+It could be helpful to use versioning for the IDE files except files which store user specific settings. See also https://intellij-support.jetbrains.com/hc/en-us/articles/206544839-How-to-manage-projects-under-Version-Control-Systems.  
+
+Advantage of using version control for these files is 
+
+
+Sharing of code styles for the whole development team
+Manage and share nested repositories that are under version control as well.
+etc.
+
+    
+    
+Title: Why Delphi says &#39;cannot resolve unit name xxx&#39;?
+Description: 
+    
+    
+                    
+I'm working with Delphi2010 Enterprise Update 4.
+When I'm opening my project in the IDE and displaying the mainform code, there are 2 unit names underline in red.
+
+xxx http://img268.imageshack.us/img268/6475/unitnameunresolved.png.
+
+I have verified that the path to the unit source is in the Library path and in the Browsing path.
+
+Surprisingly, when I'm doing a right-clicking on the unit and selecting Open file at cursor, it works (ie. delphi opens the right unit).
+
+Any idea about that ?
+    
+
+        
+Answer 1: 
+
+    
+    
+Error Insight which keeps all the error messages into the structure view is quite buggy. 
+It doesn't understand your code the way the compiler understands it. 
+
+There is an IDE Fix Pack developed by Andreas Hausladen which reduces the number of those "Cannot resolve unit xyz" problems.
+
+It doesn't fix the bug, but it makes them less visible by addressing some of the Error Insight's threading problems.
+    
+    
+Answer 2: 
+
+    
+    
+Out of curiosity, is there any code in AdPort and/or AdStatLt that is subject to conditional compilation ?
+
+The parser that underpins Error Insight is I think different (physically and contextually) from the compiler.  The compiler may be able to make sense of those conditional compilation areas that Error Insight is not.
+
+This is just speculation on my part, but Error Insight is much improved in Delphi 2010 and typically now only chokes when there are errors in my code that I have yet to resolve.
+    
+    
+Answer 3: 
+
+    
+    
+I reset the library path under tools\options\environment options\delphi options\library.
+
+Click the dropdown box, and reselect your os, and it will reset the path to the library.  Worked for me.
+    
+    
+Answer 4: 
+
+    
+    
+Just disable Error Insight (Tools -
+Answer 5: 
+
+    
+    
+Closing and reopening a project usually helps to get rid of most of these errors. Try it...
+
+(That doesn't change the fact that nowadays, this is probably my number one annoyance in the IDE...) 
+    
+    
+Title: Does anyone have the &ldquo;Documentation URL&rdquo;s in PyCharm for the following libraries:
+Description: 
+    
+    
+                    
+I'm a fan of the "quick documentation" feature of PyCharm &amp; other Jetbrains IDEs, but it needs to know the specific "Documentation URL" for each library, that gets set under Preferences &gt; Tools &gt; Python External Documentation settings.
+
+I was wondering if anybody has worked it out for any of the following libraries:
+
+
+Tensorflow
+PyTorch
+Matplotlib
+Seaborn
+Pandas
+
+    
+
+        
+Answer 1: 
+
+    
+    
+These work for me (using PyCharm 2018.2.4):
+
+Matplotlib
+
+Module Name: matplotlib
+
+URL/Path Pattern: https://matplotlib.org/api/_as_gen/{module.name}.{element.name}.html#{module.name}.{element.name}
+
+Pandas
+
+Module Name: pandas
+
+URL/Path Pattern: https://pandas.pydata.org/pandas-docs/stable/reference/api/{element.qname}.html#{element.qname}
+
+TensorFlow
+
+(untested)
+
+Module Name: tensorflow
+
+URL/Path Pattern: https://www.tensorflow.org/api_docs/python/tf/{element.name}
+
+Seaborn
+
+Module Name: seaborn
+
+URL/Path Pattern: https://seaborn.pydata.org/generated/{module.name}.{element.name}.html#{module.name}.{element.name}
+
+scikit-learn
+
+Module Name: sklearn
+
+URL/Path Pattern: https://scikit-learn.org/stable/modules/generated/{element.qname}.html#{element.qname}
+    
+    
+Title: Delphi XE2 background IDE compiler unable to find source path
+Description: 
+    
+    
+                    
+I just bought XE2 version, installed the update 1 ISO, and made my Open Source projects compile with it.
+
+In fact:
+
+
+I added the source code paths of the library to the general settings IDE (for all platforms I use, i.e. Windows 32 bit and 64 bit up to now);
+I compiled the TestSQLite3.dpr regression tests of our framework - no problem: EXE is compiled and all tests passed;
+I've a strange issue with the IDE background compilers: even if the project compiled, the IDE displays some errors about unknown files (not in the bottom compiler messages, but in the top of the classes navigation tree - left to the source code editor), and in the .dpr source code, the unit names are underlined in red, and I'm not able to navigate inside the source (using Ctrl+Click on a symbol).
+
+
+I've added the source code paths of the library to the project options (for Win32/Win64 - even if it was already set at the global IDE level). Now the errors about unknown files disappeared, but the unit names are still underlined in red in the source code, and the Ctrl+Click does not work.
+
+The TestSQLite3.dpr source code do not specify the full path of the units:
+
+uses
+  {$I SynDprUses.inc}
+  Windows,
+  Messages,
+  SysUtils,
+  Classes,
+  SynCrypto,
+  SynCrtSock,
+  SynCommons,
+  SynDB,
+  SynOleDB,
+  SynDBOracle,
+  (...)
+
+
+In the above lines, SynCrypto, SynCrtSock, SynCommons are underlined in red.
+
+My actual guess is that full paths are needed in the .dpr (SynCrypto in '..\SynCrypto.pas'). I did not test this because I don't have XE2 at work.
+
+Since there was no issue with the previous IDE with this kind of source code (it worked from Delphi 6 up to XE), I wonder if there is a possibility of regression, or a new option not available with the previous version of the IDE (probably platform-based) which I did not set properly. Or perhaps the full path is now needed in .dpr - but this sounds like a regression in the Code/Error Insight compiler to me.
+    
+
+        
+Answer 1: 
+
+    
+    
+I asked the question to Dr Bob (by whom I bought the XE2 license - since the 1 $ = 1 € equation sounded a bit unfair, I wanted at least to have a real Delphi expert for being my reseller).
+
+Here is his answer:
+
+
+  You did not make a mistake. The problem is that the there are three 
+  compilers in XE2 (like in previous versions of Delphi): the real 
+  compiler (which works fine), the Code Insight compiler (which is 
+  faster), the Error Insight compiler (which must be even more faster), 
+  and the syntax highlighting parser (which is the fastest). 
+  
+  XE2 introduced a number of features that made the normal compiler 
+  slower, and gave the Code Insight and Error Insight compilers a bit of
+  trouble. First of all, we have the new targets: Win32, Win64 and OSX 
+  which cause the search paths to be different for each target (see 
+  $PLATFORM directive), as well as build configuration, although there
+  is  only one "Library path" for each PLATFORM (and not for the build 
+  configurations). 
+  
+  The second complexing factor is the dotted unit names (scoped unit 
+  names) that were introduced. Windows is no longer Windows, but 
+  Winapi.Windows. 
+  
+  My guess is that these two additional complexing factors cause
+  problems  for the Code Insight and Error Insight compilers. Note that
+  the real  compiler still works. But the Error Insight shows incorrect
+  errors, and  the Code Insight doesn't always work for these units. 
+  
+  You could try to explicitly add them to the project again (in which
+  case  the full path will be used, like you mention in your question on
+  stack  overflow as well).
+
+
+So I'm afraid this is some regression...
+
+Edit at closing question:
+
+First point is that adding full paths:
+
+  SynPdf in '..\SynPdf.pas',
+
+
+in the .dpr did let the files been found - but the background compiler is still lost, unable to find a class declaration in this body.
+
+Just another regression sample:
+
+   var Thread: array[0..3] of integer; 
+       Handle: array[0..high(Thread)] of integer;
+
+
+Is a perfectly safe syntax, compiles just fine, was interpreted by the previous Error Insight compiler without any problems (works since Delphi 5), but fails under XE2.
+
+I'm a bit disappointed about XE2 IDE. Compiler makes it work. But IDE is really disappointing. It is not usable, from my point of view. I'll continue using Delphi 7 as my main editor, and just use XE2 as cross-platform compiler and debugger.
+    
+    
+Answer 2: 
+
+    
+    
+Might be related to what Barry Kelly mentions here:
+
+http://blog.barrkel.com/2011/10/delphi-xe2-compiler-performance.html
+    
+    
+Title: How to tidy up R code?
+Description: 
+    
+    
+                    
+I know that many programming languages have tools to tidy up programming code? Is there a way to tidy up R code or some tools that will do this (e.g. included in R IDE's?)?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can try formatR, which I found via this blog post.
+    
+    
+Answer 2: 
+
+    
+    
+In RStudio, there is an option for this in the menu: Code /p/div
+Title: How do I stop Visual Studio from resizing my controls?
+Description: 
+    
+    
+                    
+Visual Studio 2008 SP1 (although IIRC, the behavior was present in 2005 as well) keeps resizing a couple of grid controls (Janus.GridEx to be precise) I use.
+
+I can resize them back to normal, save, and compile just fine. When it does compile, these two controls will expand to ridiculous values.
+
+More Information:
+This problem is related to setting the Anchor property on the control. If I set the Anchor property to opposing ends (say Left and Right), when the Designer file gets compiled, it sets the width/height of the control to the width/height of the container.
+
+It seems that in the Designer file, the Anchor property is set before the Size property. Manually editing (I know, shame on me) the file to put the Size property first doesn't help as when the Designer file gets compiled, it seems to be rewritten from scratch as well.
+
+So I guess my real question is how to make VS form designer respect my initial size declaration as well as the Anchor property.
+    
+
+        
+Answer 1: 
+
+    
+    
+I usually solve that kind of trouble by putting the 'good' code in the form constructor, right after the call to InitializeComponent(), so it overrides any mess the automatic designer magic might cause. 
+    
+    
+Answer 2: 
+
+    
+    
+I had the same problem. The instances of my user control on the form had these settings.
+anchor   - none
+autosize - false
+dock     - none
+
+It still horribly resized them every time I did a build etc. 
+
+I found that on the user control in the design properties it had autoscalemode set to font. I change it to none and that fixed the problem.
+    
+    
+Answer 3: 
+
+    
+    
+What I'm doing currently is handling the Resize event and setting the Size on the two required controls. I feel this is a bit of a kludge given the intended effect of the Anchor property.
+    
+    
+Answer 4: 
+
+    
+    
+Usually when I have this problem, I end up using Panels and Labels (blank text) with the Dock and Padding properties on the controls to get the same visual look.  Whether this would be practical for your form would depend on how it is laid out.
+
+Not the best solution because of all the extra controls, but it gets the job done.
+    
+    
+Answer 5: 
+
+    
+    
+Perhaps I'm misunderstanding the question, but I think what you are looking for is the Locked property: http://msdn.microsoft.com/en-us/library/80xxxf69.aspx
+    
+    
+Title: CLion uses system memory excessively
+Description: 
+    
+    
+                    
+I recently started to use CLion, on Windows 7 64-bit, for editing C files. 
+
+One thing that bothers me a lot is that it uses too much system memory. It doesn't cause out of memory error as asked in another question. Actually CLion shows much lesser memory consumption in IDE (~500 mb out of ~2000 mb) than it takes from system (~1000 mb). You can see a snapshot of the system memory usage and CLion's memory display below:
+
+
+
+I use CLion not for C++ but for C projects. My project isn't that big (~5 c files &lt; 300 lines and ~10 h files). I don't use it to compile the project, I just use it for editing. And during the snapshot there was no user program running by it. And CLion wasn't showing any processes running (indexing etc). It is a general behaviour.
+
+I'm not sure if what I experience is something expected/normal, or it is caused because of my system setup, project settings or the way I use the IDE. 
+
+Is there any known causes for excessive memory usage? Can you suggest practices to decrease memory usage? 
+    
+
+        
+Answer 1: 
+
+    
+    
+The post is 2 years old, but I am also having this issue with CLion 2018.1, and I imagine, others do, too. Some tips that worked for me: 
+
+
+Excluding directories from indexing.
+Deleting source files I don't need.
+Resolving a circular dependency between two classes. (Note: I can't vouch it was exactly that, because I tried several things at once, and it seems odd that such a powerful IDE would be affected by such an issue, but I can't rule it out.)
+If it's really bad, the indexing can be paused. Guaranteed to reduce the memory usage. Of course, the intelligent completion won't work then. 
+
+
+Currently the RAM usage is stable at ~1 Gb with RocksDB, RapidJson, and ~50 classes.
+
+UPDATE: tweaking clion64.exe.vmoptions reduced the consumption radically. 
+    
+    
+Answer 2: 
+
+    
+    
+Same issue here. I haven't used CLion just sitting there so that I do not have to open again, 2 projects few files open, nothing major, still eating up +3GB is not something that I can accept, switching back to Sublime, that works fine, as others have mentioned I am using it only for editing/refactoring, compilation happens in Terminal.
+
+(PyCharm has similar issues)
+
+
+    
+    
+Answer 3: 
+
+    
+    
+CLion need to index and support all information about the system headers to provide you smart completion, auto-import and symbol resolution. Your project is the smallest part of code base for analyzing.
+    
+    
+Title: How can I change the connection for current tab in Microsoft SQL Server Management Studio
+Description: 
+    
+    
+                    
+I want to run a query in SQL Server Management Studio on several databases on different servers.
+
+I am already connected to these servers in the object explorer.
+
+Is there a quick way to change the connection of the current query tab to a different server without the need to login again (without using change connection) and without opening a new tab.
+    
+
+        
+Answer 1: 
+
+    
+    
+Right-click in the query window and select Connection &gt; Change Connection:
+
+
+
+That will bring up the standard connection dialog from which you can connect to whatever other server / instance you want ...
+    
+    
+Title: Is it possible to launch more than one Webstorm instance using the command-line launcher?
+Description: 
+    
+    
+                    
+Webstorm can be launched from the command line using the command wstorm. However, would it be possible to launch more than one instance? Usually, the second time I run wstorm, it doesn't open another Webstorm for me and does nothing.
+    
+
+        
+Answer 1: 
+
+    
+    
+In OS X, this is apparently caused by an outdated wstorm (a Python script at /usr/local/bin/wstorm). I verified the solution indicated in this ticket with WebStorm 2016.1.3:
+
+
+Go to Tools /strong/ppa href="https://i.stack.imgur.com/9HN0m.png" rel="nofollow noreferrer"img src="https://i.stack.imgur.com/9HN0m.png" alt="enter image description here"/a/p/li/ulpstrong/strongcode/codecode/codecode/code/ppa href="https://i.stack.imgur.com/zTGdd.png" rel="nofollow noreferrer"img src="https://i.stack.imgur.com/zTGdd.png" alt="enter image description here"/a/p/div
+Answer 2: 
+
+    
+    
+Just run: 
+
+WebStorm.exe "Full\path\to\the\project\that\contains\the\.idea\folder\of\your\project"
+
+
+The project will run in the same instance but in a separted window as described here: https://www.jetbrains.com/webstorm/help/opening-multiple-projects.html
+
+NOTE: This was tested on WebStorm 9.0.3 and may not work on previous versions.
+    
+    
+Title: &ldquo;ExtensionManagerPackage&rdquo; did not load correctly
+Description: 
+    
+    
+                    
+I have downloaded Visual Studio 2017 on one of my machines with Windows 7, SP 1, and at some point setup has failed. There was an error about installing Windows 10 SDK. According to Microsoft site, this is a bug, and a solution is to download Windows 10 SDK separately and install it like that.
+
+Now when I did that, on first run of VS, I got next error:
+
+
+  The 'ExtensionManagerPackage' package did not load
+  correctly...Restarting Visual Studio could help resolve this issue.
+
+
+Suggested restarting didn't change anything.
+
+There were few more errors like this on startup (packages related errors). Now I am re-installing, and will try to choose different Workloads to see if this happens for every workload... 
+
+If matters, I have installed the Universal Windows Platform development,
+.NET desktop development and Windows desktop development with C++ workloads.
+
+This is what I get from ActivityLog.xml file (located in VisualStudio\15.0_0b1e9ecf\ folder:
+
+
+  SetSite failed for package [ExtensionManagerPackage]Source:
+  'Microsoft.VisualStudio.ExtensionManager.Implementation' Description:
+  Could not load type 'Microsoft.VisualStudio.Shell.IOleMenuCommand'
+  from assembly 'Microsoft.VisualStudio.Shell.Interop.8.0,
+  Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.
+  System.TypeLoadException: Could not load type
+  'Microsoft.VisualStudio.Shell.IOleMenuCommand' from assembly
+  'Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0,
+  Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. at
+  Microsoft.VisualStudio.ExtensionManager.VSPackage.ExtensionManagerPackage.d__27.MoveNext()
+  at
+  System.Runtime.CompilerServices.AsyncTaskMethodBuilder.Start[TStateMachine](TStateMachine&amp;
+  stateMachine) at
+  Microsoft.VisualStudio.ExtensionManager.VSPackage.ExtensionManagerPackage.InitializeAsync(CancellationToken
+  cancellationToken, IProgress`1 progress) at
+  Microsoft.VisualStudio.Shell.AsyncPackage.&lt;
+Answer 1: 
+
+    
+    
+I was finally able to get past this by following:
+https://developercommunity.visualstudio.com/content/problem/26746/getting-errors-when-starting-vs2017-ide.html
+
+I went with the method in the comment"
+
+"Another way that worked for me was just to replace the dll in GAC with the one from VS2017 PublicAssemblies folder... Less steps, still gets it done... :)"
+    
+    
+Answer 2: 
+
+    
+    
+I registered just to answer this because i spend 2 hours trying to resolve it, and this may save someone some time.
+I had the same problem with the "package didn't load correctly" but on visual studio community 2007.
+
+In my case it was because of a conflict of a file added from microsoft office 2017.
+
+You can try the following solutions
+A. Close the program, go to C:\Users\\AppData\Roaming\Microsoft\VisualStudio and delete the 11, or 12, or 14 or 15XXX folder. Restart Visual studio which will recreate the folder and thankfully will work correctly (this didn't work for me)
+
+B. There is a file that is from office 2007 inside windows/assembly/gac that needs to be replaced with a newer version. Thankfully this file is already on the installation location of visual studio. 
+
+The offending file is Microsoft.VisualStudio.Shell.Interop.8.0.dll
+
+Problem is that on windows 10 there is no way to do any file operations inside the assembly folder. To bypass this limitation open a elevated command line and paste the following command
+
+Depending of the version of visual studio and the location when you have installed the program this command has to be modified accordingly.
+
+copy /-Y "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.Shell.Interop.8.0.dll" C:\Windows\assembly\GAG
+
+    
+    
+Title: Get PyCharm to know what classes are mixin for
+Description: 
+    
+    
+                    
+Our application has set of complex form wizards. To avoid code duplication I created several mixins.
+
+The problem is that PyCharm highlights mixin methods with Unresolved attribute refference error.
+This is correct as object does not have such methods. But I know that this mixin will be used only with special classes. Is there any way to tell this info to PyCharm?
+
+For now I use such approach:
+
+class MyMixin(object):
+    def get_context_data(self, **kwargs):
+        assert isinstance(self, (ClassToBeExtended, MyMixin))
+        # super.get_context_data is still highlighter, 
+        # as super is considered as object
+        context = super(MyMixin, self).get_context_data(**kwargs)
+        context.update(self.get_preview_context())
+        return context
+
+    def get_preview_context(self):
+        # without this line PyCharm highlights the self.initial_data
+        assert isinstance(self, (ClassToBeExtended, MyMixin))
+        return {'needs': (self.initial_data['needs']
+                          if 'type' not in self.initial_data
+                          else '%(needs)s %(type)s' % self.initial_data)}
+
+
+While this works for some cases like autocomplete for self., it fails for other cases like super. Is there a better approach to achieve the desired behavior?
+
+P.S.: I know that I can disable reference check for specific name or whole class, but I don't want to do this as it will not help in typo checks and autocomplete.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can type-hint to PyCharm what kind of classes to expect.
+
+class DictMixin(object):
+    def megamethod(
+        self,  # type: dict
+        key
+    ):
+        return self.get(key)
+
+
+It's still not quite comparable to other type handling.
+PyCharm is lazy in evaluating it, and only does so when first working on self.
+Things are a bit tricky when accessing attributes of the mixin as well - self,  # type: dict | DictMixin works for one of my classes, but not in my test code.
+In python 3.5, you should be able to use # type: typing.Union[dict, DictMixin].
+    
+    
+Answer 2: 
+
+    
+    
+If you are creating Mixin, for, let's say ClassSub, which is subclass of ClassSuper, you can implement Mixins this way:
+
+class Mixin1(ClassSuper):
+    pass
+
+
+class Mixin2(ClassSuper):
+    pass
+
+
+and then use them like:
+
+class ClassSub(Mixin1, Mixin2):
+    pass
+
+
+That way I use some mixins for models in Django. Also, django-extensions uses similar pattern (gives models that are actually mixins). Basically, this way you don't have to inherit ClassSuper, because it's "included" in every of your mixins.
+
+Most important - PyCharm works like a charm this way.
+    
+    
+Title: Stop Visual Studio solution titles showing as localhost_12312 etc
+Description: 
+    
+    
+                    
+For various reasons we are using VS2013 as our preferred IDE to edit php and html pages. 
+
+These are websites running on WAMP, so VS2013 is just IDE for us, nothing else. These aren't web solutions or web projects. There's no IIS or ASP. We just do "open website" and just point to the local folder containing the website files.
+
+If we have multiple instances open it's hard to tell them apart as VS2013 captions the windows as localhost_12312, localhost_45645 etc
+
+Here's what it looks like in the taskbar:
+
+
+
+Tried installing Erwin Mayer's addon mentioned here but that just results in the title bar showing as:
+
+localhost_12312\localhost_12312 - Microsoft Visual Studio *
+
+
+Is there a fix for this annoying niggle?
+    
+
+        
+Answer 1: 
+
+    
+    
+If the Mentioned method in my comment doesn't support your question, you can use the following vs extension: https://visualstudiogallery.msdn.microsoft.com/2e8ebfe4-023f-4c4d-9b7a-d05bbc5cb239
+
+Use the Expression language operators and their precedence section to help you build the required behavior. 
+
+For example you can do something like this:
+
+&gt; if (sln_filename) {
+    sln_filename + " - Visual Studio " + vs_version + " " + vs_edition
+} else {
+    // do whatever you want if there is no solution open
+    "Visual Studio " + vs_version + " " + vs_edition
+}
+
+
+I hope it supports your question
+    
+    
+Answer 2: 
+
+    
+    
+Check this extension VSCommands for Visual Studio 2013 and it features to rename instance Click Here for details
+    
+    
+Title: Debugging with Eclipse CDT and GDB: can&#39;t find source file
+Description: 
+    
+    
+                    
+When I try to debug my application using GDB from eclipse CDT, I get the following error:
+
+ Can't find a source file at "../mingw/main.c"
+ Locate the file or edit the source lookup path to include its location.
+
+
+Eclipse is looking for the source file location at ../mingw/main.c, but it should be in /edit/src/main.c. As you can see in the screenshot below, edit/src is part of the source lookup path. Why is looking in ../mingw? I can't find any configuration setting that makes it look there.
+
+
+
+I'm using eclipse Juno, CDT 8.1, Windows 7 64bit
+    
+
+        
+Answer 1: 
+
+    
+    
+Here is your answer http://www.eclipse.org/forums/index.php/t/57027/
+
+If you're working under Windows, have you set the required mappings?
+Maybe Eclipse couldn't find the Source because of the missing mapping to
+the (cygwin-)drive where your projects/workspaces are.
+
+When you start Cygwin, enter "mount" and look for the mapping you have:
+They may look like this:
+
+Admin@bs11-01xp ~
+$ mount
+D:\cygwin\bin on /usr/bin type system (binmode)
+D:\cygwin\lib on /usr/lib type system (binmode)
+D:\cygwin on / type system (binmode)
+c: on /cygdrive/c type system (binmode,noumount)
+d: on /cygdrive/d type system (binmode,noumount)
+e: on /cygdrive/e type system (binmode,noumount)
+j: on /cygdrive/j type system (binmode,noumount)
+n: on /cygdrive/n type system (binmode,noumount)
+u: on /cygdrive/u type system (binmode,noumount)
+w: on /cygdrive/w type system (binmode,noumount)
+x: on /cygdrive/x type system (binmode,noumount)
+y: on /cygdrive/y type system (binmode,noumount)
+z: on /cygdrive/z type system (binmode,noumount)
+
+
+My Projects ara all under J:\Projects, so my mapping needs to be present
+in Eclipse as:
+
+/cygdrive/j j:/
+
+
+Open Eclipse and then click
+- Windows =
+Answer 2: 
+
+    
+    
+in "Debug Configuration" (under debugger popup icon) in Debugger tab uncheck "stop on startup at", after this it will not stop on startup, but u can put breakpoint there if u like
+    
+    
+Title: How to use Go language with NetBeans IDE?
+Description: 
+    
+    
+                    
+How to setup Go language in NetBeans IDE?. 
+(Like i am already using Python, C/C++, Java, Php, BASH already in one NetBeans IDE).
+    
+
+        
+Answer 1: 
+
+    
+    
+Although I've never used it, there appears to only be one Go plugin for NetBeans. Their official website says that it provides syntax highlighting and templates for Go. I'm not sure if it's everything you're looking for, but it appears to be the only option at this point in time.
+    
+    
+Answer 2: 
+
+    
+    
+because NetBeans is maven-oriented IDE just out of the box, I use NB with maven through mvn-golang plugin and made some very restricted plugin contains project and file templates, may be in future will make syntax highlighting
+    
+    
+Title: How to rebind a key to &ldquo;Continue&rdquo; command other than F5 in Visual Studio?
+Description: 
+    
+    
+                    
+In Visual Studio, F5 is used for both of StartDebugging and Continue, which is rather annoying. Because many other IDEs/Debuggers don't act in the same way, e.g. cgdb, IntelliJ IDEA.
+
+For simplicity and universality, I want to use one key-binding scheme for all IDEs/Debuggers. I cannot change other IDEs/Debuggers to bind both of StartDebugging and Continue to F5. 
+
+So, my question is:
+
+Is there a way to separately bind StartDebugging and Continue to different keys in Visual Studio?
+    
+
+        
+Answer 1: 
+
+    
+    
+This link describes how you can remap behaviour to different keys. The command you're looking to change is called Debug.Start
+
+http://msdn.microsoft.com/en-us/library/5zwses53.aspx
+
+That said however, I think it counts Debug.Start as the same command for both Run and Continue. So I'm not sure it will allow you to map the action to different keys.
+    
+    

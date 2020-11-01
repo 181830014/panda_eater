@@ -1,0 +1,2977 @@
+Title: How do I code in Objective C on windows?
+Description: 
+    
+    
+                    
+I want to create apps for iOS. I make games in C++ and SFML, so I decided to use Objective C after further research. I can't find any windows IDE's, so I came here. What am I supposed to code in? 
+    
+
+        
+Answer 1: 
+
+    
+    
+You can install macOS on a virtual machine like virtual box or VMware.
+
+Here is a tutorial to install the virtual machine: tutorial
+    
+    
+Answer 2: 
+
+    
+    
+Yeah unfortunately the only way to create iOS apps is through MacOS. You'll have to get your hands on a Mac.
+    
+    
+Answer 3: 
+
+    
+    
+I hav tried to work with a virtual machine on linux and it was not easy to set-up. Ultimately, an iSO development project can take hundreds of hours of coding time, and you will rely a lot on the stability of your system. So why starting from an inperfect arragment?
+The cheap way to start is to buy an Apple mini. It's cheap and it will get you started. You can move to faster Mac later on when you are sure you are committed to finish the project.
+    
+    
+Answer 4: 
+
+    
+    
+
+  What am I supposed to code in?
+
+
+The short answer is "Mac OS." Some people build a "hackintosh" (A PC running Mac OS) and build their iOS apps on that, but that is a violation of Apple's copyrights and developer agreements.
+
+You can also run Mac OS as a virtual OS, but with the same legal issues.
+    
+    
+Answer 5: 
+
+    
+    
+You can try Xamarin. Now belongs to Microsoft and I believe it’s part of Visual Studio. It should be able to export projects for both iOS and Android. But I haven’t used it myself, so I can’t confirm for sure.
+    
+    
+Title: New Custom Component Crashing the IDE
+Description: 
+    
+    
+                    
+This is my first attempt at creating a component, I thought I would start with a very basic LED (light bulb not text), after reading a few articles I came up with the following code (which was working), I closed down the IDE (XE10.1 update2) and when trying to use the component in a new blank empty app the IDE crashes when adding the control can anybody help   : 
+
+unit ZaxLED;
+
+interface
+
+uses
+  Windows, Messages, Controls, Forms, Graphics, ExtCtrls, Classes, math;
+
+type
+  TZaxLED = class(TGraphicControl)
+  private
+    { Private declarations }
+    FColorOn: Tcolor;
+    FColorOff: Tcolor;
+    Color: Tcolor;
+    FStatus: Boolean;
+    FOnChange: TNotifyEvent;
+
+    procedure SetColorOn(Value: Tcolor);
+    procedure SetColorOff(Value: Tcolor);
+
+    function GetStatus: Boolean;
+    procedure SetStatus(Value: Boolean);
+
+  protected
+    { Protected declarations }
+    procedure Paint; override;
+
+  public
+    { Public declarations }
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
+  published
+    { Published declarations }
+    property width default 17;
+    property height default 17;
+    property Align;
+    property Anchors;
+    property Constraints;
+    property ColorOn: Tcolor read FColorOn write SetColorOn default clLime;
+    property ColorOff: Tcolor read FColorOff write SetColorOff default clGray;
+
+    property Status: Boolean read GetStatus write SetStatus default True;
+    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+
+  end;
+
+procedure Register;
+
+implementation
+
+procedure Register;
+begin
+  RegisterComponents('Samples', [TZaxLED]);
+end;
+
+{ TZaxLED }
+
+constructor TZaxLED.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  width := 17;
+  height := 17;
+  ColorOn := clLime;
+  ColorOff := clGray;
+  Status := False;
+  Color := ColorOff;
+end;
+
+destructor TZaxLED.Destroy;
+begin
+  inherited Destroy;
+end;
+
+function TZaxLED.GetStatus: Boolean;
+begin
+  Result := FStatus;
+end;
+
+procedure TZaxLED.Paint;
+var
+  Radius, xCenter, YCenter: Integer;
+begin
+  if csDesigning in ComponentState then
+  begin
+    Canvas.Pen.Style := psDot;
+    Canvas.Brush.Style := bsClear;
+    Canvas.Rectangle(ClientRect);
+  end;
+
+
+  Canvas.Brush.Color := Color;
+  Radius := Floor(width / 2) - 2;
+  xCenter := Floor(width / 2);
+  YCenter := Floor(height / 2);
+  Canvas.Ellipse(xCenter - Radius, YCenter - Radius, xCenter + Radius,
+    YCenter + Radius);
+
+end;
+
+procedure TZaxLED.SetBounds(ALeft, ATop, AWidth, AHeight: Integer);
+begin
+  if Autosize and (Align in [alNone, alCustom]) then
+    inherited SetBounds(ALeft, ATop, width, height)
+  else
+    inherited SetBounds(ALeft, ATop, AWidth, AHeight);
+end;
+
+procedure TZaxLED.SetColorOff(Value: Tcolor);
+begin
+  FColorOff := Value;
+  if not Status then
+    ColorOff := Value;
+end;
+
+procedure TZaxLED.SetColorOn(Value: Tcolor);
+begin
+  FColorOn := Value;
+  if Status then
+    ColorOn := Value;
+end;
+
+procedure TZaxLED.SetStatus(Value: Boolean);
+begin
+  if Value &lt;&gt; FStatus then
+  begin
+    FStatus := Value;
+    if FStatus then
+      Color := ColorOn
+    else
+      Color := ColorOff;
+    if Assigned(FOnChange) then
+      FOnChange(Self);
+  end;
+end;
+
+end.
+
+
+
+
+I have updated the code to take in comments from @Ari0nhh I think this is working but led is not changing color at design or runtime now
+
+procedure TZaxLED.SetColorOff(Value: Tcolor);
+begin
+  FColorOff := Value;
+end;
+
+procedure TZaxLED.SetColorOn(Value: Tcolor);
+begin
+  FColorOn := Value;
+end;
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Lets consider this code:
+
+procedure TZaxLED.SetColorOff(Value: Tcolor);
+begin
+  FColorOff := Value;
+  if not Status then
+    ColorOff := Value;
+end;
+
+
+An assignment of the property ColorOff will call a SetColorOff method. Which will again assign a ColorOff property. Since there is no way to break this assignment cycle, everything will end up with a stack overflow pretty fast.
+    
+    
+Answer 2: 
+
+    
+    
+I see a number of problems with your code.
+
+
+your uses clause needs cleanup.  Do not create dependencies on units you do not actually use.  Units that are only used by the component's internal code should be moved to the uses clause of the implementation section. The uses clause of the interface section should only refer to units that are needed to satisfy types/references directly used by your public interface.
+a Color data member is being declared when there is already an inherited Color property.  This data member is redundant and unnecessary, as its sole purpose is to carry the selected Status color from SetStatus() to Paint(), which is not necessary because Paint() can (and should) determine that color value directly.
+the Status property is declared with a default value of True, but the property is initialized to False in the constructor.
+the ColorOn and ColorOff property setters are calling themselves recursively, instead of triggering a repaint so the new state image can be shown.  
+The Status property setter is also not triggering a repaint.
+
+
+With that said, try something more like this instead:
+
+unit ZaxLED;
+
+interface
+
+uses
+  Classes, Controls, Graphics;
+
+type
+  TZaxLED = class(TGraphicControl)
+  private
+    { Private declarations }
+    FColorOn: TColor;
+    FColorOff: TColor;
+    FStatus: Boolean;
+    FOnChange: TNotifyEvent;
+
+    procedure SetColorOn(Value: TColor);
+    procedure SetColorOff(Value: TColor);
+    procedure SetStatus(Value: Boolean);
+
+  protected
+    { Protected declarations }
+    procedure Paint; override;
+
+  public
+    { Public declarations }
+    constructor Create(AOwner: TComponent); override;
+    procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
+
+  published
+    { Published declarations }
+    property Width default 17;
+    property Height default 17;
+    property Align;
+    property Anchors;
+    property Constraints;
+    property ColorOn: TColor read FColorOn write SetColorOn default clLime;
+    property ColorOff: TColor read FColorOff write SetColorOff default clGray;
+    property Status: Boolean read FStatus write SetStatus default False;
+    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+  end;
+
+procedure Register;
+
+implementation
+
+uses
+  Math;
+
+procedure Register;
+begin
+  RegisterComponents('Samples', [TZaxLED]);
+end;
+
+{ TZaxLED }
+
+constructor TZaxLED.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  FColorOn := clLime;
+  FColorOff := clGray;
+  FStatus := False;
+  Width := 17;
+  Height := 17;
+end;
+
+procedure TZaxLED.Paint;
+var
+  Radius, xCenter, YCenter: Integer;
+begin
+  if csDesigning in ComponentState then
+  begin
+    Canvas.Pen.Style := psDot;
+    Canvas.Brush.Style := bsClear;
+    Canvas.Rectangle(ClientRect);
+  end;
+
+  if FStatus then
+    Canvas.Brush.Color := FColorOn
+  else
+    Canvas.Brush.Color := FColorOff;
+
+  Radius := Floor(Width / 2) - 2;
+  xCenter := Floor(Width / 2);
+  YCenter := Floor(Height / 2);
+  Canvas.Ellipse(xCenter - Radius, YCenter - Radius, xCenter + Radius, YCenter + Radius);
+end;
+
+procedure TZaxLED.SetBounds(ALeft, ATop, AWidth, AHeight: Integer);
+begin
+  if AutoSize and (Align in [alNone, alCustom]) then
+  begin
+    AWidth := Width;
+    AHeight:= Height;
+  end;
+  inherited SetBounds(ALeft, ATop, AWidth, AHeight);
+end;
+
+procedure TZaxLED.SetColorOff(Value: TColor);
+begin
+  if FColorOff  &lt;&gt; Value then
+  begin
+    FColorOff := Value;
+    if not FStatus then Invalidate;
+  end;
+end;
+
+procedure TZaxLED.SetColorOn(Value: TColor);
+begin
+  if FColorOn &lt;&gt; Value then
+  begin
+    FColorOn := Value;
+    if FStatus then Invalidate;
+  end;
+end;
+
+procedure TZaxLED.SetStatus(Value: Boolean);
+begin
+  if Value &lt;&gt; FStatus then
+  begin
+    FStatus := Value;
+    Invalidate;
+    if Assigned(FOnChange) then
+      FOnChange(Self);
+  end;
+end;
+
+end.
+
+    
+    
+Title: Fix VCL Styles Directory in Delphi XE3
+Description: 
+    
+    
+                    
+I have a problem about VCL Styles in Delphi IDE.
+When I change VCL Style From default style to another style in delphi IDE and run program an "Style 'Style Name' not found" error comes up. I trying to find a option in IDE to fix Style directory, but I can't find any options. 
+Please, help me to solve this problem and fixing IDE Options.
+thanx a lot.
+    
+
+        
+Answer 1: 
+
+    
+    
+oh, after a time, I found a way for solving this problem. for solving this problem must running the "redistsetup.bat" file. this file by default located in "C:\Program Files\Embarcadero\RAD Studio\10.0\Redist\redistsetup.bat".  (^_^)
+    
+    
+Answer 2: 
+
+    
+    
+I found I was suddenly seeing this "Style 'Style Name' not found" error when as a result of removing a file from my project the line in my project file that shows 
+
+{$R *.RES}    
+
+was inadvertently replaced by
+
+{R *.RES}    
+    
+    
+Answer 3: 
+
+    
+    
+I had the same problem , after I added some styles in project ( option ) , I had error ' style not found " I remove all styles in project --/pp/pprecode/code/prep/pp/p/div
+Answer 4: 
+
+    
+    
+I think the only supported way of fixing IDE issues is to run Delphi setup and choose Repair (if the problem is really the Styles folder)
+
+You can use Sysinternals' Procmon to check if your program (or the IDE) is failing to find/open a style file.
+
+Also you may take a look at: How can I apply Delphi XE2 skins to forms in a DLL?
+    
+    
+Answer 5: 
+
+    
+    
+Maybe check this directory
+C:\Users\Public\Documents\RAD Studio\10.0\Styles
+
+I have no idea and cannot reproduce the problem.
+
+In the help file - Section Application Appearance.
+
+Greetings
+Mike
+    
+    
+Title: IDE for C# with unit testing (like Eclipse for Java and assertEquals( &hellip; ) etc. )
+Description: 
+    
+    
+                    
+I'd like to test drive C#, and I've seen several posts about free IDEs for C# (including MonoDevelop). 
+
+What I have not seen yet is information about the IDEs' capabilities for unit tests. I've been coding in Java, and am reliant on Eclipse's Unit Testing (assertEquals( ... )) etc.) to develop my desk-top code (I know that Eclipse is not the only way to do unit testing in Java, but it does it well).
+
+Is there a similar functionality with any of the IDEs for C#?
+    
+
+        
+Answer 1: 
+
+    
+    
+Can't say I've used any of the free IDEs myself much, but according to this blog post, MonoDevelop supports NUnit pretty well. I'd expect most IDEs to support multiple unit test frameworks to be honest - certainly if I were developing a unit test framework, one of the goals would be IDE integration.
+
+Using NUnit with the free "Express" editions of Visual Studio is possible but somewhat painful, in that it uses the separate NUnit GUI instead of being an integrated runner - but it's still better than nothing, of course.
+
+(Personally I've usually used the Professional versions Visual Studio, with ReSharper and NCrunch running my unit tests.)
+    
+    
+Answer 2: 
+
+    
+    
+There is a free version of Visual Studio created by Microsoft, and the latest beta includes new unit testing features that was previously only available in the Professional/Ultimate versions. 
+
+There are also a lot of workarounds to the limitations of unit testing in the free version of Visual Studio.
+    
+    
+Answer 3: 
+
+    
+    
+Apparently there is an IDE test runner plugin for SharpDevelop that uses MBUnit and Gallio. The first link is to an article that mentions how to set things up.
+    
+    
+Answer 4: 
+
+    
+    
+SharpDevelop supports Unit testing with NUnit, and of course supports C#.  
+    
+    
+Title: Setup eclipse java SE-1.7
+Description: 
+    
+    
+                    
+I wanted to start learning java but Eclipse is giving me some trouble.
+
+First of all I'm a beginner with Java with little to no knowledge about it. I want to use 'JavaSe-1.7'. I have no clear reason to use it besides using the latest version. After downloading Eclipse (Eclipse IDE for Java Developers) I created a new Java project and selected 'use an execution eviorment JRE : JavaSE-1.7'. This directly popped the notification saying 'The default compiler compliance level for the current workspace is 1.6. The new project will use a project specific compiler compliance level of 1.7.'. I finished creating the project and started following some tutorials.
+
+However I noticed directly I have 2 errors which dont explain anything or have a source. I ignored it and started typing and tried to import 'java.io.console' however it said 'The import java.io cannot be resolved' and I have no idea what is the cause of it neither how to fix this.
+
+Would like some instructions into the right direction.
+
+Thanks in advance
+    
+
+        
+Answer 1: 
+
+    
+    
+You may not have your JDK/JRE set up correctly.
+
+Check the following:
+
+
+Did you install a JDK or just the JSE? The JDK is needed to compile .java files to .class files. Without it, you can only run java programs, not develop them. If not, download and install it from Oracle website.
+Check in Eclipse, if you have the JRE installed there as well. You just need to specify the path to the installation. You can reach this screen via the "Window-/p/li/ulpimg src="https://i.stack.imgur.com/FJFu1.png" alt="enter image description here"/pp/pp/p/div
+Answer 2: 
+
+    
+    
+Check your Eclipse preferences: Java -/pp
+Title: IDE suggestions for working with big source code files
+Description: 
+    
+    
+                    
+I am working on an Android application which works with JNI, with already developed C++ and C source codes.
+
+This C/C++ code is really big and I have to study and work on it. Currently I use Eclipse as IDE on Windows XP, which can not properly work with big source code files, like go to declaration, references or search. 
+
+So I'm looking for an IDE that covers these requirements:
+
+
+Import and Build JNI layer of and Android project
+Proper handling of big source code files (some of the files are more than 8k lines)
+Proper linking, source formatting and code indexing will be very helpful.
+Running on Windows XP.
+
+
+If Eclipse is the better option, how can I use it for points 2 and 3?
+    
+
+        
+Answer 1: 
+
+    
+    
+If your computer is powerful enough, eclipse is able to handle a big code base. I have 2-3M lines here with a few files with more than 10k lines and the indexer is working well.
+
+Like you said, Eclipse editor turns off some features for big files above a specific threshold. This "feature degradation" is not always a good thing and can be disabled, or the threshold can be changed if it's too conservative.
+
+Go to Window 
+Answer 2: 
+
+    
+    
+How big is your software project? How many millions lines of source code?
+
+I'm working on GCC, which has (depending on how you neasure) between five and nine millions lines of source code. And I am happy using GNU emacs (and other Linux utilities, e.g. GNU make for building, etags ...) for that purpose.
+    
+    
+Answer 3: 
+
+    
+    
+Do you have to stay on XP? Win7 is a much better OS. I would suggest the 64-bit version, as it can utilize more than 4GB (it's actually less) of RAM, unlike XP 32-bit. Also, fork out the bucks for a solid-state drive. It will remind you of when you went from dial-up to DSL.
+
+doug
+    
+    
+Title: Java preprocessing support in Intellij IDEA
+Description: 
+    
+    
+                    
+Does anyone know about Java preprocessing support in Intellij IDEA? Probably there are some 3rd party plugins?
+
+Just for example: here's a piece of Java code written for Netbeans (which supports preprocessing):
+
+//#if JSR82
+//# import javax.bluetooth.*;
+//#endif
+
+
+Netbeans built-in preprocessor parses those //# keys and comments or uncomments pieces of code depending on defined preprocessor keys.
+
+I'd expect something similar in Intellij IDEA.
+
+Thanx in advance
+    
+
+        
+Answer 1: 
+
+    
+    
+(this is too long for a comment, hence the answer that isn't really an answer but more of a comment).
+
+I've worked extensively with Java pre-processors and IntelliJ IDEA.  I don't know of any plugin/add-on allowing to work with pre-processors (but that would be great).
+
+Besides that, invariably when a discussion comes on Java and preprocessors, people will point out that "such a thing doesn't exist".
+
+Yet of course several of these exists.  For example here's a cool Nokia (you may have heard of that company, they produce a few Java cellphones) article called: "Java ME Porting using preprocessor directives".
+
+Truth is: Java never delivered its WORA promise, especially not in the J(2)ME world.
+
+http://wiki.forum.nokia.com/index.php/Java_ME_Porting_using_preprocessor_directives
+
+Another very valid reason to use custom (sadly custom) preprocessors and code-generators can be seen in things like the (excellent) Trove API source code: basically it's your only way to avoid repeating the same code for all the Java primitives, etc.
+
+I've also heard about people wanting to generate different versions of the "same" .jar, without putting all the code in the various .jars produced.  Sure, this can be done in a "Java friendly way" using amazing workarounds... But some pre-processing saves the day too in such a case.
+
+Point is: there are valid case for Java pre-processors.  I tend to like the Nokia one because it's kinda hard to argue versus that ;)
+    
+    
+Answer 2: 
+
+    
+    
+You may want to look into configuring different artifacts for the various versions of the lib and then restructuring your code to isolate the version specific code in subclasses/components that are only including in the relevant artifact. This may be impractical, especially in an existing project, but less trouble than writing a plugin. Maven has similar functionality via classifiers.
+    
+    
+Answer 3: 
+
+    
+    
+Java programmers don't normally use preprocessers the way C/C++ do. Other techniques and systems have been developed like annotations, code generation, etc. Perhaps if you let us know what problem you're trying to solve, someone will know of a java friendly way to help.
+
+Edit: I think the consensus is that you're looking at writing an IntelliJ plugin
+    
+    
+Title: Regex for removing part of a line if it is preceded by some word in Java
+Description: 
+    
+    
+                    
+There's a properties language bundle file:
+
+label.username=Username:
+label.tooltip_html=Please enter your username.&lt;/center&gt;&lt;/html&gt;
+label.password=Password:
+label.tooltip_html=Please enter your password.&lt;/center&gt;&lt;/html&gt;
+
+
+How to match all lines that have both "_html" and "&lt;/center&gt;&lt;/html&gt;" in that order and replace them with the same line except the ending "&lt;/center&gt;&lt;/html&gt;". For example, line:
+
+label.tooltip_html=Please enter your username.&lt;/center&gt;&lt;/html&gt;
+
+
+should become:
+
+label.tooltip_html=Please enter your username.
+
+
+Note: I would like to do this replacement using an IDE (IntelliJ IDEA, Eclipse, NetBeans...)
+    
+
+        
+Answer 1: 
+
+    
+    
+Since you clarified that this regex is to be used in the IDE, I tested this in Eclipse and it works:
+
+FIND:
+(_html.*)&lt;/center&gt;&lt;/html&gt;
+
+REPLACE WITH:
+$1
+
+
+Make sure you turn on the Regular expressions switch in the Find/Replace dialog. This will match any string that contains _html.* (where the .* greedily matches any string not containing newlines), followed by &lt;/center&gt;&lt;/html&gt;. It uses (…) brackets to capture what was matched into group 1, and $1 in the replacement substitutes in what group 1 captured.
+
+This effectively removes &lt;/center&gt;&lt;/html&gt; if that string is preceded by _html in that line.
+
+If there can be multiple &lt;/center&gt;&lt;/html&gt; in a line, and they are all to be removed if there's a _html_ to their left, then the regex will be more complicated, but it can be done in one regex with \G continuing anchor if absolutely need be.
+
+
+
+Variations
+
+Speaking more generally, you can also match things like this:
+
+(delete)this part only(please)
+
+
+This now creates 2 capturing groups. You can match strings with this pattern and replace with $1$2, and it will effectively delete this part only, but only if it's preceded by delete and followed by please. These subpatterns can be more complicated, of course.
+    
+    
+Answer 2: 
+
+    
+    
+if (line.contains("_html=")) {
+   line = line.replace("&lt;/center&gt;&lt;/html&gt;", "");
+}
+
+
+No regExp needed here ;) (edit) as long as all lines of the property file are well formed. 
+    
+    
+Answer 3: 
+
+    
+    
+String s = "label.tooltip_html=Please enter your password.&lt;/center&gt;&lt;/html&gt;";
+Pattern p = Pattern.compile("(_html.*)&lt;/center&gt;&lt;/html&gt;");
+Matcher m = p.matcher(s);
+System.out.println(m.replaceAll("$1"));
+
+    
+    
+Answer 4: 
+
+    
+    
+Try something like this:
+
+Pattern p = Pattern.compile(".*(_html).*&lt;/center&gt;&lt;/html&gt;");
+Matcher m = p.matcher(input_line); // get a matcher object
+String output = input_line;
+if (m.matches()) {
+  String output = input_line.replace("&lt;/center&gt;&lt;/html&gt;", "");   
+}
+
+    
+    
+Answer 5: 
+
+    
+    
+/^(.*)&lt;\/center&gt;&lt;\/html&gt;/ 
+
+
+finds you the 
+
+label.tooltip_html=Please enter your username. 
+
+
+part. then you can just put the string together correctly.
+    
+    
+Title: Doesn&#39;t C++ IDE Netbeans or Eclipse support class inheritance?
+Description: 
+    
+    
+                    
+I am using NetBeans IDE 6.8 to create C++ project. While I use class inheritance, however, it seems to me that it does not recognize the derived class. Here is what I have:
+
+class A
+{
+public:
+    A(vector&lt;double&gt; a, double b) {...}
+};
+
+class B : public A
+{
+public:
+    additionalfunction(...) {...}
+};
+
+main()
+{
+    vector&lt;double&gt; c = something;
+    double d = 0;
+    B b=B(c, d);
+}
+
+
+And the compiler tells me that "B(c,d)" is not declared. I tried Eclipse C++, it told me the same thing. Why is that? Is it because both IDEs do not support C++ inheritance? What should I do? 
+
+Any reply is appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+I'd suggest implementing the constructor in class B.
+    
+    
+Answer 2: 
+
+    
+    
+Subclasses don't inherit constructors.  You're trying to call B(double, double), but there is no B(double, double).  You can define B(double, double), or you can use this pattern from the C++ FAQ.
+    
+    
+Answer 3: 
+
+    
+    
+In C++, constructors (and destructors) are not inherited like regular methods. You need to define B(vector, double). However, you can perform a sort of call on the parent constructor in the initialization list:
+
+public:
+    B(vector&lt;double&gt; a, double b) : A(a, b){
+        ...
+    }
+
+    
+    
+Title: Coda Clips for Vim
+Description: 
+    
+    
+                    
+I'm currently trying to switch from Coda (a Mac IDE) to Vim. One thing I loved about Coda and my knowledge of Vim cannot replace were the so-called "clips". Basically, you type, say, "new", press TAB, and the text is replaced with a basic XHTML page. And you can add as many keyword/clips combinations as you want. 
+
+The most I could get with Vim so far was to create a new file containing my clip, and then use :r FILE in Vim in order to get it inserted, but this is not a very elegant solution, as I'd have to carry these clips around in every directory I have a file I want to use my clips with.
+
+So assuming I've explained things properly, what would be my choices?
+    
+
+        
+Answer 1: 
+
+    
+    
+For various editors, there's a functionality called '''snippets''' which tab expands the beginnings of common text (like a HTML div, or C function definition) into a skeleton for that code.
+
+There's a couple vim plugins that present this functionality.  Two off the top of my bookmark list:
+
+
+snippetsEmu
+snipMate
+
+
+I heard of another plugin for quick HTML editing that uses snippets recently:
+
+
+zencoding
+
+
+Check those out and see if they're near what you're looking for.
+
+
+
+Also, you can define a default BufNewFile action in vim - which lets you read in a skeleton for a file if it doesn't already exist automatically.
+
+                                                *skeleton* *template*
+To read a skeleton (template) file when opening a new file: &gt;
+
+  :autocmd BufNewFile  *.c      0r ~/vim/skeleton.c
+  :autocmd BufNewFile  *.h      0r ~/vim/skeleton.h
+  :autocmd BufNewFile  *.java   0r ~/vim/skeleton.java
+
+
+Put those (or the equivalent) in your .vimrc (w/o the leading colon) to have them set up automatically every time you run vim.
+    
+    
+Answer 2: 
+
+    
+    
+Very late to the party, but:
+
+I would recommend something like Dash for this, because the snippets are then available across all your apps.
+
+This can be a significant bonus as your muscle-memory starts to rely on particular snippets, and can also ease the transition from one editor to the other, because your snippets are independent.
+
+Sometimes I find myself using snippets in something like Mail to send to someone else, or in a Vim terminal on a remote machine I haven't configured, and it's great to have them all there at the ready.
+
+Now all we need is a cross-platform solution which moves with you to a colleague's machine!
+    
+    
+Answer 3: 
+
+    
+    
+As well as the various snippet plugins, Vim also has an abbreviation feature built in, using the :ab[breviate] command.
+
+For example you can define this:
+
+:ab &lt;h &lt;head&gt;^M&lt;/head&gt;^M&lt;body&gt;^M&lt;\body&gt;
+
+
+Then when you type &lt;h&lt;SPACE&gt; it will expand into the full text.  The ^M in the example above are actually carriage returns inserted in the string definition with &lt;ctrl-V&gt;&lt;RETURN&gt;.
+    
+    
+Title: How do you make Python wait so that you can read the output?
+Description: 
+    
+    
+                    
+I've always been a heavy user of Notepad2, as it is fast, feature-rich, and supports syntax highlighting. Recently I've been using it for Python. 
+
+My problem: when I finish editing a certain Python source code, and try  to launch it, the screen disappears before I can see the output pop up. Is there any way for me to make the results wait so that I can read it, short of using an input() or time-delay function?  Otherwise I'd have to use IDLE, because of the output that stops for you to read.
+
+(My apologies if this question is a silly one, but I'm very new at Python and programming in general.)
+    
+
+        
+Answer 1: 
+
+    
+    
+If you don't want to use raw_input() or input() you could log your output (stdout, stderr) to a file or files.
+
+You could either use the logging module, or just redirect sys.stdout and sys.stderr.
+
+I would suggest using a combination of the logging and traceback if you want to log errors with their trace stack.
+
+Something like this maybe:
+
+import logging, traceback
+logging.basicConfig(filename=r'C:\Temp\log.txt', level=logging.DEBUG)
+
+try:
+    #do some stuff
+    logging.debug('I did some stuff!')
+except SomeException:
+    logging.error(traceback.format_exc())
+
+
+Here's an example of redirecting stdout and stderr:
+
+if __name__ == '__main__':
+    save_out = sys.stdout  # save the original stdout so you can put it back later
+    out_file = open(r'C:\Temp\out.txt', 'w')
+    sys.stdout = out_file
+
+    save_err = sys.stderr
+    err_file = open(r'C:\Temp\err.txt', 'w')
+    sys.stderr = err_file
+
+    main()  #call your main function
+
+    sys.stdout = save_out  # set stdout back to it's original object
+    sys.stderr = save_err
+
+    out_file.close()
+    err_file.close()
+
+
+I'm going to point out that this is not the easiest or most straight forward way to go.
+    
+    
+Answer 2: 
+
+    
+    
+This is a "problem" with Notepad2, not Python itself.
+
+Unless you want to use input()/sleep (or any other blocking function) in your scripts, I think you have to turn to the settings in Notepad2 and see what that has to offer.
+    
+    
+Answer 3: 
+
+    
+    
+you could start in the command window. e.g.:
+
+c:\tmp\python&gt;main.py
+
+
+adding raw_input() (or input() in py3k) at the end of your script will let you freeze it for until enter is pressed, but it's not a good thing to do.
+    
+    
+Answer 4: 
+
+    
+    
+You can add a call to raw_input() to the end of your script in order to make it wait until you press Enter.
+    
+    
+Title: php studio
+Description: 
+    
+    
+                    
+Hello fellow programmers. Is there any PHP "studio" like MS VS2008. By that I mean, in VS2005 you NEEDED to install IIS in order to run web applications in your computer, VS2008 creates a temporary mini server, so you don't HAVE to install IIS anymore in order to compile / debug in your computer.
+
+Anyway, I'm looking for something like this for PHP, a couple of weeks ago I installed APACHE server in my computer and MySql too, and I was able to compile / debug PHP code (using an IDE called CodeLobster...), but I stumbled upon opening a connection to a database! When I tried doing that, it just didn't; I started googling around, and I found that I had to recompile PHP, and at that point I said, screw it, I'll find another way to debug. But now the project is more complex and I REALLY need to debug locally.
+
+So my question is: Is there anything that runs PHP5 out of the box? Pretty much like VS2008.
+
+Thank you.
+
+BTW, I need to be able to run it in on a PC with Windows Vista and it's ok if it's not free.
+    
+
+        
+Answer 1: 
+
+    
+    
+If you are comfortable in Visual Studio 2008, take a good look at VS.Php.
+
+It is an add-in for Visual Studio (2005 or 2008) that adds support for PHP.
+Intellisense works as you'd expect, debugging works as you'd expect (set breakpoints and run) it includes a built-in/bundled web server (Apache) so you don't even have to worry about that.
+
+The version I have supports both PHP 4 &amp; 5 (though I seem to recall the author contemplating dropping PHP 4 support).
+
+It costs $99 which in my opinion is well worth it since it allows me to do both my .Net and PHP development in the same IDE (Visual Studio 2008).
+    
+    
+Answer 2: 
+
+    
+    
+Since you're using Windows, try XAMPP.  It's basically an integrated distribution of Apache, PHP, and MySQL (plus optional add-ons).
+    
+    
+Answer 3: 
+
+    
+    
+Well, there's Eclipse with PHPEclipse.
+    
+    
+Answer 4: 
+
+    
+    
+Have a look at EasyEclipse for LAMP development:
+
+http://www.easyeclipse.org/site/distributions/lamp.html
+    
+    
+Answer 5: 
+
+    
+    
+There is also VsPhp which runs PHP from within Visual Studio but I dont know how effective the debugging is. You can also try Zend Studio, but that it a bit on the expensive side. Eclipse is free and very functional, but again I dont know how its debugging compares to VS since I do all my php Debugging the old fashioned way on the server. 
+    
+    
+Answer 6: 
+
+    
+    
+I've used phpED in the past (an older version than the currently available one). It has a debugger and a built-in php web server, meaning you don't need to install apache/IIS or php. 
+    
+    
+Answer 7: 
+
+    
+    
+With PHP code you should do all debugging on the target architecture. Unless you're developing web apps that run on a client machine (and who would?) it would be totally inappropriate to do your testing on the same machine that you are writing your code on.
+This will prevent any platform and pathing eccentricities from arising in production. In addition, it allows you to test the code on multiple target platforms while "staging" the latest version.
+    
+    
+Answer 8: 
+
+    
+    
+I use WAMPServer for the all-in-one installation, then PDT from eclipse.org for the development side of things (similar in intent to PHPEclipse).
+
+Be sure to take the time and install (and get working!) the XDebug extension: that will give you breakpoints and step debugging from within PDT, too.
+    
+    
+Title: How can I search the contents of .module files?
+Description: 
+    
+    
+                    
+I'm working  with Drupal at the moment and I'm having a real hard time searching the contents of various .module files. For example I want to search for something like "div style="border: 1px solid red;" and find out which file it's in.
+
+All my code editors ignore the .module files in their search because it is a strange extension. Windows won't do it because it's on a networked location.
+
+Any ideas? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Install Cygwin, open a shell in your Drupal site's directory, and use grep --- a commandline utility to search files using regular expressions.
+
+Something like this:
+
+grep -r 'div style="border: 1px solid red;"' *
+
+
+would recursively search every file for that string.
+
+Or:
+
+find . -name '*.module' -exec grep -H 'div style="border: 1px solid red;"' {} \;
+
+
+would search only the .module files.
+    
+    
+Answer 2: 
+
+    
+    
+ack can do that for you pretty happily. For more convenience, you can also add in your .ackrc file the following:
+    --type-set=drupal=.php,.inc,.module,.install,.info,.engine
+    --type=drupal
+
+So that typing 
+
+$ ack string
+
+
+will find string in all drupal files under the current directory.
+
+(Yes, it runs on windows, see the link).
+    
+    
+Answer 3: 
+
+    
+    
+What I do:
+
+Use firebug, it will tell you the exact file and then you can browse the system for that style. You'll want to turn off CSS caching for this temporarily.
+
+Generally, there aren't too many (or shouldn't be any) CSS rules being defined in the .module files anyway.
+
+If all else fails, you can use something like Agent Ransack or, for a more command line unixy feel, the king of command line search: grep.
+    
+    
+Title: What design patterns should I use for a lightweight IDE?
+Description: 
+    
+    
+                    
+I'm writing a lightweight IDE. I chose Ruby+Gtk2 for the task. I already have a minimal prototype for it, but right now, most of the code is inside my window class. I'll soon start working on the "real deal", but I would like to know what design patterns should I make use of. I'm planning for plugin support too, so that the app will be extensible. Any ideas are welcome, but please discuss your option a bit.  
+
+Please keep in mind this is a scripting language. I'm not sure if all of Java's design patterns apply here.
+    
+
+        
+Answer 1: 
+
+    
+    
+Design patterns are solutions for common problems. What problems are you having? In consulting work, we see that often when someone sets out saying "Okay, here's my idea. What design patterns can I put to work?," the architecture gets overly complicated very quickly.
+
+Instead of looking for design patterns that you could possibly use, read up on design patterns (I hate to link to Wikipedia, but their article does have a good list to get you started on other searches with at least) and then apply them when you come up with a problem that fits their criteria.
+
+As far as having a lot of code in your window class, that may be appropriate for your application, or you may want to look at something like a loose MVC pattern. Generally for GUI programming, a rigid MVC is going to be too strict, and require too much work for "true" separation of concerns.
+
+There are many common problems that can be solved without design patterns, and that does not mean the solution is right or wrong. Plugin support, for instance, is very often given just by supplying a plugin interface or a set of events a plugin can respond to. Alternatively, you could look at the Adapter pattern.
+    
+    
+Answer 2: 
+
+    
+    
+I'm not sure if this will be much help, but the book "Design Patterns in Ruby" talks about, well, design patterns in ruby and how they might differ from Java's design patterns.
+    
+    
+Answer 3: 
+
+    
+    
+Also, don't forget to check out existing IDEs. What did they use?
+
+Since editing will be a component of your IDE, you should check up on actual open source editors.
+    
+    
+Answer 4: 
+
+    
+    
+Just to clarify a possible misunderstanding: Are you perhaps referring to UI patterns (as opposed to software architecture design patterns)? Your question seems to me to make more sense that way. 
+    
+    
+Answer 5: 
+
+    
+    
+I'm not sure if this is appropriate, but there's a nice book about disecting &amp; building an IDE in C#. The book does discuss about the design patterns being used to develop the Sharp Develop IDE.
+SharpDevelop is a nice IDE &amp; it's open source you might want to have a peek at this book &amp; home page for Sharp Develop. 
+    
+    
+Answer 6: 
+
+    
+    
+The best way to design a ruby GUI application is to use visualruby:
+
+http://visualruby.net
+
+You can make your GUI totally separate from your classes.  For example, If you want to create a GUI for the following class, you can do it easily without disturbing it:
+
+class DataObject
+
+  def initialize(name, address, email, phone)
+    @name = name
+    @address = address
+    @email = email
+    @phone = phone
+  end
+
+end
+
+
+You create a GUI for this class by subclassing it, and adding the GUI:
+
+class DataObjectGUI &lt; DataObject
+
+  include GladeGUI
+
+  def show()
+    load_glade(__FILE__)  #loads glade/DataObjectGUI.glade into @builder
+    set_glade_all() #populates glade controls with insance variables from DataObject 
+    show_window() 
+  end   
+
+end
+
+
+The GladeGUI interface contains all the GUI magic.  The load_glade() method will load the file, DataObject.glade.  This is a glade form that contains Gtk::EntryBoxes named,name, address, phone and email.  The form will show on the screen with all the fields filled-in.
+
+Obviously the show_window() will make the window appear on the screen.  The destroy window is automatically called by GladeGUI when you click the "x" button.
+
+This disign pattern can be used for any class.  A good example is if you have an ActiveRecord class, and you want to show the record on the screen.  You just subclass as above, and it's editable and savable.
+
+This example is taken from one of the example projects on visualruby.net.
+    
+    
+Title: Missing/hidden tools windows in Android Studio
+Description: 
+    
+    
+                    
+All the tools windows have disappeared. I can still open them individually via the View-/ppa href="https://stackoverflow.com/questions/26704839/how-to-hide-all-toolbar-windows-and-buttons-in-android-studio-with-a-keyboard-sh"/a/pp/ppa href="https://i.stack.imgur.com/xh0md.png" rel="nofollow noreferrer"img src="https://i.stack.imgur.com/xh0md.png" alt="no tool windows minimized"/a/p/div
+Answer 1: 
+
+    
+    
+In android studio toolbar window can be hide/unhide with View-/strong/p/div
+Answer 2: 
+
+    
+    
+In android studio toolbar window can be hide/unhide:
+
+
+set checkbox View -/strong/p/lilipstrong/strong/p/li/ul/div
+Answer 3: 
+
+    
+    
+Maybe you enter Presentation or Distraction Mode.
+So please exit them by the way:
+
+
+  View/ Exit Presentation Mode
+
+
+or 
+
+
+  View/ Exit Distraction Mode
+
+
+Hope this helps
+    
+    
+Title: VSCode import path intellisense for custom files extensions
+Description: 
+    
+    
+                    
+When writing a code that will be later pushed through webpack, it is possible to use custom loaders for non-standard files. In effect it is possible to write
+
+import image from './assets/image.png';
+
+
+and it will be properly handled. The problem is VSCode doesn't provide autocompletion for files like .png, .svg, .scss and so on.
+
+Is it possible to do so by some settings or an extension?
+    
+
+        
+Answer 1: 
+
+    
+    
+I was able to fix it using Path Autocomplete extension. By default it does not include file extensions and suggests the .js files in addition to the default suggestions by VS Code. It can be changed by adding the following lines to the User Settings:
+
+"path-autocomplete.extensionOnImport": true,
+"path-autocomplete.excludedItems": {
+    "**/*.js": {"when": "**"}
+}
+
+    
+    
+Title: Library (dylib) not loaded - image not found - Python IDE
+Description: 
+    
+    
+                    
+Basically I'm trying to run some Python code from savReaderWriter module in order to create a .sav file ready to open in IBM SPSS. As a macOS user I needed to run these two lines in the terminal first for the module to work:
+
+echo 'export DYLD_LIBRARY_PATH=/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/savReaderWriter/spssio/macos'  &gt;&gt; ~/.bash_profile
+echo 'export LC_ALL=en_US.UTF-8'  &gt;&gt; ~/.bash_profile
+
+
+Below you can see a piece of code I'm trying to run in Python:
+
+import savReaderWriter
+
+savFileName = "someFile.sav"
+records = [['Test1', 1, 1], ['Test2', 2, 1]]
+varNames = ['var1', 'v2', 'v3']
+varTypes = {'var1': 5, 'v2': 0, 'v3': 0}
+with savReaderWriter.SavWriter(savFileName, varNames, varTypes, ioUtf8=True) as writer:
+    for record in records:
+        writer.writerow(record)
+
+
+My problem is that while running the code in Python through terminal.app works like a charm and a new .sav file appears, trying to execute the very same code in an IDE (tried PyCharm and Spyder) gives me an error:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/IPython/core/interactiveshell.py", line 2847, in run_code
+    exec(code_obj, self.user_global_ns, self.user_ns)
+  File "&lt;ipython-input-2-94007b092d47&gt;", line 7, in &lt;module&gt;
+    with savReaderWriter.SavWriter(savFileName, varNames, varTypes, ioUtf8=True) as writer:
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/savReaderWriter/savWriter.py", line 198, in __init__
+    super(Header, self).__init__(savFileName, ioUtf8, ioLocale)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/savReaderWriter/generic.py", line 29, in __init__
+    self.spssio = self.loadLibrary()
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/savReaderWriter/generic.py", line 117, in loadLibrary
+    spssio = self._loadLibs("macos")
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/savReaderWriter/generic.py", line 89, in _loadLibs
+    return [load(os.path.join(path, lib)) for lib in libs][-1]
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/savReaderWriter/generic.py", line 89, in &lt;listcomp&gt;
+    return [load(os.path.join(path, lib)) for lib in libs][-1]
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/ctypes/__init__.py", line 348, in __init__
+    self._handle = _dlopen(self._name, mode)
+OSError: dlopen(/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/savReaderWriter/spssio/macos/libicuuc48.1.dylib, 6): Library not loaded: @executable_path/../lib/libicudata48.1.dylib
+  Referenced from: /Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/savReaderWriter/spssio/macos/libicuuc48.1.dylib
+  Reason: image not found
+
+
+The module author was unable to help me on this matter, therefore I would be very glad for any suggestions from this community.
+
+EDIT (added sys.path):
+
+From terminal:
+
+ ['',
+ '/Library/Frameworks/Python.framework/Versions/3.6/lib/python36.zip',
+ '/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6',
+ '/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/lib-dynload',
+ '/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages',
+ '/Users/mg/mne-python']
+
+
+From IDE:
+
+['/Applications/PyCharm.app/Contents/helpers/pydev',
+ '/Users/mg/Documents/Python/Projects/MD',
+ '/Applications/PyCharm.app/Contents/helpers/pydev',
+ '/Library/Frameworks/Python.framework/Versions/3.6/lib/python36.zip',
+ '/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6',
+ '/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/lib-dynload',
+ '/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages',
+ '/Users/mg/mne-python',
+ '/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/IPython/extensions',
+ '/Users/mg/Documents/Python/Projects/MD']
+
+
+Regards,
+
+MG
+    
+
+        
+Answer 1: 
+
+    
+    
+Found the solution!
+
+Basically I needed to create symbolic links to every dylib that appeared in the error, examples below:
+
+sudo ln -s /Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/savReaderWriter/spssio/macos/libicudata48.1.dylib /usr/local/lib/libicudata48.1.dylib
+sudo ln -s /Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/savReaderWriter/spssio/macos/libicui18n48.1.dylib /usr/local/lib/libicui18n48.1.dylib
+sudo ln -s /Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/savReaderWriter/spssio/macos/libspssdio.dylib /usr/local/lib/libspssdio.dylib
+sudo ln -s /Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/savReaderWriter/spssio/macos/libzlib123spss.dylib /usr/local/lib/libzlib123spss.dylib
+
+
+So theoretically speaking:
+
+sudo ln -s /path/to/original /path/to/symbolic/link
+
+
+Regards,
+
+MG
+    
+    
+Answer 2: 
+
+    
+    
+I'll add an answer to this question just to make it more generalizable. Would have preferred a comment but don't have the rep! While Maciej is entirely correct, and his answer helped me find my problem, savReaderWriter has since been updated. As of version 3.4.2 there are now 6 .dlyb files to be copied over.
+
+Once you have your path to your folder (path is location of your error message), make sure to list ( ls in a terminal window) all files within that folder before creating your symlinks. Then create symlinks for each .dylib
+
+Thanks again to Maciej for the great answer! 
+    
+    
+Answer 3: 
+
+    
+    
+For anyone else who is lazy:
+
+ls /Users/your_user/anaconda/envs/quattro8/lib/python2.7/site-packages/savReaderWriter/spssio/macos/ | xargs -I {} sudo ln -s /Users/your_user/anaconda/envs/quattro8/lib/python2.7/site-packages/savReaderWriter/spssio/macos/{} /usr/local/lib/{}
+
+
+This links all packages in that repo
+    
+    
+Answer 4: 
+
+    
+    
+You can also specify the path to the libraries within PyCharm, which eliminates the need to create the symbolic links:
+
+From the menubar click "Run" -/ppcode/code/ppa href="https://i.stack.imgur.com/ODxwY.png" rel="nofollow noreferrer"/a/p/div
+Answer 5: 
+
+    
+    
+I am not a Mac person, but are you really using Python 3.6?  Does the savReaderWriter support that version?  I doubt that the I/o module it uses is built for that version.
+
+If this works via Terminal but not an IDE, check that the Python search paths are the same.
+    
+    
+Answer 6: 
+
+    
+    
+After upgrading to Mac OS Catalina, copying all six dylib files to /usr/local/lib/ no longer work (for me at least). To find out what the correct destination was, I did the following:
+
+Open the ctypes/__init__.py referred in the error stack tree
+Add print(os.getcwd()) to get the working directory. For me, the working directory was /Users/Username/GitHub/myproject
+Since the path in the dylib files is relative to this path (@executable_path/../lib/), the correct destination for the dylib files was /Users/Username/lib
+
+    
+    
+Title: How can I select multiple views in design section in xml?
+Description: 
+    
+    
+                    
+How can I select multiple views in design section in xml? For example, I selected only one CheckBox on the screenshot just by clicking on it:
+
+Now I want to select two another CheckBoxes. I try pressing Ctrl and clicking on them, but such attempt only opens up an xml markup of the selected element for me, but selects nothing. I am stuck.
+    
+
+        
+Answer 1: 
+
+    
+    
+Shift instead of Ctrl works for me.
+    
+    
+Title: How do i fix &ldquo;Unable to obtain result of &#39;adb version&#39; &rdquo;?
+Description: 
+    
+    
+                    
+I installed ADT by Andmore. When i booted Eclipse, this error happen:
+
+Unable to obtain result of 'adb version'
+
+I think i have to fix this error. How do i fix this error?
+My efforts
+
+I looked this question.
+I searched on Google.
+Keyword: Unable to obtain result of 'adb version'
+
+but it wasn't fixed.
+Multiposted(Japanese)
+    
+
+        
+Answer 1: 
+
+    
+    
+I forgot to add the environment variable. It was fixed after i added the environment variable.
+Windows
+Windows10
+
+Log in as Administrator
+Right click Windows icon, and click &quot;System&quot;.
+Click advanced Setting
+Click written environment variable button.
+Click variable what named Path and edit.
+Click written &quot;new&quot; and enter platform-tools' path
+Click OK.
+
+Windows7
+
+Click start, right click &quot;computer&quot;, and open the advanced option
+Click written environment variable button.
+In system environment variable, click line what named Path, and edit.
+In variable, add platform-tools' path. Do NOT delete entered variable!
+Click OK.
+
+    
+    
+Answer 2: 
+
+    
+    
+Restart the eclipse, Before that open task manager/p/div
+Answer 3: 
+
+    
+    
+In Windows 7/10
+
+System Properties-
+Title: customizing emacs with &ldquo;sidebars&rdquo;
+Description: 
+    
+    
+                    
+I'm tinkering about switching my IDE to emacs. (I'm still an emacs newbie.)
+The problem is that I customized my IDE quite well and I'd regret to leave my helpers behind.
+
+
+
+Let me explain:
+
+
+Shows the current open files/buffers, allows fast switching with a hotkey (C-1, C-2, ...) 
+Shows the most recent texts on the "clipboard" or inserted by complete (no. 4), text insertable with a hotkey (C-b 1, C-b 2, ...) Last inserted shown in bold, insertable with C-`
+The last inserted complete (no. 4) text, insertable with M-`
+Autocomplete-ish list, gathered from all open files, regardless of their type with some magical logic. text insertable with a hotkey (M-1, M-2, ...)
+
+
+I guess emacs has such features, but I'm a visual type I'd like to see what I have available. 
+Of course actual hotkeys don't matter much, but as you see having all that info visible makes it easy to hit the spot with the least keypresses.
+
+My pain is that there is a plethora of emacs extensions providing various features, checking all seems to take a lifetime.
+
+My question is:
+
+
+are there any emacs extensions to achieve similar looks and behavour?
+as I'm a programmer, which extensions could I take as a base to assemble something like this?
+
+
+Thanks!
+
+
+
+Elaborating a bit more:
+
+I’m a python dev, so most of the code I’m writing is python. Add some HTML JS CSS XML to the picture.
+One important thing is that completion needs to work across filetype boundaries, because python / HTML(template) / XML(config) / doctest identifiers are cross-referenced. It’s a huge pain with some IDEs that completion works only for python filetypes.
+
+
+I have a lot of same named files but in different folders, like init.py, configure.zcml, etc. It seems to be a pain to switch between those by filename.
+Better said that’s a list of recently inserted text. To be reused by the fewest keys as possible. Usually when coding I’m reusing the same identifiers/whatever within the same task. So it’s handy to have them listed instead having to retype the starting x chars to get completion again.
+Usually best use of this feature is when changing/refactoring code. Like adding one more extra feature and the identifier is needed several times over the place.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+TL;DR
+
+Learn keyboard macros. Learn yasnippet.
+Autocomplete mode is probably similar to what you have.
+Get acquainted with emacs kill-ring before trying to change it, it wants to be your friend. Then you'll know what to look for when you DO want to change it.
+
+
+
+Long Version
+
+Shows the current open files/buffers, allows fast switching with a hotkey (C-1, C-2, ...)
+
+You have three options for this. 
+
+
+My personal preference is to have all source files open at all times. So I don't need a visual list of open buffers. Whenever I want to switch to a file I hit C-= (which I've bound to iswitchb-buffer) and type a couple of unique letters. It's common to constantly switch between the same two buffers so I also bound C-backspace to previous-buffer. 
+Another option I can recommend is tabbar. It's not exactly like your setup, but it displays a list of open buffers (just like webpages in a browser) and it has functions for cycling through the tabs, so it shouldn't be hard to reproduce your C-number key bindings.
+You could use speedbar or ecb. They would be the most similar to your current visual configuration, but I'd argue the other options are more efficient.
+
+
+
+
+Shows the most recent texts on the "clipboard" or inserted by complete (no. 4), text insertable with a hotkey (C-b 1, C-b 2, ...) Last inserted shown in bold, insertable with...
+
+I see you've sort of mixed the clipboard with completion history. When it comes to emacs, yasnippet and autocomplete are just so good you're better off going with them for completion (see below).  
+
+Emacs clipboard is called the kill-ring. I'm sure you know of C-y and M-y, so you can always recover anything you've cut in the past. Unfortunately, I don't know of any packages that constantly display the kill ring or allow you to yank a specific part of it (though that shouldn't be too hard to write), but at least you know what to search for (kill-ring). 
+
+
+
+The last inserted complete (no. 4) text, insertable with M-`
+
+I'll be honest, I don't see that much use in this. If you have to repetitively insert text, you should learn keyboard macros. In fact, you should learn keyboard macros anyway, they're the first reason I got hooked to emacs.
+
+
+
+Autocomplete-ish list, gathered from all open files, regardless of their type with some magical logic. text insertable with a hotkey (M-1, M-2, ...)
+
+Emacs had many great completion options. In your case, the best one is probably autocomplete-mode. It pops-up completion options (much like your separate completions window), and I think it allows for quick selection of a specific option (like your M-number shortcuts). Also it has several different ways of deciding which completions to offer you (it calls them "sources") and one of them is to gather from all buffers.  
+
+In addition to that you have yasnippet, and I couldn't possibly recommend it enough. Seriously. Learning to use it and writing your own snippets will change the way you write code. You'll become a mage whose fingers produce pages of code flowing through your screen in blazing speeds. Use yasnippet!
+Once you have it configured, every 3 or 4 keys you press will generate a line (or more) of code for you.
+
+
+
+After all that, if you still miss something from your previous editor you'll write it yourself. :-)
+    
+    
+Answer 2: 
+
+    
+    
+Your setup looks exactly like https://github.com/emacsmirror/ecb.
+To me at least, since I don't use side-bars:)
+    
+    
+Answer 3: 
+
+    
+    
+You should take a look at the extension speedbar. I have installed this extension, but I rarely use it even for a very large project.
+    
+    
+Title: PhpStorm 6 does not always show PHP structure
+Description: 
+    
+    
+                    
+I am using PhpStorm 6 for web development. I have noticed that PhpStorm quite frequently never shows the PHP Structure in the PHP Structure window. This is very annoying and almost makes the IDE useless. The window shows the spinning icon and never finishes. The code I am working on is a couple hundred lines so this should not take more than a second or two to scan and display (never had this issue in eclipse). I am wondering if there is some sort setting that I am missing or is this a bug the program.
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+It happened in older versions of PHPStorm. In big project try: File/p/div
+Title: OpenCV C++ - Windows IDEs
+Description: 
+    
+    
+                    
+I'd like to start using OpenCV for C++ on Windows after a bunch of OpenCV4Android work.  From this forum post, it seems that not all C++ IDEs have equivalent capabilities to display OpenCV images, since some do not have an integrated GUI plugin.  Are there any differences between IDEs in terms of OpenCV functionality that I should be aware of?
+    
+
+        
+Answer 1: 
+
+    
+    
+Go with Qt Creator. It's a cross-platform IDE for C/C++ development that supports the Qt framework. When you move to Linux/Mac you can continue to use Qt Creator to develop your projects.
+
+It's an IDE that you'll spent a day or two to master, and it will be useful for the rest of your career.
+
+Qt Creator uses a .pro file to configure the project. The instructions on this file are used to build all the Makefiles needed to build the .exe. 
+
+This is the .pro file I use to build my Qt Creator projects on Windows/Mac/Linux:
+
+TEMPLATE = app    
+
+SOURCES += \
+    main.cpp \
+    cvImage.cpp
+
+HEADERS += \
+    cvImage.h
+
+## OpenCV settings for Unix/Linux
+unix:!mac {
+    message("* Using settings for Unix/Linux.")
+    INCLUDEPATH += /usr/local/include/opencv
+
+    LIBS += -L/usr/local/lib/ \
+        -lopencv_core \
+        -lopencv_highgui \
+        -lopencv_imgproc
+}
+
+## OpenCV settings for Mac OS X
+macx {
+    message("* Using settings for Mac OS X.")
+    INCLUDEPATH += /usr/local/include/opencv
+
+    LIBS += -L/usr/local/lib/ \
+        -lopencv_core \
+        -lopencv_highgui \
+        -lopencv_imgproc
+}
+
+## OpenCV settings for Windows and OpenCV 2.4.2
+win32 {
+    message("* Using settings for Windows.")
+    INCLUDEPATH += "C:\\opencv\\build\\include" \
+                   "C:\\opencv\\build\\include\\opencv" \
+                   "C:\\opencv\\build\\include\\opencv2"
+
+    LIBS += -L"C:\\opencv\\build\\x86\\vc10\\lib" \
+        -lopencv_core242 \
+        -lopencv_highgui242 \
+        -lopencv_imgproc242
+}
+
+    
+    
+Title: Alternative language or toolchain for creating Android programs
+Description: 
+    
+    
+                    
+Is there some sort of alternative toolchain or language for Android, which can generate standalone APK files?
+
+Ideally it should not depend on the huge and ever-changing, ever-upgraded official Android SDK.
+
+As a parable, I am looking for a rough equivalent to how PowerBASIC and Mingw targets plain Windows just fine, despite Microsoft releasing new Visual Studios all the time.
+
+Bonus points if this language or toolchain itself is an Android program...
+    
+
+        
+Answer 1: 
+
+    
+    
+As you may or may not be aware, the Android toolchain is based on a few simple ideas:
+
+
+Your code is compiled using the plain old java compiler, and linked against the Android stubs (android.jar) for linkage against the system library.
+After being compiled, the code is converted to dex format.  You can actually run this yourself, just do a dx --help.  The job of the dx tool is to take Java class files and convert them to dex code, a pretty straightforward compilation which involves going from a stack based to register based vm, and a few other changes.
+After having this in place, an apk is built using a set of apk tools.  It used to be apkbuilder, but this has since been deprecated.  You can actually run this yourself as well.  All an APK is is simply a collection of the manifest, resources, and a single file for all the code in dex form.  (I.e., many .class files compile to a single .dex which is quite a bit smaller because of a wrapped web of pointers).
+
+
+So the Android toolchain isn't really all that complex.  The custom build process is handled by ant build rules, which are defined in an SDK wide build.xml, which you can find in the platform-tools/ directory (iirc).  However, to generate new baseline projects using this custom build environment you simply use the android update project command.
+
+While I'm not sure if this is the response you'd hoped for, I hope it will disambiguate the build process.  It's not really all that complex of a toolchain, the majority of it is off the shelf Java, and not Android specific (all that makes it Android specific is library specific stubs for dynamically linked system code).  Beyond this, once you have a set of classes, you need only run a few commands to make an executable APK which Android unpacks.  I would suspect that any tool targeting the JVM (and capable of linking with the Android specific dynamically linked API) could perform a similar process of producing class files and using this toolchain to compile the rest of the way, though obviously the automated ant build process makes it much simpler.
+
+EDIT:
+
+After some more digging, I found this relevant android-developers thread.  An unsettling quote:
+
+
+  At this time we simply don't have the resources to support people who
+  want to use their own build system, but we really wish we could. In
+  many ways we try to make it easy on other tools vendor by clearly
+  separating logic to eclipse or ant specific code (hence the multitude
+  of jar files everywhere in the tools and in ADT), but this is not one
+  of them.
+
+
+However, you may also find this link helpful.
+    
+    
+Answer 2: 
+
+    
+    
+Terminal-IDE and AIDE are pretty much what I was looking for. Both runs on Android.
+    
+    
+Title: How to set shortcut to a line of code in Eclipse IDE editor
+Description: 
+    
+    
+                    
+I'm after a feature in eclipse that allows me to allocate a shortcut to a line (say line number 55) then go somewhere else in the same file and hit the shortcut then IDE shows me the line 55. I have used this feature in Delphi IDE. Using CNTL + number keys[1,2,...,0] a shortcut to line where the curser is will be created. This shortcut only has effect within the editor and each opened file would have its own shortcuts.
+Is there such a feature in eclipse? Is there any plugins out there which adds this feature to eclipse?
+
+Regards,
+
+Ali
+    
+
+        
+Answer 1: 
+
+    
+    
+By default there is no shortcut defined for this task.
+I use to define my shortcuts in Eclipse in "Windows/Preferences/General/Keys" type bookmark in the filter text and select the commands you want to define the shortcuts.
+
+My current shortcuts are:
+
+
+Alt+Shift+B, Alt+Shift+A: Add Bookmark;
+Alt+Shift+B, Alt+Shift+V: Show View (BookMarks);
+
+
+But, I agree, still is not fast as the Delphi predefined shortcuts.
+
+Update 1:
+This plugin (or its sucessor) seems to offer the option. From their site:
+
+
+  
+  Add a numbered bookmark at the cursor: Alt/p/lilip/p/li/ul/blockquotepstrong/strong/p/div
+Answer 2: 
+
+    
+    
+You can add Bookmarks to the code fragments you think are important to you in eclipse.
+
+I referred this link for the same purpose. 
+    
+    
+Title: Does anything like Code Bubbles exist yet?
+Description: 
+    
+    
+                    
+The Code Bubbles project was announced years ago, and I've wanted to try something like it ever since. Yet every now and then, when I think to myself, So much time has passed; surely they've released an IDE using that bubbles concept by now!, I hit up Google and see nothing but tantalizing mentions of the idea from 2010.
+
+Is there anything like Code Bubbles that I can download and try out today?
+    
+
+        
+Answer 1: 
+
+    
+    
+Turns out the original code bubbles for Java is still around.
+    
+    
+Answer 2: 
+
+    
+    
+Wow, so it turns out there is something:
+
+Debugger Canvas. An add-on for Visual Studio, in fact!
+
+Now I'm excited to try it out later.
+    
+    
+Answer 3: 
+
+    
+    
+I've used Leo - Literate Editor with Outlines. It is written in Python and has many of the features I think Code Bubbles aspires too but without the graphical view.
+
+Think outlines, but with the ability to position related pieces of code close to each other or in any way that makes sense to you.
+    
+    
+Answer 4: 
+
+    
+    
+For Visual Studio 2015, I've recently released Task Canvas extension that supports working sets and function-based views of the code.
+    
+    
+Title: Delphi XE2 : F12 switching between unit and form intolerably slow
+Description: 
+    
+    
+                    
+This one has been annoying me for a long time and having switched directly from D2007 to XE2 a few months back I can't vouch for when this may have started, but on D2007 I didn't have the issue.
+
+The larger a unit grows, the slower it becomes to use F12 to switch between unit and form when code changes have been made. Even if you undock the form designer (back to D7 format), just clicking back into the form when code has been changed causes the BDS.exe to max out on CPU for a long time. In my case, on my largest form (30,000 lines) this can be over a minute. I'm not sure what checking is going on when reactivating the form, but if the IDE has been "told" that all is uptodate, then the switch is instantaneuos. My workaround is therefore to Ctrl+F9 to compile the form before reactivating the form. The time taken to compile is only a few seconds. I can then switch instantly to the form without issue. Compare that to the minute or more wait I endure if I don't compile before switching...  
+
+So, what are the possibilities, apart from reducing the unit size ?!
+    
+
+        
+Answer 1: 
+
+    
+    
+There is a bug in the LiveBindings design-time package that slows down the IDE. CodeCompletion (Ctrl+Space) and switching between form and code editor is very slow.
+If you don't use LiveBindings or want to test if it is really the LiveBindings design-time code, you can disable the LiveBinding packages under Component/Installed Packages.... They are Embarcadero LiveBindings Components, Embarcadero LiveBindings Components FireMonkey and Embarcadero LiveBindings Components VCL. If you disable the first, the other 2 will automatically be unloaded.  
+
+In case you use LiveBindings in your project you have to either wait for an Update or you can install the IDE Fix Pack for XE2 that also fixes this bug.
+    
+    
+Answer 2: 
+
+    
+    
+I fixed this after I installed the hotfix "RAD Studio XE Hotfix for RAID 280864 (QC 88928)".   
+
+page: https://edn.embarcadero.com/article/41312
+    
+    
+Title: PHPStorm Namespace support not working for Symfony2 projects
+Description: 
+    
+    
+                    
+I'm evaluating PHPStorm right now, and I've really grown fond of it. It's fast, has more or less everything perfectly implemented and the flow flows like a breeze...
+
+The only thing bugging me (and that's a big one) is, that it doesn't seem to get the namespaces for my symfony2 project right.
+
+See, in Netbeans, when I type use Symf[CTRL+SPACE] it show me all the Symfony namespaces, right out of the /vendors folder.
+
+If I do the same in PHPStorm, no namesapces are shown. That means that the whole code copletion doesn't work for the vendor libraries, which is really very, very bad in terms of easy and fast programming.
+
+Now, I'm quite sure that I'm just missing a setting somewhere, but I just can't find it.
+    
+
+        
+Answer 1: 
+
+    
+    
+Looks like a known issue in PhpStorm.
+    
+    
+Answer 2: 
+
+    
+    
+The Question is a bit old, but if anyone stumbles across it (like me) and still nothing works, it might be because your vendor folder gets excluded from code inspection.
+
+You have to go to "File -
+Answer 3: 
+
+    
+    
+This is not an issue anymore, there is a Symfony plugin that works most of the time now.
+    
+    
+Title: Netbeans FileReader FileNotFound Exception when the file is in folder?
+Description: 
+    
+    
+                    
+so the problem is that I am having exception thrown each time I try to load the code below on NetBeans or Eclips, but when I try to run it thru TextMate everything works fine! 
+
+I tried to put the absolute address, changed the text file etc.. didn't help! 
+
+Can someone help me or  tell why it won't run with IDE? 
+
+Thanks
+
+void loadFile() {
+    try {
+        list = new LinkedList&lt;Patient&gt;();
+
+        FileReader read = new FileReader("a.txt");
+        Scanner scan = new Scanner(read);
+
+        while (scan.hasNextLine()) {
+            String Line = scan.nextLine();
+            String[] subArray = new String[5];
+            subArray = Line.split(",");
+            int a = Integer.parseInt(subArray[4]);
+
+            list.add(new Patient(Integer.parseInt(subArray[0]), subArray[1], subArray[2], subArray[3], a));
+        }
+    } catch (FileNotFoundException e) {
+        JOptionPane.showMessageDialog(null, "The file does not exist!" + "\nProgram is terminating.", "File Not Found", JOptionPane.INFORMATION_MESSAGE);
+        System.exit(0);
+    }
+    cap = list.size();
+    search_names = new int[cap];
+    for (int i = 0; i &lt; list.size(); i++) {
+        search_names[i] = i;
+    }
+    setNames(search_names);
+}//end loadFile
+
+
+Debug log:
+Have no file for /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jsfd.jar
+Have no file for /System/Library/Frameworks/JavaVM.framework/Frameworks/JavaRuntimeSupport.framework/Resources/Java/JavaRuntimeSupport.jar
+Have no file for /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/laf.jar
+Have no file for /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/sunrsasign.jar
+}
+    
+
+        
+Answer 1: 
+
+    
+    
+In netbeans the default working directory is always the root folder, i mean the folder which contains the folders which name "src", "build" etc. Place the file along with these folders and it will do the trick.
+    
+    
+Answer 2: 
+
+    
+    
+Here is step by Step procedure in NetBeans IDE 7.0.1
+
+
+Click on File menu.
+Click on Project Properties.
+In the categories, select Run.
+In main class you select your current java file.
+In Arguments select the file you want to read for e.g. abc.txt or abc.java
+And in Working Directory write down the path of folder in which this abc.txt or abc.java lies.
+Click OK to close Project Properties.
+While running your program don't forget to select your project as Main Project.
+Then click F^ on keyboard. i.e. You have to raun your main project instead of just running your current java file.
+That's it....enjoy!!!!
+
+    
+    
+Answer 3: 
+
+    
+    
+Finally found the solution 
+
+In eclipse you should put the target file in project folder. Guess same applies to NetBeans. 
+
+I had my target file in "src" folder (where the actual code files were). In fact i had to just change it to upper folder where the project folder is.
+
+Easy and simple.
+    
+    
+Answer 4: 
+
+    
+    
+Probably you have different "working directories" in you different setups. You can check which directory you are in by printing it like this:
+
+System.out.println(new File(".").getAbsoluteFile());
+
+
+In eclipse you can set set up the working directory in the run configurations, arguments tab.
+    
+    
+Answer 5: 
+
+    
+    
+Try BufferedReader?
+
+EDIT: Edited to show example more closely to your code. I got excepption when using File Reader. But was able to .println with BufferedReader. I did not use Scanner.
+
+EDIT2: I was also able to get your code to work. With Scanner etc(When using full path) (Example: FileReader read = new FileReader(""C:\\myfolder\\folder\\a.txt". So hmmm.
+
+  try {
+  list = new LinkedList&lt;Patient&gt;();
+  BufferedReader scan = new BufferedReader(new FileReader("C:\\a.txt"));
+  String lines;
+            try {
+                // Scanner scan = new Scanner(read);
+                while ((lines = scan.readLine()) != null) {
+                 //I just printed lines you will do your stuff here
+                    System.out.println(lines);
+                    }
+            } catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        catch (FileNotFoundException e) {
+      JOptionPane.showMessageDialog(null, "The file does not exist!" + "\nProgram is terminating.", "File Not Found", JOptionPane.INFORMATION_MESSAGE);
+      System.exit(0);     
+        }
+
+    
+    
+Answer 6: 
+
+    
+    
+right click on your text file select properties and copy the path and paste it in the place where you have entered your file name
+    
+    
+Answer 7: 
+
+    
+    
+lets say you wanna add test.txt in netbeans
+
+if your project in C:\myProject put the text file inside C:\myProject file directly not in the C:\myProject\src . then use:
+
+File file = new File("test.txt");
+
+Scanner in = new Scanner(file);
+
+OR
+
+Scanner input = new Scanner(new File("test.txt"));
+    
+    
+Title: PHP Vim autocomplete
+Description: 
+    
+    
+                    
+I can not get the autocomplete to work for php files. I added the following to my .vimrc file but when I type ctl + o nothing happnens. When I type ctl + x i get -- ^X mode (^]^D^E^F^I^K^L^N^O^Ps^U^V^Y) at the bottom of vim. 
+
+filetype plugin on
+autocmd FileType php set omnifunc=phpcomplete#CompletePHP
+
+    
+
+        
+Answer 1: 
+
+    
+    
+What you probably want is Ctrl + xCtrl + o in succession.
+
+Incidentally, I map this to Ctrl + Space so as not to feel like I'm using Emacs.
+    
+    
+Answer 2: 
+
+    
+    
+I think you want ^P, but I'm not sure.
+    
+    
+Title: Visual Studio 2010, &ldquo;File &gt; Recent Projects and Solutions&rdquo; is not a active !
+Description: 
+    
+    
+                    
+I have created hundreds of project on VS 2010 but "File /ppimg src="https://i.stack.imgur.com/TdTPC.png" alt="It should look like this"/pp/ppimg src="https://i.stack.imgur.com/0WUki.png" alt="enter image description here"/pp/pp/pp/ppstrong/strong/pp/ppimg src="https://i.stack.imgur.com/ZNjmn.png" alt="enter image description here"/pp/ppimg src="https://i.stack.imgur.com/hDjU9.png" alt="enter image description here"/p/div
+Answer 1: 
+
+    
+    
+It seems you have two separate problems:
+
+
+The "Recent Files" and "Recent Projects and Solutions" options are missing from your File Menu.
+You have a lot less Projects in your Recent Projects than you should.
+
+
+Solution To #1: Go to Tools 
+Answer 2: 
+
+    
+    
+This worked for me.
+
+open notepad and paste the text below in it without the ===== part.
+
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+"NoRecentDocsHistory"=dword:00000000
+
+[HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\10.0\ProjectMRUList]
+
+===================================================================================
+now save it as vs2010-fix.reg or whatever you like just make sure it ends with .reg
+    
+    
+Title: Windows compatible IDE for webdevelopment?
+Description: 
+    
+    
+                    
+I have been searching for the perfect web development IDE for some time now. I first started coding with notepad when all I wrote was HTML. Clearly, that was a relationship not meant to last.
+
+Eventually I discovered Notepad++ and the wonderful syntax highlighting that it does. However, I got frustrated when I started working with server-side code and eventually moved to Netbeans, which I have been using for about a year now.
+
+I enjoy using Netbeans quite a bit. The syntax highlighting is fantastic, the ability to push a button and step through your server side code (once you get your apache server set up properly). And the diff engine on it is fantastic for viewing code side by side. I dislike the learning curve (it seems awfully steep to me), and I've recently wanted to try Zen coding, which I can't do with Netbeans.
+
+So, I am looking for an IDE that allows stepping through server side code, and the ability to install plugins such as zencoding. A good Diff engine would be fantastic (but not a dealbreaker), and making code versioning a bit easier would also be points for it.
+    
+
+        
+Answer 1: 
+
+    
+    
+Here are some choices:
+
+
+EngInSite
+Eclipse
+Komodo
+phpDesigner
+Zend Studio
+
+    
+    
+Answer 2: 
+
+    
+    
+While I myself enjoy the simpler things in life such as VI or even notepad++.  Your problem is going to arise when you want to do debugging, as you found it requires an apache plugin.  My best recommendation to you would to look at zend studio although it is not free. I've used it with non zend framework apps, and its pretty handy.
+    
+    
+Answer 3: 
+
+    
+    
+As Stijntjhe  mentioned zend studio , if you want free software , use eclipse or eclipse pdt. 
+Netbeans also could be good for it. 
+    
+    
+Answer 4: 
+
+    
+    
+Hi recently i have started the same journey. And my main choices where eclipse with WPT, Aptana en Netbeans. And After a while I returned to Netbeans 7 beta. Which suits me perfectly fine. It is helps me in a robust way which in the end matter the most to me. 
+    
+    
+Answer 5: 
+
+    
+    
+The Zeus IDE has support for HTML, CSS and Zen coding.
+    
+    
+Answer 6: 
+
+    
+    
+Zend Studio for Eclipse, I used it a while ago when I was still a windows user.
+Html-Kit is also a good editor but if you're more advanced I prefer the first one.
+    
+    
+Answer 7: 
+
+    
+    
+Adobe Dreamweaver is also an excellent Web IDE. It is pricey (if you purchase it).
+
+The best versions are MX2004, CS4, and CS5.
+    
+    
+Answer 8: 
+
+    
+    
+Surprised no one has mentioned UEStudio yet.  It is not free, but is one of the more powerful editors out there.
+
+And I second netbeans as well.
+    
+    
+Title: Best C++ development environment in Linux
+Description: 
+    
+    
+                    
+I have some experience with Eclipse and Qt creator and am somewhat disappointed in their debuggers, less so in their editors.  On Windows, I like Visual Studio for debugging and SlickEdit for editing (SE is also available on Linux).  Is there an IDE that is somehow better than the two mentioned?
+    
+
+        
+Answer 1: 
+
+    
+    
+I definitely recommend Eclipse and the CDT plugin. Emacs would be my preferred choice if you only need a good editor and not a full IDE.
+
+I use Eclipse almost every day on Linux, mostly for C++ programming these days. The CDT plugin is really good because it is very well integrated with the g++ compiler and the gdb debugger. On top of that, the really strong feature of CDT is the code indexer - i.e. what Microsoft calls "intellisense" for Visual Studio. The CDT Indexer is so sophisticated it is almost like a compiler, in that it really understands your code as you type it. Very often it allows me to find errors even before I build my project. Also Eclipse can handle very large source trees, especially if you run it with a 64-bit JVM.
+
+Eclipse is a great IDE with a lot of users, and if you don't know any other IDE you may want to start with it. Because it supports many languages and has so many tools, even if you switch to another project with different technologies you can still keep your IDE. So you only need to learn one tool (the same can be said for Emacs).
+    
+    
+Answer 2: 
+
+    
+    
+Try Eclipse CDT or NetBeans IDE.
+    
+    
+Answer 3: 
+
+    
+    
+Emacs + Emacs Code Browser + g++(from gcc). GCCSense in also pretty cool.
+
+This is a lightweight, slick and extremely powerful environment. Not everybody like Emacs though. NetBeans is a good alternative for people accustomed to traditional IDEs.
+    
+    
+Answer 4: 
+
+    
+    
+I used Code::Blocks and it works flawlessly and it's great if you come from Visual Studio IDE.
+    
+    
+Answer 5: 
+
+    
+    
+KDevelop 4 (kde-4.4 branch), built in cmake support, git, subversion, addon to add php support.
+    
+    
+Answer 6: 
+
+    
+    
+nano (with syntax highlighting) + make + gcc + gdb + valgrind
+
+Who needs anything else? ;)
+    
+    
+Answer 7: 
+
+    
+    
+Geany, QT Creator, or Eclipse CDT.
+If you don't need a full IDE learn emacs, it's not only an editor, but a full desktop environment, browser, terminal, and more, on its own.
+    
+    
+Title: Proper alternative for the unreliable Search and Replace of Visual Studio?
+Description: 
+    
+    
+                    
+Today I was actually wondering why I've stuck with it for so many years without actively complaining about it. Doing a "search &amp; replace in all files and folders of a solution" is something I quite regularly need to do, esp. when refactoring tools fail me. Unfortunately, "all folders and files" means "some projects and some other files". Notably, unconnected files in solution folders, complete web sites and csproj/vbproj/sln files are skipped. 
+
+Also, just searching often reveals more hits than replacement replaces (for instance, a csproj is only replaced when its project is unloaded).
+
+Ok, enough complaining: anybody aware of a good plugin or a nice valuable trick that can do a real search and replace through all files and folders of a solution? Something I can rely on?
+
+(edit)
+PS: after some more thought: having your system under Subversion or other source control system will make a full search only really valuable when the folder-list could contain a filter of exclusions, i.e., exclude all .svn files and dirs. Unfortunately, as far as I know, that's not possible with the supplied solution.
+    
+
+        
+Answer 1: 
+
+    
+    
+While it's not a plugin for Visual Studio Notepad++'s find (and replace) in files functionality seems to be solid.
+
+You even get syntax highlighting of your code - though not for aspx files by default. However, this post tells you how to get it working.
+
+UPDATE
+
+You can get a more comprehensive search and replace from within Visual Studio.
+
+Ctrl+Shift+H to go the the dialog up.
+
+Then select the ... button next to the "Look in" drop down to get the "Choose Search Folders" dialog.
+
+Pick your folder and then do your search and replace (or just search even).
+    
+    
+Answer 2: 
+
+    
+    
+I have the same issues with "Entire Solution".
+In fact it is not effectively "entire" and that's the point.
+I shouldn't need to learn how to use the tool. Is there a tool for me or am I for the tool?
+It is so simple - "entire" means "entire" for me but not for the feature developers.
+
+For now I don't use "Entire Solution" but I replace it with a path every time. It's not perfect because it may search other files in the directory that are outside the solution but it's more reliable.
+    
+    
+Answer 3: 
+
+    
+    
+You could use the VS Command Shell and let Windows do the walking. Even if you don't use it for S&amp;R, it's nice to have.
+    
+    
+Answer 4: 
+
+    
+    
+I agree that it's not the best search tool in the world, but I've never had any of the problems you describe.
+
+You imply that it is not possible to filter the files searched in Visual Studio, and that files on disk that are not referenced in your solution are not searched. Well, that's because you've asked Visual Studio to do that - I think you need to learn how to use the tool better, because it handles these situations perfectly well.
+
+You can set the search to work on a solution, on specific projects, the current project, open documents only, the current document, or search any folder hierarchy on your drive with a list of filename filters to choose precisely what is scanned. These settings can be saved and then used whenever you need them by just choosing the pre-set in a combobox. The user interface for setting this up is pretty awful, but once it's set up it works well. For example, I often use an "entire codebase" to search my drive rather than "Entire Solution" which only searches the files in my solution. Or "All XML files". Or "All Source files but no headers". Etc.
+
+If you have problems with scanning open projects, then don't - just run another instance of VS with no solution loaded in it. The idea of trying to use one instance of VS to handle everything (with all the window layout reconfiguring that is necessary as you swap between tasks) quite frankly baffles me.
+    
+    
+Title: Adding forms and frames to packages
+Description: 
+    
+    
+                    
+I am developing a package of IDE-registered components, most of which are derived from a base TFrame class.  There are also various custom dialog forms that are called by these components, included in the package.  I'm working in Delphi 2007.
+
+I'm noticing that sometimes frame and form units, which normally have an associated DFM file, do not always show the DFM file "underneath" (accessible via the little [+] treeview node expander) underneath them.  If I add an existing form-based PAS file, for instance, via right-clicking on the BPL project (in the Project Manager) -/pp/pp/pp/ppstrong/strong/pp/pp/pp/pp/pp/phrpa href="https://stackoverflow.com/questions/589523/delphi-ide-treating-tframe-as-if-it-were-a-form"/a/p/div
+Answer 1: 
+
+    
+    
+Vegar is on the right track. In order for the project manager to display the .dfm node, it needs to know that a form/frame/datamodule is associated with the pas file. It looks at the {Form1} comment in the .dpk or .dpr file for this information. If, when adding a file to the project, the IDE doesn't recognize that there is a .dfm associated with it, make sure the .pas file has the {$R *.dfm} directive in the clear. By that, I should not be buried in an IFDEF or otherwise obscured by potential syntax errors in the file. The IDE uses the presence of this directive to decide whether or not it should try and open the .dfm in the designer.
+
+The IDE doesn't just take for granted that if there is a Unit1.pas and a Unit1.dfm, that they are really supposed to be together. Consider that you created a new form unit and it was called Unit1. Now you deleted just the Unit1.pas and then just went and created a new unit which would be given the name Unit1.pas. There is no reference to the old, stale Unit1.dfm out there on the disk from this new, same-base-named, Unit1.pas. It would be strange and confusing if the IDE were to just blindly open that .dfm.
+    
+    
+Answer 2: 
+
+    
+    
+If you take a look at the project source for the package, you will find a difference in the Contains-section:
+
+contains
+  Unit2 in 'unit2.pas',
+  Unit1 in 'Unit1.pas' {Form1};
+
+
+Unit2 will show as a single unit, and unit1 will show as a unit with a form.
+As you can see, unit1 has a {Form1} comment that unit2 lacks.
+
+I do not know if it's possible to add an existing unit so that this comment is automatically generated.
+    
+    
+Answer 3: 
+
+    
+    
+Another reason for anyone else that is looking for another solution is when you rename pas file  close all files and reopen.  The previous version will reopen &amp; must be removed with previously named added to project
+    
+    
+Title: Free IntelliSense for C++ in Visual Studio
+Description: 
+    
+    
+                    
+Does anybody here know any free IntelliSense tool available for C++ which is atleast 50% of the features of Visual Assist X (Which of course is not free)? Basically I want my intellisense to work without loading my full workspace/solution? I had seen Visual Assist and it provides this feature.
+    
+
+        
+Answer 1: 
+
+    
+    
+Support these guys as they spent considerable time writing this excellent tool and just buy it.
+
+For free alternatives you can check CTags and a plugin for VS.
+    
+    
+Answer 2: 
+
+    
+    
+Paste this into the EnvironmentEvents module in your Visual Studio macros:
+
+Dim curWord As String
+Private Sub TextDocumentKeyPressEvents_AfterKeyPress(ByVal Keypress As String, ByVal Selection As EnvDTE.TextSelection, ByVal InStatementCompletion As Boolean) Handles TextDocumentKeyPressEvents.AfterKeyPress
+
+    If (InStr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_", Keypress)) Then
+
+        curWord = curWord + Keypress
+
+        If (curWord.Length &gt; 2) Then
+            'AutoCompleteFromFile()
+            curWord = ""
+            DTE.ExecuteCommand("Edit.CompleteWord")
+        End If
+    Else
+        curWord = ""
+    End If
+
+End Sub
+
+    
+    
+Title: Export/import RStudio user preferences, global setting, etc
+Description: 
+    
+    
+                    
+I found myself lately having to install RStudio over multiple computers.
+While I found it possible to migrate/reinstall my packages, I couldn't find a way/script/package that deals with migrating user preferences such as global options and its sub options (appearance, pane layout, ect.).
+I tried to look here, here, and here, but I wasn't able to find an answer.
+Edit
+I found that I can use rstudioapi to change the theme (link). However, I still have other global options that I don't know how to export (e.g. pane layout, fonts).
+    
+
+        
+Answer 1: 
+
+    
+    
+Update:
+
+There is a package now, supporting the feature:
+https://github.com/pat-s/rstudioSettings,
+requiring RStudio v1.4.162+.
+
+Unfortunately, it is not officially supported by now, but you could consider a workaround.
+
+Feature request: 
+
+As you can see here https://github.com/rstudio/rstudio/issues/1607, there are plenty of users waiting for this feature:
+
+(related)  https://community.rstudio.com/t/configure-rstudio-global-options-on-install/14881
+
+Workaround:
+
+Here is described where the settings are stored: https://support.rstudio.com/hc/en-us/articles/200534577-Resetting-RStudio-Desktop-s-State.
+
+You can navigate to the Rstudio-desktop folder. E.g. on windows enter: %localappdata%\RStudio-Desktop in the explorer.
+
+The global options you are looking for can be found here: ..\monitored\user-settings\user-settings. 
+
+Example:
+
+The flag "always save history,..." in Rstudio - Tools - Global Options - General is the first value in ..\monitored\user-settings\user-settings.
+
+So you might consider copying this folder as suggested here: https://support.rstudio.com/hc/en-us/community/posts/115000932128-RStudio-Config-Files?page=1#community_comment_115001435068. 
+    
+    
+Title: How do I check installed JARs, external libraries, etc. on three different Java IDEs?
+Description: 
+    
+    
+                    
+I've written programs in several languages and have tutored students in computer science, but just starting to learn Java on my MacBook. Regarding this question, I'd be happy with any answer that points me to available information or tutorials that address my question; I'm capable of understanding advanced things. 
+
+I've been searching for the right IDE for me as well as something I can use with my students, and I've tried IntelliJ, Eclipse, and VS Code. Along the way I've installed external JARs to provide extra capabilities, such as Apache Commons.
+
+Things are getting confusing. I've lost track of how I got to the present state in each IDE. I'd like to understand better how to know the overall Java environment that any given project is using on each of these IDEs, including any external JARs and where they are located. And I'd like to know if they borrow from the Java system environment. 
+
+My goal is to understand how my own system got to the way its currently configured, to update my configuration on a project-by-project basis, and to help my students get a matching configuration.
+
+I'd also like advice on the right way, or simplest/cleanest way, to install external JARs.
+    
+
+        
+Answer 1: 
+
+    
+    
+All IDEs need a way to know your project's dependencies. You can either tell them that yourself or let a build tool do that.
+
+Manual dependency handling: by adding the jars to your project. This is probably the fastest way when working on a small project, with one developer, on a specific IDE, with few dependencies. Usually when telling the IDE that this .jar is a dependency of your project, the IDE stores that reference to a project-specific file (eg. in Eclipse the .classpath file which you can edit with a txt editor and see the dependencies yourself). However, it kind of locks your application to your IDE. Most IDEs have cross-IDE support for import and migration, but using both IDEs at the same time can be confusing when a dependency is added to one and has to be repetitively added to other as well. Furthermore, your dependencies have dependencies on their own. By adding manually your jars you are responsible to find and download their own  dependencies as well.
+
+Use a build tool: There are 3 standard such tools right now: Apache Ant with Ivy, Apache Maven and Gradle. All of them have support in the major IDEs for Java: IntelliJ IDEA, Eclipse and NetBeans. All of them use some extra build-tool specific files to store your project's configuration and subsequently configure your IDE and the IDE-specific files. That way, your project becomes IDE-agnostic, the IDE outsources the dependency handling to the build tool. These tools will download any direct or transitive dependencies of your project in a local directory or you can compile jars in a specified folder. From those, Ant is the oldest (with Ivy adding dependency handling support), Maven was developed after that and Gradle is the newest and probably the most flexible. In production however Maven is by far the most established one right now.
+It would be also useful to look up the Standard Directory Layout. If you adhere to that, it will be easier to work/start with either Maven or Gradle.
+
+Finally, you can search and find most of the free libraries in Maven-Central where conveniently their Ivy/Maven/Gradle script is added as well for you to use on your build-tool script. In many cases a .jar is provided as well if you prefer to manually add it as a dependency.
+
+Regarding VS Code, I think it supports these tools through plugins but I'm not sure.
+    
+    
+Answer 2: 
+
+    
+    
+Maven
+
+
+  Question: I'd also like advice on the right way, or simplest/cleanest way, to install external JARs.
+
+
+If you really wanna work in a organised way and wanna focus completely on coding rather than looking for dependencies to work with , then try building your projects with Apache Maven. The magic wand of Maven projects are pom.xml file where all magic happens depending upon your wish.
+
+Maven is a build automation tool used primarily for Java projects. Maven addresses two aspects of building software: 
+
+
+Describes and manages how software is built.
+Describes and manages dependencies (various libraries used by your code).
+
+
+Why Maven:
+
+
+De facto standard
+Able to compile, test, pack and distribute source code ( different Goals)
+Robust dependency management (Most important from my point of view)
+Extensible via plugin
+Good community support and many fan boys around.
+The big 3 IDEs (IntelliJ, NetBeans, and Eclipse) all having good
+support for Maven, letting you use Maven as a substitute for their
+own proprietary project definition and build process. 
+Maven famously caches all of its dependencies in the ~/.m2
+directory, which is sometimes called the local Maven repository.
+Maven local repository keeps your project's all dependencies (library jars, 
+plugin jars etc.). When you run a Maven build, then Maven automatically 
+downloads all the dependency jars into the local repository. It helps to 
+avoid references to dependencies stored on remote machine every time a 
+project is build. 
+
+
+You can simply deploy your project as JAR, WAR, or EAR file and use it on different IDEs or as standalone.
+    
+    
+Title: How do I use PyCharm and WebStorm in the same project simultaneously?
+Description: 
+    
+    
+                    
+I am working on a Django project using React for some aspects and seeing that I have licenses for both WebStorm and PyCharm, I would like to use both. 
+
+If I open them simultaneously, they keep having to reload the project. More specifically every time one of the IDEs receives focus, it prompts me to reload the project iff, the other IDE received focus since the last window switch. 
+I suspect this is because they are using the same folder (i.e. {project_root}/.idea) to store there cache/shelved changes etc.
+
+Were can I change the setting, where these infos are stored in order to allow both IDEs to function alongside each other?
+    
+
+        
+Answer 1: 
+
+    
+    
+Idea-based IDEs (WebStorm, PyCharm, PHPStorm, IDEA, etc) have the same project format (.idea) but different settings/module types that aren't always compatible, plus each IDE needs to write its stuff to project files (for example, .idea/workspace.xml is updated each time you open editor tab, etc., as information about recently opened files, cursor positions, etc. is stored there), so having the project opened in 2 IDEs at the same time will cause such issues.
+If you like to work on the same sources in different IDEs, I'd suggest sharing the sources folder(s) but keeping the .idea folders separated: just create a new empty WebStorm project in preferred WebStorm-specific location and add your shared sources root as additional content root to it in Settings | Directories, Add Content root. Same thing should be done for PyCharm. As a result, you will have IDE-specific .idea folders and shared sources
+    
+    
+Title: Visual studio - select word with hyphen
+Description: 
+    
+    
+                    
+When you ctrl+click or double click a word in the Visual Studio text editor, it stops the selection at a hyphen. So, for example, you cannot select a full GUID with ctrl+click. Is there a way to remove the hyphen as a word separator?
+    
+
+        
+Answer 1: 
+
+    
+    
+There is an extension that solves this issue for visual studio. "Select Hyphenated" @ marketplace.visualstudio.com
+
+There is also a setting in vscode:
+
+"editor.wordSeparators": "`~!@#$%^&amp;*()-=+[{]}\\|;:'\",.&lt;&gt;/?",
+
+
+By removing the hyphen, double clicking selects whole hyphenated words.
+I also removed the period and hash for selecting css classes and ids.
+    
+    
+Title: What is this sort of book in the Delphi IDE?
+Description: 
+    
+    
+                    
+Today I've came accross this kind of book (or maybe a chipset? lol) standing at a if condition on my code.
+
+
+
+What exactly does it represent?
+    
+
+        
+Answer 1: 
+
+    
+    
+It's a Bookmark.
+
+You can set bookmark two-ways :
+
+
+  CTRL + SHIFT + 1-9 sets up bookmark, 
+  
+  CTRL + 1-9 Goes to bookmark 
+
+
+or
+
+
+  Right click on the left side of editor and set up/go to / delete bookmark.
+  It's convenient to jump to another, marked parts of code.
+
+
+Regards
+    
+    
+Title: How to remove toolbars in PhpStorm
+Description: 
+    
+    
+                    
+I try to remove two things in PhpStorm but I can not remove them. Do you know if it is possible? 
+
+A friend who works on Mac do not have these bars. And I'm on Windows and looking for some time for settings to remove them.
+
+View the attached picture.
+
+1 - Toolbar
+2 - Path Method
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+
+It's Menu bar and not toolbar. On Mac OS X it is not part of the actual app window but rather part of the desktop itself.
+
+There does not seem to be an option to hide it by just turning some setting off. I recommend trying one of these modes:
+
+
+File | Settings | Editor |General | Appearance --&gt; Show HTML breadcrums
+
+
+Yes, this option also controls PHP code
+You need to close and reopen file to see the changes
+
+
+
+
+    
+    
+Answer 2: 
+
+    
+    
+Just for extra reference...
+
+If you are member of Laracasts, there's a lesson there called "Be awesome with PhpStorm". I learned lots of good stuff from it, one of them being how to completely remove toolbars, breadcrumbs, status bars, so that your IDE is much cleaner. The author (Jeffrey Way) also talks about useful shortcuts and plugins to make your work more productive.
+
+Also, other things that are taught in that lesson and that I'm glad I've done:
+
+
+Increase font size (your eyes you be thankful in the long run)
+Remove tabs (Window 
+Title: Make PHP Storm Aware of Singleton Classes
+Description: 
+    
+    
+                    
+I have a piece of code like below and it works perfectly fine but PHP Storm doesn't show code completion and I am unable to CTRL+click to open the method. Is there a way to make PHP storm aware of the method's location for quicker opening?
+
+$data= MyCoolBusinessManager::Instance()-&gt;GetSomeData();
+
+
+Just an FYI, I am also making use of the spl_autoload_register() function instead of having includes all over the place since my classes follow a standard naming format.
+    
+
+        
+Answer 1: 
+
+    
+    
+You need to put a PHPDoc comment on the Instance() function in your singleton, that says your singleton function return a type of that class:
+
+/**
+* @return MyCoolBusinessManager
+*/
+
+    
+    
+Title: Why does this Visual Studio timer component work in design time?
+Description: 
+    
+    
+                    
+In .Net windows form application, there is a timer in one of the form which is enabled. The below code is the handle:
+
+    private void timer2_Tick(object sender, EventArgs e)
+    {
+        try
+        {
+            if ( !CheckLock())
+            {
+                MessageBox.Show("No lock found.");
+                this.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("No lock found.");
+            this.Close();
+        }
+    }
+
+
+The lock is an usb  hardware lock. Suprisingly the code shows this pops up message in the design time (in the VS 2010 IDE) if I take out the lock.
+
+Does anyone know what the reason is?
+    
+
+        
+Answer 1: 
+
+    
+    
+This is pretty normal, your code can run at design time as well.  The context of this method is unclear, but good odds that you'll get the timer to tick when you, for example, inherit the Form class in which this method is present.  Or when you have this code in a UserControl and you dropped it on a form.
+
+This is the primary way in which the designer provides the WYSIWYG appearance.  Like setting the BackgroundImage property of a control immediately shows you the image in the designer as well.  In other words, both the BackgroundImage property setter and the control's OnPaintBackground() method are executing at design time.  The basic rule is that any code in the base class can run at design time.  The code that you add to the derived class does not.
+
+Fixing it is easy, use the DesignTime property to prevent the timer from being active at design time.  Something like this:
+
+    timer2.Enabled = !this.DesignTime;    // Instead of true
+
+    
+    
+Answer 2: 
+
+    
+    
+You can use the below condition on the code that you don't want to run in design mode:
+
+if (!this.DesignMode)
+{
+// Code here only executes when running, not in design mode
+}
+
+    
+    
+Answer 3: 
+
+    
+    
+This is because the timer also runs in design time.
+You should test whether the code is running in DesignMode:
+
+private void timer2_Tick(object sender, EventArgs e)
+{
+    if( this.DesignMode ) return; 
+
+    try
+    {
+        if ( !CheckLock())
+        {
+            MessageBox.Show("No lock found.");
+            this.Close();
+        }
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show("No lock found.");
+        this.Close();
+    }
+}
+
+
+Confer to Controls, properties, events and timers running in design time
+and Building Windows Forms Controls and Components with Rich Design-Time Features for more background information.
+    
+    
+Title: Cannot convert project: C:\workspace_IntelliJ\Main\new-webapp\.idea\workspace.xml: Error on line 1: Content is not allowed in prolog
+Description: 
+    
+    
+                    
+I have no clue what suddenly have happened. I restarted my Idea workspace and it popped up the following error:
+
+
+  Cannot convert project: C:\workspace_IntelliJ\Main\new-webapp.idea\workspace.xml: Error on line 1: Content is not allowed in prolog.
+
+
+What does this error mean? I have checked my workspace.xml. Whenever I try to open it in an editor it displays the following (I believe it's broken):
+
+nulnulnul
+
+
+I have no clue what to change and how to fix this thing. Any help on this would be great!
+    
+
+        
+Answer 1: 
+
+    
+    
+Just remove workspace.xml file. It worked for me ;)
+    
+    
+Answer 2: 
+
+    
+    
+Ok, I fixed the problem (not sure yet why the file got broken though). 
+Step1: I created a new workspace and copied my source files and .idea files excluding workspace.xml. Infact I deleted it before copying it to new workspace.
+
+It worked! guess deleting and re-creating was the option
+    
+    
+Answer 3: 
+
+    
+    
+It looks like this problem can be fixed by opening up the .idea/workspace.xml file in a text editor and saving it specifically with UTF-8 encoding.  This is possible using Sublime Text for example.  This fixed the problem for me.
+    
+    
+Title: Generating setter for a created Object in the main Class in INTELLIJ IDEA IDE
+Description: 
+    
+    
+                    
+Can I generate a setter for an object created in the main class
+
+
+Created class X
+class X has dozens of variables with there setter and getter methods (No problem)
+Crated object y from class X in another class
+I want to set the variables of object y within the other class
+
+
+Does intelliJ IDE have a generator for setters to be y.set1() .. y.setn() instead of writing them down tens of times.
+    
+
+        
+Answer 1: 
+
+    
+    
+No, not directly, however you may want to create a constructor which sets all fields (perhaps messy with dozens of fields, but doable nonetheless...)
+
+
+go into class X, hit Insert to get the Generate popup, hit Enter to select Constructor, then ctrl-A for All, Enter
+
+
+There is also the possibility to write an Action in a small custom IntelliJ plugin to do this, if you think the effort it is worth the benefit...
+
+Otherwise, if you are dealing with objects with many fields, the Builder design pattern might be worth a look.
+
+Example of Builder pattern
+
+There is an IntelliJ refactoring for this!
+
+Create your constructor using all fields (like above), and from the Refactor menu (right click), choose Replace Constructor With Builder.
+
+Then look for a new class named XBuilder and use it like so...
+
+X y = new XBuilder.setA(1).setB(2).setC(3).createX();
+
+    
+    
+Answer 2: 
+
+    
+    
+I was using the constructor trick, but found a better way (to me) :
+
+Go to the "Structure" view for the class you'd like to generate the setters for, and sort members from a to z.
+
+Then you can copy / paste setters
+
+
+
+Now with a little bit of multi line editing (alt + left click) you 'll be able to add the missing parts of the line.
+
+
+
+Hope that help.
+    
+    
+Answer 3: 
+
+    
+    
+There is a plugin for that. GenerateAllSetter
+
+To install the plugin, go to:
+
+
+Preferences -
+Title: Why sometimes class methods or fields marked erroneous(red underline) by IDE
+Description: 
+    
+    
+                    
+Sometimes some class methods or fields marked erroneous(that red underline) by IDE, but the project successfully compiled and executed(no error or warning). 
+
+If I hold mouse pointer on this erroneous sections I got this tool tip : "'TSomeClass' does not contain a member named 'SomeMethod'" or "Undeclared identifier 'SampleIdentifier'".
+
+Is that a kind of IDE bug or am I wrong somewhere?
+    
+
+        
+Answer 1: 
+
+    
+    
+That feature is called Error Insight and is known not to work reliably. AFAIK you can't fix that. If it bothers you enough you'll have to disable it.
+    
+    
+Answer 2: 
+
+    
+    
+This is an old question, but I found it when searching for a similar issue. I have a large project group with over a dozen packages, and Error Insight was broken for only one of them. The issue appeared after upgrading to Delphi 10 Seattle.
+
+In Project Options | Delphi Compiler, make sure "Use MSBuild externally to compile" is false. This fixed the Error Insight behavior in my project.
+    
+    

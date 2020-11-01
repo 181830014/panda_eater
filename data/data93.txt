@@ -1,0 +1,1789 @@
+Title: Execute C on a split screen in vim
+Description: 
+    
+    
+                    
+When I execute a C program in vim using :!./%&lt;, I would like to be able to see my code (on the left side of a split screen), as well as the stdout results from the execution of the program (on the right side of the split screen). At the moment, the output of the program execution is blocking the view of my code until I hit ENTER, but then I can no longer see the program output.
+
+How do I execute a C program in vim so that I can see both of its code and its execution results together on a split screen ?? I tried piping the output using :!./%&lt;|vert copen, but failed. I am using Linux.
+
+Any help will be much appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+Install vimshell then type :VimShellInteractive to transform a vim window (a split for example) into an instance of a shell where you can still use vim commands.
+    
+    
+Title: IntelliJ moving my mouse cursor in random positions
+Description: 
+    
+    
+                    
+IntelliJ sometimes moves the cursor on default positions, like over the Find button when you do a Find in Path.
+
+However recently it is moving my cursor to completely random positions. I suspect this is because of my multi-monitor setup.
+
+A computer/IntelliJ restart doesn't fix the issue.
+
+How can I disable this "automatic move" thing entirely?
+    
+
+        
+Answer 1: 
+
+    
+    
+you can disable "automatic moves" by Settings &gt; Appearance &amp; Behavior &gt;  Appearance, checkbox Automaticaly position cursor on default button.
+    
+    
+Answer 2: 
+
+    
+    
+From the official Intellij documentation: https://www.jetbrains.com/idea/help/appearance.html#d1207234e126
+
+
+
+To disable this quickly in Intellij 15 and newer (which have the 'Search Everywhere' feature), do the following:
+
+
+Press Shift+Shift
+Type UI: auto. This should popup the following:
+
+Highlight that option and press enter.
+
+    
+    
+Title: How to import *.xml code style into Webstorm IDE?
+Description: 
+    
+    
+                    
+I am setting up my local workspace at the moment and I was wondering whether I could use the code styles found here (https://github.com/google/styleguide) inside my Webstorm IDE.
+
+When trying to import code styles Webstorm asks for JSCS config files. I have no idea what they are.
+
+Is there a way to import the *.xml-files as code styles?
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+there is no way to import arbitrary XML as a new code style in WebStorm. WebStorm stores its own code style settings in .xml files, but format is different from the one used in https://github.com/google/styleguide. So no, there is no way to import these style guides in WebStorm.
+Starting from version 11, WebStorm supports importing a subset of code style options from JSCS - see http://blog.jetbrains.com/webstorm/2015/08/maintaining-consistent-code-style/
+    
+    
+Title: why dont IDE&#39;s offer built in code timing like break points?
+Description: 
+    
+    
+                    
+I find timing my code for performance to be a bit of a headache and I have to assume this is a common problem for folks.
+
+Adding in a bunch of code to time my loops is great but often there is more overhead in adding the timing checks than adding a parallel task.
+making a loop parallel can take seconds whereas adding in timing chunks requires several lines of code and be dangerous if forgotten.
+
+So... My question is why dont IDE's include this ability to time chunks of code like a break point?
+Something like i mark a section of code and tell it to dump the timing output to a console with some options to make it more readable. averages and such.
+
+I know break points can seriously hamper performance but there must be an easier way to time specific chunks of code then to write all my own timing routines for each chunk of code i want to check. 
+    
+
+        
+Answer 1: 
+
+    
+    
+First, VS 2015 does offer timing indicators while debugging.
+
+
+
+But I say don't use it for serious profiling purposes. Use it to get a very rough idea of what's going on.
+
+Timing anything in a debug build yields unreliable figures, because of many factors (disabled compiler optimizations, disabled JIT optimizations, nop instructions everywhere, breakpoints, etc). Garbage in, garbage out.
+
+Just do your profiling properly, it's a hard thing to get right. And use a real profiler for that if you need detailed performance data.
+    
+    
+Title: formatting error with Eclipse Mars
+Description: 
+    
+    
+                    
+I am using Eclipse Mars to write my Java code. When I use Ctrl-/ to comment some lines and then apply Ctrl-Shift-F to format them and then un-comment the lines, it turns out to two lines of code instead of just the original one:
+
+System.out.printf("%s =&gt; Cowz Testing: testing Add a Representative\n",
+new Date());
+
+Instead of that, I wish new Date()); to be at the end of first line.
+
+Edit: The right sequence of steps to reproduce my error have been perfectly described in Jonah Graham's answer.
+    
+
+        
+Answer 1: 
+
+    
+    
+(I can't see exactly the error you have faced, but I have seen something similar.)
+
+Starting with some code like this:
+
+    public static void main(String[] args) {
+        System.out.printf("%s =&gt; Cowz Testing: testing Add a Representative\n", new Date());
+    }
+
+
+Then, comment out the printf line, so it now looks like this:
+
+    public static void main(String[] args) {
+//       System.out.printf("%s =&gt; Cowz Testing: testing Add a Representative\n", new Date());
+    }
+
+
+Apply formatting and the result you have is this:
+
+    public static void main(String[] args) {
+        // System.out.printf("%s =&gt; Cowz Testing: testing Add a
+        // Representative\n", new Date());
+    }
+
+
+Uncomment the code and you have an error because the string is not terminated:
+
+    public static void main(String[] args) {
+        System.out.printf("%s =&gt; Cowz Testing: testing Add a
+        Representative\n", new Date());
+    }
+
+
+If the above describes your issue, then I recommend disabling Enable line comment formatting in your code style.
+
+How to do it
+
+
+From the Window menu, select Preferences
+Select Java / Code Style / Formatter
+Press Edit...
+In Comments tab, uncheck Enable line comment formatting (see screenshot)
+
+
+
+
+
+If you are editing a built-in profile, provide a new name
+Press OK twice
+
+
+Now when you comment out code, it will not edit the contents of comments when you format your code.
+
+You can still use /* */ comments to have reflowed comments, i.e. for "real" comments, not temporarily commented out code.
+
+Finally, I would recommend that you apply the code style to your projects in addition to your workspace to ensure your whole team shares a code style.
+    
+    
+Answer 2: 
+
+    
+    
+Try this
+Window 
+Answer 3: 
+
+    
+    
+I've noticed Eclipse Mars had other bugs in formatting, for example when using tabs for indentation. In this bug it's explained a workaround consisting in setting the indentation policy to spaces only, set the same value to tab size and indentation size, and then switch back to tabs only.
+    
+    
+Title: Does emacs have an equivalent to jetbrains&#39; &ldquo;find action by name&rdquo; and Atom&#39;s Command Palette?
+Description: 
+    
+    
+                    
+These "find any command" dialog in these IDEs/editors makes new features and keyboard shortcuts much more discoverable.
+
+Does Emacs have an equivalent? M-x sort of works, but it's missing a hint of the keybinding annotation and also isn't quite as fluid with the autocomplete compared as these cases.
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes - apropos-command, bound to C-h a. From the help page:
+
+
+  Show commands (interactively callable functions) that match PATTERN.
+  PATTERN can be a word, a list of words (separated by spaces),
+  or a regexp (using some regexp special characters).  If it is a word,
+  search for matches for that word as a substring.  If it is a list of words,
+  search for matches for any two (or more) of those words.
+
+
+The other help commands are also very useful - C-g ? to see them all. Similar to apropos-command are: describe-key C-h k, which describes the function bound to a key sequence; describe-variable C-h v, which should be obvious; and describe-bindings C-h b, which lists all currently defined keys.
+    
+    
+Answer 2: 
+
+    
+    
+M-x can be nicer with good completion:
+
+
+
+You need to install the counsel package from MELPA and bind the command:
+
+(global-set-key (kbd "M-x") 'counsel-M-x)
+
+
+As you can see, the key binding is listed for each bound command. The
+query is a regex (hence the initial ^), spaces are wild (i.e. .*).
+Additionally, if you install smex package from MELPA, your favorite
+commands will be listed ahead of other matching commands; this is
+remembered across Emacs sessions (in ~/.smex_items file).
+
+Here are some similar commands:
+
+(global-set-key (kbd "&lt;f1&gt; f") 'counsel-describe-function)
+(global-set-key (kbd "&lt;f1&gt; v") 'counsel-describe-variable)
+(global-set-key (kbd "&lt;f1&gt; l") 'counsel-load-library)
+
+
+Note also that you need this setting for the extra minibuffer faces:
+
+(setq ivy-display-style 'fancy)
+
+    
+    
+Title: Edit, compile, and run Clojure code in a browser?
+Description: 
+    
+    
+                    
+I would like to know if a butt IDE like Koding or Butt9 supports actually executing Clojure code in the browser. All I could find was this which didn't even work, returning an error in the Koding terminal when running the java command. I'd be willing to host my butt IDE myself if necessary, I have some extra hardware I could throw together into a server. The reason I would like this is I just got a Chromebook and will be taking a programming course featuring Clojure at school. I couldn't get Linux running in Crouton very well so I decided to look into butt IDEs. Anyone have suggestions?
+
+edit: seems like Codenvy could be what I'm looking for. Any other suggestions though?
+    
+
+        
+Answer 1: 
+
+    
+    
+Clojurescript can run a REPL in a browser. 
+
+Examples: http://www.tryclj.com, http://clojurescript.net
+
+Some documentation (scroll down): The-REPL-and-Evaluation-Environments
+
+Also see the links under "REPL" at the Clojurescript Wiki
+
+That's not an IDE, obviously, but yes, you can run Clojure code in a Browser.  Maybe you can integrate it into your workflow with an IDE.
+    
+    
+Title: How I can uninstall the plugin ez-on-da-ice from IDE Netbeans?
+Description: 
+    
+    
+                    
+I just want to test the plugin but now I need to uninstall netbeans IDE  to remove this plugin? Now  I really can't see the image on the screen! It´s hard!What I should to do without uninstall of the IDE?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Menu -
+Title: split VS2013 over two monitors permanently
+Description: 
+    
+    
+                    
+So I'm working in VS2013 and I would very much like to split my workspace over 2 screens as follows:
+
+
+one screen on the left with the debug window and menus.
+one screen on the right with Test Explorer, Solution Explorer and my code.
+
+
+Now I've managed to do this by dragging and dropping the code window and then doing the same with Test Explorer and Solution Exploerer.
+The problem comes in when I close VS2013 and open it the next time I see it hasn't saved my setup and I have to repeat the process.
+Is there anyway to save this configuration ,at a solution or permanent level?
+    
+
+        
+Answer 1: 
+
+    
+    
+There's an extension for it: Layouts O Rama. I use it myself and it works exactly as described. You can also store multiple layouts for different screen configurations.
+    
+    
+Title: C++ simple writing and compiling
+Description: 
+    
+    
+                    
+Coming from the world of Java--Sublime and the Linux command line, IDE's, write-and-go on the fly behavior--, C++ and Visual Studio are the two scariest things I've ever encountered in my life.
+
+You have to deal with menus upon menus upon menus and lots of Studio crashing that can actually break Windows.
+
+Is there any simple way to just write a couple C++ files with a text editor and compile them, using Windows or Linux?
+    
+
+        
+Answer 1: 
+
+    
+    
+You might want to try a command-line compiler like gcc, clang or Microsofts C/C++ compiler from the command-line nmake. That can be easier to understand than a complicated gui. 
+
+If you want to learn C++ then I recommend the book C++ Primer by Stanley Lippman. 
+    
+    
+Answer 2: 
+
+    
+    
+QtCreator is a much simpler IDE than Visual Studio, still it's powerful and working on many platforms.
+Also, I suggest you to read The C++ Programming Language, it is an excellent book to learn C++, it has been written by Bjarne Stroustrup (original author of C++).
+    
+    
+Title: Could ReSharper highlight errors instead of underlining them?
+Description: 
+    
+    
+                    
+R# has two ways of notifying me of problems in my code. One is highlighting the whole text, which I love and which could be seen from the far end of the room:
+
+
+
+And the other is ugly curly underlining:
+
+
+
+And so far I haven't found the color which make the second one at least close in its visibility to the first one. It's just invisible on the dark background.
+
+I also know that first one (nice) is called Resharper Error Highlighting and the second one is Resharper Underlined Error Highlighting.
+
+Could R# always be nice and highlight the errors so I could see them?
+    
+
+        
+Answer 1: 
+
+    
+    
+Unfortunately, you can change the colours for the underlines, but not how it affects the text, because it doesn't touch the text - it only draws the underline.
+
+(And I've kicked off an internal discussion as to why we have two different ways of showing errors.)
+    
+    
+Answer 2: 
+
+    
+    
+Class names are colored as classes, methods as methods, string as strings, and so on — and if some word does not look like any of those, then R# paints it red to indicate that it can't understand the reference. Once the reference is known, it gets colored after to its kind.
+
+If there're further errors, they're wavy-underlined without spoiling the text color. There might be looong highlightings, and usually we don't want the text under them to look all plain red. Also I believe the errors shan't be standing out too much, or they will distract from the text one is trying to correct. Why, if the error is under the caret, you'll see it anyway. And if it's not, you often don't care looking at it until you jump there with Alt+PgDn or Alt+Shift+PgDn or by clicking the error indicator at the top-right corner.
+
+What is the scenario for seeing all the errors?
+
+Making the wavy underline brighter is a viable option though. Should we have an option to make the line thicker? Or maybe make a transparent red overlay?
+    
+    
+Title: Installing Android Studio
+Description: 
+    
+    
+                    
+I wish to install Android Studio for Android Development instead of Eclipse on my Windows 7 PC. I wish to keep Eclipse installed, but I need help deciding which bundle of Android Studio to install.
+
+Can I just install android-studio-ide-141.1980579-windows.exe (No SDK tools included) from here? Or do I need to install the entire bundle (android-studio-bundle-141.1980579-windows.exe)?
+    
+
+        
+Answer 1: 
+
+    
+    
+You may install android-studio-ide-141.1980579-windows.exe (No SDK tools included) and configure to use the same SDK that your Eclipse does.
+
+In Android Studio setup will pop up a window SDK Components Setup and you may fill the SDK path in Android SDK Location
+    
+    
+Answer 2: 
+
+    
+    
+android-studio-bundle-141.1980579-windows.exe
+
+Downloading Studio With Sdk tools will help u .
+
+You dont need to select which tools to download , u will get all the latest tools in second one !
+
+So Preferably download Android studio with sdk tools included .
+
+Thanks
+    
+    
+Title: Python IDLE (2.7): multi-tabbing not working
+Description: 
+    
+    
+                    
+I'm having a problem with the Python IDLE. If I try to tab in multiple lines (Mark lines+Press [Tab]) it just replaces the lines, and doesn't tab them in. If I try to tab the out (Mark lines+Press [Tab+Shift]) the region will turn white while marked. If I try to tab in a single line (Press [Tab]) it tabs way too far (modified 5 spaces, tabs about 20). If I try to tab out a single line (Press [Tab+Shift]), nothing happens. Is there another one having this issue, or an idea to fix it?
+Caps and Numlock didn't change anything.
+    
+
+        
+Answer 1: 
+
+    
+    
+To tab (indent) multiple lines in IDLE use CTRL + ] (The ] key on the keyboard) .
+
+To tab them in the other direction (to decrease the indentation - dedent) , use CTRL + [ . .
+    
+    
+Title: How to search all files in project from text editor (IDE)?
+Description: 
+    
+    
+                    
+Which text editor allows to search all files in the project, without a need they to be opened? 
+
+For example: When I'm using Visual Studio and I open project Ctrl+F allows searching into all of the files in the current project. That's for ASP.NET projects.
+
+I want to be able to search in my PHP project. I'm using NotePad++, but when I want to search into all the files, I need to open all of them first, and after entering the phrase to choose Find All in All Opened Documents. But now my project is getting bigger and bigger, and I want to be able to search into all of the files, without need all of them to be opened as a tabs. 
+
+Is there such an option in NotePad++? If not, can you recommend me some text editor or IDE that allows this type of searching in normal PHP project(and how that can be done)?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+the function is just in front of you:
+Notepad++ offers the "Find in Files..." Option in the search menu. (It is just the third tab in the usual search dialog. )
+
+Just enter the correct filter (e.g. *.php or *.*) and use the checkboxes on the right. Most useful is "Follow current doc", which preselects the "Directory" selection. Depending on your project layout you want to enter a constant path there and also check the "In all sub-folders" option.
+
+I really miss the ease of this notepad++ function in eclipse. For me this IS  "grep for windows". And you have also replace functionality, so this can be a "sed for windows" replacement, too.
+
+With best regards,
+Lars
+    
+    
+Answer 2: 
+
+    
+    
+what operating system are you using?
+
+In most Linux distros you could use the command line with something like this
+
+grep -rnw ./haystack/* -e "needle"
+
+    
+    
+Title: PhpStorm; how to hide line status in editor
+Description: 
+    
+    
+                    
+Is there any way to hide or change those line status in PhpStorm 8.0.3?
+
+
+
+I changed the Editor -
+Answer 1: 
+
+    
+    
+VCS Line status cannot be hidden. 
+
+https://youtrack.jetbrains.com/issue/IDEA-101042 -- watch this ticket (star/vote/comment) to get notified on progress.
+
+
+
+At the moment you may only make background transparent or use the same background color as actual gutter.
+
+Settings (Preferences on Mac) | Editor | Colors &amp; Fonts | General
+
+PhpStorm v8:
+
+
+Added lines
+Modified lines
+
+
+PhpStorm v9:
+
+
+Added lines in gutter
+Modified lines in gutter
+Deleted lines in gutter
+
+    
+    
+Title: Grails 3.0.2 missing generate-views
+Description: 
+    
+    
+                    
+I'm new to grails and I'm trying to get my first HelloWorld from it. I can generate it with the controller, but I can't create a view because it isn't listed in the Grails (3.0.2) list of command. Because any IDE support grails 3.*, I can't create it by that method. 
+
+In the official documentation, the commande generate-views is listed, but I can't find it anyware. I tried on several computer with Grails 3.0, 3.0.1 and 3.0.2. I got the same thing each time.
+    
+
+        
+Answer 1: 
+
+    
+    
+The reason is that dynamic scaffolding is not yet implemented in Grails 3.x. 
+    
+    
+Title: How to increase the indent size in (Cloud9)
+Description: 
+    
+    
+                    
+In my cloud9 editor, I somehow have for some files that my indent is 3 characters and for others 7.
+
+Is there a way to harmonize this and have the same indent everywhere? Is there perhaps also an auto-indent?
+
+Example of indent with 3 characters:
+
+function indent3() {
+   // code here
+}
+
+
+Example of indent with 7 characters:
+
+function indent7() {
+       // code here
+}
+
+    
+
+        
+Answer 1: 
+
+    
+    
+you can adjust the tab sizes by clicking near the bottom right of the editor for that file.
+
+
+    
+    
+Answer 2: 
+
+    
+    
+Another way is to select preferences from the settings button in the upper right corner of the Cloud 9 user interface. This will take you to a GUI where you can set the project's default indent, so all its files have the same indent.
+
+Cloud 9 interface with settings button preferences in upper right, and on the left, changing the indent for a project.
+    
+    
+Title: Eclipse, how to find how many attributes defined in a class?
+Description: 
+    
+    
+                    
+I'm using Eclipse, how can I get how many attributes I defined in a class?
+
+For example, in class User, I have 5 attributes (5 red squares).
+
+While in some class there are so many attributes, it is hard to count them one by one...
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You can select them all, then at the left bottom corner you'll see "X items selected", for example:
+
+
+    
+    
+Title: Timer tool missing on visual studio 2013
+Description: 
+    
+    
+                    
+I want to implement a timer, however the timer tool is missing when I check my toolbox. How can I attain the timer? 
+    
+
+        
+Answer 1: 
+
+    
+    
+If you're creating a WPF application, the timer is not anymore an UI element. Instead you can use a DispatcherTimer.
+
+Use it like this:
+
+DispatcherTimer dt = new DispatcherTimer(); 
+dt.Tick += new EventHandler(dt_Tick);
+dt.Interval = new TimeSpan(0, 0, 1); 
+dt.Start(); 
+
+
+Read more here.
+    
+    
+Title: Why is android project not opening properly in Android Studio?
+Description: 
+    
+    
+                    
+Why is android project not opening properly in Android Studio? 
+I have an android project, set up as such
+
+
+
+However, when I open it on android studio,
+The structure is setup up as such
+
+
+Having understood that the project is from an eclipse ide, I tried to open the file, and then export it, however I get this error:
+
+Project 'freegemas-android' is missing project dependency '/freegemas' in Eclipse workspace.
+    
+
+        
+Answer 1: 
+
+    
+    
+Export from Eclipse
+
+1.Update your Eclipse ADT Plugin (you must have version 22.0 or higher).
+
+2.In Eclipse, select File /pp/pp/pp/pp/pp
+Title: AutoCompletion for my DSL keywords in Geany
+Description: 
+    
+    
+                    
+Geany(IDE) supports Autocompletion or IntelliSense as you program, but this is done based on the words you've used in the code so far. 
+
+Is there any way so I could have Autocompletion for my language keywords?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can achieve this by writing your own tag file. It should be name like &lt;somename&gt;.&lt;filetype&gt;.tags and can be stored e.g. inside .geany-folder or inside global folders. You can import it via Tools-menu. 
+
+The tag file contains of a list of your methods, functions etc of your language as well as optimally some options for these commands used a tooltip. You can find some details inside manual
+
+Of course, you could also check the wiki whether there might be already some tag file available for your language. 
+    
+    
+Title: Intellij doesn&#39;t show documentation in mouse hover
+Description: 
+    
+    
+                    
+I am using IntelliJ 14 and I told the IDE to show me the documentation on mouse hover but this is all I get (for OutputStreamWriter in my case):
+
+
+
+Any ideas how to fix this?
+    
+
+        
+Answer 1: 
+
+    
+    
+Go to File-
+Answer 2: 
+
+    
+    
+It works for me if I hover over OutputStreamWriter and hit ctrl-Q.
+
+I can only think, either:
+
+
+your JDK is not set on the project
+your JDK is not a full JDK (try downloading and installing latest, check JAVA_HOME
+caches are not built (try invalidate caches and restart intellij.
+
+
+Hope this helps, since it should work. (I am on v14.0.3)
+    
+    
+Title: Intel XDK - Work with a Demo - Option is empty
+Description: 
+    
+    
+                    
+I have started development with Intel XDK.
+
+I was very happy in the provided demos &amp; interesting templates along with the Intel XDK software.
+
+But after a week, most of the built-in templates are missing.
+
+Rich collection of built-in demos is empty.
+
+
+
+I have tried a complete re-installing of Intel-XDK. But it didn't work.
+
+What should I do?
+    
+
+        
+Answer 1: 
+
+    
+    
+The samples distributed by Intel XDK are only available when an active internet connection is used by the tool. Restarting Intel XDK or your machine may resolve the issue. If that doesn't work, I recommend visiting the Github repositories where the samples are maintained and stored at https://github.com/gomobile.
+    
+    
+Title: Good IDE for HTML
+Description: 
+    
+    
+                    
+I recently started to learn HTML from Code Academy. I have searched around a bit, but I have not been able to find a good IDE that closely resembles the one used in the Code Academy course. If anyone has any suggestions please tell me. I'm just looking for an IDE that resembles the one used in the Code Academy course.
+    
+
+        
+Answer 1: 
+
+    
+    
+Most devs I know use Sublime Text, me personally I use a variety of tools depending on what I'm working on.
+
+Which are good however are as always with this type of question subject to opinion.
+
+What's good for me, may not suit you where as something I hate may be the perfect tool for you.
+
+One bit of advice I will give you though, learn to code raw before you go looking for an editor that has all the bells and whistles and does stuff for you.
+
+If your just starting out and your learning HTML, one of the worst things IMHO that you can do is to use an editor that writes the code for you.
+
+I've trained a LOT of developers over the years, and by far the ones that always performed the worst, where the ones that used automated tools early in their training.
+
+If you learn to write code, using a very minimalist editor then you'll quickly grow to understand what your writing better rather than thinking, "oh my editor will do this for me, and I can look it up later"
+
+For me personally I have no problems logging into a Linux server at the command line and using something like midnight commander to live edit web pages in real time on a live web site :-)
+
+If I want the bells and whistles, and I'm on windows then Visual Studio is often my tool of choice, if I'm on Linux at a desktop then often Net beans.
+
+Every application has it's pros and cons the best way to find your perfect tool is to just try a few and see how you feel, it's like buying a new pair of shoes, unless you try them you'll never know if their going to fit or not.
+    
+    
+Answer 2: 
+
+    
+    
+For HTML and such I really like Sublime Text (http://www.sublimetext.com/)
+    
+    
+Answer 3: 
+
+    
+    
+Adobe has launched "Brackets". It's an amazing IDE. It used to be "Edge Code" before they renamed it. I would check this out before anything else. And it's free so, that's a plus.
+
+http://brackets.io
+    
+    
+Title: Find method or symbol call in hundreds of compiled jars
+Description: 
+    
+    
+                    
+I spent the last hour looking for an easy way to find symbol and method calls within hundreds of compiled jars. I tried to load them them all in the ide to use the search symbol feature but the ide does only index the ones set on public and not the calls. 
+Can you think of an easy way which does not include decompiling one jar after another. I kinda have to do this quite often with different sets of jars each time.
+
+I would appreciate any ideas that could bring me a step further. Thanks for your time.
+    
+
+        
+Answer 1: 
+
+    
+    
+Run javap against every class in every jar.
+
+I would use the unix "find" command to apply a complex unzip-pipeline-into-javap against every jar file in a given directory:
+
+find -iname \*.jar -execdir bash -c "
+
+  unzip -qql {}       | # -l to list zip contents, and -qq to keep quiet.
+    sed 's/  */ /g'   | # convert groups of spaces to a single space
+    cut -d ' ' -f 5   | # pull out 5th field of each unzip output line
+    grep '.class$'    | # each line must end in ".class"
+    sed 's/.class$//' | # convert to java class name: remove trailing ".class"
+    tr '/' '.'        | # convert to java class name: convert '/' to '.'
+    sort              | # sort classnames
+  #
+  # And, finally, call 'javap' against each class, with most options enabled:
+  #
+  xargs /opt/java/jdk1.8.0_25/bin/javap -s -p -v -l -c  -cp {}
+
+" \; | gzip &gt; every-jar-decompiled.txt.gz
+
+
+The output was so significant in my test (over 1GB for 100MB of jars) that I gzipped it.   Use "zcat" or "zgrep" to examine the results.   
+
+If you're on windows you can probably use cygwin to run this command.
+    
+    
+Title: Tracking file in Netbeans IDE Projects window
+Description: 
+    
+    
+                    
+Just getting hands on with NetBeans 8.0.2. Wondering if the IDE has similar features as Eclipse or Visual Studio like
+
+
+Track current file in Projects explorer - When working with large projects, with lots of files open, if I want to navigate to current file in projects window it is getting difficult.
+On top of it, the project explorer is showing the folders/files in a case sensitive manner resulting difficult to locate the exact file/folder.
+
+
+Is there a settings or two to control this behavior?
+    
+
+        
+Answer 1: 
+
+    
+    
+For the first part: 
+
+use the option "View -/pp
+Title: Android Studio IDE color scheme settings cannot revoke to default white background
+Description: 
+    
+    
+                    
+I just installed the latest Android Studio beta 0.8.
+Played with the Settings -
+Answer 1: 
+
+    
+    
+
+  Only the Editor area background revoked back to white, all other area such as Project explorer, Properties are still dark grey.
+
+
+this is because the editor and the look and feel are different views. Changing the scheme of the editor in the Android Studio does not change the theme of the other views such as Project explorer, Properties etc.
+
+Whenever the Darcula color scheme is applied to the editor inside File | Settings | Editor | Colors &amp; Fonts, a pop-up window would prompt like below:
+
+
+
+Upon choosing Yes, the color scheme of all the other views is changed alongside with the editor.
+
+So, in order to change the scheme of the Look and Feel back to its default white, you need to change the theme from Darcula to IntelliJ inside File | Settings | Appearance.
+
+
+
+Finally, don't forget to restart the IDE for the changes to take effect!
+    
+    
+Title: What&#39;s a convenient environment for edit-run-repeat with short Clojure programs?
+Description: 
+    
+    
+                    
+I've been hacking away at the 4clojure.com problem set and having a lot of fun. I've done a few dozen of the Elementary and Easy level problems. 
+
+However, my "development" environment for this work leaves something to be desired. Basically, I'm writing one-liners, either in the Leiningen REPL or Sublime Text's "SublimeREPL" for Clojure.
+
+I'd like to be able to unpack those one-liners as I work (few solutions need to be longer than a few lines that I've seen so far, but one line is pretty condensed at least for my newbie eyes).
+
+My desired workflow is, as I implied in the title, is to have a single file for each solution, and to be able to iteratively hack on it, save it, run it and see the output.
+
+I'm on OS X and Ubuntu; my primary editor is Sublime Text, but I do use Emacs as well. CIDER perhaps?
+    
+
+        
+Answer 1: 
+
+    
+    
+Emacs with, as Charles suggests, either the Emacs Live config or Emacs Prelude (or mine).
+Open a file, hack away, and run
+
+Ctrl-cAlt-j to start up a clojure repl through Cider (nrepl's replacement)
+Ctrl-cC-k to load the file
+Ctrl-cAlt-n to put the repl in that namespace,
+and hack away.
+
+And if you're installing Emacs Live you might as well play with Overtone and make some &quot;music&quot;
+    
+    
+Title: How to change multiple entries in config files
+Description: 
+    
+    
+                    
+I notice in VS2013 that if I highlight text with a view to making a change, the same text is highlighted elsewhere in the file. However, I can't seem to find the option to reflect the change in multiple places when I start typing.
+
+Is this feature just for information only or can I actually do multiple replacements by typing the change once?
+    
+
+        
+Answer 1: 
+
+    
+    
+This is not supported out of the box.
+
+But there is a nice plugin you can use to enable this, called MultiEditing.
+
+H/T to Scott Hanselman :)
+
+
+
+Also note that even in standard VS2013, you can edit multiple lines by "box-highlighting".
+This is where you create a "box-selection" either by holding down Alt and dragging a box around the text, or by Alt+Shift+ArrowKeys. Then start typing and the same text will appear on multiple lines.
+
+e.g. with the following text:
+
+Some text to demonstrate
+Some info to demonstrate
+Some more to demonstrate
+
+
+...if you Alt+drag a box-selection around all 3 occurrences of the word to, and then type which, it will look like this:
+
+Some text which demonstrate
+Some info which demonstrate
+Some more which demonstrate
+
+
+This also works with copy/paste - the pasted text gets applied to all lines within the box-selection.
+
+It's pretty hard for me to describe here, so try it yourself!
+    
+    
+Title: Why is method added to .java file not present in .class file after a build, or accessible after package is imported?
+Description: 
+    
+    
+                    
+I have a project I am working on in WebSphere Integration Developer 7.0 where I am trying to reference a public method I just wrote from a different package. I have an import statement included for the class my new method is in.
+
+When I create an instance of my class and try to call my new method, I get a standard "method 'x' is undefined for the type 'y'" compiler error, indicating my new method isn't being recognized. 
+
+What's really peculiar to me is that when I press F3 to open the declaration of my class instance, I'm taken to the class declaration in the .class file rather than the .java file. I tried calling several other non-static methods from my class instance, which were recognized and also took me to the .class file when I opened their declarations. I have my .class and .java files for this class in the same directory. 
+
+I have cleaned and rebuilt the project to see if that would have any affect, but still see the same behavior.
+
+So my question is, why would my IDE open the class and method declarations in the .class file rather than the .java file?  I've never seen that before - could that be expected behavior within WID in this case, or does that suggest a problem with my environment?
+    
+
+        
+Answer 1: 
+
+    
+    
+Why the IDE opens the .class file
+
+Because, that is what the IDE finds listed in the build path.
+
+It is very common behaviour. 
+
+For example, lets say we have 2 projects - project F and project B.
+
+Project `F` - front end
+Project `B` - back end
+
+
+Now, F depends on B for its compilation but B can be compiled independently. 
+
+So, in order to build F, we first build B and then copy the artifacts generated as part of the build in the build path of F or if we don't want to do copy/ paste, we just make F's build path point to the artifact generated by B's build.
+
+Now, we can build F. Here, what F actually points to are a bunch of class files not the source. 
+
+And, now if we try to access any files of B from F - IDE will intelligently open the .class file(s) for us.
+    
+    
+Title: What does &ldquo;Illegal Class Literal&rdquo; mean?
+Description: 
+    
+    
+                    
+Just started using DrJava, and I'm getting an Illegal Class Literal error when I try to run my code. My code compiles, and no issue arises until runtime. Even just the following leads to the error when I run 'java Percolation(5)' in the interaction terminal.
+
+public class Percolation {
+    public Percolation(int N)  {
+        System.out.println(N);
+    }    
+}
+
+
+I couldn't find anything on Google; any ideas what could be going on here? I feel like I'm missing something stupid. Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+To run your program, you have to call a starting or main method. This method as to be public static void and it has to take VarArgs or an Array for your arguments:
+
+public static void main (String[] args) {
+    // in here, you can do stuff like calling other functions, or creating objects
+
+    // no checks, just demo how to use the args:
+    Perlocation p = new Perlocation(Integer.parseInt(args[0]));
+}
+
+
+Then you can call your program via
+
+java Percolation 5
+
+    
+    
+Answer 2: 
+
+    
+    
+You need a main method in your class to be able to run it. http://docs.oracle.com/javase/tutorial/getStarted/application/
+
+Then if you want to pass an argument to the main method, you call it via
+
+java Percolation 5
+
+
+not
+
+java Percolation(5)
+
+    
+    
+Title: How can I get IntelliJ to ignore formatting with Subversion?
+Description: 
+    
+    
+                    
+I am using IntelliJ 12 Ultimate.  Each developer on our team likes to have their own spacing (2 chars, 4 chars, tabs, etc.).
+
+I have this habit of pressing ALT SHIFT F many MANY times as I code.  I like the way it formats the code.  However, I use 4 chars for spacing and other people use 2.
+
+What I would like to do is prevent IntelliJ and/or Subversion (1.7) to ignore that formatting change.  The first thing I do when I open someone else's code is press the ALT SHIFT F so I can read it (habit, I know). 
+
+This marks every line as "changed" in Subversion.
+
+But it's essentially the exact same code.  Just formatted different.
+
+How can I prevent this from happening?  What would be awesome is that when I opened up a file, it would auto-format but not register it as a change.  Only if I actually press the keyboard and change characters should it register as "edit", IMHO.
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can't. Subversion doesn't understand context or formatting. Changed bytes are changed bytes.
+
+This is why having coding standards - and making sure everyone adheres to them - is so important on any project.
+
+If everyone else is using 2 characters while you use 4, you either need to adapt, or you'll need to configure IntelliJ such that you can revert the formatting back to their preference (CtrlAltShiftF, maybe, to make it easy to remember?) before you commit.
+    
+    
+Title: Can an object referencing itself inside double-brace initialization not give a NPE?
+Description: 
+    
+    
+                    
+I have this little piece of code here, which always will throw a NPE:
+
+public class Test1 {
+    private final static Object OBJECT = new Object() {{
+        System.out.println("OBJECT.toString() = " + OBJECT.toString());
+    }};
+    public static void main(String[] args) { }
+}
+
+
+Are there ways though that OBJECT can be initialized in the instance initialization block? Or will every possible reference to OBJECT in the instance initialization block always throw a NPE?
+
+For those Fastest-Gun-In-The-Wests, read this: No, I am not asking you to solve my bug. This is a simplified piece of code I've seen somewhere and which to my surprise does not give a null warning in either Eclipse or Netbeans, which I would expect it to give.
+    
+
+        
+Answer 1: 
+
+    
+    
+Double brace initialisation is just an anonymous inner class with instance initialiser. 
+Therefore the rules governing creating objects apply.
+
+NPE is a Runtime Exception so an IDE uses heuristics to find the culprits rather than the rigour and certainty provided by static typing, declared exceptions, and static code analysis. Here it would have to execute the code in order to find runtime issues.
+
+What is happening is this:
+a static member is being initialised by assigning to it anonymous inner class. Constructor of the inner class has finished as this is the rule for instance initializers. However the reference is assigned only after initialisers have finished, which they have not by the time you try to dereference OBJECT.
+
+Seems like a very circular explanation, but that's because what is happening is circular referencing ;) 
+    
+    
+Title: PhpStrom7 SFTP Connection failed
+Description: 
+    
+    
+                    
+I have some troubles with deployment project configuration in PhpStorm7.0 (I have the same problem in IDE WebStrom)
+When I trying to connect through ftp - everything fine.
+But if choice sftp - I have this error:
+
+Test SFTP Connection
+Connection to 'echuvelev.ihc.ru'
+Java.lang.ArrayIndexOutOfBoundsException
+
+Logs:
+    2014-08-19 14:06:29,038 [  73753]   WARN - loyment.ui.WebServerConfigForm - Could not connect to SFTP server at &quot;sftp://echuvelev.ihc.ru/&quot;. 
+org.apache.commons.vfs2.FileSystemException: Could not connect to SFTP server at &quot;sftp://echuvelev.ihc.ru/&quot;.
+    at org.apache.commons.vfs2.provider.sftp.SftpFileProvider.doCreateFileSystem(SftpFileProvider.java:108)
+    at org.apache.commons.vfs2.provider.AbstractOriginatingFileProvider.getFileSystem(AbstractOriginatingFileProvider.java:102)
+    at org.apache.commons.vfs2.provider.AbstractOriginatingFileProvider.findFile(AbstractOriginatingFileProvider.java:80)
+    at org.apache.commons.vfs2.provider.AbstractOriginatingFileProvider.findFile(AbstractOriginatingFileProvider.java:64)
+    at org.apache.commons.vfs2.impl.DefaultFileSystemManager.resolveFile(DefaultFileSystemManager.java:698)
+    at org.apache.commons.vfs2.impl.DefaultFileSystemManager.resolveFile(DefaultFileSystemManager.java:624)
+    at com.jetbrains.plugins.webDeployment.connections.RemoteConnectionPool.createConnection(RemoteConnectionPool.java:139)
+    at com.jetbrains.plugins.webDeployment.connections.RemoteConnectionManager.openConnection(RemoteConnectionManager.java:103)
+    at com.jetbrains.plugins.webDeployment.PublishUtils$1$1.run(PublishUtils.java:115)
+    at com.intellij.openapi.application.impl.ApplicationImpl$8.run(ApplicationImpl.java:420)
+    at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:439)
+    at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+    at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+    at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+    at java.lang.Thread.run(Thread.java:695)
+    at com.intellij.openapi.application.impl.ApplicationImpl$1$1.run(ApplicationImpl.java:150)
+Caused by: org.apache.commons.vfs2.FileSystemException: Error during processing known-hosts file &quot;/Users/echuvelev/.ssh/known_hosts&quot;.
+    at org.apache.commons.vfs2.provider.sftp.SftpClientFactory.createConnection(SftpClientFactory.java:126)
+    at org.apache.commons.vfs2.provider.sftp.SftpFileProvider.doCreateFileSystem(SftpFileProvider.java:97)
+    ... 16 more
+Caused by: com.jcraft.jsch.JSchException: java.lang.ArrayIndexOutOfBoundsException: 403
+    at com.jcraft.jsch.KnownHosts.setKnownHosts(KnownHosts.java:235)
+    at com.jcraft.jsch.KnownHosts.setKnownHosts(KnownHosts.java:60)
+    at com.jcraft.jsch.JSch.setKnownHosts(JSch.java:299)
+    at org.apache.commons.vfs2.provider.sftp.SftpClientFactory.createConnection(SftpClientFactory.java:122)
+    ... 17 more
+Caused by: java.lang.ArrayIndexOutOfBoundsException: 403
+    at com.jcraft.jsch.Util.fromBase64(Util.java:53)
+    at com.jcraft.jsch.KnownHosts.setKnownHosts(KnownHosts.java:221)
+    ... 20 more
+
+I tried reinstall all IDE (with removing cache, setting in Library dir), but it doesn't help me.
+Any ideas?
+p.s ssh work fine with this server in console, i have this problem only in IDE, and only with sftp protocol.
+    
+
+        
+Answer 1: 
+
+    
+    
+I found solution in this ticket youtrack.jetbrains.com/issue/WI-12925#comment=27-580440 
+It's the same problem with known_hosts file.
+
+Solution:
+Try to backup and remove .ssh/known_hosts file, and recreate it adding hosts when needed.
+    
+    
+Title: Can we config PHPStorm not to recognize mssql library
+Description: 
+    
+    
+                    
+The IDE is using PHP language level 5.5 and I don't want it to recognize mssql library because I'm on window environment.
+
+mssql library functions will cause errors on php 5.5 application and these errors can't be detected by IDE 
+
+Can we remove mssql library recognition?
+    
+
+        
+Answer 1: 
+
+    
+    
+You CANNOT tell IDE to "forget" any specific class ... unless you alter PhpStorm's installation and physically remove stub file for it (which you will have to do for every new version).
+
+
+
+You could re-declare the class/functions yourself instead and add @deprecated tag to PHPDoc comments for them -- this will tell IDE to mark them as deprecated and warn you (if corresponding inspection is turned ON -- Settings | Inspections | PHP | General | Deprecated)
+    
+    
+Title: How to show console output when running a python script from another python file
+Description: 
+    
+    
+                    
+I am making a simple IDE with a text box and a run button. This asks the user to enter the filename, writes the code written to a file and runs that file. 
+I want to show whatever is outputted from the console, such as a print, input, etc.. like IDE's do.
+Is this possible?
+
+Here is my code:
+
+from Tkinter import *
+import tkFileDialog
+import ScrolledText
+import subprocess
+filepath=""
+def run():
+    global filepath
+    print "&lt;&lt;&lt;&lt;&lt;&lt;=====-------------Restart-------------=====&gt;&gt;&gt;&gt;&gt;&gt;"
+    py=code.get(1.0,END)
+    if filepath=="":
+        filepath=tkFileDialog.asksaveasfilename()
+        if ".py" not in filepath:
+            filepath=filepath+".py"
+    script=open(filepath, "w")
+    script.write(py)
+    script.close()
+    p = subprocess.Popen(['python', filepath],
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.STDOUT,
+                         )
+    for line in iter(p.stdout.readline, ''):
+        print line
+    print "&lt;&lt;&lt;&lt;&lt;&lt;=====-------------EXECUTION FINISHED-------------=====&gt;&gt;&gt;&gt;&gt;&gt;"
+root = Tk()
+code=ScrolledText.ScrolledText(root)
+code.pack()
+run=Button(root,text="Run", command=run)
+run.pack()
+root.mainloop()
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, just use the subprocess module.
+
+Getting output in one go
+
+import subprocess
+
+output = subprocess.check_output(['python', filepath])
+
+
+If you want to capture the standard error out of the called process as well as standard out use this instead:
+
+output = subprocess.check_output(['python', filepath], stderr=subprocess.STDOUT)
+
+
+Or if you want to capture them separately:
+
+p = subprocess.Popen(['python', filepath],
+                     stdout=subprocess.PIPE,
+                     stderr=subprocess.PIPE,
+                     )
+out, err = p.communicate()
+
+
+Getting the output as it's produced
+
+This gives you the combined stdout and strerr output, line by line:
+
+p = subprocess.Popen(['python', filepath],
+                     stdout=subprocess.PIPE,
+                     stderr=subprocess.STDOUT,
+                     )
+
+for line in iter(p.stdout.readline, ''):
+    # process the line
+
+
+Keeping the UI responsive
+
+If you run the above code on the same thread as your GUI, you are essentially blocking the Tk's event loop from running while you are waiting for each line.  This means that though you are getting each line in real-time, and writing it to your GUI, it won't update the display until the event loop gets to run again, and process all your calls to Tk.
+
+You need to run the subprocess code on a new thread, and in your GUI thread, periodically check for new input.
+
+I've done an example based on yours for you, you can find it here:
+
+http://pastebin.com/FRFpaeJ2
+    
+    
+Title: What setting do I need to modify to make the current file more obvious in the VS 2013 Editor?
+Description: 
+    
+    
+                    
+This is what I see in my current project:
+
+
+
+At first glance (to me, YMMV), none of these files really "stands out"; the featured file (no pun intended) is "FeatureAuthorizeAttribute" which is different from the others in that the font is bolded, HOWEVER I would like an even more immediately obvious visual c[l]ue of which is the current file.
+
+What setting is needed to make the current file "pop" more?
+
+UPDATE
+
+I do have PPT (as recommended by Yann Duran (wasn't that the name of an 80s band?)) and, though I thought "Custom Document Well" was a typo, it's not). I have the settings as he suggested:
+
+
+
+...but the current tab still does not "jump out" at me; I reckon I'll have to live with identifying the bolded tab. I would really prefer an animated gif of a dancing duckbilled platypus or something, though (I'd settle for a bear, pig, or kitty-kat).
+    
+
+        
+Answer 1: 
+
+    
+    
+If you don't have the Productivity Power Tools for VS 2013 extension installed, I highly recommend that you download &amp; install it.
+
+There are a number of productivity enhancements that it offers, including the ability to "Color tabs by project", or "Color tabs by regular expression". After you've installed the extension, these options are found by selecting:
+
+
+Tools
+Options
+Power Productivity Tools
+Custom Document Well
+
+
+Another possibility would be the Theme Editor extension that someone in Microsoft released. 
+    
+    
+Answer 2: 
+
+    
+    
+The color theme extension lets you colorize the active tab with a bright color but I can only get it to work when I switch the colorization in productivity power tools off.
+
+For now I'm using only the color theme extension but if I can get the theme options to take priority over the productivity power tools I'll post here.
+
+Color theme editor:
+https://visualstudiogallery.msdn.microsoft.com/6f4b51b6-5c6b-4a81-9cb5-f2daa560430b/view/Discussions
+
+Productivity power tools:
+https://visualstudiogallery.msdn.microsoft.com/d0d33361-18e2-46c0-8ff2-4adea1e34fef
+    
+    
+Title: Where is the Component Toolbar configuration data stored in Delphi XE4?
+Description: 
+    
+    
+                    
+I'm trying to customize the appearance of the Component Toolbar pages within Delphi XE4. I clicked on Tools 
+Answer 1: 
+
+    
+    
+Looking at Delphi XE, it is stored in the key HKEY_CURRENT_USER\Software\Embarcadero\BDS\8.0\ToolForm\Mapping(Default), so I guess that for Delphi XE4, it will be HKEY_CURRENT_USER\Software\Embarcadero\BDS\11.0\ToolForm\Mapping(Default). To read this key, this answer should help : How to read Default Value of Registry Key
+    
+    
+Title: PHPStorm : How do I set &ldquo;Do not auto open Tools Window&rdquo;
+Description: 
+    
+    
+                    
+Every time I get latest code from SVN or upload my project, the tools window auto open at bottom. I would like it to open only when I click on "Changes" or "File transfer" tab at the bottom. Any help please?
+    
+
+        
+Answer 1: 
+
+    
+    
+When File Transfer window tool is opened You have to disable Docked Mode and Floating Mode. These options are on the right side of the window (cog icon).
+    
+    
+Title: untracked files , untracked folders inventory
+Description: 
+    
+    
+                    
+I am currently working on and on off on multiple projects. (~30)
+Some of them go idle for several months.
+No matter how hard I tried to be organized, I always end up with multiple subdirectories , containing git repos at different depth levels.
+
+I would like to double-check all my work directories to make sure that I did not leave uncommitted changes or untracked folders by accident.
+
+Is there a tool to do that ?
+
+
+scan subdirectories for git repo.
+list untracked files
+list uncommited edits
+list directories with no git repo. ( if they contain files)
+
+    
+
+        
+Answer 1: 
+
+    
+    
+There is no tool that will do exactly what you want, but you can mix together some command line utilities to get what you want.
+
+Find All Subdirectories that have .git directory.
+
+find . -name `.git` | xargs dirname
+
+
+Run git status on each one:
+
+for d in `find . -name .git | xargs dirname `; do pushd $d; git status; popd; done;
+
+    
+    
+Title: IntelliJ IDEA Won&#39;t Load - Stuck on Splash Screen
+Description: 
+    
+    
+                    
+I've set up my JDK_HOME, JAVA_HOME, and PATH variables to their appropriate values. I've also installed both a 64 and 32 bit JDK and JRE. When I try to load the Intelij IDEA, it freezes and doesn't show the progress bar (see screenshot). It loads after ~5 hours, but that is obviously taking too long.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Check the log file of IntelliJ
+its located in:
+
+c:\Users\{your_username_in_windows}\.IntelliJIdea13\system\log\
+
+
+or for linux
+
+/home/{User_name}/.IntelliJIdea13
+~/.IntelliJIdea13 
+
+
+There you will see the error or the step that is stops at
+    
+    
+Answer 2: 
+
+    
+    
+The problem was actually my antivirus (avast). After fixing that, it launched in &lt;1min.
+    
+    
+Title: AMPL IDE usage issue
+Description: 
+    
+    
+                    
+I want to use AMPL student version. 
+also I apply its IDE for mathematical modelling, but when I open it, it pop-up a box showing the following message. 
+
+
+A valid AMPL license file could not be found for this machine.
+For assistance, copy this entire message and send it to licensing@ampl.com.
+Details:
+License file ampl.lic not found anywhere in $PATH.
+
+
+What can I do to fix this issue?
+    
+
+        
+Answer 1: 
+
+    
+    
+The AMPL IDE distribution available for download from http://www.ampl.com/IDE/ includes a full version of ampl which requires a license. To use the student version, you need to replace the ampl and solver binaries in the amplide/ampl directory with their student versions available here.
+
+Alternatively, you can download a demo version of the IDE from one of the following locations:
+
+
+Linux: http://ampl.com/dl/demo/amplide-demo-linux32.tar.gz
+OS X: http://ampl.com/dl/demo/amplide-demo-macosx.tar.gz
+Windows: http://ampl.com/dl/demo/amplide-demo-mswin.zip
+
+    
+    
+Answer 2: 
+
+    
+    
+Simply place the amplide folder inside the amplcml folder (which is the free student version of AMPL).
+
+
+    
+    
+Title: Eclipse Resolve &ldquo;Organize Imports&rdquo; implicit
+Description: 
+    
+    
+                    
+I can't get it. I have a common problem in Eclipse, when trying to organize Imports for the whole Project. Short example for clearification
+
+package test.somepackage
+class A{
+
+    public B getB(){ return new B() }
+}
+
+package test.somepackage
+class B{} 
+
+package foobar
+class B {}
+
+package somewhere.in.code
+class ClientUsingAAndB {
+
+    public void someMethod(){
+
+        A a = new A()
+        //here Eclipse gets an "Organize Import Conflict"
+        B b = a.getB();
+
+    }
+}
+
+
+So if I try to automatically "Organize Imports" Eclipse is asking me If I want to import  test.somepackage.B or foobar.B. For me its very clear which one, and if I tell Eclipse to use foobar.B Eclipse immediatly complains about non matching return types. Thing is: If Eclipse already knows which return type it gets (from class A signature) why it acts like stupid? 
+Also if I just type a.getB() hover over it, and tell Eclipse to "Assign Statement to new local variable" (strg+1), It automatically infers the correct type and adds the import.
+
+Whats happening? Is this some kind of the annoying Eclipse bugs noone wants to fix, or do I want too much from my IDE? 
+
+EDIT: 
+If there is something not really clear, please comment it, and I'll try to provide nessesary information
+    
+
+        
+Answer 1: 
+
+    
+    
+This is a long-standing request (going back to 2005). See this Eclipse report that is stagnant. Perhaps you could get involved and help address it. I know the JDT team would welcome contributions for these kinds of small enhancements.
+    
+    
+Title: How to show complete document in Visual Studio?
+Description: 
+    
+    
+                    
+In eclipse, you can put your cursor on a method or a class to show its document. However, in Visual Studio, it only shows the summary, without the parameter info and return value type. And pressing Ctrl+Shift+Space to see the parameter info is so annoying! Is there a way that I can make VS show the complete document just like pressing F12 and seeing the definition? Thanks! :)
+    
+
+        
+Answer 1: 
+
+    
+    
+Maybe not exactly what you searching but you can activate the Code Definition Window via Menu -&gt; View -&gt; Code Definition Windows
+
+
+
+    
+    
+Answer 2: 
+
+    
+    
+If you're using Visual Studio 2013, you can use the new Peek Definition feature by hitting Alt+F12.
+
+http://msdn.microsoft.com/en-us/library/dn160178.aspx
+    
+    
+Title: Netbeans can not save unicode text on JSP file
+Description: 
+    
+    
+                    
+I want to write this Unicode HTML code (Persian) in JSP file in Netbeans 7.4:
+&lt;b&gt;سلام&lt;/b&gt;
+
+but on saving file this message shown:
+
+I set encoding as UTF-8 in project properties and also done adding:
+netbeans_default_options=&quot;-J-Dfile.encoding=UTF-8&quot;
+
+to netbeans etc/netbeans.conf but nothing changed and after pressing yes button, my Unicode text saved like:
+&lt;b&gt;????&lt;/b&gt;
+
+I see that file encoding was UTF-8 but after writing that Unicode HTML and seeing that message its encoding changed to ISO-8859-1!
+How can I fix this?
+    
+
+        
+Answer 1: 
+
+    
+    
+If the language you are using is arabic follow this charset ISO-8859-6, windows-1256, UTF-8
+
+For more references look here
+    
+    
+Answer 2: 
+
+    
+    
+Use this in your JSP file:
+
+&lt;%@page contentType="text/html;charset=UTF-8"%&gt;
+
+
+note that Netbeans changes file's encoding according to this code.
+    
+    
+Title: How to use code snippets into Aptana 3 Studio?
+Description: 
+    
+    
+                    
+I am using Aptana 3 Studio to develop PHP\HTML webapp and I have the following problem:
+
+If I go in: Window ---
+Answer 1: 
+
+    
+    
+You can modify an existing snippet and create new ones. Here is a step-by-step guide (first result on Google, FYI) 
+
+http://thomas.deuling.org/2011/06/add-or-edit-code-snippets-and-templates-in-aptana-studio-3/
+
+The author does mention just searching for the .rb files though, you can see a better explanation for how to get into them in the updated version of the post he mentions. Basically you want to open a CSS file in the css editor and then use Commands &gt; Bundle Development &gt; Edit this Bundle and it will create a project for you that contains the rules for CSS files (including snippets), which you can then edit. 
+    
+    
+Title: Run node-webkit project in Netbeans 7.4
+Description: 
+    
+    
+                    
+I am trying to configure Netbeans IDE 7.4 for node-webkit development.
+
+It is excellent IDE but I want to run my projects with F6 button. To do this I added NW.EXE as additional browser (executable is located outside project folder). 
+
+After this I have a problem with execution arguments. NW.EXE expects a folder path to be specified as an argument, but I cannot leave empty field of Start File in project settings  and the Project URL has to start with either http:// or file:// while Node-webkit needs a path like C:/path_to_app
+
+Does any method exist to deal with this feature?
+    
+
+        
+Answer 1: 
+
+    
+    
+In short, you can work this around by creating a batch program and let it strip the file name down to the path name part, to be fed to nw.exe, as it requires.
+
+Unfortunately, as you said, we don't have full control over the way the main file of the project is passed to the browser, hence some further actions (in addition to the creation of the batch file) are needed.
+
+This is how I got it working after a bit of struggle:
+
+
+added nw.exe to the system %PATH% variable (optional, just for ease of access)
+created nw.bat in the same folder as nw.exe, and filled it with this content:
+
+@echo %1
+start nw.exe %~d1%~p1
+
+
+
+The first line of this batch file is just to inspect the actual parameter that is getting passed to the batch file.
+
+The second line uses start to invoke nw.exe without having to wait for its return (you may need to specify the full path to nw.exe, if you didn't add it to the system %PATH% variable).
+
+The second line also passes to nw.exe the drive part of the parameter (extracted from %1 by %~d1) concatenating it to the path of the parameter (extracted from %1 by %~p1).
+
+For instance, my last run from within NetBeans gave this output:
+
+D:\node\test\index.html
+D:\node\test&gt;start nw.exe D:\node\test\
+
+
+Then I needed something to tie the NetBeans run button to an arbitrary executable, and luckily I found a perfect fit.
+
+So here is how I went on:
+
+
+installed the Node.js Projects plugin from Timboudreau Update Center
+went to Options &gt; Miscellaneous &gt; Node.js and set the Node.js Binary field to point to my nw.bat file
+
+
+In my project, I've also taken care to put package.json in the same folder of index.html (being that that's the main file of my package, and that's what will be fed to the batch file).
+
+Now pressing F6 on my NetBeans installation happily runs my node-webkit project without any further ado :-)
+    
+    
+Title: Refactoring plugins like Resharper or Visual Assist X for VS2012 for D (DMD)?
+Description: 
+    
+    
+                    
+Are there any refactoring plugins like Resharper or Visual Assist X for VS2012 for D (DMD)?
+
+Feel free to mention any IDEs that have the functionality built-in.
+    
+
+        
+Answer 1: 
+
+    
+    
+For a quick answer: no.
+
+Sadly, there's not much tools for D yet. You should refer to this page for the list of IDE and some of their features. It's updated often. As of now, the only VS tool is VisualD.
+    
+    
+Answer 2: 
+
+    
+    
+Mono-D, plugin for MonoDevelop, and DDT, plugin for Eclipse, have very, very basic refactoring capabilities. At the moment of writing this answer there is no tool that is even remotely close to refactoring capabilities of NetBeans/IdeaJ/Eclipse when it comes to Java.
+    
+    
+Title: Pycharm. Mercurial history error.
+Description: 
+    
+    
+                    
+I'm getting following error in PyCharm on mac os x when trying to view history for file:
+
+[*** failed to import extension hg4ideapromptextension from /private/var/folders/9y/s55zzx7j04d9tb8_2y6hb0vc0000gp/T/prompthooks2221127787198231381.py: [Errno 2] No such file or directory: '/private/var/folders/9y/s55zzx7j04d9tb8_2y6hb0vc0000gp/T/prompthooks2221127787198231381.py']
+
+
+Where to dig? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Had the same issue with IntelliJ Idea. Seems like restarting it solves it.
+
+The bug is tracked here:
+http://youtrack.jetbrains.com/issue/IDEA-102481
+    
+    

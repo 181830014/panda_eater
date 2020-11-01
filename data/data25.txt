@@ -1,0 +1,2324 @@
+Title: Can I use JAVAC to compile a project with multiple files and directories?
+Description: 
+    
+    
+                    
+I'm working on a very large project that has associated class files in multiple directories, all stemming from the root dir \src.
+
+I'm trying to compile a file in src\solution\ (called Console.java) that uses imports from other directories in the src, which are still uncompiled.
+
+So if I want to compile Console.java outside of an IDE, how do I go about doing that? Oh yeah, I also have some external JARs which need to be included in the build.
+
+Thanks! I appreciate it!
+    
+
+        
+Answer 1: 
+
+    
+    
+I would look at using Ant to create a build script.  It's a little bit of work now but it'll pay off over the lifetime of your project.
+    
+    
+Answer 2: 
+
+    
+    
+javac comes with two options, that might help you her:
+-c path/to/one/jar;path/to/another/jar  for libraries and
+-s path/to/src/solution/java;path/to/src/test/java for sourcefiles. It's worth a try.
+    
+    
+Answer 3: 
+
+    
+    
+I'm a little unclear on your specific requirements, but what your asking is almost certainly possible.  You might want to take a look at the javac options, and see what you can find that will help you.
+
+http://java.sun.com/j2se/1.4.2/docs/tooldocs/windows/javac.html#options
+
+For example, for the external .jars you need, those need to be included in your classpath using the -classpath option.
+    
+    
+Answer 4: 
+
+    
+    
+You definitely want a build tool. You might want to look at these questions:
+
+
+https://stackoverflow.com/questions/80622/maven-or-ant
+What do you use for a complex build process?
+What are some good java make utilities?
+
+    
+    
+Title: How to check if thread holds the monitor in IntelliJ?
+Description: 
+    
+    
+                    
+While working on IntelliJ , I am unable to check that if the thread is holding the lock or not.
+
+On eclipse GUI there is a lock like icon against the thread , telling us that it is holding that lock.
+
+In below code snapshot, my thread is at notifyElementAdded() and holding the lock however, in a thread stack there is no such Icon or intimation from Intellij
+
+So my question is how to check the same on IntelliJ GUI.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+There is actually a boolean attribute to the Thread class in Java - Thread.holdsLock(). 
+To get the name of the thread which holds the monitor you can use the code example below:
+
+public static long getMonitorOwner(Object obj)
+{
+    if (Thread.holdsLock(obj)) 
+    {
+        return Thread.currentThread().getId();
+    }
+}
+
+    
+    
+Answer 2: 
+
+    
+    
+I don't think there is a similar functionality. But you can still check by getting the dump
+
+
+
+You can click on Get Thread Dump in Debug window and then you can see the locked in the log to see that the thread is actually holding the lock
+    
+    
+Answer 3: 
+
+    
+    
+Create a custom variable in the Intellij debugging console using the plus button as shown in the image below. 
+
+Now every time you run the code in the debug mode, this variable will be re-calculated at your all debug points.
+
+I created a variable- Thread.holdsLock(AwsS3ClientHelper.class) since I was acquiring a lock on the class itself. You can write any variable of your choice there. In your particular case, it will be Thread.holdsLock(observers).
+
+
+    
+    
+Answer 4: 
+
+    
+    
+This can be a potential feature request for IntelliJ to include this to their GUI product. 
+
+Programmatically, to verify this you can use the java.lang.Thread.holdsLock() method which returns true if and only if the current thread holds the monitor lock on the specified object
+
+public static boolean holdsLock(Object obj)
+
+
+Below snippet of run method for reference,
+
+public void run() {
+
+   /* returns true if thread holds monitor lock */
+
+   // returns false
+   System.out.println("Holds Lock = " + Thread.holdsLock(this));  
+
+   synchronized (this) {
+      // returns true
+      System.out.println("Holds Lock = " + Thread.holdsLock(this));
+   }
+ }
+
+    
+    
+Title: Netbeans PHP function parameter hints
+Description: 
+    
+    
+                    
+I looked around and found things that addressed related issues, but not what I'm looking for specifically.
+
+I'm using Netbeans which has really grown on me, but when I go to use a function, the "intellisense" hints pop up correctly, but as soon as I go to type in the arguments, the code hint that shows the function signature and its parameters disappear.  
+
+This hurts my productivity because I don't have the signatures memorized, and I always end up having to reference it as I'm typing it up.
+
+Is this normal for Netbeans or is there some way I can make it so the function hints stay until I close the parenthesis for the function signature?
+
+Update:  I just found Ctrl + P will show the parameter methods, is there some way to have that automatically show instead of constantly typing Ctrl + P?
+    
+
+        
+Answer 1: 
+
+    
+    
+Apparently turning off auto-bracket closing will allow intellisense and code hints to appear correctly.
+    
+    
+Answer 2: 
+
+    
+    
+Inside function parentheses, type Ctrl + P and  the parameters hint will appear (NetBeans Menu Bar -
+Title: Apply patch to fix bug in Eclipse?
+Description: 
+    
+    
+                    
+I have a bug in Eclipse. When stepping through the code, when it goes to another class, the editor loses focus and I have to click again on the editor to continue debugging with the keyboard shortcuts. 
+
+I've found this thread describing the bug, and a patch to fix it. Is there any way I can apply the patch? I'm guessing it involves having the source code.
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes you'd need to recompile the module and install it.  These days with git SCM and the use of Maven project layouts and tycho plugin it can be easy to rebuild a module (compared to how it was just a few years ago).
+
+Lets see now:
+
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=372941
+
+Patches:
+
+bundles/org.eclipse.e4.ui.workbench.renderers.swt/src/org/eclipse/e4/ui/workbench/renderers/swt/StackRenderer.java
+
+We search on google "git org.eclipse.e4.ui.workbench.renderers.swt" we end up at the URL:
+
+https://git.eclipse.org/c/platform/eclipse.platform.ui.git/
+
+This can be used to checkout the 1 module to build.
+
+Git is available for many linux distribution by default, google you ditro name and "install git" terms for best help.  On windows there is https://code.google.com/p/msysgit/ and on MacOSX there is https://code.google.com/p/git-osx-installer/ all these provide a command line environment to use git.  You can look at EGit/JGit plugins for Eclipse itself to also do the job.  But the instruction below are for the command line method.
+
+git clone https://git.eclipse.org/c/platform/eclipse.platform.ui.git
+
+
+Now you'll want to find the tagged version of the version you are using.  So you need to find it in your eclipse/plugins/** folder of the Eclipse install.  The version number maybe in the filename or in the MANIFEST.MF or other *.xml file, the version number usually indicate the date of source and/or build in the number.
+
+It may help to browse around the eclipse.org website link above for the GIT tree to find the version.  This is to get the tag or version name / commit-id (like 'abc1234':
+
+# List tags (might see it in the list)
+git tag -l
+# Look through history, maybe you can work on the date
+git log
+# Finally once you know the version you want 
+# checkout the exact version that goes with your eclipse install
+git checkout -b mylocalbranch &lt;tag_or_version&gt;
+
+
+Now you can use Maven to build it.
+
+cd eclipse.platform.ui.git
+mvn package
+# The full-monty would be: mvn deploy  (or 'mvn install')
+# But I am not sure if unit and integration tests will work this easily, using
+# the 'mvn package' it enough to get you the JAR you need to install in Eclipse.
+
+
+Now you can look for a .jar in the build/* subdir, you can shutdown you eclipse and place this JAR into the plugins folder, ensure the version number is newer.
+
+If it works update the bug report.  Saying it worked for you.
+
+Also consider trying to push it via the github accounts as a new change, crediting the original author.
+
+..
+
+DISCLAIMER: The above is the principal about how you might achieve what you want.  It might take less than 5 minutes to complete.  But there maybe complications and you'll need to research those (if you get any) independently.
+
+You can also do much of the above with Eclipse itself, a 'git checkout' and a 'build Eclispe plugin module', although for me for this change it would probably take longer maybe 15 minutes (if there are no complications).
+    
+    
+Title: Python and Django IDE with remote editing?
+Description: 
+    
+    
+                    
+I'm looking for an IDE that will allow me to edit remote Python projects and also has decent Django support, remote command execution, and maybe remote debugging.  I've tried PyCharm and Aptana with PyDev but I'm not having much luck configuring them for remote editing. Thanks for your help!
+    
+
+        
+Answer 1: 
+
+    
+    
+I have Pycharm setup on a Ubuntu 10.10.  The key is to use "sshfs" - it maps to my web-host - via ssh. Those are the pre-reqs : ssh access, sshfs. (unless you can figure out a way to map ssh to a windows shared drive).
+
+So once ssh, sshfs are setup, I create a linux mount locally - so my webhost's directory appears locally as "/webhostx" .. From then on Pycharm (or WingIde or any editor) does not care that "/webhostx" is really a remote folder mounted locally.
+
+If all else fails there's always Emacs (everything included :-) ).
+
+Pycharm also has a remote debugging feature - I am in the process of testing it with my host (webfaction).
+    
+    
+Answer 2: 
+
+    
+    
+Emacs has tramp for remote editing on top of ssh, ftp or other protocols(works out of the box). nxhtml has support for editing Django templates (needs setup). I don't know about remote debugging. I've never done that.
+
+Of course, Emacs is a lifestyle rather than an editor as most of its users will tell you so be warned. 
+    
+    
+Answer 3: 
+
+    
+    
+Try WingIDE.
+    
+    
+Title: Reliable PostgreSQL IDE/Database Developer Tool
+Description: 
+    
+    
+                    
+Can someone recommend a great IDE/Database Developer Tool for Postgres 8.4. We are currently using EMS SQL Manager but it has so many bugs and shortcomings that its getting on my nerves. I reported the bugs to EMS but they have not been fixed yet. 
+
+I wonder what do people use for PostgresSQL development? Windows/Linux, commercial/free, standalone/eclipse plug-in, it does not matter as much. I just want a reliable tool that works and does not blow up in my face.
+
+On PostgreSQL DB we do and would like to have IDE support for.
+
+
+Tables, views, indexes, triggers
+SQL, plpgsql, and python procedures that return single values, set of values or tables
+SQL query and performance monitoring
+DB role management
+Good transaction support straight from GUI as well as support for BEGIN, COMMIT, etc
+
+
+Any recommendations are welcome.
+
+Edit: After many months we are still using EMS SQL Manager. I got used to certain shortcomings, some bug were fixed. I tried every possible PostgreSQL management program I could get my hands on and still in my opinion EMS SQL Manager is still the best. 
+    
+
+        
+Answer 1: 
+
+    
+    
+pgAdmin is a popular one. It's free, and it runs on Windows and Linux. It's been a while since I have used it but I found it to be quite stable. Wasn't fond of the procedure code editor - it worked, I just didn't like it (but now I can't remember why, it was probably a minor thing).
+    
+    
+Answer 2: 
+
+    
+    
+Lightning Admin, commercial, postgreSQL and mysql, $50. The developer is very pro postgreSQL.
+
+http://lightningadmin.com/
+    
+    
+Title: Assembly programming - WinAsm vs Visual Studio 2017
+Description: 
+    
+    
+                    
+I'm here to ask you some stuff about VS2017.
+In the past I had used WinAsm for MASM and I never got problems with it.
+
+However, when I'm trying to do something with MASM in VS2017, I always gonna get problems and stuff...
+I've checked the whole internet about "how to set up VS for MASM", but nothing has helped me as I'm always getting troubles...
+
+Is there any way to use Visual Studio 2017 for MASM32/64bit without any kind of headache?
+
+Can someone give me the ultimate guide to set up VS2017 for assembly programming?
+
+Thanks you very much and sorry for my weak english.
+    
+
+        
+Answer 1: 
+
+    
+    
+How to build a x64/x86-project with a standalone x64/x86 assembly file
+
+1) Start Visual Studio (Community) 2017 and choose FILE - New - Project.
+
+
+
+2) In the next window choose Empty Project.
+
+
+
+3) Make sure, that the project is highlighted in the Solution Explorer and and choose PROJECT - Build Customizations....
+
+
+
+4) In the next window tick masm(.targets,.props) and click on OK.
+
+
+
+5) Choose PROJECT - Add New Item from the menu.
+
+
+
+6) In the next window choose C++File(.cpp) and - IMPORTANT! - give it a name with an .asm extension. Click on Add.
+
+
+
+7) Now you can fill the file with content.
+
+Source.asm:
+
+EXTERN GetStdHandle : PROC
+EXTERN WriteFile    : PROC
+EXTERN ExitProcess  : PROC
+
+.DATA?
+    hFile           QWORD ?
+    BytesWritten    DWORD ?
+
+.DATA
+    hello   BYTE 'Hello world!', 13, 10
+
+.CODE
+main PROC
+    ; https://blogs.msdn.microsoft.com/oldnewthing/20160623-00/?p=93735
+    sub rsp, 40                 ; Shadow space (4 * 8) &amp; 1 parameter (8 bytes)
+    ; https://docs.microsoft.com/en-us/cpp/build/stack-allocation
+    and spl, -16                ; Align to 16
+
+    ; https://msdn.microsoft.com/library/windows/desktop/ms683231.aspx
+    mov ecx, -11                ; DWORD         nStdHandle = STD_OUTPUT_HANDLE
+    call GetStdHandle           ; Call WinApi
+    mov hFile, rax              ; Save returned handle
+
+    ; https://msdn.microsoft.com/library/windows/desktop/aa365747.aspx
+    mov rcx, hFile              ; HANDLE        hFile (here: Stdout)
+    lea rdx, hello              ; LPCVOID       lpBuffer
+    lea r9, BytesWritten        ; LPDWORD       lpNumberOfBytesWritten
+    mov r8d, LENGTHOF hello     ; DWORD         nNumberOfBytesToWrite
+    mov qword ptr [rsp+32], 0   ; LPOVERLAPPED  lpOverlapped = NULL
+    call WriteFile              ; Call WinAPI
+
+exit:
+    ; https://msdn.microsoft.com/library/windows/desktop/ms682658.aspx
+    xor ecx, ecx                ; Set RCX to null for return value
+    call ExitProcess            ; Call WinAPI to exit
+main ENDP
+
+end
+
+
+This is a 64-bit Console application that starts at the procedure main.
+
+8) Change the Solution Platforms to x64
+
+
+
+9) Choose PROJECT - Properties.
+
+
+
+10) In the Properties window you have to complete two linker options:
+
+
+Entry Point: main
+SubSystem: Console (/SUBSYSTEM:CONSOLE)
+
+
+Choose at the left side Configuration Properties - Linker - All Options , change both options at once and click OK. 
+
+
+
+
+
+11) Build and run the .exe with CTRL-F5. The application will be opened in a new window.
+
+
+
+Now overwrite Source.asm with a 32-bit Console application:
+
+.MODEL flat, stdcall
+
+; https://docs.microsoft.com/en-us/cpp/assembler/masm/proto
+GetStdHandle PROTO STDCALL,     ; https://docs.microsoft.com/en-us/windows/console/getstdhandle
+    nStdHandle: SDWORD
+WriteFile PROTO STDCALL,        ; https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-writefile
+    hFile: DWORD,                       ; output handle
+    lpBuffer: PTR BYTE,                 ; pointer to buffer
+    nNumberOfBytesToWrite: DWORD,       ; size of buffer
+    lpNumberOfBytesWritten: PTR DWORD,  ; num bytes written
+    lpOverlapped: PTR DWORD             ; ptr to asynchronous info
+ExitProcess PROTO STDCALL,      ; https://docs.microsoft.com/en-us/windows/desktop/api/processthreadsapi/nf-processthreadsapi-exitprocess
+    dwExitCode: DWORD                   ; return code
+
+.DATA                   ; https://docs.microsoft.com/en-us/cpp/assembler/masm/dot-data
+    Hallo db "Hello world!",13,10
+
+.DATA?                  ; https://docs.microsoft.com/en-us/cpp/assembler/masm/dot-data-q
+    lpNrOfChars dd ?
+
+.CODE                   ; https://docs.microsoft.com/en-us/cpp/assembler/masm/dot-code
+main PROC               ; docs.microsoft.com/en-us/cpp/assembler/masm/proc
+    invoke GetStdHandle, -11            ; -&gt; StdOut-Handle into EAX
+    invoke WriteFile, eax, OFFSET Hallo, LENGTHOF Hallo, OFFSET lpNrOfChars, 0
+    invoke ExitProcess, 0
+main ENDP
+
+END main                ; https://docs.microsoft.com/en-us/cpp/assembler/masm/end-masm
+
+
+Change the Solution Platforms to x86 (No. 8 above) and complete the project properties with SubSystem: Console (/SUBSYSTEM:CONSOLE) (No. 10 above). You must not set the Entry point, because ml32 expects the entry point after the END directive (END main). Build and run the .exe with CTRL-F5.
+    
+    
+Title: Debug javascript code in atom ide
+Description: 
+    
+    
+                    
+I ask if there is a solution or a package to install in atom so that I can debug javascript (when using node) in the IDE, like the one offered by Visual Studio Code.
+
+Thank you in advance.
+    
+
+        
+Answer 1: 
+
+    
+    
+Nuclide – an atom package – enables debugging of a page running in Chrome inside Atom.
+
+More infos in the Nuclide docs.
+    
+    
+Title: Is there a &ldquo;light version&rdquo; IntelliJ IDEA to edit files WITHOUT a project?
+Description: 
+    
+    
+                    
+ItelliJ IDEA can be called from command line on a single file - as described in here:
+
+
+Running IntelliJ IDEA as a Diff or Merge Command Line Tool
+Intellij like Text Editor (which BTW does not answer my question!)
+
+
+However, it seems that you have to provide IntelliJ with a project, as described here:
+
+
+Opening Files from Command Line
+
+
+
+  In the command line, type the following:
+
+[IntelliJ IDEA] [path1] --line [number] [path2]
+
+  
+  where:
+  
+  [IntelliJ IDEA] is the platform-specific product launcher
+    [path1] is the path to the project that contains the desired file
+    [number] is the number of the line, where the caret should rest
+    [path2] is the path to the file to be opened 
+
+
+Is there a way of using a "light version" of IntelliJ IDEA as a pure file editor, without a project? 
+
+IntelliJ IDEA is especially good editor for some file types, such as Java, XML, HTML, ... I'd like to associate it with these types and use it from Total Commander, but currently Idea opens too slowly with all the project overhead. And I sometimes need to edit files across the projects.
+    
+
+        
+Answer 1: 
+
+    
+    
+UPDATE: It's now supported using the LightEdit mode.
+
+
+
+Original answer:
+
+It's not possible at the moment, there is a related request (created 11 Dec 2010), you can vote for:
+
+
+IDEABKL-5939 using IDEA as a general-purpose text editor
+
+    
+    
+Answer 2: 
+
+    
+    
+Since IntelliJ IDEA 2020.1, there is LightEdit Mode. It's really light :)
+
+LightEdit mode lets you use IntelliJ IDEA’s text editing features without creating or opening a dedicated project. In LightEdit mode, a file is opened in a separate editor window which may coexist with other (project) windows.
+The mode has certain limitations: it offers simpler code completion (or sometimes none at all), no code inspections, only basic code highlighting that doesn’t require sophisticated code analysis, and so on. But if you just need to open a single file, make a few changes, and save, LightEdit is the quickest way to do it, and you don’t have to use a third-party editor either.
+
+    
+    
+Title: Go tests debugging
+Description: 
+    
+    
+                    
+Is there a way to debug tests in Go using an IDE like IntelliJ ? I am using the Go plugin for intelliJ and seems like when providing a debug configuration, the debug button is disabled. 
+    
+
+        
+Answer 1: 
+
+    
+    
+It is possible in Gogland: 1.0 Preview, Build EAP 12, 172.3757.46.
+
+This version has an expiration date: November 9, 2017, but there are already newer versions released and they probably have later expiration dates.
+    
+    
+Answer 2: 
+
+    
+    
+Currently it's not possible to debug tests, please watch over this issue to see when this will be supported.
+    
+    
+Title: Viewing assembly code of functions in emacs
+Description: 
+    
+    
+                    
+I'm wondering if there's a package for emacs that would allow me to see the generated assembly code quickly of a function? This should also work with compiler optimizations enabled. What I'd like is to be able to with one command open a new buffer which would contain the assembly code of the current function.
+
+Xcode on OS X does this very nicely, but I'd like to switch back to Linux and emacs on my dev workstation and this is a feature I've learned to like a lot.
+    
+
+        
+Answer 1: 
+
+    
+    
+Try disaster.el:
+
+
+Disaster lets you press C-c d to see the compiled assembly code for the C/C++ file you're currently editing. It even jumps to and highlights the line of assembly corresponding to the line beneath your cursor.
+It works by creating a .o file using make (if you have a Makefile) or the default system compiler. It then runs that file through objdump to generate the human-readable assembly.
+
+disaster.el is available in MELPA.
+    
+    
+Title: Sublime Text 3 Java autocomplete
+Description: 
+    
+    
+                    
+Lately I was seriously considering switching to Sublime Text 3 for all of my projects. Now that Sublime Text 3 has a goto definition feature it's definitely more useful. However, to be a happy programmer under Sublime I still need a proper Java auto completion. Sublime Text 2 has one - it is called sublimejava. Unfortunately this plug-in doesn't deliver the magic with Sublime Text 3.
+
+Does anyone know if Sublime Text 3 has a working plug-in for Java autocomplete?
+    
+
+        
+Answer 1: 
+
+    
+    
+Sublime 3 does have basic autocompletion for Java baked-in - if you start typing "pub", for example, it'll suggest "public". I'd also suggest looking at the Javatar plugin, which adds things like automatic creation of classes, packages, and interfaces. The QuickJava plugin might also be worth a look - it adds automatic creation commands for setters, getters, and constructors.
+    
+    
+Answer 2: 
+
+    
+    
+You can try JavaIME for helping with package imports and Java Methods Completion for method names completion.
+    
+    
+Title: How to add different programming languages to Eclipse (C++, C#, Java)
+Description: 
+    
+    
+                    
+another completely beginner question. I just went through two introductory courses in Java, and I noticed that Eclipse can also support development in other languages (which I didn't know). Does anyone know how to add other languages to Eclipse so that I can switch between IDE's, or do I have to have a completely separate installation of Eclipse per language?
+    
+
+        
+Answer 1: 
+
+    
+    
+In Eclipse, use the menu Help -/pp
+Answer 2: 
+
+    
+    
+Eclipse is a plugin framework...... 
+
+You have two choices - fortunately the eclipse community saw fit to produce Eclipse in a range of products that will do 99% of what 99% of people want. These distros are good to go. You install them and start work. You can then extend them if you want, but they do all of the basics very well, reliably, out of the box. Installing more than one with eclipse is easy, they do not interfere with each other, and if one turns out to be broken, the rest are not affected. 
+
+The other option, is to extend the framework by adding the plugins you want. So you start with an Eclipse distro, and download and install plugins till the cows come home. In the perfect world, this would be the perfect solution. Its not a perfect world..... you have not installed all you plugins and Eclipse suddenly crashes........
+
+Problems occur because sometimes 
+
+
+Plugins are buggy     
+Plugins are incompatible with each other.   
+Different plugins rely on different versions of another one
+(indirectly incompatible).    
+Plugins don't work the way the rest of the tool does    
+There are just too many plugins to choose from - you  don't need most, and the ones you need can be hard to find.
+
+
+Adding more than a few (probably 1) plugin to Eclipse exposes you to these problems. This is not something for the novice or people who have job not involved in fixing Eclipse. if you have a real reason for it, like your a sadist, or it's your job, or you want it to be your job, to make a team of 100 Devs productive, then plugins are great, otherwise, download a pre-canned, tested, reliable distro and take advantage of the great work by the contributors. 
+    
+    
+Title: Qt Creator custom split view settings for edit and debug
+Description: 
+    
+    
+                    
+Is it possible to have different split settings for Edit and Debug mode in Qt Creator?
+
+I am:
+
+
+using two monitors
+splitting the editor vertically
+align the splits onto the edge between monitors
+
+
+Now when I switch do debugging mode:
+
+
+the variable column gets squeezed in
+my editor split edge is pushed away from the monitor edge
+
+
+Can I somehow tell Qt Creator to remember each split?
+
+(I couldn't find a setting for this inside the Options or the Window menu)
+    
+
+        
+Answer 1: 
+
+    
+    
+Although it's not exactly the solution I was looking for, it somehow fits my purpose:
+
+
+use QtCreator without splitting window
+go: Window -/lili/lili/li/olpbr/pp/ppem/embr/p/div
+Title: How to make cscope display full file paths during search
+Description: 
+    
+    
+                    
+When I search for a C symbol or global definition using cscope, it displays the file-names and line numbers. I would like to see the full file-paths so that I can jump to my arch specific file. For example, when searching for global definition of __switch_to on cscope build on Linux code-base, I get:
+
+Global definition: __switch_to
+
+  File         Line
+0 process.c    297 struct task_struct *__switch_to(struct task_struct *prev,
+1 switch_to.h   44 #define __switch_to(prev,next,last) do { \
+2 process.c    202 struct task_struct *__switch_to(struct task_struct *old,
+3 process.c    400 struct task_struct *__switch_to(struct task_struct *prev,
+4 process_32.c 211 __switch_to(struct task_struct *prev, struct task_struct *next)
+5 process.c     80 void *__switch_to(struct task_struct *from, struct task_struct *to)
+6 process_32.c 248 __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
+7 process_64.c 272 __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
+
+
+Now, the file process.c is different for each arch. How to make cscope display the full file-paths?
+    
+
+        
+Answer 1: 
+
+    
+    
+Run cscope with args -pn
+
+
+  -pn    Display the last n file path components instead of the default (1). Use 0 not to display the file name at all.
+
+
+Running with cscope -p4 and searching for global definition of __switch_to results in
+
+Global definition: __switch_to
+
+  File                           Line
+0 arch/arm64/kernel/process.c    297 struct task_struct *__switch_to(struct task_struct *prev,
+1 ia64/include/asm/switch_to.h    44 #define __switch_to(prev,next,last) do { \
+2 arch/openrisc/kernel/process.c 202 struct task_struct *__switch_to(struct task_struct *old,
+3 arch/powerpc/kernel/process.c  400 struct task_struct *__switch_to(struct task_struct *prev,
+4 arch/sh/kernel/process_32.c    211 __switch_to(struct task_struct *prev, struct task_struct *next)
+5 arch/um/kernel/process.c        80 void *__switch_to(struct task_struct *from, struct task_struct *to)
+6 arch/x86/kernel/process_32.c   248 __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
+7 arch/x86/kernel/process_64.c   272 __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
+
+    
+    
+Title: Eclipse CDT indexing and std::unique_ptr
+Description: 
+    
+    
+                    
+I am using std::unique_ptr in this piece of code which compiles and runs as I expected. 
+
+std::stringstream out;
+out &lt;&lt; std::setw(3) &lt;&lt; std::setfill('0') &lt;&lt; i;
+std::unique_ptr&lt;std::string&gt; s(new std::string(out.str()));
+s-&gt;insert(s-&gt;end()-2, 1, '.');
+return std::move(s);
+
+
+However, I am getting error messages from Eclipse CDT. At the fourth line: Method 'insert' could not be resolved, Method 'end' could not be resolved.
+
+Previously, I was also getting errors on appearances of the name std::unique_ptr. This was solved by setting the pre-processor symbol __GXX_EXPERIMENTAL_CXX0X__ and rebuilding the index, as described in the answer to this question.
+
+Is there a way to make CDT understand that s is of type std::string * and that it should look in std::string for s-
+Answer 1: 
+
+    
+    
+It seems as if the Eclipse CDT indexer is not able to deduce the unique_ptr::pointer type that is also used as the return type of operator-/pprecode/code/prepcode/code/p/div
+Answer 2: 
+
+    
+    
+This issue has been recently fixed, in cdt 8.1.1. Just go help-/p/div
+Answer 3: 
+
+    
+    
+I have the same issue on newer version of Eclipse CDT (9.3). I tried all the tricks I found on the internet, rebuilding every time my index, hoping for a change. But the indexer was never able to deduce the type of std::unique_ptr&lt;T&gt;::operator-&gt;(). Finally, I decided to use a very simple workaround:
+
+# ifdef ECLIPSE_INDEXER_WORKAROUND
+MyType* my_var;
+# else
+std::unique_ptr&lt;MyType&gt; my_var;
+# endif    
+
+
+I add ECLIPSE_INDEXER_WORKAROUND to preprocessor symbols (of course for indexing options only, not building) in Eclipse, and indexing is useful again! 
+
+In order to pollute the code less, we can use a macro:
+
+# ifdef ECLIPSE_INDEXER_WORKAROUND
+#  define MY_UNIQUE_PTR( type ) type* 
+# else
+#  define MY_UNIQUE_PTR( type ) std::unique_ptr&lt; type &gt;
+# endif
+
+MY_UNIQUE_PTR( int ) pint{ new int(42) };
+
+    
+    
+Title: Python and vim on windows?
+Description: 
+    
+    
+                    
+I started learning vim a couple of days ago and surprisingly it felt quite natural to me, I also want to get back to learning python. I thought, why not combine the two?
+So now I'm looking how to set up a proper python development environment, all my searches turned up either guides for other OSes (which I just couldn't "translate" to windows without feeling like I missed something) and some feel like they are made for previous versions of vim (they assume it has no python support at all...)
+So how do you set up vim for python development? I see it already has syntax highlighting, how do I set up compiling? how do I set up debugging (if it's even needed, I read somewhere that it's not really that needed in python)? how do I setup error highlighting? or anything else I might need? I saw some guides setting up a "go to source" link, is that needed in the new version?
+    
+
+        
+Answer 1: 
+
+    
+    
+Good choice on VIM!
+
+Have a look here though:
+
+http://dancingpenguinsoflight.com/2009/02/python-and-vim-make-your-own-ide/
+    
+    
+Title: What is the status of Vim keybindings in MonoDevelop?
+Description: 
+    
+    
+                    
+There seems to be a lot of conflicting information regarding Vim keybindings in MonoDevelop. Does anyone know whether this feature is available or what the current status is? I know there was progress being made at some point.
+    
+
+        
+Answer 1: 
+
+    
+    
+The basics work pretty well. It currently supports the following modes: Normal, Visual, Visual Line, Insert, Overwrite. In those modes, most of "single-key" commands are supported, and some slightly more complex commands work too, such as searching and marks.
+
+The major limitation right now is that it does not support multi-character text operators and text objects. I started implementing support for that a while back but it isn't finished yet. Assistance would be welcome.
+    
+    
+Answer 2: 
+
+    
+    
+If you check their site, you can see that Vi Mode is a section of their TODO.
+    
+    
+Title: Cucumber IDE for feature writing with autocomplete?
+Description: 
+    
+    
+                    
+Is there any Eclipse plugin for writing features for cucumber with autocomplete functionality?
+I guess that would be good to find and reuse steps from other features. Any ideas?
+    
+
+        
+Answer 1: 
+
+    
+    
+The cucumber-eclipse plugin illustrates one possible approach.
+
+
+  As Xtext seems not to be the perfect solution for this special case, it is more like a case study then a working plugin.
+
+
+Based on XText, it uses the cucumber grammar (as in Gherkin), it uses XText features to produce a full-fledge editor.
+
+
+    
+    
+Title: Eclipse helios install new plugin problem
+Description: 
+    
+    
+                    
+I'm trying to install new plugin but when I choose the update site I got this error 
+
+
+  !ENTRY org.eclipse.equinox.p2.core 4 0
+  2010-10-07 08:57:56.153 !MESSAGE
+  Provisioning exception !STACK 1
+  org.eclipse.equinox.p2.core.ProvisionException:
+  Bad HTTP Request:
+  http://download.eclipse.org/eclipse/updates/3.6/compositeContent.xml
+    at
+  org.eclipse.equinox.internal.p2.repository.CacheManager.createCache(CacheManager.java:189)
+    at
+  org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepositoryFactory.getLocalFile(CompositeMetadataRepositoryFactory.java:74)
+    at
+  org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepositoryFactory.load(CompositeMetadataRepositoryFactory.java:99)
+    at
+  org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.factoryLoad(MetadataRepositoryManager.java:57)
+    at
+  org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:747)
+    at
+  org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:652)
+    at
+  org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:96)
+    at
+  org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:92)
+    at
+  org.eclipse.equinox.p2.ui.LoadMetadataRepositoryJob.doLoad(LoadMetadataRepositoryJob.java:115)
+    at
+  org.eclipse.equinox.p2.ui.LoadMetadataRepositoryJob.runModal(LoadMetadataRepositoryJob.java:100)
+    at
+  org.eclipse.equinox.internal.p2.ui.sdk.PreloadingRepositoryHandler$2.runModal(PreloadingRepositoryHandler.java:82)
+    at
+  org.eclipse.equinox.p2.operations.ProvisioningJob.run(ProvisioningJob.java:177)
+    at
+  org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+  Caused by:
+  org.eclipse.ecf.filetransfer.BrowseFileTransferException:
+  HttpClient connection error response
+  code 400.     at
+  org.eclipse.ecf.provider.filetransfer.httpclient.HttpClientFileSystemBrowser.runRequest(HttpClientFileSystemBrowser.java:249)
+    at
+  org.eclipse.ecf.provider.filetransfer.browse.AbstractFileSystemBrowser$DirectoryJob.run(AbstractFileSystemBrowser.java:69)
+    ... 1 more !SUBENTRY 1
+  org.eclipse.equinox.p2.repository 4
+  1002 2010-10-07 08:57:56.153 !MESSAGE
+  Bad HTTP Request:
+  http://download.eclipse.org/eclipse/updates/3.6/compositeContent.xml
+  !STACK 1
+  org.eclipse.ecf.filetransfer.BrowseFileTransferException:
+  HttpClient connection error response
+  code 400.     at
+  org.eclipse.ecf.provider.filetransfer.httpclient.HttpClientFileSystemBrowser.runRequest(HttpClientFileSystemBrowser.java:249)
+    at
+  org.eclipse.ecf.provider.filetransfer.browse.AbstractFileSystemBrowser$DirectoryJob.run(AbstractFileSystemBrowser.java:69)
+    at
+  org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+  !SUBENTRY 2 org.eclipse.ecf.identity 4
+  0 2010-10-07 08:57:56.153 !MESSAGE
+  HttpClient connection error response
+  code 400.
+  
+  !ENTRY org.eclipse.equinox.p2.core 4 0
+  2010-10-07 08:57:56.384 !MESSAGE
+  Provisioning exception !STACK 1
+  org.eclipse.equinox.p2.core.ProvisionException:
+  Bad HTTP Request:
+  http://dl.google.com/eclipse/inst/codepro/latest/3.6/content.xml
+    at
+  org.eclipse.equinox.internal.p2.repository.CacheManager.createCache(CacheManager.java:189)
+    at
+  org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory.getLocalFile(SimpleMetadataRepositoryFactory.java:66)
+    at
+  org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory.load(SimpleMetadataRepositoryFactory.java:88)
+    at
+  org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.factoryLoad(MetadataRepositoryManager.java:57)
+    at
+  org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:747)
+    at
+  org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:652)
+    at
+  org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:96)
+    at
+  org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:92)
+    at
+  org.eclipse.equinox.p2.ui.LoadMetadataRepositoryJob.doLoad(LoadMetadataRepositoryJob.java:115)
+    at
+  org.eclipse.equinox.p2.ui.LoadMetadataRepositoryJob.runModal(LoadMetadataRepositoryJob.java:100)
+    at
+  org.eclipse.equinox.internal.p2.ui.sdk.PreloadingRepositoryHandler$2.runModal(PreloadingRepositoryHandler.java:82)
+    at
+  org.eclipse.equinox.p2.operations.ProvisioningJob.run(ProvisioningJob.java:177)
+    at
+  org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+  Caused by:
+  org.eclipse.ecf.filetransfer.BrowseFileTransferException:
+  HttpClient connection error response
+  code 400.     at
+  org.eclipse.ecf.provider.filetransfer.httpclient.HttpClientFileSystemBrowser.runRequest(HttpClientFileSystemBrowser.java:249)
+    at
+  org.eclipse.ecf.provider.filetransfer.browse.AbstractFileSystemBrowser$DirectoryJob.run(AbstractFileSystemBrowser.java:69)
+    ... 1 more !SUBENTRY 1
+  org.eclipse.equinox.p2.repository 4
+  1002 2010-10-07 08:57:56.385 !MESSAGE
+  Bad HTTP Request:
+  http://dl.google.com/eclipse/inst/codepro/latest/3.6/content.xml
+  !STACK 1
+  org.eclipse.ecf.filetransfer.BrowseFileTransferException:
+  HttpClient connection error response
+  code 400.     at
+  org.eclipse.ecf.provider.filetransfer.httpclient.HttpClientFileSystemBrowser.runRequest(HttpClientFileSystemBrowser.java:249)
+    at
+  org.eclipse.ecf.provider.filetransfer.browse.AbstractFileSystemBrowser$DirectoryJob.run(AbstractFileSystemBrowser.java:69)
+    at
+  org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+  !SUBENTRY 2 org.eclipse.ecf.identity 4
+  0 2010-10-07 08:57:56.385 !MESSAGE
+  HttpClient connection error response
+  code 400.
+
+
+I have tried this with many update sites and I got the same error, so what is this?if someone interested in the full log I can post it.
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+I also had the same problem, What I did was I had previously set a proxy address so when I went to a network that required no proxy, I got that error.
+
+I solved the problem by
+
+
+Preferences
+Network connection
+Then set network provider to Direct.
+
+    
+    
+Answer 2: 
+
+    
+    
+I got the same issue and by following various options mentioned above I could able to find a solution for ProvisionException:
+
+Solution:
+If you are behind proxy, set the network option to "manual" and provide the proxy host, port. If the proxy needs authentication provide the username and password. 
+
+I am assuming if you are not behind proxy you can use "Direct" option in network setting.
+    
+    
+Answer 3: 
+
+    
+    
+I'm not sure where you got your URLs, it seems you just entered wrong ones. Try the following:
+
+
+Open the Help → Install new software.
+Use the Helios main site: http://download.eclipse.org/releases/helios
+Make sure to turn off "contact all update sites..."
+Try to install something and see if it works.
+
+
+It seems you are just using the wrong URLs and you have some bad update sites. To remove the update sites that don't work, go to the Preferences → Install/Update → Available Software Sites. In this list, locate the bad site and remove them. 
+
+Also, I would suggest turning off the "contact all update sites..." as a common practice, unless the installation fails and you really need to install a dependency from another site. 
+
+You can find more tips on plugins installation in my blog post.
+    
+    
+Answer 4: 
+
+    
+    
+I also had the same problem, What I did was I had downloaded the below checkstyle plugin files and added in the STC plugin folder and its working fine.
+
+net.sf.eclipsecs.branding_5.9.0.201410282234.jar
+net.sf.eclipsecs.checkstyle_5.9.0.201410282234.jar
+net.sf.eclipsecs.core_5.9.0.201410282234.jar
+net.sf.eclipsecs.doc_5.9.0.201410282234.jar
+net.sf.eclipsecs.ui_5.9.0.201410282234.jar
+
+    
+    
+Answer 5: 
+
+    
+    
+Copy and paste eclipse in program files and run it from there. Due to some permission problem it may not run. If you run it from downloads folder or from Desktop
+    
+    
+Title: Has anyone successfully configured NetBeans for Python (specifically Python 3.0) development?
+Description: 
+    
+    
+                    
+I was able to configure NetBeans for 2.6.1 by going to to the Python Platform Manager, creating a new platform, and pointing NetBeans at python.exe where I installed 2.6.1. However, when I follow the exact same steps for 3.0, I get an error in the NetBeans console that says "SyntaxError: invalid syntax".
+
+If it matters, Python is installed in this format:
+
+/Program Files
+    /Python
+        /2.6
+            python.exe and everything else
+        /3.0
+            python.exe and everything else
+
+
+I'm wondering if anyone else has experienced this and what they did to correct the problem.
+    
+
+        
+Answer 1: 
+
+    
+    
+Yep- it's actually very easy. The scripts in the plugin use 'print' as a keyword which has been changed in Python 3; you just have to convert all 'print' statements in the console.py and platform_ info.py files under the 'python1' folder in your NetBeans installation directory to use parenthesis. For instance, in platform_info.py the first print line says:
+
+print "platform.name="+ "Jython " + version 
+
+
+Change it to:
+
+print("platform.name="+ "Jython " + version)
+
+
+And do this for all print statements. Then go into the NetBeans and import your Python30 directory into the Python Platform Manager; it will work just fine.
+
+I haven't run into any other issues yet, but there might be some other small syntax issues in the plugin; they should be very easy to fix.
+    
+    
+Answer 2: 
+
+    
+    
+It doesn't let me comment back here so I'll answer your comment in an post.
+
+Yes, it will let you use Python 2.x as well; the 'print' method was both a keyword and function prior to Python 3, so the parenthesis were optional. As on 3 they are required, so this change is backwards compatible.
+    
+    
+Answer 3: 
+
+    
+    
+There are some issues with debugging, btw- I'll let you all know when I successfully figure out what has to be updated here.
+    
+    
+Answer 4: 
+
+    
+    
+Thank you Ben Flynn for the solution to integrate python30 with netbeans 6.71
+
+However, this piece of code :
+
+def fib(n):    # write Fibonacci series up to n
+     """Print a Fibonacci series up to n."""
+     a, b = 0, 1
+     while b &lt; n:
+         print (b, end=' ')
+         a, b = b, a+b
+
+fib(2000)
+
+
+Which is an example code from a help site, runs with out error from the IDE,
+but the editor complains:
+
+Internal parser error
+"no viable alternative at input'=' "
+
+
+Which suggests it is parsing against python2.5.1
+    
+    
+Answer 5: 
+
+    
+    
+Starting at version 3.0, the print statement has to be written as a function...
+
+your 
+
+print (b, end=' ')
+
+becomes 
+
+print("end= ", b)
+    
+    
+Title: IntelliJ - The selected directory is not a home for JDK
+Description: 
+    
+    
+                    
+Similar to this question IntelliJ, &quot;The selected directory is not a home for JDK&quot;, I am getting an error that my JDK directory suddenly is not valid.
+
+
+
+Even though my JDK directory looks fine to me and worked last time I loaded IntelliJ
+
+
+
+So I am selecting a valid JDK directory and yet still I get this error. 
+
+
+
+What could cause this? What could fix this?
+    
+
+        
+Answer 1: 
+
+    
+    
+That is because of tool.jar and/or rt.jar file(s) being missed from JAVA_HOME/lib directory.
+
+Reinstalling java can resolve this issue.
+    
+    
+Title: Selenium IDE-Automating Select2 Search Box
+Description: 
+    
+    
+                    
+I am trying to automate the select2 search box in selenium IDE.
+I got it to open and also typed the search keyword I am searching for.However even though I have the code in place for showing results, it does not work. The problem is I guess the characters are getting typed too fast, so the results don't show up for the search box. I am sure I am going wrong somewhere, because I am new to Selenium IDE .So any help is appreciated
+
+  mouseDown css=.select2-choice &gt; div &gt; b
+  type css=input.select2-input.select2-focused Chris
+  waitForVisible css=.select2-results
+  mouseUp css=.select2-result-label:contains('Chris')
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I've had to deal with this as well, the sites I test use select2 and select3.   What I've found that works in both situations would be the following: 
+
+clickAt | css=.select2-choice &gt; div &gt; b | 
+sendKeys | css=input.select2-input.select2-focused | Chris
+click | css=.select2-result-label:contains('Chris')
+
+
+With these types of dropdowns, and Angular, I found sendKeys works better than type or typeKeys. 
+
+Klendathu
+    
+    
+Title: &ldquo;Scope Highlight&rdquo; feature in Visual Studio? (same as seen in BlueJ for java)
+Description: 
+    
+    
+                    
+I would like to know (as I've failed so far in finding such a feature in the VS's options),
+if there is a feature which allow for scope highlighting same as seen in the BlueJ IDE for java,
+here is an example:
+
+
+
+Note how the code blocks are all highlighted with color,
+when learning java using blueJ i found it to be extremely easy on the eye when looking at code,
+and everything felt a lot more organized,
+moving to C# and working on MS visual studio, its all text with some highlighting, Class names, keywords etc etc,
+but in general it still feel like a black text on a white background and lacking that organized feeling i sorely miss from blueJ,
+
+i noticed there is a similar question here referring to eclipse,
+Eclipse IDE Scope Highlighting?
+
+just to be on the safe side, ill ask again referring to Visual studio,
+is there such a feature in VS? is there an add-on \ plugin for VS which allows it?
+
+Thanks in advance for your answer.
+    
+
+        
+Answer 1: 
+
+    
+    
+Look at the DevExpress CodeRush plugin, there is a 30-day trial version.
+The function it provides is called "Structural highlighting", and I think its even better than what you want (and its customizable). 
+
+CodeRush Express 
+
+CodeRush Documentation
+    
+    
+Answer 2: 
+
+    
+    
+Microsoft provides a free Productivity Power Tools extension for Visual Studio 2013 and 2015. This has a "Structure Visualizer" feature similar to the CodeRush plugin. Both are more subtle than the BlueJ style, but should make scopes a little clearer.
+
+
+
+Productivity Power Tools 2013
+
+Productivity Power Tools 2015
+
+Update
+
+Visual Studio 2017 integrated a version of this into the core application for C#, Visual Basic, F#, and XAML (as Structure Guide Lines). However, C++ still requires an extension.
+    
+    
+Title: Is there a way to have SSMS open a certain connections every time I open it up?
+Description: 
+    
+    
+                    
+Every night the university reboots every machine in my department at midnight and I help my professor with various projects on 11 different sql servers.  Since i do not own a personal computer i can't just leave SSMS open over night.
+
+Is it possible to have a setting or some featured enabled so that it remembers to open the connections that i tell it to when i open SSMS?
+
+Thank you.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can call SSMS from the command line and uses switches to do what you're trying to do.
+
+There are -S -d -U and -P switches for server, database, username, and password. You should be able to put the call into a .bat file and use that easily enough.
+
+There is documentation on the Microsoft website.
+    
+    
+Answer 2: 
+
+    
+    
+If you are allowed to install third party software the SSMS Tools Pack addin does what you need.
+
+
+  ... You can also Restore Last Session by pressing the button on
+  toolbar. This opens the last saved tabs already connected to the
+  server they were connected to before...
+
+    
+    
+Title: Does clang/libclang have Java bindings?
+Description: 
+    
+    
+                    
+I would like to use the code analysis capabilities of clang in a plugin for a Java-based IDE.
+
+Since the plugin must be written in Java, I am wondering whether there are any Java bindings for libclang, or some other way to access clang functionality from a Java program (beyond using JNI directly)?
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm closely tracking LLVM/Clang development and i'm not aware of Java bindings to libclang.
+    
+    
+Title: What are .recommenders and .metadata in Eclipse workspace and should they be in sync between devices?
+Description: 
+    
+    
+                    
+To work seamlessly on different Windows 10 devices, I added an Eclipse workspace to OneDrive (OneDrive/Eclipse). The contents of this folder are my projects, and a .metadata (~45MB) folder, and a (hidden?) .recommenders (~5MB) folder.
+
+Because all of this is inside OneDrive, all files and projects get synced between devices. If I come home from work, the projects will sync to my home computer, but so will the .metadata and .recommenders folders. 
+
+The problem is that OneDrive often runs into issues: something cannot be synced or overwritten, so it creates a local copy - which is obviously annoying. Upon closer inspections I realised I don't even know what .metadata and .recommenders are, or what they do.
+
+
+Should these folders be device specific and should hence not be syncronised between devices OR are they workspace specific and are they required to be in sync?
+What do these folders actually contain? When going through some files I see a lot of folders, plug-ins, and preferences but I don't get what they are for.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+To what extend do you want it to be seamless? Including workspace settings or not?
+
+
+.recommenders should contain information about dynamic ctrl-space completion based on the user's past behavior etc. Probably not needed for a seamless experience unless you care about details.
+.metadata is all the workspace settings &amp; cache &amp; essentially the workspace's home directory. It contains all sorts of things: What is the .metadata folder in Eclipse workspace? Not super important to sync if you enable per project settings instead of workspace settings. But maybe needed for whatever your definition of seamless is. There is lots of caching and other things in there that isn't useful to sync and can cause odd effects so I would rather avoid the entire folder.
+
+    
+    
+Title: Refactoring &ldquo;Implement Interface&rdquo; using auto properties VS2015
+Description: 
+    
+    
+                    
+I am trying to get Visual Studio 2015 (14.0) to use auto properties when implementing an interface using refactoring for C#.
+
+I.e. I want this;
+
+public object SomeProperty { get; set; }
+
+
+as opposed to this;
+
+public object SomeProperty
+{
+    get
+    {
+        throw new NotImplementedException();
+    }
+    set
+    {
+        throw new NotImplementedException();
+    }
+}
+
+
+I have accomplished this in past versions of Visual Studio by editing the code snippet file (instructions here) but I cannot get this to work using Visual Studio 2015. 
+    
+
+        
+Answer 1: 
+
+    
+    
+Ok, so I stumbled upon the answer during my testing of VS2019 Preview (16.0). 
+
+In the main menu bar Tools --&gt; Options --&gt; Text Editor --&gt; C# --&gt; Advanced look for the option Implement Interface or Abstract Class under When generating properties choose prefer auto properties.
+
+This results in the same outcome that snippets used to take care of pre VS2015.
+    
+    
+Answer 2: 
+
+    
+    
+You can solve by editing the PropertyStub.snippet
+
+Just go to C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC#\Snippets\1033\Refactoring open PropertyStub.snippet and edit:
+
+$GetterAccessibility$ get 
+{ 
+    $end$throw new $Exception$(); 
+}
+$SetterAccessibility$ set 
+{ 
+    throw new $Exception$(); 
+}
+
+
+to 
+
+$GetterAccessibility$ get;
+$SetterAccessibility$ set;
+
+    
+    
+Title: IntelliJ won&#39;t accept Java8 and diamonds at the end of List/Map
+Description: 
+    
+    
+                    
+I'm using the latest JDK and everywhere from project creation to now everything is set to Java8 or SDK 8.
+
+Still, intelliJ gives me this issue:
+
+
+
+The red lamp tells me to change to Java7.
+
+This is my project settings:
+
+
+and this is the Modules section:
+
+
+As you can see; I specifically changed it from the SDK default to java 8 when I got the error, but no result.
+
+The compiler settings look like this:
+
+
+I'm on a macbook and the intelliJ is the community version. Does anyone know why this is happening and how I fix it?
+    
+
+        
+Answer 1: 
+
+    
+    
+Try to run the project, if this is your error message:
+
+
+Then I suggest you have a little look into your pom-file.
+
+This project was built using the intelliJ maven project setting, and it was missing this lovely line of code:
+
+&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+            &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+            &lt;configuration&gt;
+                &lt;source&gt;1.8&lt;/source&gt;
+                &lt;target&gt;1.8&lt;/target&gt;
+            &lt;/configuration&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;
+
+
+IntelliJ doesn't (at least in my case) generate the version in the pom (despite that I picked all the settings for it).
+    
+    
+Answer 2: 
+
+    
+    
+I tried specifying the compiler version in the plugin too, to no avail. Have you tried invalidating the cache? It's File -code/code/p/div
+Title: Comparison between rational software architect(RSA) &amp; rational application developer(RAD) IBM products
+Description: 
+    
+    
+                    
+It seems Rational software architect (RSA) &amp; Rational application developer (RAD) both IBM products are basically used as an IDE. But both have specific purpose to use. Please help me to understand when to use RSA and when RAD. What are the differences and what are the similarities between these two IBM products.
+    
+
+        
+Answer 1: 
+
+    
+    
+RAD is a commercial Eclipse-based integrated development environment (IDE), made by IBM's Rational Software division, for visually designing, constructing, testing, and deploying Web services, portals, and Java EE applications.
+
+RSA is a modeling and development environment that uses the Unified Modeling Language (UML) for designing architecture for C++ and Java EE applications and web services. RSA is built on the Eclipse open-source software framework and includes capabilities focused on architectural code analysis, C++, and model-driven development (MDD) with the UML for creating applications and web services.
+
+RSA includes all the capabilities of RAD and more!
+    
+    
+Title: Which IDE supports CoffeeScript debugging (Source Mapping, Breakpoints &amp; Call Stack) for Node.js apps?
+Description: 
+    
+    
+                    
+I'm still pretty new to the whole CoffeeScript scene.
+
+Are there any IDEs out there that support debugging of CoffeeScript source code running on Node.js?
+
+I'm hoping for something where I can set a breakpoint within a .coffee file and see a call stack and inspect variables.
+
+WebStorm doesn't seem to fit the bill yet. WEB-2389
+
+It appears that there is a solution for this client side using CoffeeScriptRedux in Chrome. Example 
+
+Are there other options? Sublime?
+
+Update
+After checking in on this issue again nearly a year later I came across this JetBrains help document.  It looks like it supports debugging server side coffee script... finally!
+    
+
+        
+Answer 1: 
+
+    
+    
+JetBrains products support debugging CoffeeScript with a combination of the JetBrains Chrome Plugin and Coffee-script-redux.
+
+http://www.jetbrains.com/products.html#IDE_and_editors
+
+http://confluence.jetbrains.com/display/RUBYDEV/Debugging+CoffeeScript+Code
+    
+    
+Answer 2: 
+
+    
+    
+Nodeclipse has an opened issue #12 CoffeeScript debugging support
+    
+    
+Answer 3: 
+
+    
+    
+You can theoretically do this on any IDE that supports remote debugging.  However, with Coffee-script redux in beta 2 and all the activity surrounding source-map support you would be better off just waiting 5 minutes.
+    
+    
+Title: Browsing through previous-compilation errors during a new compilation?
+Description: 
+    
+    
+                    
+How to setup emacs so that I can browse through previous-compilation errors during new compilation?
+
+Two things don't work for me: 
+
+
+M-g M-g (next-error) function is not working when second compilation is in-progress. 
+I have my emacs split into 5 uneven windows (split-windows-horizontally), the compilation "window" is double the size (dbl monitor setup). When I launch compilation it always appeared in the last double compilation window. Now it opens a new window for itself.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Here is a solution which seems to fulfill all your requirements:
+
+
+the *compilation-old* buffer always stays in the same window
+next-error does not break
+all successive compilation outputs are appended at the end of *compilation-old* when the compilation process terminates
+
+
+(defun my-compilation-finish-function (buffer msg)
+  ;; Don't do anything if we are in a derived mode
+  (when (with-current-buffer buffer (eq major-mode 'compilation-mode))
+
+    ;; Insert the last compilation output at the end of *compilation-old*
+    (if (get-buffer "*compilation-old*")
+        (with-current-buffer "*compilation-old*"
+          (save-excursion
+            (goto-char (point-max))
+            (insert-buffer buffer)))
+      (with-current-buffer buffer
+        (rename-buffer "*compilation-old*")))))
+
+(add-hook 'compilation-finish-functions 'my-compilation-finish-function)
+
+
+
+(defadvice compile (around my-compile-show-old activate)
+  "Show the *compilation-old* buffer after starting the compilation"
+  (let ((buffer (current-buffer)))
+    (when (get-buffer "*compilation-old*")
+      (pop-to-buffer "*compilation-old*")
+      (switch-to-buffer "*compilation*"))
+    ad-do-it
+    (when (get-buffer "*compilation-old*")
+      (switch-to-buffer "*compilation-old*")
+      (pop-to-buffer buffer))))
+
+    
+    
+Answer 2: 
+
+    
+    
+Putting the following in your init file will rename the compilation buffer to *compilation-old* when the compile command terminates.
+
+Please note that this will not work if you run the new compilation process from the old compilation buffer (since compile will in this case reuse the buffer instead of creating a new one)
+
+(defun my-rename-compilation-buffer (buffer message)
+  ;; Don't do anything if we are in a derived mode
+  (when (with-current-buffer buffer (eq major-mode 'compilation-mode))
+    (let* ((old-compilation-buffer-name "*compilation-old*")
+           (old-compilation-buffer (get-buffer old-compilation-buffer-name)))
+
+      ;; Kill old compilation buffer if necessary
+      (when old-compilation-buffer
+        (kill-buffer old-compilation-buffer))
+
+      ;; Rename the current compilation buffer
+      (with-current-buffer buffer
+        (rename-buffer old-compilation-buffer-name)))))
+
+(add-hook 'compilation-finish-functions 'my-rename-compilation-buffer)
+
+    
+    
+Answer 3: 
+
+    
+    
+It's a bit of a Kludge, but try this:
+
+Before starting the new compilation, save (write, C-x C-w) the current compilation buffer to a file.  If the buffer for the new file looses it "compilation-mode" setting, simply turn compilation-mode back on (M-x compilation-mode).
+    
+    
+Title: How to print to C++Builder output window
+Description: 
+    
+    
+                    
+I have a C++Builder 2010 project and want to add tests to it. So, instead of pausing the output of my console window to read the outcome of the tests, I want to print the same information to the Output Window in C++Builder (not in the Event Log).
+
+So OutputDebugString is not an option for me. Is there some specific way to either redirect console output to the Output Window or to print directly there?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You can simply define a Post-build event in your Project Options to run your executable. Its console output will automatically be included in Output messages.
+    
+    
+Answer 2: 
+
+    
+    
+That window is for the output of the compilation process. It's not what you are looking for. You want to generate output whilst the program runs. I'd use the console or OutputDebugString or similar and I can't understand what you have against those options.
+    
+    
+Title: Eclipse CDT build/run on file basis
+Description: 
+    
+    
+                    
+In my scenario I have a C++ project in CDT Eclipse. This projects however is rather a collection of individual (helper) programs than one complex application. Consequently I want to be able to build and run them individually. 
+
+My project structure is very simple and looks like:
+
+src/app1.cpp
+src/app2.cpp
+src/...
+
+
+Note that I do not have common header files or libraries. However I want to be able to add programs to this project just by creating e.g. src/appx.cpp
+
+Ideally I want to have shortcuts for 
+
+
+"Build currently opened .cpp"
+"Run binary of currently opened .cpp" 
+
+
+Any suggestions on how to achieve this behaviour, if possible without additional plugins?
+    
+
+        
+Answer 1: 
+
+    
+    
+The straightforward way to succeed what you aim is to create a Makefile project with CDT and add a new target rule for each of your applications inside your Makefile. You can even use SCons or other build systems with a CDT Makefile project and obtain the same effect.
+
+You can also trick the managed build to create executables instead of object files. Remove -c option from Other flags of C++ compiler settings inside project properties. This will produce a separate application file for each of your source files.
+
+Application files which are created inside the build directory will have the object file extension and they will not be executable. To solve this, you can add a post build script in your project directory such as:
+
+postbuild.sh for Linux:
+
+ chmod +x *.o
+ rename -v 's/\.o$//' *.o
+
+
+or postbuild.bat for Windows:
+
+rename *.o *.exe
+
+
+After adding ../postbuild.sh or ../postbuild.bat as a post build command in your build settings, you applications will be ready to run. Right click on any of these executable files and choose Debug As or Run As and a new Run configuration will be created.
+
+Also you will have to stop the linker of the managed build to prevent errors. This can be achieved with changing the linker command to true (Linux) or true.exe (Windows, msys).
+    
+    
+Title: JSfiddle : how to create multi-JS/CSS/HTML files project?
+Description: 
+    
+    
+                    
+Is there a way to create a serious HTML/CSS/JS project with multiple HTML, CSS, JS files on JSfiddle.net ?
+If yes, how to do it ?
+
+
+
+I want to create a basic mobile apps based on HTML/CSS/JS, about a dozen of HTML/CSS/JS files. I would like to develop it all on JSfiddle, my favorite Online JavaScript IDE. But JSfiddle.net while a clean way to test projects stays limited to:
+
+
+1 html file (personal)
+1 CSS file (personal)
+1 JS file (personal)
+several external resources (CSS, JS libs, data) which request you another webhosting.
+
+
+The official doc suggesting Github hosting for 1HTML/1JS/1CSS/someDataFiles is not satisfying. I wish all on JSFiddle, and more files in my project.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can do it inside a jsFiddle but there are few limitations, and you are probably not going to be satisfied with it.
+
+
+You can test only 1 HTML multiple pages template. But in case of jQuery Mobile framework this will be enough, as you can place numerous jQM pages inside a 1 html file.
+
+For example, this is my jsFiddle template when helping to this group: http://jsfiddle.net/Gajotres/yWTG2/
+You cant use normal form submitting.  Instead you should use ajax to sumbit form data.
+
+In my other answer you can find solutions for ajax form submitting and how to send parameters during the page transition: jQuery Mobile: Sending data from one page to the another
+
+In case you want to communicate with an remote host:
+
+var ajax = {
+    sendRequest:function(save_data){
+        $.ajax({url: 'http://localhost/JSONP_Tutorial/json.php',
+            data: save_data,
+            async: true,
+            beforeSend: function() {
+                // This callback function will trigger before data is sent
+                $.mobile.showPageLoadingMsg(true); // This will show ajax spinner
+            },
+            complete: function() {
+                // This callback function will trigger on data sent/received complete
+                $.mobile.hidePageLoadingMsg(); // This will hide ajax spinner
+            },
+            success: function (result) {
+                if(result == "true") {
+                    $.mobile.changePage( "#index", { transition: "slide"} ); // In case result is true change page to Index
+                } else {
+                    alert('Login unsuccessful, please try again!'); // In case result is false throw an error
+                }
+                // This callback function will trigger on successful action
+            },
+            error: function (request,error) {
+                // This callback function will trigger on unsuccessful action                
+                alert('Network error has occurred please try again!');
+            }
+        });
+    }
+}
+
+jsFiddle has a stupid policy where they want to prevent usage of full HTML files. They are trying to enforce this with stupid error warnings in HTML content part. You will need to have something like firebug plugin for Firefox or Chrome to remove this stupidity. Or you can even do it with Grease Monkey plugin.
+In case you want to use full HTML template like in this example: http://jsfiddle.net/Gajotres/yWTG2/ you will need to use your javascript code in onDomready state.
+Some functionalities are not going to work. Like window.orientationchange event.
+
+    
+    
+Title: What is meant by an &ldquo;unbound&rdquo; library or classpath container in Eclipse?
+Description: 
+    
+    
+                    
+While recently imported a new project into eclipse, at one point when I tried to add the GROOVY_SUPPORT library it would up as "unbound" with error-X, like this:
+
+
+
+It also did not appear in the package explorer as I expected.
+
+What precisely does this mean?  Eclipse did not report any other errors.  All I have it the red-X and the unbound message.
+
+I was able to fix this via futzing with stuff (specifically removing and re-adding the Groovy nature) until it went away, but I'm curious about what was really going on.
+    
+
+        
+Answer 1: 
+
+    
+    
+Usually it means that the classpathentry in the .classpath can't be resolved. I usually see this when opening a project that was created/updated with a different plugin (or version) defining the classpath container that is unbound. 
+
+If you compare the .classpath file from when it was unbound to after the problem was fixed you should see the difference.
+
+Fixing the problem the way you did (removing the unbound contain and re-adding it, as you did via the Groovy nature) is a simple way to fix the problem. One caveat, if you are part of a team working on the project and you get this problem then it would be a good idea to ensure all team members are on the same release of the IDE.
+    
+    
+Answer 2: 
+
+    
+    
+I just ran into this exact problem.  It turns out I had not installed the Groovy Eclipse SDK features.  Once I had them installed, GROOVY_SUPPORT was no longer unbound and everything worked.
+
+
+    
+    
+Answer 3: 
+
+    
+    
+Encountered on Eclipse 4.5 Mars and GRECLIPSE 2.9.2
+I had a few Groovy projects, imported before GRECLIPSE had been installed (but the Groovy compiler was on the path and GROOVY_HOME was set)
+After GRECLIPSE installation, the projects wouldn't compile. So go to
+
+Project Properties via Pulldown Menu &gt; Java Build Path &gt; Libraries &gt; Add Library
+
+And add &quot;GROOVY SUPPORT&quot; manually. The project compiles but:
+
+This entry cannot be removed because this makes compilation impossible. So go to
+
+Project Properties via Pulldown Menu &gt; Groovy &gt; Remove Groovy Nature
+&quot;Do you want to also remove the groovy runtime jars from project FOO?&quot; YES
+
+And circle around:
+
+Project Properties via Pulldown Menu &gt; Configure &gt; Convert to Groovy Project
+
+Everything compiles as before.
+This changed the Libraries:
+
+The content of &quot;.classpath&quot; has changed from:
+&lt;classpathentry exported=&quot;true&quot; kind=&quot;con&quot; path=&quot;GROOVY_DSL_SUPPORT&quot;/&gt;
+&lt;classpathentry kind=&quot;con&quot; path=&quot;GROOVY_SUPPORT&quot;/&gt;
+
+to
+&lt;classpathentry exported=&quot;true&quot; kind=&quot;con&quot; path=&quot;GROOVY_SUPPORT&quot;/&gt;
+&lt;classpathentry exported=&quot;true&quot; kind=&quot;con&quot; path=&quot;GROOVY_DSL_SUPPORT&quot;/&gt;
+
+The content of &quot;.project&quot; has not changed.
+&lt;natures&gt;
+   &lt;nature&gt;org.eclipse.jdt.groovy.core.groovyNature&lt;/nature&gt;
+   &lt;nature&gt;org.eclipse.jdt.core.javanature&lt;/nature&gt;
+&lt;/natures&gt;
+
+    
+    
+Title: Screen + vim causes shift-enter to insert &#39;M&#39; and a newline
+Description: 
+    
+    
+                    
+When running a vim instance in gnu screen hitting shift enter in insert mode adds an 'M' and then a newline, rather than just a newline.
+
+Does anybody know what the problem might be, or where to look?
+
+Relevant system info:
+
+
+  Ubuntu 8.04.1
+  
+  Screen version 4.00.03 (FAU) 23-Oct-06
+  
+  VIM - Vi IMproved 7.1 (2007 May 12, compiled Jan 31 2008 12:20:21)
+    Included patches: 1-138
+  
+  Konsole 1.6.6 (Using KDE 3.5.10)
+
+
+Thanks to the comments.  When checking the value of $TERM I noticed that it was xterm (as expected), but within screen $TERM was set to screen-bce.  Setting TERM=xterm after launching screen resolves this issue.
+
+Adding the following to ~/.screenrc solved the problem without having to do anything manually:
+
+
+  term xterm
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Missing info from your question:
+
+
+Where do you run screen and see this issue? Some terminal app (KTerminal, Gnome terminal, virtual console etc) or remote session (eg putty, ssh from another computer)
+do a “echo $TERM” and tell us its output
+do a “cat -v”, press Shift-Enter, then Enter, then Ctrl-D and then tell us what is output.
+
+    
+    
+Answer 2: 
+
+    
+    
+First, you could fix your $TERM for within konsole.  Install "ncurses-term" and configure konsole to set $TERM=konsole-256color.  Then configure screen with "term screen-256color".  Or 'konsole' and 'screen', respectively, if that's your preference.  Konsole and screen are not xterm and doesn't support everything xterm does, so using incorrect $TERM can lead to bad things.
+    
+    
+Title: Any Java IDE which can quickly establish a local project based on a remote JNLP file for instant debugging?
+Description: 
+    
+    
+                    
+Given a remote JNLP which works (all jars are available etc) but you need to run a debug session on the code.
+
+Is there any facility that easily allows you to create a local project in ANY reasonably modern IDE which consists of a local copy of the resources stated in the JNLP and can run said code in debug mode?  Assume that a decompiler is available so it is just a matter of getting the debug session running.
+
+Are there any IDE's (Eclipse, Netbeans, IntelliJ, JDeveloper, etc. etc. - even a commercial offering) which can do this just given the JNLP URL?
+    
+
+        
+Answer 1: 
+
+    
+    
+I have a pre-defined project in Eclipse which is blank except for a utility that parses a JNLP file and downloads all the jars specified in the jnlp codebase. Optionally, you can replace any jars with updated code you want to test here.  It uses reflection to add all the jars to the classpath (which is a hack) and then reflectivly invokes the main method of the class specified as the main-class in the JNLP with any arguments.
+
+Unfortunately I can't share the source for this but it only took me a day to get it running.  
+
+The class path hack is available here: How should I load Jars dynamically at runtime?
+
+Should work well with any debugging.
+    
+    
+Answer 2: 
+
+    
+    
+I am facing a similar problem with a JNLP program. The only way I found to debug the program is by debugging into Eclipse (I have the project and the code source) and copy-pasting all parameters passed by the JNLP file in the Arguments tab into Debug configuration in Eclipse. I don't know if this is related because my problem came from the arguments passed to the application through JNLP file.
+
+I don't understand something... Why you want to debug directly on the compiled code from the final location?
+    
+    
+Title: Scripting the Visual Studio IDE
+Description: 
+    
+    
+                    
+I'd like to create a script that will configure the Visual Studio IDE the way I like it. Nothing vastly complicated, just a few Tools/Options settings, adding some External Tools, that kind of thing. 
+
+I know that this can be done inside VS with Import/Export Settings, but I'd like to be able to automate it from outside of VS. Is this possible, and if so, how?
+
+
+
+Edited to add: doing it from outside of VS is important to me -- I'm hoping to use this as part of a more general "configure this newly-Ghosted PC just the way I like it" script.
+
+
+
+Edited again: the solution seems to be to hack CurrentSettings.vssettings, or use AutoIt. Details below.
+    
+
+        
+Answer 1: 
+
+    
+    
+Answering my own question, in two ways:
+
+
+In VS2005/8, the things I mentioned (Tools/Options, External Tools) are all stored in the CurrentSettings.vssettings file, in the folder "Visual Studio 200{5|8}\Settings". This file is just XML, and it can be edited programmatically by anything that knows how to parse XML. You can also just paste a new vssettings file over the top of the default one (at least, this works for me).
+The larger question of configuring a virgin PC. It turns out that not everything I want to change has an API, so I need some way of pretending to be a user who is actually sitting there clicking on things. The best approach to this seems to be AutoIt, whose scripting language I will now have to learn in my Copious Free Time.
+
+    
+    
+Answer 2: 
+
+    
+    
+An easy way is to use the macro recorder to do something simple, then look at the code it produces and edit it as you see fit. 
+    
+    
+Answer 3: 
+
+    
+    
+On my machine Visual Studio stores it's local settings in a file called VCComponents.dat. Its a text file, so perhaps you could find a way of placing your settings directly in there.
+
+The file is stored in my users local AppData\Local\Microsoft\VC folder
+    
+    
+Title: PyCharm is missing project type drop down
+Description: 
+    
+    
+                    
+I've just downloaded PyCharm community edition for my Mac. It seems to work great but for some reason project type -dropdown is missing in Create project dialog. I'm newbie to PyCharm (and Python overall) so I don't know if there is some obvious reason for this. 
+
+I was able to create projects however - even in virtualenv. But they are always empty projects. 
+
+Any ideas?
+    
+
+        
+Answer 1: 
+
+    
+    
+This may be due to Community Edition which doesn't provide all functionality. Download the professional edition of pycharm. The professional edition is free to use for one month.
+    
+    
+Title: Cause runtime exceptions to be properly ordered with println in console output
+Description: 
+    
+    
+                    
+A common problem with VM Java console output is that System.out and System.err are not usually synchronized properly, possibly because they are on different threads. This results in mixed up output such as the following:
+
+debugging output mixed up with runtime exception stack trace
+
+[8, 1, 3, 5, 9, 13, 15, 17, 19]
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 9
+scanning xAnswer: 1 xValue: 1 total: 1 [1, 1, 0, 0, 0, 0, 0, 0, 0]
+    at cra.common.Group_jsc.listSubsetSum(Group_jsc.java:29)
+scanning xAnswer: 2 xValue: 2 total: 4 [2, 1, 2, 0, 0, 0, 0, 0, 0]
+    at cra.common.Group_jsc.main(Group_jsc.java:12)
+scanning xAnswer: 3 xValue: 3 total: 9 [3, 1, 2, 3, 0, 0, 0, 0, 0]
+scanning xAnswer: 4 xValue: 4 total: 18 [4, 1, 2, 3, 4, 0, 0, 0, 0]
+scanning xAnswer: 5 xValue: 5 total: 31 [5, 1, 2, 3, 4, 5, 0, 0, 0]
+  reset to xAnswer: 4 xValue: 5 total: 26 [4, 1, 2, 3, 5, 5, 0, 0, 0]
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+scanning xAnswer: 5 xValue: 6 total: 41 [5, 1, 2, 3, 5, 6, 0, 0, 0]
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+  reset to xAnswer: 4 xValue: 6 total: 35 [4, 1, 2, 3, 6, 6, 0, 0, 0]
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:601)
+    at com.intellij.rt.execution.application.AppMain.main(AppMain.java:120)
+scanning xAnswer: 5 xValue: 7 total: 52 [5, 1, 2, 3, 6, 7, 0, 0, 0]
+  reset to xAnswer: 4 xValue: 7 total: 45 [4, 1, 2, 3, 7, 7, 0, 0, 0]
+scanning xAnswer: 5 xValue: 8 total: 64 [5, 1, 2, 3, 7, 8, 0, 0, 0]
+  reset to xAnswer: 4 xValue: 8 total: 56 [4, 1, 2, 3, 8, 8, 0, 0, 0]
+
+Process finished with exit code 1
+
+
+Since the exception occurred at the end of the process I would expect the print out of the exception to occur AFTER all the println's in the program. Why is this happening and what can be done to correct the problem?
+
+(note that this particular example is from IntelliJ's IDEA console, but the same thing happens in Eclipse and other Java IDEs)
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  A common problem with VM Java console output is that System.out and System.err are not usually synchronized properly,
+
+
+No, they are synchronized perfectly.  The problem is that the lines are intermixed because they are printed as separate calls to println(...).  This is the code from Exception.printStackTrace():
+
+        StackTraceElement[] trace = getOurStackTrace();
+        for (int i=0; i &lt; trace.length; i++)
+            s.println("\tat " + trace[i]);
+
+
+Loggers (like log4j) get the full stack trace and turn multiple lines into a single log output call which is then persisted atomically.
+
+
+  Why is this happening and what can be done to correct the problem?
+
+
+Typically with Unix programs, standard-out is buffered while standard-error is not.  I didn't think that this was true with Java but maybe it is.  To read the javadocs of System.out:
+
+
+  The "standard" output stream. This stream is already open and ready to accept output data. Typically this stream corresponds to display output or another output destination specified by the host environment or user.
+
+
+Versus for System.err:
+
+
+  By convention, this output stream is used to display error messages
+  or other information that should come to the immediate attention
+  of a user even if the principal output stream, the value of the
+  variable out, has been redirected to a file or other
+  destination that is typically not continuously monitored.
+
+
+See this answer for more details: Why do System.err statements get printed first sometimes?
+
+If this running the from the command line, you should redirect the out and err output to different files.  Here's how to do that using ~unix:
+
+
+  How to redirect stderr and stdout to different files in the same line of bash?
+
+
+In Java you can use System.setOut(...) and System.setErr(...) to send the different output to different PrintStreams so the lines don't interleave.
+
+
+
+You edited the question to note that this is happening from inside an IDE.  If you need to use System.out and err then you can redirect them using Java code above.
+
+However, it is typical to use logging code instead.  Common logging packages are log4j or logback which writes a single multi-line log message atomically to the output file so they don't get interleaved.  As @fge mentions, there is also java.util.logging built into the JVM although the other packages provide more features.
+    
+    
+Answer 2: 
+
+    
+    
+
+  Why is this happening and what can be done to correct the problem?
+
+
+Because syserr and sysout are separate data streams but the system (IDE) console is trying to display both simultaneously. This can be fixed by using a Logger which will typically correctly order entries in the log.
+
+Another possibility is to invoke System.setErr and assign it to a PrintStream for an error log file. This would be the Java equivalent solution to redirecting the error stream.
+    
+    
+Answer 3: 
+
+    
+    
+PyCharm also has this problem, which I believe uses the same IDE engine. There's a fix if you add the following line to your idea.properties file:
+
+output.reader.blocking.mode=true
+
+
+Get to idea.properties via Help | Edit Custom Properties.
+    
+    
+Title: How to debug Java application from Sublime Text editor
+Description: 
+    
+    
+                    
+Sometimes I am doing simple fixes for rather huge Java application and I don't want to open Eclipse for this task. Eclipse starts long and since the project is build out of large number of subprojects, which are build anyway by Maven, it takes ages before Eclipse is usable (at least ages in impatient Java developer scale).
+
+Almost everything I need can be done in Sublime Text editor, however one place where Eclipse shines is debugger. My workflow is: make a fix, then test it running application (on server) using debugger, to check if everything is ok.
+
+So is there any Sublime plugin, or other non-IDE solution for easy debugging of Java application.
+
+Note: I have seen this post - its pretty old, maybe there is something better.
+    
+
+        
+Answer 1: 
+
+    
+    
+You could look for a standalone Java Debugger like JDebugTool.
+
+Or you could simply create an additional Eclipse workspace with only the bare minimal you need for remote debugging your application (just one project with all the source jars linked in).
+This workspace will start considerably faster than the full blown.
+
+I have never worked with a standalone debugger for Java and personally I tend to keep the number of tools I have to learn as low as possible and Eclipse's debugger is pretty good.
+    
+    
+Title: How do I prevent the Visual Studio debugger from focusing the window when a breakpoint is hit? [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                Closed 7 years ago.
+        
+
+
+    
+
+
+  Possible Duplicate:
+  Visual Studio: How to stop breakpoint hit from stealing focus?  
+
+
+
+
+Many times I will set a break point in Visual Studio and run a process that might take seconds or a minute or two. While that runs, I will do something else, usually other coding in another window. When the breakpoint is hit, Visual Studio gains focus and my next several keystrokes go into the debugger and all hell breaks lose depending on what my kestrokes are. (expecially in Visual C++). This is especially annoying the longer it takes to get to the breakpoint since I have to restart all over again.
+
+Bottom line, is there a way to turn off the auto focusing feature in Visual Studio or Windows in general?
+    
+
+        
+Answer 1: 
+
+    
+    
+You cant stop it but you can hack around it, by setting a hit counter, so it only breaks when it reaches a certiain hit count, just right click the break point and go to hit count to do this.
+
+
+    
+    
+Title: Is edit-triggered testing the next step?
+Description: 
+    
+    
+                    
+I have just read Michael C. Feathers great book Working Effectively with Legacy Code, the bible of introducing tests to legacy code. In this book he describes something called Edit-triggered testing:
+
+If it isn't out by the time this book is released, I suspect that someone will soon develop an IDE that allows you to specify a set of tests that will run at every keystroke. It would be an incredible way of closing the feedback loop.
+It has to happen. It just seems inevitable. There are already IDEs that check syntax on each keystroke and change the color of code when there are erros. Edit-triggered testing is the next step.
+
+When I read this I hadn't heard about any IDEs or tools that support this. However, I just found a project called Infinitest that supports this for Java.
+My questions are:
+
+Are there any other tools/framework that support this (hopefully also for Visual Studio)?
+What are your experiences with this kind of testing (efficient, slows down the IDE, etc)?
+Is this the next step of TDD?
+
+Updates:
+
+Take a look a look at this screencast to see Infinitest in action for Eclipse.
+Just found a blog where Brett Schuchert shares some experiences with Infinitest.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+There's Autotest for ruby. It continuously runs unit tests as you edit files, using some simple conventions to map source files to test files. There's also a plugin for it I've seen that colors the test code red or green in emacs interactively. I think this idea of immediate visual feedback of passing/failing in the code editor itself is great.
+    
+    
+Answer 2: 
+
+    
+    
+It's been a few years since the original question, and there are a few tools available for .NET (I assume that this space has grown for other languages as well).
+
+There is a .NET version of Autotest (mentioned previously in this thread) called AutoTest.NET, which has been forked and updated into a more fully-featured tool called ContinuousTests. I tried it about a year ago, and it looked to have a lot of potential at that point, but unfortunately, it sounds like they've decided to stop development.  On the up-side, however, it's now free!
+
+I haven't used NCrunch, but it's a commercial product that appears to be actively developed.
+
+There are script-based tools that might also fit the bill for what you're asking about
+
+See also this question:
+How do I do continuous testing in .NET?
+    
+    
+Answer 3: 
+
+    
+    
+Well, it essentially is Test-driven development, with tests being run continuously, as you type? So I wouldn't say "edit-triggered testing" is a new development technique, but merely a feature of your IDE.
+
+Regarding the speed of this feature, I guess it really depends on how complex your project is, what compiler and language you are using, and what changes you are making. If you are modifying some base library which is used throughout the project, your compiler will have to recompile a large part of your program to be able to run tests in other libraries using your code.
+    
+    
+Title: Do I need multiple Jetbrains IDE&#39;s or can I collect them into one?
+Description: 
+    
+    
+                    
+How do I collect multiple Jetbrains IDE's into one, like I do with Eclipse using plugins? I do Java, Ruby and C/C++ and don't won't a single IDE installed for every programming language.
+    
+
+        
+Answer 1: 
+
+    
+    
+JetBrains provides IntelliJ Idea for Java and Ruby development and for C/C++ it provides, CLion IDE. So it is not possible to collect multiple IDEs into one.
+    
+    

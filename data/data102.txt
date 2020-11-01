@@ -1,0 +1,1791 @@
+Title: Netbeans 7.3.1 autocomplete code on my Javascript Class doesn&#39;t work
+Description: 
+    
+    
+                    
+I have a question about autocomplete code for Javascript on Netbeans 7.3.1 for Mac. I have the following javascript code tha defines a class "Person":
+
+function Person(nm, cgn, ss){
+                 this.nome = nm;
+                 this.cognome = cgn;
+                 this.sesso = ss;
+
+                 this.getNome = function(){
+                    return nome;
+                 };
+                 this.getCognome = function(){
+                    return cognome;
+                 };
+                 this.getSesso = function(){
+                    return sesso;
+                 };
+              }
+
+
+Under this code, if i try to write the following code:
+
+var aPerson = new Person("C", "A", "p");
+aPerson.get
+
+
+I don't see (in autocomplete box) any function related to Person object.
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+It's a limitation of NetBeans.
+Follow this step
+
+
+Create a new file .js : MyClass.js
+Insert class declaration in MyClass.js
+Back to the .html and import the file &lt;script src = "MyClass.js"&gt;
+
+
+Now you can use the object MyClass with autocompletion.
+    
+    
+Title: How to set up instant code completion in WebStorm 7 EAP?
+Description: 
+    
+    
+                    
+I'm love instant code completion, but in my WebStorm 6.02 it doesn't works. Pop-up with options shows after few second, when I've stop typing. Need help ;-(
+
+My Settings:
+OS: Mac OS X 10.8.4
+WebStorm: 6.0.2
+
+
+
+UPD: Problem is solved by new iMac with fast CPU.
+    
+
+        
+Answer 1: 
+
+    
+    
+It can just be slow. If explicit Ctrl+Space is as slow, I'd suggest you to file a performance problem request to http://youtrack.jetbrains.com/ with a CPU snapshot attached (http://devnet.jetbrains.com/docs/DOC-1253).
+    
+    
+Title: phpstorm, subdomain handling
+Description: 
+    
+    
+                    
+I have a project with some php and html files. URL for this project, for exmaple, - mysite.com
+
+I need to create a subdomain for content, that will be moved to CDN: assets.mysite.com
+
+Now, during development time, all files for subdomain are stored in a subfolder of my project /home/user/phpstormprojects/mysite/assets
+
+In my html/php files I need to specify full path to my assets
+html://assets.mysite.com/mybest.png
+
+Of cource I want autocompletion and other features to work well.
+So I need to set up phpstorm smth like "assets.mysite.com" = "/home/user/phpstormprojects/mysite/assets"
+
+Could I do it?
+    
+
+        
+Answer 1: 
+
+    
+    
+I am using PhpStorm 7.1.3
+
+
+Ensure your cursor has highlighted the project name.
+At the menu on top select "File" then "New" then "Directory".
+Name your directory. It will go under the project name (see step 1).
+Right click on the new directory then select "Mark Directory As" a
+pop-up will appear giving you the option to mark the new directory
+as "Resource Root".
+
+
+Put whatever directories you want inside it. PhpStorm will rename all references to them in your code.
+    
+    
+Title: Why isn&#39;t CodeBlocks letting me compile this example Allegro program?
+Description: 
+    
+    
+                    
+Basically I'm having a problem with getting an Allegro binding (D + Allegro) to work with Code:Blocks.
+I think it's a settings problem, but I'm not sure where.
+So here's what I've done so far...
+
+Error: module base is in file 'allegro5\base.d' which cannot be read|
+
+
+This is the error I keep getting. I'm using Windows 7, DAllegro5, Code:Blocks, and the D language DMD compiler.
+
+Code:Blocks works. Compiling a regular D project works. I've added the DAllegro5 files to the project, but I keep getting this error. What else should I do to get this error to go away?
+
+I followed the instructions here.
+
+
+  You have two options here. You can copy all the modules into your project, and just use them like that. Alternatively, you can compile the binding into a static library for convenience:
+
+
+I did the bolded. Just copied the actual .d files to my project.
+    
+
+        
+Answer 1: 
+
+    
+    
+The "you can copy all the modules into your project" path is in fact not much easier than the alternative one, which is to build the library separately.
+
+Anyway, here's a step-by-step that worked for me. Note that this applies to Windows + Code::Blocks + Allegro5 + DMD chain, assuming that compiling a D project in Code::Blocks already works. Specifically, this does not apply to other D compilers, GDC and LDC.
+
+Part I
+
+
+Create a Code::Blocks D project, remove all example D sources if they are present.
+Download and copy the whole https://github.com/SiegeLord/DAllegro5 to the directory of that project, preserving the directory structure.
+Add all the .d files recursively by navigating to Project - Add files recursively... in Code::Blocks (example.d and allegro5/*, right now it was 49 files in total).
+
+
+If you build the project now, it will complain, like:
+
+||=== Build: Debug in [your-project-name] (compiler: Digital Mars D Compiler) ===|
+|| Symbol Undefined _al_run_main|
+|| Symbol Undefined _al_install_mouse|
+|| Symbol Undefined _al_draw_triangle|
+...
+||=== Build failed: 26 error(s), 0 warning(s) (0 minute(s), 6 second(s)) ===|
+
+That is, the linker can't find any of the library functions.  And here's the catch: you should now obtain an Allegro5 binary in COFF .lib format.  And as far as I can tell, it is not exactly lying around for us in a trusted place: the .lib binaries supplied by Allegro developers are in OMF format.  To get it, you will need an Allegro DLL, perhaps from Allegro's main site, and a program to perform the DLL-to-COFF conversion, perhaps from D compiler's site.  The process is detailed below.
+
+Part II
+
+
+To get an Allegro5 DLL, go to https://www.allegro.cc/files/ and download some binary.
+To get the converter, obtain an implib.exe from DigitalMars. For example, go to http://www.digitalmars.com/download/freecompiler.html and download the basic utilities from there (the link is http://ftp.digitalmars.com/bup.zip).
+The easiest route now is to grab a single Allegro5 DLL containing all the library functions (as opposed to using modules like allegro-*.dll, allegro_font-*.dll, allegro_primitives-*.dll separately). Running a command such as implib /s dallegro5.lib allegro-5.0.10-monolith-mt.dll will produce a .lib file in COFF format from the existing DLL file. Here, the "/s" option is needed to prepend an underscore to function names, so that, for example, "al_run_main" is called "_al_run_main" in the .lib file. The naming of Allegro5 DLL files (what is monolith, md or mt, etc.) is explained here: https://www.allegro.cc/manual/5/install/windows.html.
+
+
+Now is the time we get back to our Code::Blocks project.
+
+Part III
+
+
+Copy both the DLL (allegro-5.0.10-monolith-mt.dll) and the lib (dallegro5.lib) into the root of our Code::Blocks project directory.  A bit of a mess there, but you can move things to a more appropriate location later, when you already have a working configuration.
+In Code::Blocks, navigate to Project - Build options... - Linker settings and add your newly created "dallegro5.lib" to the list of libraries.
+Rebuild the project and run it.  Everything should be working now.
+
+
+Please tell if all of the above worked for you &mdash; and if not, what is the failing step, and what exactly went wrong.
+    
+    
+Title: How to avoid necessity of writable .vbg in Visual Studio 6?
+Description: 
+    
+    
+                    
+I have a Project Group in Visual Studio 6 (.vbg). The projects are under source control (TFS). When I start debugging Visual studio there is an error Path/file access error: Path/name.vbg and dialog for "Save Project Group As" follows when canceled debugging runs without problems. To circumvent this annoyance I need to have the group file checked out or mark as readable just by file attribute. Is there a way how to avoid this behavior?
+
+Notes: Situation was the same when Visual Source Safe was used. By my observation .vbg is not changed when the change is allowed. The problem can be connected with using English Windows with non English regional settings.
+    
+
+        
+Answer 1: 
+
+    
+    
+No. Just keep the VBG in version control, and make the files read-write in your local directory. 
+    
+    
+Answer 2: 
+
+    
+    
+The easiest solution would be for you to save your VBG files to a folder outside of source control. It won't make a difference to the running directory - that is based on the EXE project (if any).
+    
+    
+Title: I need a windows objective-c programming IDE that checks syntax and warns errors
+Description: 
+    
+    
+                    
+I need a programming IDE for windows and objective-c.  It doesn't need to compile and run or anything like that, but I really need it to check my code, and make sure it's legitimate.
+
+After hours of searching I haven't found anything good...
+    
+
+        
+Answer 1: 
+
+    
+    
+JetBrain is one and there was a failed eclipse objective c project. Or you could use X-code on a virtual Machine
+    
+    
+Title: QtCreator 2.7.0 &amp; class browser
+Description: 
+    
+    
+                    
+Does QtCreator 2.7.0 offers some kind of class browser that given some headers can help you to filter classes, members and so on ? 
+
+something like the html output from doxygen and its simple search engine.
+
+I also found that suggestions for ctors are often incompletes or wrong, for example if a type offers more than 1 ctor only 1 is the suggested one.
+
+For example I can build an std::string containing 10 # like so std::string(10, '#') but QtCreator doesn't say nothing about this.
+
+There is something more complete as a class browser and ctor listing under Qtcreator ?
+    
+
+        
+Answer 1: 
+
+    
+    
+Thing that stopped you is just a bug, please report it to qt-project bugtracker or vote +1 to existing bug.
+
+QtCreator have class browser in project tree (just switch mode on top of this widget from "Projects" to "Class View". It also can search for classes and for any C++ symbol (class, function, method, constructor, etc) with Quick Search.
+
+Quick Search is an input filed on bottom panel (hotkey: Ctrk+K or Cmd+K on Mac OS X), which, by default, search by file names. If you enter "c ClassName", it will filter classes at whole project by substring "ClassName", and if you enter ": name", it will filter methods/classes/ctors/etc. at whole project by substring "name".
+    
+    
+Title: Display only recently modified tabs when editing multiple files in Eclipse 4
+Description: 
+    
+    
+                    
+In Eclipse 3.x, if you were working on say 60 files at once, but you were only editing 4 in a particular session, then the tabs for these four would tend to stay displayed throughout. For example: if I edit tab 1, and then tab 60, tab 1 will still be displayed and I can switch back to it quickly.
+
+However in Eclipse 4.x, it seems displayed tabs have no relevance to editing history. For example: if I edit tab 1, and then edit tab 60, tab 1 will not be displayed: I will have to use the dropdown to re-select it.
+
+Is there any way to restore the functionality of Eclipse 3.x, in that recent or session tabs stay displayed when switching between documents?
+    
+
+        
+Answer 1: 
+
+    
+    
+This is intended behaviour for the new Windows 7 style of Eclipse 4: see Eclipse bug 389169.
+
+You can restore the previous behaviour - and also the previous style - by selecting the Classic theme in General /em/p/div
+Title: Pygame and IDEs &mdash; source changes require python restart
+Description: 
+    
+    
+                    
+I can run my pygame project fine in either of the IDEs I use (Spyder and IEP), but then I try makes changes to some of the .py files and when I run the project again, the changes don't show up. I think this has something to do with the IDEs running .py files as scripts, but I can't figure out a good solution. I tried deleting the compiled files but the same problem still occurs.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use the reload function to update the running python instance with the updated files.
+    
+    
+Title: Ruby&#39;s irb with [what?] is equivalent to the Python Shell with IDLE? (On Windows, if relevant.)
+Description: 
+    
+    
+                    
+This has been a surprisingly hard question to find an answer to.
+
+(A few questions seem to be asking something at least similar, like:
+
+Ruby console alternative for IRB (Windows)
+
+IDLE like interactive console for Ruby
+
+A recommended Ruby interactive console
+
+But I couldn't get what I need from any of those.)
+
+Also, I'm a bit unsure of the precise terminology I should be using, so I'll try to be really concrete here:
+
+Say you're using IDLE with the Python shell.
+
+You have one of IDLE's text-editor windows open with a script "example.py" in it.
+
+You hit F5 and the Python shell comes up and does exactly what it would do if you had just entered every line in "example.py" into the shell line-by-line.
+
+Functionally, that's exactly what it's doing is automatically entering every line, only without cluttering up the screen by displaying them. (Also it resets the shell to a fresh state every time you do this, but that's not really the important point at the moment; Sometimes it'd be nice to have the option of having it not reset the state of the shell, whatever.)
+
+So the outcome is that now you can play around in the shell, and all the functions and variables etc that were in the script that you just ran are all there.
+
+But with irb...
+
+How do I get the same effect?
+
+For instance, I tried irb example.rb (an equivalent ruby script) in the Windows console, and it just literally enters each line one-by-one into irb, spewing them down the screen, then automatically exits back to the Windows command prompt.
+
+(Although even if that did work the way I wanted (is there some option flaggy argument thingy that would make it do more what I want here?), I'd still have to alt-tab from the text-editor to a console window, and enter the command and file name, which is inferior to just pressing F5, obvs.)
+
+To make really sure I'm being clear in what I mean, here are concrete examples of:
+
+1) a Python script for "example.py"
+2) an example of running it in the shell then doing some things in the shell (copy-pasted from the actual shell)
+
+3) an equivalent Ruby script to that Python one
+4) an example of running it in the kludgy, slow online-interpreter at repl.it, and doing the exact same things in that irb shell (again, copy-pasted)
+
+1) example.py :
+
+x = "some value you don't want to keep reassigning to this variable"
+y = "some other value like that"
+
+def some_function(var):
+    return "do something complicated with `"+var+"`"
+
+
+print("example.py just ran")
+
+
+2) Python shell :
+
+Python 3.2.3 (default, Apr 11 2012, 07:15:24) [MSC v.1500 32 bit (Intel)] on win32
+Type "copyright", "credits" or "license()" for more information.
+&gt;&gt;&gt; ================================ RESTART ================================
+&gt;&gt;&gt; 
+example.py just ran
+&gt;&gt;&gt; x
+"some value you don't want to keep reassigning to this variable"
+&gt;&gt;&gt; y
+'some other value like that'
+&gt;&gt;&gt; print(some_function(x))
+do something complicated with `some value you don't want to keep reassigning to this variable`
+&gt;&gt;&gt; x = "a frog"
+&gt;&gt;&gt; print(some_function(x))
+do something complicated with `a frog`
+&gt;&gt;&gt; print("gonna run example.py again")
+gonna run example.py again
+&gt;&gt;&gt; ================================ RESTART ================================
+&gt;&gt;&gt; 
+example.py just ran
+&gt;&gt;&gt; print("x is back to: `\""+x+"\"`")
+x is back to: `"some value you don't want to keep reassigning to this variable"`
+
+
+3) example.rb :
+
+x = "some value you don't want to keep reassigning to this variable"
+y = "some other value like that"
+
+def some_function var
+        "do something complicated with `#{var}`"
+end
+
+puts "test.rb just ran"
+
+
+4) online Ruby irb shell thing at repl.it :
+
+Ruby 1.8.7 (2008-05-31 patchlevel 0) [x86-linux]
+[GCC 4.2.1 (LLVM, Emscripten 1.5, Emscripted-Ruby)]
+
+test.rb just ran
+=&gt; nil
+   x
+=&gt; "some value you don't want to keep reassigning to this variable"
+   y
+=&gt; "some other value like that"
+   puts some_function x
+do something complicated with `some value you don't want to keep reassigning to this variable`
+=&gt; nil
+   x = "a frog"
+=&gt; "a frog"
+   puts some_function x
+do something complicated with `a frog`
+=&gt; nil
+   puts "gonna run this script again..."
+gonna run this script again...
+=&gt; nil
+
+test.rb just ran
+=&gt; nil
+   puts "x is back to: `\"#{x}\"`"
+x is back to: `"some value you don't want to keep reassigning to this variable"`
+=&gt; nil
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The best answer I've found so far seems to be to install pry (enter gem install pry at the command prompt).
+
+Now if you run a script by entering pry scriptname.rb, and it encounters an exception, it will automatically go interactive.
+
+Furthermore, if you add require 'pry' inside the script at the top, then you can put binding.pry in the script at ay point.
+
+Now when you run the script (simply by entering scriptname.rb at the command prompt), it will stop executing and go interactive in pry at that point.
+
+Pressing ^D (ie, ctrl-d) will resume execution.
+
+Getting a script to run in a command prompt window when you press F5 (or whatever) in your editor (eg, Notepad++) is apparently somewhat trickier. Solutions like this have some problems that I haven't figure out how to tweak away yet.
+
+So currently I'm just alt-tabbing to the command prompt window and running the script from there (again, by entering pry scriptname.rb or just scriptname.rb, depending on what exactly what I want and whether I put a binding.pry in the script anywhere. Up-arrow recall, tab completion, blah blah.)
+
+I'm working on figuring it out.
+    
+    
+Answer 2: 
+
+    
+    
+I am not 100% sure if this is what you want, but from my experience, using ruby scriptname.rb will run the code
+    
+    
+Title: Javascript editor for EaselJS code complete
+Description: 
+    
+    
+                    
+What javascript editor I can use for EaselJS code complete? 
+I tried Aptana plugin for eclipse but it did not work out, I also tried making an uncompressed file using below command and import the uncompress file
+
+
+  node ./build.js --format=PRETTY_PRINT
+
+
+I also tried to look for sdocml for EaselJS but I could not find any.
+
+Does any one know how we can get  EaselJS code complete? 
+
+Thanks
+
+-Maaz
+    
+
+        
+Answer 1: 
+
+    
+    
+though this is nothing official and unfortunately I haven't had the time to adjust this to EaselJS 0.6.0 here is a code-completion for SublimeText: http://indiegamr.com/easeljs-codecompletion-for-sublimetext2/ - but be aware, this is no 'intelligent' completion as you might be used to from Java or AS3, but it includes the methods and attributes ect. from 0.5.0
+
+There is also a TypeScript-definition for CreateJS: https://bitbucket.org/drk4/createjs_ts_definitions (unfortunately also only EaselJS 0.5.0) - but TypeScript is a way better choice than pure JS if you want a good/intelligent code-completion. - But maybe you can find something for 0.6.0 for this on the web.
+
+*Edit: This looks like an updated version for TypeScript: https://nuget.org/packages/easeljs.TypeScript.DefinitelyTyped/
+    
+    
+Title: Java : Interactive Console using jTextArea
+Description: 
+    
+    
+                    
+I am developing a cmd like console using jTextArea, for an IDE. What I want to do is as I click the execute button, it provides me interactive input/output screen in the jTextArea.
+
+I am able to grab the output contents of the cmd screen, but what if user wants to run a command like take two integers as input from stdin (here from my jTextArea) and display the sum, on my console screen, as if it happened in a normal cmd/terminal.
+
+How do I send input to that instance/session?
+    
+
+        
+Answer 1: 
+
+    
+    
+See java.lang.Process, method java.lang.Process.getOutputStream()
+
+The name OutputStream is a doubtful choice because it's the input of the underlying process, the output for your program.
+    
+    
+Title: Free compiler + IDE for writing Windows App in C++ (for students)
+Description: 
+    
+    
+                    
+I will be teaching middle school and high school students C++ over this summer vacation. I went to a bookstore, browsed through some of recommended C++ books such as C++ Primer, The C++ Programming Language, Thinking in C++ and I have strong confidence that my students will lose interest quickly when they read those books :) It will be 2 hours a week for 8 weeks program so I don't have much time and the main goal will be to get students excided about writing app and also have them somewhat prepared for AP computer class for the next semester (thus C++ instead of C# or Java)
+
+I myself learned programming using MFC first. I didn't know anything about C++ but followed Sam's teach yourself on VC++ MFC and the idea of being able to write an app where I can click on a button and have it pop up "hello world" was so much cooler then boring console app. If I started from console app with black screen and white text, i probably won't be doing software for living today.
+
+So I was going to teach MFC to my students. I won't go in too deep into MFC as the focus will be on C++ and to make students excited about programming....Until i realized that Visual studio express doesn't include MFC. 
+
+It would be great if there is C++ compiler, IDE and framework that my students can use for free and be able to create a windows dialog app. Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+I would suggest a book like "Head First C" the Head First series has a lot of pictures and it is really interesting to read because it has a lot of humor. Although they do not have a C++ book. It would be worth checking out so you can get a better idea on how to explain things differently. 
+
+I personally love these books because like I said it has a lot visual stuff to think about. If you are thinking of teaching OOP concepts then the Head First OOAD is a must in my opinion. 
+
+I'm not sure if there are free C++ IDE to create windows console apps. There free IDE's to create C++ applications, but for Windows specific. I dont think there is. I am pretty sure if you contact microsoft they may be able to give you free licenses. since you will be teaching at a k-12 school. However, the Visual Studio Express version is free, so that should be enough to get you started. 
+
+If you want all the bells and whistles then the Pro version is the way to go, but it may take contacting Microsoft to get it for free.
+
+Best wishes.
+    
+    
+Answer 2: 
+
+    
+    
+Did you check out Accelerated C++? It was a textbook of modern C++, written for beginners.
+
+http://www.amazon.com/Accelerated-C-Practical-Programming-Example/dp/020170353X
+
+I am not sure whether teaching GUI programming for beginners is a good idea. GUI programming, by its very nature, is more complicated. If you really want to have a try, Codeblocks is a cross-platform IDE built around wxWidgets, which is a decent open-source GUI framework.
+    
+    
+Answer 3: 
+
+    
+    
+MFC is rather old and Forms programming under Windows using Visual Studio is the current practice using C++/CLI which is an extension to c++ and would have to be learned but is a similar syntax to c++.
+
+If your interest is in Visual Studio, that is the way I would go unless the Express editions are undesirable and you could go with an open source IDE/Compiler using Eclipse C++ CDT and MinGW.  There is also CodeBlocks and a few other opensource and free IDEs in which your students can write c++ code.
+
+I also plug C++ Primer as a book I am learning c++ with.
+    
+    
+Title: Is there a macro recorder in Xamarin studio?
+Description: 
+    
+    
+                    
+I can't find the keystroke macro recorder in Xamarin Studio, however it's an usefull feature for an IDE (to edit some aligned code lines for example). Where is it hidden ?
+
+In the same order of idea, searches are bit basic, where can I set if a search is only related to the "full words" (so the expression separated by symbols/blanks) ?
+    
+
+        
+Answer 1: 
+
+    
+    
+As of March 6th, 2013, it appears there is no keystroke macro support
+http://forums.xamarin.com/discussion/1987/keystroke-macros-please
+
+The post talks about code snippets, maybe that will work for you?
+
+Martin
+    
+    
+Title: Use emacs or vim syntax highlighting files (e-lisp, vimrc) in Eclipse
+Description: 
+    
+    
+                    
+Is it possible to somehow import emacs or vim sytax highlighting specifications in Eclipse? I tried searching but all I can find are questions about vim/emacs and Eclipse integration or other unrelated things.
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't know about that other editor, but for Vim syntax highlighting, this is definitely not possible. Why?
+
+
+Vim syntax definitions are written in Vimscript; it would require a complete interpreter.
+Most definitions use regular expressions; no other engine implements exactly the same flavor; some atoms are unique to Vim.
+
+
+If you just want similar colors in Eclipse, you can certainly re-create your Vim colorscheme in another editor. The output of :highlight gives you all defined groups and their color values.
+    
+    
+Title: Aptana 3 Studio: Can I put the www Apache folder as workspace?
+Description: 
+    
+    
+                    
+I am very new in PHP world and now I have install Apatana 3 Studio and I have some question to you about PHP configuration in this development environment.
+
+Seems that my configuration work well but I don't know if it is configured in a smart way...
+
+I use Ubuntu and I have installed Apache 2 web server
+
+Executing a simple php file (that is inside my /var/www folder) conteining phpinfo() function:
+
+&lt;?php phpinfo(); ?&gt;
+
+
+I obtain some information and seems that I have installed Apache 2 web server under this path: /etc/php5/apache2 and that the php.ini file have this path: /etc/php5/apache2/php.ini
+
+Infact, this is part of the phpinfo() output that I obtain:
+
+
+  Configuration File (php.ini) Path   /etc/php5/apache2 Loaded
+  
+  Configuration File   /etc/php5/apache2/php.ini
+
+
+Ok, so I have configured my PHP environment settings in the following way:
+
+1) I have create a new WorkSpace so that it matches the folder /var/www
+
+2) I have set an external web server in this way: Windows ---
+Answer 1: 
+
+    
+    
+You can put it. Actually, I've did this with my Aptana install on Windows. On ubuntu I'm not using Aptana but it's the same principle..
+    
+    
+Answer 2: 
+
+    
+    
+As long as you create new projects as a sub-folder of /var/www you are fine.
+
+Creating sub-folders is to allow for multiple projects to be previewed with the same server.
+
+If you wish, you can place your project directly in the root of the web server, but note that if you delete the project, and select to "delete files on disk" it will delete the entire directory and all contents.
+
+Reference: Setting up an external web server to preview PHP and other non-HTML pages
+    
+    
+Title: I would like to place a Visual studio code editor in a Direct X window. Is this feasibly possible? [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        Can I host the Visual Studio 2010 editor in my application?
+                            
+                                (4 answers)
+                            
+                    
+                Closed 6 years ago.
+        
+
+
+    
+
+Is it possible to grab the code editor "control" used within Visual Studio using the VS SDK APIs?
+Would I be able to draw this control to other places outside of Visual Studio?
+
+I would like to have C# editing capabilities in the application I am considering developing (with IDE support that the code editor provides).
+    
+
+        
+Answer 1: 
+
+    
+    
+I have an idea: 
+
+HWND WINAPI FindWindow(
+  _In_opt_  LPCTSTR lpClassName,
+  _In_opt_  LPCTSTR lpWindowName
+);
+
+
+First you get a lpWindowName with Spy++, then by using FindWindow you get a handle of this window and can show / place it where ever you want.
+    
+    
+Title: Eclipse not able to find libraries after reinstall
+Description: 
+    
+    
+                    
+I had to reinstall my OS and now I can't load my old projects on Eclipse IDE. At first it didn't find the GAE source folder, as it was not on the same location where it was when I created the project, so I just changued the variable $GOOGLE_APP_ENGINE to where it really was.
+
+But now it seems that on the new version of the GAE source the library folders have different names, and Eclipse won't find them.
+
+How can I make Eclipse modify the info on my old projects so it updates the library folders names?
+
+Thank you very much.
+    
+
+        
+Answer 1: 
+
+    
+    
+If you are using python, you need to set the correct paths on Project -
+Title: IDE for mongodb for Ubuntu [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        How can I browse or query live MongoDB data?
+                            
+                                (21 answers)
+                            
+                    
+                Closed 7 years ago.
+        
+
+
+    
+
+Previously I was using MongoDB with the help of MobgoVUE on Windows 7, but now i switched from Windows 7 to Ubuntu and am facing problem to work efficiently on mongodb by commands.
+
+Can anyone help me suggest any IDE for MongoDB in Ubuntu.
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+Take a look at here: http://www.mongodb.org/display/DOCS/Admin+UIs
+
+Personally, I think that UMongo (formerly JMongoBrowser) seems to be the best option for Linux.
+    
+    
+Answer 2: 
+
+    
+    
+Two good options:
+
+RockMongo (php)
+
+GenghisApp (php/ruby)
+
+Also start learning to use the Mongo Shell - better than any graphical ide. Go to mongodb.org and click on try the shell.
+    
+    
+Title: Visual Studio 2012: Sign Symbol in Property Symbol
+Description: 
+    
+    
+                    
+I noticed a symbol in the Watch Window that I have never seen before. It looks like this:
+
+
+
+
+What does this mean? When I wouldn't have access, why can I see the value then?  I already looked on MSDN, but it is not listed. Does anyone know what this symbol means?
+
+NOTE: I am referring to the icon on the left.1.
+    
+
+        
+Answer 1: 
+
+    
+    
+I just got it, reminded this post and decided to answer it.
+
+This just says the property has the access modifier internal.
+
+That's it, nothing more.
+    
+    
+Title: AspectJ causing &ldquo;Editor does not contain a main type&rdquo; error
+Description: 
+    
+    
+                    
+After installing the AspectJ Development Tools into Eclipse, the "Run" button and the Ctrl-F11 shortcut both become nearly useless: using them (or the Debug button) will throw an "Editor does not contain a main type" error message, even for projects that do not require a main type to be present (eg. Android application projects). Standalone Java projects with a proper main type defined work fine - so it seems AJDT is forcing Eclipse to check for a Java main() without checking the project type first. Whether or not the project is an AspectJ project makes no difference, either.
+
+The problem only appears when the file you are currently editing has either ".java", ".aj" or ".class" anywhere within its filename (note: it doesn't actually have to end with those extensions, as long as it's anywhere in there - readme.txt will work, readme.java.txt won't).
+
+Two ways I've found to work around this - regardless of whether or not it's an AJ project - after installing AJDT is:
+
+
+Select a file within your project in the Package Explorer whose name doesn't contain .java, .class or .aj, and then hit Run (the Package Explorer has to remain active and selected).
+Create a new Run Configuration for your project, and use it to launch your project. This still adds a pointless extra step, as well as being impractical for those who work with a lot of projects.
+
+
+I've tried this on both Eclipse Juno and Helios (Windows XP x86 as well as Win7 x64), the result is the same. While it might seem like nitpicking it certainly isn't: AJDT is hijacking the most frequently used function of the IDE.
+
+I've resorted to having two different Eclipse installations with their own separate workspaces on my work PC, one with AJDT installed, and one without, so I can use the IDE properly when I'm not working on anything AJ-related. Since my company is working on a project that would require other developers to install AJDT into their IDEs, this is a significant issue for us that goes beyond our own loss of time - I can't imagine a lot of developers would be willing to put up with a significant bottleneck being added to their workflow for absolutely no reason at all. So most likely, they will just ditch our product instead!
+
+
+
+Update: This has been identified to be a bug inside AspectJ, and has been reported to the AJ development team. You can keep track of it here: https://bugs.eclipse.org/bugs/show_bug.cgi?id=399660
+As of this writing, the bug has already been partially fixed, restoring Run functionality to non-AJ-enabled projects.
+    
+
+        
+Answer 1: 
+
+    
+    
+I was just coming on this site to ask the same question. While I don't have an answer for why this is going wrong, I have a workaround which is helping me currently:
+
+Go to Preferences 
+Title: ATA commands to USB drive
+Description: 
+    
+    
+                    
+Windows 7
+C Programming
+Visual C++ 2008 (in a VMWare) 
+
+I'd like to send some ATA commands (IDENTIFY DEVICE, READ NATIVE MAX ADDRESS, SET MAX ADDRESS) with DeviceIOControl to a USB hard drive. Therefore I have some questions.
+
+As I understood, USBSTOR cannot handle ATA-commands directly (with IOCTL_ATA_PASS_THROUGH). I tried this and it worked with the native IDE hard drive but not with USB.
+
+
+Is it correct that applications send SCSI-commands to the device and they are forwarded to the device? So I need to create a SCSI command with the respective ATA command encapsulated? 
+With what dwIoControlCode can I do that? I tried it with IOCTL_SCSI_MINIPORT but the error was ERROR_NOT_SUPPORTED. Could it work with minport? Is miniport still up to date?
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Look at this link:
+
+http://www.mombu.com/microsoft/windows-programmer-nt-kernel-mode/t-howto-send-ata-spec-command-to-usb-hdd-1646752.html
+
+
+  Q: howto send ATA spec. command to USB HDD?
+
+
+A: You are limited to whatever the USB-
+Title: WML and WAP development environment for school purpose
+Description: 
+    
+    
+                    
+I am studying WML and WAP at semester 5 in BscIT and i had hard time finding the nokia wap toolkit as used in my books.When i finally got a copy from a friend , it never loaded the jvm even though beside java 1.6  that was previouly installed i installed jre 1.4 .Besides i have a dual booting windows7/Ubuntu12.04. i clearly prefer working from Ubuntu. Is there any alternatives. Like IDE, eclipse, netbeans, intellij ? what I've seen  so far are Android sdk,java MIDP projects from these IDEs but not some sort of wml project.
+
+Please point me to the right direction. thank you
+    
+
+        
+Answer 1: 
+
+    
+    
+You could try the Openwave SDK, which has been helpfully archived here. Sadly, just like the Nokia WAP Toolkit it is no longer available or supported by the manufacturer.
+
+Obviously it isn't going to match the examples in your books, but it should give you a simple environment in which to run and test WAP applications. Note this is Windows only, and pre-dates Windows 7; hopefully it will run.
+    
+    
+Answer 2: 
+
+    
+    
+do code in a document file and give .wml extension. After that to run this code just add a add-ons to your firefox. It's great to work with these.
+
+Thanks. 
+    
+    
+Title: PHP IDE with autolinkage of files based on pattern?
+Description: 
+    
+    
+                    
+I have a structure of php files related with each other in a predictable way. I'm using a modified version of the MVC pattern used in asp.net. Since I'm frequently switching between files I find that I'm opening too many tabs for them to be useful. 
+
+Most of the files are classes calling and instancing each other so code-links like css-files included by html in dreamweaver, for example, doesn't work. 
+
+I still want tabs as well so I can switch between groups of these related files.
+
+Source Code, user_registration.php and users_wider.css are the links here.
+The links i talked about are just below this text. 
+
+
+Is there a way in any free or low-cost IDE to get automatically updating links as described to all the related files? I'm using Windows and Mac. One IDE for both OS:es would be nice but one is better than none.
+    
+
+        
+Answer 1: 
+
+    
+    
+I found a way of doing this in Dreamweaver CS5 (by accident). This is probably a bug.
+If you comment away a php require or include dreamweaver still links those files.
+
+
+
+So by adding a few lines of comments anywhere in the document (i prefer the top) you can "link" any files the same way Dreamweaver links css and js that's added in html. 
+
+Works on both mac 10.6 and windows 7. Haven't tested any other version yet.
+    
+    
+Answer 2: 
+
+    
+    
+JetBrains's PhpStorm might be a good option. http://www.jetbrains.com/phpstorm/
+
+I haven't used this specific IDE before, but I have used ReSharper and IntelliJ, two other products of theirs. They make quality stuff. It's not free, but there's a trial so you can see if it will fit what you need before you buy.
+    
+    
+Title: webstorm bug? project pane missing, did i bump a hotkey?
+Description: 
+    
+    
+                    
+I.T. gave me an upgrade to V5 and I can't see my directory listing.
+Maybe I bumped a hotkey i don;t know about?
+You can see a screengrab here http://dl.dropbox.com/u/23768853/help.jpg
+
+I'm combing thru all the preferences but so far nothing, anyone know how to make it come back?
+    
+
+        
+Answer 1: 
+
+    
+    
+Fixed !
+I.T.  re-copied the application into the application folder and webstorm is working normally again.
+Surprising to think that the application can run even after a corrupt install.
+    
+    
+Title: Make project automatically makes IntelliJ IDEA very slow. Any workaround?
+Description: 
+    
+    
+                    
+I tried to use the "Eclipse mode" to do the build in background, in order to identify compilation error while refactoring:
+
+
+
+but IDEA becomes so slow!
+
+Any workaround?   
+
+I already tried the IDEA way of compiling and it's not for me: for the first time in ages I am breaking the builds... (and I need to double check from the command line with mvn-compile before to git-push)
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse Mode plug-in is known to cause performance issues, uninstall it. Make project automatically should not affect IDE performance. If it's slow, provide a CPU snapshot.
+    
+    
+Title: Does clooj evaluates line by line or by the whole line
+Description: 
+    
+    
+                    
+It seems when i evaluate the whole file it does not have an issue.
+
+(ns ShipDataRecord
+  (:import [java.util.Date]
+   [org.joda.time.DateTime]
+   [org.joda.time.Seconds]
+   [org.joda.time.format.*]
+   [semsav.RecordSplitter]))
+(require '[clojure.data.csv :as csv]
+         '[clojure.java.io :as io])
+
+(defrecord Record [W1 W2 W3])
+
+(defn read-csv [fname count]
+  (with-open [file (reader fname)]
+    (doall (take count (map (comp first csv/read-csv)
+                            (line-seq file))))))
+
+(map #(apply -&gt;Record %) (read-csv "test.csv" 1))
+
+
+However, when i evaluate line by line it seems to give me a problem.
+
+Hence after evaluating the file, i ran this line in the REPL 
+
+(:W3 (first Record))
+
+
+but it gives me a compiler exception of IllegalArgumentException Don't know how to create ISeq from: java.lang.Class  clojure.lang.RT.seqFrom (RT.java:494).
+
+I have googled around but i cant seem to find the problem. I have asked this in another question but as the words are too long i have to create a new question 
+    
+
+        
+Answer 1: 
+
+    
+    
+In (:W3 (first Record)) the symbol Record represents class Record. I guess from your previous post you just want to get :W3 field from first record of collection of records produced by (map #...). So all you need is to get this value right from map expression or from variable where you can store result of expression:
+
+(:W3 (first (map #(apply -&gt;Record %) (read-csv "1.csv" 1))))
+
+
+or
+
+(def records (map #(apply -&gt;Record %) (read-csv "1.csv" 1)))
+
+(:W3 (first records))
+
+    
+    
+Title: Goto jsp page in NetBeans
+Description: 
+    
+    
+                    
+I work with Spring framework and have a lot of lines in .java:
+
+
+new ModelAndView("/reports/distribution", map);
+
+
+and in dispatcher-servlet.xml:
+
+
+&lt;bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"&gt;
+    &lt;property name="prefix" value="/WEB-INF/jsp/" /&gt;
+    &lt;property name="suffix" value=".jsp" /&gt;
+    &lt;property name="viewClass" value="org.springframework.web.servlet.view.JstlView" /&gt;
+&lt;/bean&gt;
+
+
+I think that this info is enough for goto file PROJ-ROOT/src/main/jsp/reports/distribution.jsp from java code.
+
+Is there any standard command or extension for NetBeans with implementation of such command?
+    
+
+        
+Answer 1: 
+
+    
+    
+As Ben suggested for goto JSP file feature "Quick FileChooser" plug-in can be used.
+
+But this solution isn't perfect as use need select and copy JSP file name...
+
+
+Netbeans Shortcut to Open File
+http://blog.anorgan.com/2012/10/14/quick-file-opening-in-netbeans/
+http://plugins.netbeans.org/plugin/16495/open-file-fast
+
+    
+    
+Title: `require&#39;: cannot load such file &mdash; mail (LoadError)
+Description: 
+    
+    
+                    
+In trying to use the mail gem from geany I get errors as so:
+
+/home/thufir/.rvm/rubies/ruby-1.9.3-p327/lib/ruby/site_ruby/1.9.1/rubygems/custom_require.rb:36:in `require': cannot load such file -- mail (LoadError)
+    from /home/thufir/.rvm/rubies/ruby-1.9.3-p327/lib/ruby/site_ruby/1.9.1/rubygems/custom_require.rb:36:in `require'
+    from mail.rb:3:in `&lt;main&gt;'
+
+
+------------------
+(program exited with code: 1)
+Press return to continue
+
+
+However, the program runs fine from the CLI:
+
+thufir@dur:~$ 
+thufir@dur:~$ ruby ruby/mail.rb 
+hello world
+hello world
+thufir@dur:~$ 
+thufir@dur:~$ nl ruby/mail.rb 
+     1  require 'yaml'
+     2  require 'net/imap'
+     3  require 'mail'
+
+     4  2.times do
+     5    puts 'hello world'
+     6  end
+thufir@dur:~$ 
+thufir@dur:~$ ruby -v
+ruby 1.9.3p327 (2012-11-10 revision 37606) [i686-linux]
+thufir@dur:~$ 
+thufir@dur:~$ gem -v
+1.8.24
+thufir@dur:~$ 
+thufir@dur:~$ rvm -v
+
+rvm 1.17.2 (stable) by Wayne E. Seguin &lt;wayneeseguin@gmail.com&gt;, Michal Papis &lt;mpapis@gmail.com&gt; [https://rvm.io/]
+
+thufir@dur:~$ 
+
+
+Why does geany have trouble with the mail gem?
+
+Just to confirm:
+
+thufir@dur:~$ 
+thufir@dur:~$ type rvm | head -1
+rvm is a function
+thufir@dur:~$ 
+thufir@dur:~$ gem list --local
+
+*** LOCAL GEMS ***
+
+bundler (1.2.3)
+i18n (0.6.1)
+mail (2.5.3)
+mime-types (1.19)
+polyglot (0.3.3)
+rake (10.0.3)
+rubygems-bundler (1.1.0)
+rvm (1.11.3.5)
+treetop (1.4.12)
+thufir@dur:~$ 
+
+
+geany mailing list question
+
+related question
+    
+
+        
+Answer 1: 
+
+    
+    
+your system is not configured to use login shell, here is an example how to enable login shell in gnome terminal https://rvm.io/integration/gnome-terminal/
+
+also running:
+
+rvm get head --auto-dotfiles
+
+
+will update your shell configuration to load rvm in the "right" way
+    
+    
+Title: Changing Webmatrix IDE color theme
+Description: 
+    
+    
+                    
+I've started working with webmatrix, and I have to admit it works really well.
+But the customization is not very intuitive. I've managed to change the code editor color theme to dark, but I can't find a way to change the color theme for the whole IDE.
+Google wasn't very helpful on the subject, can it even be done?
+
+Thank you.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can't change the whole theme of WebMatrix, but you can change the theme of the coding window. This can be done by installing the free extension ColorThemeManager from there you can download others or create your own theme.
+    
+    
+Answer 2: 
+
+    
+    
+Upon reviewing the choices in "Options", nothing suggests that the look and feel can be altered.
+    
+    
+Title: How well does the current DreamWeaver work with complex PHP frameworks?
+Description: 
+    
+    
+                    
+I've always been intrigued by DreamWeaver, particularly the ability to click on something and edit its CSS right there so I don't have to find it in my huge list of CSS.  However, I use a pretty complex home-made MVC framework for my coding that loads and creates pages through a series of includes, classes, function calls, etc.  Quite a while ago, I tried a little to get Dreamweaver to even load a page but gave up pretty quickly.  It wouldn't even display a single thing.  I didn't try anything special though to get it to work like messing in the settings though.  
+
+I was wondering if DreamWeaver can handle something like this at this point and if so, what version would I need and how can I find out how to do it?  If not, does anyone know of a good visual IDE where I can edit CSS just by clicking on something that would also support a complex PHP MVC framework page loading process?
+    
+
+        
+Answer 1: 
+
+    
+    
+You have to know how to develop a Dreamweaver extensions. The following resource, official Adobe website, offers a manual to do that:
+
+http://www.adobe.com/support/dreamweaver/extend.html#dw8
+    
+    
+Title: TextMate - Keep editor in focus when doing Run for Python scripts
+Description: 
+    
+    
+                    
+I'm writing Python and I find it annoying that when I press Cmd + R, TextMate (1.5.11) would focus on the "running..." window, so I have to switch back to the main window to continue writing code. 
+
+Is it possible to prevent TextMate from doing that and run my code in background — or, would you recommend an alternative way (another bundle?) to run Python code?
+    
+
+        
+Answer 1: 
+
+    
+    
+I wrote a simple TextMate bundle to run Python, Ruby, PHP, Bash scripts without stealing focus from TextMate and released it on GitHub under the MIT license.
+    
+    
+Title: Python Kivy in Eclipse IDE on Mac
+Description: 
+    
+    
+                    
+I am trying to use the Kivy library for python in the Eclipse IDE. I have tried some solutions that I have found on google but none of them seem to work. I am using Mac OSX 10.7 with python 2.7.
+
+I have installed the kivy setup.py file with the command
+
+python setup.py install
+
+
+I now how a kivy folder in /Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/. In eclipse I go to Preferences-
+Answer 1: 
+
+    
+    
+In a recent Google Groups post, Russell Owen outlined how he built a 64-bit version of PyGame 1.9.1 for Mac OS X 10.6 (Snow Leopard), and also provides a URL to a pre-built 64-bit PyGame OS X binary dmg file!
+
+pygame-1.9.1release-py2.7-python.org-macosx10.6.dmg
+
+Russell's instructions were:
+
+Building pygame 1.9.1 on Mac OS X 10.6 using XCode 3.2.6
+2012-04-12
+I was building this for a binary distribution that would run against python.org's 64-bit Python 2.7.2, for use on Mac OS X 10.6 and later.
+
+* Install dependencies:
+
+- libjpeg (use ./configure, make, sudo make install)
+- SDL and extra packages (use precompiled framework builds):
+  - SDL
+  - SDL_mixer
+  - SDL_image
+  - SDL_ttf
+- portmidi (use CMake as per the instructions)
+
+* Delete shared libraries in /usr/local/lib (if you want to build a binary installer that can be used elsewhere).
+
+* Check for /usr/local/lib/portmidi.a and if not found, make it a symlink from /usr/local/lib/portmidi_s.a or whatever portmidi got installed.
+
+* Modify config_darwin.py to include '/usr/X11/include' and '/usr/X11/lib':
+    incdirs = ['/usr/X11/include', '/usr/local/include']
+    libdirs = ['/usr/X11/lib/', '/usr/local/lib']
+
+(since libpng and libfreetype are standard in /usr/X11)
+
+* Configure pygame and make sure it finds everything:
+
+python config.py
+
+As of 2012-04-12 on Mac OS X 10.6 I found that png was NOT found. I have no idea why, but I went ahead and installed it manually.
+
+Also SCRAP is not found, but apparently that is normal for Mac OS X.
+
+* Build pygame normally
+
+python setup.py build
+bdist_mpkg (or sudo python setup.py install if you don't want a binary installer)
+
+
+Hopefully, these instructions will work on more recent versions of OS X and XCode (please let us know if they do).
+
+Thanks
+    
+    
+Answer 2: 
+
+    
+    
+Looking at the import errors in your output it would appear you need to install pygame and PIL.
+
+The pygame install looks tricky but there's a guide for installing pygame with homebrew:
+
+https://bitbucket.org/pygame/pygame/issue/82/homebrew-on-leopard-fails-to-install#comment-627494
+
+If you have Xcode installed you should in theory be able to do 'easy_install PIL' or 'pip install PIL' if you're using distribute.
+    
+    
+Title: How to add C compiler in MPLAB IDE v 8.0?
+Description: 
+    
+    
+                    
+I am trying to write some programs using MPLAB IDE in C language. For that I have installed version 8.0 MPLAB. But I could not find out the C compiler in it. So how to proceed to get the C compiler. Hope to get quick responses.
+                  Cheers!!!
+    
+
+        
+Answer 1: 
+
+    
+    
+You have to install a C compiler separate.  MPLAB supports several C compilers and it's easiest just to download one from Microchip.  The compiler you'll need will depend on the chip family you are looking to program against whether it be 8, 16, or 32 bit.  You can find more information on the various compilers available from Microchip here.
+    
+    
+Title: Selenium IDE - Verify random generated email
+Description: 
+    
+    
+                    
+I want to use this below code to randomize an email address creation - but on my website I have another "type" field which requires me to verify this email address afterwards, so it needs to type in that specific generated address to make it work - how can I do that easily ?
+
+    &lt;tr&gt;
+    &lt;td&gt;storeEval&lt;/td&gt;
+    &lt;td&gt;Math.round (Math.random() * 1357)&lt;/td&gt;
+    &lt;td&gt;random&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+    &lt;td&gt;type&lt;/td&gt;
+    &lt;td&gt;email&lt;/td&gt;
+    &lt;td&gt;selenium${random}@domain.com&lt;/td&gt;
+&lt;/tr&gt;
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Change the code to use a variable that does your calculation to a random number.  Place that variable in the selenium test so it has the same number.
+
+var Random = Math.round (Math.random() * 1357);
+
+
+Then use this variable in the page and Selenium test.
+    
+    
+Title: Manually add IDE support for Lua (CryEngine)
+Description: 
+    
+    
+                    
+You all now basic IDE support for other languages such as c++. You write a class with member functions. If try to use it in your code and you press ctrl + space you will se all those member functions in a menu.
+
+Now CryEngine has a Lua api (scriptbinds?) but there is no IDE that supports it. 
+
+Isn't it possible to feed an IDE of choice with the cryengine API and get full IDE support?
+I have never done something similar and don't know where I should start and I hope you can give me some directions.
+
+Update:
+
+Maybe I should add what I am thinking. If you have for example a java IDE and you included an external jar file you will get access to its content and the IDE will support it (autocomplete etc). Shouldn't the exact same thing be possible with cryengine and lua?
+    
+
+        
+Answer 1: 
+
+    
+    
+Almost every IDE provides some way to incorporate custom APIs. For example, Eclipse (Koneki LDT) provides a way to add a custom API (as described in their User Assistance documentation). ZeroBrane Studio IDE I've been working on also provides a way to incorporate custom APIs (there are dozen or so shipped with the IDE for various engines).
+    
+    
+Title: how do I setup android sources in intellij?
+Description: 
+    
+    
+                    
+For my project I need to be building a custom build of Android, and I'm looking to set up the source code in Intellij.
+
+The source code is obtained from Android Open Source Project with the these instructions. I would like to modify the Java code of some of the base modules (eg. content provider), and would like to do this in Intellij since that is my main IDE for android development.
+    
+
+        
+Answer 1: 
+
+    
+    
+If you're looking to build the whole AOSP within IntelliJ I'm afraid I can't help you - I think you'd be setting yourself up for lots of torment there.
+
+If, on the other hand, you just want to modify apps with it, then the easiest way I found to set up IntelliJ to do dev work on the Android source was to copy the .classpath file from development/ide/eclipse to the root directory, and then to have IntelliJ use it's "Build over existing eclipse structure" feature - it takes a long time but all of the apps I'm working in seem to load dependencies, etc just fine.
+    
+    
+Title: How can we customize vs2010 css editor template?
+Description: 
+    
+    
+                    
+In particular, I do love to organize code blocks into regions by #region and #endregion. Is it possible to do something like this while editing css document? 
+
+Well, in general how can we customize vs2010 css editor template?
+    
+
+        
+Answer 1: 
+
+    
+    
+Checkout the JSEnhancements add-on for VS.NET it will let you use #region in css and js. For a list of js and css enhancements in vs.net please read this.
+    
+    
+Title: phpDesigner 8 font rendering bug
+Description: 
+    
+    
+                    
+phpDesigner 8 seems to have an error rendering text. I'm comparing it to Sublime Text 2.
+
+Using these values:
+
+
+
+in both programs, I get these different results:
+
+
+
+
+Seems like phpDesigner 8 is expanding the font, but I can't find any configuration which allows me to stop that behavior.
+
+How can I remove the horizontal font extra space?
+    
+
+        
+Answer 1: 
+
+    
+    
+Not sure if you had this problem resolved. You can change this in Tools &gt; Preferences &gt; Editor &gt; Syntax Highlighters, choose PHP from the drop down list and for each attribute, uncheck the Bold checkbox.
+    
+    
+Title: How to display characters per line in Eclipse
+Description: 
+    
+    
+                    
+Is there an option in Eclipse or CDT to display the number of characters in each line of code or to highlight lines of code that exceed a specific length?
+
+I am programming in C on Eclipse 3.7
+    
+
+        
+Answer 1: 
+
+    
+    
+I found it.  Go to Windows -/p/div
+Answer 2: 
+
+    
+    
+In Eclipse, on the bottom bar of the IDE, there is a number like: 1:1, 19:20, 50:100... this means that "line:charactersInLine".
+
+To complement not exceed too much the number of characters in line is a good practice. I'm the old days programming with very little monitors on resolution with 800x600, the number of 80 characters was a good one. But now with widescreen monitors a good number of characters in accord with many programmers is 120 characters per line.
+
+Complementing the answer of @David Kaczynski:
+
+
+  I found it. Go to Windows -/p/blockquotepstrong/strong/pprecode/code/pre/div
+Title: How to set up an environment for android app development?
+Description: 
+    
+    
+                    
+I have been researching for sometime now regarding the process to install android sdk and associated tools . After visiting Android Developers page, i first installed the android sdk and then installed eclipse plugins for my indigo version from the install softwares options.However, it is   mentioned in the developers page :
+
+Download the Android SDK.  Install the ADT plugin for Eclipse (if    you’ll use the Eclipse IDE).  Download the latest SDK tools and  platforms using the SDK Manager.
+
+I have downloaded the sdk and installed the adt plugins for eclipse.I just need to point the eclipse towards the location of the sdk.  However, i am stuck at the last step which is asking me to download the latest tools using the sdk manager. The manager interface pops up and i see a lot of options there. I don't know which ones i must select and install. If some one can help me out here and tell me which options to choose and install(if possible, with a screen shot), it will be very beneficial for me.
+    
+
+        
+Answer 1: 
+
+    
+    
+I just went through setting things up, myself, actually.
+
+For the most part, you'll figure out pretty quickly through trial and error what you'll need. If you're using Eclipse, it will yell at you when you're missing things, and you simply find what you're missing in the SDK Manager and install it.
+
+That said, here's what I needed to get up and running with a very basic setup (this assumes using Android 4.1, if you plan on building for an earlier version, then you'll need to download the corresponding libraries from that version):
+
+
+SDK Platform
+ARM EABI v7a System Image (optional, you can also grab the Intel x86 Atom and/or Mips System images if you plan on developing for one of those platforms; ARM is the default, from what I've seen)
+Android SDK Platform-tools
+
+
+You get these simply by going to the Android SDK Manager (your SDK folder/tools/android; or click the "SDK Manager" button in Eclipse), selecting what you need, and clicking "Install Packages". Once you do that, you can follow the rest of the guide that you linked for building your first app (I highly recommend it, it's extraordinarily beneficial), and your app should run with no problem.
+
+
+    
+    
+Title: How to build a VC++ 2010 project on the command line?
+Description: 
+    
+    
+                    
+I need to build a VC++ 2010 project on Windows command line using MSBuild. The projects builds file using VC++ 2010 but it fails to build on the command line.
+
+The failures are all in the form fatal error C1083: Cannot open include file: 'boost/.../.hpp': No such file or directory
+
+I would like to know...
+
+1) Why does this occur on the command line and not the IDE?
+
+2) How can I add boost include and lib via the command line.
+    
+
+        
+Answer 1: 
+
+    
+    
+Even though it's deprecated, it's still supported if you want to build with the dev-studio directly via the cmd-line.  I've tried a few times to use MSBuild but keep going back due to issues.  e.g. [path-to-tools]\devenv.exe my_project.sln /build "Release|x64" /project my_project
+    
+    
+Title: Eclipse CDT – Application wide theme configuration
+Description: 
+    
+    
+                    
+I've recently started using Eclipse CDT.
+
+After some searching, I've found a way to change its source view theme by importing a .epf file from the File menu.  However when I launch another Eclipse instance and create a new project, that theme is lost (it goes back to the default white background).
+
+How can I perform application wide theme configuration in Eclipse CDT?  I want all my Eclipse instances to have the same appearance.
+    
+
+        
+Answer 1: 
+
+    
+    
+In case anyone is wondering, here is one way:
+
+
+Download preference file (.epf file) from somewhere (e.g., http://eclipsecolorthemes.org/)
+Import it from File -
+Title: Eclipse IDE is taking very long to open an error location
+Description: 
+    
+    
+                    
+When an error happens while running a RCP-Project, Eclipse shows the location of the error in the Console view. You can click on the filename and Eclipse will immediately opened the file and put the cursor in the correct line.
+
+Since a few days it takes my Eclipse installation very long to do that (several minutes).In the Progress view I see a "Searching" process running and after a long time the file will be opened.
+
+Do you have any ideas what could be the cause of that long duration?
+
+Or  how I could find out what Eclipse is doing while taking so long?
+
+===
+Update:
+Setting up a completely new workspace solved the problem. In the new workspace opening the error location works fine.
+
+I'd still like to know what I could do in such a case to find out what Eclipse is working on (and taking so long for).
+    
+
+        
+Answer 1: 
+
+    
+    
+I'd imagine that a good jumping off point might be the class org.eclipse.ui.internal.console.FollowHyperlinkAction.
+
+If you set a breakpoint in FollowHyperlinkAction.run(), you could walk down into IHyperlink.linkActivated() and see just what's going on.
+    
+    
+Title: How to sort fields and methods in source code documents?
+Description: 
+    
+    
+                    
+In many programming languages, fields and methods can be arranged freely, but the order impacts the readabilty of the code. Which ordering strategy do you apply?
+
+Background: We (a group of researchers from the University of Trier) already looked at the code of different open source projects and tried to figure out what strategies are applied. But as you can imagine, it is hard to extract this information from the code. Now, we are interested in the concrete strategies you apply and want to share and discuss this information here. Please find further information on our project page.
+    
+
+        
+Answer 1: 
+
+    
+    
+
+private fields first
+public fields (if any)
+properties (if any, e.g. in C#) or simple Getter/Setter
+constructors
+public methods
+private methods near to their appearance in public methods (in functional programming languages even inside public methods if possible)
+
+
+Moreover I try to order each of these sections semantically or to their importance for the class. I really try to structure my code so that I can quickly gain an overview of everything important. However in very big classes I have my problems to follow my strategy and then I often use the outliner to get to fields or methods instead of looking for them by scrolling.
+    
+    
+Title: Lazarus/Ubuntu - start up error
+Description: 
+    
+    
+                    
+When Lazarus on Ubuntu 12.04 starts, I get this error (screen shot attached).
+
+Does this have an effect on the application been built?
+
+
+
+After clicking OK, the IDE starts and I can create simple forms. But I'm not sure if this is the right thing to do.
+    
+
+        
+Answer 1: 
+
+    
+    
+This is referring to the source for the free pascal compiler itself. It should not affect your ability to compile and run normal applications.
+
+Having the compiler's source is useful if you discover a bug in the compiler or want to build a cross-compiler to target a different platform than what you're developing on.
+
+I use Lazarus mostly on Windows but from a simple internet search on the error message it seems some versions of Ubuntu don't/didn't install the fpc source along with Lazarus. Check to make sure the fpc-source package is installed. If its not there install it.
+
+Then make sure the path is actually correct. Most Linux installations I've seen have it as /usr/share/fpcsrc/$(FPCVer)/. On Windows its usually $(LazarusDir)fpc\$(FPCVer)\source
+    
+    
+Title: Selecting multiple xpath elements using Selenium IDE
+Description: 
+    
+    
+                    
+I am trying to select multiple elements using xpath in Selenium IDE.  The query i am using is
+
+//*[contains(@id, "address_menu_")]
+
+
+This works for the first element, but there are 8 on the screen that I am trying to target.  Any thoughts?  Thanks.  
+
+*Edit - here is the HTML copied over from Firebug.  I extended the product, but the left the other ones minimized for space.  The first four products are gift announcements (the functionality I am testing)) and the last 4 are actual products.  For the record, what I am trying to target is -
+
+&lt;td class="item-address"&gt;
+&lt;select id="address_menu_71740515" name="address_71740515"&gt;
+
+&lt;script type="text/javascript"&gt;
+&lt;tr id="item_71740515" class=" odd gift_cont"&gt;
+&lt;th class="sub"&gt;
+&lt;td class="product"&gt;1 x Gift Announcement (Physical)&lt;/td&gt;
+&lt;td&gt;
+&lt;td class="item-address"&gt;
+&lt;select id="address_menu_71740515" name="address_71740515"&gt;
+&lt;/td&gt;
+&lt;td class="price"&gt;$0.00&lt;/td&gt;
+&lt;td class="price"&gt;$0.00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class="gift_sep"&gt;
+
+&lt;script type="text/javascript"&gt;
+&lt;tr id="item_71740511" class=" gift_cont"&gt;
+&lt;tr class="gift_sep"&gt;
+
+&lt;script type="text/javascript"&gt;
+&lt;tr id="item_71740507" class=" odd gift_cont"&gt;
+&lt;tr class="gift_sep"&gt;
+
+&lt;script type="text/javascript"&gt;
+&lt;tr id="item_71740503" class=" gift_cont"&gt;
+&lt;tr class="gift_sep"&gt;
+
+&lt;tr id="item_71740495" class=" odd"&gt;
+
+&lt;tr id="item_71740487" class=" "&gt;
+
+&lt;tr id="item_71740499" class=" odd"&gt;
+
+&lt;tr id="item_71740491" class=" "&gt;
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Actually it is not possible to do this way in Selenium. Many of its commands intended to work with exact one element. Although you can do it another way, just clarify your question what do you need exactly?
+
+Now it seems that I understood what you are doing. You have selects inside &lt;td&gt;.
+//*[contains(@id, "address_menu_")][1] allows to select only from siblings, but your selects are obviously not those. 
+
+If you have all of them in one table then you can slightly change expression, e.g.:
+
+//tr[contains(@id, 'item_')][1]/descendant::select 
+//tr[contains(@id, 'item_')][2]/descendant::select
+
+    
+    
+Answer 2: 
+
+    
+    
+You can use:
+
+&lt;tr&gt;
+    &lt;td&gt;addSelection&lt;/td&gt;
+    &lt;td&gt;Locate your select element&lt;/td&gt;
+    &lt;td&gt;Option you need to select&lt;/td&gt;
+&lt;/tr&gt;
+
+    
+    
+Title: Is with Editra 0.7.08 a reliable IDE?
+Description: 
+    
+    
+                    
+I have been using this particular IDE (Editra) for about a year, previously it was version 0.6.77, the latest is version 0.7.08, after updating to the the newer version I built the exe with py2exe. The ide works fine, but Norton's Avirus flagged and quarantined it. The primary reason I use it is because it can be configured to run on different versions of Python from a single drop down box, so I have it set use Python 2.6 and/or Python 3.1. Does anyone else use Editra? and if so, does it trigger your Anti-virus? or should I stick with IDLE? 
+    
+
+        
+Answer 1: 
+
+    
+    
+I haven't used Editra in a while, but I think it's just the py2exe binary that's flagged the antivirus (which is subject to false positives). You can run the Editra source (IIRC, Editra comes with wxPython) directly. As per Editra vs IDLE, I'm sure Editra has some more functionality than IDLE.
+
+Just my 2 cents.
+    
+    
+Title: In netbeans how do I select all currently open files in the project view
+Description: 
+    
+    
+                    
+How do I select the files I currently have open in the project view without trawling through the project tree and ctrl+clicking them all individually.
+
+After editing multiple files I then want to diff and commit them using the SVN plugin. To do this currently I trawl through the project tree selecting all the files I need then right click and select diff. Seeing as it is nearly always the files I have open that I want to diff it would be nice to automatically select them in project view and save the trawling. 
+
+This is especially annoying if I miss a file as I can't seem to find a way to add it to the diff tab without redoing the whole process.
+
+Solutions or better ways of using SVN with netbeans would be awesome :)
+
+Many thanks, Tom
+    
+
+        
+Answer 1: 
+
+    
+    
+In my opinion, much better approach would be the following:
+
+
+checkout/update your project from Subversion in order to be sure that you have fresh source files
+open and change whichever file you want and save changes
+right click on Source packages, then Subversion-&gt;Commit, it will commit all changes you've made on the source code
+
+
+Hope that helps.
+    
+    

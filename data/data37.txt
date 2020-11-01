@@ -1,0 +1,2131 @@
+Title: How to reorder methods in PyCharm
+Description: 
+    
+    
+                    
+Is there a way to change the order of methods in PyCharm? I would expect a dialog similar to that for changing the order of parameters in a function call, but I can't find it.
+
+The only way I am aware of explicitely copy/pasting the code.
+
+If it is possible then how?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can try these:
+
+
+Move Class/Function Dialog
+Move statements using Ctrl+Shift+Up or Ctrl+Shift+Down
+
+    
+    
+Title: Copy/pasting feature in codeblocks
+Description: 
+    
+    
+                    
+I have installed Code::Blocks 13.12 in my windows 8.1 but pasting input at runtime in the command line(I think it is called command line)doesn't seem to work.I have to type the whole input inorder to get output.Can anybody tell me how to fix this?
+
+P.S :- I have tied ctrl+V as well as right click and paste but nothing really working in my case.
+    
+
+        
+Answer 1: 
+
+    
+    
+Copy the text that you want to paste. When C::B console runs, right-click on its top window border (where the name of the executable appears). This will produce a menu. Select Edit -strong/strong/p/div
+Title: Changing default TextSettings Font Family / Size (XE7)
+Description: 
+    
+    
+                    
+I am currently developing an application for Windows 8.1 and OSX Yosemite.
+
+Firemonkey uses Segoe UI (12) and Helvetica (13) as the default font family and size.
+
+Does someone know a way to change those default settings or completely deactive them:
+
+
+
+Because the default fonts have different font sizes (12 and 13) it's hard to get an equal look and feel.
+
+
+
+As you can see the other sizes all look pretty equal except default.
+
+If you want to display a font with text size 12 in OSX you would have to do that by runtime. That's because if you set text size 12 in designer it would automatically switch to (Default) and change it to 13 when compiling for mac.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can change the default font and size by replacing the IFMXSystemFontService:
+
+unit My.FontService;
+
+interface
+
+uses
+  FMX.Platform;
+
+type
+  TmyFMXSystemFontService = class(TInterfacedObject, IFMXSystemFontService)
+  public
+    function GetDefaultFontFamilyName: string;
+    function GetDefaultFontSize: Single;
+  end;
+
+implementation  
+
+function TmyFMXSystemFontService.GetDefaultFontFamilyName: string;
+begin
+  Result := 'Lato';
+end;
+
+function TmyFMXSystemFontService.GetDefaultFontSize: Single;
+begin
+  Result := 12;
+end;
+
+procedure InitFont;
+begin
+  if TPlatformServices.Current.SupportsPlatformService(IFMXSystemFontService) then
+    TPlatformServices.Current.RemovePlatformService(IFMXSystemFontService);
+
+  TPlatformServices.Current.AddPlatformService(IFMXSystemFontService, TmyFMXSystemFontService.Create);
+end;
+
+initialization
+
+InitFont;
+
+end.
+
+
+The default font size (in XE10, don't know for XE7) is
+
+
+for Windows: 12 (see DefaultWindowsFontSize in FMX.Platform.Win.pas)
+for iOS: 14 (see DefaultiOSFontSize in FMX.Platform.iOS.pas)
+for OS X: 13 (see DefaultMacFontSize in FMX.Platform.Mac.pas)
+
+    
+    
+Answer 2: 
+
+    
+    
+I would expect that default means it's using the settings in the style. You can open the style in the Bitmap Style Designer on the Tools menu, make any changes and the Save As a FireMonkey style.
+
+I'm not sure if there's an easy way to change the defaults, though. It may mean changing every font individually.
+    
+    
+Answer 3: 
+
+    
+    
+Workaround:
+
+var
+  Settings: ITextSettings;
+  Instance: TComponent;
+  i: integer;
+begin
+
+  for i := 0 to ComponentCount - 1 do
+  begin
+    Instance := Components[i];
+
+    if IInterface(Instance).QueryInterface(ITextSettings, Settings) = S_OK then
+    begin
+      Settings.TextSettings.BeginUpdate;
+      try
+        Settings.DefaultTextSettings.Font.Size := 12;
+        Settings.DefaultTextSettings.Font.Family := 'Comic Sans MS';
+      finally
+        Settings.TextSettings.EndUpdate;
+      end;
+    end;
+  end;
+
+    
+    
+Answer 4: 
+
+    
+    
+The real problem is, a bad use of the default value for this property.
+It's a mistake of Embarcadero. Sure!
+
+My solution, inside TStyleBooks components, is put a value, near to 12, but not 12.
+
+Specifically I use "11.9".  This value is not assumed as Default Value by the Delphi property editor. But when you run the program, the system converts it, correctly to 12, in the size of the font. In Mac OS X and in Windows too.
+    
+    
+Title: Multiple &ldquo;right margins&rdquo; or guides in PHPStorm
+Description: 
+    
+    
+                    
+PHPStorm has a vertical line on what they call the "right margin" which is set by default to 120 characters or columns...
+
+Given that PSR standards state There MUST NOT be a hard limit on line length; the soft limit MUST be 120 characters; lines SHOULD be 80 characters or less., it'd be nice if I could get another visual indicator at the 80 character mark...
+
+I'm well aware that it says what line/column you're on in the status bar, but I typically hide most panels (status bar included) while coding.
+
+Therefore, is there a way (feature or plugin) that would allow me to add a 2nd vertical line to indicate the 80th column?
+    
+
+        
+Answer 1: 
+
+    
+    
+It is not currently possible .. and no plugin comes into my mind.
+
+https://youtrack.jetbrains.com/issue/IDEA-99875 -- star/vote/comment to get notified on progress.
+
+P.S. Considering that this is rather PHP/Python specific (other languages do not care about this) .. I would not expect JB to have it implemented in nearest future...
+    
+    
+Answer 2: 
+
+    
+    
+I suggest the following workaround, it works for me on PhpStorm 9.0:
+
+
+Open Settings page (usually Ctrl+Alt+S), go to Plugins -/lili/lili/lili/lili
+Answer 3: 
+
+    
+    
+In the latest PHPStorm, this is now possible. This would be PHPStorm 2017.3. The instructions on the ticket mentioned in the accepted answer explain it quite well:
+
+
+  Will be available in the next EAP build. You can set it up at
+  Settings|Editor|Code Style|Visual guides for all languages or on
+  "Wrapping and Braces" tab for a specific language ("Other" tab for
+  XML/HTML). You can change the visual indent guide color at
+  Settings|Editor|Color Scheme|General|Guides|Visual guides. Please
+  submit separate reports if you find any problems.
+
+
+I personally found the setting in Settings|Editor|Code Style|PHP|Wrapping and Braces|Visual guides. It should be there for every language.
+    
+    
+Title: Why does this error keep messing up the XE2 IDE Toolbars?
+Description: 
+    
+    
+                    
+Screen Shot
+
+
+
+The following source code was used to produce the error above. All you have to do is compile the program and make sure the IDE is still running (the error does NOT happen if the IDE is closed), click the button 12 to 15 times and the error will popup.
+
+Once the error has occurred, switch back to the IDE, all the toolbars for the IDE have then disappeared.  You have to shut down the IDE and run again, for them to reappear.
+
+Source Code
+
+unit MainUnit;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, Winapi.ShlObj, System.SysUtils,
+  System.Variants, System.Classes, System.StrUtils, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.StdCtrls;
+
+type
+  TMainFrm = class(TForm)
+    Button1: TButton;
+    procedure FormCreate(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  MainFrm: TMainFrm;
+  hDesktop: HWND;
+
+implementation
+
+{$R *.dfm}
+
+function GetHandle(theHandle: HWND; NotUsed: NativeInt): LongBool; stdcall;
+begin
+  if (theHandle &lt;&gt; 0) then
+  begin
+    hDesktop := FindWindowEx(FindWindowEx(theHandle, 0, 'SHELLDLL_DefView',
+      nil), 0, 'SysListView32', nil);
+  end;
+  Result := (hDesktop = 0);
+end;
+
+procedure TMainFrm.FormCreate(Sender: TObject);
+var
+  lpss: TShellState;
+begin
+  ZeroMemory(@lpss, SizeOf(lpss));
+  try
+    SHGetSetSettings(lpss, SSF_HIDEICONS, False);
+  finally
+    Button1.Caption := IfThen(lpss.fHideIcons, 'Show Icons', 'Hide Icons');
+  end;
+  EnumWindows(@GetHandle, 0);
+  Button1.Enabled := (hDesktop &lt;&gt; 0);
+end;
+
+procedure TMainFrm.Button1Click(Sender: TObject);
+const
+  nCmdShow: array [Boolean] of NativeInt = (SW_HIDE, SW_SHOW);
+var
+  lpss: TShellState;
+begin
+  ZeroMemory(@lpss, SizeOf(lpss));
+  try
+    SHGetSetSettings(lpss, SSF_HIDEICONS, False);
+    ShowWindow(hDesktop, nCmdShow[lpss.fHideIcons]);
+
+    lpss.fHideIcons := (not BOOL(lpss.fHideIcons));
+    Button1.Caption := IfThen(lpss.fHideIcons, 'Show Icons', 'Hide Icons');
+  finally
+    SHGetSetSettings(lpss, SSF_HIDEICONS, True);
+  end;
+end;
+
+end.
+
+
+Application Screen Shot
+
+
+
+Any help would be greatly appreciated.
+
+UPDATE
+
+The IDE toolbars no longer disappear, and the error doesn't appear anymore, thanks to TOndrej for the information about turning off the "Profiler toolbar".  Now I get a very annoying flicker that sometimes takes 10 to 15 seconds to return back to normal.
+    
+
+        
+Answer 1: 
+
+    
+    
+Do you have AQTime installed? The problem seems to disappear if you simply hide the Profiler toolbar.
+    
+    
+Title: AppCode: Turn off automatic matching brace
+Description: 
+    
+    
+                    
+How do a I turn off AppCode generating a closing brace } whenever I type the opening brace { character? 
+
+What I've Tried:
+
+I looked through: Settings --
+Answer 1: 
+
+    
+    
+Turn off "AppCode" -&gt; "Preferences" -&gt; "Editor" -&gt; "Smart Keys" -&gt; "Insert Pair Bracket" and "Insert Pair '}'"
+    
+    
+Answer 2: 
+
+    
+    
+Choose Xcode code/code/p/div
+Title: How keep the debug layout the same as the desktop layout
+Description: 
+    
+    
+                    
+I try to have a similar layout during editing as well debugging. When running the program my structure and object inspector disappear. I did create my own desktop speedsetting, set the debug desktop to it as well, but as soon as the program runs structure and obejct inspector disappear. How can I prevent that? 
+
+A question related to this: the edit menu changes as well. A right click on a procedure name results in a popup menu with the first item being "find declaration". When debugging the first item is "close page". I find the find declaration item a fast way to find some code. Apart from that it is frustrating to lose one's code because you click "no" on the question to save the information (I know, it's my fault but menu's shouldn't change in my opinion).
+
+Thanks,
+
+Arnold
+    
+
+        
+Answer 1: 
+
+    
+    
+What version of Delphi? Dialogs and menus change between versions (and even between SKUs of the same version).
+
+For the first, open Tools-&gt;Options-&gt;Environment Options and uncheck Hide designers on run in the Running group box (D2010, XE, and XE2), or Tools-&gt;Options-&gt;Environment Options and unchecking Hide designers on run in the Compiling and Running group box (D2007).
+
+For the second: The right-click menu is called a context menu, meaning it displays what is appropriate in the context of when it's being shown. It's entirely appropriate for it to change  depending on when and how you're using it; that's the way it's supposed to work. 
+
+Right-clicking on a .zip file in Windows Explorer is different than right-clicking on a Word .doc file, because they have different options based on context - a zip file has an 'Extract to...' option that the Word document doesn't have, because 'extracting' a Word document doesn't apply. Same applies to right-clicking a .exe file, which has the Run as Administrator option (Win7), as opposed to right-clicking a .pas file, which doesn't offer that option.
+    
+    
+Title: Why is source code text-only?
+Description: 
+    
+    
+                    
+All my life I have used text-based source code editors.
+I can't believe we're all still doing this!  There must be a better way.
+
+I don't mean that I want to use a WYSIWYG-editor, I usually hate those, since they don't exactly produce what you want.
+
+No, I mean a text-based source-code editor that is greatly enhanced by the following extra's:
+
+
+include pictures, excel-data, pdf's, etc. INSIDE the source code, to explain certain data-structures, to include (mockup) screenshots of what the client actually wants, etc. Of course with the option to minify/hide/fold these things. 
+(the advantage of this as opposed to separate file, is clear, you want to store this information together WITH your source code)
+comments not as text, but more like post-it-like items, that are resizable, moveable, clickable, etc.
+Class definitions and instances not as text, but as clickable object-boxes, maybe even with an icon to quickly see in the source code which class an object is).
+operators that are now 2 characters as 1 symbol. For example:  -/p/lilip/p/lilip/p/li/ulp/pp/p/div
+Answer 1: 
+
+    
+    
+There have been attempts to make visual development tools in the past - but the problem is that computers need very precise statements in a formal language in order to fully meet a specific requirement of a user.
+In fact, if you write down a requirement and then read it with different emphasis you will see that it is very hard to write an unambiguous statement.
+This example is from Software Craftsmanship: The New Imperative by Pete McBreen (978-0201733860).
+
+Mary had a little lamb - the lamb belongs to Mary and not anybody else
+Mary had a little lamb - she no longer has it
+Mary had a little lamb - there was only one
+Mary had a little lamb - it was exceptionally small
+Mary had a little lamb - everybody else ate chicken
+
+This is why we need a language that requires us to be more explicit that natural language requires and why visual aids to development are not useful.
+For example, being to annotate code with a &quot;post-it&quot; is less useful that writing clean readable code that is easy for other people to read. In fact, sharing code with other developers means changing text size and colour would require other developers to suffer your personal style, which is not cool.
+Some of the ideas you mention are actually available now. Being able to view a class diagram and navigate to the code by clicking on the class &quot;boxes&quot; is a feature of Visual Studio - as is organisation of multiple files behind a single file in the tree view.
+    
+    
+Answer 2: 
+
+    
+    
+This is just my opinion of course, so take it with a grain of salt. I think the main reason that something like this hasn't been done is because the compilers still expect plain text. If you have a source code editor like you mention, it's going to be just a front end - the actual source files will still be plain text. The problem that you run into is that each source editor that takes this approach may have a different way of implementing certain features, so what appears to be identical source will in fact be completely different in the plain text.
+
+When you compile that source, you'll be in a world of trouble. It might be fine for the example you mentioned, PHP, but for the type of things that I work on (real-time C++ applications for industry) I need exact low level control over the source so that I know exactly how my code is being compiled. This would never work for the vast majority of programmers, which is why it's never been done. The target audience is small at best.
+    
+    
+Answer 3: 
+
+    
+    
+What you are describing sounds a lot like https://en.wikipedia.org/wiki/Literate_programming to me.
+
+There has been some progress on this and some of this is useful right now
+
+Fonts with ligatures (and editors with support for them)
+
+
+
+(https://github.com/tonsky/FiraCode in https://www.jetbrains.com/idea/)
+
+Jupyter Notebook, though you cannot easily "tangle" an executable or library for end-users out of it.
+
+
+
+(http://jupyter.org/)
+
+Fortress (programming language from Sun)
+
+Fortress supported source code in utf-8 and encouraged its use, esp. for user-defined operators. They experimented with typesetting the source in editors (since most of it was computational science, so lots of math).
+
+Elastic tabstops
+
+
+
+(http://nickgravgaard.com/elastic-tabstops/)
+
+Conclusion
+
+There is many efforts like that, actually. There is not yet anything like UX movement for developer tooling, but I have hope it will gather momentum in the coming years.
+    
+    
+Title: Netbeans: Auto Format - Prevent Space Formatting on Variable Assignment
+Description: 
+    
+    
+                    
+I prefer formatting assignments like this:
+
+$foo          = $bar;
+$long_foo     = $bar;
+
+
+instead of this:
+
+$foo = $bar;
+$long_foo = $bar;
+
+
+However the latter is being used by Netbeans when using auto format.
+Anyone knows how to fix that?
+    
+
+        
+Answer 1: 
+
+    
+    
+It's been 3 years since this question has been posted but I think it is very useful, so I should answer this question. I've found one website that it seems right to your question. 
+
+
+  In Alignment category there are new properties for Group Multiline Alignment - Assignment and Array Initializer.
+
+
+
+    
+    
+Answer 2: 
+
+    
+    
+Generally, I'd like to know how to prevent Netbeans (and maybe other editors) from reformatting specific parts of my code... for example, Netbeans does a pretty bad job at formatting chained method calls with nesting. It totally ignores the nesting level when calculating the indentation width.
+    
+    
+Answer 3: 
+
+    
+    
+I think the short answer is:  you can't.   There are a few things you can configure as listed onhttp://netbeans.org/kb/docs/java/editor-codereference.html but for the most part there is not a lot of configuration.  
+
+Have you looked at 3rd party plugins?
+I used one for eclipse called Jalopy http://jalopy.sourceforge.net/ that I read somewhere might be supported for netbeans...  Worth investigation
+    
+    
+Title: IDE for GPSS language
+Description: 
+    
+    
+                    
+GPSS stands for General Purpose Simulation System. And it looks like that the language is more dead than alive (I didn't find good and actual blog or web site).
+
+I began studying this language a few weeks ago, and faced with the lack of good IDE. I have to work with GPSS World and a don't like this system.
+
+Does anyone know if there is any IDE or IDE-like system to work with GPSS? My dream is about intellisense, good run-time debugger, etc.
+
+P.S. Sorry, but i can't create a new tag 'gpss'.
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+FastForward to 2016: I have used Wolverine's GPSS\H professional and student version.  There are several variations of GPSS and there are many other non-GPSS alternatives.    
+
+AGPSS has a GPSS has IDE.  A Toolbox GPSS-version exists for MATLAB (subset of commands).  
+
+GPSS's (Wolverine version) strength lies in that is computationally very efficient (lean) because it precedes Win-Tel \ DOS.  The successor to GPSS\H is Wolverine's SLX and both are considered to be at the forefront of speed and capability.  The student versions are available for download and evaluation
+    
+    
+Answer 2: 
+
+    
+    
+Ok, It's time to answer and finally close the question. As I told to lak-b, there are some companies in Russia, but I didn't see their result. 
+
+However, I found the one solution - WebGPSS. But I do not know if the development is in progress, or the project already died. You can figure it out by yourself. As to me, I would choose AnyLogic instead of GPSS.
+
+Thanks.
+    
+    
+Answer 3: 
+
+    
+    
+I'm studing in UBA. We are using SNAKE in the Simulation course.
+    
+    
+Title: How to create shared source folder across multiple projects in Eclipse?
+Description: 
+    
+    
+                    
+I've been looking at the Android + App Engine source code from a Google IO session (Android meet App Engine).  They generate three projects, an Android project, a GWT interface, and an App Engine server project.  All of these projects have a common source folder called shared where they can put their synchronized data classes that all parts of the app need to know about.
+
+I'm wondering how to create that shared source folder in a general Eclipse project.  How can I create a source folder in one project that's also available to and synced with other projects in Eclipse?
+
+Edit
+I'm not looking for how to do an Android Library project (I already use several of those for my apps).  Android Libraries don't work for a general eclipse project, say an App Engine server side project.  
+    
+
+        
+Answer 1: 
+
+    
+    
+I am using Helios eclipse.
+
+To create Source Folder
+
+Navigate to your project in the package Explorer, right-click and select New, select Source Folder.  Enter the folder name and click Finish.
+
+If you want to use the source folder in any of your projects, then go to your project properties, click Java Build Path, go to Source tab, you can link the folder.
+    
+    
+Answer 2: 
+
+    
+    
+The way to do this within Android is through use of a library project. Create one project as an Android library (properties-
+Title: Searching for a Python lightweight IDE (or text-editor) [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has an answer here:
+                        
+                    
+                
+            
+                Closed 9 years ago.
+        
+
+
+    
+
+
+  Possible Duplicate:
+  What IDE to use for Python?  
+
+
+
+
+Hi all, 
+
+I'm looking for either a lightweight IDE or a text-editor (with plugins, of course) for writing Python code. Some of the features I'd like the software to provide are as follows:
+
+1) Auto-complete/suggest
+2) Multi-tab
+3) Auto-format (on save if it is possible)
+4) Syntax highlighting
+5) Easy navigation between .py code (in Eclipse, if you use F3, you can jump to the Class/Interface file)
+6) Expand/Collapse (more known as Folding?)
+7) Integrate with code-checking specific to Python (code analysis, unit-test tools, etc)
+8) [Optional] Source tree (browsing/navigation)  
+
+I prefer to use keyboard to navigate around because I'm using a laptop (with limited display size as well) and I'd like to avoid using mouse.
+
+Update: Please list the plugin names as well if the out-of-the-box doesn't provide them.
+
+Thanks 
+    
+
+        
+Answer 1: 
+
+    
+    
+You mention Eclipse - what about PyDev, a Python IDE for Eclipse? 
+
+edit - also, this question has an incredibly comprehensive list of Python IDEs, sorted by feature. Might be worth a look.
+    
+    
+Answer 2: 
+
+    
+    
+Wingware's Python IDE fulfills all of your requirements, and I do consider it to be the best Python IDE around. That being said, it's a commercial product and not available free of charge, though Wingware offers noncommercial/open-source licensing.
+    
+    
+Answer 3: 
+
+    
+    
+There is python.el (written by Emacs community) and python-mode.el (written by Python community) for Emacs.  Also, rope, ropemacs, and a few more.  Look at EmacsWiki, you will find something for sure if you are open to use Emacs.
+    
+    
+Answer 4: 
+
+    
+    
+If you're on Windows, I would suggest you give Python Tools for Visual Studio. Might not be lightweight, but it sure is nice.
+
+Cruder look, but very lightweight and extremely powerful: you could look at using Vim as a Python IDE.
+    
+    
+Title: Visual Studio equivalent to Eclipse keyboard shortcut Alt Shift L
+Description: 
+    
+    
+                    
+I just did a few years of Java and I'm now back in the C# world. I'm actually happy to be back in Visual Studio except for one thing.
+
+The Eclipse shortcut: ALTSHIFTL really grew on me and I can't find an equivalent in Visual Studio to extract local when the cursor is on a method. 
+
+Anyone knows the equivalent in Visual Studio please? 
+    
+
+        
+Answer 1: 
+
+    
+    
+There's no native Visual Studio 2010 refactoring command for 'extract local', as Eclipse has.
+
+The closest you'd get is the 'Extract Constant', which isn't by default bound to a keyboard shortcut. To do this, you have to highlight the entire string, including the double-quote " delimiters.
+
+
+
+You could explore third party IDE addons like CodeRush or ReSharper for more functionality.
+    
+    
+Answer 2: 
+
+    
+    
+TO get 'Extract Constant' you need to install 'PowerCommands for Visual Studio 2010' from:
+
+http://visualstudiogallery.msdn.microsoft.com/e5f41ad9-4edc-4912-bca3-91147db95b99/
+    
+    
+Answer 3: 
+
+    
+    
+For MSVS 2013 you can download Productivity Power Tools 2013 to get Extract Constant - features also Ctrl + Click to Peek Definition (customizable to Go to definition as in all other IDEs I used) and it is free !
+
+To install go to Tools /emem/em/p/div
+Answer 4: 
+
+    
+    
+With extension VAssisX, you can bind keys to this: VAssisX.RefactorIntroduceVariable
+
+And I think this does what you want.
+    
+    
+Title: Help a fellow blind student get setup for programming classes
+Description: 
+    
+    
+                    
+I'm a computer science student at a large university.  The department has had it's first blind student enroll in the program.  The department is not sure how best to support this student.  The first struggle is getting a development environment setup on his laptop.  He has a Mac with a screen reader program.  I'm looking for the best programs for this student.  He is currently enrolled in a web class (html/css) and a C# class and needs a text editor for both.  He also needs an ftp program that will work well with the screen reader.
+
+Me and another student has volunteered to help him as much as possible.  I've considered console based text editors like VIM and using the command line utilities to upload files to the server.
+
+I'm glad to see there are individuals who have had great success with programming that share his disability.  I'm here to ask for advice in order to help this student.
+
+This is the first time I've worked with a blind student.
+
+Any help would be appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+As a blind developer myself, I'd be happy to help.
+
+I assume he's using Voiceover (http://apple.com/accessibility/voiceover). This will work with any application that implements the accessibility APIs (including most cocoa apps).
+
+To get started, I'd keep things simple:
+* TextEdit.app for text editing. He won't get autocomplete, but for a web dev class that's probably ok. Syntax highlighting won't matter.
+* Just start with Finder for FTP. It should work for simple scenarios.
+* Terminal is mostly accessible.
+
+For C# I find Visual Studio on Windows with the JAWS screen reader really good. On the Mac, however, I don't think that MonoDevelop is accessible. The only solution I can think of right now is TextEdit and Terminal.
+
+There's a very active mailing list for Voiceover users at www.MacVisionaries.com.
+
+Finally, I'd be happy to help another blind developer - if you can find my contact details, I'd be happy to hear from you.
+    
+    
+Title: VIM + Python - &ldquo;gd&rdquo; command not working properly
+Description: 
+    
+    
+                    
+I'm getting started with using VIM to program Python. I've run into some issues, hopefully someone can help me with this one.
+
+The "gd" command is supposed to take you to the first place a variable is defined/used in the current function. From what I understand, it's the same as doing "[[" to go to the top of the function, then performing a search for the variable name.
+
+Problem is, when I try this in Python functions, vim finds the first occurrence of the variable in the entire file.
+
+Any thoughts on why this happens/how I can fix this?
+    
+
+        
+Answer 1: 
+
+    
+    
+I think the problem is due to the way that Vim treats a function.  From the documentation for [[:
+
+                            *[[*
+[[          [count] sections backward or to the previous '{' in
+            the first column.  |exclusive|
+            Note that |exclusive-linewise| often applies.
+
+
+Unless a section is somehow defined specifically for python files somewhere (I'm not convinced this is possible as they're supposed to be two-letter nroff sections), this will assume that there should be an open-brace in the first column, which isn't relevant for python files.
+
+I'd suggest asking on the Vim mailing list to see if there are any plugins or work-arounds for this.  Alternatively, you could define a mapping like this:
+
+nmap gd :let varname = '\&lt;&lt;C-R&gt;&lt;C-W&gt;\&gt;'&lt;CR&gt;?\&lt;def\&gt;&lt;CR&gt;/&lt;C-R&gt;=varname&lt;CR&gt;&lt;CR&gt;
+
+
+This could be done more elegantly with a function, but this was just a quick hack that should work.  It maps gd to a function that sets the variable 'varname' to hold the word the cursor is on, searches backward for def and then searches forward for the variable:
+
+    :let varname =             " Variable setting
+    '\&lt;                        " String start and word boundary
+    &lt;C-R&gt;&lt;C-W&gt;                 " Ctrl-R, Ctrl-W: pull in the word under the cursor
+    \&gt;'                        " Word boundary and string end
+    &lt;CR&gt;                       " Enter - finish this command
+    ?                          " Search backwards for...
+    \&lt;def\&gt;                    " def but not undefined etc (using word boundaries)
+    &lt;CR&gt;                       " Enter - Perform search
+    /                          " Now search forward
+    &lt;C-R&gt;=                     " Pull in something from an expression
+    varname&lt;CR&gt;                " The expression is 'varname', so pull in the contents of varname
+    &lt;CR&gt;                       " Enter - perform search
+
+    
+    
+Answer 2: 
+
+    
+    
+I didn't redefine varname in my Vim configuration, and it works good, but I have vim compiled with python.
+Maybe this is the problem?
+
+Do you have VIM version 7.x installed, compiled with Python support? To check for this, enter :python print “hello, world” 
+into VIM. If you see an error message like 
+E319: Sorry, the command is not available in this version, 
+then it’s time to get a new one. 
+    
+    
+Title: Why do Visual Studio 2005+ bookmark keyboard Shortcuts go to bookmarks in other documents?
+Description: 
+    
+    
+                    
+Prior to Visual Studio 2005, the bookmark feature worked perfectly.  Then starting with VS 2005, I noticed that requesting the "next" or "previous" bookmark stopped working correctly.  Sure it will take you to a different bookmark, but it takes you to a bookmark location that is the least relevant or most obscure based on your current location.  Even when I'm sitting on a book mark, and I can "see" the next (and previous) book mark, Visual Studio will still take me to some random far-off bookmark (in an entirely seperate project and file if it can help it).
+
+In fact, the only way I can truly get to the "next" bookmark in my document, is to ensure there are not more than two bookmarks in the entire solution (and both must be located in the current document).
+
+I'm trying to understand how this went so wrong, and if there is some simple configuration setting I can make that will correct the problem.  I'm now using Visual Studio 2008 (which has the same problem).  I've not tried this in 2010 yet.
+
+Update:
+I've discovered that the order which bookmarks are traversed, are the order they are created in.  There is a "bookmarks view" where that order can be manually re-arranged.  However, in the past the order was always ascending line-number, which was much more useful.  So now the question is, how do I modify the behavior?
+    
+
+        
+Answer 1: 
+
+    
+    
+I think starting with 2005 the CTRL-K+CTRL-N and CTRL-K+CTRL-P shortcuts were changed from "move the caret to the next bookmark in the current document" to "move the caret to the next bookmark".
+
+You can get the old behaviour back by editing the keyboard shortcuts to assign CTRL-K+CTRL-N and CTRL-K+CTRL-P like so:
+
+
+
+
+    
+    
+Title: What IDE setup and workflow is used for OSGi development?
+Description: 
+    
+    
+                    
+I made quite a few easy OSGi test projects in Eclipse RCP. My typical workflow would always be:
+
+
+Make 3 different projects: APIproject, Clientproject and Serverproject
+Edit the MANIFEST.MF of APIproject to export the api package
+Edit the MANIFEST.MF file of Clientproject and Serverproject to add the required API package
+Choose "Run as..." /lili/li/ulp/ppbr/pp/pulli/lili/li/ul/div
+Answer 1: 
+
+    
+    
+Normally when I develop OSGi bundles (not Eclipse RCP bundles) I use the following tools:
+
+
+Maven 2 as the build system.
+Apache Felix maven-bundle-plugin to generate MANIFEST.MF automatically.
+Pax Exam to create integration tests that run inside an OSGi container.
+Pax Runner to execute my bundles in any OSGi framework (equinox, felix, etc.).
+IntelliJ (or sometimes Eclipse) as a standard IDE without any OSGi extras.
+
+
+I have not yet developed any Eclipse RPC bundles, but there's a new tool for Maven 6 Eclipse RPC build integration called Tycho (http://tycho.sonatype.org).
+    
+    
+Title: Does NetBeans play nice with Eclipse projects and vice-versa?
+Description: 
+    
+    
+                    
+I recently switched from Eclipse to NetBeans (although I don't have any current Eclipse projects lying around that I have easy access to), but a lot of people that I work with (and even my department at school) use Eclipse as their primary IDE.
+
+Are there any known catches to using NetBeans with projects made by others in Eclipse? How about things that might interfere with someone using Eclipse from importing one of my projects?
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse projects are not compatible with Netbeans one. 
+
+Having said so, you can easily have both project configurations on the same folder (or SCM system). So you could easily integrate them. That is especially true if you have plain Java projects (not Java EE). With Java EE things are a little bit more complicated.
+    
+    
+Answer 2: 
+
+    
+    
+I work in a department that uses both Eclipse and Netbeans successfully.  Maven basically made this possible and fairly easy.  If you are using ant I imagine there is some way to get Netbeans to grok the project.  If you are using some other build tool you will have to set up a separate build file in ant or maven for the Netbeans users...  
+    
+    
+Title: Pre-Build Events in VB6 Ide (similar to Visual Studio 2005)
+Description: 
+    
+    
+                    
+Does anyone know if VB6 IDE has the ability to run pre-build events prior to making and compiling the code (this is for creating a .vb file from a template file for subversion revision numbers to be compiled into the code using SubWCRev.exe).
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+There is no method to do this from the IDE. My company built a utility (in VB6) to do our automated build process including steps like you mention (updating version numbers, etc). 
+
+The essential trick is that you can run VB6.exe from the command line to compile projects. To see a list of all the option just goto the VB6 directory and type 
+
+VB6 /?
+
+
+A list of all the command line options will appear. 
+
+This is what we use for our build utility.
+
+VB6 /Make &lt;project name&gt; /out &lt;errorlog filename&gt;
+
+
+We copy our project to a temporary project files and alter it using check boxes and parameters files. For example we can choose to compile everything as binary compatible or project compatible. The VB6 project files are easy to manipulate as they are just text. There are any number of things you can do if you write your own build utility.
+    
+    
+Answer 2: 
+
+    
+    
+We use Visual Build Pro to do this.  It has built-in support for updating the version numbers of VB6 projects.  Our project group includes ~7 ActiveX projects which is really painful to build within VB in the correct order, so we just always use Visual Build Pro because it automatically handles building the projects in the right order based on their dependencies.
+    
+    
+Answer 3: 
+
+    
+    
+There is some support in NAnt (or possibly NAnt.Contrib) for building vb6 projects.  NAnt can then handle all of the pre/post build events. Just be prepared for some tweaking.
+    
+    
+Title: eclipse with moonrise color theme: change button color
+Description: 
+    
+    
+                    
+I run the Eclipse Kepler IDE on redhat. I use the dark theme color Moonrise.
+
+The buttons in all windows appear as white with white text. As you can imagine this is suboptimal...
+
+How can I change the color of the buttons, or the color of the text buttons?
+
+I looked into Preferences/Appearance/Colors and Fonts but could not find the correct color to change.
+
+Here's how it looks:
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Adding SWT_GTK3=0 to the environment solved the problem.
+
+So I create an eclipse_launcher file:
+
+#!/bin/bash
+export SWT_GTK3=0
+/YOU/PATH/eclipse
+
+    
+    
+Answer 2: 
+
+    
+    
+I had a similar problem using the dark theme in Eclipse Neon in combination with the Flatabolous theme (http://www.noobslab.com/2016/07/flatabulous-theme-makes-your-desktop.html): all the buttons and text boxes had no contour, so they where merged with the background having the same color.
+
+Elaborating on DevShark perfect answer (which made my day) I'll just add the eclipse.desktop launcher with this modification included which makes the contours visible:
+
+[Desktop Entry]
+Name=Eclipse
+GenericName=Eclipse IDE
+Exec=bash -i -c "export SWT_GTK3=0 &amp;&amp; /YOUR/PATH/eclipse"
+Type=Application
+Terminal=false
+Icon=/YOUR/PATH/eclipse/icon.xpm
+Comment=Integrated Development Environment
+NoDisplay=false
+Categories=Development;IDE;
+Name[en]=Eclipse
+
+    
+    
+Title: Does PyCharm Have Spyder&#39;s Variable Explorer Functions (mainly &ldquo;Save As&rdquo; and &ldquo;Import&rdquo;)?
+Description: 
+    
+    
+                    
+I started playing around with PyCharm today, and it seems like this is the Python IDE I want to start working with in the near future. 
+
+Currently, I am using Spyder from Anaconda. What I really like about Spyder is that I am able to export and import variables from the Variable Explorer window.
+
+This means that I can debug part of my script, save the results, and then import the variables back into Spyder at another time. I can use such variables without even having to declare it in my script as Spyder already assume that it exists from the Variable Explorer window. 
+
+This feature is extremely useful to me, and I cannot tell if PyCharm has this feature.
+
+I searched many places, and I could not find anything. 
+
+Does anyone know how to get this feature to work in PyCharm if it exists?
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+PyCharm added some functionality similar to Spyder's Variable Explorer some months ago, as can be seen in this blog post.
+
+However, as far as I know, it doesn't have the ability to import/export the variables present in its Python console.
+    
+    
+Title: How can save to file the on screen output of a Python IDE?
+Description: 
+    
+    
+                    
+I use Spyder as my Python IDE. In most of what I do I use the editor to write code and execute portions of the program one at a time. I typically go back and forth, change things, add pieces, execute portions... you get it. Is there a way to save to file what Spyder shows in the console portion of the IDE after each portion of code is executed?
+    
+
+        
+Answer 1: 
+
+    
+    
+(Spyder dev here) Well, there is a way to save the output shown in our consoles but not after each execution. You have to do it manually, like this:
+
+
+For our Python consoles, you need to do a right mouse click over any console and select the option Save history log.
+For our IPython consoles, you need to do a right mouse click over any console and select the option Save as HTML/XML
+
+    
+    
+Answer 2: 
+
+    
+    
+One way to capture entire console output of Sypder IDE:
+1. Go to "Profile" (Shortcut: F10) under "Run" Tab.
+2. On Right hand side, you can see Run, Stop and Output buttons.
+3. Click on Run and the entire console session is captured under Output.
+
+Hope, this helps. Kindly correct me if I am wrong.  
+    
+    
+Title: Will memory release if I stop debugging directly?
+Description: 
+    
+    
+                    
+I want to know, suppose I am debugging a code and at any point I allocated some memory and break point hits for example:
+
+1: Statement to allocate 1 MB memory in **C**.
+2: Any other statement where **BREAKPOINT HIT**.  
+
+
+Now my question is:
+
+
+If I will kill my IDE (like visual studio) directly using task manager then allocated memory and resources will free or not.
+If I will stop debugging then allocated memory and resources will free or not.
+
+
+If yes then How can I confirm it whether memory and resources have freed.
+    
+
+        
+Answer 1: 
+
+    
+    
+On modern operating systems, all the memory for your program is returned to the system when the program is terminated, which will happen in either of those cases. This might not happen on some embedded systems, but you wouldn't be running an IDE on those.
+
+For other resources than memory, e.g., open files, devices, etc., the OS will generally reclaim all resources (unless they're still in use by other processes), but for some systems and some resources, under some conditions, resources can be lost or locked (which should be considered a bug in the OS or the device driver). 
+
+As far as determining that the system actually freed the memory, it can be quite difficult because the system allocates memory to buffers and swap areas and doesn't necessarily have a count of free space that you can check. For other resources ... if you can't acquire them then they weren't released.
+    
+    
+Title: Visual Studio 2010 - Task List. What is the UNDONE token used for?
+Description: 
+    
+    
+                    
+I know these are customisable, but I'm intrigued as to what the last one indicates.
+
+
+TODO
+HACK
+UNDONE
+
+
+Has anyone ever used this? If so, what for?
+    
+
+        
+Answer 1: 
+
+    
+    
+It looks to be for incomplete code. As in: I'm not done with this part, so I will remind myself to start here next time.
+
+
+  Whenever you are typing code and you know that you are about to leave something undone, simply type in a comment that starts with ‘undone’. When you do this, Visual Studio .NET can show all your undone items in the Task List toolwindow. 
+
+
+FROM:
+http://www.fmsinc.com/free/NewTips/NET/NETtip9.asp
+    
+    
+Answer 2: 
+
+    
+    
+The UNDONE tag does not seem to be used too much; I personally never used it.
+
+I suppose it would be to let people know that some code has been removed;
+
+    // UNDONE: unnecessary code removed...
+
+
+I'm not too sure about its usefulness thought, I would also like to know if anybody uses this.
+    
+    
+Title: Can I set IntelliJ to auto indent the code body?
+Description: 
+    
+    
+                    
+Question 1: Can IntelliJ be set to indent the code body automatically upon making a new line?
+
+Here is an example of what I mean:
+
+I have this method:
+
+    public static void main(String[] args)
+        {
+            System.out.println("Hi there.");
+        }
+
+
+Upon hitting the return key after typing the expression, I get this:
+
+    public static void main(String[] args)
+        {
+            System.out.println("Hi there.");
+        // the new line aligns itself with the braces.
+        }
+
+
+I would like it to do this:
+
+    public static void main(String[] args)
+        {
+            System.out.println("Hi there.");
+            // the new line aligns itself with the preceding line
+        }
+
+
+I haven't been able to locate an option anywhere under Settings that would make this the default behavior. Does it exist and am I missing it or am I looking for a unicorn?
+
+Question 2: Is there an option to have the code body indented by default? If so, where can it be found?
+
+Example:
+
+Upon using the "Reformat Code..." command, I get this:
+
+    public static void main(String[] args)
+        {
+        System.out.println("Hi there.");
+        // the code body is realigned with the braces
+        }
+
+
+Is it possible to set IntelliJ to do this, and if so, where can I find that option?:
+
+    public static void main(String[] args)
+        {
+            System.out.println("Hi there.");
+            // the code body is indented from the braces
+        }
+
+
+That is another thing I cannot seem to find in the Settings options.
+
+Any help would be great. Thanks for your time.
+    
+
+        
+Answer 1: 
+
+    
+    
+You should use the Next line, each shifted option:
+
+
+    
+    
+Answer 2: 
+
+    
+    
+IntelliJ IDEA 15
+
+File 
+Title: Best way to determine what macros are defined by clang and cmake
+Description: 
+    
+    
+                    
+I am currently trying to convert CGAL to Javascript, by use of an amazing LLVM-/pp/pp/pprecode/code/prep/pp/pp/pprecode/code/prepstrong/strong/pp/pprecode/code/prep/pp/pp/ppem/em/pp/pp/p/div
+Answer 1: 
+
+    
+    
+Putting this on the command line will output a list of defined macros:
+
+-E -dM
+
+    
+    
+Answer 2: 
+
+    
+    
+did you try using -DBOOST_NO_THREADS ? and did you manage to get CGAL compiled as javascript in the end ?
+    
+    
+Title: Oo javascript code completion in any IDE
+Description: 
+    
+    
+                    
+Do you know any IDE which can autocomplete this kind of code?
+
+I have a javascript class generator here:
+
+(function() {
+    var core = {
+        bind : function(method, scope) {
+            if (!( method instanceof Function))
+                throw new TypeError("Function needed as method.");
+            if ( typeof (scope) != "object")
+                throw new TypeError("Object needed as scope.");
+            return function() {
+                return method.apply(scope, arguments);
+            };
+        },
+        require : function(source) {
+            if ( typeof (source) != "object" || !source)
+                throw new TypeError("Object needed as source.");
+            for (var property in source)
+                if (source.hasOwnProperty(property) &amp;&amp; !this.prototype.hasOwnProperty(property))
+                    this.prototype[property] = source[property];
+        },
+        override : function(source) {
+            if ( typeof (source) != "object" || !source)
+                throw new TypeError("Object needed as source.");
+            for (var property in source)
+                if (source.hasOwnProperty(property))
+                    this.prototype[property] = source[property];
+        },
+        extend : function(source) {
+            var superClass = this;
+            var newClass = source.hasOwnProperty("constructor") ? source.constructor : function() {
+                superClass.apply(this, arguments);
+            };
+            newClass.superClass = superClass;
+
+            var superClone = function() {
+            };
+            superClone.prototype = superClass.prototype;
+            newClass.prototype = new superClone();
+            newClass.prototype.constructor = newClass;
+
+            if (source)
+                newClass.override(source);
+            return newClass;
+        }
+    };
+
+    core.require.call(Function, core);
+
+    Function.create = function (source){
+        var newClass = source.hasOwnProperty("constructor") ? source.constructor : function() {};
+        newClass.override(source);
+        return newClass;
+    };
+})(); 
+
+
+I need code completion (wrote in the comments) for these example classes:
+
+//Function.prototype: bind, require, override, extend
+//Function.create
+
+var A = Function.create({ //offer Function.[create]
+    test: function (){
+        console.log("a");
+    }
+});
+
+//A is a Function instance
+//A.prototype: test
+
+var B = A.extend({ //offer A.[extend]
+    test: function (){
+        console.log("b");
+    },
+    test2: function (){
+        console.log("b2");
+    }
+});
+
+//B is a Function instance
+//B.prototype inherits from A.prototype
+//B.prototype.test overrides A.prototype.test
+
+var F = Function.create({ //offer Function.[create]
+    getA: function (){
+        return new A();
+    },
+    getB: function (){
+        return new B();
+    }
+});
+//F is a Function instance
+//F.prototype getA, getB returns A and B instances
+
+var f = new F(); //offer [F]
+//f inherits from F.prototype
+var a = f.getA(); //offer f.[getA]
+//a inherits from A.prototype
+var b = f.getB(); //offer f.[getB]
+//b inhertis from B.prototype
+
+a.test(); //offer a.[test]
+b.test(); //offer b.[test]
+b.test2(); //offer b.[test2]
+
+
+So I must let the IDE somehow know, that these functions are existing in the Function.prototype, and these functions are creating Function instances and they are writing into the prototype of those instances. This is possible only with manual indexing of my code, like jsdoc, but that's not enough to describe for example inheritance. So I need an IDE which can handle at least js inheritance, and for which I can write a plugin that creates this indexing automatically. (Maybe the plugin could handle the inheritance too, I don't know how that indexing works exactly...)
+
+Which IDE is capable of that (and how)?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use something like WebStorm or VisualStudio with Resharper 6 installed and it builds a list of all prototypes of all objects and you can use that.. its not particularly useful nor would I recommend it.. But somethings better than nothing..
+    
+    
+Answer 2: 
+
+    
+    
+solution 1:
+
+I found that in Eclipse the javascript indexer is a part of Web Tools Platform / Javascript Development Tools. The source code is here. The developers wrote that the InferEngine is easy extendable, so you can write an eclipse plugin.
+In that case this blog is really-really-really useful. It has great articles how to extend JSDT, and the JSDT developers can help too. Unfortunately I don't have much time to create such a thing if there is another solution.
+
+solution 2:
+
+Was looking around and found that the real problem is, that JSDOC 3 is not supported completely neither in Netbeans, nor in Eclipse JSDT and Aptana. The only IDE I found with JSDOC 3 support is Jetbrains WebStorm, so I'll use that. (Did not test the Resharper for Visual Studio, but it's JetBrains product either, so it possibly works too.)
+
+The original example with jsdoc 3 in webstorm:
+
+/** @class*/
+var A = Function.create(//offer Function.[create] -&gt; OK!
+/** @lends A.prototype*/
+{ 
+    test: function (){
+        console.log("a");
+    },
+    testA: function (){
+        console.log("a2");
+    }
+});
+
+/** @class*/
+/** @extends A*/
+var B = A.extend(//offer A.[extend] -&gt; OK!
+/** @lends B.prototype*/
+{ 
+    test: function (){
+        console.log("b");
+    },
+    testB: function (){
+        console.log("b2");
+    }
+});
+
+/** @class*/
+var F = Function.create(//offer Function.[create]  -&gt; OK!
+/** @lends F.prototype*/
+{ 
+    /** @returns A*/
+    getA: function (){
+        return new A();
+    },
+    /** @returns B*/
+    getB: function (){
+        return new B();
+    }
+});
+
+var f = new F();
+f.getA().test(); //offer f.[getA], offer f.getA().[test] -&gt; OK
+f.getA().testA(); //offer f.[getA], offer f.getA().[testA] -&gt; OK
+f.getB().test(); //offer f.[getB], offer f.getB().[test] -&gt; OK
+f.getB().testA(); //offer f.[getB], offer f.getB().[testA] -&gt; OK
+f.getB().testB(); //offer f.[getB], offer f.getB().[testB] -&gt; OK
+
+    
+    
+Title: Installing package without IDE on Lazarus from command line
+Description: 
+    
+    
+                    
+I am trying to automate installing of my package to IDE from the command line using (this) article.  
+
+When using IDE the package is installed correctly and my components appear on Lazarus palette.
+To verify the article steps, after installation with IDE I copied idemake.cfg, packagefiles.xml and staticpackages.inc files from C:\Users\&lt;user_name&gt;\AppData\Local\lazarus to a temp folder, so I have my package registered there.  
+
+Then tried without success:
+1. uninstalled my package from IDE
+2. called make clean all from c:\Lazarus
+3. called lazbuild and built my package
+4. copied all the kept files (idemake.cfg, packagefiles.xml and staticpackages.inc) to C:\Users\&lt;user_name&gt;\AppData\Local\lazarus
+5. copied kept idemake.cfg to c:\Lazarus
+6. created .lpl file for my package and placed that in C:\Lazarus\packager\globallinks
+7. finally called make idepkg from C:\Lazarus
+8. alternatively tried make bigide and lazbuild --build-ide= with same result
+
+When Lazarus IDE was built and started I could see my package among the installed packages but marked with the green "+". The palette also missed my components.
+If I select then Tool -&gt; Build Lazarus with profile: Build IDE with Packages, this makes my package installed correctly after IDE is rebuilt the second time.
+
+Version info:  
+
+
+  Lazarus: 0.9.30.2
+     FPC: 2.4.4
+     OS: Win 7  
+
+
+Am I missing something? Is there alternative to register packages from the command line without IDE?
+
+Thanks in advance.
+    
+
+        
+Answer 1: 
+
+    
+    
+Lazbuild in current Lazarus (at least as far back as 1.0RC1) has been extended to be able to install packages.
+For this, you can use the --add-package and --build-ide together.
+See the lazbuild wiki article
+    
+    
+Title: Selenium IDE: How to check text color using CSS
+Description: 
+    
+    
+                    
+I have a link:
+
+&lt;a class="title"&gt;My link&lt;/a&gt;
+
+It is styled with this CSS code:
+
+a.title {
+  color: #CC3333;
+}
+
+
+How can I verify that the text "My link" is red? I can locate the element with css=a.title, but how can I assert that color == "#CC3333" in Selenium IDE?
+    
+
+        
+Answer 1: 
+
+    
+    
+style.color will return color if actual DOM element has style attribute. In your case, when color is definied in &lt;style&gt; tag it won't work. This we need you use getComputedStyle(). Still, color returns color in RGB format but you may convert your color manually and verify RGB result.
+
+Like this:
+
+assertEval(
+  "window.document.defaultView.getComputedStyle(window.document.getElementsByClassName('title')[0]).getPropertyValue('color')",
+  "rgb(204, 51, 51)"
+)
+
+
+N.B. It's also recommended to use selenium.browserbot.getCurrentWindow() instead of window. I left window to make snippet shorter.
+    
+    
+Title: Status and Documentation on Aptana 3?
+Description: 
+    
+    
+                    
+Recently I downloaded Aptana Studio 3 because it's widely recommended.   When I first ran it, it put up a dialog saying it was "configuring git support" with no button to opt out of this.  When I let it proceed it put up a "progress dialog" saying “Configuring Git support (could take a few minutes)” with a grayed-out cancel button and it wouldn’t let me minimize the (full-screen) Aptana window so I had no access to my desktop to do other work while waiting.  After 10 minutes I killed Aptana in Task Mgr.
+
+I restarted Aptana and in the Start Page I clicked on Aptana Documentation but it sent me to a page about Titanium!   Questions:
+
+
+What is Titanium and does it replace Aptana?  (i.e., should I be
+using it instead?)
+Where is the Aptana documentation?
+Is Aptana still being maintained, i.e., should I report my
+experiences to them as bugs?
+
+
+Thanks in advance!
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Titanium is a product that is built on top of Aptana Studio plugins. As you may know, Aptana was acquired by Appcelerator at the beginning of 2011. Titanium Studio is the main tool for Web and Titanium developers. Appcelerator provides both Aptana Studio and Titanium Studio,  which are in sync in terms of the Aptana Studio features.
+The documentation is at http://aptana.com/r/apdocs. It includes both Aptana Studio and Titanium Studio docs.
+Definitively YES. Please report this issue to http://aptana.com/r/apbugs
+
+
+Hope that helps :)
+    
+    
+Answer 2: 
+
+    
+    
+Appcelerator's Titanium offers the same HTML, CSS, JavaScript, PHP, Python, Ruby,
+Ruby on Rails support as Aptana plus support for Titanium Desktop and Titanium Mobile.
+
+For web development, the following page must be what you're looking for (since
+for web development aptana is the same as titanium):
+
+http://docs.appcelerator.com/titanium/2.0/index.html#!/guide/Web_Development
+
+Regards,
+
+John Goche
+    
+    
+Answer 3: 
+
+    
+    
+Had the same issue and it worked for me when I ran Aptana as an administrator. You can also opt out of configuring git by clicking the red X in the top right corner of the dialog.
+    
+    
+Title: What&#39;s the benefit of Javascript Resources in Eclipse?
+Description: 
+    
+    
+                    
+When I make Dynamic Web Project in Eclipse it generates Javascript Resources
+meta-folder; before I tried to use it at first time I thought that it works
+just like Java Resources - if you add your source here IDE provides you with
+Intellisense, documentation and error checking.
+
+But when I tried to add jquery.js there, I found nothing that I was expecting to see.
+Yes, eclipse shows me that it's aware of jQuery object now but it knows nothing
+about jQuery's methods (like jQuery.ajax(...)) and it also doesn't recognize $ shortcut.
+
+How can I make eclipse recognize methods of js libraries that I include?
+    
+
+        
+Answer 1: 
+
+    
+    
+The two things aren't related in the way you think.  The JavaScript Resources node indicates all of the known globals and named "types", as well as their properties, organized according to the way you've set up the project's JavaScript Include Path.  It represents everything that is known to the JavaScript (standalone and client-side) in your project--this is what Content Assist will be able to offer you, shown in what we hope is a nicely laid out and browseable structure.
+
+What you've run into is that jQuery is more dynamic, and perhaps a little trickier syntactically, than JSDT understands.  Googling for both jQuery and JSDT should help you find a plug-in that helps in that regard.
+    
+    
+Title: How can I highlight multiple variables in Eclipse?
+Description: 
+    
+    
+                    
+In Eclipse, if you rest your cursor on a variable it will highlight that variable everywhere in the code.  I was wondering how you could highlight more than one variable at a time?
+    
+
+        
+Answer 1: 
+
+    
+    
+Not exactly what you want, but using the find dialog you can look for two variables in the same search.
+
+
+Mark the Regular Expressions Checkbox in the Options.
+Use a regular expression in the Find textbox. For example if you are looking both for the index and count variables use (index)|(count).
+The Find button will cycle through all instances of both index and count.
+
+
+This can be expanded to even more tricky searches.
+    
+    
+Title: There is a PL/pgSQL free environment to develop for PostgreSQL?
+Description: 
+    
+    
+                    
+I want to know if there is a free environment to develop in PL/pgSQL. 
+
+Writing the code in Notepad++, replacing the function and running it turns the process slow. I'm using pgAdmin(only to replace and run the procedure) at the moment, but this is not what I want.
+
+I know that there is one similar question here, but this is not duplicated. All the tools to develop are paid, I want to know if there is one free.
+    
+
+        
+Answer 1: 
+
+    
+    
+I am very happy with following environment.
+
+I use a programmer editor like geany or similar and I edit a file with functions - I put related functions to one file - this is similar to modules from other environments.
+
+I don't use a copy to pgAdmin - it is terrible work - and I don't think so pgAdmin is good tool for editing and maintaining more functions - it is good for ad hoc changes. The editor is not strong - it is simply, and you can't use a usual tools like git, cvs, .. More - you cannot to organize a related functions to one entity.
+
+If I have a one or two files, then I have a opened console, and just import a file to postgres via \i command. If I have a more larger and complex project I use a makefiles - so it automatically import only modified and depended files. This is very good and very effective when you have a project with more then one hundred functions. 
+    
+    
+Answer 2: 
+
+    
+    
+If you are looking for a debugger, check http://pgfoundry.org/projects/edb-debugger/ that can be included in pgAdmin. I have never seen any other tool that can debug plpgsql, only pgAdmin.
+    
+    
+Answer 3: 
+
+    
+    
+I had similar question and guys recommended me Toad Extension for Eclipse. You can see the discussion here: Development oriented PostgreSQL IDE
+    
+    
+Title: Automating Eclipse tasks
+Description: 
+    
+    
+                    
+I'm currently looking for ways to automate some tasks in Eclipse.
+
+For instance, let's say I have a couple  of ant files that I'll want to run a couple of times per hour. Being able to assign a hot key to each one of them, so that I could easily run them without having to click, bring the context menu up and click again would bring joy into my life.
+
+Other example would be build/run configurations. I have a couple of them on my project and I'd love to have a way of running each one of them with a different hot key configuration.
+
+Moreover, the very nature of a project I'm currently working on involves a lot of experimentation and trying, so having to click and use my mouse a lot is definitely driving me insane. There are other similar things that I would like to get automated as well (for example, each time I do a commit I'd like to also run some command over my project's folder, etc).
+
+Is there some tool for Eclipse(or outside it) that'll somehow allow me to automate these kinds of tasks? Would Vim for Eclipse help me anyhow?
+
+After some years coding I feel like I have hit a stone wall. I came to the conclusion that I am losing way too much time with my mouse. Yes, I know that a lot of Eclipse actions have correspondent hot keys, but a lot of others don't. I want the ultimate solution !
+    
+
+        
+Answer 1: 
+
+    
+    
+There are several solutions:
+
+
+Use a console. Consoles allow to remember the last commands (on Unix, you can even search). So instead of mouse-fu, it's Alt-TabUpReturn
+There was Eclipse Monkey to script Eclipse. Not sure if it still works but it might.
+On Sourceforge is Practical Macro. No documentation that I could find, though.
+
+
+EclipseShell might also work, not sure.
+    
+    
+Title: intellij-idea - how to add custom build step to a module
+Description: 
+    
+    
+                    
+I am using IntelliJ(8.x).  The build step require ant "ant" from outside to generate java files from .idl  files. This uses jacorb. I would like to avoid the step. Current work around is to call some scripts using "External Tools". This works, but I guess there may be a  better way to do it..
+
+Is it possible to call custom build step from IntelliJ, so it  gets called we make or compile a module?
+    
+
+        
+Answer 1: 
+
+    
+    
+In the Ant Panel right click on a target and choose Execute On | Before Compilation or After Compilation.
+
+If such option is not available in IDEA 8, try more recent version.
+    
+    
+Title: Determining where a type is defined
+Description: 
+    
+    
+                    
+I am working on a rather large code base that has a bit of the #ifdef magic going on.  I'm looking at one file and trying to determine where a type is defined.  Unfortunately, it includes many file, which include many files, which include many files, etc. some of which define macros that affect which definitions you might use.  The structure is sufficiently complicated that after 10 minutes worth of grepping and following the include chains, I still have no idea which definition is being used.  I recall that visual studio has a nice feature where I can right click on the type and it will show where the type is defined.  Is there an equivalent nice tool for linux that reads make files, etc?  I'm sure there is, but I still just use vim + grep for my development environment.
+    
+
+        
+Answer 1: 
+
+    
+    
+With complicated defines and dependencies this feature doesn't always work in Visual Studio either.
+
+Solution: ask your compiler to dump the code after it was preprocessed, ask it to print #line and #file directives too. Search through the resulted file for your type, then look at the closest #file directive to see where it came from.
+
+(In GCC you can use the -E switch)
+    
+    
+Title: Eric4 Python IDE - autosave and quick script/project start, run
+Description: 
+    
+    
+                    
+I've got 2 problems with Eric4 IDE.
+
+Can't find an option in preferences to autosave my changed files before running script. It's very annoying that I have to save my file and then run script.
+
+Second problem is running a script. I can't find any button to run a script/project instantly. 'Run Script' button always opens a setting window.
+    
+
+        
+Answer 1: 
+
+    
+    
+One way to get around this, as it seems there is no built in way is to bind a key to save the file (ctrl+s), then run the script (F2), and finally hit enter (to close the settings window and run the code).
+    
+    
+Answer 2: 
+
+    
+    
+This bothered me a lot too, and I know this is 2 years late but it might help some else who comes here looking for this very solution, like I did. Here are the actual answers, ERIC v4.4: 
+
+Press F4 instead of F2.
+
+The first time you have to use F2 to 'Start' the script, so dismiss the settings window. After that you can use F4 'Restart' and it will run with the settings you chose initially.
+
+The Autosave option is well hidden unfortunately:
+
+Settings--&gt;Preferences--&gt;Debugger--&gt;General--&gt;!Scroll down to!--&gt;Start Debugging--&gt;Autosave changed scripts
+
+And you were spot on - these two things do have a huge impact on productivity.
+    
+    
+Title: Eclipse - Is it possible to link to a file from within a Java comment?
+Description: 
+    
+    
+                    
+I am looking for a way to link from a comment inside a .java file to another file somewhere in the project folder (like CMD-clicking a Java Type links to the Type declaration). In my case I am working on a (Spring Roo backed) web application, so I have controllers and view files.
+
+What I have in mind may look like this (Javadoc-oriented but of course not parsed but used directly as a link):
+
+public String orderlist(ModelMap modelMap){
+
+    modelMap.addAttribute("orders", Order.findAllOrders());
+
+    // @link("/WEB-INF/views/order/list.jspx")
+    return "order/list";
+}
+
+
+I want to CMD-click on the comment link to open the file.
+
+I am heavily using Working Sets, filters and of course CMD+SHIFT+R ("Open Resource"), which are all great, but this might come in handy working on a controller and the corresponding view (especially in a team). Is this possible somehow, a basic feature that I missed completely so far or even total nonsense for some reason? I realize that those links should be considered when, for example, refactor|move the view file.
+    
+
+        
+Answer 1: 
+
+    
+    
+The feature you're describing is Eclipse's hyperlink detectors: http://help.eclipse.org/helios/index.jsp?topic=/org.eclipse.platform.doc.isv/reference/extension-points/org_eclipse_ui_workbench_texteditor_hyperlinkDetectors.html. Unfortunately I'm not sure an implementation as you're describing is likely available.
+
+There's an URLHyperlinkDetector that can pick up URLs, so you could potentially put a file:// URL in a comment and link to that, but I think that Eclipse is hard-wired to assume it's something that can be opened in it's browser. It's worth a shot, but of course the absolute paths would break sharing across teams/machines.
+
+You could try your hand at contributing your own via a plugin that your team could install. Here's an implementation we created in Aptana Studio for picking up relative URIs in files and opening them in editors if possible: https://github.com/aptana/studio3/blob/development/plugins/com.aptana.editor.common/src/com/aptana/editor/common/text/hyperlink/HyperlinkDetector.java
+    
+    
+Title: Xcode window organization tips?
+Description: 
+    
+    
+                    
+I'm a fairly recent convert to Xcode and OS X. Even though I have two large monitors it feels likes I spend far to much time hunting for windows.
+
+I typically have at least the following windows open:
+
+
+The file I'm editing.
+A matching header file.
+Another source file.
+API Documentation.
+A browser window.
+
+
+It seems like whatever I want next is always underneath something else. There are lots of ways to switch windows (e.g., Exposé, Spaces, OS X hotkeys, Xcode hotkeys), but that's part of the problem. There are so many different approaches, I can't blindly use one; I have to think about which is the right one for each situation.
+
+How do you organize your Xcode windows so you aren't switching all the time?
+
+Or, how do you effectively switch between windows?
+    
+
+        
+Answer 1: 
+
+    
+    
+I prefer all-in-one layout (Xcode's preferences-/pp/pp/p/div
+Answer 2: 
+
+    
+    
+I keep the main XCode window open and the documentation open slightly askew from each other horizontally so i can click one while the other is on top. I use the button (right next to the lock icon) which opens the associated file to toggle in-betweeen the h and m files.
+
+I use expose and keep safari in another panel.
+    
+    
+Title: Can TextMate find matching opening and closing tags?
+Description: 
+    
+    
+                    
+Something I liked in Visual Studio was that I could click an opening tag, say  and it would do its best to highlight in bold the closing tag.  Does anyone know if you can do that in textmate?  I searched an looked but cannot find it.
+
+It gets hard to find the closing tag many DIVs deep.  
+
+If TextMate won't do it, can anyone tell me an editor on Mac that will?
+
+Thank you for any help.
+
+EDIT: If it can do it, can someone please tell me how?  Thanks again.
+    
+
+        
+Answer 1: 
+
+    
+    
+Install the experimental bundle - and look for the "Select Balanced Tags" macro (Shift-Command-B)
+    
+    
+Answer 2: 
+
+    
+    
+Whenever you transverse with your keyboard or mouse the closing tag, TM will flash you the opening one.
+
+But I think the reverse it's not possible (or at least, haven't found a way to work it like that) 
+    
+    
+Title: User Interface for creating Oracle SQL Loader control file
+Description: 
+    
+    
+                    
+Is there a good user interface for authoring Oracle SQL Loader control files? PL/SQL Developer includes a "Text Importer" feature (that reminds one of the Excel import wizard) to import text files into tables, but uses a proprietary format instead of the SQL Loader format. Something like this for the SQL Loader format would be quite helpful.
+    
+
+        
+Answer 1: 
+
+    
+    
+TOAD has an interface to do SQL*Loads, it can generate the control files too...
+
+http://www.toadsoft.com/get2know9/#Loader
+    
+    
+Answer 2: 
+
+    
+    
+The TOAD answer is probably the best at present. However, in trying out the TOAD SQL Loader wizard, I was disappointed at the level of usability. It assumed that I had a pre-existing table to load the data into. I was looking for something that would let me first
+
+
+locate columns in the fixed-width input file, then
+analyze the columns for candidate names and data types, then
+generate a table and control file for loading the data
+
+
+Since I couldn't find anything that would adequately meet my needs, I created a utility for the purpose. The utility is somewhat custom to my specific needs (fixed-width file format, headers on top, dashed divider separating headers from data, white space between columns) and only supports the SQL Loader features that I required. If I have opportunity to flesh it out to something more universally usable, I'd be happy to post it for the community.
+    
+    
+Title: How do scala developers cope with incorrect IDE(Idea) errors in scala code with shapeless
+Description: 
+    
+    
+                    
+This is a general question with a specific example.
+
+How do people getting into scala and using it for big projects handle unreliability of tools/IDE? Do you just accept red markings all over your source code?
+
+I encounter yet another scala codebase where working code is flagged red by idea Cannot resolve symbol Repr.
+
+I start a playground project to explore one of libraries in the codebase - shapeless (as I understand it a highly regarded library in scala community).
+
+I write extremely basic code from the first page of official shapeless guide.
+
+package example
+import shapeless._
+
+object Hello extends App {
+  val genericEmployee = Generic[Employee].to(Employee("Dave", isOld = true))
+  val genericIceCream = Generic[IceCream].to(IceCream("yellow", isInCone = false))
+
+  def genericCsv (gen: String :: Boolean :: HNil) :List[String] = List(gen(0), gen(1).toString())
+
+  println(genericCsv(genericIceCream).toString())
+}
+
+case class Employee (name: String, isOld: Boolean)
+
+case class IceCream (name: String, isInCone: Boolean)
+
+
+gen(0) and gen(1) are flagged with No implicits found for parameter at hlist.At[String :: Boolean :: HNil, Nat#N]
+
+The code works.
+
+I also remember errors-but-not-real-errors being caused by Akka HTTP.
+    
+
+        
+Answer 1: 
+
+    
+    
+There seems to be a fundamental difficulty in IntelliJ supporting libraries relying on macros such as shapeless
+
+@niktrop
+
+
+  Shapeless is heavily using macros. We have no way to support them
+  generically.
+
+
+@joroKr21 
+
+
+  there is a fundamental barrier for whitebox macros. You have to run a
+  complete typecheck and expand them just to see what type they return
+  and this is not feasible to do on every keystroke. Blackbox macros on
+  the other hand shouldn't pose such problems.
+
+
+@olafurpg 
+
+
+  scala-compiler and intellij-scala are different typecheckers,
+  scala-reflect macros are currently implemented against scala-compiler
+  APIs which makes them difficult to support in alternative scala
+  compilers.
+
+
+
+
+You could try reporting highlighting errors as a bug at
+
+https://youtrack.jetbrains.com/issues/SCL
+
+Here is an example you could use as a template
+
+https://youtrack.jetbrains.com/issue/SCL-16091
+
+Select the affected subsystem as Error Highlighting
+
+This feature is called Type-aware highlighting and can be disabled by clicking on the little T icon in bottom right corner
+
+
+
+
+  How to deal with false errors?
+  
+  So, the truth is you have to remember that sometimes there’s no spoon
+  error. To help us to fix a highlighting glitch you may report it to
+  YouTrack as usual or by pressing Alt+Enter on wrong highlight:
+
+    
+    
+Title: &ldquo;Move&rdquo; refactoring in IntelliJ doesn&#39;t works with input
+Description: 
+    
+    
+                    
+I am using Python plugin to handle Python code inside an IntelliJ Java project.
+
+I have selected refactoring "Move -/pp/pprecode/code/prep/pprecode/code/prep/p/div
+Answer 1: 
+
+    
+    
+This is common in PyCharm and IntelliJ
+
+The problem here is working directory and run/debug config
+
+Even when you move files, wd stays the same
+
+It is a confirmed bug, but it's not still fixed
+
+You can vote for it to be fixed faster
+    
+    
+Title: How do I get each python import on a different line when using Alt+Enter to magically import in Pycharm?
+Description: 
+    
+    
+                    
+Currently if i do Alt+Enter on a function in a different module which isn't imported yet it simply adds it to a an existing import line.
+
+Say I have:
+
+from my_package.my_module import do_something
+
+my_module.do_something()
+
+
+Then I type:
+
+from my_package.my_module import do_something
+
+do_something()
+do_something_else()  # My new line
+
+
+I love that I can simply Alt+Enter on do_something_else and it gets imported. But what happens is this: 
+
+from my_package.my_module import do_something, do_something_else
+
+do_something()
+do_something_else()
+
+
+While what I would like to happen is this:
+
+from my_package.my_module import do_something
+from my_package.my_module import do_something_else
+
+do_something()
+do_something_else()
+
+
+I looked into the settings, but none of the ones I saw seemed right.
+
+These are the ones I've looked at for now:
+
+
+
+
+
+
+
+Where else can I look? Seems like something which should be possible. Maybe one of the options above is the one I'm looking for, but just didn't understand was the right one?
+    
+
+        
+Answer 1: 
+
+    
+    
+This can now be done easily:
+
+Settings &gt; Code Style &gt; Python &gt; Imports
+
+
+Then under Structure of "from" imports check the Always split imports option.
+
+
+    
+    
+Answer 2: 
+
+    
+    
+Currently there does not seem to be a way to do this, but there is an open ticket that you can up vote if you would like to have this feature.
+
+https://youtrack.jetbrains.com/issue/PY-20100
+    
+    
+Answer 3: 
+
+    
+    
+It seems to be possible now in Pycharm 2018.3 according to this comment here
+    
+    

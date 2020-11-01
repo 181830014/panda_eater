@@ -1,0 +1,1235 @@
+Title: How do I remap the default CTRL+f (find) in Visual Studio Code such that I can use CTRL+f as is typical in unix/linux?
+Description: 
+    
+    
+                    
+In Visual Studio Code, Ctrl+f activates the Find widget. I use vscode on Windows 10 (ssh into 'nix) and separately on the Ubuntu 18.04 Linux distro (w/Gnome Shell), when using the integrated terminal. I expected Ctrl+f to step one character forward in the CLI, as is typical on many Linux terminals, within vscode. How do I accomplish this?
+
+I'd additionally like to maintain the find functionality, if possible, though with a different binding.
+
+Because my search in SO retrieved little, I'm posting the solution and references I found for the community. 
+    
+
+        
+Answer 1: 
+
+    
+    
+After searching several links via Google, I found straightforward documentation to solve this problem at https://vscode.readthedocs.io/en/latest/editor/integrated-terminal/.
+The solution, in summary:
+
+Open up Keyboard Preferences, e.g. Ctrl+Shift+p and typing key and then enter or return.
+Type Ctrl+f in the Keyboard Shortcuts search bar and find the &quot;Terminal: Focus Find Widget&quot; line. Mine looks like this:
+Click the pencil icon to alter the keybinding. One available for me was Ctrl+Alt+f.
+
+Note: the following is pasted from the docs for easy reference.
+Or, in your keybindings.json change:
+{ &quot;key&quot;: &quot;ctrl+f&quot;, &quot;command&quot;: &quot;-workbench.action.terminal.focusFindWidget&quot;,
+                      &quot;when&quot;: &quot;terminalFocus&quot; },
+
+to something like this:
+{ &quot;key&quot;: &quot;ctrl+alt+f&quot;, &quot;command&quot;: &quot;-workbench.action.terminal.focusFindWidget&quot;,
+                      &quot;when&quot;: &quot;terminalFocus&quot; },
+
+    
+    
+Title: Python IDE That Runs Matplotlib (Especially Without Additional Configuration)
+Description: 
+    
+    
+                    
+I have been having trouble with matplotlib running on putty and the community version of PyCharm. Is there an IDE that will run matplotlib with minimal or no extra configuration? In putty it somewhat works (no error but also no graph) with matplotlib.use('Agg') but I get an error with matplotlib.use('TKAgg').
+
+This is the error:
+
+Use one of following commands are :: --
+'UPLOAD' to upload a file
+'DOWNLOAD' to download a file
+'DELETE' to delete a file
+'DIR' to view the current directories
+DOWNLOAD
+enter the name of the file to download!!!
+break.txt
+file opened
+file close()
+time:  start =  0  end =  1587306325.2672875
+time:  transfer_time =  1587306325267.287
+file downloaded and graph is shown below!!
+Traceback (most recent call last):
+  File "file_client.py", line 117, in &lt;module&gt;
+    plot_graph(result)
+  File "file_client.py", line 81, in plot_graph
+    plt.scatter(list(time_dict.keys()), list(time_dict.values()))
+  File "/usr/lib/python3/dist-packages/matplotlib/pyplot.py", line 3364, in scatter
+    ax = gca()
+  File "/usr/lib/python3/dist-packages/matplotlib/pyplot.py", line 962, in gca
+    return gcf().gca(**kwargs)
+  File "/usr/lib/python3/dist-packages/matplotlib/pyplot.py", line 592, in gcf
+    return figure()
+  File "/usr/lib/python3/dist-packages/matplotlib/pyplot.py", line 539, in figure
+    **kwargs)
+  File "/usr/lib/python3/dist-packages/matplotlib/backend_bases.py", line 171, in new_figure_                                                                                                manager
+    return cls.new_figure_manager_given_figure(num, fig)
+  File "/usr/lib/python3/dist-packages/matplotlib/backends/backend_tkagg.py", line 1049, in n                                                                                                ew_figure_manager_given_figure
+    window = Tk.Tk(className="matplotlib")
+  File "/usr/lib/python3.6/tkinter/__init__.py", line 2023, in __init__
+    self.tk = _tkinter.create(screenName, baseName, className, interactive, wantobjects, useT                                                                                                k, sync, use)
+_tkinter.TclError: no display name and no $DISPLAY environment variable
+
+
+    
+
+        
+Title: “Invalid number of arguments” warning after applying “util.promisify”
+Description: 
+    
+    
+                    
+I'm using stream.pipeline in Node.js:
+
+import {pipeline} from "stream";
+
+pipeline(file.stream,
+        fs.createWriteStream(`${__dirname}${uploaderConfig.savePath}${fileName}`),
+        (err) =&gt; {}
+);
+
+
+Everything is working, no warnings.
+Now, I want to get rid of the callback with a help of util.promisify:
+
+import {pipeline} from "stream";
+import {promisify} from "util";
+const asyncPipeline = promisify(pipeline);
+
+await asyncPipeline(file.stream,
+        fs.createWriteStream(`${__dirname}${uploaderConfig.savePath}${fileName}`)
+);
+
+
+That's works too, but IDEA shows a warning:
+
+
+  Invalid number of arguments expected 1
+  const asyncPipeline: (arg1: (NodeJS.ReadableStream | (NodeJS.ReadableStream | NodeJS.WritableStream | NodeJS.ReadWriteStream)[])) =/p/blockquotepcode/codecode/code/ppstrong/strong/polli/lilicode/code/li/ol/div
+Title: IntelliJ / IDEA Gradle plugin not finding source JARs
+Description: 
+    
+    
+                    
+I've been building my Java projects with Gradle, and publishing the with the following setup:
+
+apply plugin: 'java-library'
+apply plugin: 'maven-publish'
+
+
+java {
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        libs(MavenPublication) {
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            credentials {
+                username depotUsername
+                password depotPassword
+            }
+            url "${depotUrl}/repository/internal/"
+        }
+    }
+}
+
+
+When I run the publishAllPublicationsToMavenRepository, things work as expected: I can see the results on my server (using our serdes library as an example):
+
+.
+├── 0.0.1
+│   ├── serdes-0.0.1.jar
+│   ├── serdes-0.0.1.jar.md5
+│   ├── serdes-0.0.1.jar.sha1
+│   ├── serdes-0.0.1.jar.sha256
+│   ├── serdes-0.0.1.jar.sha512
+│   ├── serdes-0.0.1.module
+│   ├── serdes-0.0.1.module.md5
+│   ├── serdes-0.0.1.module.sha1
+│   ├── serdes-0.0.1.module.sha256
+│   ├── serdes-0.0.1.module.sha512
+│   ├── serdes-0.0.1.pom
+│   ├── serdes-0.0.1.pom.md5
+│   ├── serdes-0.0.1.pom.sha1
+│   ├── serdes-0.0.1.pom.sha256
+│   ├── serdes-0.0.1.pom.sha512
+│   ├── serdes-0.0.1-sources.jar
+│   ├── serdes-0.0.1-sources.jar.md5
+│   ├── serdes-0.0.1-sources.jar.sha1
+│   ├── serdes-0.0.1-sources.jar.sha256
+│   └── serdes-0.0.1-sources.jar.sha512
+├── maven-metadata.xml
+├── maven-metadata.xml.md5
+├── maven-metadata.xml.sha1
+├── maven-metadata.xml.sha256
+└── maven-metadata.xml.sha512
+
+
+However, when I try to resolve this in another project, I run the idea plugin, and I don't get the sources JAR. I can search for a class name in IntelliJ, and I only get the option to view the decompiled code. If I look in the .iml file, I also see that there is no source jar:
+
+    &lt;orderEntry type="module-library"&gt;
+      &lt;library&gt;
+        &lt;CLASSES&gt;
+          &lt;root url="jar:///Users/tom/.gradle/caches/modules-2/files-2.1/io.majeure/serdes/0.0.1/fb710e84a3a74e2548423d258f9ae13da5c35cf8/serdes-0.0.1.jar!/"/&gt;
+        &lt;/CLASSES&gt;
+        &lt;JAVADOC/&gt;
+        &lt;SOURCES/&gt;
+      &lt;/library&gt;
+    &lt;/orderEntry&gt;
+
+
+This appears to work for dependencies I pull down from MavenCentral, and I can view the source files from those in IntelliJ just fine:
+
+    &lt;orderEntry type="module-library"&gt;
+      &lt;library&gt;
+        &lt;CLASSES&gt;
+          &lt;root url="jar:///Users/tom/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/28.2-jre/8ec9ed76528425762174f0011ce8f74ad845b756/guava-28.2-jre.jar!/"/&gt;
+        &lt;/CLASSES&gt;
+        &lt;JAVADOC/&gt;
+        &lt;SOURCES&gt;
+          &lt;root url="jar:///Users/tom/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/28.2-jre/79474f7d08b9a8d03f827161825711d9d62ef09a/guava-28.2-jre-sources.jar!/"/&gt;
+        &lt;/SOURCES&gt;
+      &lt;/library&gt;
+    &lt;/orderEntry&gt;
+
+
+What am I missing here? Have already tried blowing away my Gradle cache, and have deleted my local Maven repo to make sure I'm not getting anything from there.
+
+Thanks in advance for any help!
+
+Versions:
+
+
+Gradle 6.0
+
+    
+
+        
+Title: Android Studio: Fold all methods non-recursively
+Description: 
+    
+    
+                    
+In Android Studio 3.6.1. (Java 8) there are multiple options for folding (Code -&gt; Folding):
+
+
+Collapse - Collapses the code block the cursor is in, if I put it at the start of a method, it only collapses that but not the if, for, whatever else inside.
+Collapse Recursively - Collapses the code block the cursor is in but also all the if, for, //... inside.
+Collapse All - Works like Collapse Recursively but collapses all the functions in the file, so it's actually a "Collapse All Rescursively".
+
+
+Using the third option in a file with a lot of methods/code blocks, if I just want to work on a single method, means that I have to unfold everything inside that code block again.
+
+I know that Eclipse and Visual Studio are able to fold all methods non-recursively (my shortcuts there are: Ctrl + Shift + Numpad / for folding and Ctrl + Shift + Numpad * for unfolding) but how do I do the same thing in Android Studio?
+    
+
+        
+Answer 1: 
+
+    
+    
+Unfortunately it appears this can't be done. The best way to deal with this that I've found is to expand the desired method recursively with ctrl alt +
+    
+    
+Title: Typescript vscode back tab the line when I put end bracket
+Description: 
+    
+    
+                    
+e.g 
+
+There is a code like this.
+
+&lt;div className="game-result-container"&gt;
+  &lt;h1&gt;{resultTitle}&lt;/h1&gt;
+  &lt;h2&gt;{numberOfTotalQuestions}: {totalNum}&lt;/h2&gt;
+  &lt;h2&gt;{numberOfCorrectAnswers}: {correctNum}&lt;/h2&gt;
+  &lt;h2&gt;{numberOfIncorrectAnswers}: &lt;/h2&gt;
+&lt;/div&gt;
+
+
+When put a single bracket
+
+&lt;div className="game-result-container"&gt;
+  &lt;h1&gt;{resultTitle}&lt;/h1&gt;
+  &lt;h2&gt;{numberOfTotalQuestions}: {totalNum}&lt;/h2&gt;
+  &lt;h2&gt;{numberOfCorrectAnswers}: {correctNum}&lt;/h2&gt;
+  &lt;h2&gt;{numberOfIncorrectAnswers}: {&lt;/h2&gt;
+&lt;/div&gt;
+
+
+It's still okay. but when put end bracket
+
+&lt;div className="game-result-container"&gt;
+  &lt;h1&gt;{resultTitle}&lt;/h1&gt;
+  &lt;h2&gt;{numberOfTotalQuestions}: {totalNum}&lt;/h2&gt;
+  &lt;h2&gt;{numberOfCorrectAnswers}: {correctNum}&lt;/h2&gt;
+&lt;h2&gt;{numberOfIncorrectAnswers}: {}&lt;/h2&gt;
+&lt;/div&gt;
+
+
+It changed like that.
+I don't know why It works like that.
+It's really annoying while working.
+Is there anyone who know to solve this problem?
+    
+
+        
+Title: IntelliJ problem setup JDK (compiles properly but keep seeing errors)
+Description: 
+    
+    
+                    
+I have a problem with my IntelliJ : it is able to launch my project and make it work properly (because the JDK is set up correctly), but the view of my project is full of errors, like if it did not know the JDK, and it keeps asking me to set up the JDK. Here are some screens :
+
+screen
+
+I tried to invalidate caches and restart, but it did not change anything. I repeat, I can successfully launch this project, this is just about the view. This is really bothersome, could someone help me please ?
+
+Thank you in advance,
+
+Virgile Petermannn
+    
+
+        
+Answer 1: 
+
+    
+    
+Try this. first, clear your local cache files and then download dependencies. 
+
+rm -rf $HOME/.gradle/caches/
+./gradlew build --refresh-dependencies
+
+    
+    
+Answer 2: 
+
+    
+    
+Remove JDK configuration in IntelliJ IDEA, reinstall JDK, add JDK configuration again in Settings (Preferences) | Project structure | SDKs.
+    
+    
+Title: Netbeans doesn&#39;t match Git status
+Description: 
+    
+    
+                    
+Doing git status returnsnothing to commit, working tree clean but Netbeans project/files sidebar indicates folders and files Contains add/modified or deleted files which means Netbeans thinks there are files in the folder that are not commited.
+
+Any ideas how to "sync" git status with Netbeans?
+    
+
+        
+Answer 1: 
+
+    
+    
+NetBeans 11.3 or 11.2
+
+It could be a bug. It was introduced in NetBeans 11.3 or 11.2 when implementing this improvement (updating jgit to 5.5.0). 
+There is a pull request and probably it will be merged either in 12.0 or 12.1.
+
+Other versions
+
+Sometimes for a big project, NetBeans doesn't automatically refresh statuses. For me manually asking for status refreshing usually helps. 
+
+For refreshing go to the file or project or the parent folder, right-click on the mouse -
+Title: Why does adding list.add(&ldquo;SuppressWarnings&rdquo;) output a warning in Eclipse and not in Intellij? [duplicate]
+Description: 
+    
+    
+                    
+Questions:
+
+
+What are raw types in Java, and why do I often hear that they shouldn't be used in new code?
+What is the alternative if we can't use raw types, and how is it better?
+
+    
+
+        
+Answer 1: 
+
+    
+    
+What is a raw type?
+The Java Language Specification defines a raw type as follows:
+JLS 4.8 Raw Types
+
+A raw type is defined to be one of:
+
+The reference type that is formed by taking the name of a generic type declaration without an accompanying type argument list.
+
+An array type whose element type is a raw type.
+
+A non-static member type of a raw type R that is not inherited from a superclass or superinterface of R.
+
+
+
+Here's an example to illustrate:
+public class MyType&lt;E&gt; {
+    class Inner { }
+    static class Nested { }
+    
+    public static void main(String[] args) {
+        MyType mt;          // warning: MyType is a raw type
+        MyType.Inner inn;   // warning: MyType.Inner is a raw type
+
+        MyType.Nested nest; // no warning: not parameterized type
+        MyType&lt;Object&gt; mt1; // no warning: type parameter given
+        MyType&lt;?&gt; mt2;      // no warning: type parameter given (wildcard OK!)
+    }
+}
+
+Here, MyType&lt;E&gt; is a parameterized type (JLS 4.5). It is common to colloquially refer to this type as simply MyType for short, but technically the name is MyType&lt;E&gt;.
+mt has a raw type (and generates a compilation warning) by the first bullet point in the above definition; inn also has a raw type by the third bullet point.
+MyType.Nested is not a parameterized type, even though it's a member type of a parameterized type MyType&lt;E&gt;, because it's static.
+mt1, and mt2 are both declared with actual type parameters, so they're not raw types.
+
+What's so special about raw types?
+Essentially, raw types behaves just like they were before generics were introduced. That is, the following is entirely legal at compile-time.
+List names = new ArrayList(); // warning: raw type!
+names.add(&quot;John&quot;);
+names.add(&quot;Mary&quot;);
+names.add(Boolean.FALSE); // not a compilation error!
+
+The above code runs just fine, but suppose you also have the following:
+for (Object o : names) {
+    String name = (String) o;
+    System.out.println(name);
+} // throws ClassCastException!
+  //    java.lang.Boolean cannot be cast to java.lang.String
+
+Now we run into trouble at run-time, because names contains something that isn't an instanceof String.
+Presumably, if you want names to contain only String, you could perhaps still use a raw type and manually check every add yourself, and then manually cast to String every item from names. Even better, though is NOT to use a raw type and let the compiler do all the work for you, harnessing the power of Java generics.
+List&lt;String&gt; names = new ArrayList&lt;String&gt;();
+names.add(&quot;John&quot;);
+names.add(&quot;Mary&quot;);
+names.add(Boolean.FALSE); // compilation error!
+
+Of course, if you DO want names to allow a Boolean, then you can declare it as List&lt;Object&gt; names, and the above code would compile.
+See also
+
+Java Tutorials/Generics
+
+
+How's a raw type different from using &lt;Object&gt; as type parameters?
+The following is a quote from Effective Java 2nd Edition, Item 23: Don't use raw types in new code:
+
+Just what is the difference between the raw type List and the parameterized type List&lt;Object&gt;? Loosely speaking, the former has opted out generic type checking, while the latter explicitly told the compiler that it is capable of holding objects of any type. While you can pass a List&lt;String&gt; to a parameter of type List, you can't pass it to a parameter of type List&lt;Object&gt;. There are subtyping rules for generics, and List&lt;String&gt; is a subtype of the raw type List, but not of the parameterized type List&lt;Object&gt;. As a consequence, you lose type safety if you use raw type like List, but not if you use a parameterized type like List&lt;Object&gt;.
+
+To illustrate the point, consider the following method which takes a List&lt;Object&gt; and appends a new Object().
+void appendNewObject(List&lt;Object&gt; list) {
+   list.add(new Object());
+}
+
+Generics in Java are invariant. A List&lt;String&gt; is not a List&lt;Object&gt;, so the following would generate a compiler warning:
+List&lt;String&gt; names = new ArrayList&lt;String&gt;();
+appendNewObject(names); // compilation error!
+
+If you had declared appendNewObject to take a raw type List as parameter, then this would compile, and you'd therefore lose the type safety that you get from generics.
+See also
+
+What is the difference between &lt;E extends Number&gt; and &lt;Number&gt;?
+java generics (not) covariance
+
+
+How's a raw type different from using &lt;?&gt; as a type parameter?
+List&lt;Object&gt;, List&lt;String&gt;, etc are all List&lt;?&gt;, so it may be tempting to just say that they're just List instead. However, there is a major difference: since a List&lt;E&gt; defines only add(E), you can't add just any arbitrary object to a List&lt;?&gt;. On the other hand, since the raw type List does not have type safety, you can add just about anything to a List.
+Consider the following variation of the previous snippet:
+static void appendNewObject(List&lt;?&gt; list) {
+    list.add(new Object()); // compilation error!
+}
+//...
+
+List&lt;String&gt; names = new ArrayList&lt;String&gt;();
+appendNewObject(names); // this part is fine!
+
+The compiler did a wonderful job of protecting you from potentially violating the type invariance of the List&lt;?&gt;! If you had declared the parameter as the raw type List list, then the code would compile, and you'd violate the type invariant of List&lt;String&gt; names.
+
+A raw type is the erasure of that type
+Back to JLS 4.8:
+
+It is possible to use as a type the erasure of a parameterized type or the erasure of an array type whose element type is a parameterized type. Such a type is called a raw type.
+[...]
+The superclasses (respectively, superinterfaces) of a raw type are the erasures of the superclasses (superinterfaces) of any of the parameterizations of the generic type.
+The type of a constructor, instance method, or non-static field of a raw type C that is not inherited from its superclasses or superinterfaces is the raw type that corresponds to the erasure of its type in the generic declaration corresponding to C.
+
+In simpler terms, when a raw type is used, the constructors, instance methods and non-static fields are also erased.
+Take the following example:
+class MyType&lt;E&gt; {
+    List&lt;String&gt; getNames() {
+        return Arrays.asList(&quot;John&quot;, &quot;Mary&quot;);
+    }
+
+    public static void main(String[] args) {
+        MyType rawType = new MyType();
+        // unchecked warning!
+        // required: List&lt;String&gt; found: List
+        List&lt;String&gt; names = rawType.getNames();
+        // compilation error!
+        // incompatible types: Object cannot be converted to String
+        for (String str : rawType.getNames())
+            System.out.print(str);
+    }
+}
+
+When we use the raw MyType, getNames becomes erased as well, so that it returns a raw List!
+JLS 4.6 continues to explain the following:
+
+Type erasure also maps the signature of a constructor or method to a signature that has no parameterized types or type variables. The erasure of a constructor or method signature s is a signature consisting of the same name as s and the erasures of all the formal parameter types given in s.
+The return type of a method and the type parameters of a generic method or constructor also undergo erasure if the method or constructor's signature is erased.
+The erasure of the signature of a generic method has no type parameters.
+
+The following bug report contains some thoughts from Maurizio Cimadamore, a compiler dev, and Alex Buckley, one of the authors of the JLS, on why this sort of behavior ought to occur: https://bugs.openjdk.java.net/browse/JDK-6400189. (In short, it makes the specification simpler.)
+
+If it's unsafe, why is it allowed to use a raw type?
+Here's another quote from JLS 4.8:
+
+The use of raw types is allowed only as a concession to compatibility of legacy code. The use of raw types in code written after the introduction of genericity into the Java programming language is strongly discouraged. It is possible that future versions of the Java programming language will disallow the use of raw types.
+
+Effective Java 2nd Edition also has this to add:
+
+Given that you shouldn't use raw types, why did the language designers allow them? To provide compatibility.
+The Java platform was about to enter its second decade when generics were introduced, and there was an enormous amount of Java code in existence that did not use generics. It was deemed critical that all this code remains legal and interoperable with new code that does use generics. It had to be legal to pass instances of parameterized types to methods that were designed for use with ordinary types, and vice versa. This requirement, known as migration compatibility, drove the decision to support raw types.
+
+In summary, raw types should NEVER be used in new code. You should always use parameterized types.
+
+Are there no exceptions?
+Unfortunately, because Java generics are non-reified, there are two exceptions where raw types must be used in new code:
+
+Class literals, e.g. List.class, not List&lt;String&gt;.class
+instanceof operand, e.g. o instanceof Set, not o instanceof Set&lt;String&gt;
+
+See also
+
+Why is Collection&lt;String&gt;.class Illegal?
+
+    
+    
+Answer 2: 
+
+    
+    
+
+  What are raw types in Java, and why do I often hear that they shouldn't be used in new code?
+
+
+Raw-types are ancient history of the Java language. In the beginning there were Collections and they held Objects nothing more and nothing less. Every operation on Collections required casts from Object to the desired type.
+
+List aList = new ArrayList();
+String s = "Hello World!";
+aList.add(s);
+String c = (String)aList.get(0);
+
+
+While this worked most of the time, errors did happen
+
+List aNumberList = new ArrayList();
+String one = "1";//Number one
+aNumberList.add(one);
+Integer iOne = (Integer)aNumberList.get(0);//Insert ClassCastException here
+
+
+The old typeless collections could not enforce type-safety so the programmer had to remember what he stored within a collection.
+Generics where invented to get around this limitation, the developer would declare the stored type once and the compiler would do it instead.
+
+List&lt;String&gt; aNumberList = new ArrayList&lt;String&gt;();
+aNumberList.add("one");
+Integer iOne = aNumberList.get(0);//Compile time error
+String sOne = aNumberList.get(0);//works fine
+
+
+For Comparison:
+
+// Old style collections now known as raw types
+List aList = new ArrayList(); //Could contain anything
+// New style collections with Generics
+List&lt;String&gt; aList = new ArrayList&lt;String&gt;(); //Contains only Strings
+
+
+More complex the Compareable interface:
+
+//raw, not type save can compare with Other classes
+class MyCompareAble implements CompareAble
+{
+   int id;
+   public int compareTo(Object other)
+   {return this.id - ((MyCompareAble)other).id;}
+}
+//Generic
+class MyCompareAble implements CompareAble&lt;MyCompareAble&gt;
+{
+   int id;
+   public int compareTo(MyCompareAble other)
+   {return this.id - other.id;}
+}
+
+
+Note that it is impossible to implement the CompareAble interface with compareTo(MyCompareAble) with raw types.
+Why you should not use them:
+
+
+Any Object stored in a Collection has to be cast before it can be used
+Using generics enables compile time checks
+Using raw types is the same as storing each value as Object
+
+
+What the compiler does:
+Generics are backward compatible, they use the same java classes as the raw types do. The magic happens mostly at compile time.
+
+List&lt;String&gt; someStrings = new ArrayList&lt;String&gt;();
+someStrings.add("one");
+String one = someStrings.get(0);
+
+
+Will be compiled as:
+
+List someStrings = new ArrayList();
+someStrings.add("one"); 
+String one = (String)someStrings.get(0);
+
+
+This is the same code you would write if you used the raw types directly. Thought I'm not sure what happens with the CompareAble interface, I guess that it creates two compareTo functions, one taking a MyCompareAble and the other taking an Object and passing it to the first after casting it.
+
+What are the alternatives to raw types: Use generics
+    
+    
+Answer 3: 
+
+    
+    
+A raw type is the name of a generic class or interface without any type arguments. For example, given the generic Box class:
+public class Box&lt;T&gt; {
+    public void set(T t) { /* ... */ }
+    // ...
+}
+
+To create a parameterized type of Box&lt;T&gt;, you supply an actual type argument for the formal type parameter T:
+Box&lt;Integer&gt; intBox = new Box&lt;&gt;();
+
+If the actual type argument is omitted, you create a raw type of Box&lt;T&gt;:
+Box rawBox = new Box();
+
+Therefore, Box is the raw type of the generic type Box&lt;T&gt;. However, a non-generic class or interface type is not a raw type.
+Raw types show up in legacy code because lots of API classes (such as the Collections classes) were not generic prior to JDK 5.0. When using raw types, you essentially get pre-generics behavior — a Box gives you Objects. For backward compatibility, assigning a parameterized type to its raw type is allowed:
+Box&lt;String&gt; stringBox = new Box&lt;&gt;();
+Box rawBox = stringBox;               // OK
+
+But if you assign a raw type to a parameterized type, you get a warning:
+Box rawBox = new Box();           // rawBox is a raw type of Box&lt;T&gt;
+Box&lt;Integer&gt; intBox = rawBox;     // warning: unchecked conversion
+
+You also get a warning if you use a raw type to invoke generic methods defined in the corresponding generic type:
+Box&lt;String&gt; stringBox = new Box&lt;&gt;();
+Box rawBox = stringBox;
+rawBox.set(8);  // warning: unchecked invocation to set(T)
+
+The warning shows that raw types bypass generic type checks, deferring the catch of unsafe code to runtime. Therefore, you should avoid using raw types.
+The Type Erasure section has more information on how the Java compiler uses raw types.
+Unchecked Error Messages
+As mentioned previously, when mixing legacy code with generic code, you may encounter warning messages similar to the following:
+
+Note: Example.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+
+This can happen when using an older API that operates on raw types, as shown in the following example:
+public class WarningDemo {
+    public static void main(String[] args){
+        Box&lt;Integer&gt; bi;
+        bi = createBox();
+    }
+
+    static Box createBox(){
+        return new Box();
+    }
+}
+
+The term &quot;unchecked&quot; means that the compiler does not have enough type information to perform all type checks necessary to ensure type safety. The &quot;unchecked&quot; warning is disabled, by default, though the compiler gives a hint. To see all &quot;unchecked&quot; warnings, recompile with -Xlint:unchecked.
+Recompiling the previous example with -Xlint:unchecked reveals the following additional information:
+WarningDemo.java:4: warning: [unchecked] unchecked conversion
+found   : Box
+required: Box&lt;java.lang.Integer&gt;
+        bi = createBox();
+                      ^
+1 warning
+
+To completely disable unchecked warnings, use the -Xlint:-unchecked flag. The @SuppressWarnings(&quot;unchecked&quot;) annotation suppresses unchecked warnings. If you are unfamiliar with the @SuppressWarnings syntax, see Annotations.
+Original source: Java Tutorials
+    
+    
+Answer 4: 
+
+    
+    
+A "raw" type in Java is a class which is non-generic and deals with "raw" Objects, rather than type-safe generic type parameters.
+
+For example, before Java generics was available, you would use a collection class like this:
+
+LinkedList list = new LinkedList();
+list.add(new MyObject());
+MyObject myObject = (MyObject)list.get(0);
+
+
+When you add your object to the list, it doesn't care what type of object it is, and when you get it from the list, you have to explicitly cast it to the type you are expecting.
+
+Using generics, you remove the "unknown" factor, because you must explicitly specify which type of objects can go in the list:
+
+LinkedList&lt;MyObject&gt; list = new LinkedList&lt;MyObject&gt;();
+list.add(new MyObject());
+MyObject myObject = list.get(0);
+
+
+Notice that with generics you don't have to cast the object coming from the get call, the collection is pre-defined to only work with MyObject.  This very fact is the main driving factor for generics.  It changes a source of runtime errors into something that can be checked at compile time.
+    
+    
+Answer 5: 
+
+    
+    
+ private static List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+
+
+You should specify the type-parameter. 
+
+The warning advises that types that are defined to support generics should be parameterized, rather than using their raw form.
+
+List is defined to support generics: public class List&lt;E&gt;. This allows many type-safe operations, that are checked compile-time.
+    
+    
+Answer 6: 
+
+    
+    
+What is a raw type and why do I often hear that they shouldn't be used in new code?
+
+A "raw type" is the use of a generic class without specifying a type argument(s) for its parameterized type(s), e.g. using List instead of List&lt;String&gt;. When generics were introduced into Java, several classes were updated to use generics.  Using these class as a "raw type" (without specifying a type argument) allowed legacy code to still compile.
+
+"Raw types" are used for backwards compatibility. Their use in new code is not recommended because using the generic class with a type argument allows for stronger typing, which in turn may improve code understandability and lead to catching potential problems earlier.
+
+What is the alternative if we can't use raw types, and how is it better?
+
+The preferred alternative is to use generic classes as intended - with a suitable type argument (e.g. List&lt;String&gt;). This allows the programmer to specify types more specifically, conveys more meaning to future maintainers about the intended use of a variable or data structure, and it allows compiler to enforce better type-safety.  These advantages together may improve code quality and help prevent the introduction of some coding errors.
+
+For example, for a method where the programmer wants to ensure a List variable called 'names' contains only Strings:
+
+List&lt;String&gt; names = new ArrayList&lt;String&gt;();
+names.add("John");          // OK
+names.add(new Integer(1));  // compile error
+
+    
+    
+Answer 7: 
+
+    
+    
+Here I am Considering multiple cases  through which you can clearify  the concept
+
+1. ArrayList&lt;String&gt; arr = new ArrayList&lt;String&gt;();
+2. ArrayList&lt;String&gt; arr = new ArrayList();
+3. ArrayList arr = new ArrayList&lt;String&gt;();
+
+
+Case 1
+
+ArrayList&lt;String&gt; arr it is a ArrayList reference variable with type String which reference to a ArralyList Object of Type String. It means it can hold only String type Object.
+
+It is a Strict to String not  a Raw Type so, It will never raise an warning .
+
+    arr.add("hello");// alone statement will compile successfully and no warning.
+
+    arr.add(23);  //prone to compile time error.
+     //error: no suitable method found for add(int)
+
+
+Case 2
+
+In this case ArrayList&lt;String&gt; arr is a strict type but your Object new ArrayList(); is a raw type. 
+
+    arr.add("hello"); //alone this compile but raise the warning.
+    arr.add(23);  //again prone to compile time error.
+    //error: no suitable method found for add(int)
+
+
+here arr is a Strict type. So, It will raise compile time error when adding a integer.
+
+
+  Warning :- A Raw Type Object is referenced to a Strict type Referenced Variable of ArrayList.
+
+
+Case 3
+
+In this case ArrayList arr is a raw type but your Object new ArrayList&lt;String&gt;(); is a Strict type. 
+
+    arr.add("hello");  
+    arr.add(23);  //compiles fine but raise the warning.
+
+
+It will add any type of Object into it because arr is a Raw Type.
+
+
+  Warning :- A Strict Type Object is referenced to a raw type referenced Variable.
+
+    
+    
+Answer 8: 
+
+    
+    
+The compiler wants you to write this:
+
+private static List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+
+
+because otherwise, you could add any type you like into list, making the instantiation as new ArrayList&lt;String&gt;() pointless. Java generics are a compile-time feature only, so an object created with new ArrayList&lt;String&gt;() will happily accept Integer or JFrame elements if assigned to a reference of the "raw type" List - the object itself knows nothing about what types it's supposed to contain, only the compiler does.
+    
+    
+Answer 9: 
+
+    
+    
+A raw-type is the a lack of a type parameter when using a generic type.
+
+Raw-type should not be used because it could cause runtime errors, like inserting a double into what was supposed to be a Set of ints.
+
+Set set = new HashSet();
+set.add(3.45); //ok
+
+
+When retrieving the stuff from the Set, you don't know what is coming out. Let's assume that you expect it to be all ints, you are casting it to Integer; exception at runtime when the double 3.45 comes along.
+
+With a type parameter added to your Set, you will get a compile error at once. This preemptive error lets you fix the problem before something blows up during runtime (thus saving on time and effort).
+
+Set&lt;Integer&gt; set = new HashSet&lt;Integer&gt;();
+set.add(3.45); //NOT ok.
+
+    
+    
+Answer 10: 
+
+    
+    
+Here's another case where raw types will bite you:
+
+public class StrangeClass&lt;T&gt; {
+  @SuppressWarnings("unchecked")
+  public &lt;X&gt; X getSomethingElse() {
+    return (X)"Testing something else!";
+  }
+
+  public static void main(String[] args) {
+    final StrangeClass&lt;String&gt; withGeneric    = new StrangeClass&lt;&gt;();
+    final StrangeClass         withoutGeneric = new StrangeClass();
+    final String               value1,
+                               value2;
+
+    // Compiles
+    value1 = withGeneric.getSomethingElse();
+
+    // Produces compile error:
+    // incompatible types: java.lang.Object cannot be converted to java.lang.String
+    value2 = withoutGeneric.getSomethingElse();
+  }
+}
+
+
+As was mentioned in the accepted answer, you lose all support for generics within the code of the raw type. Every type parameter is converted to its erasure (which in the above example is just Object).
+    
+    
+Answer 11: 
+
+    
+    
+What is saying is that your list is a List of unespecified objects. That is that Java does not know what kind of objects are inside the list. Then when you want to iterate the list you have to cast every element, to be able to access the properties of that element (in this case, String).
+
+In general is a better idea to parametrize the collections, so you don't have conversion problems, you will only be able to add elements of the parametrized type and your editor will offer you the appropiate methods to select.
+
+private static List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+
+    
+    
+Answer 12: 
+
+    
+    
+tutorial page.  
+
+A raw type is the name of a generic class or interface without any type arguments. For example, given the generic Box class:  
+
+public class Box&lt;T&gt; {
+    public void set(T t) { /* ... */ }
+    // ...
+}
+
+
+To create a parameterized type of Box, you supply an actual type argument for the formal type parameter T:  
+
+Box&lt;Integer&gt; intBox = new Box&lt;&gt;();
+
+
+If the actual type argument is omitted, you create a raw type of Box:  
+
+Box rawBox = new Box();
+
+    
+    
+Answer 13: 
+
+    
+    
+Avoid raw types
+
+
+  Raw types refer to using a generic type without specifying a type parameter.
+
+
+For example, 
+
+A list is a raw type, while List&lt;String&gt; is a parameterized type.
+
+When generics were introduced in JDK 1.5, raw types were retained only to maintain backwards compatibility with older versions of Java. Although using raw types is still possible,
+
+They should be avoided:
+
+
+They usually require casts
+They aren't type safe, and some important kinds of errors will only appear at runtime
+They are less expressive, and don't self-document in the same way as parameterized types
+Example 
+
+import java.util.*;
+
+public final class AvoidRawTypes {
+
+void withRawType() {
+
+    //Raw List doesn't self-document, 
+    //doesn't state explicitly what it can contain
+
+    List stars = Arrays.asList("Arcturus", "Vega", "Altair");
+
+    Iterator iter = stars.iterator();
+
+    while (iter.hasNext()) {
+
+        String star = (String) iter.next(); //cast needed
+
+        log(star);
+    }
+
+}
+
+void withParameterizedType() {
+
+    List &lt; String &gt; stars = Arrays.asList("Spica", "Regulus", "Antares");
+
+    for (String star: stars) {
+
+        log(star);
+    }
+
+}
+
+private void log(Object message) {
+
+    System.out.println(Objects.toString(message));
+
+}
+
+}
+
+
+
+For reference: https://docs.oracle.com/javase/tutorial/java/generics/rawTypes.html
+    
+    
+Answer 14: 
+
+    
+    
+I found this page after doing some sample exercises and having the exact same puzzlement.
+
+============== I went from this code as provide by the sample ===============
+
+public static void main(String[] args) throws IOException {
+
+    Map wordMap = new HashMap();
+    if (args.length &gt; 0) {
+        for (int i = 0; i &lt; args.length; i++) {
+            countWord(wordMap, args[i]);
+        }
+    } else {
+        getWordFrequency(System.in, wordMap);
+    }
+    for (Iterator i = wordMap.entrySet().iterator(); i.hasNext();) {
+        Map.Entry entry = (Map.Entry) i.next();
+        System.out.println(entry.getKey() + " :\t" + entry.getValue());
+    }
+
+
+====================== To This code ========================
+
+public static void main(String[] args) throws IOException {
+    // replace with TreeMap to get them sorted by name
+    Map&lt;String, Integer&gt; wordMap = new HashMap&lt;String, Integer&gt;();
+    if (args.length &gt; 0) {
+        for (int i = 0; i &lt; args.length; i++) {
+            countWord(wordMap, args[i]);
+        }
+    } else {
+        getWordFrequency(System.in, wordMap);
+    }
+    for (Iterator&lt;Entry&lt;String, Integer&gt;&gt; i = wordMap.entrySet().iterator(); i.hasNext();) {
+        Entry&lt;String, Integer&gt; entry =   i.next();
+        System.out.println(entry.getKey() + " :\t" + entry.getValue());
+    }
+
+}
+
+
+===============================================================================
+
+It may be safer but took 4  hours to demuddle the philosophy...
+    
+    
+Answer 15: 
+
+    
+    
+Raw types are fine when they express what you want to express.
+
+For example, a deserialisation function might return a List, but it doesn't know the list's element type. So List is the appropriate return type here.
+    
+    
+Title: does anyone know how to install howl IDE
+Description: 
+    
+    
+                    
+I'm trying to install howl but I've got absolutely zero idea what to do and their website is no help what so ever. Has anyone done this before and know what to do?
+    
+
+        
+Title: Delphi source code with LF only vs CRLF causing source corruption in IDE
+Description: 
+    
+    
+                    
+I recently received some Delphi 2007 source code that was written by another developer.
+
+I noticed when I click on a component icon in the IDE that Delphi generates the stub code as you would expect, HOWEVER it is 'stealing' the first character from the next procedure or function and placing that character in front of the generated code.
+
+For example, when clicking on the RaizeObjects Launcher component icon in the IDE, I get this generated code with an "f" stolen from the next function (or it would be a "p" if the next item was a procedure):
+
+fprocedure TFLogin.RzLauncher1Error(Sender: TObject; ErrorCode: Cardinal);
+begin
+
+end;
+
+unction TFLogin.DelDir(dir: string): Boolean;
+var
+
+
+Of course, this corrupts my source code everytime I click on a component icon in the IDE.
+
+I did a hex dump on the source and found that these source files only have a linefeed (0A) in them and not the Carriage Return (0D) &amp; Linefeed (0A) that my locally produced code has (examples below).
+
+Hex dump of a typical source file Delphi normally produces:
+
+unit Unit1; (CR &amp; LF)
+
+
+75 6E 69 74 20 55 6E 69 74 31 3B 0D 0A
+
+
+Example source code file from other person (hex dump):
+
+unit Calc; (LF)
+
+
+75 6E 69 74 20 43 61 6C 63 3B 0A
+
+
+Saving the source in my editor does not fix this issue. My question is, how do I fix this issue? Is there a setting in Delphi 2007 telling it to just use linefeeds, or is there some Windows 7 setting to adjust for this issue?
+    
+
+        
+Title: Android studio codes are showing red color. But it runs successfully
+Description: 
+    
+    
+                    
+All codes in my project will be in red color . But i can run my project successfully. i updated andriod 
+ studio as well as i clean , rebuild the project. The errors are still existing there. Can anyone help to 
+ solve the problem. 
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  Solution 1:
+
+
+try sync gradle 
+
+File -&gt; Sync Project With gradle Files 
+
+
+If not work, follow solution 2. 
+
+
+  Solution 2:
+
+
+Just remove  dependencies inside dependencies{} section and sync
+
+then back to all dependencies and sync
+
+Step 1
+
+//1. Remove all dependencies 
+//2. Sync
+dependencies {
+
+}
+
+
+Step 2
+
+//1. back to all dependencies (Re-Add) 
+//2. Sync
+dependencies {
+   implementation fileTree(include: ['*.jar'], dir: 'libs')
+   ......
+   ......
+}
+
+
+One day I face same problem and I solve them by second tricks.. 
+    
+    
+Title: How to change the background color of Eclipse&#39;s &ldquo;Packages&rdquo; tab
+Description: 
+    
+    
+                    
+How do I change the background color of Eclipse's Packages tab? It's too bright and is slightly distracting.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I can think of it, as a composite step, if you want to change only the packages tab color. First of all you can go to marketplace (Help/Marketplace) and find a theme that fulfills your needs(you can choose also a pre-installed themes from Eclipse Eclipse menu -
+Answer 2: 
+
+    
+    
+Go to Preferences -code/code
+Title: Run two applications in the same AWS Cloud9 instance (front-end and API)
+Description: 
+    
+    
+                    
+I'm trying to run json-server on port 8082 to serve some mock data to the front-end I'm developing using create-react-app (via yarn start to get the dev server on port 8080). Although both servers run correctly in their respective terminals, I can only access the first one I run from the AWS-provided URL, thus making it impossible to perform any kind of HTTP request from the React app to the json-server.
+
+How should I go about this? Probably running two EC2 instances would work, but that seems awfully inefficient...
+    
+
+        
+Title: How to do EOF in CLion IDE?
+Description: 
+    
+    
+                    
+I'm trying to do a simple scan line code in CLion: 
+
+while((c=getchar())!=EOF) {
+        char_count++;
+    }
+
+
+. I learned in class to type Ctrl-D to do a manual EOF, but this doesn't work in CLion. I've looked at previous questions about the same topic, and the command is enabled in the preferences. Any solutions?
+    
+
+        
+Answer 1: 
+
+    
+    
+There is actually a long-known issue about this. Have you tried disabling the option run.processes.with.pty in Registry (Find Action /p/div
+Title: Pycharm/Pytorch: finding usages of nn.Module.forward
+Description: 
+    
+    
+                    
+
+
+Then you click no, and it only finds explicit mentions of .forward in the code, rather than model(x) calls. If you click yes, it finds explicit mentions of forward in the pytorch source. Is this fixable? Is there another IDE that supports this?
+
+Pycharm Version:
+
+PyCharm 2019.3.3 (Professional Edition)
+Runtime version: 11.0.5+10-b520.38 x86_64
+VM: OpenJDK 64-Bit Server VM by JetBrains s.r.o
+macOS 10.15.1
+GC: ParNew, ConcurrentMarkSweep
+Memory: 725M
+Cores: 12
+Registry: 
+Non-Bundled Plugins: Key promoter, mobi.hsz.idea.latex, name.kropp.intellij.makefile, net.seesharpsoft.intellij.plugins.csv
+
+    
+
+        
+Title: Creating android layout by xml without android studio layout editor
+Description: 
+    
+    
+                    
+Is any editor to create android layout except android studio or others Android IDE layout editor?
+I have 2GB of RAM and android studio or others IDE make crashes a lot. I need to build XML layout for android application , if you know any IDE or XML editor which can be used for android layout (such activity layout or drawable or...) or any suggestion please tell me.
+    
+
+        
+Title: Possible to change Delphi search history list
+Description: 
+    
+    
+                    
+In the Delphi 10.3 IDE, using the Find function, when I press the down arrow in the search item edit I get an alphabetical list of everything I've ever searched for. But using the Find In Files function, when I press the down arrow in the search item edit I get a list of my most recent search items. Is there a way to control which list is presented? I'd much prefer the most recently used list in both search functions. 
+
+Thanks
+    
+
+        
+Title: Intellij Idea won&#39;t start Windows 10
+Description: 
+    
+    
+                    
+I downloaded Intellij Idea and was using it just fine for a while. I don't know what happened between the time it was working and when it started to not work. When I would click the shortcut, my mouse would give me the loading wheel and then nothing would happen. In task manager, there is a task called "IntelliJ Idea" running. I uninstalled and reinstalled twice, and then installed it with the JetBrains toolbox, but this is still happening. I saw another thread about this from 4 years ago, but none of the solutions worked for me.
+
+Other thread: Intellij IDEA won&#39;t start
+    
+
+        

@@ -1,0 +1,2678 @@
+Title: How to see if the function or procedure is private, protected or public without scrolling to the top
+Description: 
+    
+    
+                    
+Is it possible to know if the function or procedure is private, protected or public.
+Now I must scroll to the top to see if the methode is private.
+Is there a tool or in the structure (Code Explorer) to see if the methode is private, protected or public whitout scrolling to the top. 
+
+example:
+
+ unit .....
+ // 100 line code
+ private
+ // 1000 line code
+   procedure A(); // &lt;-- Here I can't see if the procedure is private. Must scroll to the top
+ //  2000 line code 
+ ...
+ procedure A();  // &lt;-- Here I can't see if the procedure is private. Must scroll to the top
+ begin
+   ...
+ end;
+
+
+The only thing I can to now is to set (private, protected or public) it the the summary description
+
+In Code Explorer I see blue color for procedure and green color for function but nothing for private, protected or public icon.
+
+I changed the properties of the Explore Code and now I have maps of private , protected or pulic.
+
+But when I go to a procedure in the code there is no selected item in the explore code like in the Project Manager view.
+The same situation for the Explore Code. Must scroll up to the map to see if it is private, protected or public
+One alternatieve is the write the methode in the search of the explored code. Then ther is a hint popup.
+
+I found the possible solution: Copy the methode and past to the searchbox of the explorer code. The comboboxlist popup give me what I want to see (private, protected...)
+    
+
+        
+Answer 1: 
+
+    
+    
+Use the Structure View to show all details about class declarations.
+
+To control the appearance of the view, define the settings in Tools &gt; Options &gt; Environment Options &gt; Explorer dialog.
+
+
+
+Update
+
+As noted in comments, you have to manually navigate the structure view to view the class structure.
+
+Filed enhancement request QC 128271 Structure view lookup from editor to facilitate a quick lookup into the structure view from the editor.
+    
+    
+Answer 2: 
+
+    
+    
+
+  ... without scrolling to the top
+
+
+Use the keyboard shortcut CTRL-SHIFT-UP (or CTRL-SHIFT-DOWN) to jump to the declaration.
+
+And use the same to jump back to the implementation again.
+
+If it is not clear to which section (private, protected or public) the declaration belongs right away, then use CTRL-UP to scroll without moving the cursor.
+    
+    
+Answer 3: 
+
+    
+    
+I can recommend ModelMaker Code Explorer. It's not free, but well worth the money. It shows a lot of information and provides some really useful refactorings.
+    
+    
+Answer 4: 
+
+    
+    
+No you can not. because Delphi splits its classes into two pices interface and implementation.
+
+In fx. c# you do it diffrent 
+
+public static byte[] ColumnBlob(Sqlite3Statement stmt, int index)
+{
+    return Sqlite3.sqlite3_column_blob(stmt, index);
+}
+
+
+While in Delphi you'll spilt the class into thw :
+
+type 
+   TSQLiteException  = class(TException)
+   public
+     class function  ColumnBlob(stmt : Sqlite3Statement, index : integer) : TArray&lt;byte&gt;;
+   end;
+
+
+and the impelmentation: 
+
+function TSQLiteException.ColumnBlob(stmt : Sqlite3Statement, index : integer) : TArray&lt;byte&gt; ;
+begin
+  //Do stuff
+end;
+
+
+There are ups and downs in boths methods:
+
+the c# way you can see the protection level of the class while you can not see wich class you are with in
+
+And the othere way arround with Delphi
+    
+    
+Title: How to repair broken Delpi XE3 IDE after installation of custom package?
+Description: 
+    
+    
+                    
+I have created a new package with one component in it (descendant of TSpeedButton), compiled the package and installed it in the IDE (Delphi XE3 Pro).
+It worked as far as I have tested it (I could use my component in design- and runtime).  
+
+BUT: I have closed the IDE and now I can't start it.
+It displays the splashscreen and shows progress: 
+
+
+Documentation Insight Express  
+CodeSite Express  
+Jedi Code Library
+Jedi Visual Component Library
+
+
+Up to All designtime packages loaded (translated from German, YMMV).
+I guessed it was my package, so I deleted the BPL. On next start, Delphi said it could find the package and asked if it should load it when loading the next project; I clicked "No".
+But still Delphi doesn't start, behaviour is exactly the same. Splashscreen loading and STOP.  
+
+The "Repair" option of the installer didn't help, either.
+
+Pharaoh
+
+Edit: It turns out I was too impatient - A reboot cleaned it up.
+I still marked the answer of Ken White because it would have been the solution of the last resort.
+    
+
+        
+Answer 1: 
+
+    
+    
+Create a new desktop shortcut for Delphi, modify it's properties (right-click and choose Properties), and add -rFoo to the end of the command line. Then start the IDE from that new shortcut.
+
+This creates a new, empty Delphi registry branch that contains only the default components and settings (called foo). It will not load any of your component packages (or any third-party ones you've installed that weren't part of the normal installer). You can then add back any third-party packages one at a time. Just continue to run the IDE from your new shortcut, and you should be fine.
+
+If this doesn't put you in a state where you can run the IDE, you've somehow totally borked your install, and you should uninstall completely and start over from scratch.
+    
+    
+Title: IPython IDE for Windows
+Description: 
+    
+    
+                    
+I recently installed IPython after hearing about it on this forum.  I am looking for an environment that is similar to what might come with MATLAB or RStudio for R.
+
+I was under the impression that IPython would give me that but the version I downloaded for Windows looks very bare.  In fact I do not really see a difference between IDLE and IPython except tab completion and history (which I have been wanting) but this is about as much as the interpreter that comes with R which I used to think was hard to work with.  
+
+Have I misunderstood the point of IPython? Or is it possible that I have not installed correctly?
+
+I have also downloaded the 'Console' and while I am not convinced that it is working properly, it looks very bare as well.  
+
+Komodo looks good but is somewhat costly.  Netbeans and Eclipse also look good, but do not seem to be straightforward to install, at least for somebody with my level of knowledge, so it would be good if somebody could verify their compatibility with Python, features, and ease of use for a non-expert user.
+    
+
+        
+Answer 1: 
+
+    
+    
+I suggest you try Spyder
+You can find it here : http://code.google.com/p/spyderlib/
+
+It is perfect for you : it is a lightweight Scientific IDE with the explicit purpose of being similar in feel to matlab.
+It has an editor, a console and lots of neat features and plug-ins.
+It can use IPython as its console.
+
+IPython is "just" an enhanced python console with pure awesomeness built-in. (actually it's much more : it's a client-server architecture with multiple interfaces to pure magic, in console mode, Qt, and even inside a browser with the Notebook)
+Definitely check it out later on when you've used the basic console for a while.
+    
+    
+Answer 2: 
+
+    
+    
+For the context, i've been using Eclipse, pycharm, got tired of those, and i started to ask around what people use, and the one i've heard the most about is sublime text.
+You should take a look, maybe it's what you are looking for! 
+I just saw it's not open source though!
+
+What i'm using now is Ninja-IDE, which is written in python and is open source and seems pretty good! It has plenty of plugins, which includes an IPython plugin
+    
+    
+Answer 3: 
+
+    
+    
+Have you tried the qtconsole backend?  It was released after you asked your question.  
+
+
+  This is a very lightweight widget that largely feels like a terminal,
+  but provides a number of enhancements only possible in a GUI, such as
+  inline figures, proper multiline editing with syntax highlighting,
+  graphical calltips, and much more.
+
+
+From the Windows command prompt, enter:
+
+ipython qtconsole
+
+
+
+    
+    
+Title: What are possible languages/syntaxes in Sublime Text 2 settings creation?
+Description: 
+    
+    
+                    
+As part of a Rails project, I'd like to create some custom settings (specifically indentation!) for "HTML (Rails)" (aka .html.erb) files and Ruby on Rails files (.rb files).
+
+I know how to create and edit a Preferences.sublime-settings file - AND a Ruby.sublime-settings file - but I have one question remaining for each file type:
+
+(1) For .html.erb files, what [language] do I use when creating the [language].sublime-settings file? Is there a big list somewhere of all the languages possible to use in this case and others?
+
+(2) After I've created these custom settings (as I have for Ruby.sublime-settings already, customizing my tabs to 2 spaces), I would like to globally apply these new settings to all Ruby riles.
+
+(Bonus) My .rb files within my Rails project seem to load the "Ruby on Rails" syntax instead of just the "Ruby" syntax (shown in the bottom-right of Sublime Text). If Ruby.sublime-settings will not affect .rb "Ruby on Rails" files (this seems to be the case for me..), I would love an answer for #1 for both .html.erb AND .rb files that are created as part of a Rails project.
+
+I've found much info on SO related to this question, but the two questions above remain unanswered for me after ~1 hour of Googling and creeping the Sublime Text docs.
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+OOOOhhhhh, I figured this one out on my own.
+
+Sublime can generate custom settings-sublime files for each file type via its UI - this doesn't have to be created via command line or Terminal, etc.
+
+Here's how it's done:
+
+
+Open Sublime application
+Open (or bring to focus) any file of the type you'd like to make custom settings for, e.g. a .HTML.ERB file
+Use the menu &amp; go to Sublime Text 2 
+Title: How to debug php code in dreamweaver cs5?
+Description: 
+    
+    
+                    
+If it doesn't support debugging are there any extensions or plugins out there?
+    
+
+        
+Answer 1: 
+
+    
+    
+Dreamweaver, even if it supports syntax-highlighting of PHP source, isn't quite known as a PHP-development environment ; so I'm not sure it supports debugging of PHP code.
+
+Instead, I would recommend you use another more PHP-Oriented IDE, like :
+
+
+Eclipse PDT (free -- not sure if it's maintained as much as it was a couple of month ago)
+netbeans (free)
+PHPStorm (not free)
+
+
+Those three all support debugging with the Xdebug extension.
+    
+    
+Answer 2: 
+
+    
+    
+You can use FirePHP with Firebug on any IDE including Dreamweaver. http://www.firephp.org/
+    
+    
+Title: Python multi-line strings breaks Vim&#39;s indent folding
+Description: 
+    
+    
+                    
+Python's string-literal juxtaposition makes multi-line strings much easier and prettier to write, but when I'm four or five indents deep and want to use the entire row (leading whitespace does not matter), Vim's foldmethod=indent breaks down.
+
+For example:
+
+def getQuotation():
+    print "Fetching quotation from the absolutely useless function."
+    return ("Four score and seven years ago our fathers brought forth, "
+"upon this continent, a new nation, conceived in liberty, and dedicated "
+"to the proposition that \"all men are created equal\"")
+
+
+should be folded as this:
+
+def getQuotation():
++--  4 lines: print "Fetching quotation from the absolutely useless function."--
+
+
+but instead I get this:
+
+def getQuotation():
++--  2 lines: print "Fetching quotation from the absolutely useless function."--
+"upon this continent, a new nation, conceived in liberty, and dedicated "
+"to the proposition that \"all men are created equal\"")
+
+
+I tried setting foldignore=\", but to no avail. Vim's help foldignore offers this to say on the subject:
+
+
+  Used only when 'foldmethod' is "indent".  Lines starting with
+  characters in 'foldignore' will get their fold level from surrounding
+  lines.  White space is skipped before checking for this character.
+
+
+Is there something obvious that I'm missing, or will I have to resort to foldmethod=expr, base the foldlevel on the indent, and except the corner cases myself?
+
+EDIT: I've made at least some headway; it turns out that if I add a non-empty line after the strings and "refresh" the indent with set fdm=indent, then the block folds as it's supposed to. Even an empty comment (#) is enough.
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  Is there something obvious that I'm missing, or will I have to resort to foldmethod=expr, base the foldlevel on the indent, and except the corner cases myself?
+
+
+Short answer: you can't do this with foldmethod=indent, but I found something you can use with foldmethod=expr, so no need to reinvent the wheel.  See the long answer.
+
+Long answer
+
+Just a brief review of how foldmethod=indent works...
+
+
+Look for text shifted shiftwidth with whitespace from the edge of the page
+Insert a new foldlevel
+De-indenting takes you down foldlevels
+
+
+Since the text you have is justified at the edge of the screen, anything involving shiftwidth is eventually broken unless you hack it up as you did.
+
+I looked at several different .vimrc configurations before I found something that would work.  For a cleaner solution than foldmethod=indent, use foldmethod=expr with the ~/.vimrc I have below.  I found it in jneb's bitbucket python-fold repo
+
+As a test, I built a few more cases into your example...
+
+
+
+class testclass(object):
+    def __init__(self):
+        self.testit = None
+    def __repr__(self):
+        return "guacamole"
+
+def foobarme():
+    assert False
+    return 42
+
+def getQuotation():
+    print "Fetching quotation from the absolutely useless function."
+    return ("Four score and seven years ago our fathers brought forth, "
+"upon this continent, a new nation, conceived in liberty, and dedicated "
+"to the proposition that \"all men are created equal\"")
+
+
+Using python-fold at the bottom of my ~/.vimrc yields:
+
+
+
+And when I hit zR to unfold:
+
+
+
+FYI, I use Dmitry Vasiliev's python.vim in  ~/.vim/syntax/python.vim for python syntax highlights.
+
+I copied jneb's vim script below in case the bitbucket repo disappears...
+
+
+
+
+" Fold routines for python code, version 3.2
+" Source: http://www.vim.org/scripts/script.php?script_id=2527
+" Last Change: 2009 Feb 25
+" Author: Jurjen Bos
+" Bug fixes and helpful comments: Grissiom, David Froger, Andrew McNabb
+
+" Principles:
+" - a def/class starts a fold
+" a line with indent less than the previous def/class ends a fold
+" empty lines and comment lines are linked to the previous fold
+" comment lines outside a def/class are never folded
+" other lines outside a def/class are folded together as a group
+" for algorithm, see bottom of script
+
+" - optionally, you can get empty lines between folds, see (***)
+" - another option is to ignore non-python files see (**)
+" - you can also modify the def/class check,
+"    allowing for multiline def and class definitions see (*)
+
+" Note for vim 7 users:
+" Vim 6 line numbers always take 8 columns, while vim 7 has a numberwidth variable
+" you can change the 8 below to &amp;numberwidth if you have vim 7,
+" this is only really useful when you plan to use more than 8 columns (i.e. never)
+
+" Note for masochists trying to read this:
+" I wanted to keep the functions short, so I replaced occurences of
+" if condition
+"     statement
+" by
+" if condition | statement
+" wherever I found that useful
+
+" (*)
+" class definitions are supposed to ontain a colon on the same line.
+" function definitions are *not* required to have a colon, to allow for multiline defs.
+" I you disagree, use instead of the pattern '^\s*\(class\s.*:\|def\s\)'
+" to enforce : for defs:                     '^\s*\(class\|def\)\s.*:'
+" you'll have to do this in two places.
+let s:defpat = '^\s*\(@\|class\s.*:\|def\s\)'
+
+" (**) Ignore non-python files
+" Commented out because some python files are not recognized by Vim
+"if &amp;filetype != 'python'
+"    finish
+"endif
+
+setlocal foldmethod=expr
+setlocal foldexpr=GetPythonFold(v:lnum)
+setlocal foldtext=PythonFoldText()
+
+function! PythonFoldText()
+  let fs = v:foldstart
+  while getline(fs) =~ '^\s*@' | let fs = nextnonblank(fs + 1)
+  endwhile
+  let line = getline(fs)
+  let nnum = nextnonblank(fs + 1)
+  let nextline = getline(nnum)
+  "get the document string: next line is ''' or """
+  if nextline =~ "^\\s\\+[\"']\\{3}\\s*$"
+      let line = line . " " . matchstr(getline(nextnonblank(nnum + 1)), '^\s*\zs.*\ze$')
+  "next line starts with qoutes, and has text
+  elseif nextline =~ "^\\s\\+[\"']\\{1,3}"
+      let line = line." ".matchstr(nextline, "^\\s\\+[\"']\\{1,3}\\zs.\\{-}\\ze['\"]\\{0,3}$")
+  elseif nextline =~ '^\s\+pass\s*$'
+    let line = line . ' pass'
+  endif
+  "compute the width of the visible part of the window (see Note above)
+  let w = winwidth(0) - &amp;foldcolumn - (&amp;number ? 8 : 0)
+  let size = 1 + v:foldend - v:foldstart
+  "compute expansion string
+  let spcs = '................'
+  while strlen(spcs) &lt; w | let spcs = spcs . spcs
+  endwhile
+  "expand tabs (mail me if you have tabstop&gt;10)
+  let onetab = strpart('          ', 0, &amp;tabstop)
+  let line = substitute(line, '\t', onetab, 'g')
+  return strpart(line.spcs, 0, w-strlen(size)-7).'.'.size.' lines'
+endfunction
+
+function! GetBlockIndent(lnum)
+    " Auxiliary function; determines the indent level of the surrounding def/class
+    " "global" lines are level 0, first def &amp;shiftwidth, and so on
+    " scan backwards for class/def that is shallower or equal
+    let ind = 100
+    let p = a:lnum+1
+    while indent(p) &gt;= 0
+        let p = p - 1
+        " skip empty and comment lines
+        if getline(p) =~ '^$\|^\s*#' | continue
+        " zero-level regular line
+        elseif indent(p) == 0 | return 0
+        " skip deeper or equal lines
+        elseif indent(p) &gt;= ind || getline(p) =~ '^$\|^\s*#' | continue
+        " indent is strictly less at this point: check for def/class
+        elseif getline(p) =~ s:defpat &amp;&amp; getline(p) !~ '^\s*@'
+            " level is one more than this def/class
+            return indent(p) + &amp;shiftwidth
+        endif
+        " shallower line that is neither class nor def: continue search at new level
+        let ind = indent(p)
+    endwhile
+    "beginning of file
+    return 0
+endfunction
+
+" Clever debug code, use to display text for a given moment the statement is executed:
+" call PrintIfCount(6, "Line: ".a:lnum.", indent: ".ind.", previous indent: ".pind)
+let s:counter=0
+function! PrintIfCount(n,t)
+    "Print text the nth time this function is called
+    let s:counter = s:counter+1
+    if s:counter==a:n | echo a:t
+    endif
+endfunction
+
+function! GetPythonFold(lnum)
+    " Determine folding level in Python source (see "higher foldlevel theory" below)
+    let line = getline(a:lnum)
+    let ind = indent(a:lnum)
+    " Case D***: class and def start a fold
+    " If previous line is @, it is not the first
+    if line =~ s:defpat &amp;&amp; getline(prevnonblank(a:lnum-1)) !~ '^\s*@'
+        " let's see if this range of 0 or more @'s end in a class/def
+        let n = a:lnum
+        while getline(n) =~ '^\s*@' | let n = nextnonblank(n + 1)
+        endwhile
+        " yes, we have a match: this is the first of a real def/class with decorators
+        if getline(n) =~ s:defpat
+            return "&gt;".(ind/&amp;shiftwidth+1)
+        endif
+    " Case E***: empty lines fold with previous
+    " (***) change '=' to -1 if you want empty lines/comment out of a fold
+    elseif line == '' | return '='
+    endif
+    " now we need the indent from previous
+    let p = prevnonblank(a:lnum-1)
+    while p&gt;0 &amp;&amp; getline(p) =~ '^\s*#' | let p = prevnonblank(p-1)
+    endwhile
+    let pind = indent(p)
+    " If previous was definition: count as one level deeper
+    if getline(p) =~ s:defpat &amp;&amp; getline(prevnonblank(a:lnum - 1)) !~ '^\s*@'
+        let pind = pind + &amp;shiftwidth
+    " if begin of file: take zero
+    elseif p==0 | let pind = 0
+    endif
+    " Case S*=* and C*=*: indent equal
+    if ind&gt;0 &amp;&amp; ind==pind | return '='
+    " Case S*&gt;* and C*&gt;*: indent increase
+    elseif ind&gt;pind | return '='
+    " All cases with 0 indent
+    elseif ind==0
+        " Case C*=0*: separate global code blocks
+        if pind==0 &amp;&amp; line =~ '^#' | return 0
+        " Case S*&lt;0* and S*=0*: global code
+        elseif line !~'^#'
+            " TODO: here we need to check GetBlockIndent(a:lnum) for version 3.3
+            " Case S*&lt;0*: new global statement if/while/for/try/with
+            if 0&lt;pind &amp;&amp; line!~'^else\s*:\|^except.*:\|^elif.*:\|^finally\s*:' | return '&gt;1'
+            " Case S*=0*, after level 0 comment
+            elseif 0==pind &amp;&amp; getline(prevnonblank(a:lnum-1)) =~ '^\s*#' | return '&gt;1'
+            " Case S*=0*, other, stay 1
+            else | return '='
+            endif
+        endif
+        " Case C*&lt;0= and C*&lt;0&lt;: compute next indent
+        let n = nextnonblank(a:lnum+1)
+        while n&gt;0 &amp;&amp; getline(n) =~'^\s*#' | let n = nextnonblank(n+1)
+        endwhile
+        " Case C*&lt;0=: split definitions
+        if indent(n)==0 | return 0
+        " Case C*&lt;0&lt;: shallow comment
+        else | return -1
+        end
+    endif
+    " now we really need to compute the actual fold indent
+    " do the hard computation
+    let blockindent = GetBlockIndent(a:lnum)
+    " Case SG&lt;* and CG&lt;*: global code, level 1
+    if blockindent==0 | return 1
+    endif
+    " now we need the indent from next
+    let n = nextnonblank(a:lnum+1)
+    while n&gt;0 &amp;&amp; getline(n) =~'^\s*#' | let n = nextnonblank(n+1)
+    endwhile
+    let nind = indent(n)
+    " Case CR&lt;= and CR&lt;&gt;
+    endif
+    if line =~ '^\s*#' &amp;&amp; ind&gt;=nind | return -1
+    " Case CR&lt;&lt;: return next indent
+    elseif line =~ '^\s*#' | return nind / &amp;shiftwidth
+    " Case SR&lt;*: return actual indent
+    else | return blockindent / &amp;shiftwidth
+    endif
+endfunction
+
+" higher foldlevel theory
+" There are five kinds of statements: S (code), D (def/class), E (empty), C (comment)
+
+" Note that a decorator statement (beginning with @) counts as definition,
+" but that of a sequence of @,@,@,def only the first one counts
+" This means that a definiion only counts if not preceded by a decorator
+
+" There are two kinds of folds: R (regular), G (global statements)
+
+" There are five indent situations with respect to the previous non-emtpy non-comment line:
+" &gt; (indent), &lt; (dedent), = (same); &lt; and = combine with 0 (indent is zero)
+" Note: if the previous line is class/def, its indent is interpreted as one higher
+
+" There are three indent situations with respect to the next (non-E non-C) line:
+" &gt; (dedent), &lt; (indent), = (same)
+
+" Situations (in order of the script):
+" stat  fold prev   next
+" SDEC  RG   &gt;&lt;=00  &gt;&lt;=
+" D     *    *      *     begin fold level if previous is not @: '&gt;'.ind/&amp;sw+1
+" E     *    *      *     keep with previous: '='
+" S     *    =      *     stays the same: '='
+" C     *    =      *     combine with previous: '='
+" S     *    &gt;      *     stays the same: '='
+" C     *    &gt;      *     combine with previous: '='
+" C     *    =0     *     separate blocks: 0
+" S     *    &lt;0     *     becomes new level 1: &gt;1 (except except/else: 1)
+" S     *    =0     *     stays 1: '=' (after level 0 comment: '&gt;1')
+" C     *    &lt;0     =     split definitions: 0
+" C     *    &lt;0     &lt;     shallow comment: -1
+" C     *    &lt;0     &gt;     [never occurs]
+" S     G    &lt;      *     global, not the first: 1
+" C     G    &lt;      *     indent isn't 0: 1
+" C     R    &lt;      =     foldlevel as computed for next line: -1
+" C     R    &lt;      &gt;     foldlevel as computed for next line: -1
+" S     R    &lt;      *     compute foldlevel the hard way: use function
+" C     R    &lt;      &lt;     foldlevel as computed for this line: use function
+
+    
+    
+Answer 2: 
+
+    
+    
+You can use python-mode along with FastFold. Python-mode has solved a lot of the problems with folding, and FastFold improves folding speed.
+    
+    
+Title: Keep focus in command window when debugging MATLAB
+Description: 
+    
+    
+                    
+Often in MATLAB I turn on 'automatic' debugging with dbstop if error.  When an error occurs, the function enters debug mode, and I am able to query the variables in the command window and see exactly what is going on. Very useful.
+
+However, when this occurs, the focus switches to the editor. To me this seems counter-intuitive; we are in debug mode, so I want to find out what is going on, not look at the code (which I can already see in the adjacent window). I always immediately tab back to the command window.
+
+So my first question is: Is there any point in accessing the editor at this point? What can I usefully do, when my script has crashed, in the editor?
+
+And secondly: If I want to, can I change MATLAB's default behaviour to keep the focus in the command window?
+    
+
+        
+Answer 1: 
+
+    
+    
+To your second question:
+
+If you use MATLAB's desktop environment, just deselect "Open Files when Debugging" in the "Debug" menu.
+
+If you use MATLAB without the graphical desktop you can change this preference by modifying your matlab.prf file. This file stores preferences set from the GUI. The menu option described above makes the same changes as the manual process described below.
+
+NOTE: Editing this file is entirely unsupported. Do so at your own risk.
+
+
+Open the file from the MATLAB command prompt,
+
+&gt;&gt; edit([prefdir '/matlab.prf'])
+
+Or use the prefdir command in MATLAB to find the directory and then open the file in whatever editor you prefer.
+Search for a line that says
+
+EditorGraphicalDebugging=Btrue
+Change it to read
+
+EditorGraphicalDebugging=Bfalse
+
+If the line doesn't exist, add it to the file.
+Restart MATLAB.
+
+    
+    
+Answer 2: 
+
+    
+    
+You can use the invocation stack to see how you came about to the particular error position. Sure, you can use dbup and dbdown for this in the command window, but it's much easier in the editor. 
+
+Also, seeing the variables (and their values, using mouse hover) in the context of the code that caused the crash is far better for understanding the root cause of the error than just seeing the static values.
+    
+    
+Answer 3: 
+
+    
+    
+I can answer only your first question.
+
+Things you can do in the editor:
+
+
+Mouse hover a variable, which pops up a 'quick view' window.
+Any action you can do when not in debug mode, treating the function as a script - running a line (highlight + F9), running a code block, etc.
+
+    
+    
+Title: CTRL + Click not working
+Description: 
+    
+    
+                    
+Code browsing is not working for my project. I set the Search Path to all the Source units that I am using. And also I deleted the .local and .identcache files. My project is compiling with no problems. What can I do to make ctrl + click work.
+
+Thanks 
+    
+
+        
+Answer 1: 
+
+    
+    
+One bug that I am aware of occurs when you have a class which declares a record inline, as so:
+
+TMyClass = class
+private
+  FData: record
+    MyData: Integer;
+  end;
+end;
+
+
+If you have any code like this then many of the IDE's code insight/completion/whatever features stop working. This fault stretches right back to Delphi 6 and possibly beyond.
+
+I fix it with an class private type declaration:
+
+TMyClass = class
+private
+  type 
+    TData = record
+      MyData: Integer;
+    end;
+private
+  FData: TData;
+end;
+
+
+But if that syntax is not available in D2007 then you'd need to declare the record type outside the class.
+
+Another factor which I find can confuse the IDE is if you are using a lot of conditional statements ($IFDEF and the like).
+
+Finally I'd recommend installing Andreas Hausladen's IDEFixPack which does improve IDE behaviour.
+
+Of course, your problem may be caused by something else, but without being able to experiment with your actual code, we have to guess to a degree.
+    
+    
+Answer 2: 
+
+    
+    
+Ctrl-Click easily gets confused when you use conditional defines to control what code gets compiled:
+
+{$IFDEF DEBUG}
+...
+{$ENDIF}
+
+
+Usually it needs a couple of these, but sometimes a single one of these, especially in the interface section, is enough to send Ctrl-Click into confusion.
+
+Another time when I have seen Ctrl-Click not to work is when you are using project groups and the unit you have in the editor does not belong to the project that is currently active in the project group.
+    
+    
+Answer 3: 
+
+    
+    
+I had same problem with code browsing in my module (in Delphi XE3). Look for your source code and find construction like this:
+
+procedure procName;
+begin
+  if ... then
+  begin
+     ...
+  end else
+end;
+
+
+Attention to last "else".
+The compiler understands this code, but Code Browsing don't.
+It's need to insert ";" after "else" or erase "else". 
+After this correction of source, the Code Browser is working. 
+    
+    
+Title: Best Compiler for C++ [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                Closed 9 years ago.
+        
+
+
+    
+
+
+  Possible Duplicate:
+  Which is the best, standard (and hopefully free) C++ compiler?  
+
+
+
+
+I am 10 years old and was wondering what is the best C++ compilers that include a IDE.
+
+I know MS has Express VS C++ but I want something else for Windows.
+
+Thanks in advance.
+    
+
+        
+Answer 1: 
+
+    
+    
+It's hard to beat VC++ Express for ease of use. If you really want to go elsewhere, Code::Blocks offers a very rich IDE for C++ programming.
+    
+    
+Answer 2: 
+
+    
+    
+The best compiler is one that does not include an IDE.  It may be reasonable to phrase the question as "What's the best IDE that includes a compiler?", but no reasonable compiler will include an IDE.  It is entirely possible that a software suite will contain both a compiler and an IDE, and also possible that the marketing gurus will incorrectly call that software suite a "compiler", but an actual compiler that includes an IDE is highly suspect.
+    
+    
+Title: Expand collapsed Javascript code?
+Description: 
+    
+    
+                    
+I have javascript source code that was not obscured, but compressed by collapsing. How can i expand it? Any tools/IDEs?
+
+Thank you!!!
+    
+
+        
+Answer 1: 
+
+    
+    
+This should work for you:
+
+http://jsbeautifier.org/
+    
+    
+Answer 2: 
+
+    
+    
+I once used with success UniversalIndent for this purpose: http://universalindent.sourceforge.net/
+
+It also works as a notepad++ plugin, which was very useful for me.
+
+If you are interested in doing a lot of Javascript programming, I can also recommend the Aptana Studio 3. From all the code editors I have ever tried, when it comes to Javascript this is the best one, offering code outlining and a primitive (but the best I've seen for Javascript) autocomplete functionality. It also has a Source Auto Format functionality that will help you auto indent the code.
+
+You can more about the Aptana studio on the official site: http://aptana.com/products/studio3 . Please note that Aptana Studio 3 is a Beta product, but even so for me it was the best editor I could find.
+    
+    
+Title: Fixing Zend Studio 8 Performance (typing lag) Issue
+Description: 
+    
+    
+                    
+Zend Studio 8 has performance problems with large php source files (around 3,000 lines of code) causing MAJOR typing lag. There has been a patch developed but apparently they haven't rolled it out yet as nothing happens when I to go Help /pp/p/div
+Answer 1: 
+
+    
+    
+Since ZS8 is a commercial product and only available for a few days now, you are likely still entitled to support. Please login to the Zend website and open a support ticket. They will get back to you and likely will provide you with a patch (if there is one) and instructions on how to install it.
+    
+    
+Answer 2: 
+
+    
+    
+Zend Studio has a lot of performance issues because it is based on Eclipse  / PDT and Eclipse often exhibits performance problems.
+
+You might want to consider Netbeans which has solid PHP support and less performance issues.
+    
+    
+Answer 3: 
+
+    
+    
+Zend Finally released a beta fix for the issue. Steps to resolve the problem are as follows:
+
+
+In Zend navigate to Help /p/lilipa href="http://beta.zend.com/studio/8.0.1/update" rel="nofollow"/a/p/lilip/p/lilip/p/li/ol/div
+Title: Scala programming environment [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                Closed 10 years ago.
+        
+
+
+    
+
+
+  Possible Duplicate:
+  Which IDE for Scala 2.8?  
+
+
+
+
+I'm learning Scala by reading 'Programming in Scala' book by Odersky et al.
+
+What programming environment people use for scala?
+
+I've used TextMate and emacs, and trying to use eclipse for Java. 
+    
+
+        
+Answer 1: 
+
+    
+    
+There are several options, with varying degrees of maturity: 
+
+
+Emacs has good bindings;
+Eclipse has a plugin;
+Intellij IDEA has a Scala plugin and a community edition; 
+NetBeans has it's plugin for scala (I believe a lot of people on the Lift side us it).
+
+
+Other tools that  are not IDEs but will help have on your routine (specially if you are not addicted to IDEs):
+
+
+SBT (Scala Build Tool), has some very nice features, including get Maven Artifacts, continuous compilation and testing, written in Scala;
+Maven does provide a good support for building (but you have to learn Maven);
+Specs is an awesome test framework
+
+
+I like IDEA better then Eclipse, although the Eclipse has evolved well. I chose it because it worked better on refactors and has good support for Maven. Eclipse also support maven, but I felt IDEA's implementation better.
+
+Now these tools are in constant improvement, and all of the have their strengths and weaknesses. Stability has improved a lot, and I felt productive in both Eclipse and IDEA. But my understanding is that the tooling is not at the same level the Java versions.
+    
+    
+Answer 2: 
+
+    
+    
+I'm using IntelliJ IDEA Community Edition and Scala plugin for IDEA
+    
+    
+Answer 3: 
+
+    
+    
+If your question applies during the time you are going through the book and in general when testing code snippets, a combination of any text editor, sbt and the REPL works well for me.
+
+sbt has a "scratch" mode where it will compile scala you have in the current directory and import jar files automatically. The setup is to download sbt, create the sbt script/bat file, create the scratch project and change the scala version in project/build.properties. 
+
+You can then drop into the console and have your jars files in the classpath. You can also use the run command and it will prompt you for which class to run (if you have multiple ones in the current directory). 
+    
+    
+Title: why doesnt netbeans support python and django?
+Description: 
+    
+    
+                    
+i wonder why sun doesnt support python and django in netbeans?
+
+cause i am choosing between learning ruby/rails or python/django.
+
+does this mean that i should use ruby/rails cause then support comes out of the box?
+
+seems that other applications favor support for ruby over python.
+    
+
+        
+Answer 1: 
+
+    
+    
+Why let one particular IDE determine what programming language you learn?
+
+I use python a lot, and Geany does what I need rather well.  Other folks like heavier weight editors.  Here's a list to get you started:
+
+What IDE to use for Python?
+    
+    
+Answer 2: 
+
+    
+    
+Netbeans now suports python please take look at http://wiki.netbeans.org/Python and DJANGO http://wiki.netbeans.org/Python70Roadmap
+    
+    
+Title: Textmate Code Completion Question
+Description: 
+    
+    
+                    
+I know the ESC key does code completion, but is there a way to get a pop-up(tool-tip I guess) that shows you all the possible choices for a piece of code?  As an example, it would be nice when writing Javascript to get a list of available actions.  Other apps I've used like Coda do this.  I'd like to check out Textmate but I have a hard time getting past this missing feature which I find pretty valuable, particularly as a fairly new programmer who likes to see what options are there as it's a bit of a learning tool for me also.  I thought I had found a plugin like what I'm looking for, Dialog2, but it seems to have disappeared as it was meant to be built-in to the never-released TM2.  
+
+I've looked around a fair bit for the answer to this question and figured this was my next best option.  Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't have Textmate available to try it out, but I believe that option-Esc is supposed to show you the list of possible code completions.
+    
+    
+Answer 2: 
+
+    
+    
+Check out subtleGradient's tmbundle: https://github.com/subtleGradient/javascript.tmbundle
+
+It knows how to auto-wrap for arrays, and objects. Documentation look-up too.
+    
+    
+Title: Keyboard shortcut to open drop down box in visual studio
+Description: 
+    
+    
+                    
+I have noticed that doing actions like implementing an interface, that a small rectangle appears at the start of the interface. Then I have to hover my mouse over the rectangle and it becomes a context menu. Then I can select to implicitly implement interface or to explicitly implement interface. Or like when an I type Collection and I need the import of System.Collections.ObjectModel. I get tired of reaching over for my mouse and hovering over the rectangle and waiting for the context menu. Is there a keyboard shortcut for this? If so, please give me every shortcut there is for it. By the way, Visual Studio for me is set to C# development settings, NOT GENERAL!
+    
+
+        
+Answer 1: 
+
+    
+    
+If you don't have any, or prefer your own, use Tools + Customize, Keyboard and assign keystrokes to the Edit.ImplementInterfaceStubsImplicitly and Edit.ImplementInterfaceStubsExplicitly commands.
+    
+    
+Answer 2: 
+
+    
+    
+EDIT:
+CTRL + . and SHIFT + F10
+    
+    
+Title: developer tools for os&#39; other than windows
+Description: 
+    
+    
+                    
+I currently use visual studio 2008 for creating projects that can run on windows. Can you recommend me of other tools that can be used to develop applications for other operating systems?(Linux, Mac, Solaris)
+The most prominent programming languages will do(C++, C#, F#)
+And scripting languages(PHP, Perl, etc)
+    
+
+        
+Answer 1: 
+
+    
+    
+A somewhat similar commercial IDE on Linux is SlickEdit.
+
+Eclipse and NetBeans are free alternatives for development on many platforms.
+
+Emacs and vim give you lots of functionality, with a bit coarser interface.
+    
+    
+Answer 2: 
+
+    
+    
+Eclipse strong Java focus, but support for a wide variety of other languages and is cross platform. 
+
+MonoDevelop for cross platform c# fun
+    
+    
+Answer 3: 
+
+    
+    
+For Mac OS X, Apple provides XCode which is a pretty decent IDE and you can't beat the price.
+
+It handles Java, C, Objective-C and C++ apps out of the box, I believe.
+    
+    
+Answer 4: 
+
+    
+    
+Padre, the Perl IDE can be used to develop applications in Perl. It is cross platform and since Perl is (mostly) cross platform, you can develop applications for other operating systems.
+    
+    
+Answer 5: 
+
+    
+    
+On Linux, I sometimes just use nano (with syntax highlighting), makefiles and subversion. It has the advantage of being really fast over ssh, and unless you need syntax highlighting, Netbeans and Eclipse are overkill.
+
+The languages that can be highlighted in nano by just uncommenting a line in the nanorc file are: asm, awk, c, c++, css, html, java, objective-c, ocaml, patch, perl, php, pov, python, ruby and sh. (It also has highlighting for non-programming things like email and man pages)
+    
+    
+Answer 6: 
+
+    
+    
+For C programming which is very frequent on Unix especially for older programs, the best combination is make + gcc with a good editor.  Emacs has good integration with C source, and compiler output.
+    
+    
+Title: NetBeans IDE under Oracle
+Description: 
+    
+    
+                    
+I'm a bit freaked about what I just read. I did some research, as I want to start programming in Java, and I came to the conclusion that NetBeans is the best IDE for me because of its capable Swing GUI Designer and powerful reporting with Jasper Reports (iReport). 
+
+Yet Oracle (who will soon buy Sun) doesn't seem to care about NetBeans. As I will start building appz in Java no too long from now, I would like to know your opinion on the following matter:
+
+Shall I continue using NetBeans in spite of the rumours that Oracle will discontinue it or shall I make another the IDE of choice?
+
+PS: Basically NetBeans would be the choice but because of the current circumstances I'm doubting this decision.
+
+Thank you 
+    
+
+        
+Answer 1: 
+
+    
+    
+Oracle have put a lot of time and money into their own product, JDeveloper.  It has some pretty neat features.  But it has never got much traction in the industry, because many Java developers don't like using proprietary software, even though Oracle make quite a big play over their commit to open standards.
+
+Anyway, at the moment Oracle are still integrating a lot of their freshly acquired BEA WebLogic functionality into the JDeveloper suite.  But I'm sure that once they have sealed the deal to buy Sun they will start to look at what they can take from NetBeans.  Because whatever you may think about Larry Ellison's business methods, he knows the value of a dollar.  If there are things worth having in NetBeans, they will not be thrown away, they will end up in JDeveloper.
+
+edit
+
+
+  So you say it will abandon NetBeans
+  and salvage some pieces which will go
+  into JDeveloper?
+
+
+In the long run Oracle will not maintain two Java IDEs.  But look at their strategy for handling previous acquisitions (Seibel, JD Edwards, BEA, etc).  Oracle have kept those products current while they devised a plan for getting the customers onto Oracle's own brand applications.  In some cases this meant dumping Oracle's offering in favour of the acquired product (Seibel Analytics, BEA WebLogic Server). 
+
+Oracle has made similar sounding pronouncements with regards to MySQL.  People may scoff, but I think Oracle will keep MySQL going, partly because Larry thinks they can make money from it but also just to spike Microsoft's attempts to swipe the MySQL customer base.  
+
+I haven't read anything official regarding Oracle's intentions for NetBeans.  So the following is just my conjecture.  Oracle won't kill off NetBeans.  If it did that then all the NetBeans users would probably decamp to Eclipse (because many people share Pascal's belief that "JDeveloper sucks").  Indeed Oracle will probably keep it going for some time yet.   
+
+In the meantime they will create an inventory of the features in NetBeans which are better than the JDeveloper equivalent or which have no equivalent, and which can support Oracle's Fusion programme.   For instance Ellison has been vocal in his admiration for JavaFX.  My uninformed feeling is that it will be easier to port that functionality into JDeveloper than it will be to reverse the Fusion stuff into NetBeans.  I might well be wrong about that.  Perhaps it would make more sense to leverage NetBeans' broader market penetration and cut JDeveloper loose.   
+
+Either way I think you should start working with NetBeans, because that functionality isn't going to disappear overnight.
+
+update
+
+InfoWorld has just (27-JAN-2010) published a summary of Oracle's plans for Sun.  The pertinent bit is
+
+
+  NetBeans, the Sun-driven open source
+  Java IDE that has competed with Oracle
+  JDeveloper and the Eclipse platform,
+  will remain as a "lightweight
+  development environment for Java
+  developers," Kurian said. But
+  JDeveloper continues as Oracle's
+  enterprise development tool.
+
+    
+    
+Answer 2: 
+
+    
+    
+I was a long time eclipse user, and although I still like it for some things, I believe Netbeans to be a far superior IDE for Java development.  I would say go ahead and use NetBeans.  You will appreciate it more than Eclipse.  In the worst case scenario that Netbeans is no longer supported, you will be a much better developer by the time it has reached its end of life (i dont think this will happen though).  
+    
+    
+Answer 3: 
+
+    
+    
+Eclipse is better than Netbeans IMHO even though eclipse doesn't allow you to create GUI.
+    
+    
+Answer 4: 
+
+    
+    
+If NetBeans seem better for your needs , go with it. I prefer Eclipse but it's just a personal choice.
+
+Even if in the future NetBeans will be no longer supported, you'll still be able to use it, or you'll maybe prefer to start using a another IDE.
+
+Java code remain java code, no matter of the IDE.
+
+I believe that NetBeans will remain supported even under Oracle reign. Since there's a lot of Java developer using it, Oracle won't tell all of them to go away.
+    
+    
+Answer 5: 
+
+    
+    
+You worry too much. So what if Oracle discontinues NetBeans next month? Your installation still works, and will for a long time. Just keep the installer, in case you have to set up a new computer. Later, you can still make a switch to another IDE. Should Oracle discontinue NetBeans (or threaten to), surely most other IDEs will offer an "Import NetBeans project" option.
+    
+    
+Title: How to get type hinting / autocompletion for Objects that came out of an array?
+Description: 
+    
+    
+                    
+In my framework, I have a method that returns an array with objects.
+It looks pretty much like this:
+
+    /**
+     * @return array Array with Action objects
+     */
+    public function getActions() {
+        return $this-&gt;actions;
+    }
+
+
+The user of this Class will get an doc-popup when calling this method, which only says that this method will return an array. But that's it! Next, when the user gets an object out of the array, the IDE is plain stupid and doesn't know / suggest / autocomplete anything.
+
+Is there anything I can do as a framework developer to make life of the framework users easier here? Or what else can I suggest them to do, so their IDE knows what kind of object is returned from the array?
+
+Or in general: How to let the IDE know what kind of object came from the array, so that it can suggest what methods are available for that object?
+    
+
+        
+Answer 1: 
+
+    
+    
+When you call getActions() method you can prepend comment line before iterated array of objects:
+
+$actions = $o-&gt;getActions();
+
+/* @var Action $action */
+foreach ( $actions as $action ) {
+    ...
+}
+
+    
+    
+Answer 2: 
+
+    
+    
+I think you can't hint on the type of an array member other than maybe assigning it explicitly like so:
+
+$my_object = new myClass();
+$my_array[567] = $my_object;
+
+
+the only idea that comes to mind is to use an object for this-&gt;actions instead of an array. That object you could predefine for any decent IDE to understand. 
+    
+    
+Answer 3: 
+
+    
+    
+php is a dynamically/weakly typed language, objects in arrays could be anything. so IDEs cannot know what object to expect. imagine the following array:
+
+array ( 1, "string", someObject, array (1,"string",3) );
+
+    
+    
+Answer 4: 
+
+    
+    
+JetBrains new WebIDE has the best static code analysis, you can just use @return ElementType[] there. And it can infere types directly from the actual code too - see details on their site
+    
+    
+Answer 5: 
+
+    
+    
+As @Alexey Gopachenko said, some new IDEs (and also phpdoc documentation) support the sintax @return ElementType[]
+
+/**
+ * @return MyObj[]
+ */
+function getObjects() { return [new MyObj(), new MyObj()]; }
+
+
+For your example:
+
+/**
+ * @return Action[]
+ */
+public function getActions() {
+    return $this-&gt;actions;
+}
+
+    
+    
+Title: Popular IDE for Struts 2
+Description: 
+    
+    
+                    
+I'm beginning to learn Struts 2, and am wondering:
+
+Which is the most popular IDE for Struts 2?
+
+I've looked at a few of them (netbeans, idea, eclipse) and only idea seems to treat Struts as a first class citizen. But the community version of idea doesn't have this capability.
+
+The others have third party plugins to support it but it doesn't sound like its really 'built in'. I find this strange, given that struts is the most popular java framework.
+
+Any hints appreciated
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  I find this strange, given that Struts is the most popular Java framework.
+
+
+Even if that's true, things are ephemeral in the presentation layer landscape and it might change in the future. On top of that, developing and maintaining IDE support for a non standard framework is not that light and may not be worth the effort, especially for open source initiatives. This might be an explanation.
+
+That said, a good idea would be actually to avoid the XML configuration hell and to prefer a convention over configuration approach. The Codebehind Plugin can help achieving this. Another option would be to throw Struts 2 away and to switch to the Stripes Framework /p/div
+Answer 2: 
+
+    
+    
+Eclipse with Struts 2 Plugin, this article provides details information about it Struts-2-Eclipse-plugin
+    
+    
+Answer 3: 
+
+    
+    
+I use IntelliJ with Struts 2 plugin. I'm a happy user so far.
+    
+    
+Answer 4: 
+
+    
+    
+I use eclipse, but without any real plugin support.
+
+Editing the struts xml files is a bit of a pain, but the xml valiator in Eclipse and eclipse's support for application servers and containers is pretty easy to deal with.
+    
+    
+Answer 5: 
+
+    
+    
+I've used Eclipse &amp; MyEclipse.
+
+MyEclipse was slightly more tailored to developing STRUTS webapps because you could start a Tomcat instance within it, and edit JSPs for real time changes.  Not that you couldn't do this in Eclipse without setup.  MyEclipse also had a graphical representation of the struts-config, but it wasn't really useful for large setups.
+
+Most of my JSPs &amp; config files were editted in TextPad...
+    
+    
+Title: NetBeans IDE for PHP/Ruby
+Description: 
+    
+    
+                    
+I just came across NetBeans site and found its PHP and Ruby IDEs. I want to know how popular is NetBeans and are the plugins for SVN really as good as the plugins for Eclipse?
+    
+
+        
+Answer 1: 
+
+    
+    
+I use NetBeans at work for Java and UML and at home for C, C++, Java, UML, and Python. I have no problems with it or it's support for version control systems, such as SVN, CVS, and ClearCase. It's just as easy, if not easier, than Eclipse to get everything working the way you want to. However, I have found that for some things, it might be more difficult to find a plugin for.
+    
+    
+Answer 2: 
+
+    
+    
+NetBeans has very good SVN integration out of the box &mdash; no plugins required.  Choosing between it and Eclipse is largely a matter of taste, as they are both very well built and supported.
+    
+    
+Answer 3: 
+
+    
+    
+I have using the Ruby Netbeans IDE for almost a year now. For PHP I still stick to Eclipse.
+
+As far as Ruby is concerned its one best IDEs around and SVN is as easy as it is in Eclipse.
+    
+    
+Answer 4: 
+
+    
+    
+I've used Netbeans for PHP since about 8 months ago and I love it (I used to use Eclipse and prior to that Zend Studio). My workflow requires heavy use of SVN as well as some use of the built-in FTP functionality and I have no complaints. Solid, free IDE.
+    
+    
+Answer 5: 
+
+    
+    
+I recommend you netbeans .its free. it is available for all platforms, and mostly it is good for editing php, jsp, java, css, html, ...
+Good for SVN, mercurial, Plus you can integrate it easyly with kenai.com...
+
+believe me, i'm using it for php development and its the best suited ide i can find...
+    
+    
+Title: Delphi 2009 IDE Structure View Collapse function
+Description: 
+    
+    
+                    
+Does anyone know now to collapse all items in Delphi 2009 IDE structure View?
+
+I have no idea to collapse all items and that make me hard to find my class from the view.
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+Select root node (Classes) and press / (divide sign) on the numerical keypad. That will collaps everything. Then press +  (plus) key on the numerical keypad and first level will expand.
+
+You can also play with - (minus, collapses everything but + will expand everyhing, not only the first sublevel) and * (multiply, expands everything).
+
+Left arrow key works the same as - and right arrow key works the same as +.
+
+Those shortcuts work the same in Windows native tree control (for example the one in the Registry Editor) and are pretty much universally useful for Windows applications that are displaying tree structure.
+    
+    
+Title: netbeans - preview html within IDE , split view?
+Description: 
+    
+    
+                    
+I have installed the latest version of netbeans and its working.. I have opened an html file but i don't see where i can preview it..
+
+Does it support HTML preview inside the IDE?
+
+Do i need a plugin?
+
+I would like to view in design mode at least so i can design in the ide ...
+
+All i see is pure html ...
+
+any ideas?
+
+thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't believe this feature is in Netbeans as of 6.7 I'm afraid. There is CSS preview, but I assume that falls short of the full preview you require. You can preview it directly in the browser by selecting "view" in the context menu, but that again is nowhere near the full preview which you require.
+
+Searching plugins.netbeans.org also proves fruitless.
+    
+    
+Answer 2: 
+
+    
+    
+Download NetBeans for PHP, open an HTML file and you will see 
+    
+    
+Answer 3: 
+
+    
+    
+"Web Preview" and "Embedded Browser UI - XUL Runner" solution is only working at Windows systems. My solution is using an external HTML WYSIWYG Editor for Mac OS X. There are some nice free/open source HTML interface builders:
+
+http://www.kompozer.net/
+
+http://ckeditor.com/
+
+http://www.w3.org/Amaya/
+
+Alternatively you can use HTML palette + Netbeans HTML Source editor. Click Window + Palette. At the right hand side palette will be opened which contains basic HTML elements. You can drag &amp; drop elements to your source code as visual designers but it only creates code. This function can also help you for some basic tasks.
+    
+    
+Title: VIM Project and Tabs
+Description: 
+    
+    
+                    
+Is there a possibility to combine the Project Plugin with Tabs?
+
+If i open a file in my Project Explorer, i want to open it in a new tab ... :)
+    
+
+        
+Answer 1: 
+
+    
+    
+You have to hack this plugin yourself (I do not think it would be difficult) or email the author and kindly ask him to do it.
+
+I would also suggest NERDTree as a Project replacement (it can open files in tabs).
+    
+    
+Answer 2: 
+
+    
+    
+For open file of project in other tab use
+Leader T
+\T
+    
+    
+Answer 3: 
+
+    
+    
+I was having the same issue.  For now I'vee learned to use buffers.
+To expand on the buffers post above, when you open a new file the Project plugin hides the previous file but it is still an active buffer.  ':ls' will list the buffers, switch to a buffer with ':b #' where # is the number of the buffer or split the screen and open a buffer with ':sb #'.  Not quite as convenient as tabs but it works until a better solution comes up.
+    
+    
+Answer 4: 
+
+    
+    
+If you open a new buffer window, you can click to open in that buffer.
+    
+    
+Answer 5: 
+
+    
+    
+If you have macVim or gVim of some sort, you can open a finder/explorer window at the project's tree and drag and drop files into windows/tabs.
+    
+    
+Answer 6: 
+
+    
+    
+I had this same desire, so I created a portable configuration called Vim.ana.
+
+It doesn't have many opinions that you can't change easily in the .vimrc
+
+Sauce on layout at the project homepage
+    
+    
+Title: How to make Visual Studio 2008 &ldquo;find all references&rdquo; to work correctly?
+Description: 
+    
+    
+                    
+Just a thing that annoys me.
+
+When I right click on a method name a context menu appears with a "Find All References" option.
+
+It works ok, except when you're implementing a Interface. Then it lists all references (maybe that's why it's called Find All References?), independent of the class that implements it.
+
+Example:
+
+interface IGetAThing&lt;T&gt;
+{
+    T Get();
+}
+
+public class ThingManager: IGetAThing&lt;Thing&gt;
+{
+    public Thing Get() {
+        return new Thing();
+    } 
+}
+
+public class ThingManagerReloaded: IGetAThing&lt;Thingmabob&gt;
+{
+    public Thingmabob Get() {
+        return new Thingmabob();
+    } 
+}
+
+
+When I search for all references of method ThingManager-/emem
+Answer 1: 
+
+    
+    
+ReSharper detects this and ask you if you want to find usages of the method from the base interface. If you decline it does what you ask for in the question. 
+    
+    
+Answer 2: 
+
+    
+    
+Third party tools such as resharper and coderush provide much better support for this kind of action.  If your solution is small enough and machine beefy enough, you'll probably make plenty of use for these tools.  To directly answer your question, I don't believe this is possible with VS2008 out of the box.
+
+(You'll probably get a better answer from someone that has used these tools.)
+    
+    
+Title: IntelliJ Python plug-in
+Description: 
+    
+    
+                    
+I've been using IntelliJ IDEA at the day job for Java development for a few weeks now.  I'm really impressed with it and I'm looking to extend it for other programming languages that I tinker with, starting with Python. I found this plug-in, pythonid. I figured I would look for some input on the Stack before proceeding. First, has anyone given pythonid a try and and have any feedback about it (the site for it is a bit weak)? And second, sre there any other Python plug-ins for IntelliJ IDEA that might be better?
+    
+
+        
+Answer 1: 
+
+    
+    
+I've tried Pythonid before and found it very limited. There's a new Python plugin from JetBrains, the people that make IDEA, which looks pretty nice, though it's still very unfinished.
+    
+    
+Answer 2: 
+
+    
+    
+There is currently an EAP for the Intellij Python IDE (PyCharm): here
+    
+    
+Title: IntelliJ: (Keyboard shortcut to) jump to next / previous suggestion
+Description: 
+    
+    
+                    
+I know how to jump to the next and previous error (F2, see SO Link, jetbrains.com), but is there a way to easily jump between suggestions?
+
+If possible, I would really love to have a keyboard shortcut for this, as I am currently learning Kotlin and IntelliJ often has nice suggestions on how to improve the code.
+If there is no keyboard shortcut to jump between suggestions, is there at least any other way?
+
+With suggestion I mean things like the following (Ignore the "nonsense code")):
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+F2 also works to navigate between warnings. If there are errors in the file, it will jump to the next error. If not, it will jump to the next warning.
+    
+    
+Answer 2: 
+
+    
+    
+Adding to yole's answer: if you want to jump backwards you can use Shift + F2 instead.
+
+Additionally you can alter the severity of each inspection (or inspection group) using the settings menu File | Settings | Editor | Inspections or directly using the intention action context menu (ALT + ENTER or similar) when dealing with a highlighted element (be it warning, error, information, etc.).
+
+Note that some inspections are not enabled by default and many allow customization to your needs (e.g. class naming conventions, etc.).
+
+I did once increase the severity of all the inspections and switch them back one by one as needed or even turned many off (or switched them to "weak warnings"), just to easily jump back and forth between them. I can't recommend that approach anymore ;-) (too many highlightings then... but it may help to find out about inspections you consider more helpful).
+    
+    
+Title: Terraform - Auto-populate required attributes in IDE
+Description: 
+    
+    
+                    
+I took a class recently with the exceptional Yevgeniy Brikman, and as he created Terraform resources, his IDE auto-populated required attributes.  For instance, if he typed:
+
+resource "aws_lambda_function" "lambda_example" {
+
+
+His IDE would auto-populate:
+
+resource "aws_lambda_function" "lambda_example" {
+  function_name = ""
+  handler       = ""
+  runtime       = ""
+  role          = ""
+}
+
+
+Now that I'm writing Terraform code frequently this feature would be handy, but I can't find a way to configure my IDE to do this (Visual Studio Code).  I'm up for switching IDEs - how does one get this functionality?
+    
+
+        
+Answer 1: 
+
+    
+    
+Hashicorp (the company behind Terraform) publish a plugin for IntelliJ IDEA that has a lot of spiffy functionality.
+
+This picture is a result of me defining an empty lambda, then pressing Alt-Enter:
+
+
+Selecting that first entry populates the mandatory properties as you showed.
+Then after that, I put my cursor inside the resource and press Ctrl-Space, to have IDEA show code completion options for all the other optional properties:
+
+
+I'm a keyboard user, so that's what I know to do.  I'm sure you can do all sorts of mousery if that's what floats your boat.
+
+I use the commercial version of IDEA, but there is a free community version and I assume the Hashicorp plugin would work with that.
+    
+    
+Title: .kt files not recognized in Android Studio
+Description: 
+    
+    
+                    
+I opened my Studio today and Android Studio didn't recognize Kotlin files. .kt files started showing up as just an ordinary file. I checked my Plugins and I still have the Kotlin plugin. I tried uninstalling and installing it again. But no use.
+
+I tried building my building my project from Terminal and it works fine. But Android studio doesn't understand Kotlin files.
+
+
+
+Configuration:
+
+Android Studio 3.1
+
+Kotlin 1.2.41
+
+OS: MacOS Sierra
+    
+
+        
+Answer 1: 
+
+    
+    
+Go to Library/Preferences and delete the AndroidStudio3.1 folder. This is the config directory for my Android Studio.
+
+Once deleted, I started Studio again, and the config was created fresh. Now everything worked perfectly.
+    
+    
+Answer 2: 
+
+    
+    
+Update Kotlin plugin:
+Go to
+
+menu
+preferences
+plugins
+find Kotlin plugin
+update
+
+    
+    
+Answer 3: 
+
+    
+    
+I got this problem too, after upgrading my Android Studio from 3.1.4 to 3.2.1 
+
+And I have followed @Evgenii Vorobei step, found no "Update" button available just install and uninstall.
+
+So I go to the root project build.gradle file update the kotlin_version from 1.3.11 to 1.3.21, sync project then restart Android studio
+
+This is work for me
+
+
+
+Update:
+
+You also can update the plugin with Tools &gt; Kotlin &gt; Configure kotlin plugin update
+
+
+    
+    
+Answer 4: 
+
+    
+    
+I already had kotlin configured and could see the files in the "Project" view but could not see them in the "Android" view.  When in "Android" mode, if you can see the File-
+Title: How do I adjust the column ruler in Visual Studio 2017 for Mac Community Edition?
+Description: 
+    
+    
+                    
+The column ruler defaults to the 80th character which is way too small. How do I adjust this? (I circled it in red below)
+
+I tried looking for extensions, but according to this post I can't install things like Productivity Power Tools that give me the option to adjust this.
+
+Is there a plist file somewhere that I can edit?
+
+This issue is super frustrating to me, so any help is greatly appreciated.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You can configure this in the preferences dialog. Select Source Code - Code Formatting. Then select the type of file you want to configure. Most code formatting styles inherit from Text file so you may just want to select that.
+
+
+
+Then change the Desired file width setting. By default it is 80.
+    
+    
+Answer 2: 
+
+    
+    
+I have checked all settings in Visual Studio 2017 for Mac and I don't find any settings could change the column ruler's size. And I also searching in Visual Studio -/pp/ppa href="https://visualstudio.uservoice.com/forums/563332-visual-studio-for-mac/suggestions/31250842-column-ruler-size" rel="nofollow noreferrer"/a/p/div
+Title: How to connect IntelliJ IDEA with a free Jira instance?
+Description: 
+    
+    
+                    
+My team has a Jira project on Atlassian servers. How can I connect that project with IntelliJ IDEA IDE?
+
+When creating a connection from IntelliJ to Atlassian, I need the server name and username with credentials.
+
+What is in this case the value of the Server URL?
+
+Here is my error log:
+
+com.atlassian.theplugin.commons.remoteapi.RemoteApiException: my_username:[password XX chars]@https://instance.atlassian.net
+
+Login failed
+    at com.atlassian.connector.commons.jira.rest.JiraRestSessionImpl.wrapWithRemoteApiException(JiraRestSessionImpl.java:800)
+    at com.atlassian.connector.commons.jira.rest.JiraRestSessionImpl.login(JiraRestSessionImpl.java:180)
+    at com.atlassian.connector.commons.jira.rest.JiraRestSessionImpl.testConnection(JiraRestSessionImpl.java:762)
+    at com.atlassian.connector.commons.jira.JiraRESTFacade2Impl.testServerConnection(JiraRESTFacade2Impl.java:329)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:498)
+    at com.atlassian.connector.commons.jira.JIRAServerFacade2Impl$1.invoke(JIRAServerFacade2Impl.java:91)
+    at com.sun.proxy.$Proxy40.testServerConnection(Unknown Source)
+    at com.atlassian.connector.commons.jira.JIRAServerFacade2Impl.testServerConnection(JIRAServerFacade2Impl.java:268)
+    at com.atlassian.theplugin.commons.jira.IntelliJJiraServerFacade.testServerConnection(IntelliJJiraServerFacade.java:473)
+    at com.atlassian.theplugin.idea.config.serverconfig.ProductConnector.connect(ProductConnector.java:35)
+    at com.atlassian.theplugin.ConnectionWrapper.run(ConnectionWrapper.java:63)
+Caused by: com.atlassian.jira.rest.client.RestClientException: Login failed
+    at com.atlassian.jira.rest.client.internal.jersey.AbstractJerseyRestClient.invoke(AbstractJerseyRestClient.java:82)
+    at com.atlassian.jira.rest.client.internal.jersey.AbstractJerseyRestClient.postAndParse(AbstractJerseyRestClient.java:140)
+    at com.atlassian.jira.rest.client.internal.jersey.JerseySessionRestClient.login(JerseySessionRestClient.java:54)
+    at com.atlassian.connector.commons.jira.rest.JiraRestSessionImpl.wrapWithRemoteApiException(JiraRestSessionImpl.java:797)
+    ... 13 more
+Caused by: com.sun.jersey.api.client.UniformInterfaceException: Client response status: 401
+    at com.sun.jersey.api.client.WebResource.handle(WebResource.java:607)
+    at com.sun.jersey.api.client.WebResource.access$200(WebResource.java:74)
+    at com.sun.jersey.api.client.WebResource$Builder.post(WebResource.java:507)
+    at com.atlassian.jira.rest.client.internal.jersey.AbstractJerseyRestClient$4.call(AbstractJerseyRestClient.java:144)
+    at com.atlassian.jira.rest.client.internal.jersey.AbstractJerseyRestClient.invoke(AbstractJerseyRestClient.java:68)
+    ... 16 more
+
+    
+
+        
+Answer 1: 
+
+    
+    
+For everyone looking how to connect JIRA without the Atlassian Connector, there is already a simple build-in solution in IntelliJ IDEA:
+
+
+
+Normally you don't have to edit the "Search".
+
+And it's also available via the top menu "Tools" -&gt; "Tasks &amp; Contexts" -&gt; "Configure Servers..."
+    
+    
+Answer 2: 
+
+    
+    
+You can get the url by login into your Jira account via a browser; the Server URL is the the first section of the URL before the '/'.
+
+Example:
+https://example.atlassian.net/secure/Dashboard.jspa
+Server URL = https://example.atlassian.net
+
+Update:
+Also note that Atlassian has stopped support for IDE Connectors since 20 April 2015, developer.atlassian.com/blog/2015/06/… ,so I would consider rather connecting your IntelliJ to Jira thorugh other means, such as GitHub via WebHooks 
+    
+    
+Answer 3: 
+
+    
+    
+Server url is something like: https://aleksandar.atlassian.net
+
+    
+    
+Title: IDE for Go capable of refactoring: variable, function, structure and package renaming
+Description: 
+    
+    
+                    
+I am interested in any IDE (or even a script) that is capable of refactoring Go source code for variable renaming. For example in Eclipse for Java, one can select a variable, an object or a class, then to rename it and it gets automatically renamed in all the files in the project. This feature is very useful if automatic string replacement may cause substring collisions.
+    
+
+        
+Answer 1: 
+
+    
+    
+If you're interested in a script, use gofmt with -r flag. Like this:
+
+gofmt -w -r 'OldFoo -&gt; Foo' foopackage
+
+
+From the docs:
+
+
+  Without an explicit path, it processes the standard input. Given a file, it operates on that file; given a directory, it operates on all .go files in that directory, recursively. (Files starting with a period are ignored.) By default, gofmt prints the reformatted sources to standard output.
+
+
+EDIT: Today there are better tools for that: gorename for renaming and eg for general refactoring.
+    
+    
+Answer 2: 
+
+    
+    
+The gorename tool performs precise type-safe renaming of identifiers in Go source code. 
+    
+    
+Title: Losing Precision on purpose
+Description: 
+    
+    
+                    
+While converting double to int:
+
+double d = 5.5;
+int i = (int) d;
+
+
+Variable "i" becomes 5. That's exactly what i want, the problem is i am getting the warning: Cast to 'int' from 'double' may result in loss of precision
+My question is, is there any way to tell IDE that such precision loss is expected so i will not get the warning?
+So is there any other way to lose precision and cast to integer?
+
+I know that i could disable all loss precision warnings at all, but it wouldn't be nice.
+I am using Intellij IDEA 13
+    
+
+        
+Answer 1: 
+
+    
+    
+The best thing is to use Double and Integer. Then you can use intValue() method.
+    
+    
+Answer 2: 
+
+    
+    
+Consider adding @SuppressWarnings("NumericCastThatLosesPrecision") on your method. This would be a portable solution to your concern.
+    
+    
+Answer 3: 
+
+    
+    
+You can disable this inspection in Idea for whole project.
+
+Main menu -
+Answer 4: 
+
+    
+    
+Why do you want do declare another variable "i" ..
+I mean you can directly use "(int) d" where ever you want,that way you also save some memory.  
+    
+    
+Title: Android Studio Setup and UI issues
+Description: 
+    
+    
+                    
+
+I recently started watching a getting started video on youtube 
+
+
+http://www.youtube.com/watch?v=ZddHwDYqyIw
+
+and I followed him to where he opens Main_Activity.xml, I am not able to find the design/text tabs, I looked everywhere (I use the same build he does), I am not sure if Tool Windows/polli/li/olp/pprecode/code/prep/pprecode/code/preolli/li/olp/pprecode/code/prep/ppa href="http://postimg.org/image/esd6e4wol/" rel="nofollow"/a/pp/p/div
+Answer 1: 
+
+    
+    
+Close, reopen, check 
+
+
+  View
+Answer 2: 
+
+    
+    
+Even if you just downloaded it, make sure you have the last version of Android Studio (0.2.9 at the moment). You can check in Help /pp/p/div
+Answer 3: 
+
+    
+    
+I must ask you for your Android Studio Build number and your system environment. But I think the following step may help. And sorry for poor English if there is any spell mistake.
+
+Under Windows 7 x64
+Android Studio 130.737825
+
+First,check your Android Studio version . I have the problem when the version is 130.737825  . Anyway update Android Studio.  "Help-/pp/pp/pp/pp/pp/ppa href="https://dl.google.com/android/studio/patches/AI-130.737825-132.821530-patch-win.jar" rel="nofollow"/a/pp/pprecode/code/pre/div
+Title: Setting up a Dynamic Web Project in Eclipse with Tomcat 7.0
+Description: 
+    
+    
+                    
+I am having issues properly setting up a dynamic web project in Eclipse [Juno] using Apache Tomcat 7.0. I have JRE and JDK 1.7 installed. These are the steps that I have taken:
+
+
+Tomcat files extracted to my C:\Program Files\ directory.
+New /lilicode/codecode/code/lilicode/codecode/code/lilicode/codecode/code/lili
+Answer 1: 
+
+    
+    
+Don't put the index.jsp in WEB-INF.  Put it in WebContent.
+    
+    
+Title: Why IDE-specific project files are ignored in Git?
+Description: 
+    
+    
+                    
+I have seen that a number of projects posted on Github feature a .gitignore file explicitly excluding control files related to the IDE. These control files are widely used to define the project and its dependencies. These can be .sln for .NET or .project for Eclipse.
+
+I want to ask why is this practice widely applied or considered a good practice, considering that I agree that achieving IDE-neutrality (don't bind developers to a specific IDE) is a good principle, in general.
+
+On the contrary, these control files often dictate project dependencies, configuration or compilation variables in multiple configurations (this is the case of the .csproj files for example).
+
+I have seen a large number of open source projects ignoring Eclipse files, however it has been impossible to me so far to set up a development environment without the project files (even if I create a project from existing code, or create a new project and import the code, I always get plenties of compilation errors).
+
+If the project files were present in repositories it would be vry simple to set up a development environment with "download the code, import the project and voilà compile the source" but it would obviously bind developer to a specific IDE (and that's not funny).
+
+Standardizing or migrating project files is out of the scope of the question.
+
+So, from an external contributor's point of view, how does one build up a working and compiling project environment for a project of which he downloaded the source code from Github? (after cloning all submodules, if needed)
+
+Just to pick one example project I would like to import into Eclipse, analyse and slightly modify, here it is.
+    
+
+        
+Answer 1: 
+
+    
+    
+With quite a lot of build-systems in the Java world (Maven, Gradle, SBT, etc). It is a piece of cake to generate the project files for your IDE. This makes it unnecessary to check them into version control, as they can be considered a build artifact.
+
+Furthermore in a mixed team, where different people use different IDE's, when somebody updates the Eclipse project files, the guy using IntelliJ suddenly also needs to update his project files, as he now gets compilation problems. Whereas using a build system that generates these files, ensures that they're always up-to-date. Using Maven for instance this is even done without user interaction when you add the M2Eclipse plugin to Eclipse or use IntelliJ.
+
+So I always advocate to add the project files to .gitignore...
+    
+    
+Answer 2: 
+
+    
+    
+Notice that csproj files are not IDE specific but instead form the basic project structure and build steps of a .NET project. Even if you switch to a completely diffferent IDE like SharpDevelop you still need them to get the project running. So, in general those shouldn't be on the .gitignore file. Only the things that are user or IDE specific should be excluded.
+    
+    
+Answer 3: 
+
+    
+    
+Because some people don't use those IDEs while others have some tweaks made to their configurations. Not to mention the fact that those IDE specific files change too quickly and too uselessly after each compile step.
+
+The best is to have Makefiles, Ant files or other equivalent build systems in place, instead of relying on IDE files.
+
+Of course, some of the errors are caused by missing libraries. You'll have to install them by yourself, having IDE files in repo or not doesn't matter.
+
+What I usually do: clone the project, create build script if it doesn't exist, add it to .git/info/exclude since it will be machine specific.
+    
+    
+Title: interpreted java IDE environment
+Description: 
+    
+    
+                    
+In scripting languages like Ruby/Python/Perl, we can start an interactive session and create new variables, and essentially execute whatever statements.
+
+But in Java, I only know of a way to print arbitrary expressions - in Eclipse's debug-expression view.
+
+There is no way to create new vars, and later utilize that var (though you can assign to pre-existing vars).
+
+Is there any way to run Java in a interpreted IDE environment just like scripting languages?
+    
+
+        
+Answer 1: 
+
+    
+    
+Check out Groovy. If you want to stick to pure Java, I think Groovy will happily execute any valid Java code. You can poke at it via the GroovySH  interactive shell.
+    
+    
+Answer 2: 
+
+    
+    
+Check out Beanshell  It has been around a while.  Also you can look at IDEOne website for an online IDE-like environment for several languages (not quite a shell).  And yeah, I meant to mention Groovy too, which has the groovy shell.
+    
+    
+Answer 3: 
+
+    
+    
+As of Java 9 there will be a REPL available to allow you to start an interactive Java session.
+
+It's called JShell, and you can read the original proposal: JEP 222: jshell: The Java Shell (Read-Eval-Print Loop)
+
+There are a number of blogs and articles exploring some of the features of JShell, if you'd like to see it in action.
+    
+    
+Title: F# type inference (compiler output)
+Description: 
+    
+    
+                    
+Is there a way to get a structured output of the result of type inference by the F# compiler?
+
+(I am trying to build a small IDE).
+    
+
+        
+Answer 1: 
+
+    
+    
+Assuming you have a file test.fs, you can use the following command to generate F# Signature File test.fsi, which contains type information about all top-level definitions:
+
+Fsc.exe --sig:test.fsi test.fs
+
+
+To get information about local variables, you'll need to use the F# compiler as a service. There is a simple command-line example that demonstrates how to call the API and you can also explore the F# binding for MonoDevelop.
+    
+    
+Title: Firebug for PHP
+Description: 
+    
+    
+                    
+Firebug is such a spectacular development tool for javascript, is there any kind of strong analog for PHP? I have seen this PHP (and Drupal) extension for Firebug, but it seems like they are no longer maintained. Specifically in terms of console, net, and yslow functionality?
+    
+
+        
+Answer 1: 
+
+    
+    
+Xdebug and Wincachegrind are great debuggers and profilers for PHP
+    
+    
+Answer 2: 
+
+    
+    
+You also can try FirePHP: http://www.firephp.org/
+    
+    
+Title: Which IDE should i use for Google&#39;s Native Client?
+Description: 
+    
+    
+                    
+I'm planning to try out Google's NaCL. Which IDE should i use for developing? It would be nice to be able to compile the project from the IDE and run it in Chrome. Some basic debugging would be also very useful.
+    
+
+        
+Answer 1: 
+
+    
+    
+We do not have any IDE support yet. You can try Eclipse (with CDT) + Standard Make C or C++ project to automate compilation. Launching and debugging will not be possible from Eclipse.
+
+Alternatively, you can use any editor with syntax highlighting and compile/launch by hand from cmd/bash.
+
+Debugging on NaCl is very tricky by itself. There is no sane way to do this now.
+
+You can use NACL_EXE_STDOUT and NACL_EXE_STDERR environment variables (set them to absolute paths to files where stdout and stderr of NaCl program will be written) plus --no-sandbox chrome flag for debug printf's.
+
+Update (March 2014)
+We have Visual Studio plugin now which can be installed with naclsdk update vs_addin. See also: https://developers.google.com/native-client/dev/devguide/devcycle/vs-addin
+
+Also, I created a page that describes how to use Eclipse with CDT to compile and debug NaCl applications: http://www.chromium.org/nativeclient/how-tos/debugging-documentation/debugging-with-debug-stub-recommended/debugging-nacl-apps-in-eclipse-cdt
+    
+    
+Title: How to make selected html tag highlighting in Visual Studio 2010 work like it did in Visual Studio 2008
+Description: 
+    
+    
+                    
+Is there a way to make VS 2010 work more like VS 2008 when it come to highlighting the begin and end tags of the currently selected html element.  
+
+In Visual Studio 2008 the selected html tag simply gets a bold font on the beginning and end tags of the element along with the &lt; /pp/pp/pp/p/div
+Answer 1: 
+
+    
+    
+Go to Tools -
+Answer 2: 
+
+    
+    
+Go to Tools -
+Title: Run an action by name in Eclipse
+Description: 
+    
+    
+                    
+As much as I like to remember as many keyboard shortcuts as possible, there's always something I don't know how to do via a keyboard shortcut. Is there an Eclipse equivalent to M-x from Emacs or Find action by name from Intellij IDEA?
+    
+
+        
+Answer 1: 
+
+    
+    
+How about Ctrl+Shift+L which is the shortcut for Show Key Assist.
+
+I use Ctrl+3 a lot, which is the shortcut for quick access popup, where you can type the name of any view, perspective or open editor to open/switch to that, or the name of an action to run it. By the way, you can see if your choose have a shortcut assigned when selecting.
+
+Note: this is on Ubuntu, may be slightly different on a Mac.
+    
+    
+Answer 2: 
+
+    
+    
+Also you can try Quick Assist by pressing Ctrl+3
+    
+    
+Title: Is it possible to execute this debugging code while program is paused in .NET IDE?
+Description: 
+    
+    
+                    
+I have a couple of massive data structures that are causing problems in my VB.NET application. After an exception is thrown and the application pauses, I'd like to run some code like:
+
+For Each o As MyClass In myObjects
+  If o.property = "value" Then debug.print(o.id)
+Next
+
+
+to diagnose the problem.
+
+The problem is that the immediate window won't let me execute loops, and the myObjects collection contains far too many objects for me to find the offending one I want manually.
+
+How can I find this object while the debugger is paused? Is this, or something similar, possible in the .NET IDE?
+    
+
+        
+Answer 1: 
+
+    
+    
+You should be able to use the Immediate mode window in the IDE to execute commands like that, but the data has to be available within the current scope of the debugger.
+    
+    
+Answer 2: 
+
+    
+    
+No, you can't do this directly from the IDE. Unfortunately, the easiest way to work around it is to stop debugging, write your loop inside a public static method that returns the object you are looking for, re-compile and run, and then call that public static method from the Immediate or Watch window.
+
+Another more immediate (but annoying) trick is to write "? myObjects" in the Immediate window, copy paste the result into notepad, and use text search (Ctrl+F) in notepad to find your object.
+    
+    
+Title: PHP Syntax Checking in Notepad++
+Description: 
+    
+    
+                    
+is there a plugin for notepad++ that allows for files to be run through a compiler for simple syntax checking? such as to catch missing ; or or non-matching brace counts, etc.?
+    
+
+        
+Answer 1: 
+
+    
+    
+Not tested myself, but you should be able to do this with the Run Command (F5) and a windows binary of PHP.
+
+The command you most likely would want is as follows:
+
+cmd /K c:\path\to\php.exe -l $(FULL_CURRENT_PATH)
+    
+    
+Answer 2: 
+
+    
+    
+I don't think so. Use Netbeans PHP. It's great. I haven't looked back since I switched to it
+    
+    
+Title: IDE: Structure viewer displays all items expanded
+Description: 
+    
+    
+                    
+Delphi 2007:
+
+Whenever I switch to a new pas file the structure viewer displays its class entries in an expanded form. This is very annoying!
+
+Is there a way that the classes items are always displayed in a compressed tree view.
+
+Chris
+    
+
+        
+Answer 1: 
+
+    
+    
+Right click on the "Structure" pane and select "Properties" from the context menu. In the "Explorer Options" dialog, you'll see a "Explorer categories" check list box. For each item in this box, there's a tiny figure (a tree) between the check box and the item name. For items you want to see contracted, click on this tiny figure. It will switch from an expanded tree to a contracted tree. Then select 'OK'.
+    
+    
+Title: Which GNOME LINUX PHP IDE is most like phpDesigner in Windows?
+Description: 
+    
+    
+                    
+I'm looking for a php editor can list all functions in one script and all variables in script, functions, classes. and count repeat of every variable. and auto-complete all default functions and user defined functions and variables and consts. and can search and replace in all files in one folder.
+
+really I'm handy with phpDesigner and don't wanna use WinE!
+
+Thanks for advance!
+    
+
+        
+Answer 1: 
+
+    
+    
+You looking for editor, and not IDE - so I'm not talking about Eclipse, Netbeans or PHPStrom (which is great BTW). But you should take a look at: Komodo Edit.
+    
+    
+Answer 2: 
+
+    
+    
+What about Eclipse PHP?
+
+http://www.eclipse.org/pdt/
+    
+    
+Answer 3: 
+
+    
+    
+You should take a look at NetBeans.
+
+NetBeans supports all the features you need, like:
+
+
+Listing your functions
+Auto-Completion
+Searching and replacing in your files
+
+
+and so on...
+    
+    
+Answer 4: 
+
+    
+    
+You can keep on using PHPDesigner 7 on linux with wine with some tricks. I had installed and submitted my experiences on linux (ubuntu 10.10 back then) with PHPDesigner couple of months ago here in Wine AppDB.
+    
+    
+Answer 5: 
+
+    
+    
+gedit is great, you can add a class browser and zen coding.
+    
+    
+Title: Static web project in Visual Web Developer Express
+Description: 
+    
+    
+                    
+I am about to develop a sort of web application using only static files (eg. html, js &amp; css). Is there a way to start this sort of project in Visual Web Developer Express?
+
+I want to have all the niceties with intellisense, sulution explorer and whatnot but I don't want all of the ASP.net structure in the sulution.
+
+Is thiss possible or is there perhaps another IDE for this kind of project?
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Well Igues I found it.
+
+In Visual Web Developer:
+
+File &gt; New Web Site &gt; ASP.NET Empty Web Site 
+
+
+I'll guess it doesn't hurt to look one more time before you ask.
+But someone might find this usefull in the future.
+    
+    
+Title: VS2010 Implement Generic Interface expansion doesn&#39;t use specified type
+Description: 
+    
+    
+                    
+Using the release version of Visual Studio 2010 I think there's a difference in the "Implement Interface" expansion from VS2008
+
+If I speicify an interface and implement it in a class as so:
+
+public interface IRepository&lt;T&gt; where T : IModel
+{
+    T Get&lt;T&gt;(int id);
+    void Update&lt;T&gt;(T item);
+    int Add&lt;T&gt;(T item);
+}    
+
+public class MockRepository : IRepository&lt;MockUser&gt;
+{
+// ...
+}
+
+
+Then use the "Implement Interface" expansion and get this:
+
+public class MockRepository : IRepository&lt;MockUser&gt;
+{
+    public T Get&lt;T&gt;(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Update&lt;T&gt;(T item)
+    {
+        throw new NotImplementedException();
+    }
+
+    public int Add&lt;T&gt;(T item)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+
+Instead of what I expected
+
+public class MockRepository : IRepository&lt;MockUser&gt;
+{
+    public MockUser Get&lt;MockUser&gt;(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Update&lt;MockUser&gt;(MockUser item)
+    {
+        throw new NotImplementedException();
+    }
+
+    public int Add&lt;MockUser&gt;(MockUser item)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+
+The IDE uses the type variable name from the generic interface definition T instead of the specified concrete type MockUser.
+Is this a bug? Or is something new just for VS2010 / .Net 4.0?
+
+Update:
+This is NOT a bug, I didn't specify the interface as I inteded, it should be defined as:
+
+public interface IRepository&lt;T&gt; where T : IModel
+{
+    T Get(int id);
+    void Update(T item);
+    int Add(T item);
+}    
+
+
+in other words I didn't need to specify the Type parameter T at the interface and method level, but only at the interface.
+    
+
+        
+Answer 1: 
+
+    
+    
+There's no purpose to &lt;T&gt; as a type parameter to the interface's methods. It's not necessary, and if you remove it, you'll get the expected behavior -- except that the result is this:
+
+public class MockRepository : IRepository&lt;IModel&gt;
+{
+    public IModel Get(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Update()
+    {
+        throw new NotImplementedException();
+    }
+
+    public int Add(IModel item)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+
+Generic method type parameters are distinct from interface/class type parameters -- I wouldn't expect them to be implemented using IModel in your example. (In other words, the T in IRepository&lt;T&gt; is not the T in Get&lt;T&gt;.)
+    
+    
+Answer 2: 
+
+    
+    
+It's doing exactly the right thing for you.
+
+Each of the methods of your interface has its own T parameter, which is still unspecified until the caller of the method eventually specifies it. Your interface's T is unused.
+    
+    
+Title: Flex + PHP: Flash Builder 4 vs. Eclipse
+Description: 
+    
+    
+                    
+I'm getting started with Flex and initially installed the Adobe environment (Flex Builder 3) and later found out that they're starting to call it Flash Builder 4. 
+
+Anyway since I'm very new to this technology and I have to leave Flex Builder 3 anyway, I'm trying to find out if there are any advantages to developing with Adobe's Flash Builder 4 (adobe's commercial IDE) vs. Eclipse (which Adobe seems to also heavily support, they make and support a special plugin for it). 
+
+My main language is PHP so my end goal is to integrate Flex with PHP. It sounds like Adobe did a decent job with integration in the Flash Builder 4 release (you can choose a language and choose data services options, etc. which should make that integration smoother), but is that integration only available through their commercial Flash Builder 4 or is it also available through the plugin they release for Eclipse? I'm trying to get some advice from those who used the technology so I can make up my mind whether there's a lot of advantage using Adobe's commercial IDE vs. the very robust open source Eclipse IDE. Other aspects I may not have considered are also welcome. 
+
+Note: I use php without a framework, and I keep also hearing Zend from Adobe themselves, which is kind of confusing too. I guess they're using part of the zend for remoting. Does anyone know how zend will affect my flex development environment?
+    
+
+        
+Answer 1: 
+
+    
+    
+Flex Builder and Flash Builder both function as Plug-ins to Eclipse, though each also comes in a "stand-alone" flavor - which is still eclipse, but with a lot of the Eclipse functionality torn out for a smaller footprint.
+
+What you want to do is pretty simple - get eclipse set up, install PDT or whatever your favorite PHP plug-in is and then install Flash/Flex Builder into that same instance of Eclipse. Make sure when you download FB you choose to download the "Plug-in" version instead of the stand-alone version. When you go to install it, it'll ask you where you want to install it - pick a location, and hit next. It will then ask you if you want to plug-in to an existing instance of Eclipse or use the bundled Eclipse (at least Flash Builder comes with a Bundled eclipse). Opt to select an eclipse version and point it toward the Eclipse install that has your PHP coder plugged into it.
+
+If all goes well, once it' done you can open Eclipse and then switch views between Flash Builder and PDT all within one instance of Eclipse. I do this with Aptana, it's very handy to be able to do your HTML, PHP and AS3 all in one editor.
+
+Good luck!
+
+Also [edit]:
+
+Adobe promotes Zend because of a Zend plug-in called ZendAMF. ZendAMF is the spiritual successor to AMFPHP - basically, with a little bit of setup you can create a dev environment where you are able to call PHP functions right from your AS3 code. You can set up a ZendAMF Class, for instance, called getUsers() which then queries your DB and pulls out a list of Users. You can use that to populate PHP ValueObjects, and then it will pass those VO's back to Flex in binary (much, much faster than XML) and if you have it set up correctly they will be data-typed as AS3 Value Objects of the same type. 
+
+This is very useful because it's all very transparent - you can then write an AS3 function called getUsers() which returns an Array of value objects, set it up to quietly call your PHP which calls the database, and have it return a value as though it were just all AS3 from start to finish. A bit tricky to set up, but once you're rolling there's really no going back! :)
+    
+    
+Answer 2: 
+
+    
+    
+I'm pretty sure they're actually the same thing - this was certainly the case with Flex Builder 3, and I'm assuming is the case with Flash Builder 4 as well.
+
+The plugin is there for if you have an existing installation of eclipse and want to just add in Flash Builder to that. But if you don't already have it, the Flash Builder stand-alone installation includes eclipse, pre-built with the plugin.
+
+As for Zend - Adobe is currently collaborating over aspects of the Zend Framework to improve integration with your Flex Apps. Zend have there own eclipse plugin called Zend Studio for building Zend Framework apps, which does integrate with the Flash Builder plugin. I've not used it myself, but from what I hear it's not that brilliant. You can still use Flex without any Zend stuff if that's the way you work.
+
+Hope this helps.
+    
+    
+Answer 3: 
+
+    
+    
+You should also check IntelliJ which has support for Flex and PHP. Apparently it's way better than FlexBuilder/Eclipse. We're using Eclipse with the FlexBuilder plugin but are looking to switch over.
+    
+    
+Answer 4: 
+
+    
+    
+You can download and use the Flash Builder Standard program for free if you're a student or unemployed, so I would grab that.  The premium version does have some nice to haves like Network Monitoring and better code generation tools.
+
+The standard package will install the Zend PHP engine for remote calls if you use PHP, which is a framework that allows you to write your services in PHP, then make calls in Flash through the Zend engine to PHP.  It's pretty useful, and they will easily pull properly formatted PHP services into the data view (a window showing your available service calls).
+
+You can also use other frameworks like AMFPHP.
+
+Overall, the only real differences between the Adobe Flash Builder and Eclipse plugin is if you upgrade to the Premium version or you prefer a concentrated lightweight version of eclipse tailored specifically to Flash (the Builder).
+    
+    
+Title: IDE integration with GIT
+Description: 
+    
+    
+                    
+We're considering migrating from CVS to GIT. Our whole development process is centered around IntelliJ, and the plugin we've found (GIT4idea) is severely lacking. Essential features, like global history logs or diff changes are completely missing.
+
+Are there any other alternatives in IntelliJ land? And, if not, which current Java IDE do you consider to have the best GIT integration?
+    
+
+        
+Answer 1: 
+
+    
+    
+git-idea
+
+http://code.google.com/p/git-idea/
+
+
+
+Next option is use GIT without IDE integration.
+
+
+Git-Gui or Tortoise GIT
+From command line
+
+    
+    
+Answer 2: 
+
+    
+    
+Update January 2012
+
+Off course, with latest Eclipse (3.6, 3.7+), as Thorbjørn Ravn Andersen points out in the comments, EGit is now the official Git plugin for Eclipse and offers a quite complete set of Git feature right within Eclipse.
+
+
+
+The EGit project is implementing Eclipse tooling on top of the JGit Java implementation of Git (much stable now). 
+
+
+
+Original answer July 2009:
+
+We are using JGit with Eclipse, but are finding the plugin not quite stable enough.
+
+
+
+So basically, we have still a gitk running alongside our IDE... or we do have some scripts to encapsulate any operations not available through the IDE Git plugin.
+    
+    
+Answer 3: 
+
+    
+    
+I've found both the plugins for Netbeans and Eclipse lacking, some issues (sometimes nasty ones). Not stable enough for my taste, although Eclipse one is better.
+
+I would recommend to just use command line. I know it's not the same, but should not be a big deal
+    
+    
+Answer 4: 
+
+    
+    
+Now git4idea(for IDEA), nbgit(for Netbeans), egit(for Eclipse) are all mature plugins which provide excellent Git integration through jgit. It is just a choice of which IDE you prefer to use.
+    
+    

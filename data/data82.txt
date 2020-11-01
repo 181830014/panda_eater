@@ -1,0 +1,2458 @@
+Title: &ldquo;Folding&rdquo; long sections of code in Visual Studio 2008
+Description: 
+    
+    
+                    
+I have lengthy functions in VB.NET (VS2008) and I'd like to shrink them down. I know about the #region directives, but they don't work inside functions.
+
+I was wondering if anyone knew of any plugins for visual studio 2008 that would allow me to fold if statements, loops and try catch statements. I've found a couple of plugins for Visual Studio 2005 but none for Visual Studio 2008.
+    
+
+        
+Answer 1: 
+
+    
+    
+You may want to read Martin Fowler's book called Refactoring:  Improving the Design of Existing Code, as well as Code Complete: 2nd Edition.
+
+refactoring book http://ecx.images-amazon.com/images/I/21ZceZ5jBTL._SL160_PIsitb-sticker-arrow-dp,TopRight,12,-18_SH30_OU01_AA115_.jpg
+
+
+If you're having functions and subroutines that long, it means there are larger complexity forces at work that need refactoring.
+
+Update:
+
+I just finished the book Clean Code by "Uncle" Bob Martin, and I have to say that it belongs right next to the other two in the 'Must Read' category.
+
+
+
+    
+    
+Answer 2: 
+
+    
+    
+"i'm writing some lengthy functions in VB.net 2008" == Code Smell
+
+Don't treat the symptom, fix the cause and componentize your methods.
+    
+    
+Answer 3: 
+
+    
+    
+For many, regions are a subjective thing.
+
+I actively dislike anything that hides meaning. If you find you are "writing lengthy functions" try to refactor functionality into separate objects and methods. In the long run, it makes code easier to understand and to maintain.
+
+Hiding code in regions is a bad idea, IMO.
+    
+    
+Answer 4: 
+
+    
+    
+Ok so i finally found a tool to fold code inside subs and functions. it's not ideal as you have to specify the regions to be folded but it joes the job.
+the piece of software is called smartoutline. once you get past the broken installer.
+
+http://submain.com/products/smartoutline.aspx
+
+the installer has some issues with admin privileges, so to install it you need to create a shortcut to windows installer specifying the msi as a parameter and then run it as administrator
+    
+    
+Title: Setting up windows for C++
+Description: 
+    
+    
+                    
+To quote the FAQ, 'No question is [...] too "newbie"'
+
+What is the best way to set up an Windows system (vista, if that matters) to work with C++?
+
+Preferably with a nice IDE, easy compiling of software (support for make files, etc.), but suitable for a beginner.
+
+I would quite like the IDE to use a relatively portable format, such as makefiles and configure scripts, nothing too proprietary. 
+
+I would also like the ability to add new libraries etc. without much hassle, and work with the majority of C++ code others have written.
+
+I am comfortable using the command line.
+
+Thanks for the help, hopefully the question is clear. And apologies if it's already been answered, i did have a look for similar questions.
+    
+
+        
+Answer 1: 
+
+    
+    
+I know this is not exactly 'nothing to proprietary' but you should give a look at the free Express Edition of Visual C++. Under its covers you'll get all the familiar make and command line tools, but wrapped in a polished IDE.
+
+If you're really comfortable with the command line then you can make an IDE from code editor on top of a compiler/debugger suite. MS's own command line tools come with the platform SDK (free) and you get an awesome debugger in Windbg. My personal favorite code editor is Code Insight. I wish so hard for a Mac version /sigh.
+    
+    
+Answer 2: 
+
+    
+    
+Microsoft's Visual Studio has a free express edition which contains pretty much everything you need to program c++.
+For a Gui, the main choices are probably, MFC (old and ugly), CLR/.Net (new and confusing) or look at Qt(now LGPL) or wxWigets
+    
+    
+Answer 3: 
+
+    
+    
+There are quite a few good IDEs for C++ available on Windows.
+
+The de-facto standard for professional software development is Microsoft's Visual Studio, which is available in different versions, like the free Express Editions. This will give you a great tool-chain for Windows development.
+
+However, for a more "cross-platform" approach, you should have a look to the free Eclipse C++ Development Tooling, which is available for many platforms. As long as your own code is platform-independent, the whole project can be shared between Windows, Linux, Mac, etc.
+
+Other alternatives are MinGW or CygWin that both allow to use the GCC toolchain on Windows.
+    
+    
+Answer 4: 
+
+    
+    
+Try the MinGW compiler, it will come with a C and C++ compiler, Make, etc--among many others. This can be used from the command line, pretty easily: g++ -o someprogram.exe somecode.cpp
+
+As for an IDE, there are lots out there. Right now I am using Code::Blocks, and so far it's been really nice. As well, it already supports the GCC compiler, and sets many of the appropriate flags for you, so all you'll really need to do is hit the "build" button.
+
+Some others you might want to try are Eclipse, which is really powerful, but lots of its "power" will be really confusing and difficult to use until you start getting used to it. Visual C++ is another one, which (obviously) would integrate very nicely into Windows. Of course, you could always use emacs :)
+    
+    
+Answer 5: 
+
+    
+    
+I suggest you evaluate CodeBlocks.
+    
+    
+Answer 6: 
+
+    
+    
+Microsoft's Visual Studio is powerful but rather proprietary. If you prefer open/portable stuff, I recommend Dev-C++ and Cygwin.
+    
+    
+Answer 7: 
+
+    
+    
+FWIW, I recently went through this and tried the VC++ Express and QT Creator based stuff.  Coming from a linux/unix background I found that QT was a little better since it was using the Ming compilers and some make based constructs.
+    
+    
+Answer 8: 
+
+    
+    
+If you will only be hacking for windows I would go for Visual Studio. It will definitely save you time you can spend on coding instead. Most open source out there for windows either already have VC project, and if they don't it is usually very simple to set one up. And normally they have either make or nmake files for you to build VC compatible libararies to link with.
+    
+    
+Title: Collapsing If-Then-Else statements in code editor (Delphi 2007)
+Description: 
+    
+    
+                    
+Every once in a while I'm editing some long pair of if-then-else statements (or worse, nested if-then-else statements) , like, say, this:
+
+  if A &lt; B then 
+  begin
+    DoSomething; 
+    DoSomethingElse;
+    {...and more statements going on and on and on...}
+    FinallyWrapUpThisBit;
+  end 
+  else 
+  begin
+    DoThis;
+    DoThat;
+    {...and more statements going on and on and on...}
+    FinallyWrapUpThisBit;
+  end;
+
+
+...and I find myself wanting to "collapse" the first begin-end pair, to bring up the lower "else" part (usually because I'm referring to something above the if-then statemnent.  Maybe so it would just say "begin..." and have [+} sign to the left of it to expand it out again.
+
+I've explored the "fold" functions in the IDE, but none of the commands seem to do this.  It seems like my CodeRush for my old D6 did this, but I could be imagining things.  (I have a very active imagination...).
+
+Do any of the IDE plug-ins like Castalia (or some other one) do this?
+    
+
+        
+Answer 1: 
+
+    
+    
+With plain Delphi out of the box, you would have to surround your begin...end with  
+
+  {$region 'begin...end'}
+  .... 
+  {$endregion}
+
+
+which can be done through a code template...
+
+I remember Castalia for the nice colored visualization of code blocks (begin..end) but I don't remember if it was foldable.
+    
+    
+Answer 2: 
+
+    
+    
+Use the refactoring tools to move the conditional branches' code into separate functions. Then you won't need to fold anything. You might also find that you can merge code that's common to the two branches, such as that call to FinallyWrapUpThisBit.
+    
+    
+Answer 3: 
+
+    
+    
+Another big helper here would be CNPack.  It is a wizard which installs into Delphi and will colorize your begin/end pairs, making it MUCH easier to follow the code.  It doesn't exactly do code folding, for that you need to use the {$REGION} {$ENDREGION} tags. 
+    
+    
+Title: Just starting to use Java which IDE is better for me to start out?
+Description: 
+    
+    
+                    
+I am learning Java now (yay) in my spare time and have started several different tutorials.  Some tutorials say to use NetBeans, some say to use Eclipse.  Eventually I would like to get into Android development because i will be getting a smart phone at the end of this year.
+
+FYI:  I just earned Commentator Badge.
+
+UPDATE::::::::I Have also just earned the "Notable Question" and "Editor" Badges respectively
+
+2nd Update::::Soon after earning the two badges noted in the previous update, i also earned the Scholar Badge.
+    
+
+        
+Answer 1: 
+
+    
+    
+If this is your first programming language, then it's just a matter of what you like best. Try NetBeans; if you like it, keep using it forever, or until you start hating it or it doesn't do something you need. If you don't like it, try Eclipse. Rinse, repeat. You could even get away with using a simple text editor and javac in the command line.
+
+It all comes down to what your preferences and needs are at this time. If, for example, you were just starting to learn PHP as a first language, I'd tell you to use Notepad++. Eventually you're going to want support for debugging, version control, PHPDOC, etc. You'll outgrow Notepad++ and graduate to Zend Studio or similar; but for now, you don't need the bells and whistles.
+
+Personally, I've mostly used NetBeans (for Java/PHP), but the editor is a bit finicky sometimes. It's nothing debilitating though, and if I wasn't lazy I could probably fix most of the issues in the options. It was the first IDE wherein I could get the version control plugins (for Git in particular) to work properly so I stuck with it. To be fair, you can do this easily in most IDE's now.
+
+However, I'm trying to convert to using Eclipse exclusively. The Android SDK is built to work hand-in-hand with it and Zend Studio is practically the same program, so it all feels very familiar. This is a good example of what I mean by one's personal needs and preferences.
+    
+    
+Answer 2: 
+
+    
+    
+If you're heading towards Android development, I would suggest using Eclipse, because the Android SDK nicely integrates with Eclipse.
+    
+    
+Answer 3: 
+
+    
+    
+This is going to be a very subjective answer, but i like intellij.
+
+ 
+
+The community edition now has support for android development, and I have found that it is usually a good few years ahead of the other ide's as far as features are concerned.
+    
+    
+Answer 4: 
+
+    
+    
+start with the command prompt. when you attain nirvana, the answer to your question will present itself to you. (in case you don't, try netbeans (good for GUI) or eclipse (for andriod development)).
+    
+    
+Answer 5: 
+
+    
+    
+Install one.
+
+Try using it.
+
+Like it? Keep it. Don't like it? Try another.
+
+Repeat.
+
+The list of some to try: (there's plenty more out there!)
+
+Eclipse // most popular
+NetBeans // most popular for gui development
+IntelliJ // holds its own in popularlity
+BlueJ // simple
+JGrasp // simple, made by a university for university students
+
+
+The thing that make it best for you ... only you know, so only you can answer, and only after trying them yourself!
+    
+    
+Answer 6: 
+
+    
+    
+Your best bet when starting out is using a simple text editor and the command prompt to compile/run.
+    
+    
+Answer 7: 
+
+    
+    
+I like IntellJ IDEA  specially for beginners because you can get started very quickly without having to know deeply the tool. 
+
+If you want to use it as a simple text editor, it's easy, if you wan to start using more advanced features, they are discoverable. 
+
+The problem I've seen with Eclipse for instance, is sometimes I found it hard to know what to do next. But that's probably because I'm more used to IDEA.
+
+The community edition has Android support. 
+
+
+(source: jetbrains.com)  
+    
+    
+Answer 8: 
+
+    
+    
+When I started programming in Java we used BlueJ in my class. An IDE will maybe do to much work for you in the start.
+    
+    
+Answer 9: 
+
+    
+    
+If you are planning to do Android in the future, I would definitely recommend Eclipse.  Google has a set of plugins that integrate really nicely into Eclipse.
+
+I also personally prefer Eclipse over NetBeans, but that's just my opinion.  I have also not used other popular IDEs like IntelliJ, so take that with a grain of salt.
+    
+    
+Answer 10: 
+
+    
+    
+
+For learning java start with texteditor like notepad++ or any othere. So you can get familiar with setting path , compiling and running for java program. 
+As  you want to move to Android than best option is after some days move to eclipse. 
+
+    
+    
+Answer 11: 
+
+    
+    
+For beginners I think Netbeans would be better, Eclipse is sometime a bit hard on novice.
+    
+    
+Answer 12: 
+
+    
+    
+I can't give a balanced answer here, as I haven't used NetBeans extensively, and not at all for some years, nor have I used IntelliJ (which I hear is very good).
+
+I'm an Eclipse guy. There's a definite learning curve attached, but there is method to the madness and once you learn the basic concepts, they'll take you a long way. It's a powerful tool.
+
+Actually, I use SpringSource Tool Suite nowadays, which is Eclipse with some Spring-oriented extensions built-in. As with everything they do, SpringSource does a nice job of putting together a cohesive distribution, and it's great if you're going to be using Spring. If you're just starting out with Java, though, it's probably not necessary or helpful.
+
+I will second others' comments about starting with a good text editor and javac on the command line, at least for a little while. If you understand what's happening with the compile and run process, it will help you drive any IDE.
+
+But, IDEs are highly worthwhile in Java. It's a verbose language compared to, say, Ruby or Python, but a good IDE will manage that boilerplate for you, and give you great navigation and refactoring tools.
+    
+    
+Answer 13: 
+
+    
+    
+Eclipse tends to be used a LOT in big corporate java shops, but Netbeans is used exclusively in Sun/Oracle's training courses. I'd recommend Eclipse because of its ubiquity within the industry - but try &amp; learn to do without IDEs unless you're doing something really complex. When you're learning the basics of Java or when you're gearing up for certification the IDEs can provide too much of a crutch sometimes so you don't learn the syntax properly.
+    
+    
+Answer 14: 
+
+    
+    
+Eclipse is very popular and has a great debugger for java (I've heard better than Netbeans). If you are not going to program swing applications I would recommend Eclipse. For swing applications, Netbeans has a great designer.
+I've also heard that IntelliJ is a great IDE but I don't know it.
+    
+    
+Answer 15: 
+
+    
+    
+Google provides convenient Eclipse plugins for many of their technologies like Android, GWT, AppEngine, etc. So for that reason Eclipse would probably be a nice IDE if you are interested in Android development. I personally am happy using Eclipse for Java development and have had no reason so far to try NetBeans. Probably others can better explain the pros and cons of the different IDEs. Here is a comparison table of Java IDEs that may be helpful.
+    
+    
+Answer 16: 
+
+    
+    
+This is what I've found using Eclipse and Netbeans for several years:
+
+Eclipse is bloated and not as well integrated as Netbeans which is probably because it's older.
+
+Eclipse has a better emacs mode and has collected more tools over the years.
+
+Netbeans has the major advantage of being 100% Java, so I can have one shared install that's used across all our platforms and users.   There's no worrying about different configurations on everyone's individual systems.   This is mostly across Unix platforms as Windows is not nearly as flexible.
+
+As people have mentioned Android is using Eclipse as the officially supported development platform, but there are 3rd party plugins that work just as well in Netbeans.
+
+Overall they're similar enough I don't have much of a problem switching back and forth.
+    
+    
+Answer 17: 
+
+    
+    
+One thing to consider is trying to have an IDE with an easily accessible Console. 
+
+For my university courses (University of Washington) we actually used Dr. Java, and a feature that I ended up using all the time was the easily accessible and ever present console at the bottom of the application. 
+
+As a beginner you often find yourself wanting to see if  "0" == False  or if you can  cast  a value and it works correctly. 
+
+I eventually switched to Eclipse when working with bigger programs with multiple classes, but found using the Eclipse console a lot less intuitive. 
+    
+    
+Title: Do you know of any IDEs that are localized to Spanish?
+Description: 
+    
+    
+                    
+I have a buddy that's having a hard time with the language barrier. I tried to think of any IDEs that are also available in Spanish, but couldn't think of any. Any ideas?
+    
+
+        
+Answer 1: 
+
+    
+    
+Microsoft Visual Studio is avaible in spanish
+http://en.wikipedia.org/wiki/Microsoft_Visual_Studio
+http://msdn.microsoft.com/en-gb/vstudio/default.aspx
+
+Spanish version of the msdn page:
+http://msdn.microsoft.com/es-es/vstudio/default.aspx
+    
+    
+Answer 2: 
+
+    
+    
+Eclipse has a spanish language pack spanish language pack
+    
+    
+Answer 3: 
+
+    
+    
+Netbeans is available in spanish too
+    
+    
+Answer 4: 
+
+    
+    
+Visual Studio is available in most "tier one" languages, including Spanish and Japanese. However, not all documentation is translated.
+    
+    
+Title: How can C/C++ #define directives be visualised?
+Description: 
+    
+    
+                    
+I am looking for ways to visualize the effects of #define's - For example that code not seen by the compiler is shown in a different color.
+
+Primarily visual studio, but nice to know about other environments?
+Ideally, also code seen by the compiler, but will not be run.
+    
+
+        
+Answer 1: 
+
+    
+    
+Visual Studio does this already by default, at least since VS2005 and much better since VS2010 (going by this Q/A):
+
+
+
+Edit: Added in response to another answer:
+
+
+    
+    
+Answer 2: 
+
+    
+    
+One way is to see the source after the preprocessing, using gcc (for C) or g++ (for c++) just use the option -E
+
+For instance having the file p.cc
+
+#ifdef FOO
+# define BAR 1
+#else
+# define BAR 2
+#endif
+
+int main()
+{
+  return BAR;
+}
+
+
+if I do without defining  FOO I have :
+
+/tmp % gcc -E p.cc
+# 1 "p.cc"
+# 1 "&lt;built-in&gt;"
+# 1 "&lt;command-line&gt;"
+# 1 "p.cc"
+
+int main()
+{
+  return 2;
+}
+
+
+if I do defining  FOO I have :
+
+/tmp % gcc -DFOO -E p.cc
+# 1 "p.cc"
+# 1 "&lt;built-in&gt;"
+# 1 "&lt;command-line&gt;"
+# 1 "p.cc"
+
+int main()
+{
+  return 1;
+}
+
+
+
+
+Note : you probably have #include in your source so after the preprocessing you get a lot of lines coming from the included files, for the question How to show 'preprocessed' code ignoring includes with GCC I put an answer to bypass them.
+    
+    
+Answer 3: 
+
+    
+    
+
+  How can i visualise C/C++ #define's?
+
+
+Short answer: in general you cannot (and notice that you don't define what "visualize" means in your question). You really want to look at the preprocessed form. With GCC you practically get it with gcc -C -E.
+
+As a provocative example, __TIME__ or __LINE__ is a preprocessor magic predefined macro (and so is the __COUNT__ which is a GCC extension). You are allowed to code
+
+#if __LINE__ % 2 == 0
+printf("hello from line %d\n", __LINE__);
+#endif
+
+
+and the behavior depends upon where that weird code is located (on an even-numbered line, or an odd-numbered one).
+
+Ok, that example is contrived, but legal. Check by reading the C11 standard n1570.
+
+You could also imagine some #if __TIME__[1] == '2' but probably that won't compile (because preprocessor expressions cannot use the [] indexing). However, some if (_TIME__[5] == '2') printf("hello\n"); would compile (and be optimized differently, depending on the moment you are compiling it).
+
+And in practice, code nearly as contrived as the one above does exist. A good example of C code using a lot various preprocessor features is the Linux kernel source code (you might be interested by coccinelle, a tool knowing that). The first step of its build (using make config or make menuconfig) generates a lot of headers defining the features of your particular kernel. There are many thousands of such configuration options (my /boot/config-4.19.0-3-amd64 has 7352 configuration choices, and each of them translates to some preprocessor macro used in #if).
+    
+    
+Title: Is there a true all-in-one solution for PHP Development?
+Description: 
+    
+    
+                    
+I'm looking for a "SINGLE INSTALLER" solution for PHP Development.
+
+Is there anything out there which will give me a nice IDE, Web Server, Debugger, Database, etc, on a single install image (*.msi or *.exe)?
+
+This of course would be completely opposite of Eclipse PDT, which requires you to search and locate a bunch of additional components which never quite work together.
+    
+
+        
+Answer 1: 
+
+    
+    
+I think you should go for a separate install for server (web, database) and one for development (IDE, debug) -a href="http://www.zend.com/products/studio/" rel="nofollow noreferrer"/aa href="http://www.nusphere.com" rel="nofollow noreferrer"/a/p/div
+Answer 2: 
+
+    
+    
+I think the question is: Does there need to be a true all-in-one solution? I think not. 
+
+I agree it's bothersome to have to put dozens of pieces together, but I find a combination of XAMPP, the IDE of my choice, and a few additional bells and whistles (like Polystyle for source code formatting) totally flexible, and not too much work to install. 
+    
+    
+Answer 3: 
+
+    
+    
+I don't know if you'll find all of what you're looking for in one package for Windows, but you can get it narrowed down to about two...
+
+XAMPP for Windows comes with: Apache, MySQL, PHP + PEAR, Perl, mod_php, mod_perl, mod_ssl, OpenSSL, phpMyAdmin, Webalizer, Mercury Mail Transport System for Win32 and NetWare Systems v3.32, Ming, JpGraph, FileZilla FTP Server, mcrypt, eAccelerator, SQLite, and WEB-DAV + mod_auth_mysql.
+
+Then you just need an editor with a debugger, which there are many choices, mostly non-free, such as NuSphere's PhpEd - or free - such as Eclipse PDT or gVim+XDebug+DBGp client.
+    
+    
+Answer 4: 
+
+    
+    
+True one-in-all - not yet. Maybe someone reading this will upload a version.
+
+My tip would be:
+
+XAMPP and Netbeans (The PHP bundle).
+
+2 clicks to install.
+
+3 clicks if you don't have java installed already.
+    
+    
+Answer 5: 
+
+    
+    
+Netbeans is a nice IDE for PHP, too. I use it all the time and I'm much more satisfied with than with Eclipse PDT. It comes in one neat bundle, that you can just install and use right away.
+
+Just download the PHP bundle here
+
+As for a web server, I can recommend XAMPP or Zend Server. They are both easy to install and do a good job. XAMPP has MySQL on board while Zend Server has some really cool optimization features for great performance.
+    
+    
+Answer 6: 
+
+    
+    
+Should it be a requirement that your development environment is easy to install? You're a developer so, you should be able to install and configure a set of (more powerful) tools that suit your specific needs. 
+
+You'll only install your bundled IDE once (every so often) so that feature no longer is of benefit when you're developing your projects. It's more likely to become a hindrance as you struggle to configure your environment. 
+
+Take a look at Komodo IDE also. 
+    
+    
+Answer 7: 
+
+    
+    
+If you're on windows you can get a WAMP package for web,php,database. For IDE I do like Zend Studio 5.5. Not their latest interation based off of PDT. 5.5 has a nice debugger and a built-in web browser that you can view output. The interface is pretty fast, running your code through the debugger/browser is slower than on a real webserver, but ofcourse you get the nice perks of breaking,inspecting your code. The only drawback is that Zend Studio 5.5 is not supported anymore and the highest PHP version that works with it is 5.2.13.
+
+Currently though I have a Virtualbox Ubuntu Server image that mirrors my production enviroment, except it has Samba installed so I can easily copy files back and forth.
+    
+    
+Title: JavaScript Editors for .NET Programmers
+Description: 
+    
+    
+                    
+I am a .NET developer, what JavaScript code editor would make sense to use if I spend most of my day in Visual Studio?
+    
+
+        
+Answer 1: 
+
+    
+    
+For a .NET programmer, I would think Visual Studio 2008 -- using jQuery with the vsdoc files.
+    
+    
+Answer 2: 
+
+    
+    
+You can use Notepad++.Other editor also you can use is Yaldex.
+    
+    
+Answer 3: 
+
+    
+    
+Try Far Manager and its built-in editor together with Colorer-take5 plugin. Very good solution to the source code managing and editing.
+    
+    
+Title: How can I get PhpStorm to comment a line at the beginning of the text and not line?
+Description: 
+    
+    
+                    
+In PhpStorm when you press "Cmd + /" it will comment the line beginning with // like so...
+
+//      $numbers = explode(',', $numbers);
+
+
+What I'd like it to do is to put the // at the beginning of the text so as to keep my indented code more readable like this...
+
+        //$numbers = explode(',', $numbers);
+
+
+Does anyone know a way to do this in PhpStorm?
+    
+
+        
+Answer 1: 
+
+    
+    
+I may have found what you want. File 
+Title: Using VIM for Python IDE in Windows?
+Description: 
+    
+    
+                    
+I am turning to Python from .NET world. And Visual Studio was something a great tool i used.
+
+In python world we do have basic IDLE and another one is VIM. I have seen that a lot of developers have configured VIM to a great IDE. Using basic VIM in Windows 7 seems of less use.
+So i want to moderate my VIM to a level which has file explorer, syntax highlighting, search, error highlighting etc. So that it gives feel of Visual Studio and more productive.
+
+But all hacks/tips available are for Linux/Ubuntu users mostly, which i may use later but as of now i need to make my VIM in Windows more productive, visual.
+
+Please Suggest some Tips/Hacks/Resources to look around for VIM configuration?
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+This question addresses your low level issue: coding Python with an IDE that is not VS.
+
+There are a few popular blog posts addressing your high level issue: setting up Vim for Python development. They are a quick google away…
+
+I feel the need to point out that Vim is not an IDE. You can customize it a lot and end up with something that looks like an IDE but you won't get an IDE. Only an over-customized text editor.
+
+Anyway, here are a few tips for starting out with Vim:
+
+
+Do $ vimtutor as many times as needed to feel comfortable with the basics.
+Get familiar with Vim's buit-in documentation: the answers to most of your questions are somewhere inside. :help gets you to the front page, :help 'option' shows the documentation for option, :help :command shows the documentation for command… Hit &lt;C-]&gt; on a colored word to jump to its definition.
+Don't use Janus or SPF13 or whatever pre-packaged set of plugins. You'll only grow bad habits. Similarly, don't copy other people's vimrc wholesale.
+Ctags is an external code indexer that is used by Vim to "jump to definition" with &lt;C-]&gt;. cscope is another option, it's more powerful but also a little more complex. See :help tags.
+Related to ctags, TagList and TagBar are two popular plugins used to display more or less the equivalent of the Object Browser in VS.
+NERDTree is another popular plugin that mimicks the file tree found in many IDEs/editors. But Vim comes with netrw (:Ex) by default, try it before installing NERDTree.
+Read :help motion.txt as soon as possible.
+Watch Drew Neil's laser-guided vimcasts.
+Don't rush it.
+
+    
+    
+Answer 2: 
+
+    
+    
+you can use vim plugins on windows, http://www.vim.org/scripts/index.php, typing "vim {your feature here}" into google will come up with lots of results.  
+
+popular file explorer is nerdtree,
+
+syntax highlighting can be turned on with
+
+syntax on in your vimrc
+
+searching open file is easy to do using reg exes .  Initialize search with /. 
+
+Searching directory is easy to do using grep.
+
+I don't develop on windows but i have read that Cygwin might be worth installing for some linux tools if not already installed.
+    
+    
+Answer 3: 
+
+    
+    
+I wouldn't recommend to learn VIM in 2012 (despite it being a great editor). If you must, this  blog post will get you started.
+
+But VIM isn't an IDE, it's a text editor. 
+
+If you really want a powerful IDE, try IntelliJ IDEA or Eclipse. Both have great plugins to turn them into Python IDEs (along with code completion and all the other nice time savers). For Eclipse, try PyDev. For IntelliJ, search for Python in the plugin preferences pages.
+    
+    
+Answer 4: 
+
+    
+    
+I am in no way an evangelist of any Editor/IDE.
+
+But, if you are a newbie to Python I would suggest trying out Sublime Text 2 http://www.sublimetext.com/ . It is a very light weight yet powerful editor with a great following and it has a free evaluation version with no deadline.
+
+But, if you intend to work using frameworks such as Django/ GAE then I would suggest using PyCharm from JetBrains
+http://www.jetbrains.com/pycharm/
+
+Finally, these tools are all just personal choices until you get comfortable with one or two of them.
+
+Thanks,
+-Hari
+    
+    
+Answer 5: 
+
+    
+    
+One possible compromise is to use your favorite IDE with a vim emulator plugin. For example, in Eclipse you can use Vrapper, PyCharm has IdeaVim and so forth. Lighttable also has vim key-bindings. The plug-ins (or key-binding options) give you some of the benefits of editing in Vim while still having the powerful debugging / navigation features, etc. of a full-blown IDE. BTW, Vrapper works with PyDev.
+  Using an emulator in an IDE allows you to gain the "muscle-memory" necessary for  effective vim editing, without getting bogged down in "configuration hell" associated with turning an editor into an IDE (which auto-complete plugin do I use?..etc.?). Once you have mastered the vim keystrokes for normal and visual mode, used along with insert mode, you may decide to continue on into pure Vim and face those issues.
+    
+    
+Title: What PHP IDE&#39;s have outside of file Syntax Highlighter&#39;s?
+Description: 
+    
+    
+                    
+I am not looking for a debate on best, I just want to know what PHP IDE's have features for highlighting classes, functions and any other relationships outside of the viewed page, to save time on scrolling through pages of code. I would be accessing MVC like frameworks and want this to extend off of my existing page, so covering the actual project.
+
+I have a handful of IDE's I am playing with, but yet to find something that extends to full project as well as I would like. Or maybe I have not used these to their full potential. Any thoughts or ideas would be greatly appreciated. I also have looked for IDE's recently to help with CMS projects, but that is a whole other story and would likely create a debate.
+    
+
+        
+Answer 1: 
+
+    
+    
+We use PHP Storm 3.
+
+But there are some other IDEs like Aptana or PDT
+    
+    
+Answer 2: 
+
+    
+    
+We use Eclipse Classic http://www.eclipse.org/downloads/ with the PDT extension http://www.eclipse.org/projects/project.php?id=tools.pdt, you can add anything you need, as SVN, CVS, web tools (javascript, HTML, CSS, ...)
+
+You can install PDT and anything else from the 'software install' inside Eclipse.
+    
+    
+Answer 3: 
+
+    
+    
+Another vote for PHPStorm. 
+
+But due to PHP's dynamic nature, there are lots of scenarios where the IDE cannot figure out what is going on without explicit help, no matter which IDE you choose.
+
+For example, if your code looks like AbstractService::getInstance($service_class_name), the IDE cannot know the actual type of the returned object unless you annotate it using PHPDoc or it has specifically implemented support for such a pattern. In my experience, most PHP frameworks use strings like that a lot.
+    
+    
+Title: Free Python programming environement with autocompletion
+Description: 
+    
+    
+                    
+I've looked at most of the IDE's out there. I've set up vim to use autocompletion and I'm using it right now. However, I can't seem to get it to work like Visual Studio with .NET. Autocompletion seems to work only in certain cases and it only shows methods and not what parameters they take. It's pretty much unusable to me.
+
+What I'm after is a pop-up that will show me all methods available and the parameters they take. Pretty much the feel of VS2010 when you're programming .NET.
+    
+
+        
+Answer 1: 
+
+    
+    
+You won't get the kind of autocompletion in a dynamic language like Python that you get in more explicitly typed languages.  Consider:
+
+ def MyFunction(MyArg):
+      MyArg.
+
+
+When you type the "." in MyArg., you expect the editor to provide a list of methods with arguments.  That can't happen in Python because the editor has absolutely no way of knowing what type (or types) MyArg could possibly be.  Even the Python compiler doesn't have that information when it's compiling the code.  That's why, if you put MyArg.SomeNonExistentFunction() you won't get any kind of error message until runtime.
+
+If you wrote something like:
+
+ def MyFunction:
+      MyObject = MyClass(SomeArg)
+      MyObject.
+
+
+then a smart enough editor can supply a list of methods available after that final ".".
+
+You'll find that those editors that are supplying autocomplete "sometimes" are doing so in cases similar to my second example, and not doing so in cases similar to the first.  With Python, that's as good as you can get.
+    
+    
+Answer 2: 
+
+    
+    
+I've been using Eclipse with the PyDev extension for some time now. The auto-completion there is really quite impressive, I highly recommend it.
+    
+    
+Answer 3: 
+
+    
+    
+Gedit has a developer plugin which tries to do some syntax completion.  For reasons already mentioned, it doesn't work very well.  I found it more annoying than helpful and disabled it after a few weeks trial.  
+
+ipython's new Qt console has tab completion and you can have some tooltip sort of popups with syntax help and docstrings.  See screenshot below for example..
+
+But as most people have already pointed out, this kind of thing you are asking for is really more appropriate for less dynamic languages.  
+
+
+
+
+
+
+    
+    
+Title: IDE support for Spring framework; Are they worth using?
+Description: 
+    
+    
+                    
+I'm using Intellij IDEA Community Edition for IDE, and I like it a lot. However, it does not have any special "Spring support" (plug-ins/tools).  
+
+My next project uses Spring (which I'm not very familiar with), and I'm wondering whether I should consider changing my IDE from early on; e.g. to SpringSource eclipse/Intellij IDEA Professional.
+
+Do you guys have any experience with these IDE-built-in Spring support? Is it worth using?  
+
+EDIT: Sorry for the confusion. I use the community version of Intellij IDEA. I'm right now downloading the Ultimate version :)
+    
+
+        
+Answer 1: 
+
+    
+    
+I assume that you're using the Community edition of IntelliJ, which doesn't support Spring, but the commercial version does, and its support is absolutely stellar.
+
+You can also use SpringSource Tool Suite, or Eclipse with the STS plugins installed, which has very good Spring support as well.
+    
+    
+Answer 2: 
+
+    
+    
+
+  Do you guys have any experience with these IDE-built-in Spring support? Is it worth using? 
+
+
+If you're using XML configuration, then using a plugin to get "static typing" and make XML resistant to breakages/refactorings is IMO a mandatory feature (Spring support means more but this is one of the most important features for me).
+    
+    
+Answer 3: 
+
+    
+    
+I would suggest to go with Eclipse and Netbeans as both of them has good support for Spring. 
+    
+    
+Answer 4: 
+
+    
+    
+This is mis-information, Intellij IDEA has the best most robust intuitive support for Spring there is Spring is almost un-usuable on a medium to large project without the support that IDEA brings to the table.
+    
+    
+Answer 5: 
+
+    
+    
+
+  I'm using Intellij IDEA for IDE, and I
+  like it a lot. However, it does not
+  have any special "Spring support"
+  (plug-ins/tools).
+
+
+This is simply wrong.  IntelliJ has terrific Spring support, the best there is.  You have to buy a license, but it's worth the money.
+    
+    
+Title: Auto complete a statement in eclipse
+Description: 
+    
+    
+                    
+Is there a way to auto complete a statement in eclipse? If I type 
+
+if (condition) 
+
+
+it should, after pressing some key, become 
+
+if (condition) {
+    // putting cursor here
+}
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You can just continue to type the { and enter, and the closing bracket will be completed automatically without any special command:
+
+if (  condition) { /* cursor here , enter */
+
+
+if (  condition) { 
+  /* cursor here */
+}
+
+
+There is also autocompletion (Crtl-Space), which can do the following
+
+if /* cursor here , Ctrl-Space */
+
+
+becomes
+
+if ( /* cursor here */ condition) {
+
+}
+
+
+or 
+
+if ( /* cursor here */ condition) {
+
+} else {
+
+}
+
+    
+    
+Answer 2: 
+
+    
+    
+This kind of thing cannot be autocompleted the conventional way, since you're not adding to a class or variable name. However, this should be possible using eclipse templates (Window-
+Answer 3: 
+
+    
+    
+Ctrl + Space is default for code assist.
+For more customization you need templates.
+    
+    
+Answer 4: 
+
+    
+    
+Try Ctrl-Space
+    
+    
+Answer 5: 
+
+    
+    
+Ctrl + Space is used to auto complete words, variable names, classes etc,
+if you want eclipse to complete your if statement, do the following:
+ - write your if condition along with the first bracket if(condition){
+ - hit enter, then eclipse will do its job.
+    
+    
+Title: Suggestions for a new IDE/text editor
+Description: 
+    
+    
+                    
+I've been in search for a good text editor/IDE which is cross-platform and supports Mercurial, Git, or allows me to add in other version control systems.
+
+I've pretty much run the gauntlet on free programs and now I'm willing to buy a license for a good program thats under $100 (I qualify for academic discounts if applicable).
+
+I typically do work in assembly, C, C++, Java, and yacc/lex. I'd really like a way to interface with project shell scripts and makefiles as well. SSH support would be great too.
+
+I was wondering if anyone has suggestions on a good proprietary editor that has version control plugins and is cross platform?
+    
+
+        
+Answer 1: 
+
+    
+    
+I can recommend Eclipse highly.
+    
+    
+Answer 2: 
+
+    
+    
+NetBeans with Mercurial
+    
+    
+Answer 3: 
+
+    
+    
+Use emacs. it has mercurial, git etc. support. it is cross-platform and free. 
+    
+    
+Answer 4: 
+
+    
+    
+You might take a look at Geany.  It's fairly lightweight, supports syntax highlighting for a variety of languages and has a plugin for most popular version control systems.
+    
+    
+Answer 5: 
+
+    
+    
+I looked around a little bit and came across SlickEdit, which I really like the look of.
+
+I couldn't use emacs, as I am a very proud vim user. I'm just looking for something a little more polished than vim or emacs but not quite as heavyweight as Netbeans or Eclipse.
+    
+    
+Title: What is the easiest way to build an IDE in java?
+Description: 
+    
+    
+                    
+i have to build an ide for my programming language , and i need to implement features like :
+
+syntax highlighting , auto complete , line numbering , ...
+
+so i need to know how to implement these features or if there is an existing components for code editing please refer to it .
+
+thanks 
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse has a nice framework for this:
+
+http://www.eclipse.org/Xtext/
+    
+    
+Answer 2: 
+
+    
+    
+The correct answer is there is no easy way to build an ide.
+
+Some ideas:
+Eclipse has a good framework as mentioned, 
+you could make a plugin for notepad++, 
+you could custom build SciTE.
+    
+    
+Title: Learning C - Want to use visual studio
+Description: 
+    
+    
+                    
+I am trying to get cracking with my C module at uni, however I can't seem to get an IDE to work. I want to use Visual Studio though I guess I should be using Unix (I just don't understand Unix enough yet).
+
+How in Visual Studio 2008 do I set up a project to work with C? I have used Visual Studio for VB.net before and it was a doddle to use, this is proving somewhat harder for some reason. 
+
+I just don't know what I am supposed to do in the setting-up stage to get to code if you know what I mean, all I could see was C++ as an option as it has many sub-sections, none of which I could see were relevant.
+    
+
+        
+Answer 1: 
+
+    
+    
+First things first ... C++ is not C.  They are different languages.  There is no such thing as "C/C++".
+
+Secondly - it's not that hard to start using GNU/Linux as a development environment, especially for C.  I suggest taking a look at the following:
+
+
+Ubuntu.  You can burn yourself an Ubuntu CD, boot from it, and try out Ubuntu without installing anything.  When you're happy, installing a dual-boot system (i.e. without destroying your Windows partition) is a matter of a few clicks.
+KDevelop.  Once you're running Ubuntu, you can use the package manager to install KDevelop, which was my favourite C IDE (back in the day when I cut C code for a living).
+
+
+If you get stuck with Ubuntu, there's a very helpful community at the Ubuntu Forums.
+
+In terms of C, check out comp.lang.c.moderated (seems a lot less spammy than comp.lang.c which was popular around ten years ago).  Also check out the the comp.lang.c FAQ which is a treasure-trove of advice.
+    
+    
+Answer 2: 
+
+    
+    
+You can create a standard C++ console application (or a MFC/Win32 one, depending on what you need) and then make a change in the project settings, so it's treated as C code:
+Configuration -
+Answer 3: 
+
+    
+    
+To create an empty C/C++ project:
+
+New -
+Answer 4: 
+
+    
+    
+I suggest to give Dev-C++ a try. It has a number of built in sample projects that'll help you get started, and it has very nice package manager, that'll help install libraries like boost and opengl/glut. After gaining some basic knowledge of c/c++ you could move more easily to other IDEs. 
+    
+    
+Answer 5: 
+
+    
+    
+Make sure that Visual C++ is installed.  You may only have installed Visual Basic .NET.
+
+Then when you create a project, you should have a Visual C++ project type to choose from.
+    
+    
+Title: Android Studio : Remove all System.out.println() in a file?
+Description: 
+    
+    
+                    
+I have used many System.out.println() for debugging purpose which i know isn't a very good idea. Now I want to remove all the print statements without doing it manually.
+
+Is there really any shortcut or trick to achieve this using Android Studio?
+    
+
+        
+Answer 1: 
+
+    
+    
+To delete all occurences of System.out.println("..."); you can use the Find&amp;Replace:
+
+Just open the dialog with one of the following shortcuts:
+
+Ctrl+Shift+R on Windows
+Cmd+Shift+R on Mac OS X
+
+
+Then you can search for the following phrase and just leave "Replace with" empty. (Don't forget to enable regular expressions)
+
+System.out.println(.*);
+
+
+Then just press "find" and "Replace"
+
+Your dialog should look like this:
+
+
+    
+    
+Answer 2: 
+
+    
+    
+replace with empty or comment that System.out.println()
+
+I think the shortcut that you're looking for is:
+
+Ctrl+Shift+R on Windows
+
+Cmd+Shift+R on Mac OS X
+
+
+select whole project in scope (screenshot attached)
+
+[ 
+    
+    
+Answer 3: 
+
+    
+    
+Use ProGuard:
+
+-assumenosideeffects class System {
+    public static *** out.println(...);
+}
+
+
+Also check that your ProGuard-file is executed when build. 
+
+For further information read the docs.
+    
+    
+Title: Does Eclipse install in C drive?
+Description: 
+    
+    
+                    
+I have a question that might be a little stupid. I am changing from Netbeans to Eclipse and I noticed that Eclipse doesn't install on my C: drive, nor come up on the start menu, or come up on the remove programs window. When I run the installation it just opens up, and I have to use it from that file.
+
+Am I using it wrong? Or is it supposed to be like that? If not, how to I properly install eclipse? thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+You may want to extract the archive to the root of C:\ drive, thus creating the folder C:\eclipse, or just moved the extracted eclipse folder to the root of C:\ drive if you extracted it already. Since Eclipse does not have any installer, there will be a file inside the Eclipse folder named eclipse.exe. You can double click on the file to run Eclipse.
+    
+    
+Answer 2: 
+
+    
+    
+
+  Am I using it wrong? Or is it supposed to be like that? If not, how to I properly install eclipse? thanks.
+
+
+Eclipse is not supposed to be installed. On Windows download zip-file, unzip it and run eclipse.exe that's it.
+    
+    
+Answer 3: 
+
+    
+    
+Simply unzip the Eclipse download anywhere that's convenient for you.  Then browse down under the "eclipse/" root folder and execute "eclipse.exe" (on Windows).
+
+You can also "right-click, send to, Desktop" Eclipse.exe to make it easier to start.
+
+As simple as that :)
+
+PS:
+
+Be sure to install the Java JDK first:
+
+
+http://java.com
+
+    
+    
+Answer 4: 
+
+    
+    
+That means you have not installed eclipse. The one you are using is already installed one. - In windows you don't need to install it. Download a zip file and use it.
+    
+    
+Title: Why PhpStorm inspection says `Exception` is undefined?
+Description: 
+    
+    
+                    
+PhpStorm doesn't recognize Exception from some reason. The code executes fine, but I cannot "go to" code (which should send me to Core_c.php):
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Windows OS has "try rebooting the OS" advice which helps in a lot of "does not work / suddenly stopped working" scenarios.
+
+File | Invalidate Caches is the one for PhpStorm, especially after IDE/OS crash or after upgrading your IDE to a newer version.
+
+P.S.
+I had to make up some text, otherwise it's too short for an answer.
+    
+    
+Title: Conflicting if-statements in Ruby
+Description: 
+    
+    
+                    
+I tried running this code in an online IDE supporting Ruby 1.8.7, and the elsif statement isn't being recognized; e.g., if I type in "85", it still returns "Over-Weight".
+
+def prompt
+ print "&gt;&gt; "
+end
+
+puts "Welcome to the Weight-Calc 3000! Enter your weight below!"
+
+prompt; weight = gets.chomp()
+
+if weight &gt; "300" 
+ puts "Over-weight"
+elsif weight &lt; "100"
+ puts "Under-weight"
+end
+
+
+However when I run the following, it works just fine:
+
+def prompt
+ print "&gt;&gt; "
+end
+
+puts "Welcome to the Weight-Calc 3000! Enter your weight below!"
+
+prompt; weight = gets.chomp()
+
+if weight &gt; "300" 
+ puts "Over-weight"
+elsif weight &gt; "100" &amp;&amp; weight &lt; "301"
+ puts "You're good."
+end
+
+
+Any idea on how I can fix this?
+    
+
+        
+Answer 1: 
+
+    
+    
+The problem is that you try to compare strings which are evaluated from left to right, not like numbers.
+
+Convert them to integers (or floats), and compare them.
+
+weight = Integer(gets.chomp())
+
+if weight &gt; 300
+ puts "Over-weight"
+elsif weight &lt; 100
+ puts "Under-weight"
+end
+
+    
+    
+Answer 2: 
+
+    
+    
+With
+
+if weight &gt; "300"
+
+
+you are comparing two strings.
+
+It should be
+
+if weight.to_i &gt; 300
+
+    
+    
+Title: Visual Studio Solution freezes when I try to compile
+Description: 
+    
+    
+                    
+I have no idea how to even approach debugging this issue.  I have a solution with four projects in it and all of a sudden it has stopped functioning properly.
+
+When I open the solution and click on anything, it freezes up and it says that 'Visual Studio is busy waiting for an internal operation to complete".  It gives the same message when I try to build the project, although it never actually opens the file or builds - I have to end the process in order to escape.
+    
+
+        
+Answer 1: 
+
+    
+    
+To troubleshoot this you could start visual studio in safemode, by running: devenv.exe /SafeMode. It loads only default settings and services. If it works then the culprit is something like an extension or a third party package. 
+
+You can also start Visual Studio with logging:
+
+http://msdn.microsoft.com/en-us/library/ms241272.aspx
+
+For a list of other command line switches you can use, like /ResetSettings, you can follow this link:
+
+http://msdn.microsoft.com/en-us/library/xee0c8y7(v=vs.100).aspx
+    
+    
+Answer 2: 
+
+    
+    
+Perhaps you should install the Visual Studio 2010 Diagnostic Extension, to try and capture some data that can be sent to MS for analysis.
+    
+    
+Answer 3: 
+
+    
+    
+What works for me is opening VS, opening a working project and then opening the one that is experiencing the problem. Everything works fine after that.
+    
+    
+Title: Separate code and comments
+Description: 
+    
+    
+                    
+I'm finding comments on code starting to get annoying. I feel that once you achieve some level of expertise, code is pretty much self documenting. But comments are still a necessity.
+What I would like to know if there's such a plugin or IDE  with this idea of comments separated from the code. If such a thing doesn't exists, what ideas do you think would work great on a plugin for an IDE like Eclipse?
+
+Take this Python code for example:
+
+def do_something(self, var):
+    # * 541
+    ...
+
+
+Then some XML like this:
+
+&lt;comments&gt;
+ &lt;comment id="541" file="x.py" line="14"&gt;This is a comment&lt;/comment&gt;
+&lt;comments&gt;
+
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Good comments add information, such as why, they don't repeat code, so I don't agree with the premise of the question.
+
+However, to go along with the idea for a moment, I can imagine an IDE that hides comments while you are editing, but storing them separately is a recipe for confusion. 
+    
+    
+Answer 2: 
+
+    
+    
+I've never heard of such a thing as externalized comments, and I think they'd be slow or easily corrupted, because they'd always have to be updated to stay in sync with the code.  Furthermore, if your idea is to completely eliminate them from your view while you're working on your code, you could forget to update them and they could become inaccurate.
+
+A feature you should look into is code folding.  Instead of separating the comments into a different file, they're collapsed into a smaller space when you don't want to look at them.  Many IDEs implement it (eclipse is one).
+    
+    
+Answer 3: 
+
+    
+    
+Don't forget that good comments explain intent and consequences, not literally what the code is doing.
+
+Having said that, have you looked at code folding within IDEs ? Eclipse (for one) will collapse comments and hide them. You can reveal them at the press of a button. The comments remain in the code and tied to the relevant sections without any indirection (as you're proposing) so you can view them in any editor/environment.
+    
+    
+Answer 4: 
+
+    
+    
+A quick fix that will work with most editors is to change the syntax highlighting colour scheme  to make the comments invisible or barely visible, e.g. light grey text on white background.
+
+If your editor supports multiple colour schemes then you could have one that hides the comments and one that hides everything except comments, then swap between them.
+    
+    
+Answer 5: 
+
+    
+    
+Donald Knuth explored this topic heavily under the title of "literate programming" (which is a fine starting point for Googling). He wrote a program called Weave (or was it Web?) and Tangle which does something like what you ask, but for Pascal code.
+
+I'm afraid the idea never got very far off the ground and I've never heard of anything similar for Python.
+
+These days, there's a community of programmers who believe in writing short methods with names and variable names sufficiently descriptive to make comments (usually) unnecessary. The rest of us just plod along and comment the way we've always done.
+
+UPDATE
+
+I lied! There's something called PyLit, here: http://pylit.berlios.de/literate-programming/index.html . Also, a pretty extensive discussion of the whole thing.
+    
+    
+Title: More screen space in MSVS?
+Description: 
+    
+    
+                    
+I am using visual studios 2008. My laptop has the max screen res of 1366x768.
+What can i do to get more reading space? i was thinking of making the font smaller but it would be more helpful if i can make everything smaller (toolbar icons, text, etc)
+
+The only improvement i done so far was remove a bunch of things under the toolbar so i have only one line. Actually for this project i remove the standard bar so i have have the solution and text directly under the menu with no toolbar. What else can i do to maximize reading space.
+    
+
+        
+Answer 1: 
+
+    
+    
+What I do is unpin all the various tool windows and views. Unpin the Solution Explorer, Properties viewer, Output etc. and the Toolbar. This leaves you with just the coding window and small bars around that allow you to hover over the edges of the window and see everything you just unpinned.
+    
+    
+Answer 2: 
+
+    
+    
+Dual screens.  The more pixels the better.  I like 1920x1280 extended to across a matched monitor with vertically split tabs.
+
+Probably not the answer you are looking for, but really, it HELPS A LOT.
+
+
+
+Ok ok:
+
+
+Try Lucida Console as a font - it's readable at 8pt - and fixed width!
+Hit Alt+Shift+Enter to get into Full Screen mode.
+Float all your "helper" windows and use Ctrl+Tab to get to them. (Click using mouse)
+
+    
+    
+Answer 3: 
+
+    
+    
+
+Tools &gt; Options &gt; Environment &gt; General &gt; Uncheck "Show status bar"
+Tools &gt; Options &gt; Text Editor &gt; All Languages &gt; Uncheck "Navigation bar"
+Install the "Hide Main Menu" extension available here.
+Enable Auto-hide the taskbar in your Windows Taskbar properties.
+
+
+That should get you at least 5-7 more lines.
+    
+    
+Answer 4: 
+
+    
+    
+Pin your Windows Task Bar to the left or right of your screen to give more vertical reading space.
+    
+    
+Answer 5: 
+
+    
+    
+set the Solution explorer on the right to Auto-Hide, close the error window when possible (as in when you're not fixing errors), and try and drop the number of toolbars vertically to 1. You can also change the size of the text down by going to Tools 
+Answer 6: 
+
+    
+    
+I got rid of the toolbars altogether and made things like the Solution Explorer autohide. I came to the realisation that the only toolbar button I ever used was a custom tool one I'd put there (I use the menu for that now). I'm running at 1920x1200 so real estate wasnt an issue - I just wanted less visual distractions. Just me and the code.
+    
+    
+Title: Eclipse F3 Shortcut Backtrack
+Description: 
+    
+    
+                    
+Sorry if this is a stupid question but I couldn't discover the answer on google, stack overflow, or figure it out within 5 minutes in the IDE. 
+
+My question is for the F3 shortcut which lets you follow references to functions, classes, etc., is there another hotkey or option to backtrack where you went?
+
+I love this F3 hotkey but while I'm reading through code but sometimes, I have to go through multiple functions so I wanna backtrack it. 
+    
+
+        
+Answer 1: 
+
+    
+    
+Use shortcut:
+
+Alt + Left Arrow
+
+    
+    
+Answer 2: 
+
+    
+    
+Use Alt + &lt;- (left key) to return to where you were.
+    
+    
+Answer 3: 
+
+    
+    
+The shortcut is Alt + Left Arrow Key
+    
+    
+Answer 4: 
+
+    
+    
+Ctrl+g returns to the called place.
+    
+    
+Title: How can I use Visual Studio 2010 with the Visual C++ 2008 compiler?
+Description: 
+    
+    
+                    
+I want to use Visual Studio 2010 with the 9.0 compiler, how can I do this? 
+
+I need this so I can use DarkGDK, however I do not want to switch the IDE.
+    
+
+        
+Answer 1: 
+
+    
+    
+It's right there in your project properties, "Platform Toolset" defaults to "v100". 
+
+Just change that to "v90" and you are done.
+    
+    
+Title: Muliple line move and duplicate in PhpStorm
+Description: 
+    
+    
+                    
+I migrated from NetBeans to PhpStorm.
+How can I change multiple line duplication and movement method in PhpStorm to NetBeans method?
+(PhpStorm requires full selection of lines to move or dublicate)
+
+update:
+Consider two following line"
+
+   lin1 --------------
+   lin2 ++++++++++++++
+
+
+if you completely select both line and press ctrl+d :
+in NetBeans you will get:
+
+lin1 --------------
+lin2 ++++++++++++++
+lin1 --------------
+lin2 ++++++++++++++
+
+
+in PhpStorm you will get:
+
+  lin1 --------------
+  lin2 ++++++++++++++lin1 --------------
+  lin2 ++++++++++++++
+
+
+now consider two following line ({}=selection bound)
+
+   lin1 ---------{-----
+   lin2 +++++++++}+++++
+
+
+if you partially select both line and press ctrl+d :
+in NetBeans you will get:
+
+   lin1 ---------{-----
+   lin2 +++++++++}+++++
+   lin1 ---------{-----
+   lin2 +++++++++}+++++
+
+
+in PhpStorm you will get:
+
+   lin1 ---------{-----
+   lin2 +++++++++-----
+   lin2 +++++++++}+++++
+
+
+In NetBeans ctrl+e will delete multiple line but ctrl+y will not act on multiple line.
+    
+
+        
+Answer 1: 
+
+    
+    
+Ctrl+D is mapped to the 'Duplicate Line or Block' action that does exactly what you've mentioned (copy selected text right after selection end).
+
+What you need to do is to reassign the shortcut to the 'Duplicate Lines' action that provides the desired behavior.
+
+Denis
+    
+    
+Title: IDEs to organize #include&#39;s in C++?
+Description: 
+    
+    
+                    
+I recently discovered the nice Ctrl+Shift+O command in Eclipse to organize import's.
+Is there an IDE with that feature, for #include's in a C++ program?
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse CDT 8.2 (Kepler), which was just released, can do this now: http://wiki.eclipse.org/CDT/User/NewIn82#Organize_Includes_Command
+    
+    
+Answer 2: 
+
+    
+    
+#include have not the same meaning than java's import. It's basically a copy/paste instruction inside the compiled file.
+
+So, the IDE can't move the #include without changing the semantic of the code where it was put first.
+
+Don't get me wrong : in most code, order of inclusion have no impact if all the includes are done at the start of the file, but that's because developers make sure it is. 
+
+The language just don't allow to do this in a safe way.
+    
+    
+Answer 3: 
+
+    
+    
+Eclipse CDT has Ctrl+Shift+N shortcut for Add Include command, if this is what you are asking for. Look Eclipse Help here.
+    
+    
+Answer 4: 
+
+    
+    
+codelite IDE offers similar functionalities to those of eclipse:
+
+Ctrl-Shift-O -/pp
+Title: Where to start learning assembly - IDE, examples
+Description: 
+    
+    
+                    
+I have a solid knowledge of C#, I can use C quite well, and I am learning C++. I really would like to learn x86 assembly language for Windows, perhaps MASM, but I don't know where to start.
+The first thing is the IDE. If at all possible I would like a syntax-highlighting, compiling, linking IDE, as I hate using command-line tools. I do have a nice enough editor, so just a compiler and linker GUI would also be fine. Does anybody have any recommendations?
+I also am going to need some good tutorials on assembly, so if anyone knows of a good assembly intro, please post a link.
+    
+
+        
+Answer 1: 
+
+    
+    
+There are a number of assemblers you can use MASM, NASM, ObjASM, YASM, HLA, and TASM among them. Personally, I use MASM because it does everything I need and the macros allow you to transition from C style code to MASM pretty easily.
+
+As stated earlier, Iczelion's Page is an excellent resource. If you want a group dedicated to Windows assembly programming try the ASM Community Message Board. Despite its detractors, I also believe that Kip R. Irvine's book is one of the best out there covering windows development in MASM.
+
+For syntax highlighting, I would suggest Notepad++. For assembling, you can use the batch file I posted in this question: Project Options in Qeditor of MASM32 isn&#39;t working
+
+Assembly programming is a lot of fun. Ask lots of questions and good luck.
+    
+    
+Answer 2: 
+
+    
+    
+I know of some books that are good to learn from. I am not sure of online tutorials. Some of the material you will find is a little outdated just be cautious. 
+
+
+http://www.amazon.com/Introduction-Assembly-Language-Computer-Architecture/dp/0763772232/ref=sr_1_1?ie=UTF8&amp;qid=1312331523&amp;sr=8-1
+
+    
+    
+Answer 3: 
+
+    
+    
+Iczelion's Page is almost all you need for Win32Asm programming. For an introduction in assembly look at Randy Hyde's Page
+    
+    
+Answer 4: 
+
+    
+    
+Since you are already familiar with c# then you should be comfortable with the Visual Studio 2010 IDE. My blog describes how to configure VS 2010 for MASM32 programming with libraries from MASM32.com. scriptbucket.wordpress.com
+    
+    
+Answer 5: 
+
+    
+    
+I started by learning MIPS in my university so switching to x86 is not that hard but it requires a lot of study.
+I suggest to you to buy or look for a solid and big book of x86 asm that contains even all the math basics required (logic gates, boolean algebra, numeric encoding, floating point etc.)
+As ide i suggest to you to use SASM or visual masm, even visual studio can be adapted as a masm ide. 
+    
+    
+Title: Python IDE with auto completion
+Description: 
+    
+    
+                    
+please advise me some good Python IDE, I was using netbeans but it does not have suitable code completion (when I press "." it gives me methods of all classes of python. It would be nice if netbeans would work as for ex. for PHP..
+
+Thank you.
+    
+
+        
+Answer 1: 
+
+    
+    
+well, many IDEs now come with pretty good code completion. Eclipse with pydev is nice, or you can get aptana studio 3 to perform similar to it.
+Theres also jetbrain's PyCharm, if you don't mind paying for a licence (they do give a trial version too if you want to test it before buying). There are a lot of such IDEs, guess you have to try them out to see which suits your code completion tastes better.
+    
+    
+Answer 2: 
+
+    
+    
+Eclipse with Pydev
+
+nothing better out there
+    
+    
+Answer 3: 
+
+    
+    
+Pytools should add intellisense for python to visual studio if you are developing on windows. I have not tried it myself so I don't know how good it works.
+    
+    
+Answer 4: 
+
+    
+    
+I have also been searching for a good IDE for Python development. I tried using Emacs and Komodo but finally settled for PyCharm. It does a really good job at auto completing the code and I find it to be worth the money.
+
+Depending on the type of development you do, you could get a discounted or even a free license.
+    
+    
+Answer 5: 
+
+    
+    
+Try Geany and Ctrl+Enter. Foo bar &lt;= wrote this because SO said answer was to short ;)
+    
+    
+Answer 6: 
+
+    
+    
+PyCharm for pay or Komodo Edit for free. 
+    
+    
+Answer 7: 
+
+    
+    
+Komodo has since long time an excellent Python support
+    
+    
+Title: Aptana and CodeIgniter
+Description: 
+    
+    
+                    
+I've just installed Aptana 2.0, and I'm trying to get Code Assist for Codeigniter. I've never used an IDE before, always stick with my good ol' E-text (Windows version for TextMate). But in every screencast about CodeIgniter, people use Aptana and get benefits of it's awesome Code Assist.
+
+So...any tips for setting it up??
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+Aptana autocomplete feature for php's build-in function and custom functions in your project is working out of the box. Just type the part of function name, and then press Ctrl+Space. A list of functions will displayed, and if there are only 1 function with that name, the full function name will automatically written.
+
+However, since CI load the library and model using $this-&gt;load() method, Aptana will not recognize the methods in the library and models. To make Aptana recognize library's and model's methods, add these comments:
+
+&lt;?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ *
+ * @author donny
+ * @property CI_Loader $load
+ * @property CI_Input $input
+ * @property CI_Output $output
+ * @property CI_Email $email
+ * @property CI_Form_validation $form_validation
+ * @property CI_URI $uri
+ * @property Firephp $firephp
+ * @property ADOConnection $adodb
+ * @property Content_model $content_model
+ */
+class Content extends MY_Controller {
+
+  function Content()
+  {
+    parent::MY_Controller();
+    //load model
+    $this-&gt;load-&gt;model('content_model');
+    //...
+  }
+
+  /**
+   *
+   * @return void
+   * @access public
+   */
+  function index()
+  {
+    //...
+  }
+
+}
+
+
+In code snipped above, when I type $this-&gt;input-&gt; then press Ctrl+Space, a list of methods from Input library will be displayed. The key to do this is the comment with this line:
+
+ * @property CI_Input $input
+
+
+This will tell Aptana that in my controller, the $this-&gt;input-&gt; is actually an object of the CI_Input class. You can do this for models too. Just write the actual class name, and the name inside the controller, and Aptana will recognize and use it, like this:
+
+ * @property Content_model $content_model
+
+
+I use Aptana and I don't set much. I just set the tab into space with 2 space, install git plugins and jquery support, tweak the shortcut, add php templates that I always use, and I'm ready to go. I try to keep the change minimum, so when I had to use other computer with fresh installed Aptana, I don't have to do re-setting too much. Just do some mandator setting and I can use it right away.
+
+I hope this simple trick work for you.
+    
+    
+Answer 2: 
+
+    
+    
+Here is one for autocomplete
+
+
+  http://forums.aptana.com/viewtopic.php?f=14&amp;t=8519
+
+    
+    
+Title: Which development environment should I use for developing Google App Engine with Python?
+Description: 
+    
+    
+                    
+I would like to ask which IDE should I use for developing applications for Google App Engine with Python language?
+
+Is Eclipse suitable or is there any other development environment better?
+
+Please give me some advices!
+Thank you! 
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse with the PyDev plugin is very nice. Recent versions even go out of their way to support App Engine, with builtin support for uploading your project, etc without having to use the command line scripts. 
+
+See the Pydev blog for more documentation on the App Engine integration.
+    
+    
+Answer 2: 
+
+    
+    
+I think the answers you are looking for are here 
+
+Best opensource IDE for building applications on Google App Engine?
+    
+    
+Answer 3: 
+
+    
+    
+I use Komodo Edit.
+    
+    
+Answer 4: 
+
+    
+    
+I've always been using Vim (with or without plugins to make it more IDE-like) for Python programming, it's simple but powerful enough.
+    
+    
+Answer 5: 
+
+    
+    
+Wing IDE is a pretty solid IDE for python.  It's not free though (open source or $$).
+    
+    
+Title: How to set Delphi bookmarks on Vista 64-bit
+Description: 
+    
+    
+                    
+In Delphi (2007) I'm used to setting a bookmark with CTRL-SHIFT-0,1,2 etc.
+
+Since I've upgraded to Vista x64 the above no longer works. I can still set a bookmark with CTRL-K-0,1,2 etc but I'm habituated to the traditional way (plus it's quicker).
+
+Does anyone know why it's not working for me?
+    
+
+        
+Answer 1: 
+
+    
+    
+I had the same problem. Some more investigation showed that it is caused by a change in Vista. 
+
+Input method editor keyboard shortcut (CTRL+SHIFT+0) switches the input language in Vista. The following link shows how to disable this shortcut and thereby make it available to other applications (including Delphi) again: http://support.microsoft.com/kb/967893.
+    
+    
+Answer 2: 
+
+    
+    
+I am running on Windows 2008 Server 64-Bit (which is based on Vista) and I use CTRL+SHIFT+1 to set book marks and it works fine.  At home I have Vista 32-Bit and that works fine too.
+
+You might check to make sure your OEM didn't install some crazy keyboard hook on that or something.  I've had that happen before where some key combinations were remapped by a background program and it prevented them from working in Delphi.  
+
+Programmers use a lot more key combinations then most "normal" users.
+    
+    
+Answer 3: 
+
+    
+    
+Verify that you don't have system wide hot keys that conflict with those. I had the same problem with Trillian hijacking some Delphi shortcuts.
+    
+    
+Answer 4: 
+
+    
+    
+As already mentioned, Vista is using that key combination.
+
+If you don't want to disable it, Ctrl+K CTRL+0 is the old school method to set bookmark 0.
+    
+    
+Title: Delphi Prism / VS 2008: Switching from code to design with one key?
+Description: 
+    
+    
+                    
+I've used several Versions of the Delphi IDE for many years. When I'm using Delphi Prism, I have to deal with Visual Studio - in my case especially VS 2008. 
+
+One of the most annoying things to me is that I have to right-click on my form to switch to the code editor and vice versa. In Delphi, one could simply press the F12 key to switch between code and form designer. 
+
+Is there a way to let this shortcut work in Visual Studio? It seems to me that I at least need 2 shortcuts when I take a look at the Keyboard options.
+    
+
+        
+Answer 1: 
+
+    
+    
+Have you seen the free DPack.  This is a series of IDE enhancements designed to make you more productive and includes a Delphi keyboard mapping for Visual Studio.
+
+Best regards,
+
+Simon
+    
+    
+Answer 2: 
+
+    
+    
+You can use default keys:
+
+
+From "Form Designer" -  F7
+From Code To "Form Designer" - Shift + F7
+
+    
+    
+Answer 3: 
+
+    
+    
+I've simulated Delphi's behavior for just the F12 key by using the keyboard options to bind F12 to View.ViewCode, View.ViewMarkup, and View.ViewDesigner.
+
+You can bind them in different views depending on how you want to rotate between them. For example, in ASP.NET applications I use the following:
+
+
+HTML Editor Source View F12 ==code/code/p/lilipkbd/kbd
+Title: Execute rustfmt on file save in IntelliJ or CLion
+Description: 
+    
+    
+                    
+How do I run rustfmt automatically when I save a file in IntelliJ or CLion?
+    
+
+        
+Answer 1: 
+
+    
+    
+It should be noted that while bit2pixel's answer will work, (and indeed is how I did it for a good long while), there's a newer (better?) way.  The rust-plugin has an option to handle this automatically.
+
+    
+    
+Answer 2: 
+
+    
+    
+
+Make sure you have File Watchers plugin via Preferences -&gt; Plugins -&gt; Installed. If it's not installed, go to the Marketplace tab and search for File Watchers, install it, and restart your IDE.
+Go to Preferences -&gt; Tools -&gt; File Watchers.
+
+
+Add a new watcher and name it rustfmt. 
+
+
+Configure the watcher by following the screenshot below. Enter the path to rustfmt into the Program field; it can be found in your Cargo bin directory. 
+
+
+
+  If you don't know where Cargo bin directory directory is, type which rustfmt in your terminal and copy the path. If you still can't find it, make sure you followed the instructions in Installing Rust.
+
+
+
+    
+    
+Title: How to set default show line number and white space in PhpStorm 2016.1
+Description: 
+    
+    
+                    
+How to make line number visible in PhpStorm 2016.1?
+
+I can't find setting in preferences. 
+    
+
+        
+Answer 1: 
+
+    
+    
+Use CMD+SHIFT+A (on Mac) to search for actions across the IDE, including the preference pane. In this instance, typing "Line Numbers" into the search box takes you right to the preference pane for that option, with it highlighted nicely for you (http://c.hock.in/17c45d.png). This works for any settings you can't find, or want to find quickly.
+    
+    
+Answer 2: 
+
+    
+    
+Preferences if your are on Mac | Editor --code/code
+Answer 3: 
+
+    
+    
+File-
+Answer 4: 
+
+    
+    
+1.
+
+PhpStorm 2016.1 for Active Editor only
+
+Main Menu:
+View -
+Title: How to execute my C program line by line in geany as in turbo C
+Description: 
+    
+    
+                    
+I have switched to Linux Mint from Windows 7 and now I am using Geany to write C programs in it.
+
+As I mentioned in the question that I want to execute my program line by line in Geany. During execution is there a way where I can see the value of variables in Geany?.
+
+I am using Geany because it's light weight and it has an integrated terminal, compiler, scribble, etc. which is very simple to use...
+    
+
+        
+Answer 1: 
+
+    
+    
+Install Geany Debugger Plugin and then you can easily execute your program line by line.
+
+
+
+
+Step 1:
+
+Install Optional Add Ons:
+
+
+Graphical GDB Front end for geany
+set of plugins for geany 
+
+from Ubuntu Software centre or anything you have which do similar job
+
+
+
+2.Step 2:
+Go to Main Menu code/code
+Title: Is there any Delphi Open Source project that Implement a basic IDE structure?
+Description: 
+    
+    
+                    
+I have written a framework for Android and Windows, and got some tool that draw the forms and scripting that run on both enviroments. Just another solution like thousands.
+
+What I want to do now is using Delphi (Xe2 in my case) to write an IDE like Delphi itself. That I could manage source files in a project and have forms. I have much of it already on DevExpress components. But I was wondering if there is anything that I could reuse to not invent the wheel again.
+
+Certanly the drawing form should be necessary to have changes for my particular case, however it being capable of drawing forms with buttons, text, those common controls we find in majority of the platforms.
+
+Right now I am using Balsamiq Mockup to draw and export xml to my compiler to integrate on the framework, it is nice, because it is a great drawing product, howeve there is a need to have all that IDE properties integrated and the need to put events on each control, for that an IDE all in one solution is better.
+
+TMS Scripter -/p/div
+Answer 1: 
+
+    
+    
+It's not a Delphi Open Source IDE, but I think it is free for use and feature rich:
+MS Visual Studio Shell
+what-is-the-visual-studio-shell-standalone-shell-good-for
+
+RemObject use it for there tools. So it fits also for Delphi.
+    
+    
+Answer 2: 
+
+    
+    
+How about Lazarus?  I think that's free, and it certainly has an extensive IDE.
+http://www.lazarus.freepascal.org/
+    
+    
+Title: C++ IDE detecting syntax errors without recompilation?
+Description: 
+    
+    
+                    
+I work on Code::Blocks IDE on Windows. Great amount of time is wasted for code recompilation to find errors.
+Is there a C++ IDE that detects syntax errors without recompilation?
+
+I suppose any clang-based IDE would be an option?
+    
+
+        
+Answer 1: 
+
+    
+    
+Microsoft Visual Studio with it's IntelliSense.
+    
+    
+Answer 2: 
+
+    
+    
+You'd be surprised at how efficient Qt Creator is at detecting C++ errors before compilation. Give it a try!
+
+Eclipse has that awesome feature for Java, but IIRC the CDT framework is not as powerful: it detects only vague syntax errors.
+    
+    
+Answer 3: 
+
+    
+    
+Microsoft's VisualStudio which is available for free with the Express edition is very good if you are on Windows. Apple's XCode is pretty good, but it gives up after only one error, it's error messages are very short and cryptic, and I believe it is only available on Mac OS X. Unfortunately I do not know of an IDE with this support for Linux.
+    
+    
+Answer 4: 
+
+    
+    
+Configure code blocks to work with clang. Working fine for me.
+    
+    
+Title: Android IDE: Eclipse or Motodev or Tegra Android Development Pack?
+Description: 
+    
+    
+                    
+I am more comfortable with Visual Studio with C#, so I hope to get an IDE that is convenient.
+During my search for free android development IDE, apart from the usual Eclipse, IntelliJ, netbeans. I have also found these:
+
+nVidia Tegra Android Development Pack, which is kind of Eclipse. "Setting up an Android development environment can be a complex and frustrating experience. NVIDIA simplifies this for all Android developers with a single installer that manages this complexity for you."
+
+Motorola MOTODEV, which is also Eclipse. "Based on Eclipse, MOTODEV Studio lets developers who are new to Android get started quickly and helps experienced developers get the job done even faster"
+
+It's like I am exactly their targeting demographics.
+
+My first question is, are there more pack like the nVidia or the Motorola one?
+
+My second question is, should I setup Eclipse as instructed by Google's developer page or should I use the nVidia pack or the Motorola thing. (Or that I should use IntelliJ or netbeans?)
+    
+
+        
+Answer 1: 
+
+    
+    
+I'll chime in, but first a disclaimer, I am the Product Manager for MOTODEV Studio. I'll try not to market at you, especially since it's a free product. ;-)
+
+I would love to have you for a user, but I really want to see you as a happy developer, no matter what tools you use. @Ollie has it right, find tools that you like and use them.
+
+We try to be the good starter package for people who don't know Eclipse. There's a lot of setup with the Android SDK, ADT, and the platforms. For some, getting the tools set up can be confusing. We know where everything goes, so we try to uncomplicate it as much as we can.  
+
+We also try to add things that make life better for developers than just an installer. I won't enumerate, but go to the MOTODEV page and if you see what you like, try it out. It works for any Android device, not just a Motorola. 
+
+If you have questions, you can ask here (tag MOTODEV) or on our boards.
+    
+    
+Answer 2: 
+
+    
+    
+Motodev is cancelled by Google in November - you cannot download it from Motorola web-site, only from users' backups and copies. Thus I wouldn't recommend using it to any professional developer.
+
+Netbeans doesn't have official support for Android yet - you may develop for Android using plugins, but it's quite risky if a plugin's maintainer retires.
+
+IntelliJ lacks jni support. At least I couldn't find it while briefly inspecting capabilities.
+
+So it looks like Eclipse now is the only reasonable choice for full-scale android development.
+
+Alternatively you may use Visual Studio 2010+ with http://code.google.com/p/vs-android/ for native android development. Since Android v.4.0 it supports native Activities, thus you may even try to develop the whole application in C/C++
+    
+    
+Answer 3: 
+
+    
+    
+It's a personal preference.
+
+Many people use Eclipse, many people use IntelliJ. I use IntelliJ and I find it much better, but others may say the same about Eclipse.
+    
+    
+Answer 4: 
+
+    
+    
+This is a very subjective question, and it will yield many subjective answers. But here is mine:
+
+I find that using Eclipse with ADT plugins is very convenient. 
+
+
+Both the Eclipse IDE and ADT plugins are updated regularly, so bugs are quickly squashed and new features are introduced
+Eclipse has a huge user base, so it is quite easy to find answers
+Branded or customized IDE tends to fall behind in terms of bug fixes and such
+
+
+If you are doing generic android development, you should go for a clean Eclipse IDE (my subjective preference), or if you are doing Tegra only development it is probably wise to go for nVidia Tegra Android Development Pack.
+    
+    
+Answer 5: 
+
+    
+    
+I think that the pure Eclipse solution is better. Just based on the simple fact that t is the most widely used, and you will have an much bigger pool of resources to get help from when needed.
+I briefly used the MOTODEV solution, but went back to pure Eclipse, because it didn't bring much of additional value.
+But in the end it boils down to personal preference. IntelliJ felt for me much slicker and closer to Visual Studio, but again I fell back to Eclipse.
+    
+    
+Answer 6: 
+
+    
+    
+I came across this thread while searching for some Eclipse links on Goog. I realize it's pretty old but in case others are looking for Android development IDE's I thought I'd post.
+
+I work at NVIDIA in the Tegra team and work with a lot of Android developers - especially Android game developers who often use Windows on their dev machines. As part of our work, we created a plugin for Visual Studio 2010 and Visual Studio 2012 called Nsight Tegra. Using Nsight Tegra you can develop (and debug!!) Java and native/C++ Android applications from the comfort of VS. Very handy :)
+
+
+Nsight Tegra (Visual Studio plugin): https://developer.nvidia.com/nvidia-nsight-tegra
+
+
+NVIDIA also has a CPU and GPU profiler. The GPU profiler is especially handy for Android game developers wanting to understand the bottlenecks in their 3D pipeline or to try out different performance optimizations.
+
+
+3D Profiler: PerfHUD ES 
+CPU Profiler: Tegra Profiler
+Developer pack: https://developer.nvidia.com/tegra-android-development-pack
+
+
+Anyway, the tools are free so check them out!
+    
+    
+Title: PHPStorm disable html-syntax highlighting in PHP string
+Description: 
+    
+    
+                    
+In PHPStorm 3.0, a PHP string like:
+
+$sString = '&lt;div&gt;&lt;span class="someClass"&gt;test&lt;/span&gt;&lt;/div&gt;';
+
+
+has HTML Syntax / opening and closing brackets highlighting.
+
+I would like to disable this behavior and display it as a string only.
+
+Anyone figured out where I can change this?
+    
+
+        
+Answer 1: 
+
+    
+    
+Alt+Enter on the string, Un-inject Language:
+
+
+    
+    

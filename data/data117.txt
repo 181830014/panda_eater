@@ -1,0 +1,855 @@
+Title: Eclipse Juno not starting after installing update
+Description: 
+    
+    
+                    
+Everything was working fine until I installed the Eclipse IDE update from the "Check for updates" menu option in eclipse. When restarting, it did not start and showed this error:
+
+
+
+Since the log was too long, I had to cut some part from the middle:
+
+!SESSION 2013-03-10 16:31:56.588 -----------------------------------------------
+eclipse.buildId=M20130204-1200
+java.version=1.7.0_17
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.jee.product -clean
+
+!ENTRY org.eclipse.equinox.ds 4 0 2013-03-10 16:32:00.720
+!MESSAGE [SCR] Exception while activating instance org.eclipse.e4.ui.css.swt.internal.theme.ThemeEngineManager@25eaf052 of component org.eclipse.e4.ui.css.swt.theme  
+!STACK 0
+java.lang.NoClassDefFoundError: org/eclipse/swt/widgets/Display
+    at java.lang.Class.getDeclaredMethods0(Native Method)
+    at java.lang.Class.privateGetDeclaredMethods(Unknown Source)
+    at java.lang.Class.getDeclaredMethods(Unknown Source)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponent.getMethod(ServiceComponent.java:126)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponent.activate(ServiceComponent.java:213)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponentProp.activate(ServiceComponentProp.java:146)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponentProp.build(ServiceComponentProp.java:345)
+    at org.eclipse.equinox.internal.ds.InstanceProcess.buildComponent(InstanceProcess.java:620)
+    at org.eclipse.equinox.internal.ds.InstanceProcess.buildComponents(InstanceProcess.java:197)
+    at org.eclipse.equinox.internal.ds.Resolver.buildNewlySatisfied(Resolver.java:473)
+    at org.eclipse.equinox.internal.ds.Resolver.enableComponents(Resolver.java:217)
+    at org.eclipse.equinox.internal.ds.SCRManager.performWork(SCRManager.java:816)
+    at org.eclipse.equinox.internal.ds.SCRManager$QueuedJob.dispatch(SCRManager.java:783)
+    at org.eclipse.equinox.internal.ds.WorkThread.run(WorkThread.java:89)
+    at java.lang.Thread.run(Unknown Source)
+Caused by: java.lang.ClassNotFoundException: org.eclipse.swt.widgets.Display
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:501)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:421)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:412)
+    at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+    at java.lang.ClassLoader.loadClass(Unknown Source)
+    ... 15 more
+
+!ENTRY org.eclipse.equinox.ds 4 0 2013-03-10 16:32:00.730
+!MESSAGE [SCR] Exception while activating instance org.eclipse.e4.ui.css.swt.internal.theme.ThemeEngineManager@25eaf052 of component org.eclipse.e4.ui.css.swt.theme  
+!STACK 0
+java.lang.NoClassDefFoundError: org/eclipse/swt/widgets/Display
+    at java.lang.Class.getDeclaredMethods0(Native Method)
+    at java.lang.Class.privateGetDeclaredMethods(Unknown Source)
+    at java.lang.Class.getDeclaredMethods(Unknown Source)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponent.getMethod(ServiceComponent.java:126)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponent.activate(ServiceComponent.java:213)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponentProp.activate(ServiceComponentProp.java:146)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponentProp.build(ServiceComponentProp.java:345)
+    at org.eclipse.equinox.internal.ds.InstanceProcess.buildComponent(InstanceProcess.java:620)
+    at org.eclipse.equinox.internal.ds.InstanceProcess.buildComponents(InstanceProcess.java:197)
+    at org.eclipse.equinox.internal.ds.Resolver.buildNewlySatisfied(Resolver.java:473)
+    at org.eclipse.equinox.internal.ds.Resolver.enableComponents(Resolver.java:217)
+    at org.eclipse.equinox.internal.ds.SCRManager.performWork(SCRManager.java:816)
+    at org.eclipse.equinox.internal.ds.SCRManager$QueuedJob.dispatch(SCRManager.java:783)
+    at org.eclipse.equinox.internal.ds.WorkThread.run(WorkThread.java:89)
+    at java.lang.Thread.run(Unknown Source)
+Caused by: java.lang.ClassNotFoundException: org.eclipse.swt.widgets.Display
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:501)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:421)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:412)
+    at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+    at java.lang.ClassLoader.loadClass(Unknown Source)
+    ... 15 more
+
+!ENTRY org.eclipse.osgi 4 0 2013-03-10 16:32:04.800
+!MESSAGE An error occurred while automatically activating bundle org.eclipse.ui.workbench (688).
+!STACK 0
+org.osgi.framework.BundleException: The activator org.eclipse.ui.internal.WorkbenchPlugin for bundle org.eclipse.ui.workbench is invalid
+    at org.eclipse.osgi.framework.internal.core.AbstractBundle.loadBundleActivator(AbstractBundle.java:172)
+    at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:679)
+    at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+    at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:300)
+    at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+    at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:263)
+    at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+    at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:469)
+    at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:395)
+    at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:461)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:421)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:412)
+    at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+    at java.lang.ClassLoader.loadClass(Unknown Source)
+    at java.lang.Class.getDeclaredConstructors0(Native Method)
+    at java.lang.Class.privateGetDeclaredConstructors(Unknown Source)
+    at java.lang.Class.getConstructor0(Unknown Source)
+    at java.lang.Class.newInstance0(Unknown Source)
+    at java.lang.Class.newInstance(Unknown Source)
+    at org.eclipse.core.internal.registry.osgi.RegistryStrategyOSGI.createExecutableExtension(RegistryStrategyOSGI.java:184)
+    at org.eclipse.core.internal.registry.ExtensionRegistry.createExecutableExtension(ExtensionRegistry.java:905)
+    at org.eclipse.core.internal.registry.ConfigurationElement.createExecutableExtension(ConfigurationElement.java:243)
+    at org.eclipse.core.internal.registry.ConfigurationElementHandle.createExecutableExtension(ConfigurationElementHandle.java:55)
+    at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:191)
+    at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+    at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+    at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:353)
+    at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:180)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+    at java.lang.reflect.Method.invoke(Unknown Source)
+    at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:629)
+    at org.eclipse.equinox.launcher.Main.basicRun(Main.java:584)
+    at org.eclipse.equinox.launcher.Main.run(Main.java:1438)
+    at org.eclipse.equinox.launcher.Main.main(Main.java:1414)
+Caused by: java.lang.NoClassDefFoundError: org/eclipse/swt/SWTError
+    at java.lang.Class.getDeclaredConstructors0(Native Method)
+    at java.lang.Class.privateGetDeclaredConstructors(Unknown Source)
+    at java.lang.Class.getConstructor0(Unknown Source)
+    at java.lang.Class.newInstance0(Unknown Source)
+    at java.lang.Class.newInstance(Unknown Source)
+    at org.eclipse.osgi.framework.internal.core.AbstractBundle.loadBundleActivator(AbstractBundle.java:167)
+    ... 37 more
+Caused by: java.lang.ClassNotFoundException: org.eclipse.swt.SWTError
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:501)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:421)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:412)
+    at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+    at java.lang.ClassLoader.loadClass(Unknown Source)
+    ... 43 more
+Root exception:
+java.lang.NoClassDefFoundError: org/eclipse/swt/SWTError
+    at java.lang.Class.getDeclaredConstructors0(Native Method)
+    at java.lang.Class.privateGetDeclaredConstructors(Unknown Source)
+    at java.lang.Class.getConstructor0(Unknown Source)
+    at java.lang.Class.newInstance0(Unknown Source)
+    at java.lang.Class.newInstance(Unknown Source)
+    at org.eclipse.osgi.framework.internal.core.AbstractBundle.loadBundleActivator(AbstractBundle.java:167)
+    at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:679)
+    at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+    at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:300)
+    at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+    at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:263)
+    at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+    at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:469)
+    at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:395)
+    at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:461)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:421)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:412)
+    at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+    at java.lang.ClassLoader.loadClass(Unknown Source)
+    at java.lang.Class.getDeclaredConstructors0(Native Method)
+    at java.lang.Class.privateGetDeclaredConstructors(Unknown Source)
+    at java.lang.Class.getConstructor0(Unknown Source)
+    at java.lang.Class.newInstance0(Unknown Source)
+    at java.lang.Class.newInstance(Unknown Source)
+    at org.eclipse.core.internal.registry.osgi.RegistryStrategyOSGI.createExecutableExtension(RegistryStrategyOSGI.java:184)
+    at org.eclipse.core.internal.registry.ExtensionRegistry.createExecutableExtension(ExtensionRegistry.java:905)
+    at org.eclipse.core.internal.registry.ConfigurationElement.createExecutableExtension(ConfigurationElement.java:243)
+    at org.eclipse.core.internal.registry.ConfigurationElementHandle.createExecutableExtension(ConfigurationElementHandle.java:55)
+    at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:191)
+    at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+    at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+    at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:353)
+    at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:180)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+    at java.lang.reflect.Method.invoke(Unknown Source)
+    at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:629)
+    at org.eclipse.equinox.launcher.Main.basicRun(Main.java:584)
+    at org.eclipse.equinox.launcher.Main.run(Main.java:1438)
+    at org.eclipse.equinox.launcher.Main.main(Main.java:1414)
+Caused by: java.lang.ClassNotFoundException: org.eclipse.swt.SWTError
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:501)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:421)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:412)
+    at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+    at java.lang.ClassLoader.loadClass(Unknown Source)
+    ... 43 more
+
+!ENTRY org.eclipse.osgi 2 0 2013-03-10 16:32:05.210
+!MESSAGE One or more bundles are not resolved because the following root constraints 
+
+!SUBENTRY 2 overlay.com.android.ide.eclipse.adt.overlay 2 0 2013-03-10 16:32:05.480
+!MESSAGE Missing required bundle org.eclipse.wst.sse.ui_0.0.0.
+!SUBENTRY 2 overlay.com.android.ide.eclipse.adt.overlay 2 0 2013-03-10 16:32:05.480
+!MESSAGE Missing required bundle org.eclipse.wst.xml.ui_0.0.0.
+!SUBENTRY 2 overlay.com.android.ide.eclipse.adt.overlay 2 0 2013-03-10 16:32:05.480
+!MESSAGE Missing required bundle com.android.ide.eclipse.adt_0.0.0.
+
+!ENTRY org.eclipse.osgi 4 0 2013-03-10 16:32:05.490
+!MESSAGE Application error
+!STACK 1
+org.eclipse.core.runtime.CoreException: Plug-in "org.eclipse.ui.ide.application" was unable to instantiate class "org.eclipse.ui.internal.ide.application.IDEApplication".
+    at org.eclipse.core.internal.registry.osgi.RegistryStrategyOSGI.throwException(RegistryStrategyOSGI.java:194)
+    at org.eclipse.core.internal.registry.osgi.RegistryStrategyOSGI.createExecutableExtension(RegistryStrategyOSGI.java:188)
+    at org.eclipse.core.internal.registry.ExtensionRegistry.createExecutableExtension(ExtensionRegistry.java:905)
+    at org.eclipse.core.internal.registry.ConfigurationElement.createExecutableExtension(ConfigurationElement.java:243)
+    at org.eclipse.core.internal.registry.ConfigurationElementHandle.createExecutableExtension(ConfigurationElementHandle.java:55)
+    at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:191)
+    at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+    at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+    at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:353)
+    at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:180)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+    at java.lang.reflect.Method.invoke(Unknown Source)
+    at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:629)
+    at org.eclipse.equinox.launcher.Main.basicRun(Main.java:584)
+    at org.eclipse.equinox.launcher.Main.run(Main.java:1438)
+    at org.eclipse.equinox.launcher.Main.main(Main.java:1414)
+Caused by: java.lang.NoClassDefFoundError: org/eclipse/ui/application/WorkbenchAdvisor
+    at java.lang.Class.getDeclaredConstructors0(Native Method)
+    at java.lang.Class.privateGetDeclaredConstructors(Unknown Source)
+    at java.lang.Class.getConstructor0(Unknown Source)
+    at java.lang.Class.newInstance0(Unknown Source)
+    at java.lang.Class.newInstance(Unknown Source)
+    at org.eclipse.core.internal.registry.osgi.RegistryStrategyOSGI.createExecutableExtension(RegistryStrategyOSGI.java:184)
+    ... 16 more
+Caused by: org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter$TerminatingClassNotFoundException: An error occurred while automatically activating bundle org.eclipse.ui.workbench (688).
+    at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:122)
+    at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:469)
+    at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:395)
+    at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:461)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:421)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:412)
+    at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+    at java.lang.ClassLoader.loadClass(Unknown Source)
+    ... 22 more
+Caused by: org.osgi.framework.BundleException: The activator org.eclipse.ui.internal.WorkbenchPlugin for bundle org.eclipse.ui.workbench is invalid
+    at org.eclipse.osgi.framework.internal.core.AbstractBundle.loadBundleActivator(AbstractBundle.java:172)
+    at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:679)
+    at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+    at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:300)
+    at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+    at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:263)
+    at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+    ... 31 more
+Caused by: java.lang.NoClassDefFoundError: org/eclipse/swt/SWTError
+    at java.lang.Class.getDeclaredConstructors0(Native Method)
+    at java.lang.Class.privateGetDeclaredConstructors(Unknown Source)
+    at java.lang.Class.getConstructor0(Unknown Source)
+    at java.lang.Class.newInstance0(Unknown Source)
+    at java.lang.Class.newInstance(Unknown Source)
+    at org.eclipse.osgi.framework.internal.core.AbstractBundle.loadBundleActivator(AbstractBundle.java:167)
+    ... 37 more
+Caused by: java.lang.ClassNotFoundException: org.eclipse.swt.SWTError
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:501)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:421)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:412)
+    at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+    at java.lang.ClassLoader.loadClass(Unknown Source)
+    ... 43 more
+
+!ENTRY org.eclipse.e4.ui.css.swt.theme 4 0 2013-03-10 16:32:05.600
+!MESSAGE [SCR] Error while attempting to deactivate instance of component Component[
+    name = org.eclipse.e4.ui.css.swt.theme
+.
+.
+]
+!STACK 0
+java.lang.NoClassDefFoundError: org/eclipse/swt/widgets/Display
+    at java.lang.Class.getDeclaredMethods0(Native Method)
+    at java.lang.Class.privateGetDeclaredMethods(Unknown Source)
+    at java.lang.Class.getDeclaredMethods(Unknown Source)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponent.getMethod(ServiceComponent.java:126)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponent.deactivate(ServiceComponent.java:337)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponentProp.deactivate(ServiceComponentProp.java:161)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponentProp.dispose(ServiceComponentProp.java:387)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponentProp.dispose(ServiceComponentProp.java:102)
+    at org.eclipse.equinox.internal.ds.InstanceProcess.disposeInstances(InstanceProcess.java:366)
+    at org.eclipse.equinox.internal.ds.InstanceProcess.disposeInstances(InstanceProcess.java:306)
+    at org.eclipse.equinox.internal.ds.Resolver.disposeComponentConfigs(Resolver.java:717)
+    at org.eclipse.equinox.internal.ds.Resolver.disableComponents(Resolver.java:693)
+    at org.eclipse.equinox.internal.ds.SCRManager.stoppingBundle(SCRManager.java:554)
+    at org.eclipse.equinox.internal.ds.SCRManager.bundleChanged(SCRManager.java:233)
+    at org.eclipse.osgi.framework.internal.core.BundleContextImpl.dispatchEvent(BundleContextImpl.java:847)
+    at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:230)
+    at org.eclipse.osgi.framework.eventmgr.ListenerQueue.dispatchEventSynchronous(ListenerQueue.java:148)
+    at org.eclipse.osgi.framework.internal.core.Framework.publishBundleEventPrivileged(Framework.java:1568)
+    at org.eclipse.osgi.framework.internal.core.Framework.publishBundleEvent(Framework.java:1504)
+    at org.eclipse.osgi.framework.internal.core.Framework.publishBundleEvent(Framework.java:1499)
+    at org.eclipse.osgi.framework.internal.core.BundleHost.stopWorker(BundleHost.java:506)
+    at org.eclipse.osgi.framework.internal.core.AbstractBundle.suspend(AbstractBundle.java:566)
+    at org.eclipse.osgi.framework.internal.core.Framework.suspendBundle(Framework.java:1206)
+    at org.eclipse.osgi.framework.internal.core.StartLevelManager.decFWSL(StartLevelManager.java:592)
+    at org.eclipse.osgi.framework.internal.core.StartLevelManager.doSetStartLevel(StartLevelManager.java:257)
+    at org.eclipse.osgi.framework.internal.core.StartLevelManager.shutdown(StartLevelManager.java:215)
+    at org.eclipse.osgi.framework.internal.core.InternalSystemBundle.suspend(InternalSystemBundle.java:284)
+    at org.eclipse.osgi.framework.internal.core.Framework.shutdown(Framework.java:692)
+    at org.eclipse.osgi.framework.internal.core.Framework.close(Framework.java:600)
+    at org.eclipse.core.runtime.adaptor.EclipseStarter.shutdown(EclipseStarter.java:399)
+    at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:199)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+    at java.lang.reflect.Method.invoke(Unknown Source)
+    at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:629)
+    at org.eclipse.equinox.launcher.Main.basicRun(Main.java:584)
+    at org.eclipse.equinox.launcher.Main.run(Main.java:1438)
+    at org.eclipse.equinox.launcher.Main.main(Main.java:1414)
+Caused by: java.lang.ClassNotFoundException: org.eclipse.swt.widgets.Display
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:501)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:421)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:412)
+    at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+    at java.lang.ClassLoader.loadClass(Unknown Source)
+    ... 39 more
+
+!ENTRY org.eclipse.e4.ui.css.swt.theme 4 0 2013-03-10 16:32:05.610
+!MESSAGE [SCR] Error while attempting to deactivate instance of component Component[
+    name = org.eclipse.e4.ui.css.swt.theme
+    activate = activate
+    deactivate = deactivate
+    modified = 
+    configuration-policy = optional
+    factory = null
+    autoenable = true
+    immediate = true
+    implementation = org.eclipse.e4.ui.css.swt.internal.theme.ThemeEngineManager
+    state = Disabled
+    properties = 
+    serviceFactory = false
+    serviceInterface = [org.eclipse.e4.ui.css.swt.theme.IThemeManager]
+    references = null
+    located in bundle = org.eclipse.e4.ui.css.swt.theme_0.9.4.v20130123-162658 [230]
+]
+!STACK 0
+java.lang.NoClassDefFoundError: org/eclipse/swt/widgets/Display
+    at java.lang.Class.getDeclaredMethods0(Native Method)
+    at java.lang.Class.privateGetDeclaredMethods(Unknown Source)
+    at java.lang.Class.getDeclaredMethods(Unknown Source)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponent.getMethod(ServiceComponent.java:126)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponent.deactivate(ServiceComponent.java:337)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponentProp.deactivate(ServiceComponentProp.java:161)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponentProp.dispose(ServiceComponentProp.java:387)
+    at org.eclipse.equinox.internal.ds.model.ServiceComponentProp.dispose(ServiceComponentProp.java:102)
+    at org.eclipse.equinox.internal.ds.InstanceProcess.disposeInstances(InstanceProcess.java:366)
+    at org.eclipse.equinox.internal.ds.InstanceProcess.disposeInstances(InstanceProcess.java:306)
+    at org.eclipse.equinox.internal.ds.Resolver.disposeComponentConfigs(Resolver.java:717)
+    at org.eclipse.equinox.internal.ds.Resolver.disableComponents(Resolver.java:693)
+    at org.eclipse.equinox.internal.ds.SCRManager.stoppingBundle(SCRManager.java:554)
+    at org.eclipse.equinox.internal.ds.SCRManager.bundleChanged(SCRManager.java:233)
+    at org.eclipse.osgi.framework.internal.core.BundleContextImpl.dispatchEvent(BundleContextImpl.java:847)
+    at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:230)
+    at org.eclipse.osgi.framework.eventmgr.ListenerQueue.dispatchEventSynchronous(ListenerQueue.java:148)
+    at org.eclipse.osgi.framework.internal.core.Framework.publishBundleEventPrivileged(Framework.java:1568)
+    at org.eclipse.osgi.framework.internal.core.Framework.publishBundleEvent(Framework.java:1504)
+    at org.eclipse.osgi.framework.internal.core.Framework.publishBundleEvent(Framework.java:1499)
+    at org.eclipse.osgi.framework.internal.core.BundleHost.stopWorker(BundleHost.java:506)
+    at org.eclipse.osgi.framework.internal.core.AbstractBundle.suspend(AbstractBundle.java:566)
+    at org.eclipse.osgi.framework.internal.core.Framework.suspendBundle(Framework.java:1206)
+    at org.eclipse.osgi.framework.internal.core.StartLevelManager.decFWSL(StartLevelManager.java:592)
+    at org.eclipse.osgi.framework.internal.core.StartLevelManager.doSetStartLevel(StartLevelManager.java:257)
+    at org.eclipse.osgi.framework.internal.core.StartLevelManager.shutdown(StartLevelManager.java:215)
+    at org.eclipse.osgi.framework.internal.core.InternalSystemBundle.suspend(InternalSystemBundle.java:284)
+    at org.eclipse.osgi.framework.internal.core.Framework.shutdown(Framework.java:692)
+    at org.eclipse.osgi.framework.internal.core.Framework.close(Framework.java:600)
+    at org.eclipse.core.runtime.adaptor.EclipseStarter.shutdown(EclipseStarter.java:399)
+    at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:199)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+    at java.lang.reflect.Method.invoke(Unknown Source)
+    at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:629)
+    at org.eclipse.equinox.launcher.Main.basicRun(Main.java:584)
+    at org.eclipse.equinox.launcher.Main.run(Main.java:1438)
+    at org.eclipse.equinox.launcher.Main.main(Main.java:1414)
+Caused by: java.lang.ClassNotFoundException: org.eclipse.swt.widgets.Display
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:501)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:421)
+    at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:412)
+    at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+    at java.lang.ClassLoader.loadClass(Unknown Source)
+    ... 39 more
+
+
+I tried:-
+
+
+Starting it with -clean option form command
+Deleting folders as suggested in Eclipse Juno Startup error log file
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Which version of Java are you using?  Maybe it's version is too old?  Even if the 1.6 compatibility level is required for some kit like Android, make sure that 1.7 with its latest update is installed and used.  To be sure, remove all instances of previous versions of Java.
+    
+    
+Title: Using Visual Studio Web Developer for building a regular html website?
+Description: 
+    
+    
+                    
+I was wondering if it is a good idea to use VS as an IDE to build a regular HTML website with CSS and Javascript without using ASP.NET. It's mostly because I'm so used to VS and the conveniences it affords.
+
+I was planning on building a "master project" using aspx files and create separate html files once it is ready deploy. The html files would be generated from what the browser in my test environment receives.
+
+I have tried Aptana Studio and Dreamweaver, and they are quite good, but I wanna centralize as much as possible with a single IDE. Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+I think choosing an IDE for a project completely depends on the developer and how he/she is familiar with it. 
+
+For your case i think you should use vs, because first you are familiar with it (and probably know the hotkeys), second vs is the best IDE in my opinion among all other IDE's available for html for anyone who wants to use its intellisense as it would suggest more suggestions than any other ide if you are using vs 2012 for microsoft build an extremely good ide for html and work on it in 2012 version. I mysqlf usually work with notepad++ , but in your situation i suggest vs 2012. 
+    
+    
+Title: online html5 IDE that works on iPhone
+Description: 
+    
+    
+                    
+Is there a cloud/web based online HTML5 IDE or playground of some sort that let's me play with JavaScript, JavaScript libraries, HTML and CSS3 using an iPhone (or any modern mobile device for that matter)?
+
+I am looking for one that let's me quickly test stuff while I'm on the go.
+    
+
+        
+Answer 1: 
+
+    
+    
+It seams that Tinkerbin.com works on iphone (I've just tested it).
+
+This is not ideal but it runs.
+    
+    
+Answer 2: 
+
+    
+    
+
+JS Bin
+Rendera
+
+
+(One of the most popular alternatives, JsFiddle didn't work for me under iOS.)
+    
+    
+Title: How to fix tabbing in Visual Studio 2010?
+Description: 
+    
+    
+                    
+I have VS 2010 SP1 installed and I'm working with C#.
+
+Tabbing doesn't work properly when I expect it to write the class name.
+
+When I write for example "throw new NotImpl" and then press tab I expected it to write the whole word as "NotImpelementedException" but it just jumps to the next line without writing the class name!
+
+Also when I press Ctrl+space, that lists classes, and select the class name it doesn't write the class and similarly jumps to the next line.
+
+I have Resharper installed, could that affect it?
+
+How to fix it?
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, ReSharper is causing the issue. It's intellisense menu is painful. Use the ENTER key and you should be fine.
+
+One other thing you could consider is just turning off ReSharper's menus. You can do that under the options page.
+
+
+    
+    
+Title: Cannot get Aptana to recognize php includes
+Description: 
+    
+    
+                    
+I am trying to set up Aptana 3 to work on an html/css/js/php project that I'm currently using Dream Weaver to work on. It appears that the php is not being fully recognized or it's not set up correctly. For example for the line
+
+&lt;?php include_once "includes/header.php"; ?&gt;
+
+
+I am getting an error about missing a '/pp/pp/pp/pp/pp/p/div
+Title: Eclipse only invoking Content Assist Auto Activation after two characters are typed
+Description: 
+    
+    
+                    
+At the moment I only have the setting to have it show automatically  after one character is typed, but I was wondering if there is a way to limit this to only when 2 character are typed. 
+
+As it will reduce the stalling that occurs when some single letters are typed and Eclipse loads up the list of possibilities.
+
+So at the moment I have in Preferences -
+Title: how to turn off version number in eclipse juno?
+Description: 
+    
+    
+                    
+how to turn off the version numbers in the folders when checking out projects in eclipse juno?
+So in package explorer the version numbers are showing up....
+
+com.myco.action.MyAbstractAction 2
+
+com.myco.action.MyUtilityClass 3
+
+.....
+
+.....
+
+com.myco.service.ItemService 7
+
+It seems the directory version # is coming up.  How do I turn this off.....
+    
+
+        
+Answer 1: 
+
+    
+    
+Window -
+Title: Eclipse and Team City plugin
+Description: 
+    
+    
+                    
+I am using Eclipse for Java developers and Team City for continuous integration and tortoiseSVN for my repository. I have installed all the necessary plugins but whenever I choose TeamCity-/strong/ppstrong/strong/pp/p/div
+Answer 1: 
+
+    
+    
+Have you  checked that you've properly configured your build path and server pointing to TortoiseSVN
+
+Under 
+Answer 2: 
+
+    
+    
+My bad... I was doing a commit and push. In order for the Remote Run option to work you first need to commit in your local repository then Remote Run and push if the tests are satisfied.
+    
+    
+Title: is there a .net library like the Find and Replace tags feature of Expression Web
+Description: 
+    
+    
+                    
+Microsoft FrontPage and it's successor Expression Web have a feature in the Find and Replace dialog that allows you to find a tag by name, and do various actions like:
+
+
+replace tag and contents
+replace contents only
+remove tag
+change tag
+set attribute value.
+
+
+The feature is described in the documentationSet HTML rules for finding text and has a well defined Query schema
+
+Do you know of a library that would implement the same features?
+
+Specifically the library should implement as many of the "Find tag, Replace action, and HTML Rules" features as possible.
+
+
+    
+
+        
+Title: How to import MS Visual C++ 2010 solution or project into Bloodshed Dev C++ 4.9.9.2
+Description: 
+    
+    
+                    
+Any suggestion on how to import MSVS 2010 solutions (.sln) or VisualC++ projects (.vcxproj) into Dev-C++ 4.9.9.2? 
+
+There is an option to import .dsp project files from VS 6.0, but that about all I could find.
+    
+
+        
+Answer 1: 
+
+    
+    
+The "IDE" doesn't support it in any way, and since development of it stopped a while ago, I imagine there are no plugins that would do it.
+
+You'll have to do it by hand, which probably would also require fiddling with source code, as Dev-C++ 4.9 has terribly old compiler.
+
+I recommend using Visual Studio Express edition, which even in 2012 version will open/convert your projects with ease.
+    
+    
+Title: IntelliJ IDEA 12.0 Intentions Tweaking (Insertion)
+Description: 
+    
+    
+                    
+As I am looking for ways to speed development and usage with IDEA, I am using Intentions (I.e: Alt+Enter by default Keymapping) to auto-insert things like decelerations, constructors, and all that jazz, trying to keep myself well clear of using the mouse when I can.
+
+One thing that does irritate me is with creating constants, fields, and parameters. After generating them, the IDE jumps to the position they are declared, and prompts for name and type. Usually this results in a double-hit of the enter key, however, leaves the cursor at there. Is there a way to jump back to the usage after declaring it through this feature?
+Cheers. 
+    
+
+        
+Answer 1: 
+
+    
+    
+Assuming you want a field foo, you can type foo and then immediately use the quick fix intention to create a field foo. Now you can type Alt +F7 ("Find Usages"). This will take you to the usage you just typed (since it is the only one). This assumes you have the "Skip results tab with one usage" option set in "Find Usages Settings (Edit 
+Title: Zend Studio 10 and PHPUnit from Composer
+Description: 
+    
+    
+                    
+I have a project that uses Composer to manage it's dependencies; one of them being PHPUnit.
+
+To run my project's test suite, I run the following command on the terminal:
+
+bin/phpunit -c tests/
+
+
+Using the binary from the Composer PHPUnit version and setting the configuration file to be loaded from the tests/ directory.
+
+It runs perfectly.
+
+With Zend Studio 10 (BETA), though, I can't configure my project to run the tests the same way but inside the IDE.
+
+Is there anyway to do that?
+    
+
+        
+Title: Is there a text snippit manipulator plugin or feature in Eclipse?
+Description: 
+    
+    
+                    
+So I was writing some code in which a lot of the code could be generated by transforming some text containing a list of items into Java code.  Transforming the text using regular expressions seem to do the trick.  So I wrote three regular expressions than when applied in order would transform my list of items into the code I wanted.
+
+The problem was, is that I had to transform about twenty of these lists into twenty different classes.  This morning I thought, "I wish there was some sort of plugin for eclipse where I could write a short Perl script store it into a button, then highlight some text, then have that Perl script manipulate and replace the highlighted text.  I could then build a library of common text manipulators that would save me a bunch of time."
+
+Does anything like that exist?
+    
+
+        
+Title: Regarding eclipse libraries
+Description: 
+    
+    
+                    
+Have a question on eclipse libraries. I have an eclipse java project where I have created a library which contains some 50 odd jars files which are needed by the project. Now I have created a new project where I need the library. A very cumbersome way to do this is to check all the jar files in that library, them create a new library in my current project where I will manually add all the 50 odd jars. Is there a way I can export the library from my old project to the current project so that I can have all the requisite jars in one shot.
+
+Regards,
+   Dev
+    
+
+        
+Answer 1: 
+
+    
+    
+Yup you can export the lib.
+
+refer to the screen shot
+
+
+Just select the Lib you want to export , then select export button 
+
+Enter the path where you want to store the export file
+
+
+
+Now to import,  go the the same place and select the import option
+
+Select the import file and click ok
+
+
+    
+    
+Title: install pyqt IDE
+Description: 
+    
+    
+                    
+I installed python 2.7 and pyqt4 and downloaded eric4 IDE, but cant install it because it says i am missing pyqt4.qtcore. How can I fix that? I use Windows 7
+This is the console output when I try to install eric4:
+
+C:\Users\username\Desktop\eric4-4.5.7&gt;python install.py
+Checking dependencies
+Python Version: 2.6.5
+Sorry, please install PyQt4.
+Error: No module named PyQt4.QtCore
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Make sure you installed PyQt4 and python 2.7 correctly.
+If python 2.7 was installed latest, it should be the default.
+Otherwise use an explicit file path, for instance
+
+D:\python27\python.exe
+
+
+and check if it says "python 2.7" when you run it in the shell.
+
+Note that the PyQt4 has the python version in its downloaded installer or archive filename.
+(how did you actually install it?)
+
+If PyQt4 is correctly installed, then this should work, so please try that first:
+
+&gt;&gt;&gt; from PyQt4 import QtCore
+
+
+After that all works, run the install script, and use the right python version
+in the way I showed above.
+    
+    
+Title: IDE and library and Makefile
+Description: 
+    
+    
+                    
+if I wrote some files named file1.cpp file2.cpp file3.cpp and so on.  and file1.cpp need library l1, file2.cpp need l2 , file3.cpp need l3. 
+  should we write the makefile line by line? 
+  and seems IDE still can't detect which library our program use. 
+  so how to let IDE/{any thing}  to detect library automatically?
+
+Thanks for your apply!
+    
+
+        
+Title: Javascript autocomplete auto suggest not working
+Description: 
+    
+    
+                    
+Hi I am fairly new with JavaScript, dom, html5 programming. I have tried a few IDEs such as visual studio for the web and the netbeans, but seems like no matter what IDE I use, none of them can do auto complete for .value or .innerHTML.  When I do search with ctrl+space they just couldn't find them. The examples are listed below:
+
+//can't find .value after I type text-input
+var songName = textInput.value;
+
+//can't find .innerHTML
+var li = document.createElement("li");
+li.innerHTML = songName;
+
+
+Is that normal? Do I just need to type those in manually or is that because I didn't include necessary libraries for the IDE to work properly?
+    
+
+        
+Title: php IDE working with ZEND Framework 2
+Description: 
+    
+    
+                    
+As we can see here : How to integrate Zend 2 intto netbean, today there is no way to use ZF2 in neatbean.
+
+I'm still not very friendly with php IDEs but I'm searching for a free IDE natively supporting ZF2.
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse PDT works, but you have to download Eclipse Juno
+then in Eclipse install new Software and select PDT 3.1.1
+Older version available on www.zend.com/en/community/pdt didn't work for me.
+    
+    
+Title: Can I edit my C++ project in Xcode (with jump to definition/auto completion) without building the project?
+Description: 
+    
+    
+                    
+I'm working on a C++ project. My company has an internal build system which runs on Linux only. I'm not able to build the project on my mac. I would try to edit my C++ code with Xcode. I'd like to have at least 'jump to definition' and 'auto completion'. I created an empty project in Xcode and imported my files in there. It shows 'Symbol not found' when I tried to jump to definition. Is it possible to let Xcode parse my code without building the project?
+    
+
+        
+Title: Palette empty in NetBeans 7.2.1 on Windows XP
+Description: 
+    
+    
+                    
+I'm new to Java programming, I wanna develop small software for cell phones (Nokia Asha 200 at first). At first the Palette had some items, but as I downloaded Swing components, nothing is showing anymore. I already tried many solutions proposed over the net, but most of them are for Linux systems, and I'm using Windows XP. Nothing worked. The palette remains empty, although the menu Tools|Palette says it should have a lot of stuff (like Swing, AWT, Beans, etc). Someone said somewhere to right-click on the palette and choose "order by...", but right-clicking doesn't show any menu. Any help will be very appreciated. Thanks!
+    
+
+        
+Title: How to highlight members of Asp Class in MVS10, when class situated in external file?
+Description: 
+    
+    
+                    
+How to get microsoft visual studio 2010 highlight members of VBScript (Classic ASP) Class, when class is situated in an external file and added to script using #include? 
+
+Is that possible? 
+
+Here is a code Example:
+
+&lt;%@language="VBScript" %&gt;
+&lt;% 
+    ' Scripted by AB
+
+    Option Explicit 
+
+    Response.Charset = "UTF-8"
+    Session.CodePage = 65001
+
+    Class MyClass1
+
+        Function Test()
+            Test = "MyClass1 function test"
+        End Function    
+
+    End Class
+
+    Dim obj : Set obj = New MyClass1
+
+    obj. ' &lt;--- Show Test 
+
+%&gt;
+&lt;!-- #include virtual='/app_code/core/inc_class_test2.asp' --&gt;
+&lt;%   
+
+    Dim obj2 : Set obj2 = New MyClass2 ' from inc_class_test2.asp 
+
+    obj2. ' &lt;--- Show nothing
+
+%&gt;
+
+
+In my projects a lot of "chubby" classes and I began to forget what methods there are. Has anyone encountered this problem and knows of an elegant solution?
+    
+
+        
+Title: Debug Magento Adminhtml in Zend Studio XDebug
+Description: 
+    
+    
+                    
+I'm currently using Zend Studio for Magento development.I can able to debug frontend with xdebug.But xdebug for admin is not working.Breakpoints and variables are not showing for the admin.
+
+Could anyone shed some light on how to debug Magento admin? 
+    
+
+        

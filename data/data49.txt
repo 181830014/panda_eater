@@ -1,0 +1,2912 @@
+Title: Build management in C++ &amp; good IDEs on Linux
+Description: 
+    
+    
+                    
+I am starting to write a moderately sized project in C++ requiring a fairly large amount of files and dependencies on other projects.
+
+Do you think manually maintaining a Makefile for this project is the best approach?
+
+Are there other better alternatives for C++ that make build management and dependency management of files really easy to handle?
+
+Also, what IDE is good for C++ development on Linux? I am comfortable with Vim, but do you think there are good IDEs for C++ (like Eclipse for Java) that provide code-completion etc?
+
+Thanks!
+Ajay
+    
+
+        
+Answer 1: 
+
+    
+    
+Others have already recommended using CMake.  To my mind you should manage your project with CMake then decide on your favourite IDE.  
+
+CMake allows you to describe the project to be built, instead of how to build it.  For example: I want to create a shared library called foo with source files a.cpp, b.cpp and c.h and it requires these link dependencies.  Then on unix you get libfoo.so and on windows you get foo.dll and foo.lib.  All common project settings can be abstracted up to higher levels in the build tree, this keeps most files very simple.  More complicated requirments can be refactored into macros.
+
+Once your project is described like this CMake will generate makefiles and/or IDE projects.  This means each developer can choose their own IDE, as well as allowing you to mandate an IDE if appropriate.
+
+My company use CMake to build the c++ in our product on windows and solaris.  It contains 600 projects and 1.5 million lines of source code.  We originally chose it as a cross platform build utility when porting to solaris, however for a large project like ours it is much easier to manage the build with CMake than with Visual Studio project files.  I would recommend it as a build utility for any c++ project of any size
+
+We use the eclipse cdt on solaris and are very happy with it.  Most of our development is with visual studio on windows.  cmake also works well with other ides I use it with KDeveloper4 on linux at home without a hitch.
+    
+    
+Answer 2: 
+
+    
+    
+KDevelop4 (from subversion or rc1 from their site) + CMake makes life so much easier, automake should just die.
+If you want a cross-platform solution, netbeans + the c++ plugin are pretty decent, not as good as kdevelop4 though.
+    
+    
+Answer 3: 
+
+    
+    
+I like CMake a lot for the whole building process (but I have almost no experience with scons or Jam).
+
+I use vim or qtcreator. Qtcreator is still in developpment, but very promising I think.
+    
+    
+Answer 4: 
+
+    
+    
+I suggest you Code::Blocks. I use it on Debian and works gracefully.
+
+http://www.codeblocks.org/  
+
+Edit: Added another link 
+http://wiki.codeblocks.org/index.php?title=The_build_process_of_Code::Blocks
+    
+    
+Answer 5: 
+
+    
+    
+Eclipse does C++ as well - through eclipse CDT - not as comprehensive as Java but pretty good.
+    
+    
+Answer 6: 
+
+    
+    
+Manually maintaining Makefiles in larger Projects becomes quite painful. If you start using automake/autoconf, you will - after a while of learning all the facets - appreciate the powerful possibilities these tools can offer.
+
+And as IDE simply use Emacs. It's quick, powerful and supports Code completion etc.
+    
+    
+Answer 7: 
+
+    
+    
+There's also Code::Blocks as an IDE with its own building system. But I would encourage you to try out other build tools (CMake, Boost.Build, SCons) if you want to be able to build your software "anywhere" without having a fancy schmancy IDE installed. ;-)
+    
+    
+Answer 8: 
+
+    
+    
+I found Emacs + Scons works pretty well for me.
+    
+    
+Title: Preparing for a Java professional work environment before interviews
+Description: 
+    
+    
+                    
+I recently graduated in Computer Engineering. I don't have a permanent job yet. The recession is making a good difference in my aim and reality. I don't want to just sit down. I want to sharpen my capabilities. I want to learn and practice in a professional work environment.
+
+Now my question is: What are the tools and practices followed in a professional working environment? I mean IDEs, team working tools,debugging tools, unit testing tools etc?
+
+What are the frameworks in Java EE which are must-know, or which will bring me advantages in my job interviews?
+
+Thanks in advance.
+    
+
+        
+Answer 1: 
+
+    
+    
+Some initial suggestions:
+
+
+IDE: Eclipse or IntelliJ
+Source code management tools like git, Subversion, Mercurial, CVS
+JUnit for testing
+
+
+Read "Code Complete", then sleep with it under your pillow.  Maybe keep a copy in your bathroom as well.
+    
+    
+Answer 2: 
+
+    
+    
+IntelliJ is by far the best Java IDE, but it is commercial. Between Eclipse and NetBeans I would recommend NetBeans, it is closer to what an IDE should look and/or do(nothing against Eclipse, but I couldn't get used with it...maybe is just something wrong with me :) ).
+    
+    
+Answer 3: 
+
+    
+    
+You might find this poll (long but) interesting... http://www.java-forums.org/new-java/7315-what-you-using-write-your-code.html
+
+We've been running a co-op (i.e. cadette) program for the last five (or so) years. Here's a list of stuff (in no particular order) that co-ops are clueless about that we really really wish they knew "the basics of" when they arrived: 
+
+
+Testing - Everyone tests, but (IMHO) few do so really effectively. Myself included.
+Team development - How to work together on a codebase which is bigger than anyone.
+Understanding legacy systems - Hey, this code is twice is my age? WTF?
+Project management - That dark arts of delivering quality on time and on budget.
+Business analysis - BA's are full of it! You at-least need to know enough to smell the effluent.
+Known when to say NO - Practice saying this in front of a mirror: "No sir, I'm sorry, you really can't have this Ferrarri for the price of a second-hand mini."
+
+
+The technology really is the easy bit. Having said that, your first position is likely to be as a code-monkey... so the more tecken ze spreken, the more likely you are to get a foot in the door.
+
+So I suggest 
+
+
+Tackle the J2EE 1.4 Tutorial
+... also look at a web-app MVC framework like Struts 1 or (better) JSF; and
+... also look at Hibernate - the psuedo standard persistence layer.
+... also look at "early" DHTML - manipulating a html-DOM with javascript.
+... also look at Swing, Applets, but try not to drown in it.
+then (and only then) tackle the J2EE 1.5 Tutorial (EJB3). 
+I'm still in the process myself. I've been at it for two months. Anymore than two hours at-a-time makes my brain hurt, a lot... you can teach an old dog new tricks, you just have to do it slowly.
+
+
+Like already stated: Every position will have it's own technology set... two people sitting next to each other may use vastly different product groups. What I advise you to learn  instead of "all the techs" is the process of learning technologies, and the considerations in selecting appropriate technologies to suit a particular problem, and organisation.
+
+The best thing you can do to improve your chances of actually getting that job is to join a "Young IT Professionals" group (like this one in Australia)... they'll probably do a "mock interview" day... constructive criticism (as apposed to spoonfeeding) will improve your job applications, your CV, and your interviewability. Hanging-out with a bunch of people who shre your interests is informative, and fun. You'll miss that "brain stimulation" in the break between uni and IT work.
+
+On the recession thing... I graduated B.Bus(Computing) a month after the dot-com bubble burst. I worked in a supermarket, drove a cab, delivered pizza, did some builders labouring, flogged PC's, vended bad financial advise to people who can't add-up for ${nameless_charlitans}, flogged anti-virus software, tutored at the local TAFE college, got a few short-term contracts writing software for a big accounting firm... then I started voluntarily fixing up the PC's at my local employment exchange (I was there waiting for appointments for hours-on-end anyway, and it was better than doing nothing)... The IT-dude there got me an interview with "a mate" (i.e. my job was never advertised), and the rest is history. Funny how stuff works out. I feel for ya', just please don't take the knock-backs personally... you're likely to get a lot of them... it's just how the game is played.
+
+Cheers. Keith.
+    
+    
+Answer 4: 
+
+    
+    
+For the long term, work on an open source project. You'll learn a lot, and probably more quickly than you'd learn from a job.
+    
+    
+Answer 5: 
+
+    
+    
+My Java colleagues use this for most things.
+
+
+Eclipse
+Oracle or MySQL
+Struts
+Subversion
+Bugzilla
+JUnit
+
+
+They also use Sun's Java Composite Application Platform Suite (JCAPS) for some things.  
+    
+    
+Answer 6: 
+
+    
+    
+I think you need to take a close look at the companies you are applying to.  The amount of "toolage" in the java world is way too much for you to become familiar with on your own in order to become attractive to any random employer.
+
+I personally vote that the majority of it is overcomplicated crap, despite all the marketing hype that it gets.  Find a company that looks like it works with stuff that you're interested in, find out what sort of stuff they use and then familiarize yourself with that.  You probably won't be able to demonstrate job-level experience, but you will show yourself to be enthusiastic.
+    
+    
+Answer 7: 
+
+    
+    
+I'm going to go the route of suggesting what I feel are the most popular choices out there, which hopefully will give you more exposure to land that first job. Once you get your feet wet, I would recommend investing some of your free time to evaluate the other options out there. There is so much in the Java ecosystem to explore.
+
+
+IDE: From people that I talk to, Eclipse seems to be the most popular. Netbeans is solid too but its future is in doubt since Oracle is working on acquiring Sun. A lot of folks swear by IntelliJ but I think it's much smaller community (and costs money).
+SCM: Subversion and CVS are probably the most popular and Eclipse has built-in support for both.
+Unit Testing: JUnit, it's the de-facto standard.
+Builds: Ant, again the de-facto standard for build automation.
+Frameworks: I would recommend either (1) Spring and Hibernate, the wildly-popular open source stack or (2) EJB and JPA, the Java standards. My personal preference is towards #1.  As far as UI goes, there are a lot of options available, so it's harder to recommend. Struts and Spring MVC are more "old school" classic MVC frameworks whereas GWT and JSF are more "component-oriented" frameworks. You also have less popular ones like Wicket and Tapestry.
+
+    
+    
+Answer 8: 
+
+    
+    
+Assuming you can get your CV/resume read by someone and get an interview:
+
+Get a copy of Effective Java by Josh Bloch, read it, memorize it and understand it. A lot of interviewers (and I have done more than my fair share) use it as a good source of techniques that people should know and understand.  
+
+In terms of tools - you can't go wrong if you know:
+
+
+Eclipse 
+Spring 
+Hibernate
+Ant/Maven/Hudson 
+JUnit 
+Log4J
+
+
+These are all Open Source (and hence will fit anyones budget). Most Java shops will use at least one of these!
+    
+    
+Answer 9: 
+
+    
+    
+With below tools you can make sample/demo applications
+
+IDE : JDevloper/Eclipse/Netbeans
+
+Server: Tomcat/Jboss/Glassfish
+
+Technology: Hibernate,Spring,EJB,Struts,Log4J,SLF4J,Hudson,Ant,Maven
+    
+    
+Answer 10: 
+
+    
+    
+Weblogic,Jetty,JBoss or Tomcat with
+
+
+-Maven build tool (indirectly background Ant and library versioning)
+-Prettify ("readify") 
+-Minify (spaceless)
+-Refactoring (batch rename units)
+-XML 
+-Stress test tool
+
+
+Old tools e.g. rsync, emacs, awk, xargs, dd handle the largest files. less is good for streaming files (shift+F) 
+    
+    
+Answer 11: 
+
+    
+    
+This really depends on the jobs in your area. I suggest you take an analytical approach.  
+
+Use a job search engine for you area and do keyword searches.  This will give you hard numbers of job skills people are looking for in your area.
+
+You may also find these pages useful 10 Hot Skills for 2009 The 2009 IT Salary Guide
+    
+    
+Answer 12: 
+
+    
+    
+Write an own homepage! It shows that you have fun when you write software (so you do it in your free time). 
+    
+    
+Answer 13: 
+
+    
+    
+Build something you're interested in building and choose technologies that seem correct to do the job. At the same time, take the extra time -- as you should when working as well -- to use tools that might be a hassle but you think will bring you an advantage. Knowing frameworks like Spring or Maven or whatever may or may not be relevant. A good employer doesn't care what you know, but how you know what you know. Can you learn?
+
+Use some note repository (like Evernote or my own, TheKbase :) and start making notes about your world. Whatever knowledge you have digested should be instantly retrievable and not based on your limited memory.
+
+I was always interested in Swing and teaching, and strangely I got a job teaching Swing (which I knew a bit), but also teaching all kinds of stuff that I didn't know like Struts and XML security (you read the books and put in the time). Plus I taught IDEs, which I always liked even, though everyone thought I was an immature programmer because I wanted autocomplete :) Again, following preferences...
+
+My point is that unless something about learning a framework or tool particularly appeals to you, don't bother learning it. On the other hand, if frameworks are particularly annoying for you (for me they have been), take the most annoying and daunting and build something with it. It's a rite of passage that most people do because an employer asks for it, which is too late, IMO.
+    
+    
+Answer 14: 
+
+    
+    
+You already have a good list of tools from the answers above. Here are a few things you could do to get more attractive to potential employers.
+
+
+Participate in an Open-Source Project
+To become a better programmer, learn
+a language completely different from
+Java. A good starting point could be
+other languages on the JVM - Clojure
+/ Scala.
+Gain expertise in specific areas in J2EE that will make you stand out - security, performance analysis, etc.
+Create your own website using the tools and the frameworks you have learnt
+
+    
+    
+Title: Getting Started with an IDE?
+Description: 
+    
+    
+                    
+Having programmed through emacs and vi for years and years at this point, I have heard that using an IDE is a very good way of becoming more efficient.
+
+To that end, I have decided to try using Eclipse for a lot of coding and seeing how I get on.
+
+Are there any suggestions for easing the transition over to an IDE. Obviously, some will think none of this is worth the bother, but I think with Eclipse allowing emacs-style key bindings and having code completion and in-built debugging, I reckon it is well worth trying to move over to a more feature-rich environment for the bulk of my development worth.
+
+So what suggestions do you have for easing the transition?
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse is the best IDE I've used, even considering its quite large footprint and sluggishness on slow computers (like my work machine... Pentium III!).
+
+Rather than trying to 'ease the transition', I think it's better to jump right in and let yourself be overwhelmed by the bells and whistles and truly useful refactorings etc.
+
+Here are some of the most useful things I would consciously use as soon as possible:
+
+
+ctrl-shift-t finds and opens a class via incremental search on the name
+ctrl-shift-o automatically generates import statements (and deletes redundant ones)
+F3 on an identifier to jump to its definition, and alt-left/right like in web browsers to go back/forward in navigation history
+The "Quick fix" tool, which has a large amount of context-sensitive refactorings and such. Some examples:
+
+String messageXml = in.read();
+Message response = messageParser.parse(messageXml);
+return response;
+
+
+If you put the text cursor on the argument to parse(...) and press ctrl+1, Eclipse will suggest "Inline local variable". If you do that, then repeat with the cursor over the return variable 'response', the end result will be:
+
+return messageParser.parse(in.read());
+
+
+There are many, many little rules like this which the quick fix tool will suggest and apply to help refactor your code (including the exact opposite, "extract to local variable/field/constant", which can be invaluable).
+You can write code that calls a method you haven't written yet - going to the line which now displays an error and using quick fix will offer to create a method matching the parameters inferred from your usage. Similarly so for variables.
+All these small refactorings and shortcuts save a lot of time and are much more quickly picked up than you'd expect. Whenever you're about to rearrange code, experiment with quick fix to see if it suggests something useful.
+
+There's also a nice bag of tricks directly available in the menus, like generating getters/setters, extracting interfaces and the like. Jump in and try everything out!
+    
+    
+Answer 2: 
+
+    
+    
+One thing that helped me transition from Emacs to other IDEs was the idea that IDEs are terrible editors.  I scoffed at that person but I now see their point.
+
+An editor, like Emacs or Vim, can really focus on being a good editor first and foremost.
+
+An IDE, like Visual Studio or Eclipse, really focuses on being a good project management tool with a built in way to modify files.
+
+I find that keeping the above in mind (and keeping Emacs handy) helps me to not get frustrated when the IDE du jour is not meeting my needs.
+    
+    
+Answer 3: 
+
+    
+    
+If you've been using emacs/vi for years (although you listed both, so it seems like you may not be adapted fully to one of them), using said editor will probably be faster for you than an IDE. The level of mind-meld a competant emacs/vi user can achieve with a customized setup and years of muscle memory is astounding.
+    
+    
+Answer 4: 
+
+    
+    
+Some free ones:
+
+
+XCode on the Mac
+Eclipse
+Lazarus (Open Source clone of Delphi)
+Visual Studio Express
+Editions
+
+    
+    
+Answer 5: 
+
+    
+    
+Try making a couple of test applications just to get your feet wet. At first, it will probably feel more cumbersome. The benefits of IDEs don't come until you begin having a good understanding of them and their various capabilities. Once you know where everything is and start to understand the key commands, life gets easier, MUCH easier.
+    
+    
+Answer 6: 
+
+    
+    
+I think you'll find IDE's invaluable once you get into them.  The code complete and navigation features, integrated running/debugging, and all the other little benefits really add up.
+
+Some suggestions for starting out and easing transition:
+- start by going through a tutorial or demonstration included with the IDE documentation to get familar with where things are in the GUI.
+- look at different kinds of sample projects (usually included with the IDE or as a separate download) for different types of areas you may be coding (web applications, desktop applications, etc) to see how they are laid out and structured in the IDE.
+- once comfortable, create your own project from existing code that you know well, ideally not something overly complex, and get it all compiling/working.
+- explore the power!  Debug your code, use refactorings, etc.  The right click menu is your friend until you learn the keyboard shortcuts just to see all the things you can do.  Right click different areas of your code to see what is possible and learn (or re-map) the keyboard shortcuts.
+    
+    
+Answer 7: 
+
+    
+    
+Read the doc...
+And see what shortcuts/keybindings equivalents are with your familiar ones. Learn the new ones... 
+    
+    
+Answer 8: 
+
+    
+    
+Old question, but let me suggest that in some circumstances, something like Notepad++ might be appropriate for the OP's situation which may be encountered by others.  Especially if you are looking for something lightweight, Notepad++ can be part of a developer's arsenal of tools.  Eclipse, Visual Studio and others are resource hogs with all their automagic going on and if you are looking to whip out something pretty quick with a whole bunch of keyboard shortcuts and the like or if you are interested in viewing someone else's source, this can be quite useful.  Oh yeah, and it is free too.
+    
+    
+Title: MonoDevelop Complete Brace Close
+Description: 
+    
+    
+                    
+I've started using MonoDevelop again, and one thing driving me nuts is having to complete every brace (my old IDE did it for me).
+
+Is there a way to have MonoDevelop autocomplete brace closures?
+
+E.g. if I type 
+
+
+  if(bool) {
+
+
+Then it will auto complete the closing brace
+
+
+  }
+
+    
+
+        
+Answer 1: 
+
+    
+    
+In the Preferences dialog under Text Editor - Behavior there is an Insert matching brace option.
+
+This auto completes the brace, but it puts it next to the first opening brace so you will have to press return to move it into the location you have in your source code. The auto completion of the brace does not seem to indent the code at the same time.
+    
+    
+Answer 2: 
+
+    
+    
+On Mac as answered by @MattWard
+
+On Windows 10 got to Tools 
+Title: Which Windows IDE to write, execute and debug single-file C# programs?
+Description: 
+    
+    
+                    
+I use Visual Studio 2010 for C# development. But, there are many times during the day when I need to quickly try out a small bit of C# code to experiment or learn something new. I can write this as a fully functional C# program in a single file. Now, I can use Visual Studio for writing/editing this C# files, but it does not support execution or debugging (breakpoint, watch variables) unless I create a solution for it.
+
+I would like to have the ability to create, edit, execute (and hopefully debug) single C# files, without having to go through the pains of creating a VS solution everytime I need to try something. Is there a simple C# IDE on Windows in which I can do this?
+
+The IDE should not create any project/solution files. That way I can have a directory of C# files, each of which is a full C# program and each of which I can open to read, edit and execute with this IDE anytime I want.
+    
+
+        
+Answer 1: 
+
+    
+    
+LinqPad can execute expressions, statements, or small programs that could be a single file in size (also see this page). It does not create projects/solution files just as you are seeking. Just open, code, and save if you like. I use the free version to test code I post on this site. 
+
+It supports .Net 4.0 and has some other nice features, such as not needing to explicitly specify using statements. The program is smart enough to know which ones you need.
+    
+    
+Answer 2: 
+
+    
+    
+Try Snippet Compiler
+
+
+    
+    
+Answer 3: 
+
+    
+    
+In the next release of C# and Visual Studio, one of the new features is Project Roslyn, a compiler-as-a-service implementation.  The upshot is that this enables is scripting in C#, with .csx files.  The Visual Studio blog has a lot more information on .csx files here.
+
+I myself haven't played with .csx files much, but they seem similar to .fsx files for scripting F#, in that you take the code that you would normally place inside a method (in F#, a function) and place it at top-level, and can use the hash to introduce compiler directives (e.g. #r to reference a DLL).
+    
+    
+Title: Where is the preview tab on Aptana Studio 3?
+Description: 
+    
+    
+                    
+I'm using Aptana Studio 2 on a Windows PC, and have a tab to preview the page on IE, and another to preview on Firefox.
+But I switched to Aptana 3 and I don't know if there's no preview or I just not founding it.
+And yes I did some research on stackoverflow and on aptana website, and on google too, and I have no answer.
+Now I'm using Aptana Studio 3 on a Mac, and I'd like to preview my page on safari on a embed browser inside the IDE.
+
+How I set it up to preview with other browsers.
+
+If there's no way to do that, how people do to edit files and preview then? Editing CSS is like a pain, editing a thing like 1 pixel, and saving and switching to browser window, and refreshing the page. Would be awesome if exist a splited screen with live preview.
+    
+
+        
+Answer 1: 
+
+    
+    
+Side-by-Side Previewing
+
+By default, previewing opens in a new tab. You can modify this to see your source and your preview side-by-side.
+
+Setting Previews
+
+If you wish, you can have your source and preview side-by-side
+
+
+Press the Preview button in the toolbar, The preview window launches
+Drag the preview window by the top tab to the left, right, bottom, or top of the editor area, depending on how you wish to split the screen.
+Saving the original source file updates the preview.
+
+
+
+
+Result:
+
+
+
+  Source: https://wiki.appcelerator.org/display/tis/Side-by-Side+Previewing
+
+
+Thanks Ingo Muschenetz for pointing this.
+    
+    
+Answer 2: 
+
+    
+    
+There is a blue square with what looks like a eye inside. It's between the 'Aptana Start Page' and 'Open Terminal' icons in the toolbar.
+    
+    
+Answer 3: 
+
+    
+    
+You can do a side-by-side preview. See the document here: http://wiki.appcelerator.org/display/tis/Side-by-Side+Previewing
+    
+    
+Answer 4: 
+
+    
+    
+There is a blue square with what looks like a eye inside. It's between the 'Aptana Start Page' and 'Open Terminal' icons in the toolbar. : True but before you must have Toolbar visible. By default, at my Aptana, I dit not have the Toolbar but I have the same problem as Vitim.us.
+So, 1) Windows --em/emem/em/p/div
+Title: Are there any text-editors/IDEs that support languages generically?
+Description: 
+    
+    
+                    
+I'm looking for an editor/IDE that can provide features that are nice to have while coding (example: being able to click-through to function definitions) for languages that it is not specifically built for. By these, I have in mind languages designed for a very specific purpose and often only used by a small community. In other words, ones that would not have native support in most software.
+
+I realize this would require a fair bit of fairy dust but I don't think it's out of the scope of what's possible. Basically, the editor would have to be smart enough to recognize the commonly used syntax and semantics that many declarative languages have in common. It's quite possible this would require some amount of configuration.
+
+Does something like this exist? If not, what challenges do you think there would be in creating it?
+    
+
+        
+Answer 1: 
+
+    
+    
+If you need only the feature to jump of to the definition of a specific function or class, then VIM (and many other editors, like Emacs, Epsilon and JOE) can read the jump location from the ctags file. You just have to write a ctags file generator for your custom language.
+
+For programmable editors (like VIM, Emacs, Epsilon, Eclipse and gedit), you can write your own plugin for your custom language, but it may quickly become time-consuming and a maintenance nightmare, because new versions of editors tend to change the plugin interface.
+
+Please note that adding support for syntax highlighting is usually much easier than adding ctags-like support for symbol lookups. More advanced features, like refactoring and context-sensitive symbol completion (like Ctrl-Space and Tab in modern IDEs) are even harder to implement.
+    
+    
+Answer 2: 
+
+    
+    
+GNU Emacs has a pretty good infrastructure for this sort of thing.  Until recently Haskell was a relatively unknown language used primarily by researchers.  Nevertheless, in a few thousand lines of Emacs Lisp, we have
+
+
+Syntax highlighting with colors
+Automatic indentation
+Package support
+Automatic highlighting of type and other information when placing the cursor over library functions
+Meta-dot on an identifier to jump to its definition (through the standard emacs tags mechanism)
+
+
+The nice thing about Emacs is that (a) there are many models to follow, and (b) you can build up the environment gradually, starting with those aspects that are most important to you.
+    
+    
+Answer 3: 
+
+    
+    
+I'm suprised no one has mentioned Notepad++ yet:
+http://notepad-plus-plus.org/
+
+It offers syntax support for a great many languages and offers the user to add new languages, and an active community that adds many languages that are not included out-of-the-box.
+    
+    
+Answer 4: 
+
+    
+    
+Most good IDE's are language agnostic and supports several if not many programming languages. If you are talking about DSL's, eclipse has a solution that seems pretty awsome - Xtext
+    
+    
+Answer 5: 
+
+    
+    
+EditPadPro comes with a set of tools that allow you to build your own syntax highlighting, code folding and file navigation schemes, based on a very powerful regex syntax. So if your language is not among the many that have already been provided out-of-the-box or can be downloaded off the website, you can roll your own quite easily (and share it with the community).
+
+
+    
+    
+Answer 6: 
+
+    
+    
+Visual Studio is designed to allow for this, but it requires the language to add explicit support.  For example, Delphi Prism will install into Visual Studio, and provide full language support.  
+
+This is far above and beyond "configuration", however, and requires quite a bit of custom development to support.
+    
+    
+Answer 7: 
+
+    
+    
+SciTE and Scintilla offer a generic editor/platform for different languages. The library contains several parsers that work with many programming languages and you can reuse one of these for your own language to add formatting and syntax highlighting.
+
+They don't offer advanced features like click-throughs, but you could build it on top of the library.
+
+Visual Studio and Eclipse also support language plug-ins.
+    
+    
+Answer 8: 
+
+    
+    
+Zeus is a language neutral IDE for the Windows platform and it provides this go to definition/declaration functionality for any language supported by ctags.
+
+To make it work you just create a Zeus project/workspace and then add the files to this workspace.
+    
+    
+Title: What type of set-up/tools are must have if I want to build my skills as a software developer (in Java, Python, C, C++)?
+Description: 
+    
+    
+                    
+I am a newbie in the software development field. I am hungry for more avenues through which I can develop, nurture, and mature in my development, scripting, and programming skills, more so outside of work time. I'd like to know what type of set-up (hardware and/or software) would be extremely beneficial or that others have found necessary for this endeavor. 
+
+I want to be able to equip my home 'office' with tools that will enable me to progress and grow as a developer. 
+    
+
+        
+Answer 1: 
+
+    
+    
+Write Code:
+
+In this article Jeff Atwood talks about how to become better at designing and writing software by designing and writing a lot of software. His is stated more elegantly, but it is a valid point. The more you do something, the better you will get at it.
+
+Hardware:
+
+Any modern PC/Mac hardware should suffice. If you plan to run Windows or Linux I would use a PC over Mac. There is a lot of clamor over which is better, but use the one you like the best. 
+
+It should be a moot point in this day and age, but make sure you have some sort of reliable internet connectivity (cable, dsl, whatever...). Then you will have access to Google and
+stackoverflow; both good resources for programmers.
+
+Make sure you have a keyboard and mouse which are comfortable to you. This includes setting up your desk and chair to accommodate your height and hand position. You will be at the computer for long stretches of time, and you want to be comfortable.
+
+Editor/IDE:
+
+Choose an editor: Vim, EMACS, KATE, Eclipse, whatever. It doesn't really matter which one, but whichever one you do pick learn it well. The editor is your main tool and you want to be comfortable and knowledgeable when using it. The better you know your editor the faster you can create/edit code.
+
+It helps to have an editor that runs on all platforms you may be developing on, but it is not necessary.
+
+Build Tools:
+
+At some point you will find your self face to face with having to create or fix a build stystem. Make is pretty standard for *nix and C/C++, but for your own personal projects find the one that suits you best. There are a lot to choose from: Scons, Ant, Make, Jam, ...
+
+I personally use SCons, since it is python based, and I like python.
+
+Books:
+
+When learning a new topic I would recommend getting a good book on it. This will generally give you a good overview of what you are getting into, and give you a good foundation to learn from. Google and Stackoverflow are good for specific questions, but a general overview of a topic is harder to get.
+
+This of course assumes you have the luxury of time and money. For the monetarily constrained you can often find free versions of electronic books online.
+
+Languages:
+
+I used to have strong feelings about which languages to learn, but now I realize you should write in the language you enjoy most. However don't be afraid to try new languages. I personally like C++, python, and C# in no particular order.
+
+Since you are just starting out pick the languages which you can get for free, which I actually think is most languages these days.
+
+In the business world the language of choice tends to fluctuate on about a 5-7 year cycle. However you can find a job (at least currently) in all the "big" languages (C++, JAVA, C# VB.net, python, ruby, perl, ...). If you learn one of the modern languages well, it is typically not a problem to transition to another language quickly. The libraries tend to take longer to learn than the language itself. So pick a language you like learning in and learn it.
+
+Miscellaneous Thoughts:
+
+As Marc Charbonneau said set up source control. There are plenty of free source control offerings, so pick the one you like best. Personally I use Perforce, which is free for two or less people. I ahve heard good things about Subversion and git as well. The specific one is not as important, but choose one of them.
+
+If you want to get a deeper knowledge of computing I would recommend Sipser's Book and Knuth.
+
+Whichever language you choose I would spend time learning the debugger for it as well.
+
+If you are doing web development, then make sure you know how to minimally setup and run Apachie (or IIS).
+
+Avoid holy wars if you can. They are a waste of time, and you don't learn anything from it except that people are stubborn. Some Holy war topics (bracket style, editors, endianess, "best" language, "best" OS, ...).
+
+My personal setup:
+
+Standard PC (Windows XP Pro)
+
+
+Visual Studio 2007 (a little behind).
+VIM
+Python
+C/C++
+C#
+Scons
+
+
+Standard PC (FreeBSD runs headless: no GUI)
+
+
+gnu tool chain (Make, C/C++ etc)
+VIM
+python
+Scons
+
+    
+    
+Answer 2: 
+
+    
+    
+Personally, I would recommend starting with Linux - just about every programming language has good free tools on Linux.  Then I would use VMWare to make virtual machines with various other platforms you might want to test your software on - Windows, other Linux distros, maybe OpenSolaris, etc.  Again, in my experience Linux with a Windows VM works better than Windows with a Linux VM.
+    
+    
+Answer 3: 
+
+    
+    
+I recommend KATE (part of KDE) as an editor. It's a lightweight and easy editor with syntax highlighting, multiple files, and a built-in terminal. It's not imposing like emacs or vim, and it is great for all sorts of projects, because of the terminal. It's sort of like a mini-IDE.
+    
+    
+Answer 4: 
+
+    
+    
+Nothing will help more than picking a project that uses the technologies you're most interested in and building it. You could decide you're going to learn X language or read a book on Y for no other reason than to increase your knowledge, but even if you have the willpower to follow through all the way I'm willing to bet you'll learn just as much and get much more satisfaction out of basing your learning around something practical.
+
+As far as specific tools, well, the only answer depends on what you want to do. You could end up using Visual C# Express from Microsoft, NetBeans IDE for Java, or Xcode on a Mac. All of these are free, but it's really what you plan to do with the tools that matters, not that you have them installed on your hard drive. The same thing goes for hardware and OS too, you might want to have a good Windows PC for building a game in C#, or use a Mac for web development, etc. Decide what you want to do, and pick the best tools that allow you to accomplish that goal.
+
+One thing that is pretty much independent of everything is some kind of version control; it's a good idea no matter what project or technology you use. Git and Subversion are two popular, cross platform choices.
+    
+    
+Answer 5: 
+
+    
+    
+A fast connection (for downloading linux), and a safari.oreilly.com account!
+    
+    
+Title: What IDEs and tools are available for C language development?
+Description: 
+    
+    
+                    
+Looking at learning some C since i saw in another SO question that is good to learn for the language and for the historical experience.
+
+Wondering about what IDE's professionals use and what other tools are useful while programming in C?
+    
+
+        
+Answer 1: 
+
+    
+    
+I have always been fond of Code::Blocks It's a wonderful C/C++ IDE, with several helpful addons. As for a compiler I've always used MingW but I hear DigitalMars C/C++ compiler is good.
+    
+    
+Answer 2: 
+
+    
+    
+You can play with Eclipse, it is not the best one for C but it works. For a compiler I would use GNU gcc. for tools, look at CScope, gdb (debugger).
+
+If you don't care for extra baggage go with Microsoft Visual C++ Express edition but do keep in mind there is lots of extra stuff in there...
+    
+    
+Answer 3: 
+
+    
+    
+I actually use Vim when editing C code, so I don't really know about C IDEs.
+
+I often use a couple of tools to help though:
+
+
+Ctags : Generate tag files for source code
+Make  : Build automatisation
+GDB   : The GNU debugger
+GCC   : The GNU C Compiler
+
+    
+    
+Answer 4: 
+
+    
+    
+If you use Windows I suggest using Visual Studio. There's a free Express Edition here, but there is a downside - Visual C++ has a lot of "added functionality" for Win32 and .Net development. 
+
+These added features might be confusing when trying to focus on C.
+
+I learned using Borland's Turbo C. It was a while back, though.
+    
+    
+Answer 5: 
+
+    
+    
+I use Cygwin as my development environment and Notepad++ as an editor; I prefer sets of simple applications that each do one thing rather than massive complicated IDEs.  Visual Studio is particularly problematic in this sense; not only is it very C++-oriented, but its completely overwhelming to newer programmers due to its sheer mass of features.
+
+MSVC also lacks support for most of the C99 standard, which can be very annoying when programming in C.  For example, you have to declare all variables at the top of code blocks.
+    
+    
+Answer 6: 
+
+    
+    
+A favorite of mine is Slickedit.  A comprehensive IDE, one of the first apps to have C and C++ function hints (think, intellisense), works with GCC or almost every c/c++ compiler out there, will help you manage a make file or let you do it all yourself, fast, clean, and all in all slick.  Integrates with almost any version control server as well.  Fully configurable, has C/C++ refactoring, and will read/import almost any/every other project type out there.
+
+Of course, you have to pay for it, but if you want a good experience, you usually do.
+
+Alternatively, there's many many free code development tools out there like Eclipse, Textpad, CodeBlocks, Editpad, all with various levels of project integration.  Most of Microsoft's development apps are available with their Visual Studio Express apps, if that's your cup of tea.
+
+Of course, lets not forget the classics: Vi, Emacs.  People have developed with these tools for a long, long time.
+    
+    
+Answer 7: 
+
+    
+    
+If you develop on the Windows platform, the Zeus editor has support for the C language.
+
+
+(source: zeusedit.com)  
+    
+    
+Answer 8: 
+
+    
+    
+Netbeans provides a fairly slick C/C++ development environment. Excellent for anyone who is already familiar with NB for Java, Ruby, or PHP development. Provides many of the same features as Visual Studio, Borland, or CodeWarrior (are they still around?) but without being tied to the proprietary libraries. It also provides for a portable development environment so you get a consistent workflow and toolset between platforms.
+
+Of course, a properly configured Vim with the GNU compiler tools can provide a pretty slick experience. You don't get popups and a gui, but it can automate the build process and even jump to errors in your code.
+    
+    
+Title: WebStorm - Hide &#39;template literals&#39; highlighting
+Description: 
+    
+    
+                    
+I've just switched from Atom to WebStorm as development platform. I'm rather new to Angular and JavaScript, but having a fully fledged IDE seems a bit better for me to figure out where errors are coming from.
+
+I'm experiencing one little annoyance... I can't seem to find how to disable the multiline (template literal, I believe it's called) highlighting of the backticks (`). This is what it looks like:
+
+
+
+Could someone please help me figure out how I can disable it? 
+    
+
+        
+Answer 1: 
+
+    
+    
+UPDATE
+
+Go to 
+
+Preferences &gt; Editor &gt; Color Scheme &gt; General &gt; Code &gt; Injected language fragment
+
+
+and untick the Background option:
+
+Editor screenshot
+    
+    
+Answer 2: 
+
+    
+    
+Found it! You can disable this by going to the Preferences 
+Title: Messed up Eclipse window layout
+Description: 
+    
+    
+                    
+I accidently messed up the default eclipse layout now I can't get it back the way it used to be. HERE is a picture. What really annoys me is that eclipse now is taking up unnecessary space at the top. What I want gone, but can't get rid of is the bar all the to the right with "Java" in it. Right clicking won't help at all. Second, I want to get rid of the bar left to this "Java"-bar. As you can see it doesn't really have ANY FUNCTIONALITY AT ALL(??). To get rid of this strange bar is the most important thing since this will move up "Java" and Quicksearch to the placement above. 
+
+Edit: Just so to be clarify, THIS bar is what I mean which woul solve everything.
+
+Actually, the most helpful thing would be to restore the whole Eclipse layout to default. I have tried Window-/pp/p/div
+Answer 1: 
+
+    
+    
+right mouse click on the perspective(top-right "Java") and select Reset. This will fix the perspective.
+
+EDIT: It seems to be a bug in Eclipse Juno. A suggestion is to delete the workbench.xmi file, but it doesn't work for everybody...
+
+So If it doesnt work, you have to install your eclipse again.
+    
+    
+Answer 2: 
+
+    
+    
+There are different things you might try:
+
+
+You should be able to drag and drop the bar to a location where it
+automatically docks and does not disturb you (e.g. at the bottom)
+Right click the emtpy bar and choose "hide toolbar"
+If everything fails: Delete your eclipse installation and load a new one. Don't delete your workspace and point the new installation to your current workspace. You will have all your projects as they are now.
+
+    
+    
+Answer 3: 
+
+    
+    
+As a workaround, until this bug will be resolved, you can edit eclipse\plugins\org.eclipse.platform_4.2.1.v201209141800\css\e4_classic_winxp.css.
+Append following code.
+
+.MToolBar.Draggable {
+    handle-image:  url(./winXPHandle.png);
+}
+
+.MToolControl.Draggable {
+    handle-image:  url(./winXPHandle.png);
+}
+
+
+Source: https://bugs.eclipse.org/bugs/show_bug.cgi?id=389594#c4
+    
+    
+Answer 4: 
+
+    
+    
+I had to click on reset for all my perspectives, then exit eclipse, and re-open it. Worked for me.
+    
+    
+Title: Is there any local history in Visual Studio 2012
+Description: 
+    
+    
+                    
+That is a really useful feature, there are many IDEs that can provide it but I can't find any extension which can provide Local History.
+
+By Local History I mean something that tracks any changes and edits that I make on the source code so I can be able to recover it in future.
+    
+
+        
+Answer 1: 
+
+    
+    
+What you are describing is a source code control system.  Visual Studio does not provide this by default as its primary job is that of an editor.  It does support a number of source code control plugins, many for free, which will do this for you.
+
+For example there is a free Git plugin that is now officially provided by Microsoft. 
+
+
+  http://visualstudiogallery.msdn.microsoft.com/abafc7d6-dcaa-40f4-8a5e-d6724bdb980c
+
+
+This can be used with a number of free Git providers 
+
+
+CodePlex 
+GitHub
+Visual Studio Hosting
+
+    
+    
+Answer 2: 
+
+    
+    
+There is a separate extension that provides local history functionality:
+http://visualstudiogallery.msdn.microsoft.com/226c2108-9da9-407d-b90d-9783040d27b8
+
+I think the local history feature complements version control. 
+    
+    
+Answer 3: 
+
+    
+    
+There is an option to have best of both worlds:
+
+autogit - Visual Studio extension
+
+Here are some counter reasons why local history is different then source code repository:
+
+Some simple reasons:
+
+
+simple insurance against accidental changes or deletions.
+makes it easier to support smarter undo, backtracking, or exploratory programming.
+resume a task or track a task by seeing changes at a fine-grain level as they happened.
+light-weight, stays invisible until you need it.
+
+
+Some deeper reasons:
+
+
+Better Task Resumption: research suggests that resuming an interrupted task or reviewing a change made by another is made easier when changes can be reviewed in an time-ordered manner (in comparision to a flat commit).
+Auto-blog: automark is a sister project that can examine a git repository and then automatically generate a markdown file, in a format suitable for publishing a blog post.
+Personal Analytics: Watts Humphrey has advocated the idea of tracking personal activity for self-improvement, using methods such as the Personal Software Process.  Using services, such as codealike or codeivate, you can track things like time spent editing, etc.  Tracking the actual changes can take this analysis to another level.
+Api Analytics: Frequent mistakes are made when programming or using particular apis.  This can be analyzed: "You spent 3 hours figuring out how to correctly use pygit2.create_commit(), create github issue?"
+
+    
+    
+Answer 4: 
+
+    
+    
+There's also the Auto History Extension: https://visualstudiogallery.msdn.microsoft.com/dfcb2438-180c-4f8a-983b-62d89e141fe3
+
+It's like the one Juha Palomäki linked to, except has more downloads, reviews, and a slightly higher average-review. (haven't tried either myself yet, though plan to in a day or two)
+    
+    
+Title: Visual Studio 2010 vs Visual Studio 2005 for C++
+Description: 
+    
+    
+                    
+My department writes a mixture of Windows, Linux and cross platform (RHEL Linx and Windows Server 2003) C++ code for in house applications.  We use the STL and Boost 1.39.
+
+VS2010 is now available in my organisation.  If we were to move to VS2010 I'd have to make a significant business case for it.  What would some of the most noticable benefits we would see from the move?  Do you think it would be worth the time cost to move?
+
+Update
+
+Given the size of our code base and the cross platform nature of our code, I'm mainly interested in what the new IDE offers, e.g. how good is the intellisense (say, compared to VS for .net).  Does the intellisense work well for very large code bases?  What's the refactoring support like?  How is raw IDE performance?  What is the debugger like, i.e. if I hover over a pointer to a collection of smart pointers is it relatively easy to see what's in the collection?
+
+Thanks in advance
+    
+
+        
+Answer 1: 
+
+    
+    
+If you're only interested in IDE improvements, and you make a big use of smart pointers, I'd suggest to wait up to SP1 (or some SP that comes with fixes to intellisense).
+
+As some people pointed out, there are BIG changes in C++ intellisense, to support a lot of features that other languages already had for years. The thing is that they accidentally broke the intellisense of smart pointers when instantiated with a template type.
+
+I've posted a question with that issue a couple of weeks ago, and as suggested by someone I sent the issue to Microsoft Connect. Sadly the response from the VC++ team was that it won't be fixed soon.
+    
+    
+Answer 2: 
+
+    
+    
+New C++ 0x features, e.g. lambda expressions are really nice to have.
+    
+    
+Answer 3: 
+
+    
+    
+The only real difference in the two compilers is some C++0x support in VS2010. The IDE has improved a lot more, but VS2005 is fine for me too. Now are these worth the time cost to move? Up to you...
+    
+    
+Answer 4: 
+
+    
+    
+Greatly improved IntelliSense. C++0x, which means shared_ptr, unordered_set/map, function, lambdas, etc. This will in practice simplify things for you since you don't need as much from Boost. You also get access to Parallel Patterns Library (parallel for_each, etc) which really helps if you are targeting multi-core. I'd say go for it! 
+    
+    
+Answer 5: 
+
+    
+    
+Since you use STL and Boost, performance might be a pretty big deal. VC2010 supports rvalue references and move semantics, which, even if you don't use it in your own code, speeds up Boost and STL code significantly. (Although I doubt Boost 1.39 utilizes this a lot though. But if at some point you upgrade to a recent version of Boost, you'll get the benefit)
+
+Intellisense was reworked in a big way for 2010. It's still a bit wonky, and falls over the moment it sees a template, as it'll always do for C++, but I have to admit it works much better than it used to.
+    
+    
+Title: Netbeans Version Control File Color Codes?
+Description: 
+    
+    
+                    
+I'm trying to find a legend that can help explain the different colors NetBeans uses to describe the state of a file.
+
+Some of my file colors are:
+
+
+Grey
+Blue
+Green
+Any others I have yet to discover
+
+
+If it helps, I'm using Netbeans 6.7 with CVS. What are these colors?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Green means new. 
+Blue means modified.
+Grey means ignored and/or deleted. (Documentation contradicts the tooltip hint!)
+
+
+If you go into the View menu, you can turn on Show Versioning Labels. That will put text next to each file explaining its state (and what each color represents).
+
+
+Image from Netbeans.org
+    
+    
+Answer 2: 
+
+    
+    
+Using the online help and searching for icon/icons and or badge/badges should give you the information you want.
+
+Alternatively take a look at BadgedIcons which at least explains some of the colors and icons (e.g. for version control)
+    
+    
+Title: What is the current state of tooling for Scala?
+Description: 
+    
+    
+                    
+Over the past year, I've heard an increasing amount of hype regarding the Scala language.  I know that there are several existing projects that have plans to integrate Scala support with IDEs; however, it isn't always clear how good the integration really is.
+
+Do they currently support Intellisense as well as Eclipse and Netbeans do for the Java language?  Do they support instant verification as well?
+    
+
+        
+Answer 1: 
+
+    
+    
+I can't personally speak to the stability of the IntelliJ or NetBeans plugins (though I have heard good things), but the Scala IDE for Eclipse just recently made a new release with Scala 2.7.4.  Architecturally, this release is quite different from the previous ones in that it uses Equinox Aspects, the officially supported mechanism for extending JDT (and other cross-plugin extensions).  Whereas before the Scala plugin had to literally hack into the JDT internals using private APIs and reflection to trick the system into behaving properly, now it is able to simply declare its extension points and let the system do the rest.  It's hard to even describe how much more stable this makes things.  I'm not saying that it's all sunshine and roses yet, but if you've tried and rejected the plugin in the past (as I had), it's time to give it another look.
+
+As for how it stacks up feature-wise, SDT doesn't have any refactoring support (IntelliJ has some basic stuff like "Rename"), nor does the editor do some things like "Mark Occurrences".  However, it has a significantly better Outline than NetBeans, better compiler support than IDEA, and very good semantic highlighting.  All three plugins support content assist (or "intellisense", as Microsoft calls it), but none of them are particularly reliable in this area just yet.  The Scala IDE for Eclipse is the only one to support incremental compilation (alla Eclipse's Java tooling).
+
+My advice: shop around.  Try all three and see which one works the best for you.  From what I've been hearing, the Scala IDE for Eclipse has leap-frogged the competition with its latest release, but the others have shown such consistent stability and steady advancement that you can't count them out just yet.
+    
+    
+Answer 2: 
+
+    
+    
+Here's a similar question:
+Which is the best IDE for Scala development?
+
+In my very short experience with the Scala IDE for Eclipse and the Scala Plugin for Netbeans, it seemed like the Netbeans plug-in was a little more solid than the Eclipse one.
+
+With the Scala IDE for Eclipse I was having problems with running a Hello World-type Scala object, and sometimes the syntax highlighting would start acting up. Then, I tried out the Netbeans plug-in, and it seemed to be more functional than the Eclipse one.
+
+I haven't used either Scala IDE plug-in much in-depth, so I can't speak out of a lot of experience, but just from my initial impression, the Netbeans plug-in seemed a little bit more stable than the Eclipse one.
+    
+    
+Answer 3: 
+
+    
+    
+Currently, all three main IDEs are at roughly the same level of support. 
+
+
+IntelliJ - the plugin has fits of not working at all, but is otherwise quite good. The underlying platform is sluggish (at least in linux) since v8.
+Eclipse - the plugin is receiving a lot of support and is under very active development.
+NetBeans - IMHO, the plugin works a little better than the Eclipse one, but not being able to run arbitrary files is a major downer.
+
+
+All of the above suffer from being unable to parse the AST in all contexts. It is quite easy to confuse them by mixing in traits with implicit defs, for example. No IDE can be trusted when it advises of a syntax error. Fall back to the compiler to be certain.
+    
+    
+Answer 4: 
+
+    
+    
+I'm quite happy using IntelliJ IDEA 8.1 and its Scala plugin and can recommend it. It even has a roadmap that you can influence by voting your favorite missing features :) I don't have experience with the Scala support of the other IDE's, unfortunately.
+    
+    
+Answer 5: 
+
+    
+    
+I'm using the Eclipse Scala plugin. Its pretty good but not at the same level as the Java tooling.
+    
+    
+Answer 6: 
+
+    
+    
+AS for intelliJ, no idea.
+But between Eclipse and Netbeans, I must say Netbeans especially if you are not willing trade maven for sbt and you want an IDE that does not get in the way of maven.
+
+Netbeans maven support is just way too good. 
+
+The Netbeans scala editor seems to work quite nicely as well. 
+I care not for the integrated scala development kit in netbeans or the compiler plugin, or any such helpers. From netbeans I expect only tthree things: 
+(a) Do not get in the way of maven and let maven run my build
+(b) Give me a decent editor
+(c) Let me drill down from my .scala files into the source code of the libraries referred by my maven dependencies.
+
+And Netebeans is able to deliver all three quite well, I belive, even if at times it feels a bit too slow.
+
+What I can say is that
+(1) You do not run into any compilation issues since the task is up to maven.
+The maven compiler plugin is a bit too slow. But compiling scala vs java is always like that, painful. Still if you've tried GWT compiling java to javascript is more painful even.
+
+(2) Netbeans figures out the source code to you maven dependencies flawlessly and you can drill in into the most obscure sacala operators, such as the CSS mappers of lift.
+
+As for eclipse, eclipse maven integration has always been nasty. 
+Netbeans maven integration can turn very sour if you have a big project with too many dependencies and modules. Then the check for external changes done by netbeans is just horribly slow. That is the downside of netbeans.
+
+However, if you are and SBT fan ... well, maybe then answer might be something else.
+
+But for me, since maven has become the thing it is today, I never want to go back again to those "web application project", "library project" etc... wizard like options that you have when you create a new project in the IDE.
+I simply want "maven project", and please figure out what my output artefact is by reading the pom.
+    
+    
+Title: remote with selected name already exist Android studio , git hub error
+Description: 
+    
+    
+                    
+I'm getting this GitHub error in android studio whenever I'm creating a new repository , And I'm not having any GitHub repo. of the same name.
+
+  
+    
+
+        
+Answer 1: 
+
+    
+    
+goto Terminal in android studio and type below command –
+
+git remote rm github
+
+    
+    
+Answer 2: 
+
+    
+    
+Open to Android Studio 
+Answer 3: 
+
+    
+    
+Tried it.....
+
+Step1. Git-2.11.0-64-bit.exe Setup.
+
+Step2: Git Bash -/pp
+Answer 4: 
+
+    
+    
+
+Git  $ git remote rename
+New repository name: eDiot1
+    Remote name github1
+
+    
+    
+Title: IDE for elasticsearch
+Description: 
+    
+    
+                    
+I was searching extensively for having an IDE for elasticsearch. But I am unable to find one. I know it is simple Restclient will do but in most of the rest client the body editor doesnt have automatic indention and all. I was thinking If there is no IDE, I can make one so that other people can also benefit from it. To make it I need how to create an editor? Any tools are available which will do proper json formatting while typing. IF that is there I can start a github project and start making an IDE. I can also add keywords of elastic search and it will easy for developers.
+
+IF that kind of thing is already there please point me to it. I am unable to find out one.
+    
+
+        
+Answer 1: 
+
+    
+    
+The best option I have disovered so far is the Atom plugin elasticsearch-client
+
+It does a great job in simplifying my ES work. It also has tons of predefined queries like index stats and alike and a neat query benchmarking tool. Be sure to add some helpful JSON plugins like json-path-finder and general helpers like minimap and it gets quite comfortable. 
+
+Not as powerful as the combination of cat/echo, httpie and jq but much more IDE-like.
+    
+    
+Answer 2: 
+
+    
+    
+Visual Studio Code has added an extension.  It currently doesn't support HTTPS, so it's not yet fully ready.  However development is active and I am hopeful that it will become the IDE for Elasticsearch.
+    
+    
+Answer 3: 
+
+    
+    
+You should look at Sense. It does what you need.
+    
+    
+Answer 4: 
+
+    
+    
+DBEaver. Elastic does not endorse, promote or provide support for this application, but works.
+    
+    
+Title: Can I configure PhpStorm to add use statements automatically for copy and paste code blocks?
+Description: 
+    
+    
+                    
+When I write code within phpstorm, it will add use statements when I select a class from autocompletion.
+
+So writing $pagerfanta = new Pagerfanta(new DoctrineORMAdapter($query)); will add both use statements: 
+
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+
+
+Yet when I copy-paste or extract the block containing $pagerfanta = new Pagerfanta(new DoctrineORMAdapter($query)); into a new class, the use statements will not get added. PhpStorm shows them as missing by adding a different background color.
+
+Nontheless, I often forget to add the use statements then, and hence am wondering, if I can configure PhpStorm to add those use statements for me when copy-pasting.
+    
+
+        
+Answer 1: 
+
+    
+    
+If you select a class in your code you want to generate a use statements for, then type Alt-Enter-Enter you will get a menu "Import Class" where you can select the class to include in the use statement.
+    
+    
+Title: Is there InteliJ Idea equivalent for Eclipse &ldquo;type filters&rdquo; feature
+Description: 
+    
+    
+                    
+Let's assume that I have my.company.Component class in project. Unfortunately, in JDK libraries there is java.awt.Component class available (that I never need to use). 
+
+Each time I want to import Component class, IntelJ asks my to decide which one I want to use. It's quite irritating given that I always want to use the same one.
+
+In Eclipse I could use "Type Filters" to exclude packages/classes that I never use. Is there any equivalent for InteliJ?
+    
+
+        
+Answer 1: 
+
+    
+    
+The easiest way to do that is:
+
+
+press ALT+ENTER or the red balb that appears infront of Component 
+Select Import Class 
+
+Select the package you want to exclude and press the arrow to the right. Then select the specific package name you want to exclude
+
+
+The other way is to go to settings  (CTRL+ALT+S)
+Then goto 
+
+Editor -&gt; Auto import -&gt; Exclude from Import and Completion 
+
+
+and add the packages you want to exclude (or remove the ones you excluded by mistake)
+
+
+    
+    
+Answer 2: 
+
+    
+    
+When you are prompted to choose an import, you can highlight the import you don't want; press the -&gt; arrow and you have the option to exclude that import, or the package, or even parent packages.
+
+Another option is to be found in File -&gt; Settings, then choosing Editor -&gt; Auto Import.
+    
+    
+Title: Run class in Scala IDE
+Description: 
+    
+    
+                    
+I just installed the Eclipse Scala IDE and imported some existing projects. However, when I want to run the classes (that contain a main def) via right click -/pp/p/div
+Answer 1: 
+
+    
+    
+You need to run an object not a class as noted by urban_racoons. so you can run either:
+
+object MyApp{
+  def main(args: Array[String]): Unit = {
+    println("Hello World")
+  }
+}
+
+
+or
+
+object MyApp extends App {   
+  println("Hello World")   
+}
+
+
+Scala can not run a class because the main method needs to be static. Which can only be created behind the scenes by the compiler from a singleton object in Scala. Create the object and "run as a Scala application" should appear in the "run" context sub menu as long as you have the Scala perspective open.
+
+You can still access the programme's arguments using the App trait as in
+
+object MyApp extends App {   
+  println("The programme arguments are:")
+  args.foreach(println)
+  // the above is just shorthand for 
+  // args.foreach(ar =&gt; println(ar))  
+}
+
+
+It should also be noted that App is a trait. So it can be mixed in with other traits and any class, which makes it handy for rapid prototyping.
+    
+    
+Title: How to jump to the rightmost window with just one keystroke?
+Description: 
+    
+    
+                    
+I found the window manager in vim is quite powerful. We can use it to split the window to whatever we want it to be. But when the numbers of the windows comes to more then 4, it will caused one problem: it's quit hard to jump to the rightmost window. Because the rightmost window is used to display taglist in my vim. I don't like the way that type CTRL+w for twice or more times to jump to the rightmost window. Is there a more easier way to do it?
+    
+
+        
+Answer 1: 
+
+    
+    
+:nmap &lt;C-\&gt; &lt;C-w&gt;200l   
+
+
+then you press ctrl-\ will let you go to the most right window.
+
+actually you don't need to press c-w many times. if you have 10 windows opened, and now you are in 3rd window, you just type ctrl-w 10 l. to go to the right most window.
+
+from help:
+
+
+  CTRL-W_l| CTRL-W l       go to Nth right window (stop at last window)
+
+
+you just need give a N
+    
+    
+Answer 2: 
+
+    
+    
+If the previous window was TagList, you can use &lt;C-w&gt;p to jump to it.
+
+You can also use &lt;C-w&gt;b to jump to the last window at the bottom-right.
+    
+    
+Title: Specific IDE, for specific things
+Description: 
+    
+    
+                    
+I need an IDE that can do the following:
+
+
+Run on an oldish laptop (2GB Ram, 1.9 ghz intel celeron M)
+Run well on an oldish laptop (with a browswer open)
+Be able to run on windows
+Be able to run smoothly on windows
+Is able to do Java (or, if you really can't find anything, C# will be okay)
+An extension or something for Python would be nice
+Django support would be awesome
+It would be great to have SFTP/FTP editing support that actually works
+
+
+I don't care about lots of extensibility or commercial support or a kitchen sink or any of that, I just need it to be stable and all of the above.
+
+And, Vim or EMACS aren't answers since they (in my mind, without excessive configuration) don't qualify as IDEs.
+
+And, if this doesn't belong here, please tell me.
+
+EDIT: Code completion is also important.
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse with PyDev plugin gives you Java, Python and Django. Not sure about SFTP/FTP editing.
+    
+    
+Answer 2: 
+
+    
+    
+notepad++ has an ftp plugin that works very nicely and runs on very little resource. Will syntax highlight most languages and has some compiler support.
+    
+    
+Answer 3: 
+
+    
+    
+E Text Editor looks promising.
+    
+    
+Answer 4: 
+
+    
+    
+I think IntelliJ is pretty nice now.
+    
+    
+Answer 5: 
+
+    
+    
+The Zeus editor has support for Java and C#, does SFTP/FTP editing, is scriptable in Python and should run fine on a lower end Windows box off that size.
+    
+    
+Answer 6: 
+
+    
+    
+Use the IDE and tools that makes you the most productive.
+Use the IDE and tools that you want to use.
+Use the IDE and tools that you will enjoy using.
+
+If your computer is preventing you from doing that, then get a new computer.
+
+Long gone are the days when labor was cheap, and hardware expensive.
+These days hardware is cheap, labor is expensive.
+
+Your time is worth money. Don't waste it.
+You are more important than that.
+
+Whether it's from not being able to use the best tool for the job, or losing time on slow compiles, it all adds up.
+
+In a completely contrived example:
+If you're losing 1 hour of productivity a day, 5 days a week, for 48 weeks out of the year, that adds up to 240 hours. Even if you were working minimum wage, at say $10/hour, that's $2400 in lost productivity.
+
+Take whatever you are losing in productivity, and re-invest it into solutions to those problems.
+    
+    
+Title: What benefits do GWT IDE plugins have considering that GWT is simply Java?
+Description: 
+    
+    
+                    
+Seen that writing GWT code is basically writing Java code, what does a GWT for an IDE exactly do?  For example there are GWT plugins for IDEA and for Eclipse (and maybe for NetBeans?) but do they do that I cannot do simply by using Eclipse or IDEA without the GWT plugin?
+    
+
+        
+Answer 1: 
+
+    
+    
+I've only used the IDEA plugin myself.  I definitely would not want to give it up.  As others have said, you can create a GWT project and debug in hosted mode as easily as you would run any other application, but that's only the beginning.
+
+IDEA also has several GWT-specific class creation options.  You can create a new UiBinder file, which will generate both the .ui.xml file and the Java file, and will already have the plumbing in place for creating the UiBinder object.  You can create a new GWT Remote Service, which will create the service interface, async interface, and implementation class for you.
+
+The GWT plugin will also warn you about tons of probable errors right in the editor.  It will warn you if your service interface doesn't have proper matching methods in the async interface, and has an intention for fixing the problem.  It will warn if your service implementation class does not have an entry defined in the web.xml file (yep, with an intention available to automatically register it).  It will warn you if you have fields in your UiBinder class that aren't defined in the .ui.xml file, again with an intention to help resolve the issue with just a couple keystrokes.
+
+On top of that, the code completion is excellent for everything including CSS attributes, Javascript, HTML, and the various XML files.
+    
+    
+Answer 2: 
+
+    
+    
+They add wizards, dialogs, editors, and other extensions to the IDE that help specifically with GWT tasks. For example, rather then creating a new GWT project from scratch using the command line, or creating an eclipse java project and then creating all the necessary files yourself, the plug-in adds a wizard that lets you type in the name of the project, and it creates all the necessary files for you.
+
+Other additions can be large stuff like a local server, or minimal like a source code formatter. The sky is the limit with plug-ins.
+
+I know the GWT adds a GUI editor to eclipse so you can drag and drop controls rather then manually entering them all.
+    
+    
+Answer 3: 
+
+    
+    
+Yes, you can, however using a plugin for a given IDE, helps you by not needing to swap from the IDE to another tool ( for testing for instance ) 
+
+Here's the demo of IDEA
+
+http://www.jetbrains.com/idea/training/demos/GWT.html
+
+The same way you can also compile from the command line ( I do it sometimes ) or let the IDE help you by pressing a single button. 
+    
+    
+Answer 4: 
+
+    
+    
+Doesn't the GWT Eclipse plugin provide the debugging capabilities? GWT debugging in eclipse is the most useful tool ever.
+    
+    
+Answer 5: 
+
+    
+    
+There also is a plug-in for MyEclipse that gives you a Matisse-like drag and drop Toolbox for GWT. 
+For Netbeans we have the GWT4NB plug-in, which offers among other things good debugging and code completion which works also for .ui.xml files.
+    
+    
+Answer 6: 
+
+    
+    
+OK ...
+
+
+GWT RPC - With Google plugin, it does reduce the tedium verifying the interface RPC interface-async pair declaration.
+UiBinder. Each uibinder set is a pair of files: The ui template and the template bean. The plugin helps me verify the correspondence of uifields in the template and the template bean. Then there are @uifactory, @uifield(provided=true).
+You can declare another an "external" bean (a java code other than its template bean) using ui:with in the ui template. With that you pull in functions from the bean to provide values for your gwt widget attributes. The plugin provides me with auto-complete/verification of functions that are visible in ui:with bean. 
+Of course, the plugin provides the compiler too, which compiles the java code into javascript.
+The debugger which works with the client-side. Imagine how the plugin works when we step the debugger on the client code which is compiled to javascript.
+The run config, which automatically fills in the blanks, the args and params. I would hate writing a gwt launch config by myself.
+
+
+Without the plugin, GWT development would be rather tedious.
+    
+    
+Title: How to use PHPdoc in Eclipse
+Description: 
+    
+    
+                    
+We are currently in the beginning of a new project, and would like to (for once) comment as much as possible from the start to help future development.
+
+I have tried to find out what best practices are of using phpDoc in Eclipse, but with pretty slim results.
+
+Can you share your best practices and tricks of using phpDoc to comment stuff in Eclipse?
+    
+
+        
+Answer 1: 
+
+    
+    
+There is no "real standard" about what should be commented and how, but some tags are used by pretty much anyone who comments his code.
+
+For instance, I generally use at least :
+
+
+a short descriptions
+optionnally, a long description
+@param type name description : for the parameters of functions/methods
+@returns type : for the return value of functions/methods
+@throws ExceptionType : if the functions/methods throws an Exception under some circumstances
+@see ... : when I want to make a reference to either another file, or an URL that gives more informations
+depending of the structure of the project, I can also use @package and @subpackage
+Another one that's nice when you have magic properties in a class (they cannot be seen by your IDE, as they are written in the code) is @property type $name : it allows Eclipse PDT to do auto-completion, even on magic properties -- Doctrine uses this, for instance.
+
+
+Most of those are used by Eclipse PDT to help you when coding (especially @param) ; but feel free to add some that are not used by Eclipse PDT : if you generate the documentation from your code, it can always be useful ;-)
+
+
+The best advice I can give you would be to take a look at the source-code of some big applications and/or frameworks (Zend Framework, Doctrine, ...), to see how their code is commented -- chances are they are using something that's well accepted.
+
+For instance, if you take a look at Zend Framework code, you can find stuff like this for a class :
+
+/**
+ * @package    Zend_Cache
+ * @subpackage Zend_Cache_Backend
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ */
+class Zend_Cache_Backend_Apc extends Zend_Cache_Backend implements Zend_Cache_Backend_ExtendedInterface
+
+
+And like this for a method :
+
+/**
+ * Test if a cache is available for the given id and (if yes) return it (false else)
+ *
+ * WARNING $doNotTestCacheValidity=true is unsupported by the Apc backend
+ *
+ * @param  string  $id                     cache id
+ * @param  boolean $doNotTestCacheValidity if set to true, the cache validity won't be tested
+ * @return string cached datas (or false)
+ */
+public function load($id, $doNotTestCacheValidity = false)
+
+
+
+Anyway, the most important thing is to be consistent : every member of your team should comment the same way, follow the same conventions.
+    
+    
+Answer 2: 
+
+    
+    
+At a bare minimum, I'd at least stick with what minimal phpdoc tags are automatically inserted by Eclipse based on your code.
+
+The second minimal level I'd strive for would be to keep PhpDocumentor itself happy.  Once you run PhpDocumentor against your code, look for the errors.html page in the root of your docs.  This will list anything PhpDocumentor doesn't like, such as not having file-level docblocks.  You could strive to bring that list of errors down to zero.
+
+The third level you could strive to reach would be satisfying any one of the coding standards included in the PHP_CodeSniffer application at PEAR [1].  A drawback here is that these standards more specifically focus on the code itself, but all of the standards do include rules regarding code documentation.
+
+[1] -- http://pear.php.net/package/PHP_CodeSniffer
+    
+    
+Title: How can I watch multiple variables while debugging without stopping at breakpoints?
+Description: 
+    
+    
+                    
+Suppose I have a complex C++ application that I need to debug with a lot of variables. I wanna avoid using std::cout and printf approaches (below there's an explaination why).
+
+In order to explain my issue, I wrote a minimal example using chrono (This program calculates fps of its while cycle over time and increment i_times counter until it reaches 10k): 
+
+#include &lt;chrono&gt;
+
+using chrono_hclock = std::chrono::high_resolution_clock;
+
+int main(int argc, char** argv){
+    bool is_running = true;
+    float fps;
+    int i_times=0;
+    chrono_hclock::time_point start;
+    chrono_hclock::time_point end;
+
+    while(is_running){
+         start = chrono_hclock::now();
+
+         // Some code execution
+
+         end = chrono_hclock::now();
+
+         fps=(float)1e9/(float)std::chrono::duration_cast&lt;std::chrono::nanoseconds&gt;(end-start).count());
+         if(++i_times==10000) is_running=false;
+    }
+
+    return 0;
+}
+
+
+I would like to debug this program and watch for fps and i_times variables continuosly over time, without stopping execution.
+
+Of course I can simply use std::cout, printf or other means to output variables values redirecting them to stdout or a file while debugging and those are OK for simple types, but I have multiple variables which data type are struct-based and it would be creepy, time expensive and code bloating to write instructions to print each one of them. Also my application is a realtime video/audio H.264 encoder streaming with RTSP protocol and stopping at breakpoints means visualizing artifacts in my other decoder application because the encoder can't keep up with the decoder (because the encoder hit a breakpoint). 
+
+How can I solve this issue?
+
+Thanks and regards!
+
+
+
+The IDE I'm currently using for developing is Visual Studio 2019 Community.
+
+I'm using the Local Windows Debugger.
+
+I'm open to using alternative open source IDEs like VSCode or alternative debugging methods to solve this problem and/or to not be confinated into using a specific IDE.
+
+To watch for specific multiple variables in VS I use the built-in Watch Window. While debugging with LWD, I add manually variables by right-clicking them in my source code and click Add Watch. Then those are showed in the Watch Window (Debug-Windows-Watch-Watch 1):
+
+
+However I can only watch this window contents once I hit a breakpoint I set inside the while cycle, thus blocking execution, so that doesn't solve my issue.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use nonblocking breakpoint. First add the breakpoint. Then click on breakpoint settings or right click and select action.
+
+Now you add a message like any string that is suggestive for you. And in brackets include the values to show, for instance
+
+value of y is {y} and value of x is {x}
+
+
+In the image is shown the value of i when it hits the breakpoint. Check the "Continue code execution" so breakpoint will not block execution. The shape of your breakpoint will change to red diagonal square. You can add also specific conditions if you click the Conditions checkbox.
+Now while debugging all these debug messages will be shown in the output window:
+
+In the above image it is showing the following message:
+
+the value of i is {i}
+
+
+By checking the "Conditions" you can add specific conditions, for instance i%100==0 and it will show the message only if i is divisible by 100. 
+
+This time your breakpoint will be marked with a + sign, meaning it has condition. Now while debugging there will be shown the i only when divisible by 100, so you can restrict the output to some more meaningful cases 
+
+    
+    
+Answer 2: 
+
+    
+    
+The strict answer is "no" but...
+
+I think I understand what you're trying to accomplish.  This could be done by dumping the watched variables into to shared memory which is read by 2nd process.  A watch and a break point in the 2nd would allow you to see the values in Visual Studio without interrupting the original application.
+
+A few caveats:
+
+
+UAC must be admin on both sides to open the memory handle
+This wouldn't work with pointers as the 2nd program only has access to the shared memory
+Windows anti-virus went nuts for the first few times I
+ran this but eventually calmed down
+
+
+Worker application:
+
+#include &lt;stdio.h&gt;
+#include &lt;conio.h&gt;
+#include &lt;tchar.h&gt;
+#include &lt;windows.h&gt;
+#include &lt;chrono&gt;
+#include &lt;thread&gt;
+
+PCWSTR SHARED_MEMORY_NAME = L"Global\\WatchMemory";
+
+struct watch_collection  // Container for everything we want to watch
+{
+    int i;
+    int j;
+    int k;
+};
+
+using chrono_hclock = std::chrono::high_resolution_clock;
+
+
+int main(int argc, char** argv)
+{
+    bool is_running = true;
+    float fps;
+    int i_times = 0;
+    chrono_hclock::time_point start;
+    chrono_hclock::time_point end;
+    HANDLE map_file;
+    void* shared_buffer;
+
+    // Set up the shared memory space
+    map_file = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(watch_collection), SHARED_MEMORY_NAME);
+    if (map_file == NULL)
+    {
+        return 1;  // Didn't work, bail.  Check UAC level!
+    }
+
+    shared_buffer = MapViewOfFile(map_file, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(watch_collection));
+    if (shared_buffer == NULL)
+    {
+        CloseHandle(map_file);  // Didn't work, clean up the file handle and bail.
+        return 1;  
+    }
+
+    // Do some stuff
+    while (is_running) {
+        start = chrono_hclock::now();
+
+        for (int i = 0; i &lt; 10000; i++)
+        {
+            for (int j = 0; j &lt; 10000; j++)
+            {
+                for (int k = 0; k &lt; 10000; k++) {
+                    watch_collection watches { i = i, j = j, k = k };
+                    CopyMemory(shared_buffer, (void*)&amp;watches, (sizeof(watch_collection))); // Copy the watches to the shared memory space
+
+                    // Do more things...
+                }
+            }
+        }
+
+        end = chrono_hclock::now();
+
+        fps = (float)1e9 / (float)std::chrono::duration_cast&lt;std::chrono::nanoseconds&gt;(end - start).count();
+        if (++i_times == 1000000) is_running = false;
+    }
+
+    // Clean up the shared memory buffer and handle
+    UnmapViewOfFile(shared_buffer);
+    CloseHandle(map_file);
+
+    return 0;
+}
+
+
+Watcher application:
+
+#include &lt;windows.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;conio.h&gt;
+#include &lt;tchar.h&gt;
+#pragma comment(lib, "user32.lib")
+
+PCWSTR SHARED_MEMORY_NAME = L"Global\\WatchMemory";
+
+struct watch_collection  // Container for everything we want to watch
+{
+    int i;
+    int j;
+    int k;
+};
+
+
+int main()
+{
+    HANDLE map_file;
+    void* shared_buffer;
+    bool is_running = true;
+
+    watch_collection watches; // Put a watch on watches
+
+    // Connect to the shared memory
+    map_file = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, SHARED_MEMORY_NAME);
+    if (map_file == NULL)
+    {
+        return 1; // Couldn't open the handle, bail.  Check UAC level!
+    }
+
+    shared_buffer = MapViewOfFile(map_file, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(watch_collection));
+    if (shared_buffer == NULL)
+    {
+        CloseHandle(map_file);
+        return 1;
+    }
+
+    // Loop forever
+    while (is_running)
+    { 
+        CopyMemory((void*)&amp;watches, shared_buffer, (sizeof(watch_collection)));  
+    } // Breakpoint here
+
+    UnmapViewOfFile(shared_buffer);
+    CloseHandle(map_file);
+
+    return 0;
+}
+
+    
+    
+Title: WebStorm HTML files are showing TypeScript errors for HTML elements
+Description: 
+    
+    
+                    
+I installed a fresh copy of WebStorm and opened up an existing Angular project.
+
+When I open up any HTML file in the project the IDE shows 'Cannot find div' for all div tags in the .html file. For a few seconds the IDE is fine, then it shows a '2.5.3 Typescript' tab with a list of TypeScript errors.
+
+Some Typescript tab errors:
+Error:(1, 2) TS2304: Cannot find name 'div'.
+Error:(3, 4) TS2304: Cannot find name 'div'.
+Error:(3, 9) TS2304: Cannot find name 'ngIf'.
+
+
+I've tried invalidating the cache and restarting. I've tried disabling TSLint.  I've tried injecting language for some of the attributes/tags.
+
+Even index.html throws a bunch of TypeScript errors.
+
+  &lt;!doctype html&gt;
+    &lt;html lang="en"&gt;
+    &lt;head&gt;
+      &lt;meta charset="utf-8"&gt;
+      &lt;title&gt;&lt;/title&gt;
+      &lt;base href="/"&gt;
+
+      &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+      &lt;link rel="icon" type="image/x-icon" href=""&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+
+
+I expect no red squiggly marks in the .html file since it is all valid.
+It works fine in VS Code.
+    
+
+        
+Answer 1: 
+
+    
+    
+Known issue, WEB-36373 is fixed in 2018.3.3.
+
+For now, I can suggest turning Angular language service off in Settings | Languages &amp; Frameworks | TypeScript (all the angular functionality will still be available)
+    
+    
+Title: Scala IDE Error: Main method not found in class &#39;hello&#39;
+Description: 
+    
+    
+                    
+I am just beginning with my scala development on the Scala IDE(Eclipse). I am trying to create a new project and write a sample hello world program to kick things off. This is my sample program:
+
+object hello {
+  def main(args: String) = {
+    println("Hello World!");
+  }
+ }
+
+
+I am using Java 8. I don't see any errors in the program. However, when I try to run the program, I get an error like this:
+
+Error: Main method not found in class hello, please define the main method as:
+   public static void main(String[] args)
+or a JavaFX application class must extend javafx.application.Application
+
+
+I am now clueless. Why is it asking me to create a main function with Java syntax? And why is it throwing an error when there are no problems with the code(As far as I know)? I tried searching for answers on the existing questions but none of them are about scala development.
+
+Any help would be appreciated. Thank you.
+    
+
+        
+Answer 1: 
+
+    
+    
+Your main must take an array of string. It currently takes a single string
+
+From scala's official website :
+
+object HelloWorld {
+  def main(args: Array[String]): Unit = {
+    println("Hello, world!")
+  }
+}
+
+
+https://www.scala-lang.org/documentation/getting-started.html
+
+Also, make sure you are using the "run as Scala application" option in Eclipse.
+    
+    
+Answer 2: 
+
+    
+    
+You have a class with tha same name in tests.
+
+Check that your test folder does not contain object hello.
+Check yuor test package for unique object names.
+After renaming, problem must be solved.
+
+There is no difference how to implement main method. You can do like this:
+
+object hello {
+  def main(args: String) = {
+    println("Hello World!");
+ }
+}
+
+
+Or like this:
+
+object hello extends App {
+    println("Hello World!");
+ }
+
+
+```
+    
+    
+Answer 3: 
+
+    
+    
+This may not help each and everyone, But I did face the same issue, I cleaned the project and it worked!!!
+    
+    
+Answer 4: 
+
+    
+    
+In my case (Intellij Ultimate 2018.1), I had a test with the same name than the object with the main method:
+
+
+src/main/scala/com/xx/xx/MyApp
+src/test/scala/com/xx/xx/MyApp
+
+
+when tried to dun main...MyApp failed with the exception in this question.
+
+Just renamed src/test/scala/com/xx/xx/MyApp to MyAppTest
+    
+    
+Answer 5: 
+
+    
+    
+In my case I had both a companion object and a class with the same name, which is normally okay in Scala but appears to have confused Java.
+
+Renaming either the object or class to a different name solved the problem.
+    
+    
+Title: How to get more Webstorm theme listed in Appearance
+Description: 
+    
+    
+                    
+I want to change the look and feel of entire Webstorm editor. How can I add more themes in the Appearance section?
+
+
+As of now it lists only 2 option, Default and Darcula.
+    
+
+        
+Answer 1: 
+
+    
+    
+The 'Theme' dropdown in your snapshot actually refers to Look &amp; Feel in the Intellij/Webstorm parlance. This is also seen if you try doing a View -&gt; Quick Switch Scheme :
+
+
+
+
+
+
+
+Notice that the options in the above correspond to the 'Themes' dropdown in your snapshot.
+
+I would imagine that creating a new Look&amp;Feel would be a non-trivial task. This is somewhat substantiated by https://stackoverflow.com/a/27864988/325742:
+
+
+  Write a plug-in to add a new LAF. Keep in mind this is a lot of work.
+  It took the JetBrains team a year to develop the Darcula L&amp;F and that
+  was with dedicated graphic artists to create a whole suite of icons
+  and recommend color combinations. Since the IntelliJ IDEA Community
+  Edition is open source, you could use that source code to develop your
+  plug-in. I'm pretty sure Darcula is available in the community
+  edition.
+
+
+Therefore, you may not find a lot of stuff out there that change the whole Look and Feel of a Jetbrains product (like IntelliJ or WebStorm).
+
+However, the best place to look for it would be in the plugins section. 
+Therefore:
+
+First option: Theme Plugins
+
+
+
+Note that, the complete appearance of Intellij changed when I installed this, however the plugins (I tried Material Theme UI) did not appear in the dropdown list.
+
+Second Option : http://color-themes.com/
+
+This is just an editor color scheme and not a full fledged L&amp;F plugin.
+
+Download a color theme from there, then go to File -&gt; Import Settings and choose the downloaded file after which you should see the following:
+
+
+
+Finally, restart Webstorm:
+
+
+    
+    
+Title: Why intelij does not recognize java project?
+Description: 
+    
+    
+                    
+I was working in one project then created new one and after opening the old one it is not recognized as java project. There is no option to create class in package (as you see on the pic), empty middle packages are not hidden but this option is set on.
+
+
+
+Why intelij-idea does not recognize java project?
+    
+
+        
+Answer 1: 
+
+    
+    
+Your project is fine. Your directory structure does not follow the common /src/main/java convention and you need to mark your directories manually.
+
+In this case, you need to right-click on your directory and perform "Mark Directory As Sources Root"
+    
+    
+Title: IntelliJ Tomcat Run Configuration Does Not Set Environment Variables
+Description: 
+    
+    
+                    
+I am running Tomcat 8.0.35 on OS X with IntelliJ Ultimate 2016.1.2. I want to run Tomcat locally under the debugger and deploy my web application to it. I created a local Tomcat Server run configuration. In the Deployment tab I specified the WAR file to deploy.
+
+My web application requires REDIS_HOST_MM and REDIS_PORT_MM environment variables to be set. I set these in the Startup/Connection tab of the run configuration.
+
+
+
+Tomcat starts and my web application deploys, however, the environment variables are not set. I can put a breakpoint on the following line in my web application's code
+
+String _value = System.getenv(value);
+
+
+and see that when value equals "REDIS_HOST_MM", the call returns null.
+
+I have the same problem if I set the VM Options in my Server tab to -DREDIS_HOST_MM=127.0.0.1 -DREDIS_PORT_MM=6379. Also if I change the Startup Script to point to the following shell script
+
+export REDIS_HOST_MM=127.0.0.1
+export REDIS_PORT_MM=6379
+/usr/local/Cellar/tomcat/8.0.35/libexec/bin/catalina.sh run
+
+
+If I start Tomcat outside IntelliJ from the command line, the environment variables are set correctly.
+
+Is this a bug in IntelliJ, or am I supposed to set the environment variable in some other way?
+
+(This is JetBrains support issue 699091.)
+    
+
+        
+Answer 1: 
+
+    
+    
+Never mind. User error. I didn't realize you had to set environment variables separately for the Run and Debug configurations. I had them set for Run, but I was running Debug.
+
+Once I set the environment variables for the Debug configuration too, everything worked.
+    
+    
+Title: Eclipse&#39;s &#39;syso&#39; Shortcut is Not Working?
+Description: 
+    
+    
+                    
+I have been having this problem for a while and I have been constantly searching for an answer everywhere and finally chose to just ask it here. All the other posts I have seen don't fix my problem and I have tried doing the following:
+
+
+Changed the binding of the shortcut
+Made sure that is was checked under templates
+Made sure all my settings were correct
+Autocompletion on
+
+
+When I type syso and press Ctrl + Space, instead of instantly giving me the insertion or shortcut I want, it just opens the 'Intelligent Proposals' menu and I have to press Ctrl + Space again in order to get to the 'Template Proposals' menu where I can actually double click "'syso' - print to standard out" and then it gives me the full System.out.println. It really does mess with flow and is very annoying.
+
+Any fixes to my problem? Thanks,
+
+
+Sa'id
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I was facing the same problem and figured it out after playing around with some settings. So, here's what you should do:
+
+
+Go to Windows-
+Answer 2: 
+
+    
+    
+Check this. Select any string then press Ctrl + Space eclipse detects the context.
+
+
+    
+    
+Answer 3: 
+
+    
+    
+I had exactly the same problem in Eclipse with the 'Template Proposals' menu popping up instead of completing the sysout shortcut. In my case, a plug-in installed recently was to blame. I unchecked all the templates for the plug-in in Preferences/(plug-in)/Templates - and this did the trick for me. Now the selection menu doesn't pop up any more, and syso + CTRL-SPACE works again as it should.
+    
+    
+Answer 4: 
+
+    
+    
+In my case it didn't work because ctrl+space was being used by another program Ubuntu(I-Bus) in my case ref. here Try changing ctrl-space by another key combination in general-/p/div
+Answer 5: 
+
+    
+    
+Go to Windows-Preferences-Java-Editor-Templates 
+
+
+Here you can check if you have "syso" already and if so just check the box.
+If you do not have check box with "syso"-create new "New.." , type name: syso, give your description if you want to, and enter the Pattern: System.out.println(); , press OK
+Press "Apply" , then "OK"
+Check if it works!
+
+
+Also, if it still does not work for you, go to 
+Windows-Preferences-Java-Editor-Content Assist -Favorites 
+
+Here, press "New Type" -enter: System.out.println(); , press OK , press Apply.
+
+I hope it helped! :)
+    
+    
+Answer 6: 
+
+    
+    
+What worked for me was capitalizing the S in Sysout. Hope this helps.
+    
+    
+Answer 7: 
+
+    
+    
+Only for those who are using eclipse editor;
+
+Check you are using syso -/strongcode/code/p/div
+Answer 8: 
+
+    
+    
+
+Step 1: Type sysout 
+Step 2: Click Ctrl + space
+Step 3: Double click on sysout-print to standard out option.
+
+    
+    
+Answer 9: 
+
+    
+    
+I have both Chinese and English language input. Ctr + space could also mean switch language input. So make sure you are under English input
+    
+    
+Title: Consulo IDE for C# mono and Unity3d, IS IT POSSIBLE?
+Description: 
+    
+    
+                    
+I stumbled upon Consulo IDE which is currently in development. It is an Intellij IDEA based IDE with available plugins for c# and mono.
+The only problem is I don't know how to configure the IDE so I can use it with mono C# for Unity3d. Is somebody using this Consulo IDE alternative for Unity3D? If yes, how do I set it up to work with unity and mono c#?
+I DID READ THE WIKI.
+    
+
+        
+Answer 1: 
+
+    
+    
+Since it's been a long time since last answer and I still stumbled upon this thread, I must clarify few things:
+
+Right now configuring Untiy3D in Consulo is as simple as installing Unity3D plugin from plugin repository (can be done inside IDE, no need to google anything).
+
+What's more, debugging Unity is also pretty simple: you just press "Attach to Unity3D" button, select Unity process and it's done - you can set up breakpoints wherever you want.
+
+Basically, Consulo is out of the box ready to use IDE for Unity (in my experience it's even more useful than JetBrains' Project Rider due to better plugin and has better performance on my Linux installation). Of course, it's pretty limited if it comes to other C# usecases, like WPF.
+    
+    
+Answer 2: 
+
+    
+    
+Watch video how setup Consulo at first start, create and run Unity project
+
+http://www.youtube.com/watch?v=MRAzz5wxk90
+    
+    
+Title: Delphi IDE is not visible
+Description: 
+    
+    
+                    
+I double click the Delphi icon on the desktop, but the IDE does not show up. Looking into the Task Manager list, the BDS.exe appears under the Processes list, while it should appear under the Applications list. Has anyone any idea why this is happening? Note: the IDE version I'm currently using is XE3, but the 2010 version, wich is also installed, behaves the same way. Windows version is 8.1. I really appreciate any help.
+    
+
+        
+Answer 1: 
+
+    
+    
+Often this happens because you've got either a poorly behaving third-party component installed, or you've set the IDE to load the last project when it opens and it can't do that for some reason.
+
+There are a few things that can help resolve this; they involve editing the shortcut to Delphi temporarily (or creating a new shortcut and modifying it instead, of course).
+
+
+Edit the shortcut and add the -np parameter to the command line; it tells the IDE to not load a project on startup. If this works, you can try opening your project. If the IDE hangs again, rename your .dproj file to a different extension and open it with just the .dpr; the IDE will create a new .dproj file;
+If the above doesn't work, edit the shortcut again, remove the -np, and replace it with -rFoo. This tells the IDE to load the Foo configuration from the registry on startup instead of the normal Delphi configuration. (Foo doesn't exist, so the IDE will create an all-new configuration in the registry named Foo, with no third-party components installed and all of the default settings for folders and options.) If this works, you can reinstall your third-party component sets one at a time to identify the problem package, and the edit the registry to remove it from your normal Delphi configuration.
+
+
+Note: Foo in the second bullet point item above is just a name. It has no special meaning; it's just something that's commonly used as a dummy type or variable content. The parameter can be set to anything that doesn't already exist as a configuration in the Delphi registry settings; Bar, Dummy or Zombie will work just as well.
+
+Once you've tried these (whether they fix the issue or not), don't forget to go back to remove the no longer needed command line parameter.
+
+If none of the above works, a reinstall may be in order.
+
+If you want to try a reinstall, uninstall the existing version (using the usual Control Panel Uninstall Software applet). 
+
+Doing an uninstall does not remove the registry keys, and a new install will see it exists and not create a new one, so you'll need to use RegEdit to delete the HKCU\Software\Embarcadero\BDS\10.0 tree (or rename it to something different like Old 10.0), and then reinstall Delphi. (As you're using other Delphi versions, make sure you leave those keys alone so you don't damage those installs. Only alter or delete the 10.0 tree.)
+    
+    
+Answer 2: 
+
+    
+    
+In Delphi 4 and 5 it was the delphi32.dsk file. You can delete this file but you can also edit the file, section 'Main Window'. First kill the process in the taskmanager before you edit/delete this disk file.
+
+[Main Window]
+Create=1
+Visible=0   &lt;-- This value must be **1**
+State=0
+......
+......
+
+
+Start Delphi - et viola! It is back again.
+
+Offtopic: Still running Delphi 5 on Windows 7, blazing fast, yes!
+    
+    
+Title: Free ActionScript IDE for Mac?
+Description: 
+    
+    
+                    
+I have been scrambling to find a good way to edit/run AS3 on Mac for free. AXDT for eclipse won't install, and for a while I was using Sublime text + Terminal but it sucked cause of no code completion. Any ideas? Obviously FD is out of the question, being Windows only.
+    
+
+        
+Answer 1: 
+
+    
+    
+Currently, there are no entirely free ActionScript IDEs for the Mac. There are, however, some solutions you could use, depending on what you're working on and what other language support features you need, other than simple code completion:
+
+
+If you're working on open source stuff, you should take a look at IntelliJ IDEA, which is free for OSS projects.
+Also, FDT has a free version, but it does not include advanced refactoring, as well as a number of other functions.
+If you don't need project management, refactoring and such, you could keep using a text editor and compile via the command line. There is an ActionScript 3 syntax file for vim, and an ActionScript mode for Emacs. 
+
+
+If you're going to work with ActionScript (semi-)professionally, I would strongly recommend you reconsider paying for a good solution, though. There is so much more to a good IDE than just text highlighting and code completion! 
+
+IDEA, for example, actually helps you write better code in many ways: By enabling you to run unit tests (as suites, as single test class, and even as a single test method) directly from the editor window; by including highly advanced refactoring features, such as "change signature", "extract interface" or "inline method"; by analyzing what you write, and offering alternatives, etc.etc. 
+
+And then, of course, there's all the things that have nothing to do with the language itself, but make your life as a developer much easier: version control and issue tracking integration, build tools, dependency management, just to name a few.
+
+If you're going to make any money with your code - and I mean, ANY money - a good IDE will earn its price quickly, probably even within a day's work.
+    
+    
+Title: Unable to use org.joda time in clojure
+Description: 
+    
+    
+                    
+In Java i have this line 
+
+public static final DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-M-dd HH:mm:ss");
+
+
+which in clojure i am trying to convert into clojure code and i have imported the file itself 
+but this line does not seem to work 
+
+(def fmt (.forPattern DateTimeFormat ("yyyy-M-dd HH:mm:ss")))
+
+
+giving the exception of CompilerException java.lang.RuntimeException: Unable to resolve symbol: DateTimeFormat in this context, compiling:(ShipDataRecord.clj:65) 
+
+Or am i doing it wrongly could someone kindly explain 
+    
+
+        
+Answer 1: 
+
+    
+    
+First, static methods in clojure are called like this:
+
+(DateTimeFormat/forPattern args...)
+
+
+Second, you should not surround method/function arguments with parentheses, i.e. this is incorrect (disregarding for now invalid syntax for calling static methods):
+
+(.forPattern DateTimeFormat ("yyyy-M-dd HH:mm:ss"))
+
+
+Parentheses around "yyyy-M-dd HH:mm:ss" should be left out.
+
+So, the valid way to do what you want is:
+
+(def fmt (DateTimeFormat/forPattern "yyyy-M-dd HH:mm:ss"))
+
+    
+    
+Answer 2: 
+
+    
+    
+alternatively, you could use clj-time
+    
+    
+Answer 3: 
+
+    
+    
+As you are already familiar with Joda-Time, you can use Clojure.Joda-Time.
+    
+    
+Title: Cross-platform HTML5 mobile development with single codebase, including app server and native client libraries?
+Description: 
+    
+    
+                    
+I tried Kony Studio recently at a client. How does Kony Studio compare to other IDEs/frameworks for native iphone/iPad/Android compared to HTML5 development? I am working on a cloud-based adaptive learning solution that allows students to browse knowledge, test themselves and receive automated feedback about their performance. 
+    
+
+        
+Answer 1: 
+
+    
+    
+Never even heard of "Kony Studio".  Website info is light and/or badly organized.  Looks like the kind of thing they sell to "business people" who then force it on their devs. Most cross platform mobile dev is bad at this point. Best bets are either Phonegap, for HTML5, or Appcelerator Titanium.  I would recommend neither, although I'd lean towards Phonegap.  It really depends on how simple your app is, though.  Complex forms/interactions don't work well with HTML5, yet anyway.  Seems to work better on iPhone, but I think that's due to more effort being put into the JS frameworks for iPhone, as well as Android fragmentation seems more visible with HTML5/JS apps for some unknown reason.
+
+I think HTML5 based apps will eventually become more prominent, then "the standard", but today its rough.
+    
+    
+Answer 2: 
+
+    
+    
+I'd use PhoneGap with something like jQ mobile. The market definitely moves towards good /simple standards like HTML5 and CSS. The hardware acceleration is coming into browser rendering arena and "slow HTML" is going to be over with in 2-3 years.
+
+Stay away from KONY at all possible cost. The IDE is just a set of plugins into eclipse but here is where it all starts.
+
+The installer that you get from them does not work everywhere (i.e. hangs on some machines). Once IDE installed, the WYSIWIG feature (UI designer) is a joke. The demos look OK but in reality it is a tedious tasks to layout widgets correctly. You end up writing versions for every screen size and channel (Android vs iOS). On Android the scaling is not handled at all, for example, run your app on Galaxy Note and see that all form layout is completely skewed. KONY 4.x does not support device pixels and relative margins and paddings at all (you specify them in PIXELS!!!). 
+
+The biggest selling point is "drag-n-drop, don't write code". In reality KONY IDE generates LUA code (4.x) that DOES NOT handle any edge cases, such as no cell network. When you build a simple app that transacts a web service and your cell signal goes down your app just hangs then crashes with internal Android error and then re-running the app does not help until you terminate the corrupted process. To do a usable app one needs to write all code by hand in LUA. There is no easy upgrade to KONY 5 - the "auto convert" tools is a marketing feature.
+    
+    
+Answer 3: 
+
+    
+    
+So one thing to keep in mind is that Kony v4 was a complete overhaul, switching the core engine away from Lua and making Javascript the scripting language.  Kony has a very fast release schedule, and is now on version 5.5, which is a vast improvement.  There has also been the addition of a new UI design tool for Kony called Visualizer, which makes the process of creating the UI an experience that is like using a wire framing tool, but the output from Visualizer is the UI is translated directly into forms in the Kony Development platform, which makes the task of creating UI's much easier.
+
+The real advantage of Kony is that they have a Service Level Agreement ( SLA ) that guarantees that your applications will work with new OS and platform releases within 30 days of being released to the developer community, meaning that your code is "future-proofed".  This becomes a significant accelerator to your overall development approach, as you are not saddled with having to keep updating your code for each new OS update.
+
+Kony also has embraced a complete SDLC approach, with three distinct cloud products that are designed to work independently or together, covering UI ( Visualizer ), development ( Kony Studio ), and Management of apps and devices ( MAM and MDM ).
+
+You can trial all the products now for free at: http://www.kony.com/trials
+    
+    
+Title: Is TextMate really worth the price tag as a Code Editor?
+Description: 
+    
+    
+                    
+I've been reading posts from a lot of people, raving about TextMate as a code editor and was wondering if it's really worth the hefty price tag specially since there's plenty of free alternatives.
+
+Is it really better than DashCode, TextWrangler or maybe even Vim/Emacs?
+
+Which are the features that set it appart?
+    
+
+        
+Answer 1: 
+
+    
+    
+TextMate felt "magical" when I tried it in 2006. Its tab-completion/snippets system, rectangular selection/editing, extensibility, nice SVN integration and overall style made it a lot better for coding than TextWrangler, DreamWeaver or anything I tried at the time. I was very excited about it and evangelized its power around me.
+
+I bought it just after I completed a project with the trial version. It was worth every penny for me at the time.
+
+It took me about a year of heavy usage to reach a plateau, though. I knew TextMate very well but it started to feel "limited" in a way.
+
+Actually, TextMate has been very influential: many IDEs/editors now have many features inspired by TextMate. In the mean time TextMate's development has stalled and last year, I started to dig into Vim. 
+
+The learning curve was/is a lot steeper than with TextMate and it feels a lot more "hackish" but it's so much more powerful. 
+
+And it's free.
+
+TextMate is a lot better (and more versatile) for editing than DashCode. 
+The features I listed above and its polish make it a lot more convenient than TextWrangler.
+But it's a lot less powerful than Vim/Emacs.
+    
+    
+Answer 2: 
+
+    
+    
+Also check the new release of Textmate, (Textmate2). It is still on Alpha, but has added a lot of new cool features like:
+
+
+Multiple carets
+rmate
+Git Style Configuration
+
+
+amongst other improvements like ability to run processes async, split windows and autocompletion.
+    
+    
+Answer 3: 
+
+    
+    
+I don't see any features that TextMate has, which other programs such as TextWrangler, Komodo Edit, gvim, etc don't. Personally, I use TextWrangler on OSX, and find it to work well with all my text-editing needs.
+    
+    
+Answer 4: 
+
+    
+    
+TextMate is awesome, but the Mac only approach was a bit annoying for me since I have using Windows and Linux aswell. So now I am using Sublime Text 2 instead, even though it's still in beta, it's stable and works pretty much like TextMate.
+And the price tag is the same ($59), and you get a editor that works in all major systems.
+    
+    
+Answer 5: 
+
+    
+    
+For me, TextMate will be worth the price. I'm looking for a simple solution to find matching brackets/braces when coding in MediaWiki. As TextMate has a MediaWiki bundle, it seems to find the matching pairs and those who don't match up (most of them). It has been of great help to me. BTW, I've been using TextWrangler (and its predecessor BBEdit Lite) for quite some years. Those apps can colour code HTML, but they cannot do it for MediaWiki. Best of wishes/Per
+    
+    
+Title: Lightweight console/IDE for Python?
+Description: 
+    
+    
+                    
+I often use ipython (or the regular python shell) to test python code snippets while coding, and it's been very useful. One shortcoming of this, though, is that if I want to test a multi-line segment of code, or want to write multiple lines of code before running, it isn't very convenient to have to do it "line by line". And even going back to change some of the lines is cumbersome because you have to re-type all the code that comes after it.
+
+I'm playing with Groovy right now and I find that it has an excellent solution to this problem: the Groovy Console. You just write all the code you want, it's just like a regular editor; and then you hit run Ctrl+R (Cmd+R actually since I'm on a Mac) and it runs everything at once. If you want to change something (e.g. if there are errors), then that's easy too -- just change it and Ctrl+R again.
+
+Is there an equivalent of this available for python? Or do you have any recommendations on a way to achieve similar behavior? I could just create a new file, save it, and then python &lt;filename&gt;.py from the shell. But that's just too many steps and would be cumbersome. Eclipse may be an option, but it's too heavyweight. I'm really looking for something lightweight that I can just spin up when I want to test something and then get rid of it just as quickly.
+
+I'd be interested to hear any ideas/suggestions!
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+You might give DreamPie a try. As far as I can tell from a quick read of the groovyConsole page you linked to, DreamPie features a similar input area/output area division (they call it "code box" and "history box"). The code you execute is by default cleared from the code box - which groovyConsole apparently doesn't do -  but you can easily retrieve it (Ctrl+Up), or change a preference setting to "Leave code in the code box after execution".
+    
+    
+Answer 2: 
+
+    
+    
+Have you tried using IDLE, the standard Python IDE? You'd have to save the code as &lt;filename&gt;.py within IDLE, but after that you can run it using F5.
+
+The Python docs link to this intro to IDLE, which may be helpful even if it's a little outdated.
+    
+    
+Answer 3: 
+
+    
+    
+I am using emacs and its python-mode.
+C-c C-c: evals the current buffer
+but you can also eval region (ie selection), functions etc ...
+
+You can even make python-mode use ipython (like I do).
+See http://ipython.scipy.org/dist/ipython.el . It works nicely
+    
+    
+Answer 4: 
+
+    
+    
+Did you try PyCrust? It has excellent multi-line editing, copy/paste support.
+
+PyCrust can be found in wxPython Docs and Demos.
+    
+    
+Title: VB6 silently deleting huge chunks of control data from forms
+Description: 
+    
+    
+                    
+My project has maybe 130 controls (total of all labels, textboxes, etc.) in an SSTab (4 tabs).  The project loads fine, it runs fine, I don't see a single error or warning at any point, but when I save the form with the SStab on it, the SStab data isn't saved (it is completely gone).  Normally the relevant portion of the .frm file looks like this: 
+
+   Begin TabDlg.SSTab SSTab1 
+     Height          =   8895
+     [1550 more lines of code for all the controls]
+     Width           =   540
+   End
+   Begin VB.Menu FileMenu
+
+But lately it's getting cropped to:
+
+   Begin TabDlg.SSTab SSTab1 
+   Begin VB.Menu FileMenu
+
+This is very frustrating! In my VB IDE, the frame, sstab, and all the controls are there, editable, running/compiling fine, no error messages at any point, but when you save the file, 1550 lines of precious sstab data just disappears - again, with no warning or error messages.  So if you exit and restart the IDE, you get a form load error because 60% of the code is now missing.  The log file points to the first error it finds (in this case a Begin TabDlg with no End) - there's no other info in it.  (The log file was generated after the code was deleted and saved, so it makes sense that it wouldn't be helpful.)
+
+When I first posted this question, I thought it had to do with the number of controls, because it appeared after I added a control, and in my first few tests, seemed to disappear when that control (or other controls) was deleted.  Now I can't seem to get that form to save under any circumstances, even when I delete many controls (bringing the number of controls far below where it was when it was last stable).
+
+I also tried deleting the SStab and moving all the controls to 4 different frames.  I successfully did that in the IDE, but when I saved, a huge chunk of the data (starting with a slider control) was missing.  So I have no fraking idea what is going on.
+
+The problem is reproducible on two different PCs, so it doesn't appear to be a hardware/corrupt software VB install issue.
+
+Has anyone else run into something like this?
+    
+
+        
+Answer 1: 
+
+    
+    
+Create a UserControl for each tab. That makes editing MUCH easier. It also allows you to nicely modularize the code, so each tab lives in its own file, and it'll allow you to reuse tabs elsewhere if you want.
+    
+    
+Answer 2: 
+
+    
+    
+Sounds horrible, never heard of anything like that. 
+
+Presumably you aren't getting an error log file from VB6 when you load the form into the IDE before it gets corrupted? The log file has the same filename as the form file but with a .log filename extension. For example, if errors occurred when loading Myform.frm, Visual Basic would create a log file named Myform.log. The error messages you might see there are documented in the manual.
+
+Have a look in the Windows Event Log, see whether it records any interesting problems against the VB6 IDE?
+
+Are you using any weird controls? Maybe one of them is somehow corrupting the FRM or FRX. FRM files are just text as you obviously know &amp; the format is documented in the VB6 manual. Can you see any corruption in the FRM in a text editor? If you remove any properties defined in the FRX, does it still fail.
+
+I think I would try creating a new project and a new form, and then use the IDE to copy and paste all the control definitions into it - no code. Play with the new form, see whether it has the same problem. Maybe you can recreate the form this way without the problem. If the new form does have the problem, do the same thing but only take half the controls. Maybe you can find a problem control by "binary search".
+    
+    
+Answer 3: 
+
+    
+    
+I get the same problem when attempting to save a form when the .FRM is writable but the .FRX is read-only
+    
+    
+Answer 4: 
+
+    
+    
+Not sure if this is the issue, but on a VB6 form, there is a limit to 255 (or is it 256) named controls. Perhaps you are running into that?
+
+One way around that limitation is to use control arrays. For example, if you had 10 labels, instead of label1, label2, label3, etc, you could do label(0) through label(9), and use up only one named control.
+
+The other thing worth mentioning about the SSTAB is the way it shows/hides controls. While it may appear that the controls are on separate tabs, what is really happening is that the controls are getting moved waaaayyyyy to the left (and consequently out of view). Perhaps with so many components, the SSTAB is choking on this in the IDE as it tries to render the controls in design view?
+
+Again, not sure if this is the issue, but I know these two tidbits are relatively unknown.
+    
+    
+Answer 5: 
+
+    
+    
+So the SAVE function is not working.
+
+I suspect one of the components you are placing on the tab strip is the culprit.
+
+So ..
+
+1) Take an inventory of each and every kind of component you are placing on the form
+
+2) eliminate one (kind), SAVE
+
+3) Did it SAVE? 
+
+-/pp
+Answer 6: 
+
+    
+    
+You are not alone! I've seen this problem. . .in fact I'm dealing it right now, which is what brought me to this site.
+
+I've been working with VB since '94 (VB3) and I first saw this problem about 5 or 6 years ago, while using VB6.  My solution then, was not unlike some of the suggestions that you have recieved from the good folks who've responded above: throw out the existing file and rebuild the form in a new file.  I did that back and the affected form has worked ever since.
+
+My current problem is appearing in another, much newer form, and the replace/rebuild option (performed about a month ago) only worked for about three weeks.  Now the problem is back and each new iteration of the file gets corrupted very quickly.  Following the reply above regarding the total number of allowable controls, I'm looking into just how many controls I have. . .and, as it happens, I was in the process of consolidating the primary the buttons and menus into control arrays, simply because it was going to streamline their management. 
+
+I can also confirm your observations about moving the project to a second PC. . .  I've done that too, and problem persists.  Moreover, I can add that I have moved the project from one shared storage system to another to no avail.  (The original storage location was on a drive mounted to a Win-tel system and the new location is on a UNIX-based NAS!)
+
+Just rebuilt the file again and checked: Controls.Count = 62, so I am no where near the 255 control limit mentioned previously.  This is indeed strange!  (Not to mention furstrating!)
+    
+    
+Title: How to add custom template in Geany?
+Description: 
+    
+    
+                    
+How can I load my custom template in Geany? Or edit the exiting ones?
+
+Is there  any wild-card or tag to load dates, names automatically?
+    
+
+        
+Answer 1: 
+
+    
+    
+Paste your custom template file in ~/.config/geany/templates/files/ directory. Then the template file can be loaded through File -
+Title: Cloud9 IDE Main Menu Bar (File, Edit, Run, etc.) stuck minimized?
+Description: 
+    
+    
+                    
+I've seemed to minimize the Main Menu Bar (not the specific term), resting at the top, or ceiling, in the Cloud9 IDE. There's a small drop-down arrow located on the top-center and you'd think that would be indicative of bringing it back down or something, but I'm getting no functionality out of my numerous, calculated clicks.
+
+I've tried to enlarging it no avail, refreshing the URL, copy command, etc. and to my very little knowledge, surprisingly, have had no success. I'm using ChromeOS, if to supply any more assistance. Any ideas? Thanks for reading if you got this far, I sure do appreciate it. 
+    
+
+        
+Answer 1: 
+
+    
+    
+The arrow in the top center of the screen should show the File menu again. Try opening up the IDE in an incognito window to make sure no browser extensions are interfering.
+
+If this doesn't work, you may try appending ?reset=1 to your workspace URL. Be warned that this will reset all your workspace settings, such as themes, keybindings, etc. This should reset your workspace layout as well.
+    
+    
+Answer 2: 
+
+    
+    
+Click on the thin empty space right at the top of the window and the bar will re-appear.
+    
+    
+Title: How to enable #TODO/XXX/FIXME highlight in Spyder?
+Description: 
+    
+    
+                    
+I'm using Spyder for Python coding. However, I cannot have the highlight of #TODO/#FIXME/#XXX to work in Spyder. I have already checked the box in preferences setting. See the attached picture.
+
+Any hint? Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+Add : to your keyword, for example # TODO:  
+    
+    
+Answer 2: 
+
+    
+    
+OK so I dug real deep into the question, and here is the real answer:
+as of Feb, 2020, the relevant code can be found at https://github.com/spyder-ide/spyder/blob/aa9fdaf7379577bdc7c2aa1e2bdc3feb82be953b/spyder/utils/syntaxhighlighters.py line 492 or so, e.g.
+
+    OECOMMENT = re.compile(r'^(# ?--[-]+|##[#]+ )[ -]*[^- ]+')
+
+
+so, for the Spyder outline explorer (OE) to recognize your comment, it should 
+
+1. Start from the head of the line
+2. Begin with either "#---" or "### " (be careful of the mandatory space)
+3. Then optional spaces or "-", 
+4. Then some more charactors that is NOT "-".
+
+
+Following are working examples (tested on Spyder 4.0.1)
+
+### foo
+#--- bar
+############# foo
+# ---    bar
+### ----foobar
+#------------ foofoo
+
+    
+    

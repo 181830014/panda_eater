@@ -1,0 +1,2593 @@
+Title: Visual Studio Professional 2015 and Windows 10 - All kinds of IDE errors
+Description: 
+    
+    
+                    
+I have recently done the following on my Macbook Pro
+
+
+Installed VMWare 8 and updated to latest version
+Installed Visual Studio 2015 from msdn (licensed via subscription) 
+Updated extensions/etc via the extensions/updates
+    menu
+Cloned my repository
+Opened a solution originally created with VS.NET 2013 4a.) Allowed nuget to restore packages (which it did)
+Attempted to get on and 'do work'
+
+
+The problem here is, that it is regularly unusable for the following reasons:
+
+
+I regularly get 'object reference not set to an instance of an object' when trying to close the IDE! I have to kill devenv.exe from taskmgr.
+I regularly get 'Value cannot be null. Parameter name: compositionService' when trying to add references. I simply can't add references
+I see regular dialog prompts telling me that extensions have crashed and would I like to continue seeing this error message
+It is incredibly slow to react, by comparison with VS2013 which was relatively snappy.
+
+
+I have a feeling that all are related to something and finding that something is my goal.
+
+I have, so far:
+- Removed everything from the componentModelCache folder in the app data for the 14.0 folder, which prompted a load of reloading of MEF components (whatever they are!) when I reloaded the solution. This doesn't appear to have done a great deal, but it was stated as a potential solution for the 'cant load package x' problem.
+
+It is random how long it is usable before these errors manifest themselves, but it's very frequent throughout the day that I'm killing the executable and re-opening.
+
+I find it hard to believe that this software was shipped in this condition - so I assume that there's something that I need to do to remedy this situation with my local environment, solution, projects - or something else.
+
+I am going to try and create a new solution and add the projects, one by one - but all I'm really doing is trial and error/clutching at straws.
+
+Any advice on how to remedy my IDE? I have no hope of being remotely productive at present!
+    
+
+        
+Answer 1: 
+
+    
+    
+I think the VM issues were a red herring. I get these errors in Windows 10 running on the hardware (not in a VM). The most common error is the compositionService one. I also get "The TestWindowPackage did not load correctly."
+
+It seems to happen after installing some updates, and get fixed by install some updates. It leaves the Solution Explorer unable to expand folders. Running as administrator does work around the issue, but other than that I would have to wait for an update in "Extensions and Updates" and then hopefully it would clear up.
+
+After installing the UWP tools, I got the errors again and this time could not even close Visual Studio without killing the process.
+
+Now I have found a scriptable solution in Oleg's answer to the TestWindowPackage issue.
+
+
+  Posted by Oleg [MSFT] on 1/29/2013 at 1:10 PM
+  
+  This may be caused by a
+  corruption in the metadata cache Visual Studio maintains for its
+  various components. Could you run the following two steps from the
+  Developer Command Prompt for VS2012 and let us know if this fixed the
+  problem? Please run these commands "As Administrator" to avoid file
+  access errors.
+
+
+Use an administrator command prompt. Here I have updated the commands for Visual Studio 2015:
+
+del %LocalAppData%\Microsoft\VisualStudio\14.0\ComponentModelCache
+"c:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe" /setup
+
+    
+    
+Answer 2: 
+
+    
+    
+So,
+
+This turned out to be appear to be related to the virtual machine and environment.
+
+I had a bunch of failed Windows updates showing in the windows update screen in Windows 10. I shut down every app and restarted these, along with updating to the large November update to Windows 10.
+
+I also upped the number of cores to the VM, from 2 to 4 and the same for memory. This had the desired effect on performance, also.
+
+Once these two had been done, a reboot later and the environment was working fine.
+
+This, therefore, is a complete niche occurrence I guess that was somehow related to a slightly dodgy Windows state and/or lack of 'grunt' Odd.
+    
+    
+Answer 3: 
+
+    
+    
+Try disabling some of Visual Studio extensions. 
+
+I had this same message - together with another message mentioned in Visual Studio - Error when clicking on Solution -&gt; Properties (Object reference not set to an instance of an object). 
+
+Disabling an extension solved this issue for me. 
+    
+    
+Title: Node IDE auto-complete and debugging
+Description: 
+    
+    
+                    
+What IDE's support node auto-complete and can attach to the node debugger? I have used Cloud9 which does work well for node, but since it is hosted on its own servers it cannot access my private network. I have also used eclipse but the autocomplete is not very effective. 
+
+We are building an html5 website using node, it would be nice to have a good experience for CSS and html editing as well.
+    
+
+        
+Answer 1: 
+
+    
+    
+Try WebStorm by JetBrains. You can debug node in it and it has a nice autocomplete feature. 
+    
+    
+Answer 2: 
+
+    
+    
+Here best IDE for Node.js with autocomplete and debugger
+
+
+Atom with stylish coding and hundred of plugin
+
+Brackets
+Webstrom
+Komodo
+Eclips
+
+    
+    
+Answer 3: 
+
+    
+    
+I recently found CodeLite supports nodejs debugging.
+Autocomplete works well for certain modules, but somehow does not work for other modules, such as Express.
+    
+    
+Title: Qt Creator indentation changes at save
+Description: 
+    
+    
+                    
+I'm using Qt creator and i'm willing to create my own coding style.
+
+The only thing i changed in the default Qt[built-in] settings is changed "Tab policy" to "Tabs Only" and "Align continuation lines" to "With regular indent". "Tab size" and "Indent size" are both set to 4.
+
+And I get the following indentation:
+
+int function( int param1 )
+{
+&lt;  t  &gt;if(  param != 0 &amp;&amp;
+&lt;  t  &gt;&lt; s &gt;param != 1 )
+&lt;  t  &gt;{
+&lt;  t  &gt;&lt;  t  &gt;//do something
+&lt;  t  &gt;}
+}
+
+
+&lt; t 
+Answer 1: 
+
+    
+    
+Take a look here:
+
+Tools &gt; Options &gt; Text Editor &gt; Behavior
+cleanups upon saving section
+
+
+Or if you want for current project only (change qt creator version in path)
+
+http://doc.qt.io/qtcreator/creator-editor-settings.html
+    
+    
+Answer 2: 
+
+    
+    
+You can the details below for:
+
+
+Text files
+C++ files
+QML files
+
+
+http://doc.qt.io/qtcreator/creator-indenting-code.html
+    
+    
+Title: How to stop the IDE window from maximizing when running an application within Delphi 2010
+Description: 
+    
+    
+                    
+I noticed that if I set the Delphi 2010 IDE window to be something other than maximized it automatically maximizes when I run an application friom inside the IDE. When the program is closed, the IDE window resizes back to the size it was prior to running the program.
+
+Is there anyway to turn off this annoying behavior? 
+    
+
+        
+Answer 1: 
+
+    
+    
+This happens because you have defined a Debug Desktop. You can either switch off the Debug Desktop feature, or define a different desktop view to be your Debug Desktop.
+
+The settings are under the View | Desktops menu if I recall correctly.
+
+I find this feature very powerful, especially combined with my multiple monitors. The debug desktop lives on a separate monitor so it doesn't overlap with my app window. And I can also configure the layout of call stack, watches, locals windows that I don't show in my standard desktop.
+    
+    
+Title: Smart auto-indentation available in geany?
+Description: 
+    
+    
+                    
+I'm writing javascript using Geany IDE. My indentation is all messed up and I'd like to make it look nice. When I write Java in Eclipse I can do ctrl + i to make all the spacing in order.
+
+What is the indentation option available in Geany?
+    
+
+        
+Answer 1: 
+
+    
+    
+The document formatting option is on the Geany's plugin wishlist (ref. Auto Correct Indentation section in Geany's Plugin Wishlist).
+
+However, Geany allows to send text using custom commands.
+
+As you may suspect this opens a pretty wide selection of new "doors" behind which lies the solution of your problem, e.g. Artistic Style is a cross-platform code auto-formatter for C, C++, C#, and Java. So the solution is:
+
+
+get a copy of any code formatting tool that accepts text from standard input and returns the resulting text to standard output,
+in Geany go to Send Selection to-/em/li/ulp/ppimg src="https://i.stack.imgur.com/cIJp6.jpg" alt="enter image description here"/p/div
+Answer 2: 
+
+    
+    
+command for html simple smart indentation that finaly work in geany :
+
+bash -c "tidy --indent auto --indent-spaces 2 --char-encoding utf8 --quiet yes 2&gt;/dev/null; true" 
+
+    
+    
+Answer 3: 
+
+    
+    
+PHPFormatter is a php script found here -- https://github.com/NathanWong/phpformatter
+It can be run via the command line and does an awesome job of formatting PHP,HTML,and Javascript. From the authors description:
+
+"This PHP script will format another PHP script using my arbitrarily set formatting rules (real tabs, 97 chars per line, brackets on their own line, indentation based on operator hierarchy not alignment, spaces around most operators but not commas or brackets, space after if, etc.). It will also format inline HTML, and if JS Beautify is available, it'll use that for inline Javascript in inline HTML too."
+
+I simply unzipped the 2 files : format.php and jsbeautify.php to my home directory and then added the following custom command in Geany:
+
+php /home/myusername/format.php -
+
+(Note the dash at the end. This tells the script to accept input from the standard input stream which is where Geany sends the text.) Now all you have to do is a quick Ctrl+a (SelectAll) then Ctrl+1 (or whichever number you put the command on) and ...
+
+Voila...
+
+Beautifully formatted code!!
+Thanks Nathan!
+    
+    
+Answer 4: 
+
+    
+    
+Based on geany documentation type of auto-indentation are like below:
+
+
+  Geany knows four types of auto-indentation:
+  
+  None:           Disables auto-indentation completely.
+  
+  Basic: Adds the same amount of whitespace on a new line as on the last line.
+  
+  Current chars:
+  Does the same as Basic but also indents a new line after an opening brace '{', and de-indents when typing a closing brace '}'. For Python, a new line will be indented after typing ':' at the end of the previous line.
+  
+  Match braces:
+  Similar to Current chars but the closing brace will be aligned to match the indentation of the line with the opening brace.
+
+
+You have just following options. You may improve and extend these options using Scintilla.
+    
+    
+Title: Eclipse - An internal error occurred during: &ldquo;Compute launch button tooltip&rdquo;
+Description: 
+    
+    
+                    
+I launched Eclipse earlier to jot down a snippet and was faced with the following as an error when I tried to run a fresh project:
+
+
+  An internal error occurred during: "Compute launch button tooltip".
+
+
+That popup window shows as soon as I mouse-over the run icon in the top bar, or if I right click on the class in the explorer window and select any of the run/debug options.
+
+After doing some research on the error, I see several people who posted similar messages but they all have been fresh installs of Eclipse. So note that this is not a fresh install, and that Eclipse was working fine earlier today. Also note that not only does my new project not run (with the normal main method), but projects I was running earlier have all stopped working with the same error.
+
+Finally, also be aware that after seeing other people's suggestions on fixing this, one specifically said to select run configurations from the top of the page run menu. When I selected run configurations from this dropdown, I got the following message:
+
+
+  Exception occurred creating launch configuration tabs
+  Reason: Plug-in org.eclipse.jdt.debug.ui was unable to load class org.eclipse.jdt.internal.debug.ui.launcher.LocalJavaApplicationTabGroup
+
+
+After that message, the run window opens but all of the tabs are missing. Like where you can set the display width and height, and the other tabs, they are all missing from the window now.
+
+I was using Eclipse trouble free earlier today and I am sure no updates took place between when Eclipse was working and now. My question is of multiple parts: What is wrong in a nutshell? What could have caused this?
+    
+
+        
+Answer 1: 
+
+    
+    
+Got this from another site of some guy who got this same error after upgrading.
+Worked for me as well.
+Apparently putting the following line in your eclipse.ini helps:
+
+-Dcom.ibm.icu.util.TimeZone.DefaultTimeZoneType=ICU
+
+    
+    
+Answer 2: 
+
+    
+    
+Try setting the launch properties in:
+
+Window&gt;Preferences&gt;Run/Debug(Expand)&gt;Launching(Click)
+
+
+Under launch Operations menu set it to:
+
+Always launch the previously launched application
+
+
+Click:
+
+Apply&gt;Ok
+
+    
+    
+Answer 3: 
+
+    
+    
+I never found out what went wrong, but a reinstall of eclipse fixed it. All projects survived seemingly undamaged.
+ Thanks for the reply on the .ini but that did no good.
+    
+    
+Answer 4: 
+
+    
+    
+I had same error today - in an eclipse installation (Juno SR2 64bit) that has been running fine for months.
+
+0: There were no changes on svn for my projects since yesterday (when it was running fine).
+
+1: I restored the workspace from a 'Windows 7 -
+Answer 5: 
+
+    
+    
+I had the same problem using eclipse mars. I cleared the folder .recommenders\index
+
+And that solved my issue.
+Hope it helps.
+    
+    
+Answer 6: 
+
+    
+    
+incase you are having the eclipse files which you have downloaded from the official site .Just extract those file in the same folder where your previous eclipse was installed and select replace all.
+best solution
+    
+    
+Answer 7: 
+
+    
+    
+I also encountered this issue, the reason why this issue occurred on my project was due to I was missing the JRE System Library in the root folder of my project.
+To solve this issue, make sure you have the libraries like JRE System Libraries on the root folder of your project.
+    
+    
+Title: Easily Open Existing Non-Eclipse Project in Eclipse?
+Description: 
+    
+    
+                    
+Alright, this has caused me enough grief. The answer may be dead simple, but I need some help.
+
+I figured it would be simple to open an existing project in Eclipse, but I'm having quite a time actually making this work.  I don't want to change where it's located.  I don't want to pull a bunch of strings to get Eclipse to point to it.  I just want to take the project directory from where it is now and open it in Eclipse.
+
+Is there any way to do this?
+    
+
+        
+Answer 1: 
+
+    
+    
+Not sure that I entirely follow, but here's my general routine for creating projects in Eclipse.
+
+
+I go to File &gt; New &gt; Project and
+pick out what sort of project I
+want, and hit Next.
+I enter the name I want to use for
+the project, and the path where I
+want to store it.  I never store
+stuff in my workspace folder.
+For projects with existing code, I
+just put the path to the existing
+folder, and Eclipse just imports the
+code.
+
+
+Hoping that answers your question, but if not let me know.
+    
+    
+Title: Prevent MATLAB from creating a new file when it can&#39;t find the file I want to open
+Description: 
+    
+    
+                    
+I will often attempt to open an existing MATLAB file from the MATLAB command window using something like:
+
+edit exampleFile
+
+
+Alternatively, I may press cmd + shift + D with the name of a function to be opened highlighted in the editor. 
+
+However, if the function I wish to open is not on the path when using either of these methods, MATLAB will irritatingly create a new blank file exampleFile.m in the current folder. This is extremely annoying. Is there a way to stop this? Ideally, MATLAB would prompt to see if I wanted to create a new file before actually doing it.
+    
+
+        
+Answer 1: 
+
+    
+    
+In File -
+Title: IDE for css.less files dreamweaver
+Description: 
+    
+    
+                    
+I'm using lesscss, the 'framework/compiler' for css. My IDE, dreamweaver, does not recognize .less as CSS. So no niceties such as error checking or code completion there. Is there anything I can do about that? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Dreamweaver can be configured to recognize "new" filetypes and treat them as editable under preferences.  You can also edit some config files to help DreamWeaver figure out how to treat the files so it does code highlighting, etc., though in my experience, it does not always work as you would expect.  On the other hand, can lesscss be configured to output .css files?
+
+Here's an Adobe article on getting Dreamweaver to add new file types.
+http://kb2.adobe.com/cps/164/tn_16410.html
+    
+    
+Answer 2: 
+
+    
+    
+less syntax highlighter extention 
+
+http://www.adobe.com/cfusion/exchange/index.cfm?event=extensionDetail&amp;extid=2756522#
+    
+    
+Answer 3: 
+
+    
+    
+You can force DW to "recognize the files" although not parsing as far as I know. This might be of help : http://blog.assortedgarbage.com/2012/03/using-dreamweaver-with-sass-and-less/ that might be of help
+    
+    
+Answer 4: 
+
+    
+    
+Try giving the extension: less.css, to your css file.
+Example: styles.less.css.
+
+This worked for me, but I still need a base stylesheet, such as: styles.css.
+    
+    
+Answer 5: 
+
+    
+    
+Also,
+
+You can compile .less files to .css directly from within Dreamweaver using a free (Donation-ware) plugin: 
+
+http://www.adobe.com/cfusion/exchange/index.cfm?event=extensionDetail&amp;extid=2692522
+    
+    
+Answer 6: 
+
+    
+    
+Dreamweaver has a very hard time with LESS, in my experience. It doesn't properly handle nesting and will color those as though they are syntax errors. However, it is mostly workable since the auto-complete does at least still work, and the overall coloring is okay on everything except nested items. (at least for me)
+
+Also the extensions that are referenced above do not work on mac. 
+
+If you are having trouble getting DW to be able to open and color code LESS at all, try this--
+
+1) Change some DW config files:
+
+For Mac users, there are TWO configuration folders (at least for DW5.5). Two sets of identical files, FOUR in total files, have to be changed:
+
+~/Library/Application Support/Adobe/Dreamweaver CS5.5/en_US/Configuration/DocumentTypes/MMDocumentTypes.xml
+~/Library/Application Support/Adobe/Dreamweaver CS5.5/en_US/Configuration/Extensions.txt
+
+
+and -
+
+
+Adobe Dreamweaver CS5.5/Configuration/DocumentTypes/MMDocumentTypes.xml
+Adobe Dreamweaver CS5.5/Configuration/Extensions.txt
+
+And this technote tells you what exactly to change in those files:
+http://helpx.adobe.com/dreamweaver/kb/change-add-recognized-file-extensions.html
+
+Install a LESS Compiler
+
+and for those on mac, this little app works GREAT. All it does is watch your less files and automatically save them to css on save. 
+http://incident57.com/less/
+
+I hope that is helpful to someone!
+    
+    
+Answer 7: 
+
+    
+    
+http://www.adobe.com/cfusion/exchange/index.cfm?event=extensionDetail&amp;extid=2756522#
+This actually does all that and more, as CSS and less have a little different syntax specially when it comes to nesting rules inside one another.
+    
+    
+Title: Dev server for Java, like VS has for .NET?
+Description: 
+    
+    
+                    
+I am on a Java learning spree recently, however I am normally a .NET developer. (So please forgive my newbie questions.)
+
+In .Net I can develop ASP.Net pages without using IIS, as it has a watered down web server (Cassini, I think it's called).
+
+Does Java or a Java IDE have something similar so I can write and test JSP and Java Servlets without the need of a full-blown app server (Tomcat etc.)?
+
+Also if there is one, does it work on Windows?
+    
+
+        
+Answer 1: 
+
+    
+    
+Tomcat actually isn't a fullblown appserver. It's just a servlet container (i.e. implementing only web component of the (indeed huge) Java EE API) It's only around 6MB big. Glassfish, JBossAS, Weblogic and Websphere as being full Java EE API implementations may be called as "fullblown appservers". 
+
+You can also consider Eclipse Jetty. It has a small footprint (download is only 2.2MB) and is useable as an embedded server and even runnable from a plain vanilla Java class.
+
+As to IDE's, both Tomcat and Jetty are by default supported in "Eclipse for Java EE developers". You can easily integrate them in Servers view and then just associate your web project with it. Here's a nice video tutorial how to get started with servlet development with Eclipse and Tomcat.
+
+As to working on Windows, Java is platform independent. You just need to have a platform-compatible JRE installed. Then any Java software will be able to run on the particular platform. Sun has a JRE for Windows --which is by the way also included in the JDK, if you already have one.
+    
+    
+Answer 2: 
+
+    
+    
+In the Java world the usual way to develop JSP based applications is to have a web container like Tomcat inside the IDE, and there are many ways to do it.
+
+The easiest way to get started is to use Netbeans with a bundled web container - download the "Java" one from http://netbeans.org/downloads/index.html and install it.  
+
+After starting Netbeans 6.8, "File -/pp
+Answer 3: 
+
+    
+    
+You can hook up your ant scripts to hot deploy to a local tomcat instance.  That's the closest thing I can think of to the .NET development environment.
+    
+    
+Answer 4: 
+
+    
+    
+Eclipse can embed a dev version of Tomcat, and most other IDEs offer a dev server too, I should think.
+
+But also I should also point out that obtaining &amp; setting up Tomcat is quite a bit simpler than setting up IIS.  Just download a zip file and unzip -- poof!  you're done!
+    
+    
+Answer 5: 
+
+    
+    
+When I was playing with JSP a while back I used  NetBeans which has a Web &amp; Java EE-installer, that 
+
+
+  Provides tools for developing Java SE,
+  Java EE, and web applications. This
+  download option also includes the
+  GlassFish V2 UR2 application server
+  and Apache Tomcat software.
+
+    
+    
+Answer 6: 
+
+    
+    
+Try Jetty http://jetty.codehaus.org/jetty/
+
+Jetty is an Open Source HTTP Servlet Server written in 100% Java. It is designed to be light weight, high performance, embeddable, extensible and flexible, thus making it an ideal platform for serving dynamic HTTP requests from any Java application.
+
+EDIT: corrected link. 
+    
+    
+Title: Several instances of Netbeans on Win 32 platform
+Description: 
+    
+    
+                    
+Is it possible to have several instances of Netbeans running, as you can have with Visual Studio on Win 32 platform? I can just fire up one.
+    
+
+        
+Answer 1: 
+
+    
+    
+To use multiple instances of Netbeans, specify a different --userdir directory for each instance. It's probably best to create a new shortcut or script for each instance.
+    
+    
+Answer 2: 
+
+    
+    
+These are some examples that applies to all NetBeans version (3.6, 4.x, 5.x, 6.x, 7.x) on all platforms:
+
+
+Windows: netbeans.exe --userdir C:\MyOtherUserdir --cachedir "%HOME%\Locale Settings\Application Data\NetBeans\7.1\cache"
+Unix: ./netbeans --userdir ~/my-other-userdir 
+Mac OS: /Applications/NetBeans.app/Contents/MacOS/executable --userdir ~/my-other-userdir 
+
+    
+    
+Title: Visual Studio Code Replace multiple files at once
+Description: 
+    
+    
+                    
+I was wondering if there was any way to repalce multiple line in multiple files at the same time?
+
+I know under edit-/pp/p/div
+Answer 1: 
+
+    
+    
+You can also Search and Replace across files. Expand the Search widget to display the Replace text box.
+
+When you type text into the Replace text box, you will see a diff display of the pending changes. You can replace across all files from the Replace text box, replace all in one file or replace a single change.
+
+https://code.visualstudio.com/Docs/editor/codebasics#_search-across-files
+    
+    
+Answer 2: 
+
+    
+    
+
+Open the folder containing the files wished to be edited via Visual
+Studio Code. If not exist, create a folder and fill up it with the files.
+At the top-menu bar Edit - Replace in Files or (On Windows Ctrl + ⇧ + H, On Mac, ⌘ + ⇧ + H).
+
+    
+    
+Answer 3: 
+
+    
+    
+At the current time this is not supported (read in the link at Common Questions)
+https://code.visualstudio.com/Docs/editor/codebasics#_common-questions
+
+I suggest you to try with Notepad++
+    
+    
+Answer 4: 
+
+    
+    
+Replace in multiple files is supported in latest version of vscode 1.3.
+    
+    
+Title: Android Studio show function references?
+Description: 
+    
+    
+                    
+In Visual Studio 2012, I know you can enable the ability to display the references to a function above the definition. See This link: http://blogs.msdn.com/b/vcblog/archive/2009/11/17/improvements-to-find-all-references-in-visual-studio-2010.aspx. 
+
+Is that possible in Android Studio?
+    
+
+        
+Answer 1: 
+
+    
+    
+Android Studio Shortcut: ctrlg
+
+Eclipse Shortcut: ctrlshiftg
+    
+    
+Answer 2: 
+
+    
+    
+Eclipse Find references equivalent in Android Studio is Find usages on right click.
+    
+    
+Answer 3: 
+
+    
+    
+On Mac 
+
+cmdG will find next occurrence in same file 
+
+cmdshiftG will find previous occurrence 
+
+On Mac: To find occurrences across the workspace
+
+fnoption / altF7
+    
+    
+Title: Intellij Idea: One line if on two lines
+Description: 
+    
+    
+                    
+So I am new to the Intellij Idea IDE and so far I like it a lot. Just having some trouble getting the code style settings exactly how I like them for Java. I am a fan of not using braces for one line if statements but I like for them to be on two lines:
+
+if(true)
+    dosomething();
+
+
+Right now when I run code formatting in Idea, it moves up into one line:
+
+if(true) dosomething();
+
+
+and I find that very hard to read, but I cannot seem to get the settings just right. Can anyone help me out and tell me what I need to set to keep it on two lines but still no braces? Feel pretty dumb not being able to find it. Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Deselect Simple blocks in one line in settings -
+Answer 2: 
+
+    
+    
+Have you tried Control Statements on one line? Does it for me.
+    
+    
+Answer 3: 
+
+    
+    
+Well this might sound strange, but even I had the option simple blocks in one line unchecked. And I was facing same issue. But then if I left one empty line after the opening brace of method, IntelliJ didn't move entire code to one line.
+
+For better understanding,
+
+
+Problematic behavior
+
+public void methodA(){ 
+    System.out.println("No blank line left");
+}
+
+
+Now when you close and open the file again, IntelliJ does this
+
+public void methodA(){ System.out.println("No blank line left"); }
+
+Correct Behavior
+
+public void methodA(){ 
+
+    System.out.println("left a blank line above");
+}
+
+
+Now when you close and open the file again, it still stays like that
+
+public void methodA(){ 
+
+    System.out.println("left a blank line above"); 
+}
+
+
+
+Just to make a note, IntelliJ version is Ultimate 14.1.4
+    
+    
+Answer 4: 
+
+    
+    
+For Webstorm - IntelliJ for Javascript, this option is in Preferences-&gt;Editor-&gt;Code Style -&gt; Javascript-&gt; Wrapping and Braces.
+    
+    
+Title: Linux lightweight PHP editor or IDE that supports xdebug
+Description: 
+    
+    
+                    
+It's probably just a pipe dream, but...
+I'm looking for Linux php editor/IDE that has debugging support (xdebug).
+
+I know there is a couple of them like: Eclipse, Aptana, Netbeans, - but they all written in Java as I recall and not exactly snappy.
+
+I've beeen using notepad++ on Windows with dbgp plugin (for xdebug debugging). Unfortunately notepad++ is not available in Linux (not without Wine trickery).
+
+Does anyone knows any non-java lightweight editor that has xdebug support?
+
+Appreciate your help guys.
+    
+
+        
+Answer 1: 
+
+    
+    
+vim is your friend! It also has a GUI alternative called gVim.
+
+
+How to Debug PHP with Vim and XDebug on Linux
+Easy PHP Debugging in Ubuntu (using Xdebug and Vim)
+Using vim and xdebug DBGp for debugging Drupal (or any PHP application)
+
+
+Here's a screenshot of Vim + Xdebug in action.
+    
+    
+Answer 2: 
+
+    
+    
+Emacs can do too
+
+
+  GEBEN is a software package that interfaces Emacs to DBGp protocol with which you can debug running scripts interactively. At this present DBGp protocol are supported in several script languages with help of custom extensions. 
+
+
+See more at http://www.xdebug.org/docs/remote
+    
+    
+Title: How to setup eclipse ide for php development with pre-existing source
+Description: 
+    
+    
+                    
+I have been using Dreamweaver for my web development and would like to try out eclipse. I would like to keep the source files where they are now. What do I need to set for my workspace and then how do I set it to look at my existing files?
+    
+
+        
+Answer 1: 
+
+    
+    
+You'll want to set up a workspace in the parent directory of the folder containing that project.  Then, you'll create a new PHP project in Eclipse with the same name as the folder containing that project.  That should get you going!
+
+For example say you have a folder called Development.  Inside that you have a folder called MyProject which contains all the subdirectories and code for your PHP project.  On startup you'll select Development for your workspace and then create a PHP project called MyProject.
+    
+    
+Answer 2: 
+
+    
+    
+Eclipse PDT:
+
+1: New -/pp
+Answer 3: 
+
+    
+    
+Have you setup Eclipse for PHP Developers?
+
+http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/galileo/SR2/eclipse-php-galileo-SR2-win32.zip
+
+As far as I remember, it leaves the source files intact.
+    
+    
+Title: Making an IDE using Pascal Script and SynEdit
+Description: 
+    
+    
+                    
+I'm creating a built-in script engine using PascalScript from RemObjects (excellent) and the SynEdit editor. It's almost finished using the IDE example shipped with PascalScript and the IDE example in SynEdit - but - I can't see how to ask PascalScript whether a numbered source line is 'executable' or not. (I can then use this to mark the SynEdit gutter with the 'Delphi blue dot'). I guess I might have to do a dissassembly of the ROPS output? 
+
+Any PascalScript experts here? THanks. Brian.
+    
+
+        
+Answer 1: 
+
+    
+    
+Have a look at the source code of Inno Setup. It does show a small dot in the SynEdit gutter area for lines with executable code, gray ones for lines that are executable but have not been executed, green ones for lines that have been hit at least once.
+
+The code for this can be found in CompForm.pas, look for the TLineState type. The information is set up in the iscbNotifySuccess state of the compiler callback, you could do the same in your IDE. You may need to adapt the code to handle multiple source files, as the Inno Setup compiler deals with code snippets in the single source file only.
+
+In the Pascal Script sources you should have a look at the TPSCustomDebugExec.TranslatePositionEx() method - it does return the name of the source file as well.
+    
+    
+Answer 2: 
+
+    
+    
+I don't know exactly how it does it, but the IDE project in the PascalScript package (found under \samples\debug ) is able to offer Step Into and Step Over (F7 and F8) functionality, so logically it has to have some way of associating PS bytecode with lines of script code.  Try examining that project to see how it does it.  As a bonus, it uses SynEdit too, so the ideas will be easy to adapt to your own system.
+    
+    
+Answer 3: 
+
+    
+    
+I know this is an old question but I have been doing the same thing myself and the suggestions above do not really help. Inno setup for instance does not use Synedit, it uses scintilla editor.
+
+Also the TPSCustomDebugExec.TranslatePositionEx() does the opposite to what is wanted, it gives a source line number from a runtime code position.
+
+After faffing around for some time I came to the conclusion that the easiest way was to add a function to the Pascalscript code.
+
+the new method is added to the TPSCustomDebugExec class in the uPSdebugger unit.
+
+function TPSCustomDebugExec.HasCode(Filename:string; LineNo:integer):boolean;
+var i,j:integer; fi:PFunctionInfo; pt:TIfList; r:PPositionData;
+begin
+  result:=false;
+  for i := 0 to FDebugDataForProcs.Count -1 do
+  begin
+    fi := FDebugDataForProcs[i];
+    pt := fi^.FPositionTable;
+    for j := 0 to pt.Count -1 do
+    begin
+      r:=pt[j];
+      result:= SameText(r^.FileName,Filename) and (r^.Row=LineNo);
+      if result then exit
+    end;
+  end;
+end;
+
+
+and the paint gutter callback in the main editor form is as below
+
+procedure Teditor.PaintGutterGlyphs(ACanvas:TCanvas; AClip:TRect;
+  FirstLine, LastLine: integer);
+var a,b:boolean; LH,LH2,X,Y,ImgIndex:integer;
+begin
+  begin
+    FirstLine := Ed.RowToLine(FirstLine);
+    LastLine := Ed.RowToLine(LastLine);
+    X := 14;
+    LH := Ed.LineHeight;
+    LH2:=(LH-imglGutterGlyphs.Height) div 2;
+    while FirstLine &lt;= LastLine do
+    begin
+      Y := LH2+LH*(Ed.LineToRow(FirstLine)-Ed.TopLine);
+      a:= ce.HasBreakPoint(ce.MainFileName,FirstLine);
+      b:= ce.Exec.HasCode(ce.MainFileName,FirstLine);
+      if Factiveline=FirstLine then
+      begin
+        if a then
+          ImgIndex := 2   //Blue arrow+red dot (breakpoint and execution point)
+        else
+          ImgIndex := 1;  //Blue arrow (current line execution point)
+      end
+      else
+        if b then
+        begin
+          if a then
+            ImgIndex := 3  //Valid Breakpoint marker
+          else
+            ImgIndex := 0; //blue dot  (has code)
+        end
+        else
+        begin
+          if a then
+            ImgIndex := 4  //Invalid breakpoint (No code on this line)
+          else
+            ImgIndex := -1; //Empty (No code for line)
+        end;
+      if ImgIndex &gt;= 0 then
+        imglGutterGlyphs.Draw(ACanvas, X,Y,ImgIndex);
+      Inc(FirstLine);
+    end;
+  end;
+end;
+
+
+The Synedit with Line numbers, code dots, breakpoints, bookmarks and execution point look as in the image below
+
+
+    
+    
+Title: Is there any way to get a REPL in pydev?
+Description: 
+    
+    
+                    
+I would like to be able to drop to the python REPL from the debugger -- if this is not possible is there an easier way to evaluate python expressions in the context of the  current breakpoint other than manually adding them all as watch expressions?
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't use pydev, but to drop to python's interactive REPL from code:
+
+import code
+code.interact(local=locals())
+
+
+To drop to python's debugger from code:
+
+import pdb
+pdb.set_trace()
+
+
+Finally, to run a interactive REPL after running some code, you can use python's -i switch:
+
+python -i script.py
+
+
+That will give you a python prompt after the code, even if it throws an exception.
+
+You may be able to hook some of those solutions into pydev, I think.
+    
+    
+Answer 2: 
+
+    
+    
+There is a dedicated Pydev Console available by clicking on the "New console" dropdown in the console view.
+
+See http://pydev.sourceforge.net/console.html
+    
+    
+Answer 3: 
+
+    
+    
+As Dag Høidahl said, the PyDev Console is actually the best option (at least on Eclipse Indigo), no need to hack around. 
+
+Just go to Open Console:
+
+
+Then select PyDev Console:
+
+
+
+If you need to add specific parameters (for example, Jython tends to miss the python.os VM property), you can change them under Window -
+Title: Is it possible to break all threads but one in Visual Studio 2010?
+Description: 
+    
+    
+                    
+Is it possible to break all threads but one in Visual Studio 2010 Ultimate?
+
+One of the threads in my application is running a TCP proxy. The server that it connects to disconnects when the client (that connects to my proxy) doesn't send a keep-alive packet every few seconds.
+
+So I would need to break all other threads (like packet processing) so that I can edit that part without getting disconnected.
+
+Is this achievable without add-ons?
+    
+
+        
+Answer 1: 
+
+    
+    
+One solution that might possibly work, is to write a macro that you call when you stop at a BP that function evaluates some function that sends some stay alive packets.
+
+E.g. your macro goes like
+
+DTE.Windows.Item("{ECB7191A-597B-41F5-9843-03A4CF275DDE}").Activate() 'Immediate Window
+DTE.ExecuteCommand("Debug.Print", "KeepAliveFunc()")
+
+It's obviously not ideal, but if nothing else helps...
+    
+    
+Answer 2: 
+
+    
+    
+Looks like it is not possible. See Breaking single thread for a previous discussion of the same problem.
+    
+    
+Answer 3: 
+
+    
+    
+When you Break All in the debugger, in the threads window, right click on all of the threads you don't want to run and select freeze, then continue running, only your target thread will be running.
+    
+    
+Answer 4: 
+
+    
+    
+It might be possible to just put a while loop in the thread that are you wanting to pause with a timer to output data about certain variables on a textbox. Then make the button to step between the loops?
+
+Just an idea.
+    
+    
+Title: Is there an IDE for D with integrated debugger?
+Description: 
+    
+    
+                    
+Is there an IDE for D with integrated debugger?
+    
+
+        
+Answer 1: 
+
+    
+    
+Descent has the ability to use a debugger. Not exactly what you asked but...
+    
+    
+Answer 2: 
+
+    
+    
+The DDBG Win32 Debugger works with a few IDEs - http://ddbg.mainia.de/
+    
+    
+Answer 3: 
+
+    
+    
+Poseidon.
+    
+    
+Title: setup of xamarin studio to work with PCL &amp; MVVMCross
+Description: 
+    
+    
+                    
+I really enjoy Xamarin Studio and I'm looking for a template solution to start developing a cross devices application with MvvmCross.
+
+But I can't find how to set a project to work with PCL and MvvmCross with Xamarin Studio.
+
+If anyone can give me a link where I can find a tutorial to make it, it would be awesome.
+
+I would be very pleased to contribute to this community by giving my feedback and providing some tutorial about how to start using Xamarin Studio, PCL MvvmCross and get rid of Visual Studio :D
+    
+
+        
+Answer 1: 
+
+    
+    
+As @duDE's answer pointed out, for working in Visual Studio on the PC in the pre-Xamarin2.0 world, there were quite detailed instructions available on http://slodge.blogspot.de/2012/12/cross-platform-winrt-monodroid.html
+
+As various releases of Xamarin 2.0 have been released over the last month, these type of instructions have become more and more difficult to keep up to date... and this situation is likely to continue for a little while yet as Xamarin are currently adding:
+
+
+.Net 4.5 (Mono 3) support
+async/await support
+PCL support
+
+
+This work is being done with some urgency, but without any official target date - so I'm afraid there isn't any easy way to predict dates for Alpha, Beta or final availability.
+
+
+
+For the current OSX setup, I think you can use:
+
+
+the current XamarinStudio/MonoDevelop - 4.0.2
+the current stable Xamarin.iOS/MonoTouch and Xamarin.Android/MonoDroid - do not use the Aplha channel
+
+
+For the current PC setup, I think you can cannot use Xamarin.iOS, but you can use:
+
+
+VS2010 or VS2012
+the current stable Xamarin.Android/MonoDroid - do not use the Aplha channel
+with just a couple of changes:
+
+you need to add two supported framework xml files - one for Android and one for MonoTouch - you can find these on http://slodge.blogspot.co.uk/2013/03/xamarinios-with-mvvmcross-in-vs2012.html
+
+
+
+
+
+For discussions on getting things building and running, don't use StackOverflow - instead use one of:
+
+
+http://forums.xamarin.com/discussion/1549/pcls-and-mvvmcross-in-the-new-tools#latest
+
+
+as a backup you can also try https://jabbr.net/#/rooms/mvvmcross
+
+
+
+Don't even think about trying to get an MvvmCross app built - on the free version of Xamarin - it's limits are way too low for any app I've tried to build.
+
+
+
+If you are looking for some starting app templates, use: https://github.com/slodge/MvvmCross-Templates
+
+If you are looking for some pre-built binaries, use one one of the folders on: https://github.com/slodge/MvvmCross-Binaries - please note that portable libraries built on the Mac are not portable across to the PC (or vice versa) - they will be 'soon' but not yet.
+
+
+
+Sorry for the fact that we don't have a neater, finished solution... we've now been fighting to hack PCLs into Xamarin for a year. However, the good news is that really soon that battle will be over and we can all get on with the apps :)
+
+
+
+I guarantee this answer is out of date inside a week...
+    
+    
+Answer 2: 
+
+    
+    
+Xamarin.Studio 4.2 allows you to create PCL projects.
+    
+    
+Answer 3: 
+
+    
+    
+Take a look at this article: http://slodge.blogspot.de/2012/12/cross-platform-winrt-monodroid.html 
+
+Many information about using PCLs as well as some special infos about MVVMCross
+    
+    
+Title: Is there a shortcut to swap/reorder parameters in visual studio IDE?
+Description: 
+    
+    
+                    
+I have a common issue when working with code in the IDE:
+
+string.Concat("foo", "bar");
+
+
+and I need to change it to:
+
+string.Concat("bar", "foo");
+
+
+Often I have several of these that need to be swapped at once.  I would like to avoid all the typing.  Is there a way to automate this?  Either a shortcut or some sort of macro would be great if I knew where to start.
+
+Edit: changed to string.Concat to show that you can't always modify the method signature.  I am only looking to change the order of the params in the method call, and nothing else.
+    
+
+        
+Answer 1: 
+
+    
+    
+&lt;Ctrl&gt; + &lt;Shift&gt; + &lt;t&gt; will transpose two words, so it would work in your case. Unfortunately I don't see this working (without multiple presses) for functions with larger parameter lists...
+    
+    
+Answer 2: 
+
+    
+    
+There's an option built right into VS for C# code.  Go to the method definition, right-click on its name, and click Refactor, Reorder Parameters.
+
+If you need this for C++, you may need to use a regular expression search and replace—if you do, watch out for cases like someMethod("bar", GetOtherThingy("foo", "rofltron")).
+    
+    
+Title: Eclipse CDT: doesn&#39;t show name a macro appears in
+Description: 
+    
+    
+                    
+When searching for macro references, Eclipse displays file+line the macro is referenced it. I would like to file+line+function.
+
+Searching for a other type of data (e.g. function) will display file+line+function as expected, so maybe something should be tweaked in Eclipse configuration for macros?
+
+Any ideas?
+    
+
+        
+Answer 1: 
+
+    
+    
+Update - Jan 2017
+
+The next release of CDT (CDT 9.3, part of Eclipse Oxygen to be released in June 2017) will have support for showing function containing the macro reference. See Bug 508216 for more details. 
+
+The rest of this answer is the original answer.
+
+TL;DR
+
+There is no way in Eclipse CDT to display the function a macro is referenced in because such information is not included in the index when the index is built.
+
+Pictures
+
+To ensure that we are talking about the same thing I provide some visuals.
+
+Given a simplified C file containing functions, macros and globals:
+
+Example Code
+
+
+#define MACRO(X) ((X) + 2)
+int function(int);
+int global;
+
+int function_results_are_in(void) {
+    int i = 0;
+    i = MACRO(i);
+    i = function(i);
+    i += global;
+    return i;
+}
+
+
+Doing a search using one of the following methods that uses the C/C++ Index (as opposed to a file/grep style search):
+
+Setup
+
+
+References in Workspace of selection using one of:
+
+
+Shift+Ctrl+G
+Right-click -em/em
+Title: How to configure RockMongo for Mongo replicaSet
+Description: 
+    
+    
+                    
+I recently switched to the RockMongo browser, but I am having a hard time making it work with a replicaSet.
+
+Per the official documentation, I declared the server as: 
+
+$MONGO["servers"][$i]["mongo_name"] = "localhost";//mongo server name
+$MONGO["servers"][$i]["mongo_host"] = "127.0.0.1";//mongo host
+$MONGO["servers"][$i]["mongo_port"] = "27017";//mongo port
+$MONGO["servers"][$i]["mongo_timeout"] = 0;//mongo connection timeout
+
+
+RockMongo complains with the following: 
+
+Execute failed:not master
+function (){ return db.getCollectionNames(); }
+
+
+I also tried another variant which resulted in the same error: 
+
+$MONGO["servers"][$i]["mongo_host"] = "mongodb://192.168.0.2,192.168.0.3";// multiple hosts
+
+
+Can RockMongo work with a replicaSet?
+    
+
+        
+Answer 1: 
+
+    
+    
+But if you dive into the source code, you find that rockmongo can indeed connect to replicaSet using undocumented "mongo_options" key : 
+
+$MONGO["servers"][$i]["mongo_options"] = array('replicaSet' =&gt; 'REPLICA_NAME');//mongo server name
+$MONGO["servers"][$i]["mongo_host"] = "mongodb://192.168.0.2,192.168.0.3";//mongo host
+$MONGO["servers"][$i]["mongo_port"] = false;//mongo port
+
+
+Hope this helps !
+    
+    
+Title: How can I get Visual Studio to source highlight .json source code?
+Description: 
+    
+    
+                    
+How can I get VS to source highlight .json source code?  I'd also like to have it have some of the same key-bindings that normal JavaScript enjoys.  In a way all I'd really need/want is a way to have Visual Studio recognize a .json file as a .js file (I think).  Is this possible?
+    
+
+        
+Answer 1: 
+
+    
+    
+Great news! 
+
+In  CTP2 of Visual Studio 2013 Update 2 that was added a New JSON project item and editor 
+
+One more post New JSON editor features in Visual Studio 2013 Update 2 CTP2
+
+
+
+
+
+
+    
+    
+Answer 2: 
+
+    
+    
+Try to use Visual Studio Extension TextHighlighter:
+VS 2010: TextHighlighterExtension
+VS 2012: TextHighlighterExtension12
+    
+    
+Answer 3: 
+
+    
+    
+Navigate starting at the top menu bar,
+
+TOOLS --
+Answer 4: 
+
+    
+    
+Into the menus
+Tools .. Options .. Text Editor .. File Extensions
+
+Add the JSON extension and choose to use the Script Editor
+    
+    
+Answer 5: 
+
+    
+    
+The problem is that a json file isn't valid javascript. (A file containing just a javascript literals without an assignment is invalid.) So while it will highlight, Visual Studio will be convinced your file's wrong, and (personally) I find that more annoying than the lack of highlighting.
+
+There is this project: http://jsonviewer.codeplex.com/ but that seems old and not currently maintained. (Also it seems like it's just a visualizer, not a syntax highlighting plugin.)
+
+I'm currently look for a good plugin for this, or possibly writing one.
+    
+    
+Title: Project will not start in debug mode
+Description: 
+    
+    
+                    
+I'm using VS2008, and I have a project that will not start when I press F5 or when I click the little green triangle in the toolbar.  The screen flickers once, like the project is going to run, and then it doesn't.  The build message claims the build was successful, but the project won't start.
+
+In the Configuration Manager, my 'Active solution configuration:' is set to Debug, and in the 'Project contexts' list, the 'Configuration' column for my Project is set to Debug.  I've even switched them back and forth between Debug and Release and then back to Debug, all with no effect.  The project that I'm trying to run is set as the 'Startup Project' in my solution.
+
+If I go to my \bin\Debug folder and double-click the .exe, (which shows the proper time-stamp on the file) my app runs just fine.
+
+Any ideas why I can't get the silly thing to run in debug mode?  
+
+EDIT:
+It's a winforms application.
+
+My version of Visual Studio is 9.0.30729.1 SP
+
+.NET Framework: Version 3.5 SP1
+
+EDIT:
+
+This may be related to TortoiseSVN.  I keep my source code for this project in SVN.  When I do a different/new checkout in TortoiseSVN, sometimes the new checkout will then allow the project to run.  I don't understand the seemingly intermittent nature of this problem.
+
+EDIT:
+
+Not sure if this information is relevant to the problem, but when I do a new checkout and have a folder structure that is less deep (not as many nested folders) than the original checkout, I seem to have a better chance of the project running without problems.
+
+EDIT:  The problem had nothing to do with TortoiseSVN, see my answer below.
+    
+
+        
+Answer 1: 
+
+    
+    
+IT ran some type of Windows update on my machine and that has apparently fixed the issue.  It had something to do with a System.Runtime.InteropServices.COMException and an error in a 'Hosting' .dll.  I'm not sure why a corrupt Hosting dll had an impact on a winforms application, but it has fixed the issue.
+    
+    
+Answer 2: 
+
+    
+    
+I had a similar issue in the past.  The project would not run in debug mode.
+
+It was also caused by a corrupted dll, but not the 'Hosting' one.  It's been a long time, so I don't recall the exact dll, but it had something to do with Messaging.
+    
+    
+Answer 3: 
+
+    
+    
+There are actually some questions that are similar to yours. The most common workaround is to uncheck the "Enable the Visual Studio hosting process" in project properties.
+
+I sometime has to switch between debugging under x64 bit to Any CPU; re-loading the project, and delete any *.suo files in the project folder.
+    
+    
+Answer 4: 
+
+    
+    
+Gotta start with the basics... Have you eliminated the possibility of a run-time crash before the main form is shown? 
+    
+    
+Answer 5: 
+
+    
+    
+Don't have a precise answer, but do have a solution that worked for me.
+
+Close the project / solution all down.
+Via Explorer, go to the bin\debug directory. Rename each of the files present within the directory. In my case i simply prefixed each entry with an "xxx". I did this so that I could backtrack once again, if required, as I didn't have the confidence simply to delete the entries.
+By re-opening the project/solution, and attempting to debug again, seems to force the regeneration of those files once again.
+For me the program resumed re-working.
+I have no idea what the specific cause of the problem is, but the complete rebuild of the files, does appear to work, rather than just a "Build" which must partially retain what was there before. 
+    
+    
+Title: Is there an extension for jQuery code-completion in Coda?
+Description: 
+    
+    
+                    
+Do you know if there is a plugin for Coda to do the kind of code completion below for jquery? As far as i know there is such extension for Visual Studio, hope there is a way to do that in Coda too, because i don't want to write jQuery(document).ready(function(){ ... }); anymore.
+
+Thanks,
+Sinan.
+
+P.S. I'm aware of shorthands of document ready like $(function() { ... });but it's still long and it's not the only issue makes me look for a completion extension.
+
+alt text http://www.dbvy.com/Picture.png
+    
+
+        
+Answer 1: 
+
+    
+    
+Check out this web post which has a jQuery.mode that you can use for Coda:
+
+jQuery Syntax Mode
+    
+    
+Title: No &#39;Remove Widget&#39; option for flutter with Android Studio in Windows 10
+Description: 
+    
+    
+                    
+Widget options (Alt+Enter) are quite helpful in Flutter Development with Android Studio. It helps us to Move, Wrap, Add, Remove or Swap Widgets automatically, basically makes our life easy. 
+
+Issue : In my IDE the 'Remove widget' option is missing. Check the image below for reference. With my fresh installation of Android Studio in two different computers, the option was never there since the beginning. I'm sure I never played or messed related configurations. 
+
+I know its not a big deal, but I'd love to have remove option as I play a lot with Widgets around and removing sometimes a pain. 
+
+Is there anything in configuration that I need to enable?
+
+Android Studio : v3.5
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The name has been changed from Remove Widget to Replace widget with its children but does the same thing.
+
+UPDATE: Flutter has turned it back to Remove Widget.
+    
+    
+Answer 2: 
+
+    
+    
+UPDATE: From Flutter 1.12.13+hotfix.5 • channel stable The option is now back to Remove Widget.
+    
+    
+Title: IDE for Processing.js
+Description: 
+    
+    
+                    
+I'm just getting started with processing.js and neither of the IDEs I use (Aptana, NetBeans) are able to understand the JavaScript syntax processing uses. What is a good editor to use when coding processing.js? At minimum I would like code folding and coloring.
+    
+
+        
+Answer 1: 
+
+    
+    
+Depends on what you want to do, but did you have a look at the Web IDEs on the processing.js website?
+
+
+www.sketchpad.cc
+www.hascanvas.com
+sketch.processing.org
+
+
+jan.
+
+EDIT: sketch.processing.org is a broken.
+    
+    
+Answer 2: 
+
+    
+    
+If you plan to use Processing.js with processing's original Java-based syntax then the best IDE is going to be Processing. The 2.0 alpha versions have a JavaScript mode that you can switch into and will make the workflow easier. It will not provide features such as code completion that you are used to with NetBeans etc. There is no IDE that will give you those features with that syntax and writing normal Java will not translate correctly.
+
+Processing.js is really a JavaScript implementation of the Processing API,  it just has and additional feature for converting your Processing java-style code into JS. If you write your Processing.js applications directly in JavaScript you will be able to leverage some additional features from IDEs such as Aptana, but of course your code will not compile into a Java Application / Applet. Their JS Quick Start Guide introduces this method.
+    
+    
+Answer 3: 
+
+    
+    
+The next best thing is to use either C++ or Java syntax highlighting. The main determining factors are:
+
+
+Java doesn't allow file-level variables or functions, which are a core part of the PDE definition
+C++ uses different keywords for importing, inheriting, referencing parent classes and declaring interfaces and this is a pointer dereference (-/li/ulp/p/div
+Answer 4: 
+
+    
+    
+If you want to code in Processing-Java (versus pure javascript), and also want auto-code completion, I suggest using IntelliJ or Eclipse.  Import core.jar from processing into your project to enable auto completion.
+
+Then wrap your code inside of a PApplet subclass:
+
+package pde;
+import processing.core.*;
+import java.util.ArrayList;
+
+public class MySketch extends PApplet
+{
+    //your code here
+}
+
+    
+    
+Answer 5: 
+
+    
+    
+You could write in on Notepad if you're on Windows. Al you have to do is save it as an HTML document, like the following : 
+
+
+
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;
+      Your project's title
+    &lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;!--The processing.js canvas--&gt;
+    &lt;canvas id="mycanvas"&gt;&lt;/canvas&gt; 
+    &lt;!--Imports the processing.js library--&gt;
+    &lt;script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"&gt;    &lt;/script&gt;
+    &lt;!--Where you write your code--&gt;
+    &lt;script&gt;
+    var sketchProc = function(processingInstance) {
+      with (processingInstance) {
+        //Feel free to change the size
+        size(400, 400);
+        frameRate(30);
+        
+        //Write your code here:
+        
+        
+        
+        
+        
+        
+      }
+    }
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+
+
+
+
+Hope this helps! :D
+    
+    
+Title: ReSharper: Rename namespace not available?
+Description: 
+    
+    
+                    
+I'm trying to rename a namespace. For some reason, ReSharper isn't giving me the option to do so. I right click on it and choose Refactor, but everything except "Convert" is greyed out. I try the key combination CTRL R + R, and it says the command is unavailable. What am I doing wrong?
+
+Here is documentation suggesting that what I am trying to do should work:
+
+http://www.jetbrains.com/resharper/documentation/help20/Refactoring/renaming.html#renameNamespace
+
+I'm using Visual Studio 2008 with R# 4.5
+    
+
+        
+Answer 1: 
+
+    
+    
+I have come across this before and the answer is very subtle. Do not select (eg by double clicking) the entire method name(or namespace if renaming a namespace). Instead, ensure the method name is deselected and place the caret over the method name.
+eg
+
+NOT this
+
+When you select the Convert menu the items should now be available for methods, and 'Rename' will become available if you had the caret over a namespace.
+In my mind this should be changed, it is not obvious.
+    
+    
+Answer 2: 
+
+    
+    
+Apparently, the way to do this now is via ReSharper =&gt; Refactor =&gt; Adjust Namespaces menu or open the Class View, right click on the namespace you wanted to rename and again select Refactor =&gt; Adjust Namespaces.
+
+See also: Fastest way to update namespaces with ReSharper?
+    
+    
+Answer 3: 
+
+    
+    
+For what it's worth, I just had this problem. Closing Visual Studio and re-opening it fixed the problem for me. HTH.
+    
+    
+Answer 4: 
+
+    
+    
+This is an old issue but I just had this and perhaps know a workaround.
+Since someone has commented just yesterday timing could not be more perfect.
+Anyways,
+I had the same issue and was finally able to do a rename refactoring on my namespace.
+
+
+I chose one of the classes in my project and did the move to another namespace refactor.
+Then I was able to go to another class and do the rename namespace refactor.
+
+
+Perhaps a bug in Resharper that if the namespace is consistent throughout the class then it's disabled?  Unlikely since this was reported as far back as 4.5...
+    
+    
+Title: Hungry Backspace in Eclipse?
+Description: 
+    
+    
+                    
+In some editors there exist plugins implementing a feature called "hungry backspace" or "hungry delete".
+
+If this mode is active in a text editor then one hit to the backspace key will automatically delete all whitespace chars backwards from the current cursor position up to the first non-whitespace character.
+
+For example, this feature exists for Emacs and IntelliJ IDEA.
+
+Does anyone know if it is also available in Eclipse?
+    
+
+        
+Answer 1: 
+
+    
+    
+Alt-Del is probably as close as you're going to get without writing a plugin yourself.  Others have asked for this feature (coming from intelliJ) but so far it doesn't exist, or it's not published.
+
+-Adam
+    
+    
+Answer 2: 
+
+    
+    
+CTRL-backspace is pretty close too: delete previous word:
+
+function();    (4 spaces)
+
+
++ CTRL-BACKSPACE gives:
+
+function
+
+
+Other than that, AnyEdit plugin can convert trailing spaces into tabs (but also into "", effectively removing them)
+    
+    
+Answer 3: 
+
+    
+    
+Ctrl+Shift+Left, Backspace always works for me. works in notepad, web browsers, everywhere.
+Stick to the standards :)
+    
+    
+Answer 4: 
+
+    
+    
+In SciTE, and Eclipse (3.4), Ctrl+Shift+Del with the caret after the last visible character will delete these spaces. Ie. it deletes from caret to end of line.
+
+Actually, in SciTE I don't need to do that, since I have set it up to automatically remove these trailing spaces when saving.
+
+Note: In Preferences 
+Answer 5: 
+
+    
+    
+From eclipse Windows menu/Preferences
+Search for Keys and filter to "Delete Previous Word"and Bind it to the Ctrl+Backspace
+
+    
+    
+Title: Android studio connection reset error?
+Description: 
+    
+    
+                    
+I have updated android studio 2.2.2 recently. Now i got connection reset error when i check sdks and adding dependency to build.gradle. I have no idea about this. guide me to remove this error.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Try adding mavenCentral() inside the buildscript.repositories enclosure, like so. put error log for eject answer  
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()   // This repo should have the gradle plugin
+    }
+    dependencies {
+         classpath 'com.android.tools.build:gradle:0.12.2'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+ }
+
+    
+    
+Title: Can PyCharm autocomplete arguments when instantiating a class?
+Description: 
+    
+    
+                    
+Is it possible to set up PyCharm to autocomplete arguments when instantiating a class like in the example?
+
+3:48 Autocomplete arguments
+    
+
+        
+Answer 1: 
+
+    
+    
+"ctrl p" will show  parameter info which can be useful to remember what parameters the object takes and the order.
+    
+    
+Answer 2: 
+
+    
+    
+PyCharm provides this by default. It doesn't inject the argument names into the code as per the video you linked to, but it does give you a tool tip while instantiating a class with the arguments listed.
+    
+    
+Title: Set Eclipse not to insert blank lines between methods declaration in interfaces?
+Description: 
+    
+    
+                    
+I'm having trouble to set up formatter not to insert blank lines between methods in interfaces. In the same time I still want to have blank lines between methods in classes. I cannot find appropriate formatter setting that would allow this. Can somebody point me to the right option?
+    
+
+        
+Answer 1: 
+
+    
+    
+As stated in comments by vainolo, there isn't any direct option to do so. Following is the screenshot for the eclipse formatter for adding new lines and it doesn't distinguish between the methods of class and interface 
+
+
+Workaround
+
+But, a simple manual work-around is possible. Select the lines as shown below, and run a simple regex ^\s*\n find and replace to remove the blank lines.
+
+
+
+Hope this helps.
+    
+    
+Title: Show line number on Borland C++Builder 6 (2002)
+Description: 
+    
+    
+                    
+I know it's a old IDE, but in my job I have to work with it.
+
+I spend a couple of days searching where could I set the line numbers to show on the left side of the text editor, but I couldnt find. 
+
+I'm still hoping it's possible, never saw any IDE that didn't have that.
+    
+
+        
+Answer 1: 
+
+    
+    
+You'll not find it.  Only Borland c++ 2005 and higher can do this.  Sorry.
+    
+    
+Answer 2: 
+
+    
+    
+Like bbarnhart said, BCB6 does not support displaying line numbers in the gutter.  The only thing it does do is display in the lower-left corner of the statuts bar the line number and column number where the edit caret is currently located.
+    
+    
+Title: How do I delete a project in IntelliJ IDEA 9?
+Description: 
+    
+    
+                    
+I've just created a new project but the structure is incorrect so I'd like to start again. It is it possible to delete a project from within IntelliJ or do I just have to close it and delete the relevant .iml/.idea files?
+    
+
+        
+Answer 1: 
+
+    
+    
+The proper way would be to close IDEA and delete the project directory or just create a new project in the different directory.
+    
+    
+Answer 2: 
+
+    
+    
+There was no context menu on the project for me. Instead, try this:
+
+
+File /lili/liliem/em/li/ol/div
+Answer 3: 
+
+    
+    
+It seems you can select file -/p/div
+Title: How to use Microsoft C++ compiler with NetBeans?
+Description: 
+    
+    
+                    
+I was wondering whether it's possible to use Microsoft's C++ compiler and linker with NetBeans IDE?
+If so, what's the best way of doing it.
+
+P.S. I'm not interested in Mingw.
+
+EDIT: Is it possible to get NetBeans to do error parsing (so that I can click on error and have NetBeans open the right file), intellisense, etc? I know NetBeans can work with g++ make files. Why not with nmake?
+    
+
+        
+Answer 1: 
+
+    
+    
+I am currently writing a plugin/toolchain to use Visual C++ on Netbeans.
+You can find the project called VCC4N on source forge or on NetBeans plugins.
+    
+    
+Answer 2: 
+
+    
+    
+To be honest, I always do my spare time coding inside an ide (e.g. code::blocks, monodevelop, anjuta) or an editor (virtually always scite), and the compiling I do in a terminal via a makefile (handwritten, cmake, automake). 
+
+This isn't really a problem w.r.t. time to compile: F7 (or some other of the F keys) vs. (alt+tab, up, enter), where (alt+tab) and (up) are pressed nearly at the same time, but I get the great benefit of having up to full screen compiler reports, and often I am anyways testing my programs in a terminal. Also, it makes my code more independent of the IDE (ever tried to get a makefile from code::blocks for distribution purposes?).
+    
+    
+Answer 3: 
+
+    
+    
+The visual studio compiler is called cl.exe and the linker is link.exe. These are present in particular visual studio directories. From inside visual studio 
+Answer 4: 
+
+    
+    
+You can get syntax highlighting, code graphing etc from netbeans without having a compiler installed I think (not certain, you may need cygwin or mingw for parsing). What you must do is create at least an empty makefile. If you want to use Microsoft's compiler then you either need to:
+
+a) Write the makefile yourself to compile eveything using cl
+b) Call on msdev from the makefile with the project name and it will compile everything
+b) Call something like scons from the makefile to compile everything
+
+I use netbeans to develop cross platform software, at this time though, I don't actually run the builds from netbeans.
+    
+    
+Title: Mercurial practices: use with IDEs and scalability
+Description: 
+    
+    
+                    
+I am not an experimented user of SCM tools, even though I am convinced of their usefulness, of course.
+I used some obscure commercial tool in a former job, Perforce in the current one, and played a bit with TortoiseSVN for my little personal projects, but I disliked having lot of .svn folders all over the place, making searches, backups and such more difficult.
+Then I discovered the interest of distributed SCM and I chose to go the apparently simpler (than git) Mercurial way, still for my personal, individual needs. I am in the process of learning to use it properly, having read part of the wiki and being in the middle of the excellent PDF book.
+
+I see often repeated, for example in Mercurial working practices, "don't hesitate to use multiple trees locally. Mercurial makes this fast and light-weight." and "for each feature you work on, create a new tree.".
+These are interesting and sensible advices, but they hurt a bit my little habits with centralized SCM, where we have a "holy" central repository where branches are carefully planned (and handled by administrators), changelists must be checked by (senior) peers and must not break the builds, etc. :-) Starting to work on a new branch takes quite some time...
+
+So I have two questions in the light of above:
+
+
+How practical is it to do lot of clones, in the context of IDEs and such? What if the project has configuration/settings files, makefiles or Ant scripts or shell scripts or whatever, needing path updates? (yes, probably a bad idea...) For example, in Eclipse, if I want to compile and run a clone, I have to do yet another project, tweaking the Java build path, the Run/Debug targets, and so on. Unless an Eclipse plugin ease that task. Do I miss some facility here?
+How do that scale? I have read Hg is OK for large code bases, but I am perplex. At my job, we have a Java application (well, several around a big common kernel) of some 2 millions of lines, weighting some 110MB for code alone. Doing a clean compile on my old (2004) Windows workstation takes some 15 minutes to generate the 50MB of class files! I don't see myself cloning the whole project to change 3 files. So what are the practices here?
+
+
+I haven't yet seen these questions addressed in my readings, so I hope this will make a useful thread.
+    
+
+        
+Answer 1: 
+
+    
+    
+You raise some good points!
+
+
+  
+  How practical is it to do lot of clones, in the context of IDEs and such?
+  
+
+
+You're right that it can be difficult to manage many clones when IDEs and other tools depend on absolute paths. Part of it can be solved by always using relative paths in your configuration files -- making sure that a source checkout can compile from any location is a good goal in itself, no matter what revision control system you use :-)
+
+But when you cannot or dont want to bother with several clones, then please note that a single clone can cope with multiple branches. The "hgbook" emphasizes many clones since this is a conceptually simple and very safe way of working. When you get more experience you'll see that you can use multiple heads in a single repository (perhaps by naming them with bookmarks) to do the same.
+
+
+  
+  How do that scale?
+  
+
+
+Cloning a 110 MB repository should be quite fast: it depends on how long it takes to write 110 MB to your disk. In a recent message to the Mercurial mailinglist it was reported that cloning 6.3 GB took 4 minutes -- scaling that down to 110 MB gives about 4 seconds. That should be fast enough that your tea is still warm :-) Part of the trick is that the history data are simply hard-linked (yes, also on Windows) and so it is only a matter of writing out the files in the working copy.
+    
+    
+Answer 2: 
+
+    
+    
+PhiLo:  I'm new at this, but mercurial also has "internal branches" that you can use within a single repository instead of cloning it.
+
+Instead of
+
+hg clone toto toto-bug-434
+
+
+you can do
+
+cd toto
+hg branch bug-434
+hg update bug-434
+...
+hg commit
+hg update default
+
+
+to create a branch and switch back and forth.  Your built files not under rev control won't go away when you switch branches, some of them will just go out of date as the underlying sources are modified.  Your IDE will rebuild what's needed and no more.  It works much like CVS or subversion.
+
+You should still have clean 'incoming' and 'outgoing' repositories in addition to your 'work' repository.  Just that your 'work' can serve multiple purposes.
+
+That said, you should clone your work repo before attempting anything intricate.  If anything goes wrong you can throw the clone away and start over.
+    
+    
+Answer 3: 
+
+    
+    
+Question 1:
+
+PIDA IDE has pretty good Mercurial integration. We also use Mercurial for development itself. Personally I have about 15 concurrent clones going of some projects, and the IDE copes fine. We don't have the trouble of tweaking build scripts etc, we can "clone and go".
+
+It is so easy that in many cases I will clone to the bug number like:
+
+
+hg clone http://pida.co.uk/hg pida-345
+
+
+For bug #345, and I am ready to fix.
+
+If you are having to tweak build scripts depending on the actual checkout directory of your application, I might consider that your build scripts should be using some kind of project-relative path, rather than hard-coded paths.
+    
+    
+Title: Adding images to a Java project in Android Studio?
+Description: 
+    
+    
+                    
+I'm trying to add my java project in android studio. I got many references &amp; added my Project in Android studio.
+
+Now i am unable to add the assets to my projects. So please help me to solve it
+
+Thanks in Advance
+
+Structure
+
+
+
+CODE
+
+    this.trayIcon = new TrayIcon(ImageIO.read(this.getClass().getResourceAsStream("icon.png")));
+    this.trayIcon.setImageAutoSize(true);
+    this.trayIcon.setToolTip("Remot Server");
+    this.trayIcon.setPopupMenu(menu);
+
+    SystemTray.getSystemTray().add(this.trayIcon);
+
+
+Error
+
+Exception in thread "main" java.lang.IllegalArgumentException: input == null!
+    at javax.imageio.ImageIO.read(ImageIO.java:1348)
+
+    
+
+        
+Answer 1: 
+
+    
+    
+If you refresh your project in the gradle view (the blue arrow) and AS mark it as a resource folder you should be covered. The other thing is the path: Your path should start with a slash / when using Class.getResource() because your image is in the root of the resource folder.
+
+See the acccepted answer here: Classpath resource within jar
+    
+    
+Answer 2: 
+
+    
+    
+You resource directory is in a non-Android Studio standard location. My guess is that you haven't altered your Gradle file to try to include that directory.
+
+Best would be to move the image assets into the standard location, so that the apk packaging routines know what to put where. While its a pain for existing projects the process is straight forward:
+
+
+Create a new empty Android Studio generated app so that all of the configuration is up to date
+Copy over the code and resources into the appropriate place. 
+
+
+Alternatively
+
+You could try to add your resources from your Java project 
+in your build.gradle (app):
+
+android {
+    ....
+    sourceSets {
+        main {
+            // default is resources.srcDirs = ['src']
+            resources.srcDirs = ['src/main/java']
+        }
+    }
+ }
+
+
+But I haven't tried it with images.
+
+More details here: http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Project-Structure
+    
+    
+Answer 3: 
+
+    
+    
+Please check following image.
+Add Assets
+
+When you are going to use it in code, you can use following code
+// for image in Activity 
+&nbsp;&nbsp;&nbsp;AssetManager assetManager = getAssets();
+&nbsp;&nbsp;&nbsp;InputStream instr = assetManager.open("close_btn.png");
+&nbsp;&nbsp;&nbsp;BitmapFactory.Options options = new BitmapFactory.Options();
+&nbsp;&nbsp;&nbsp;mImage = BitmapFactory.decodeStream(instr, null, options);        
+    
+    
+Title: using the pycharm debugger with a flask application factory
+Description: 
+    
+    
+                    
+I am typing more print statements than code. It's killing me.
+
+If a flask development server is invoked via below, I can use PyCharm debugger
+
+from ersapp import app
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+I am following the example in Miguel Grinberg's book and an application manager (flask-script) is used. I invoke the server in my application directory like below
+
+(env)$ python manage.py runserver
+
+
+and in appdirectory/__init__.py
+
+def create_app(config_name):
+    webapp = Flask(__name__)
+    ...
+    return webapp
+
+
+The debugger in Pycharm would make things easier since that's where I work.
+    
+
+        
+Answer 1: 
+
+    
+    
+You ran the project manually by CLI. For using PyCharm IDE debug you must configure PyCharm for your project and then run this by PyCharm.
+But if you want to run the program without PyCharm, you can use the pdb library for debugging destinations. Try the code below:
+
+import pdb
+
+
+def my_def():
+    try:
+        x = 7 / 0
+    except Execption as e:
+        pdb.set_trace()
+
+
+When running this program you can see the interactive line on your CLI...
+    
+    
+Answer 2: 
+
+    
+    
+Try configuring this python running configuration in "Edit Configurations". After that, run in debug mode.
+
+
+    
+    
+Answer 3: 
+
+    
+    
+If you are using the application factory pattern (i.e. using creat_app() WITHOUT a run.app() main) you can use your standard 'flask' run configuration template (community version may not have these, not sure).  However, you'll notice that the debugger wont stop at breakpoints because the flask app in DEBUG runs the reloader which means it runs in different threads and Pycharm cant catch it.  So to make it break not just at lunch but any API call you want to debug make sure you:
+
+select DEBUG checkbox
+add --no-reload as a flask argument
+add --without-threads as a flask argument
+
+This was the only way I could get full debug support:
+
+    
+    
+Answer 4: 
+
+    
+    
+I experienced the same problem working through Miguel Grinberg's book. To answer the question How to &quot;Configure PyCharm&quot; for your project I offer the following comment.
+To remain in PyCharm to take advantage of its glorious debugger go to Edit Configurations, and in that dialog box make sure you are on the Configurations tab. There, the two top text boxes are:
+
+Script: set to path of your manage.py
+Script parameters: runserver
+
+By the way I am using PyCharm 4.5.3, although I suspect the following is true in at least a few of the previous releases I have worked in. Now running the application from PyCharm invokes the runserver command:
+python manage.py runserver 
+
+and this runs the flask development server, i.e. app.run(). The Configuration tab has allowed us to specify running the particular script manage.py, as well as the command line argument to use, e.g. runserver as in this case. After running the app in PyCharm look at the top line in the output in the Run or Debug window and you will see among other entries: --file pathto/manage.py runserver.
+You might have specified shell instead of runserver in the script parameter text box, and in that case you would have found yourself in the shell after running the app in PyCharm.
+The default Manager(app) commands are runserver and shell. The db command is added in the following line of manage.py:
+manager.add_command('db', MigrateCommand) 
+
+Underneath that the command test is added. Notice the @manager.command decorator prior to def test().
+To get a list of all Manager(app) commands type on the command line:
+python manage.py
+
+If you are at the Application Factory part of the tutorial you should see {test, shell, db, runserver}. To get help on any one command type:
+python manage.py parameter -?
+
+    
+    
+Title: Visual Studio - How to replace text preserving case
+Description: 
+    
+    
+                    
+Using the find and replace dialog in Visual Studio (2010) is it possible to replace some text but to preserve the case of the text being replaced.
+
+ie.  I want to change 'foo' to 'bar' but in my code I have Foo, foo and FOO.  I want the replacement to be Bar, bar, BAR respectively.
+
+Is it possible?  I suspect I need to use the regular expression functionality but I need assistance in doing so.
+
+EDIT: I know I can set the match case option, but all that option does is limit the replace to text matching the case of the search term. This is how I am doing it at the moment, but it is tiresome having to do three replacements - foo, Foo and FOO
+    
+
+        
+Answer 1: 
+
+    
+    
+It is - simply expand the Find Options area of the Find and Replace dialog and check the Match Case checkbox.
+
+Full documentation on the dialog can be found here:
+
+
+  Match case - Only displays instances of the Find what string that are matched both by content and by case. For example, a search for "MyObject" with Match case selected will return "MyObject" but not "myobject" or "MYOBJECT."
+
+
+
+
+Edit: (following clarification)
+
+I don't know of an easy way to do what you want. A RegEx could possibly be constructed that does this, but I suspect that doing 3 search and replace would be faster, easier and less error prone than a RegEx, in this case.
+    
+    
+Answer 2: 
+
+    
+    
+I think if you use "match case" = true then you can replace "Foo" to "Bar" and "foo" to "bar"
+    
+    
+Title: How do I set up Visual Studio 2008 to program in Perl?
+Description: 
+    
+    
+                    
+My company gave me VS2008 for web development in C#/ASP.NET.  I do a lot of Perl programming too and I'd like to start using VS for that so I can have a consistent work environment... but am having real trouble figuring out how to do so.
+
+VS has a lot of nice features but seems pretty hostile towards languages it doesn't support out of the box. Is it really or do I just not "get" the VS way of doing things?
+
+I usually write Perl scripts using TextPad and the features I'm used to having are pretty basic.  
+
+
+line numbering  
+
+
+soft line wrapping  
+syntax highlighting  
+auto-indenting in/out after open/close brace  
+auto-indenting to the same starting point as the previous line
+brace matching  
+run scripts from within the editor  
+capture script output in an editor pane   
+dbl-click on error message jumps to the line where the error occurred
+
+
+
+How do I at least get the above features in VS2008?
+
+How can I get advanced features like:
+
+
+code folding
+intellisense
+code-completion 
+integrated perldoc
+VS-style debugging and code tracing
+on-the-fly error detection
+etc
+
+
+(I see one possibly relevant online discussion in an ASPN mod-perl mailing list , but don't understand what, if anything, it means to a guy like me.)
+
+-- added --
+I'm aware of other editors and IDEs out there: vi, perlmode-emacs, Komodo, E, TextMate, etc.  This question is not about what other editor or IDE I should try.
+While I appreciate your suggestions, I'd rather read them in a thread like "What editor should I use for Perl" and not "How do I set up VS to accomplish my goal"
+
+-- added --
+After doing some additional research I've concluded that you just can't get there from here.  The only option would be to write my own language plugin.  Considering the time commitment to make something usable I think I'm just better off using a different editor. Thanks anyway guys
+    
+
+        
+Answer 1: 
+
+    
+    
+I use VS2008 for .NET stuff, but I'm completely sold on Komodo for Perl editing.  The full Komodo IDE is worth the money if this is your job and like/need to use a debugger, but even the free Komodo Edit is a terrific Perl editor.
+    
+    
+Answer 2: 
+
+    
+    
+I agree, I really like Komodo as well for an IDE.  Its solid and easy to use.  I tend to use Vim a lot instead of an IDE, but that's just personal preference.
+
+Check out Komodo though, its worth the look.
+
+Regards,
+
+Jeff
+    
+    
+Answer 3: 
+
+    
+    
+I heard rumors of there being a .NET implementation of Perl, called IronPerl, but except for that, I don't think there is any sort of plugin for Visual Studio.  I would suggest just using one of the many tools out there that are designed for Perl.
+    
+    
+Answer 4: 
+
+    
+    
+There was something called "Visual Perl" wich worked with Visual Studio.net 2002 and was needed Perl Dev kit tool, but I don't how comatible is with VS.net 2010.
+    
+    
+Answer 5: 
+
+    
+    
+Looks like you can do this via the Managed Package Framework if you are willing to put the time in.  
+
+You can decrease the amount of work required by just setting up syntax coloring
+    
+    
+Title: How to avoid this annoying autocomplete in visual studio code
+Description: 
+    
+    
+                    
+When I type import tensorflow as tf it automatically complete tf to try/finally block when I press the enter key, which is annoying and not intelligent at all, how to avoid this?
+
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Those are snippet suggestions. Try setting: 
+
+"editor.snippetSuggestions": "none"
+
+
+to disable them. 
+    
+    
+Answer 2: 
+
+    
+    
+Search your workspace settings for Editor: Accept Suggestion On Enter and set it to Off. Now when you type import numpy as np you will see numpy as the suggested completion. If you hit tab, VSC will use the suggestion, but if you hit Enter it will not.
+    
+    
+Answer 3: 
+
+    
+    
+I had this issue and solved it by disabling &quot;accept suggestions on enter&quot; in settings.
+This way, the suggestion will still come up but you need to use the tab key to accept the suggestion.
+&quot;editor.acceptSuggestionOnEnter&quot;: false
+    
+    
+Title: How do I upgrade the PHP in RAD PHP XE2
+Description: 
+    
+    
+                    
+I am using RADPHP XE2 (from Borland / Embarcadero) as my IDE.  Only because I have been using their IDE for years.  I am not actuially using any of the VCL components, as that is a stupid concept for web-design.
+
+I want to upgrade the PHP that it is using.  I have installed the latest PHP outside the IDE and it runs.  But the IDE still uses 5.2.  Is it possible to coax it to use the new one ?  Any ideas anyone ?
+    
+
+        
+Answer 1: 
+
+    
+    
+At the Moment RadPHP XE2 Update4 supports PHP 5.2.14.
+Tired to integrate PHP 5.3 and PHP 5.4 on myself.
+
+Generally after modifying the php.ini-dist File and integrating the correct xdebug Library tried to Debug Type3 with PHP 5.3 the Debugger starts but after the first to or three Breakpoints it hangs.
+    
+    
+Answer 2: 
+
+    
+    
+Abstract: Download link and fix list for RadPHP XE2 Update 4
+
+RadPHP XE2 Update 4 is now available at http://cc.embarcadero.com/item/28759.
+    
+    
+Title: Are there any user interface prototyping tools for Eclipse?
+Description: 
+    
+    
+                    
+I am looking into designing new features for Eclipse-based programming tools, from the requirements/ideas perspective. To really do this quickly, I would like to sketch UI elements without having to code things -- my concern is with the concepts and ideas right now, not the possible later realization.  Are there any such graphical sketching tools for Eclipse?
+
+(on a side note, I should also note that I find Eclipse a better idea every day, in the way that you can combine partial systems from very many different sources into a single environment. It really is the future of IDEs, especially for embedded systems.  It used to pretty horrible pre-Eclipse-3.0, but now it does seem to work)
+    
+
+        
+Answer 1: 
+
+    
+    
+WireframeSketcher is a tool that helps quickly create wireframes, mockups and prototypes for desktop, web and mobile applications. It comes both as a standalone version and as a plug-in for Eclipse IDEs. It has some distinctive features like storyboards, components, linking and vector PDF export. Among supported IDEs are are Aptana, Flash Builder, Zend Studio and Rational Application Developer.
+
+
+(source: wireframesketcher.com)  
+    
+    
+Answer 2: 
+
+    
+    
+Incidentally, NetBeans is known for having a really good GUI editor (Matisse), but I realize that you weren't asking about NetBeans :)
+    
+    
+Answer 3: 
+
+    
+    
+I've tried the Visual Editor Project before, but in the past it crashed my instance of Eclipse, and I haven't visited it since.
+
+Jigloo is a new one that I'd like to try out soon.
+    
+    
+Answer 4: 
+
+    
+    
+This is really specific to Eclipse: it is the platform of choice for general IDEs today, and I am looking to sketch out extensions to it.  The target programming language is more likely to be raw assembler and C than anything else -- OS, driver, system-level debug.
+    
+    
+Title: Is there a tool to make all classes package protected and final if possible?
+Description: 
+    
+    
+                    
+Background: I notice that in many projects almost all classes in the internal code are public and not final, even if they don't need to be. However, it seems sensible to me to make this decision not by default, but only make classes public if they are actually meant to be used from other parts of the system. Having package protected classes is an easy mechanism to enforce boundaries between modules, and serves as a documentation on the intended use of a class.
+
+If there was a (preferrably free :-) tool to protect all classes that can be protected without breaking the program, and maybe make everything final that has no subclasses, that would be a good starting point to start a conscious use of protection mechanisms. (Of course you need to tweak things afterwards.) Do you know such tool?
+
+Caveat: I am aware that there are better modularization mechanisms like OSGI and the planned superpackages and so forth. But in many current projects this is not an option, and using the plain old Java mechanisms is something you can easily do. Also, this works only if you have shared code ownership (such that everybody can change things back to public as needed) and if you are developing an endproduct, not a library for use by others. I am also not too sure about the benefits of making things final - this prevents AOP and mocking.
+
+CLARIFICATION: As I said, I am not talking about libraries that are thrown over the fence to someone who can't change it, but about internal code of medium sized projects where everybody is encouraged to change and refactor everything as needed. When I am talking about package protected or final think of it as "protected until someone feels a compelling need to lift those restrictions". If someone feels the need to lift the restrictions set by the tool, he is welcome to do so.
+    
+
+        
+Answer 1: 
+
+    
+    
+Even if there was such a tool, (there isn't), a good programmer wouldn't use it... access specification is a design issue best understood and settled by the programmer himself. Think about it... you make a program and run the tool and get everything sorted (Assuming the tool is super-intelligent in the first place to actually understand your program).. then you decide to modify it... extend some classes, etc.. and you end up extending final classes and making objects of private classes.. (and these are few of the many problems you'll face)... 
+
+Thing is.. when the tool does its job, you would no longer even understand your own program.
+
+Bottomline.. stop looking for tools to solve your design issues.. (its like asking for tools that will automatically debug your program)
+    
+    
+Answer 2: 
+
+    
+    
+You can have a look at ATL from Eclipse. Although ATL is used to create model to model transformations between different kinds of models, there is no restriction that source and target model are not of the same type. You could create a transformation from Java to Java that makes your current classes protected or final. MoDisco is a toolset of Eclipse makes use of that, just if you want to see examples.
+    
+    

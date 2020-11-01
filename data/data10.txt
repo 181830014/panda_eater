@@ -1,0 +1,4213 @@
+Title: How do I get js2-mode to use spaces instead of tabs in Emacs?
+Description: 
+    
+    
+                    
+I am using js2-mode to edit Javascript in Emacs, but I can't seem to get it to stop using tabs instead of spaces for indentation. My other modes work fine, just having issues w/ js2.
+    
+
+        
+Answer 1: 
+
+    
+    
+Do you have
+
+
+(setq-default indent-tabs-mode nil)
+
+
+in your .emacs? It works fine for me in emacs 23.0.60.1 when I do that. js2-mode uses the standard emacs function indent-to, which respects indent-tabs-mode, to do its indenting.
+    
+    
+Answer 2: 
+
+    
+    
+Add this to your .emacs file somewhere after you load js2 mode:
+
+(setq js2-mode-hook
+  '(lambda () (progn
+    (set-variable 'indent-tabs-mode nil))))
+
+    
+    
+Answer 3: 
+
+    
+    
+On my copy of GNU Emacs 24.2.1, setting:
+
+(setq-default indent-tabs-mode nil)
+
+
+in .emacs is not sufficient for javascript mode, presumably because the setting is somehow being over-ridden in a per-buffer context. The following change is sufficient:
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(indent-tabs-mode nil))
+
+    
+    
+Title: Using Cmake with Qt Creator
+Description: 
+    
+    
+                    
+I would like to use Qt creator and Cmake together (please, don't ask me about my motivation, accept this as a given.)
+
+I successfully set up Qt creator to use cmake "Cmake": see this,    this and this documents regarding how I did that.
+
+I successfully create hello world project, but I can't create files in project,
+only add existing files to project tree and after that adding it to cmake list.
+Standard operation of Qt creator "Add New..." doesn't work and I can't find why.
+
+Is there anybody who uses Qt creator and "Cmake" together? Is the combination actually possible? 
+
+Note: I'm using Qt creator v2.4.1.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can add files using glob expression in your CMakeLists.txt, like this:
+
+file(GLOB SRC . *.cpp)
+add_executable (your_exe_name ${SRC})
+
+
+Cmake will pick your new cpp files next time you run it and QtCreator will show them in the project browser.
+
+Update
+
+This solution may be useful but as noted in comments - this is not a good practice. Every time somebody add new source file and commit changes, you need to rerun cmake to build all the sources. Usually I just touch one of the CMakeLists.txt files if my build is broken after I pool recent changes from repository. After that make will run cmake automatically and I didn't need to run it by hands. Despite of that I think that explicit source lists in CMakeLists.txt is a good thing, they called thing CMake Lists for a reason.
+    
+    
+Answer 2: 
+
+    
+    
+When you add new files in QtCreator using the "New File or Project..." dialog it only creates the files on disk, it doesn't automatically add the files to the CMakeLists.txt.  You need to do this by hand by editing the CMakeLists.txt file.
+
+The next time you build the project, CMake will be re-run, and QtCreator will pick up the new files and show them in the project browser.
+    
+    
+Answer 3: 
+
+    
+    
+I solve this problem that I added new files in standard way (CTRL+N), then added needed files in CMakeLists. After that, right click on project in project tree view and choose option Run CMake. After this, files showed in project list tree. Only build was not enough.
+    
+    
+Answer 4: 
+
+    
+    
+I tested here and happened the same behavior because those options you were asking were really disabled. 
+
+Use File -/p/div
+Answer 5: 
+
+    
+    
+I'm adding an updated answer for newer versions of QtCreator (4.x, I don't know precisely which release but at least from 4.7). In the Tools &gt; Options... menu, choose the Build &amp; Run section and then the CMake tab. You will see the Adding Files settings, and you can set it to Copy file paths :
+
+This way, when you want to add a new file to your project, in the Project view, right click on the desired CMake Executable/Library's name and select Add New..., go through the Add dialog, and when you'll validate the dialog, QtCreator will open CMakeLists.txt in the Editor view. Finally, paste the content of the clipboard at the end of the corresponding source file list and save CMakeLists.txt. The CMake project will be parsed, and your new file will show up in the Project view.
+    
+    
+Title: VBA VS. VSTO what is the difference, should I upgrade?
+Description: 
+    
+    
+                    
+I am a huge fan of the KISS principle (Keep it simple) and a long time VBA for excel user. However all the articles I can find on VBA vs. VSTO (Visual Studio Tools for Office) seem very complicated. 
+
+Firstly, I am sick of the very poor IDE built into Excel and I am looking for a new one. VSTO using Visual Studio as the IDE seems to be the only alternative.
+
+So I seek to understand what is the difference between VBA and VSTO to know if it is worth me learning to use VSTO? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Which toolset you use is largely a matter of personal preference, but here are some things to consider:1. Performance: For most Excel-related tasks VSTO performs very slowly compared to VBA because of the additional Interop layer.2. UDFs: VSTO does not support UDFs3. Object Model: Its harder to work with the Excel object model with VSTO than with VBA because there is no .NET Macro recorder to give you hints.4. IDE: With VSTO you get access to the latest Visual Studio IDE (assuming you have a Visual Studio license)5. .Net Framework: VSTO gives you access to the very rich and powerful .NET framework6. Learning curve: VB.NET is a different language to VBA and the .NET framework and object model differences mean that the transition is not as simple as it could be.7. If you want to go the visual studio/.NET route I would recommend you look at Addin Express or XLDNA rather than VSTO: both of these have less limitations than VSTO
+    
+    
+Answer 2: 
+
+    
+    
+VBA in Excel gives you the advantage of having fast results between editing your code and running your code. Because you are a good VBA programmer, you could live without the super feature from Visual Studio (intellisense, try-catch-fanally, inherits, every .NET objects, multi-threading ...)
+
+VSTO is a way to work inside a very good IDE (Visual Studio), but i am afraid you will waste a lot of time switching between VB.NET and your Excel. It is not as direct as your VBA inside your Excel. 
+
+If your main purpose of programming is to stay inside your Excel file, then stay with VBA. If you really need to work outside your excel file or if you want to do something that doesn't necessary depend on your excel files, maybe you could consider VSTO. Beside, VSTO is pretty new and documentation may not be complete.
+
+I would stay with VBA if I were you. THIS IS MY HUMBLE OPINION.
+I wrote a little comparative between VBA and VB.NET (VSTO): 
+Here's Difference between VB.NET and VBA! 
+    
+    
+Answer 3: 
+
+    
+    
+This is 6 years after this question was originally asked so it's possible that at the time of the OP a comparison between these two tools were different, but I am actually very surprised at how favorable the existing answers are towards VBA!
+
+VBA is interpreted and housed entirely within the application. The advantages here are:
+
+
+Coding can be done directly within the application, requiring no external tools
+Application-specific features like Macro recording can enable quick prototyping
+You can leverage Excel-specific ActiveX controls like RefEdit
+UDFs can be developed easily
+AddIns are distributed as documents (.xla format)
+
+
+For small applications and UDFs VBA works fine. You can build quickly and easily in Excel and things "just work."
+
+If your program has any type of complexity however, it would be very worthwhile to explore VSTO. Advantages there include:
+
+
+Ability to use multi-paradigm programming languages like VB.NET or C#
+Better collection support (generic lists, dictionaries, tuples, etc...)
+Support for threads, asynchronous execution
+Deployment of AddIns as standalone applications
+Ability to use native WinForms and develop non-blocking UIs
+
+
+VSTO is at this point is pretty well documented:
+
+https://docs.microsoft.com/en-us/visualstudio/vsto/create-vsto-add-ins-for-office-by-using-visual-studio
+
+The topic of performance is rather vague but to contrast some of the previous answers this really depends on your bottlenecks. COM interoperability may add overhead, but at the same time the VBA execution model is much slower than what can be offered by C#. Particularly when you take into account the various paradigms that programming a VSTO can offer three are applications where a VSTO will be orders of magnitude faster than a similarly coded VBA program.
+    
+    
+Answer 4: 
+
+    
+    
+I'm very surprised by your answers towards VBA. 
+
+Working with VBA for some years (mainly with outlook), I was bored with various negative aspects and I'm moving to VSTO since it is much more efficient.
+
+I was confronted to many negative points:
+
+Developping
+
+
+Vba IDE is very limited,
+Userforms are limited (try to make a rich text box)
+
+
+Deploying
+
+
+User need to do too many actions (modify security settings, import references, modify ribbon ...)
+
+
+Updating
+
+
+Can't be updated automatically, you need to send new files for each update to the user .
+
+
+Add-ins are much more powerfull (by powerfull I mean it's easier to make complexe things), can add buttons to ribbons to lauch functions and are more easy to deploy (take a look at ClickOnce).
+
+Generally, VBA macros are made for a personnal use while VSTO applications are made to be distributed as you can read here:
+
+https://support.microsoft.com/en-us/help/290779/managing-and-distributing-outlook-visual-basic-for-vba
+
+
+  If you are developing a solution that you intend to distribute to more than a few people, you should convert your VBA code into an Outlook COM or VSTO add-in or an Office add-in for Outlook.
+
+    
+    
+Title: Tips for Handling large projects with Maven and IntelliJ IDEA
+Description: 
+    
+    
+                    
+I was reading this blog post about the experience of a team using Intellij Idea for large maven projects and have also looked at a similar question posted around 2 years back for IDEA v.10.0.2.
+
+One of the tips mentioned in the former made a whole lot of sense : 
+Move C:\Users\$user\.IntelliJIdea12 into a folder not access-scanned by the antivirus.
+
+I have searched around for performance centric VM options and currently my idea64.exe.vmoptions looks like this :
+
+-Xms1200m
+-Xmx1200m
+-XX:MaxPermSize=200m
+-ea
+-server
+-XX:+DoEscapeAnalysis
+-XX:+UseCompressedOops
+-XX:+UnlockExperimentalVMOptions
+-XX:+UseParallelGC
+-XX:ReservedCodeCacheSize=64m
+-XX:+UseCodeCacheFlushing
+-Dsun.io.useCanonCaches=false
+
+
+Questions
+
+
+Do you have any more such tips to improve Intellij IDEA (12.1.3, 64 bit) performance with large/huge maven projects ?
+Could you please share discoveries you have made w.r.t VM options in idea64.exe.vmoptions  and/or  IDEA configuration in idea.properties.
+I have tried using JDK 7 to startup IDEA but this does not seem to terribly affect it's performance one way or the other. If you have tried doing so, did you experience the same ?
+
+    
+
+        
+Answer 1: 
+
+    
+    
+As suggested by @CrazyCoder, I followed the steps on the official FAQ regarding this matter: 
+
+Common solutions for IntellJ IDEA performance problems
+
+Specifically, the following seemed to have had an appreciable affect:
+
+
+Moved the c:/Users/$user/.IntelliJIdea12 to a location excluded by McAfee's on-access-scanner, and updated $INTELLJ_INSTALL_FOLDER/bin/idea.properties to point to the new location like so (where c:/dev is the folder excluded by McAfee):
+
+
+  idea.config.path=c:/dev/.IntelliJIdea12/config 
+  idea.system.path=c:/dev/.IntelliJIdea12/system 
+  idea.plugins.path=c:/dev/.IntelliJIdea12/config/plugins 
+  idea.log.path=c:/dev/.IntelliJIdea12/system/log 
+
+In $INTELLJ_INSTALL_FOLDER/bin/idea.properties set idea.jars.nocopy=true as documented in this blog post.
+Reverted back to the stock $INTELLIJ_INSTALL_FOLDER/bin/idea64.exe.vmoptions. The only changes that remains are those suggested in Too low heap size for a 64-bit JVM. Here is what I have in the that file currently:
+
+
+  -Xms1200m 
+  -Xmx1200m 
+  -XX:+UseCompressedOops 
+  -XX:MaxPermSize=350m 
+  -XX:ReservedCodeCacheSize=96m 
+  -XX:+UseCodeCacheFlushing 
+  -ea 
+  -Dsun.io.useCanonCaches=false 
+  -Djava.net.preferIPv4Stack=true 
+
+Disabled Git integration plugin since I mostly use command line Cygwin-Git.
+It was useful to monitor .IntelliJIdea12/idea.log. 
+For example : I disabled the osmorc (for OSGI) plugin after seeing that it was frequently logging error while trying to opening zip files in the projects. Sample error :
+
+
+  WARN - pi.vfs.impl.jar.JarHandlerBase - error in opening zip file:
+  C:\dev\a-maven-project\pom.xml  java.util.zip.ZipException: error in
+  opening zip file
+    at java.util.zip.ZipFile.open(Native Method) 
+    at java.util.zip.ZipFile.(ZipFile.java:127) 
+    at java.util.zip.ZipFile.(ZipFile.java:143)   
+
+Disabled all the plugins that I do not need. The current list of disabled plugins is :
+
+
+  Disabled plugins: ASP (0.1), Android Designer, Android Support (10.0),
+  Atlassian Connector for IntelliJ IDE (3.0.9, SVN:1212171008), Base
+  Cucumber (1.0), BashSupport (1.1beta16), CFML Support (3.53),
+  CheckStyle-IDEA (4.2), ClearCase Integration (2.0), Cloud Foundry
+  integration (1.0), CloudBees integration (1.0), Commander (1.0.0),
+  Copy as HTML (0.8.1), Cucumber for Groovy (1.0), Cucumber for Java
+  (1.0), Database Navigator (3.0.2501), Describe Key (0.3), Drools
+  Support (1.0), Eclipse Integration (3.0), Flash/Flex Support (1.0),
+  GWT Support (1.0), Geronimo Integration (1.0), Git Integration (8.1),
+  GitHub, Google App Engine Integration (1.1.4), Grep Console (1.1),
+  GuiceyIDEA (8.0), HAML, IDEtalk (1.0), IdeaVim (0.28), Identifier
+  Highlighter (3.62), IntelliJad Plus (0.5.6), JBoss Integration (1.0),
+  JBoss jBPM (2.0.0), JRebel Plugin (2.0.2), JavaFX (1.0), Key promoter
+  (1.0.11), Log4JPlugin (1.02), Markdown (0.8.3), Osmorc (1.4.3),
+  Perforce Integration (2.0), PluginUpdateNotifier (2.0.3), RemoteTail
+  (0.3.4), Resin Integration (8.1), Ruby (5.4.0.20130410), SQL Query
+  Plugin (2.2), SSH Remote Run (0.1), Seam Pageflow Support (1.0), Seam
+  Pages Support (1.0), Seam Support (1.0), SmarterEditor (0.8.3), Struts
+  Navigator Plugin (1.3.4), Subversion Integration (1.1), TFS
+  Integration (999.999), Tapestry support (1.0), TestNG-J (8.0), UI
+  Designer, UI Designer (Core), Vaadin Support (1.0), Visual SourceSafe
+  Integration (2.0), WebLogic Integration (1.0), WebSphere Integration
+  (1.0), ZKM-Unscramble (1.0), dmServer Support (0.9.5), hg4idea (10.0),
+  soapUI Plugin (3.5)
+
+
+    
+    
+Answer 2: 
+
+    
+    
+Sometimes you can run out of memory on a large project. An import process of the large maven project fails then.
+So if any of modules of your project is underlined with a red line and you see
+
+Exception java.lang.OutOfMemoryError: GC overhead limit exceeded
+
+
+on it, go to "Settings -
+Answer 3: 
+
+    
+    
+IntelliJ IDEA 2017.2 Added really nice feature, which helps a lot when working with large projects. Basically, you can mark which modules will be loaded by IDEA and which not. Unloaded modules will not be touched in any way by the IDE. They will not be indexed, searched, they will not be subject to refactoring on inspections. Loaded/Unloaded modules can be quickly configured in Load/Unload Modules dialog. The dialog can be opened using
+
+
+  Project Tree window → Right Click on a file → Load/Unload Modules...
+
+
+
+Temporarily reducing the number of modules IDEA works with will greatly increase the performance for big projects. You can find more info about this feature and other performance tweaks for IntelliJ IDEA in a blog post I wrote:
+IntelliJ IDEA Tips &amp; Tricks: Improving performance 
+    
+    
+Title: How to make IntelliJ prompt me for command line arguments
+Description: 
+    
+    
+                    
+In Eclipse, you can provide the program argument ${string_prompt} in your run configuration to have it prompt for the command line arguments. 
+
+Is there a way to do this in IntelliJ?
+    
+
+        
+Answer 1: 
+
+    
+    
+Starting from versions 2018.3 and 2019.1, IntelliJ now supports macros in Run configurations. You can use $Prompt$ anywhere in the VM Options, Program arguments, etc. fields, and it will behave just like ${string_prompt} in Eclipse -- it will prompt you for parameters when the configuration is run.
+    
+    
+Answer 2: 
+
+    
+    
+Edit:
+
+This may be a bug in IDEA, the solution that I first posted (you can see it below) causes Intellij to hang after entering parameter.  
+
+I couldn't come up with a solution to this, but here's a little trick: you can scroll to the very bottom of Run/Debug configuration screen and in "Before launch" section check a checkbox saying "Show this page".
+
+From now on you'll be automatically shown configuration screen when you choose to Run/Debug your application and there you can enter any parameters you want... It's not that comfortable, but at least a little bit more automatized.
+
+Previous answer:
+
+This is a bit more complicated with Intellij:
+
+
+go to Settings -&gt; External Tools -&gt; Add (green plus) 
+in Parameters line click Insert macro -&gt; Prompt (you can simply type in $Prompt$ as well)
+save settings
+go to Run -&gt; Edit Configurations...
+in Before Launch section choose Run External Tool and select tool that you've created
+
+
+That should suffice (works in IDEA 12.1.6).
+    
+    
+Title: Android Studio: Rendering Problems with CoordinatorLayout
+Description: 
+    
+    
+                    
+When I set a CoordinatorLayout as my root element I get the following error when Android Studio is rendering a preview.
+
+java.lang.NoClassDefFoundError: Could not initialize class android.support.design.widget.CoordinatorLayout
+    at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+    at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39)
+    at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27)
+    at java.lang.reflect.Constructor.newInstance(Constructor.java:513)
+    at org.jetbrains.android.uipreview.ViewLoader.createNewInstance(ViewLoader.java:413)
+    at org.jetbrains.android.uipreview.ViewLoader.loadView(ViewLoader.java:105)
+    at com.android.tools.idea.rendering.LayoutlibCallback.loadView(LayoutlibCallback.java:177)
+    at android.view.BridgeInflater.loadCustomView(BridgeInflater.java:214)
+    at android.view.BridgeInflater.createViewFromTag(BridgeInflater.java:142)
+    at android.view.LayoutInflater.inflate(LayoutInflater.java:482)
+    at android.view.LayoutInflater.inflate(LayoutInflater.java:385)
+    at com.android.layoutlib.bridge.impl.RenderSessionImpl.inflate(RenderSessionImpl.java:413)
+    at com.android.layoutlib.bridge.Bridge.createSession(Bridge.java:321)
+    at com.android.ide.common.rendering.LayoutLibrary.createSession(LayoutLibrary.java:350)
+    at com.android.tools.idea.rendering.RenderTask$2.compute(RenderTask.java:497)
+    at com.android.tools.idea.rendering.RenderTask$2.compute(RenderTask.java:485)
+    at com.intellij.openapi.application.impl.ApplicationImpl.runReadAction(ApplicationImpl.java:894)
+    at com.android.tools.idea.rendering.RenderTask.createRenderSession(RenderTask.java:485)
+    at com.android.tools.idea.rendering.RenderTask.render(RenderTask.java:590)
+    at org.jetbrains.android.uipreview.AndroidLayoutPreviewToolWindowManager.doRender(AndroidLayoutPreviewToolWindowManager.java:644)
+    at org.jetbrains.android.uipreview.AndroidLayoutPreviewToolWindowManager.access$1700(AndroidLayoutPreviewToolWindowManager.java:79)
+    at org.jetbrains.android.uipreview.AndroidLayoutPreviewToolWindowManager$7$1.run(AndroidLayoutPreviewToolWindowManager.java:586)
+    at com.intellij.openapi.progress.impl.CoreProgressManager$2.run(CoreProgressManager.java:152)
+    at com.intellij.openapi.progress.impl.CoreProgressManager.registerIndicatorAndRun(CoreProgressManager.java:452)
+    at com.intellij.openapi.progress.impl.CoreProgressManager.executeProcessUnderProgress(CoreProgressManager.java:402)
+    at com.intellij.openapi.progress.impl.ProgressManagerImpl.executeProcessUnderProgress(ProgressManagerImpl.java:54)
+    at com.intellij.openapi.progress.impl.CoreProgressManager.runProcess(CoreProgressManager.java:137)
+    at org.jetbrains.android.uipreview.AndroidLayoutPreviewToolWindowManager$7.run(AndroidLayoutPreviewToolWindowManager.java:581)
+    at com.intellij.util.ui.update.MergingUpdateQueue.execute(MergingUpdateQueue.java:320)
+    at com.intellij.util.ui.update.MergingUpdateQueue.execute(MergingUpdateQueue.java:310)
+    at com.intellij.util.ui.update.MergingUpdateQueue$2.run(MergingUpdateQueue.java:254)
+    at com.intellij.util.ui.update.MergingUpdateQueue.flush(MergingUpdateQueue.java:269)
+    at com.intellij.util.ui.update.MergingUpdateQueue.flush(MergingUpdateQueue.java:227)
+    at com.intellij.util.ui.update.MergingUpdateQueue.run(MergingUpdateQueue.java:217)
+    at com.intellij.util.concurrency.QueueProcessor.runSafely(QueueProcessor.java:238)
+    at com.intellij.util.Alarm$Request$1.run(Alarm.java:351)
+    at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:439)
+    at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+    at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+    at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+    at java.lang.Thread.run(Thread.java:695)
+
+
+My layout file looks like this
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;android.support.design.widget.CoordinatorLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"&gt;
+
+    &lt;android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/detail_backdrop_height"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"&gt;
+
+        &lt;android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"&gt;
+
+            &lt;ImageView
+                android:id="@+id/img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax" /&gt;
+
+            &lt;android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" /&gt;
+
+        &lt;/android.support.design.widget.CollapsingToolbarLayout&gt;
+
+    &lt;/android.support.design.widget.AppBarLayout&gt;
+
+    &lt;android.support.v7.widget.RecyclerView
+        android:id="@+id/detail_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appbar_layout"
+        android:layout_marginTop="-25dp"
+        android:background="@color/background_light"
+        android:paddingTop="36dp"
+        android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" /&gt;
+
+    &lt;android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/appbar_layout"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="-32dp"
+        android:src="@android:drawable/ic_menu_call"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed" /&gt;
+&lt;/android.support.design.widget.CoordinatorLayout&gt;
+
+
+Here is my build.gradle
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "com.godine"
+        minSdkVersion 21
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+}  
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:cardview-v7:22.2.0'
+    compile 'com.android.support:recyclerview-v7:22.2.0'
+    compile 'com.android.support:design:22.2.0'
+    compile 'com.android.support:appcompat-v7:22.2.0'
+
+    ...
+}
+
+
+Does anyone have an idea what might be wrong here?
+
+Edit
+As @deniz already mentioned in an answer the preview works with the newest update of the Android Studio
+    
+
+        
+Answer 1: 
+
+    
+    
+This is a known issue in the Android Open Source Project Issue Tracker:
+
+https://code.google.com/p/android/issues/detail?id=175595
+
+The unfortunate workaround described by the Android project member is:
+
+
+  Workarounds: Try rendering with M preview using AS v1.3 preview OR use FrameLayout for designing and change to android.support.design.widget.CoordinatorLayout while debugging.
+
+    
+    
+Answer 2: 
+
+    
+    
+Update android studio to latest version (beta) 1.3 beta version.Menu -/ppstrongem/em/strong/ppimg src="https://i.stack.imgur.com/HyVoT.png" alt="enter image description here"/pp/ppimg src="https://i.stack.imgur.com/iVosO.png" alt="enter image description here"/p/div
+Answer 3: 
+
+    
+    
+I solved the similar error of android...coordinatorlayout that appear instead of the preview of android app by:
+
+1- Close the project
+
+2- Restart the android studio
+
+3- Build the project
+
+May be it will help someone.
+    
+    
+Answer 4: 
+
+    
+    
+I faced this issue after updating to Android Studio 4.0.1 and solved it by disabling Experimental Layout Rendering Engine and restarting Android Studio. do as this to solve:
+go to File-&gt;Settings-&gt;Experimental-&gt;Editor-&gt; and uncheck the Use new Layout Rendering Engine then hit OK and restart Android Studio. you should find it working seamlessly
+hope this solution helps someone.
+    
+    
+Answer 5: 
+
+    
+    
+Wait! Do not switch to beta channel. 
+
+As of July 29, Android Studio 1.3 has been released on stable channel. I checked, and can confirm that the new version of the IDE completely addresses your issue in question with CoordinatorLayout rendering. 
+
+Android Studio 1.3 is not yet published on the Android website, nonetheless, you can upgrade your Android Studio from 1.2 to 1.3 by downloading the update patch through the IDE menu. Simply click on: 
+
+
+  Help --
+Answer 6: 
+
+    
+    
+I had similar problem with AppBarLayout, it seems IDE cached some wrong version of widget.
+
+File -&gt; Invalidate Caches/Restart helped me.
+    
+    
+Answer 7: 
+
+    
+    
+I ran into this problem again myself.
+
+I ran clean project -code/code
+Title: What are the big differences between IntelliJ + Ruby Plugin vs RubyMine?
+Description: 
+    
+    
+                    
+Being an owner of IntelliJ Idea Ultimate edition, and having installed the IntelliJ Ruby plug-in, I'm forced to wonder how different that experience is from using the RubyMine IDE.
+
+I'm guessing they share a lot of code &amp; features. What are the major differences?
+
+If I'm jumping into the world of Ruby, should I buy the RubyMine IDE or just continue using IntelliJ + Ruby plug-in?
+    
+
+        
+Answer 1: 
+
+    
+    
+The Ruby plugin and RubyMine are build from the same codebase, that's right. 
+
+Java/Ruby integration for JRuby code is only available in Ruby plugin for IntelliJ IDEA. But the plugin doesn't have RubyMotion support.
+
+Also check this answer: If I have IDEA, do I need rubymine for ruby dev or will it do both?
+    
+    
+Title: Is there a way to catch the stderr and stdout in Visual Studio?
+Description: 
+    
+    
+                    
+Is there a way to catch the stdout and stderr in Visual Studio? For example, when I use
+
+cout &lt;&lt;"Hello world!"&lt;&lt; endl;
+
+
+A black window appears and disappears. It's so fast that I can't see it. There is a output section in the IDE but it only allow me to choose display output from build and something else but without the choice of stdout.
+
+A cheating solution maybe calling 
+
+system("pause");
+
+
+but it doesn't sound right. I searched in the option but I can't find an item.
+
+Anyone has any idea? Thanks. I just start to use VS and I'm on Linux before.
+    
+
+        
+Answer 1: 
+
+    
+    
+Rather than using the "Start Debugging" command, if you want to check the output, use "Start Without Debugging". That's generally how I handle it. The command prompt window will remain up until you close it. If there's a crash or something, you can always reattach Visual Studio to the process, or just run it with "Start Debugging".
+    
+    
+Answer 2: 
+
+    
+    
+Go to Project Properties -
+Answer 3: 
+
+    
+    
+Without actually trying to redirect stdin/err streams, there are some alternatives you can try:
+
+
+Open a command prompt window and cd to the directory your executable
+will be created in then run it from there.
+Perhaps try using something like std::cin.get(); or std::cin.ignore(std::cin.rdbuf()-/lilia href="http://msdn.microsoft.com/en-us/library/windows/desktop/aa363362%28v=vs.85%29.aspx" rel="nofollow"/a/li/ul/div
+Title: How to use emacs as my JAVA IDE?
+Description: 
+    
+    
+                    
+I would like to use emacs instead of Netbeans which gets too bloated on my computer. I already have JDEE, I did not dig it, but it looks like it lacks:
+
+
+Classes testing : run a class which has a main method, but which is not the main class of the project
+Maven integration : this is a minor wish as Netbeans doesn't support maven that well too.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I recommend you to use malabar-mode instead of JDEE - malabar is the only modern mode for Java development currently available for Emacs. It offers:
+
+
+Tight integration with Maven
+A Groovy console for rapid prototyping and exploratory programming
+JUnit integration, both for running tests standalone and through Maven
+Import help; import one class or all needed classes in the buffer (with prompting if the class name is ambiguous)
+Extend class / implement interface / override method helpers
+Simplistic refactorings
+
+    
+    
+Answer 2: 
+
+    
+    
+for Maven look to ede-proj-maven2 (inherited from ede-generic) in current CEDET from CVS.  It simple, but do some job.  I plan to look to it in near future, because I use maven very often with clojure
+    
+    
+Title: External Exception EEFFACE in Delphi
+Description: 
+    
+    
+                    
+While debugging my application with Delphi 2009, I sometimes get the following exception occurring:
+
+
+(source: beholdgenealogy.com)  
+
+This only happens occasionally, but after pressing OK, then my IDE and program both may freeze. If I am lucky I can sometimes do a File/SaveAll in Delphi, but sometimes I can't. Either way I am stuck and then the only thing I can do is use Windows Task Manager to shut down Delphi. Of course, if I was unable to SaveAll, then I lose all the edits I had made since last saving.
+
+I have all the Delphi 2009 Updates installed right up to and including Update 4. I also have IDE Fix Pack 2009 2.9 installed.
+
+The Error is trapped for me by EurekaLog, and the error report gives the following call stack:
+
+Call Stack Information:
+-----------------------------------------------------------------------------------------------------------
+|Address |Module              |Unit               |Class             |Procedure/Method          |Line     |
+-----------------------------------------------------------------------------------------------------------
+|Running Thread: ID=5068; Priority=0; Class=; [Main]                                                      |
+|---------------------------------------------------------------------------------------------------------|
+|205669C6|dbkdebugide120.bpl  |Debug.pas          |TDebugger         |DBKWndProc                |11598[6] |
+|777DE49A|ntdll.dll           |                   |                  |KiUserExceptionDispatcher |         |
+|7705E0CB|kernel32.dll        |                   |                  |RaiseException            |         |
+|03E8E3E8|dcc120.dll          |WRITEOBJ.OBJ       |                  |C62_0                     |         |
+|03E3066D|dcc120.dll          |SYMTAB.OBJ         |                  |MakeOverloadedPropertyList|         |
+|03E3064C|dcc120.dll          |SYMTAB.OBJ         |                  |MakeOverloadedPropertyList|         |
+|03E30D76|dcc120.dll          |SYMTAB.OBJ         |                  |EnterMethod               |         |
+|03E30D6C|dcc120.dll          |SYMTAB.OBJ         |                  |FindBaseClassMethod       |         |
+|03DE8D30|dcc120.dll          |DECL.OBJ           |                  |PatchConstRecordParameter |         |
+|777DE590|ntdll.dll           |                   |                  |RtlLeaveCriticalSection   |         |
+|03DBBF70|dcc120.dll          |BROWCMGR.OBJ       |                  |PutToAddress              |         |
+|03DBC436|dcc120.dll          |BROWCMGR.OBJ       |                  |GetNearestSymName         |         |
+|777DE550|ntdll.dll           |                   |                  |RtlEnterCriticalSection   |         |
+|219C5BDA|win32debugide120.bpl|Win32Debug.pas     |TWin32LinkUnit    |GetCppDebugHook           |1923[3]  |
+|219C5BB8|win32debugide120.bpl|Win32Debug.pas     |TWin32LinkUnit    |GetCppDebugHook           |1920[0]  |
+|219C644E|win32debugide120.bpl|Win32Debug.pas     |TWin32Process     |DoLinkUnitCreated         |2198[10] |
+|50001CE4|rtl120.bpl          |System.pas         |                  |InterlockedIncrement      |3200[0]  |
+|5000CD59|rtl120.bpl          |System.pas         |TInterfacedObject |_AddRef                   |21759[1] |
+|2055F40F|dbkdebugide120.bpl  |Debug.pas          |TProcess          |LinkUnitCreated           |8454[1]  |
+|2055F408|dbkdebugide120.bpl  |Debug.pas          |TProcess          |LinkUnitCreated           |8453[0]  |
+|2055CEC7|dbkdebugide120.bpl  |Debug.pas          |TEvaluatorCallback|ntfyLinkUnitDelta         |7167[7]  |
+|77050DF0|kernel32.dll        |                   |                  |VirtualProtect            |         |
+|50003FE4|rtl120.bpl          |System.pas         |                  |_ReallocMem               |3512[0]  |
+|500093F6|rtl120.bpl          |System.pas         |                  |_LStrSetLength            |15889[38]|
+|50004508|rtl120.bpl          |System.pas         |                  |Move                      |4414[0]  |
+|5001DDB9|rtl120.bpl          |SysUtils.pas       |                  |StrLCopy                  |7852[5]  |
+|5007E559|rtl120.bpl          |UxTheme.pas        |                  |DrawThemeTextEx           |5226[2]  |
+|5007E524|rtl120.bpl          |UxTheme.pas        |                  |DrawThemeTextEx           |5224[0]  |
+|2110A98D|vclactnband120.bpl  |ThemedActnCtrls.pas|TThemedMenuButton |DoDrawText                |488[23]  |
+|50009E88|rtl120.bpl          |System.pas         |                  |_UStrClr                  |16961[0] |
+|2110A9A2|vclactnband120.bpl  |ThemedActnCtrls.pas|TThemedMenuButton |DoDrawText                |490[25]  |
+|75FC7BFE|USER32.dll          |                   |                  |CallNextHookEx            |         |
+|20AA9C5E|designide120.bpl    |DeskUtil.pas       |                  |SetFocusHook              |435[4]   |
+|210E8B83|vclactnband120.bpl  |ActnMenus.pas      |                  |CallWindowHook            |741[20]  |
+|50057F7D|rtl120.bpl          |Classes.pas        |TComponent        |UpdateAction              |11881[1] |
+|50006EE4|rtl120.bpl          |System.pas         |                  |_CallDynaInst             |10209[0] |
+|501EA802|vcl120.bpl          |Forms.pas          |                  |ProcessUpdate             |6739[1]  |
+|50006F3C|rtl120.bpl          |System.pas         |TObject           |InheritsFrom              |10281[0] |
+|50006E1A|rtl120.bpl          |System.pas         |                  |_IsClass                  |10107[1] |
+|50006E0C|rtl120.bpl          |System.pas         |                  |_IsClass                  |10106[0] |
+|501EA870|vcl120.bpl          |Forms.pas          |                  |TraverseClients3          |6756[5]  |
+|501EA818|vcl120.bpl          |Forms.pas          |                  |TraverseClients3          |6751[0]  |
+|501EA88A|vcl120.bpl          |Forms.pas          |                  |TraverseClients3          |6756[5]  |
+|50047748|rtl120.bpl          |Classes.pas        |TList             |Get                       |3366[0]  |
+|501C865E|vcl120.bpl          |Controls.pas       |TWinControl       |GetControl                |8473[4]  |
+|50006F3C|rtl120.bpl          |System.pas         |TObject           |InheritsFrom              |10281[0] |
+|50006E1A|rtl120.bpl          |System.pas         |                  |_IsClass                  |10107[1] |
+|501C8668|vcl120.bpl          |Controls.pas       |TWinControl       |GetControlCount           |8478[0]  |
+|501EA87B|vcl120.bpl          |Forms.pas          |                  |TraverseClients3          |6756[5]  |
+|501EA818|vcl120.bpl          |Forms.pas          |                  |TraverseClients3          |6751[0]  |
+|501EA8E2|vcl120.bpl          |Forms.pas          |TCustomForm       |CMActionUpdate            |6778[11] |
+|501C565A|vcl120.bpl          |Controls.pas       |TControl          |WndProc                   |6642[91] |
+|501C5388|vcl120.bpl          |Controls.pas       |TControl          |WndProc                   |6551[0]  |
+|501C9CE7|vcl120.bpl          |Controls.pas       |TWinControl       |WndProc                   |9336[136]|
+|75FC7C2B|USER32.dll          |                   |                  |CallNextHookEx            |         |
+|75FCC477|USER32.dll          |                   |                  |InvalidateRect            |         |
+|75FCC41E|USER32.dll          |                   |                  |InvalidateRect            |         |
+|75FCC49D|USER32.dll          |                   |                  |CallWindowProcW           |         |
+|75FCC487|USER32.dll          |                   |                  |CallWindowProcW           |         |
+|205669A5|dbkdebugide120.bpl  |Debug.pas          |TDebugger         |DBKWndProc                |11595[3] |
+|500591DC|rtl120.bpl          |Classes.pas        |                  |StdWndProc                |12703[8] |
+|75FC9467|USER32.dll          |                   |                  |IsWindowVisible           |         |
+|75FC8B0B|USER32.dll          |                   |                  |DispatchMessageW          |         |
+|75FC8B01|USER32.dll          |                   |                  |DispatchMessageW          |         |
+|501EEABD|vcl120.bpl          |Forms.pas          |TApplication      |ProcessMessage            |9660[30] |
+|501EE9A0|vcl120.bpl          |Forms.pas          |TApplication      |ProcessMessage            |9630[0]  |
+|501EEB02|vcl120.bpl          |Forms.pas          |TApplication      |HandleMessage             |9690[1]  |
+|501EEAF8|vcl120.bpl          |Forms.pas          |TApplication      |HandleMessage             |9689[0]  |
+|501EEE2D|vcl120.bpl          |Forms.pas          |TApplication      |Run                       |9827[26] |
+|501EED64|vcl120.bpl          |Forms.pas          |TApplication      |Run                       |9801[0]  |
+|004259E6|bds.exe             |bds.dpr            |                  |bds                       |198[8]   |
+|770CECC9|kernel32.dll        |                   |                  |BaseThreadInitThunk       |         |
+-----------------------------------------------------------------------------------------------------------
+
+
+As you can see, all of the call stack is in Delphi and Windows. It does not connect back at all to any line in my program.
+
+I have looked at the webpage: External Exception EEFFACE and translated it from German to English, but it appears to be talking about Delphi C++ whereas I don't use C++ at all.
+
+My problem is I have no idea what might be causing this as it does not happen consistently. I have no idea even where to look to find it or how to track it down.
+
+Does someone know what this is and how I can track it down or at least prevent it from happening?
+
+
+
+Alex of EurekaLog posted this in response to my query on their forum:
+
+
+  I think it may be a bug in Delphi's
+  debugger. Possibly related to
+  evaluation tooltips or something
+  similar.
+  
+  See for yourself - we have an C++
+  exception in system module (EEFFACE is
+  a special code for VCL exception. When
+  VCL encounters an unknown C++
+  exception - it wraps it into
+  EExternalException object with code =
+  EEFFACE) and call stack includes
+  Delphi debugger's units:
+
+
+|205669C6|dbkdebugide120.bpl |Debug.pas |TDebugger |DBKWndProc |11598[6] |
+|7705E0CB|kernel32.dll | | |RaiseException | |
+|03E8E3E8|dcc120.dll |WRITEOBJ.OBJ | |C62_0 | |
+|03E3066D|dcc120.dll |SYMTAB.OBJ | |MakeOverloadedPropertyList| |
+|03E3064C|dcc120.dll |SYMTAB.OBJ | |MakeOverloadedPropertyList| |
+|03E30D76|dcc120.dll |SYMTAB.OBJ | |EnterMethod | |
+|03E30D6C|dcc120.dll |SYMTAB.OBJ | |FindBaseClassMethod | |
+|03DE8D30|dcc120.dll |DECL.OBJ | |PatchConstRecordParameter | |
+|03DBBF70|dcc120.dll |BROWCMGR.OBJ | |PutToAddress | |
+|03DBC436|dcc120.dll |BROWCMGR.OBJ | |GetNearestSymName | |
+|219C5BDA|win32debugide120.bpl|Win32Debug.pas |TWin32LinkUnit |GetCppDebugHook |1923[3] |
+|219C5BB8|win32debugide120.bpl|Win32Debug.pas |TWin32LinkUnit |GetCppDebugHook |1920[0] |
+|219C644E|win32debugide120.bpl|Win32Debug.pas |TWin32Process |DoLinkUnitCreated |2198[10] |
+|50001CE4|rtl120.bpl |System.pas | |InterlockedIncrement |3200[0] |
+|5000CD59|rtl120.bpl |System.pas |TInterfacedObject |_AddRef |21759[1] |
+|2055F40F|dbkdebugide120.bpl |Debug.pas |TProcess |LinkUnitCreated |8454[1] |
+|2055F408|dbkdebugide120.bpl |Debug.pas |TProcess |LinkUnitCreated |8453[0] |
+|2055CEC7|dbkdebugide120.bpl |Debug.pas |TEvaluatorCallback|ntfyLinkUnitDelta |7167[7] |  
+
+
+
+  I think that you should post this
+  description to Embarcadero's Quality
+  Central.
+  
+  Try to disable "IDE integration"
+  check-box (it's located in IDE's
+  "EurekaLog"/"EurekaLog IDE Options"
+  menu) and run your application - see
+  if there will be a change in behavior.
+
+
+
+
+I have now submitted a report to Quality Central at:
+
+http://qc.embarcadero.com/wc/qcmain.aspx?d=81881
+
+Hopefully with this information, Embarcadero will be able to prevent this in future releases.
+
+
+
+I come back to this question over 4 years later, and realize that a few months ago, I found the solution, so I am posting it here for anyone else who may encounter this.
+
+The problem and solution were provided in Olaf Monien's blog, in a post from 2009/07/22 titled Delphi 2009 / Windows 7 / 64 bit Debugger Crash Workaround. 
+
+Olaf's instructions on that post worked perfectly for me, and the problem is gone. I thanked him in a comment on his blog post.
+
+As @rossmcm points out in his comment, Olaf's blog post is no longer there, but the post can still be found on the Internet Archive. Instead, check out Chris Miller's information about the problem (now also only available on the Internet Archive) which includes a link to the patch tool that now has a permanent home at Embarcadero. 
+    
+
+        
+Answer 1: 
+
+    
+    
+This is clearly something happening in the Delphi evaluator (which is part of the compiler). The odd thing is that if it is, in fact, going through writeobj.c, something is certainly not quite right. If you can reproduce this with a test case, please report it in QualityCentral (http://qc.embarcadero.com).
+
+EEFFACE is the SEH exception code used by C++, which is "leaking" out to some Delphi code (in this case the IDE itself). When the exception code is not a Delphi generated exception or a hardware related exception, Delphi simply maps it to EExternalException.
+    
+    
+Answer 2: 
+
+    
+    
+This is not an exact answer but may help you with overcoming the error by describing my experience with it.
+
+I received this error regularly when I went to Windows Vista and 7. The same code never received that error message on Windows XP. I could put a break point on the first line of the dpr file and found that it always seemed to occur when creating the splash screen to my applications. I tried various other ways to do splash screens but they always eventually resulted in getting an EEFFACE error when debugging.
+
+So to overcome this issue, I now put
+
+if DebugHook = 0 then
+
+
+when I create and access the splash screen. The splash screen to my applications do not appear now when I'm debugging but at least I don't get that EEFFACE error anymore.
+    
+    
+Answer 3: 
+
+    
+    
+It seems that "External exception" isn't a Delphi's bug, I had this exception times ago and it was probably a problem with the motherboard, or with the hardware, because the program worked well at other machine.
+    
+    
+Answer 4: 
+
+    
+    
+Recently I've run into this and it's somehow related to the Delphi IDE. The following code ends up in this exception on the ShellExecute line:
+
+url:='https://translate.google.com/#hu/en/%C3%A1';
+ShellExecute(0,PChar('open'),PChar(url),nil,nil,SW_SHOWNORMAL);
+
+
+But this is not:
+
+url:='https://translate.google.com/#hu/en/%C3%A1';
+ShowMessage(url);    
+ShellExecute(0,PChar('open'),PChar(url),nil,nil,SW_SHOWNORMAL);
+
+
+But if I run my app outside of IDE everything is fine without the ShowMessage extra line. I don't know if it helps, but maybe in other cases where debugging is needed maybe this "trick" could help.
+
+System: DELL Optiplex, intel Core2Duo, Win7 x64, Delphi 7
+    
+    
+Answer 5: 
+
+    
+    
+I've been struggling with EEFFACE for weeks. Finally found that the cause was this instruction:
+
+PDFForgePDF.CopyPDFFile(pdffile,pdfcreatorfile,1,1);
+
+
+the contents of variables pdffile and pdfcreatorfile were the same.... 
+
+Maybe this can help some poor bugger like myself... 
+    
+    
+Title: Can you turn off all caps on the menus in VS2012?
+Description: 
+    
+    
+                    
+The all caps in the menus for VS2012 is highly annoying, is there a setting somewhere in the IDE or elsewhere to turn it off?
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes; search NuGet (yes, NuGet) for VS2012 Caps.
+    
+    
+Answer 2: 
+
+    
+    
+There is also another way to do this, create the following registry key and set its value:
+
+HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\11.0\General\SuppressUppercaseConversion
+REG_DWORD value: 1
+
+    
+    
+Answer 3: 
+
+    
+    
+You can also run this in the Power Shell
+
+Set-ItemProperty -Path HKCU:\Software\Microsoft\VisualStudio\11.0\General -Name SuppressUppercaseConversion -Type DWord -Value 1
+
+    
+    
+Answer 4: 
+
+    
+    
+An easy way (IMO) to achieve the registry key suggested by David would be entering it through a registry-file.  This can be done by saving the code underneath to a .reg-file (e.g. VS2012_MenuCasing.reg) and double-clicking it:
+
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\11.0\General\]
+"SuppressUppercaseConversion"=dword:00000001
+
+
+I hope it saves somebody some time...
+    
+    
+Title: How to make text Indent in Webstorm
+Description: 
+    
+    
+                    
+I'm using Webstorm to write my code.
+
+my code is a mess now,
+
+how can I arrange it nicely and do text Indent?
+    
+
+        
+Answer 1: 
+
+    
+    
+You should select Code | Reformat code in main menu. Also you could control how your code will be reformatted in Settings | Code Style.
+
+Additional info can be found in WebStorm help
+    
+    
+Answer 2: 
+
+    
+    
+If you are on Windows then:
+
+1.Select the area of code you want to intent (use Ctrl+A to select all lines ).
+
+2.Now press Ctrl+Alt+I to auto-intent.
+    
+    
+Answer 3: 
+
+    
+    
+For Mac:
+
+Command + Alt + L  for "Reformat Code".
+
+Ctrl + Alt + I for "Auto-indent line(s)".
+
+You can also select a block of text with the cursor and use tab or shift+tab to move the block to the right and to the left, respectively.  
+
+You can edit how your code looks further by going to Preferences | Editor | Code Style.
+    
+    
+Answer 4: 
+
+    
+    
+Although you can use auto-indentation but take a look at its settings,
+
+In Webstrom or any JetBrain's IDE:
+
+Preferences(setting) 
+Title: What are the good Scala IDEs at the start of 2010?
+Description: 
+    
+    
+                    
+I know this is an exact duplicate, but a year has gone by and Scala seems to be a fast moving thing, so I figure it might be acceptable to ask again:
+
+What is the best IDE for Scala development right now?
+    
+
+        
+Answer 1: 
+
+    
+    
+I know the Eclipse plugin is a work in progress and undergoing a complete re-write for Scala 2.8 but I saw a colleague use a nightly-build recently and it was extremely poor.  
+
+I use IntelliJ IDEA (the Community Edition 9 is free) and the scala plugin for it is really good. Excellent syntax highlighting, code navigation etc. It's not as good as the Java support but then I wouldn't necessarily expect that. It's good enough that I feel I'm more productive than I would have been in Java!
+
+It has Specs integration and console integration as well.
+    
+    
+Answer 2: 
+
+    
+    
+I tried both Eclipse, NetBeans and IntelliJ IDEA,
+
+
+Eclipse is the worst in my opinion. It is slow, sometimes messes up the syntax highlighting, almost always messes up the autocompletion and the whole IDE gets unresponsive from time to time. I would not recommend it for any kind of use except for self torturing.
+NetBeans works better than the Eclipse plugin. Better highlighting, much better autocompletion but it has been reporting errors on a fairly complex syntax all over the source. But when i hit run, the code compiles just well. Could not understand why. Another issue is that autocomplete can not suggest private members of classes when you are writing inside the body of that class. Poor!
+IntelliJ IDEA works just fine. I recommend that if you are seriously leaning against Scala development.
+
+
+I hope that the Eclipse plugin will be more mature in time but given that it had plenty of time to become mature, I'm not a big fan of the idea. Scala has a great potential, being a well thought, programmer friendly language and running on JVM (which means great performance and high availability) but the poor IDE support is the worst thing for such language. Writing PHP on a simple text editor is acceptable but Scala, with such complex syntax and requirement to use the bloated Java libraries, there is a need of assistance. Maybe the current Scala community with functinal and Java background can not understand this but you can not expect newcomers to easily adopt to such a language instantly.
+
+Anyway, go for IntelliJ IDEA...
+    
+    
+Answer 3: 
+
+    
+    
+Your main options are a fully fledged IDE like IntelliJ IDEA, NetBeans or Eclipse, or a text editor with some Scala awareness like TextMate or Emacs.
+
+Personally, I like IntelliJ the best. I've been using it for Java development for many years, especially due to its refactoring and code navigation power. The Scala plugin was quite rough to start with, but is improving constantly. It's open source, I've been contributing bug reports and a few bug fixes.
+
+The IDE plugins have all been working hard to be ready for Scala 2.8. It's been a moving target during the last 6 months, especially given that binary compatibility was broken as new features were added. So you might update to a new build of the compiler and then wait for supporting libraries (e.g. specs, scalatest) to be updated and recompiled. 
+
+Now that the Scala 2.8 Beta is imminent these problems are less frequent.
+
+IntelliJ implements its own parser and type inference, as it does for Java. This lets it be more tolerant of errors and to immediately understand your code as you are editing. The type inference is not complete yet. Eclipse delegates most of this work to scalac, which means it they should always agree, but the information is only regenerated when you save files and the compiler is re-run. I don't know how NetBeans works in this regard.
+    
+    
+Answer 4: 
+
+    
+    
+Right now, IntelliJ's IDEA. And one big difference from now to a year ago is that a free, open source version of IDEA is available. 
+
+Personally, I use IDEA CE 9.0.1, but leave compilation&amp;testing to SBT, which I keep running on another window, with cc or ~test.
+    
+    
+Answer 5: 
+
+    
+    
+In the context of 2.8, I have used Eclipse 3.5.x with the nightly plug-in and IDEA Community Edition 9.0. IDEA has been clearly better for me, except for compilation times. But I use sbt in parallel and it takes care of that.
+
+My main issues with the Eclipse plug-in are:
+
+
+Inability to change my tab settings in Eclipse (though that seems to work for others)
+Code compiles but some errors are still highlighted and I need to close and reopen the file
+Auto-completion just returns a lot of choices
+
+
+I did not have those issues in IDEA 9.0 build #IC-93.13 with the recent plug-in 0.3.385. Additionally IDEA shows me unused import statements.
+
+All plug-ins seem to be evolving quite quickly and are actively developed and I suspect that what is true today may not be in one month. I hope that in a few months from now, we will just be able to use our favorite IDE and have good Scala support.
+
+(note this is a repost of my recent answer to the original question)
+    
+    
+Title: Difference between IDE and Framework
+Description: 
+    
+    
+                    
+What is a difference between an IDE and Framework with respect to Java?
+    
+
+        
+Answer 1: 
+
+    
+    
+Basically :
+
+
+The IDE is the software you use to develop ; for example, Eclipse is an IDE (code editor, debugger, build tools ... )
+The Framework is a set of both libraries and best practices that help you not re-invent the wheel, and provide a set of guidelines on how to develop.
+
+
+
+Quoting wikipedia, an IDE :
+
+
+  is a software application that
+  provides comprehensive facilities to
+  computer programmers for software
+  development. An IDE normally consists
+  of:
+  
+  
+  a source code editor
+  a compiler and/or an interpreter
+  build automation tools
+  a debugger
+  
+
+
+While a Framework :
+
+
+  is an abstraction in which common code
+  providing generic functionality can be
+  selectively overridden or specialized
+  by user code, thus providing specific
+  functionality. Frameworks are a
+  special case of software libraries in
+  that they are reusable abstractions of
+  code wrapped in a well-defined
+  Application programming interface
+  (API), yet they contain some key
+  distinguishing features that separate
+  them from normal libraries.
+
+    
+    
+Answer 2: 
+
+    
+    
+An IDE is an application used to write and compile code.  A framework is generally a software component that someone else wrote that you can use/integrate into your own project, generally to avoid re-inventing the wheel.
+    
+    
+Answer 3: 
+
+    
+    
+A framework is a tool that is closely attached to the language you are using and usually extends upon or adds the the language features.
+
+An IDE (Integrated Development Environment) provides automation support for the language you use with regards to syntax highlighting of keywords, errors, building projects, cleaning them, intgegration with VCS, etc. and usually provides default support for popular frameworks used for your language.
+
+Java makes use of frameworks like Hibernate, Struts and Spring to extend the language and NetBeans or Intellij IDEA bring support for these tools to your Java project in a structured manor.
+    
+    
+Answer 4: 
+
+    
+    
+As per all answers I can come to a conclusion that Visual Studio is an IDE and .NET is a framework.
+And also a framework(list of .dll) can be integrated into an IDE. Mean framework is a part of an IDE.
+    
+    
+Title: IntelliJ Idea, “Not valid Scala home” error on Windows
+Description: 
+    
+    
+                    
+Alright, so I have Scala 2.10 installed on my computer, and it works fine in eclipse...
+
+I recently installed IntelliJ Idea to see how good an alternative it was, but apparently it doesn't like my scala installation, it works fine on my macbook, but here it just says "not valid Scala home" despite the fact that it is the correct directory...
+
+Upon creating a project and writing a bit of test code, I try to compile it, and in the debug console it says: "Error: scala: No compiler library set in module untitled1"
+
+so what should I do?
+
+Scala IS installed, but the IDE refuses to recognize its existance
+
+Every time I've tried to use Idea, something always goes wrong 
+
+Here's a screenshot of the error:
+
+
+
+any help?
+
+Edit: Changing the directory to C:\Program Files (x86)\scala produces the following error:
+
+
+
+note that Scala DOES work in Eclipse
+
+Edit2: Going through with the other change, still makes the IDE unable to recognize the compiler
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Path problem. IntelliJ Scala plugin looks for installed distribution by first checking SCALA_HOME environment variable. If it is not set it will then scan folders from PATH environment variable. In the latter case it will ignore the fact that it found binary directory and not actual Scala home (so it will not adjust for added bin at the end of the path). Note that Windows Scala msi installer does not set SCALA_HOME (as it is not needed for Scala to function correctly). So you either set SCALA_HOME environment variable or navigate to that directory (as you did in your second screenshot).
+Sources problem. Scala msi installer does not install source jars by default. Again as with SCALA_HOME variable they are not strictly needed. But to avoid manually setting compiler jar and also aesthetically displeasing error in your second screenshot :-) just check "Sources" in setup options screen.
+Scaladoc problem. It was not part of the question but for completeness: scala api docs will be installed by msi installer (if you did not uncheck "API Documentation" in setup options). However they are in the "wrong" path from scala plugin perspective: [SCALA_HOME]\doc\api. It wants them instead in: [SCALA_HOME]\doc\scala-devel-docs\api. You can deal with it in variety of ways but I feel the most efficient one is to create a directory junction if you are on Windows 7. Go into elevated command prompt, change directory to [SCALA_HOME]\doc and run mklink /j scala-devel-docs . thereby redirecting scala-devel-docs to parent doc folder. Obviously msi uninstall will not remove it so you will have to clean it up if you ever uninstall scala.
+
+    
+    
+Answer 2: 
+
+    
+    
+Change the Scala home directory to
+
+C:\Program Files (x86)\scala
+
+
+since that is the home directory. The bin directory is just one of many directories that belongs to the scala installation.
+    
+    
+Answer 3: 
+
+    
+    
+Adding to what Keith Pinson says above ...
+
+I had a similar problem today and eventually got it working after reading this link:
+
+
+  Actually, Scala Facet configuration and general Scala plugin configuration are not simple for newbies, and this is big usability problem, which we have to fix. So your problems are understandable.
+
+
+Hopefully these notes below will help you get going until someone more knowledgeable can confirm whether this is a bug or a usability issue.
+
+After creating a new project I opened the Project Structures dialog (Ctrl+Alt+Shift+S), moved to the "Libraries" tab, made sure there was a library created with a non-blank name, e.g. "Scala Library" then manually added these jars from the Scala lib directory:
+
+scala-compiler.jar
+scala-library.jar
+scala-reflect.jar
+scala-actors.jar
+
+
+I then associated this library with my project on the Modules tab of the project properties.
+
+Since then I've not had any trouble.
+
+One more thing, this probably makes no difference, but my Scala installation is at:
+
+C:\scala
+
+
+Hope that helps.
+    
+    
+Answer 4: 
+
+    
+    
+This problem is easily fixed , download the zip version from this link
+
+http://www.scala-lang.org/files/archive/scala-2.10.2.zip
+
+after that download the API docs if you needed, from this link
+
+http://www.scala-lang.org/files/archive/scala-docs-2.10.2.zip
+
+extract first "scala-2.10.2.zip", and after that extract the content of "scala-docs-2.10.2.zip" in a folder named "api", then copy the "api" folder to a dir like
+this C:....\scala-2.10.2\doc\scala-devel-docs\api 
+
+and thats all
+
+sorry with my english... :)
+    
+    
+Answer 5: 
+
+    
+    
+Something to try:
+
+
+Verify Scala path is correct -- open cmd and type "scala", it should start REPL
+In IntelliJ open Project Structure and set Global libraries for scala-compiler and scala-library
+Use the Existent Library option when creating an IntelliJ project
+
+    
+    
+Answer 6: 
+
+    
+    
+I wanted to post on here because I had the same issue and I found a simple solution.
+
+This issue is being caused by using the MSI installer version of Scala. IntelliJ IDEA works much better with the .zip distribution of Scala.
+
+
+Go to http://www.scala-lang.org/download/ and click All Downloads
+Click on a version. I used the latest stable version 2.10.2 (http://www.scala-lang.org/download/2.10.2.html)
+Click on the .zip Windows package (http://www.scala-lang.org/files/archive/scala-2.10.2.zip)
+Extract this zip to some directory. I used c:\scala
+Load up IntelliJ IDEA. Set the Scala Home path to c:\scala\bin
+Presto.
+
+    
+    
+Answer 7: 
+
+    
+    
+When installing the windows version, also install the sources - then it works a lot better. It still complains a bit.
+    
+    
+Title: Unsupported Modules Detected: Unfortunately you can&#39;t have non-Gradle Java modules and Android-Gradle modules in one project
+Description: 
+    
+    
+                    
+
+  Unsupported Modules Detected: Compilation is not supported for the following modules: MemorandamApp. Unfortunately, you can't have non-Gradle Java modules and Android-Gradle modules in one project.
+
+
+This Error caused to erase my files. Newly opened files are affected by this problem. 
+    
+
+        
+Answer 1: 
+
+    
+    
+1- close the project
+
+2- close Android Studio IDE
+
+3- delete the .idea directory
+
+4- delete all .iml files
+
+5- open Android Studio IDE and import the project
+
+The answer is taken from HERE
+    
+    
+Answer 2: 
+
+    
+    
+Switch to project mode and go to .idea/modules.xml &amp; delete the invalid/not existing path . Then File =/p/div
+Title: How to use libraries for Algorithms part I Coursera course in Eclipse
+Description: 
+    
+    
+                    
+I've started Coursera Algorythms course. Practice assignments must be done on Java and they suggest using DrJava as IDE, but it's really unconvenient. So I'd like to use Eclipse, but the problem is that I couldn't use 2 libraries(algs4.jar and stdlib.jar), which are provided for this course. After doing steps from this guide I was able to include them in my project:
+
+
+
+but when I try to use their classes in my project, Eclipse doesn't allow to do it, and I couldn't import them by Ctrl + Space:
+
+
+
+And even when I am trying directly import class like import stdlib.StdRandom; it still doesn't work.
+
+What can I do to make it work properly?
+    
+
+        
+Answer 1: 
+
+    
+    
+Why don't you use these two JARs—— stdlib-package.jar and algs4-package.jar.
+
+And below the code page(http://algs4.cs.princeton.edu/code/)
+
+Q. If I use a named package to structure my code, the compiler can no longer access the libraries in stdlib.jar or algs4.jar. Why not?
+
+A. The libraries in stdlib.jar and algs4.jar are in the "default" package. In Java, you can't access classes in the default package from a named package. If you need to use our libraries with a named package, you can use these package versions: stdlib-package.jar and algs4-package.jar.
+
+Warning: if you are taking Princeton COS 226 or Coursera, Algorithms, Part I or II, you must use the default package verison of our libraries to facilitate grading.
+
+Showing my test success:
+
+    
+    
+Answer 2: 
+
+    
+    
+You can't access the APIs because the authors have defined them in the default package and Java doesn't recognize these. The authors mention on their website (http://algs4.cs.princeton.edu/code/) that if you are using these in named packages, configure your build path to include the jar from http://algs4.cs.princeton.edu/code/algs4.jar.
+
+HTH!
+    
+    
+Answer 3: 
+
+    
+    
+Follow the below steps
+
+Right click on your project /ppimg src="https://i.stack.imgur.com/ZuuMB.png" alt="enter image description here"/pp/ppimg src="https://i.stack.imgur.com/dtQi9.png" alt="enter image description here"/pp/ppimg src="https://i.stack.imgur.com/Ep7GR.png" alt="enter image description here"/pp/pp/p/div
+Answer 4: 
+
+    
+    
+All you should have to do in order to include the JARs is right click on the top of your project/object tree in the project explorer panel on the left, do "Build Path/Configure Build Path", click "Libraries" tab, and "add external jars", add them there.
+
+They should happily become available both while editing your source code and while building it in Eclipse after that.
+
+Also note that, assuming you have the class name right when you type, you should be able to hover over the class name in your code and the intelli-sense/auto-complete feature will suggest where you should import it from.  You can add the import to the correct library that way with ease.
+    
+    
+Answer 5: 
+
+    
+    
+One option is that there is a maven repo on github provided by slok. The bad part of this is the jars added were those using the default package, so you can't use a package structure.
+
+UPDATE: I have added the package versions of the jar to the repo and created a pull request it has now been accepted.
+
+Note that I have changed the identifiers to match the original package structure from Princeton.
+
+&lt;dependencies&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;edu.princeton.cs.introcs&lt;/groupId&gt;
+    &lt;artifactId&gt;algs4-package&lt;/artifactId&gt;
+    &lt;version&gt;1.0&lt;/version&gt;
+  &lt;/dependency&gt;
+
+  &lt;dependency&gt;
+    &lt;groupId&gt;edu.princeton.cs.introcs&lt;/groupId&gt;
+    &lt;artifactId&gt;stdlib-package&lt;/artifactId&gt;
+    &lt;version&gt;1.0&lt;/version&gt;
+  &lt;/dependency&gt;
+&lt;/dependencies&gt;
+
+&lt;repositories&gt;
+  &lt;repository&gt;
+    &lt;id&gt;org.coursera.algs4&lt;/id&gt;
+    &lt;name&gt;Algs4 coursera course custom repository&lt;/name&gt;
+    &lt;url&gt;https://raw.github.com/slok/algs4-mvn-repo/master&lt;/url&gt;
+  &lt;/repository&gt;
+&lt;/repositories&gt;
+
+    
+    
+Answer 6: 
+
+    
+    
+From their website: http://algs4.cs.princeton.edu/code/
+
+
+  Eclipse (manual). Download stdlib.jar and algs4.jar to a folder and add each jar 
+Answer 7: 
+
+    
+    
+It is probably because there is no package structure in the libraries, so you can't import classes from it. This might help you, How to use classes in Referenced Libraries in Eclipse.
+    
+    
+Answer 8: 
+
+    
+    
+If you are anyone still looking for the solution :-
+
+OS X / Linux
+
+% javac -cp .:stdlib.jar MyProgram.java
+% java  -cp .:stdlib.jar MyProgram
+
+Windows
+
+% javac -cp .;stdlib.jar MyProgram.java
+% java  -cp .;stdlib.jar MyProgram
+
+For refrence :- https://introcs.cs.princeton.edu/java/stdlib/
+    
+    
+Answer 9: 
+
+    
+    
+I'm using Gradle. In this case the build.gradle file should have a dependency and can look like
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'edu.princeton.cs:algs4:1.0.3'
+}
+
+
+After this you can import anything from it in your class. For example:
+
+import edu.princeton.cs.algs4.StdIn;
+
+    
+    
+Answer 10: 
+
+    
+    
+Incase of Gradle, add the maven repository entry in repositories section of build.gradle as follows:
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://dl.bintray.com/algs4/maven/'
+    }
+}
+
+
+Add the dependency as follows:
+
+compile group: 'edu.princeton.cs', name: 'algs4', version: '1.0.4'
+
+
+In case of Maven, add the entry in repositories tag in build.xml, as follows:
+
+&lt;repositories&gt;
+  &lt;repository&gt;
+    &lt;id&gt;org.coursera.algs4&lt;/id&gt;
+    &lt;name&gt;Algs4 lib&lt;/name&gt;
+    &lt;url&gt;https://dl.bintray.com/algs4/maven/&lt;/url&gt;
+  &lt;/repository&gt;
+&lt;/repositories&gt;
+
+
+Add the dependency as follows:
+
+&lt;dependencies&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;edu.princeton.cs&lt;/groupId&gt;
+    &lt;artifactId&gt;algs4&lt;/artifactId&gt;
+    &lt;version&gt;1.0.4&lt;/version&gt;
+  &lt;/dependency&gt;
+&lt;/dependencies&gt;
+
+    
+    
+Title: Pydev Not Recognized in Eclipse
+Description: 
+    
+    
+                    
+I've been using PyDev within Eclipse on my Mac for about two years now. Updated Eclipse today, and suddenly PyDev is completely missing. Tried everything, included a complete uninstall and fresh install, but although PyDev shows up as installed in the menu, it appears nowhere else.
+
+PyDev version: 3.0.0.201311051910
+Eclipse: Version: Kepler Service Release 1
+Build id: 20130919-0819
+
+I can't open a PyDev perspective, I can't create a new Python file, and I can't open an existing Python file without it just being seen as plain text.
+
+I've got a huge assignment due tonight, help appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+To see what the problem is, I upgraded from PyDev 2.8.2 to 3.0.0 just for this. It caused me a world of hurt. That version is filled with bugs. Nothing is working for me, including the perspectives or the debugger. I just went back to 2.8.2 and all is well again. I am also on Kepler and Mac. Go to 2.8.2. YOu can uninstall pydev using eclipse, then simply install pydev using the easy zip file instructions here: http://pydev.org/manual_101_install.html.
+
+3.0.0 was just released yesterday. They obviously have some fixing to do!
+    
+    
+Answer 2: 
+
+    
+    
+If you can't / will not upgrade to Java 7:  
+
+Uninstall latest PyDev version
+ 1. Help 
+Answer 3: 
+
+    
+    
+Check if you are using Java 7, it is needed now for PyDev 3.
+Source: http://pydev.org/download.html and PyDev bugtracker.
+After upgrading my java-version it worked for me again.
+    
+    
+Answer 4: 
+
+    
+    
+The following solved the problem for me, on OS X Mavericks 10.9.2 initially with Java 1.7.0_55 (from Oracle, the standard Mavericks install I think, fully up to date)
+
+
+check the available Java virtual machines using the terminal :
+
+
+
+  /usr/libexec/java_home -V
+
+
+I initially only had Java 1.6 listed here (a similar check from within Eclipse also confirmed that it was running 1.6, not the available 1.7 !)
+
+
+following posts suggesting that I had the Java 7 JRE but not the JDK, I installed the JDK from Oracle :
+http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html
+then checked again /usr/libexec/java_home -V
+... and hurrah! 1.7 showing up !
+Restarted Eclipse... didn't change anything else : the previously installed PyDev started to work (just had to re-open files in the editor)
+
+    
+    
+Answer 5: 
+
+    
+    
+It seems a lot of PyDev/Eclipse issues are a matter of using the correct Java JRE/JDK and PyDev for the version of Eclipse you're running.
+
+From http://www.pydev.org/
+
+Release 5.2.0
+
+Important PyDev now requires Java 8 and Eclipse 4.5 onwards.
+
+PyDev 4.5.5 is the last release supporting Java 7 and Eclipse 3.8. See: update sites page (http://www.pydev.org/update_sites/index.html) for the update site of older versions of PyDev.
+    
+    
+Answer 6: 
+
+    
+    
+At start i was also facing same error that : The solution is not provide while installing PyDev - Python IDE for Eclipse 6.3.2 
+and when I am When trying to install I receive the following message: Unable to read repository at https://dl.bintray.com/fabioz/pydev/latest/content.xml. ?
+
+Then i came up with the final solution :
+
+follow the steps :
+
+Online Install
+
+The URL for installation of the feature is http://pydev.org/updates. You can use that URL to Install New Software... from the Help menu if the Eclipse Marketplace is not doing what you want.
+
+and uncheck all the options mentioned below on Install New Software Window like:
+Uncheck :
+
+1.Show only the latest versions of available software
+2.Group Items by category
+3.Show only software applicable to target environment
+4.Contact all update sites during install to find required software
+
+
+Offline Install
+
+If you meet the requirements (below) and continue to have problems with the update site, you can download to install offline. Get it from SourceForge (or follow the link from PyDev's website to SourceForge).
+
+and uncheck all the options mentioned below on Install New Software Window like:
+Uncheck :
+
+1.Show only the latest versions of available software
+2.Group Items by category
+3.Show only software applicable to target environment
+4.Contact all update sites during install to find required software
+
+    
+    
+Answer 7: 
+
+    
+    
+![Kepler Pydev config]
+I had to spend lot of time to figure out why it is not working. But ultimately did. Download 2.8.2 zip instead and unzip in dropins folder as shown. Start eclipse with -clean option
+    
+    
+Answer 8: 
+
+    
+    
+Not enough rep to comment on Tobx's answer so I'll make a new one. 
+
+You can install java7 but retain your current version and not affect your current set up by specifying which JVM Eclipse should use using the command line -vm option.
+
+All is explained here
+    
+    
+Answer 9: 
+
+    
+    
+I debugged a python project (imported before). The Pydev menu has reappeared by only changing the current perspective to "Debug".
+
+I think opening the Pydev perspective through Window 
+Title: Emacs as an IDE for large C++ projects
+Description: 
+    
+    
+                    
+I am a Emacs newbie. I have to trying to search on how to use Emacs for use with large C++ projects particularly to index code and auto-complete function names and behave Eclipse-like. I had been using Vim for some time where I used ctags to index code in my project and Vim used to try auto-completing my code using a drop down menu of options. I am trying to achieve the same with Emacs now. But, during my search, results pointed to CEDET and auto-complete and other 3rd party plugins. 
+
+I tried to use ctags with ctags -e -R . and etags, but with no success.
+
+Am I missing a default way of Emacs to achieve the same behavior? Which is the best and easiest way to achieve what I want?
+    
+
+        
+Answer 1: 
+
+    
+    
+I use CEDET with autocomplete successfully. Basically, autocomplete is the drop-down box provider, and it takes its sources from various things, most interestingly from CEDET (but also from etags and Gnu Global, which I recommend too).
+
+A good starting point for CEDET is http://alexott.net/en/writings/emacs-devenv/EmacsCedet.html
+
+Alex Ott's emacs config is there: https://github.com/alexott/emacs-configs -- it's an useful resource.
+
+Note that you'll need to grab CEDET from bzr, and install/configure autocomplete correctly. I strongly recommend el-get to install autocomplete (and some other stuff too). You'll need to set up generic projects for EDE to have autocompletion working for random C/C++ files not part of a structured EDE project.
+
+You'll have to spend some time to configure emacs, but it pays off. The tool is amazingly productive once set up correctly.
+    
+    
+Answer 2: 
+
+    
+    
+Indexing
+
+You might want to use GNU/global instead of ctags: it supports C++ and is in my opinion more efficient with large projects (especially since you can update the index instead of rebuilding it from scratch). And it still is a lot simpler to use that CEDET/Semantic (which is also a fantastic tool if you spend the time to set it up).
+
+Example use:
+
+$ cd sources
+$ gtags -v         # create the index
+$ cd subdirectory
+$ [hack hack hack]
+$ global -u        # update the index (can be called from anywhere in the project)
+
+
+In Emacs, activate gtags-mode in the source code buffers to get access to the gtags commands:
+
+
+gtags-find-tag (M-.) : find the definition of the specified tag in your source files (gtags lets you choose between all possible definitions if there are several, or directly jumps if there is only one possibility)
+gtags-pop-stack (M-*) : return to the previous location
+gtags-find-rtag : find all uses of the specified tag in the source files
+
+
+Below is my configuration for gtags, which automatically activates gtags-mode if an index is found:
+
+;; gtags-mode
+(eval-after-load "gtags"
+  '(progn
+     (define-key gtags-mode-map (kbd "M-,") 'gtags-find-rtag)))
+(defun ff/turn-on-gtags ()
+  "Turn `gtags-mode' on if a global tags file has been generated.
+
+This function asynchronously runs 'global -u' to update global
+tags. When the command successfully returns, `gtags-mode' is
+turned on."
+  (interactive)
+  (let ((process (start-process "global -u"
+                                "*global output*"
+                                "global" "-u"))
+        (buffer  (current-buffer)))
+    (set-process-sentinel
+     process
+     `(lambda (process event)
+        (when (and (eq (process-status process) 'exit)
+                   (eq (process-exit-status process) 0))
+          (with-current-buffer ,buffer
+            (message "Activating gtags-mode")
+            (gtags-mode 1)))))))
+
+(add-hook 'c-mode-common-hook 'ff/turn-on-gtags)
+
+
+
+
+Automatic completion
+
+I don't know of any better tool than auto-complete. Even if it is not included within Emacs, it is very easily installable using the packaging system (for example in the marmalade or melpa repositories).
+    
+    
+Answer 3: 
+
+    
+    
+It depends what you are looking for in an IDE. I have been using Emacs for a fairly large C++ project. Of course you need to configure emacs to work as you want it to work in a greater extent they any other IDE.
+
+But yes CEDET is a start, even though it is not perfect. 
+
+However there is a very good auto complete mode for Emacs http://cx4a.org/software/auto-complete/ it is not intelisense but it should integrate with CEDET in some way to give you a farily good auto complete.
+
+Another important feature that I often use is the function ff-find-other-file to easy jump from header and implementation files.
+
+Then of course you need to roll your own bulid. CEDET has some support for projects, but I have not tested it. However Emacs integrate well with command-line build tools such as make. Errors are printed in a buffer and you can jump to the correct line easily within Emacs.
+
+GDB is also integrates well with Emacs M-x gdb, then just remember the gdb-many-windows  command.
+    
+    
+Answer 4: 
+
+    
+    
+I recommend to watch Atila Neves lightning talk at CppCon 2015 titled Emacs as a C++ IDE.
+
+For for details, see my answer to this related question.
+    
+    
+Answer 5: 
+
+    
+    
+See https://emacs.stackexchange.com/questions/26518/sequence-of-packages-to-be-installed-to-make-emacs-an-ide-for-c-c
+
+I use GNU Global and two popular Emacs plugins:
+
+
+company for code completion
+emacs-helm-gtags for code navigation
+
+    
+    
+Title: PowerCommands for Visual Studio 2012?
+Description: 
+    
+    
+                    
+I see that PowerCommands for Visual Studio 2010 supports visual studio 2012, but it was last updated in Aug 2010. Is there a new "PowerCommands for Visual Studio 2012" or is there a viable replacement?
+    
+
+        
+Answer 1: 
+
+    
+    
+You don't need a replacement. If you install the Power Commands again, from within VS 2012 (Tools -/ppa href="http://geekswithblogs.net/terje/archive/2012/03/22/visual-studio-amp-tfs-11-ndash-list-of-extensions-and.aspx"/a/pblockquoteblockquotep/p/blockquote/blockquotep/ppstrong/strong/ppa href="http://visualstudiogallery.msdn.microsoft.com/3a96a4dc-ba9c-4589-92c5-640e07332afd"/a/ppa href="http://visualstudiogallery.msdn.microsoft.com/b1ef7eb2-e084-4cb8-9bc7-06c3bad9148f"/a/pp/p/div
+Answer 2: 
+
+    
+    
+I ended up using VSCommands for Visual Studio 2012. This tool provided all I needed from PowerCommands and more.
+    
+    
+Answer 3: 
+
+    
+    
+Most of what was in the Productivity Power Tools are now part of VS 2012.  There are a few items missing, afaik, what are you looking for in particular ?
+    
+    
+Answer 4: 
+
+    
+    
+As mentioned on the Productivity Power Tools 2012 page, the Power Commands were added to that addon.
+    
+    
+Answer 5: 
+
+    
+    
+Download the VS2010/2012 version from the VS Gallery.
+
+Unzip the .vsix to a folder (i.e. using the great 7zip), it's just a zip file.
+
+Edit the extension.vsixmanifest file and add this element after the 11.0 one:
+
+  &lt;VisualStudio Version="12.0"&gt;
+    &lt;Edition&gt;Pro&lt;/Edition&gt;
+  &lt;/VisualStudio&gt;
+
+
+Repeat for every future version of VS that comes out ;)
+
+Now re-zip the contents (files, not the root folder, so that the extension.vsixmanifest is at the root of the zip file, not within a folder), rename the zip file to .vsix, and double-click to install to all your newly supported editions.
+
+Enjoy!
+    
+    
+Title: `filesystem` with c++17 doesn&#39;t work on my mac os x high sierra
+Description: 
+    
+    
+                    
+I'm following this tutorial:
+
+http://www.bfilipek.com/2017/08/cpp17-details-filesystem.html
+
+to checkout new c++ filesystem feature. However I'm unable to compile even minimal example on my machine:
+
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+#include &lt;filesystem&gt;
+
+namespace fs = std::filesystem;
+
+int main()
+{
+    std::string path = "/";
+
+    for (auto &amp; p : fs::directory_iterator(path))
+        std::cout &lt;&lt; p &lt;&lt; std::endl;
+}
+
+
+I was using XCode, CLion and command line while trying to compile it but nothing works, I have Version 9.3 (9E145) with (seemingly proper) project settings, none of which work:
+
+
+
+
+Here is my CMakeLists.txt file for CLion:
+
+cmake_minimum_required(VERSION 3.8)
+
+project(FileSystem2)
+
+set(CMAKE_CXX_STANDARD 17)
+
+add_executable(FileSystem2 main.cpp)
+
+
+Here is an output from &gt; gxx --version:
+
+
+
+Nevertheless this is what I get as an output from my IDEs:
+
+
+
+
+
+What am I doing wrong, it looks to me that my compiler should support c++17?
+
+
+
+Edit
+
+As per Owen Morgan's answer I've installed clang (actual install command was brew install llvm) but it now complains about absence of string.h. Any thoughts? 
+    
+
+        
+Answer 1: 
+
+    
+    
+The compiler shipped with Xcode supports C++17 language features but not C++17 standard library features. Looking at your screenshot you will see the standard library support goes up to C++11, and Apple has not yet shipped a version of clang that has stdlib support for either C++14 or C++17. 
+
+However hope is not lost! You can download the newest version of clang from the brew package manager.
+
+brew install clang
+
+
+Then you can compile by setting your cmake compiler flags to be your custom brew version and then running that. 
+
+Here is a link how to do that: http://antonmenshov.com/2017/09/09/clang-openmp-setup-in-xcode/
+
+Edit:
+
+After installing llvm you will need to link your llvm path into your current shell. I have a shell script that I use at work to get this set up properly. Hope this helps.
+
+#!/bin/bash
+brew update
+brew install --with-toolchain llvm # llvm but with all the headers
+xcode-select --install # installs additional headers that you might be mimssing.
+echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"' &gt;&gt; ~/.bash_profile # exports the custom llvm path into the shell 
+sudo ln -s /usr/local/opt/llvm/bin/clang++ /usr/local/bin/clang++-brew # optional but I like to have a symlink set.
+
+
+Edit 2:
+
+Clang 6.0 doesn't have &lt;filesystem&gt; included on macOS yet, however you can get &lt;experimental/filesystem&gt;, and link against -lc++experimental, and use std::experimental::filesystem instead of std::filesystem.
+
+Final command line invocation:
+
+Owen$ /usr/local/Cellar/llvm/6.0.0/bin/clang++ fs.cpp -std=c++1z -L /usr/local/Cellar/llvm/6.0.0/lib/ -lc++experimental
+
+Edit 3:
+
+Current clang version 7.0.1 supports either &lt;filesystem&gt; or &lt;experimental/filesystem&gt;. In any case, the compiler command line must be slightly different:
+
+Owen$ /usr/local/Cellar/llvm/7.0.1/bin/clang++ main.cpp -std=c++1z -L /usr/local/Cellar/llvm/7.0.1/lib/ -lc++fs
+
+
+with -lc++fs instead of -lc++experimental. 
+Optionally, you can replace-std=c++1z with -std=c++17 as well.
+    
+    
+Answer 2: 
+
+    
+    
+If you don't want to change compiler to use std::filesystem (because it's a pain), another option is to use the Boost Filesystem library. Boost Filesystem was the basis for std::filesystem, so for most uses it's completely compatible with std::filesystem.
+
+Setting up Boost is pretty easy if you're using CMake. Just brew install boost then in your CMakeLists.txt do something like:
+
+# Boost
+set(boost_min_ver 1.50.0)
+set(boost_libs system filesystem)
+find_package(Boost ${boost_min_ver})
+
+if(Boost_FOUND)
+    find_package(Boost ${boost_min_ver} COMPONENTS ${boost_libs})
+endif()
+
+target_link_libraries(your_target ${Boost_LIBRARIES})
+
+
+The extra verbosity in finding Boost helps, I find, to suppress some warnings CMake would otherwise throw at you.
+
+Then in your C++ code:
+
+#include &lt;boost/filesystem.hpp&gt;
+namespace fs = boost::filesystem;
+
+
+If you're feeling very fancy, you can use the __has_include define to check if the standard filesystem include is available, and if so, set namespace fs = std::filesystem and fallback to Boost only if the std version isn't available.
+    
+    
+Answer 3: 
+
+    
+    
+As std::filesystem support on macOS with the official compiler and Xcode 11.1 is now limited to Catalina/10.15 deployment targets and up, I want to humbly add ghc::filesystem by myself as an additional option. It was written because I wanted to use std::filesystem on macOS, so it might be worth a try.
+
+It is a header-only feature complete implementation of std::filesystem for macOS, Linux and Windows, works from C++11 to C++17, and it tries to stay close to the standard. It might be a less heavy dependency than boost (if you don't use that already). In the simplest form, just drop the main header file next to your source, include filesystem.hpp, eventually add
+
+namespace fs = ghc::filesystem;
+
+
+and use it like it is std::filesystem. It is also possible to separate parts of the implementation into a cpp by using the additional header files, the readme explains how to do that.
+
+Note: It was implemented with utf8-everywhere in mind, but has an option to enable std::wstring interfaces on Windows as specified by the standard. The std::string_view related functions are limited to C++17, as it doesn't include a backport of std::string_view.
+More details can be found in the readme under differences in api.
+    
+    
+Title: Android Studio 3.0 - Logcat window can not show filter input control
+Description: 
+    
+    
+                    
+
+I can not type a text filter in the logcat input text control on Android Studio 3.0.1, because it is too small.
+
+My screen is big enough. I did an event switch to fullscreen but this did not solve the problem.
+
+See the screenshot below.
+
+Has anyone seen this problem? How do you solve it?
+
+
+
+
+
+
+
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Try clicking on the setting (cog-wheel icon) inside the logcat window and select the windowed or the floating modes, and then try to stretch the window size as long as you can  
+    
+    
+Answer 2: 
+
+    
+    
+This issue is regarding the resolution of screen size specially causing in windows platforms or desktop with small resolution.
+
+(For windows users)
+
+-If you have a slider toolbar set in left or right side set it to bottom.
+
+-Check for resolution size that suits your desktop better.
+
+-Update the windows graphic driver(Important) if you don;t see one in device manager better install it.
+
+Note: I had the same issues for the slider toolbar(refer 1st point) set to bottom and now it works fine.
+    
+    
+Answer 3: 
+
+    
+    
+use CTRL+F in logcat to find or filter logcat. then a new search bar comes below to that bar you can filter there.
+
+
+    
+    
+Answer 4: 
+
+    
+    
+Actually the problem is with the device name, which is too long and due to this it squeezes the Logcat search. So to the solution I got for this name issue is to change the device name (whether its Genymotion or AVD). So to change your device name follow below steps :
+
+For AVD : Go to Tools --strong/strong
+Answer 5: 
+
+    
+    
+Android Studio 3.1-beta in the canary channel has solved this issue.
+
+
+    
+    
+Title: What implementation of Forth should I use for learning Forth?
+Description: 
+    
+    
+                    
+I want to start learning Forth (like in the related Stack Overflow question Is it practical to learn and use Forth?). I see that there are many implementations. I would like to use a
+
+
+ANS 1994 compatible version (if reasonable, but sticking to the standard might be good)
+small and compact implementation, I don't want a full OS.
+Windows
+easy to use, I am new to Forth ;-)
+
+
+What particular implementation can be recommended?
+    
+
+        
+Answer 1: 
+
+    
+    
+Win32Forth is really fantastic, as mentioned above. It has a nice integrated development environment and is a pretty modern implementation that seems to match up very well with the standards as well as including some more experimental but widely-accepted features.
+
+I use Gforth, but I also use Vim to edit source files. :) Gforth is good and "classic" as far as the features it supports. It gives you a very "old school" Forth experience without being overly quirky to use. (Some free Forths do odd things with their command lines and such - I use Brodie's "Starting Forth" as the model of how a Forth interpreter should behave.)
+
+I looked at SwiftForth, which is a very nice "high tech" Forth system that goes well beyond what the classic Forths offer in terms of language features and really brings Forth into the modern programming world. If you want to actually do Forth programs professionally, SwiftForth looks like it can handle just about anything you want to do with it.
+    
+    
+Answer 2: 
+
+    
+    
+Some time ago I evaluated 4tH, an implementation of Forth. 
+I think it meets all of 
+your requirements. For instance the compiler is only 61 KB. There is also full support for floating point numbers, important if you want to 
+try to use it for technical/scientific purposes.
+
+4tH runs on most operating systems, including MS-DOS, MS-Windows (both 16 bit and 32 bit), Linux, Coherent, AIX, SunOS, BOS, BSD, Mac OS X, BeOS, RISC OS, etc. Download (Windows installer, 1.5 MB, includes the manual). Manual (PDF, 1.1 MB).
+
+There is an active community centered around the Google Group 4tH-compiler.
+For instance today I received two messages.
+
+Please note that in 4tH you can't define your own defining words (words executing at compile time). This is not a serious
+limitation, unless you want to cover advanced Forth features.
+
+
+
+To get you started (as this is not very clear from the manual or the interactive compile), after installation copy the compiler, 4th.exe, to an empty folder, make two files in this directory, HelloWorld.bat and HelloWorld.4th, and run HelloWorld.bat:
+
+HelloWorld.bat:
+
+    4th.exe cx HelloWorld.4th
+    pause
+
+
+HelloWorld.4th:
+
+   : hello ." Hello from XYZ!" cr cr ;
+   hello
+
+    
+    
+Answer 3: 
+
+    
+    
+SwiftForth.  It isn't self-consciously small and compact; it just happens to be.  It's easy to use (LOCATE WH EDIT , a nicer than usual WORDS), comes with two books, and has an excellent mailing list with over a decade of archives.  The evaluation version won't let you compile turnkey apps or DLLs; it still provides an excellent console for a student, and can support scripts in the usual ways.  Quick Windows examples:
+
+: sleep-monitor ( -- )
+  HWND_BROADCAST WM_SYSCOMMAND SC_MONITORPOWER 2 SendMessage drop ;
+
+
+library dnsapi.dll
+( ... DLL imports, constants ... )
+variable results
+: DnsQuery ( z -- res )
+  DNS_TYPE_A 0 NULL results NULL DnsQuery_UTF8 ;
+
+: resolves? ( z -- f )
+  DnsQuery if false exit then
+  results @ DnsRecordListFree true ;
+
+
+\ an example use of the dialog compiler
+\ this compiled DSL is an example of something that 4th
+\ precludes with its "not ... serious limitation"
+DIALOG (HELLO-ABOUT)
+[MODELESS " About Hello" 10 10 120 70
+   (FONT 8, MS Sans Serif) ]
+\  [class           text                        id   x   y   sx xy ]
+
+   [CTEXT           " HELLO"                    -1  10  10  100 10 ]
+   [CTEXT           " (C) 1997 Forth, Inc."     -1  10  25  100 10 ]
+   [CTEXT           " http://www.forth.com"     -1  10  35  100 10 ]
+   [DEFPUSHBUTTON   " OK"                     IDOK  35  50   50 14 ]
+END-DIALOG
+
+    
+    
+Answer 4: 
+
+    
+    
+I realise they might not meet all your requirements but the following Forth-like languages might also interest you from a learning perspective.
+
+
+Factor
+RetroForth
+
+
+Additionally, I have found the Re-Factor blog to be a good introduction to Factor.
+    
+    
+Answer 5: 
+
+    
+    
+If you can find a copy of FORTH Inc's old polyFORTH, and an old x86 that can run it, this is the language used in Leo Brodie's original "Starting FORTH".  It is a clean and very robust FORTH.
+    
+    
+Answer 6: 
+
+    
+    
+I recommend ciforth, as you're a Windows user the version built for Windows is known as wina: an MS-WIndows NAtive Forth.
+
+ciforth is a small system written in NASM assembler, and comes with a similar interface for a wide variety of systems. It's small, fast, classic (blocks ftw), easy to use as it's old school, comes with a ton of documentation and a wordlist that isn't overwhelming like Gforth's (the wordlist for Lina is here, I assume wina is majority the same).
+
+Gforth has a lot of bloated definitions and some of Starting Forth won't work in it, for example. The only thing ciforth lacks is a floating point stack, but Forth can deal with fixed point incredibly well (if one reads Starting Forth, one learns about how to use it).
+    
+    
+Answer 7: 
+
+    
+    
+Win32Forth worked well for me.
+    
+    
+Answer 8: 
+
+    
+    
+Download Gforth for PC and Android.  
+
+Tinker with it using it as a calculator, solving simple problems, Fibonacci, solving the quadratic a b c, etc.
+    
+    
+Answer 9: 
+
+    
+    
+durexForth is an ANS compliant C64 Forth and very small.
+    
+    
+Title: How to make Pycharm faster/lighter?
+Description: 
+    
+    
+                    
+I really dig the idea of Pycharm and would love to use it. However, its tendency to consume the computer's processing power and lag is a large drawback.
+
+In the near future, I'll be running an introductory Python course and would like to recommend that the students install Pycharm as it seems to be the friendliest IDE out there.
+
+Is there a way to speed up Pycharm to make its processing a bit 'lighter'? Or is there an alternative IDE with similar features that people would recommend?
+    
+
+        
+Answer 1: 
+
+    
+    
+The slow performance of PyCharm is mainly due to small amount of RAM. I am running PyCharm on a machine with 2GB RAM. Here are my recommendations on making it work smoother.
+
+
+You can't really tweak PyCharm for performance balancing the power it provides. If you turn off the inspection or works on Power Saver Mode, You won't get code completion unless you manually invoke it with Ctrl + Space.
+Switch to a lighter Operating System. (If you are a Linux person you have a plenty of choices.)
+Monitor other System processes. (I was able to bring down standby memory usage of Kubuntu to less than 300MB by disabling other 'useless' processes that eat up memory)
+Disable unused plugins in PyCharm.
+Modern browsers are memory hungry. Limit number of tabs and plugins (even Adblock consumes around 70MB RAM) if you open docs on brower while you code.
+Update your hardware. (This really helps. Invest on RAM so you can ignore the points above)
+
+
+WingIDE is an another IDE that works somewhat similar to PyCharm.
+    
+    
+Answer 2: 
+
+    
+    
+PyCharm is written in Java, and Java uses Just In Time compiling i.e. a method in Java bytecode is converted to native code the first time that method is called.  The next time that method is called it runs much faster.
+
+So, the first thing you should do with a new installation of PyCharm is run it a few times and try some of the basic features.  Be sure to open and close PyCharm a few times as well.  I find that this helps everytime I install a new version of PyCharm.
+    
+    
+Answer 3: 
+
+    
+    
+First of all: you can disable inspections. In right bottom, on status bar, next to memory usage indicator, there is a little Hector head - click it and select "syntax" level. I belive this will help a lot.
+
+If this won't help enough you can set "Power save mode". From PyCharm help:
+
+
+  When Power Save Mode is on, PyCharm reduces its functionality to the one of a text editor, by not executing expensive background activities that drain laptop battery. 
+
+    
+    
+Answer 4: 
+
+    
+    
+In the hardware end, upgrading your system is a fair choice. PyCharm recommends 1 GB of RAM as stated in the system requirements at the PyCharm website.
+
+You could disable a few of PyCharm's functionalities like disabling inspections. You could also turn on "Power Save Mode" for PyCharm.
+
+You could also use a lighter operating system when running PyCharm, or kill a few processes to reduce the load of the computer.
+
+If PyCharm is still heavy for you, you could try out Python for VS Code, KDevelop, or you could go use a text editor such as Atom for Python development. Here's a full list of Python IDEs.
+    
+    
+Title: Can I configure Visual Studio NOT to change StartUp Project every time I open a file from one of the projects?
+Description: 
+    
+    
+                    
+Let's say that there is a solution that contains two projects (Project1 and Project2).
+
+Project1 is set as a StartUp Project (its name is displayed in a bold font). I double-click some file in Project2 to open it. The file opens, but something else happens too - Project2 gets set as a StartUp Project.
+
+I tried to find an option in configuration to change it, but I found none.
+
+Can this feature (though it's more like a bug to me) be disabled?
+    
+
+        
+Answer 1: 
+
+    
+    
+The way to select a startup project is described in Sara Ford's blog "Visual Studio Tip of the Day" (highly recommended). She has a post there about setting up StartUp projects. Essentially there are 2 ways, the easiest one being right-clicking on the desired project, and choosing "Set As StartUp Project". That prevents other projects from becoming the StartUp project, even if you click on one their files. 
+    
+    
+Answer 2: 
+
+    
+    
+Check your Visual Studio options for the following check box:
+Projects and Solutions - Build and Run - For new solutions use the currently selected project as the startup project.  
+
+Uncheck that and see if the behavior changes.
+    
+    
+Answer 3: 
+
+    
+    
+I ran into a bug where the project in bold would not be the startup project despite it being selected in the solution properties as the "single startup project".
+
+One work around for this bug was un-checking deploy, from the Configuration Manager, for the non-bold project that was being incorrectly used as the startup project. The configuration manager is found by right clicking the solution in the Solution Explorer.
+    
+    
+Title: AndroidStudio import SVG with ERROR@ &lt;mask&gt; is not supported
+Description: 
+    
+    
+                    
+I got message "ERROR@ &lt;mask&gt; is not supported" when try to import SVG using
+
+ Android Studio 3.0.1
+Build #AI-171.4443003, built on November 10, 2017
+JRE: 1.8.0_152-release-915-b08 x86_64
+JVM: OpenJDK 64-Bit Server VM by JetBrains s.r.o
+Mac OS X 10.12.6
+
+
+Anyway to import SVG and make them show correctly?
+    
+
+        
+Answer 1: 
+
+    
+    
+Solution 1
+
+Flattern image in Sketch and use this site to convert SVG to xml for Android
+
+Solution 2
+
+I use nonZero instead of evenOdd and open it in Sketch to reverse Order after reverse it will change pathData and remove android:fillType and everything work fine on Android 21+.
+
+Solution 3 
+
+PNG
+
+TLDR
+
+After some research I found that there are two fill-rule property methods for Vector graphics, SVGs, the “evenodd” vs “nonzero”
+
+I opened the SVG icon in Sketch and inspected the hole at the top of the icon. As expected it uses fill-rule:evenodd property. Now I have to change the fill-rule to use “nonzero” property. How? Select the path. In the right side, there is a settings icon at the “Fills” property. Click it and choose “non-zero”.
+
+From the main menu, choose Layer → Paths → Reverse Order. I got the hole back at the top of the icon and got the hole in the app, too.
+
+For more detail
+    
+    
+Answer 2: 
+
+    
+    
+
+Open the SVG file and remove the mask element. You can keep the use element.
+Import
+Open imported file
+Remove the last element that hasfillType="evenOdd"
+Update the color on the android:fillType="nonZero" element 
+
+
+This depends of course on how the designer exports the asset but editing paths like this will most always get you where you want. 
+    
+    
+Answer 3: 
+
+    
+    
+If all you have is the .svg file, you can manipulate the .svg markup by hand to remove the mask and apply a fill inline. 
+
+If you're working with a designer, you can ask them to take the icon and remove whatever is inside the mask and apply a fill to the icon instead. Then have the designer export the .svg file and retry the import into Android Studio. 
+
+When the asset you're trying to import is exported from a designer software like Sketch or other, AND the icon is a mask (as opposed to a fill) it will export with that  tag. Android Studio only accepts .svg's with fills (this is not a problem with iOS)
+    
+    
+Answer 4: 
+
+    
+    
+Tool 1) is ShapeShifter https://shapeshifter.design
+
+Tool 2) is https://svg2vector.com
+
+Try this tool https://svg2vector.com on this case.
+When using Android Vector Asset Studio, you may encounter these errors:
+
+Missing "viewBox" in &lt;svg&gt; element
+&lt;animate&gt; is not supported
+&lt;animateColor&gt; is not supported
+&lt;animateMotion&gt; is not supported
+&lt;animateTransform&gt; is not supported
+&lt;mpath&gt; is not supported
+&lt;set&gt; is not supported
+&lt;a&gt; is not supported
+&lt;defs&gt; is not supported
+&lt;glyph&gt; is not supported
+&lt;marker&gt; is not supported
+&lt;mask&gt; is not supported
+&lt;missing-glyph&gt; is not supported
+&lt;pattern&gt; is not supported
+&lt;switch&gt; is not supported
+&lt;symbol&gt; is not supported
+&lt;feBlend&gt; is not supported
+&lt;feColorMatrix&gt; is not supported
+&lt;feComponentTransfer&gt; is not supported
+&lt;feComposite&gt; is not supported
+&lt;feConvolveMatrix&gt; is not supported
+&lt;feDiffuseLighting&gt; is not supported
+&lt;feDisplacementMap&gt; is not supported
+&lt;feFlood&gt; is not supported
+&lt;feFuncA&gt; is not supported
+&lt;feFuncB&gt; is not supported
+&lt;feFuncG&gt; is not supported
+&lt;feFuncR&gt; is not supported
+&lt;feGaussianBlur&gt; is not supported
+&lt;feImage&gt; is not supported
+&lt;feMerge&gt; is not supported
+&lt;feMergeNode&gt; is not supported
+&lt;feMorphology&gt; is not supported
+&lt;feOffset&gt; is not supported
+&lt;feSpecularLighting&gt; is not supported
+&lt;feTile&gt; is not supported
+&lt;feTurbulence&gt; is not supported
+&lt;font&gt; is not supported
+&lt;font-face&gt; is not supported
+&lt;font-face-format&gt; is not supported
+&lt;font-face-name&gt; is not supported
+&lt;font-face-src&gt; is not supported
+&lt;font-face-uri&gt; is not supported
+&lt;hkern&gt; is not supported
+&lt;vkern&gt; is not supported
+&lt;linearGradient&gt; is not supported
+&lt;radialGradient&gt; is not supported
+&lt;stop&gt; is not supported
+&lt;ellipse&gt; is not supported
+&lt;polyline&gt; is not supported
+&lt;text&gt; is not supported
+&lt;use&gt; is not supported
+&lt;feDistantLight&gt; is not supported
+&lt;fePointLight&gt; is not supported
+&lt;feSpotLight&gt; is not supported
+&lt;altGlyph&gt; is not supported
+&lt;altGlyphDef&gt; is not supported
+&lt;altGlyphItem&gt; is not supported
+&lt;glyphRef&gt; is not supported
+&lt;textPath&gt; is not supported
+&lt;tref&gt; is not supported
+&lt;tspan&gt; is not supported
+&lt;clipPath&gt; is not supported
+&lt;color-profile&gt; is not supported
+&lt;cursor&gt; is not supported
+&lt;filter&gt; is not supported
+&lt;foreignObject&gt; is not supported
+&lt;script&gt; is not supported
+&lt;view&gt; is not supported
+
+    
+    
+Answer 5: 
+
+    
+    
+In my case this was the result of a symbol override in Sketch which is a known technique which enables you to easily change a symbol's color. It requires you to use a (color) symbol inside a symbol (nested symbols) as a mask. This is the mask that was causing issues.
+
+My solution was simply to create an export version of the original symbol where I delete the mask. 
+    
+    
+Title: Recommend a development environment for HTML5/Javascript? [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                Closed 9 years ago.
+        
+
+
+    
+
+
+  Possible Duplicate:
+  IDE for JavaScript development  
+
+
+
+
+I want to teach myself HTML5 and Javascript (or if not Javascript, whatever the preferred technology is for manipulating HTML 5 and the DOM these days).  Can anyone recommend a good development environment for this (on a Windows 7 PC)?  I can make a start with notepad and Google chrome, but I was kind-of hoping a developer friendly IDE exists for this kind of thing.
+
+Also, as a follow up question, is Javascript THE way to manipulated the DOM, or is there some other technology out there I don't know about that's superior and supported across the board?
+
+Thanks.
+
+Edit: Ok, I would like to expand the scenario somewhat, because I didn't really put the question into context.  I'm interested in designing and writing GUI components with HTML5/Canvass.  I already do this for a living with native development and wanted to extend my skills onto the web, so I've still got that base covered from a skills point of view.  So my goal here is to provide some "drag and drop" (not an appropriate metaphor for web development I'm sure) components that others can use. I'm assuing HTML5/Javascript is the way to go, but I'm used to a good debugger, so was kind-of hoping to have that ability too.  I'm not sure if browsers support this in any reasonable sense - but an embedded browser in a specialised IDE might. 
+    
+
+        
+Answer 1: 
+
+    
+    
+It's a tricky question to answer as it's very much down to personal preference.
+
+It sounds as though you are starting out, so to guess a couple of requirements I'm guessing you'll probably want it to be free (or cheap), easy to use, easy to install?
+
+If so I'd reccomend checking out either Mirosoft WebMatrix or Visual Studio Web Developer Express.
+
+Both are free, WebMatrix is geard towards early learning. So I'd suggest starting with WebMatrix.
+
+Visual Studio Web Developer Express is more complex, but I'd recommend using this if you're planning to become a professional web developer as it's very similar to Visual Studio Professional.
+
+Web Developer Express has intellisense (auto complete) for html and javascript and since sp1 (I think automatically installed) also includes support for HTML5. I believe WebMatrix does as well, but probably not as sophisticated intellisense.
+
+I'd especially recommend these tools if you are later planing to learn ASP.net.
+
+Both can be very easily installed using the web platform installer via this site: http://www.microsoft.com/web/platform/tools.aspx
+
+
+
+EDIT: My mistake, I thought Robinson was a beginer to development (I was very wrong!) :-) Instead just getting back into the web side of things.
+
+If you're looking for a full blown IDE; debugger / web server / intellisense / live(ish) preview of changes etc etc and perhaps in the future thinking of ASP.net: I'd reccomend Visual Studio Web Developer Express.
+    
+    
+Answer 2: 
+
+    
+    
+Check out Aptana (http://www.aptana.com/). It's free and has almost everything you will ever need as well as an awesome debugger.
+
+Also, grab yourself a copy of FireFox with FireBug extension. It's amazing for real time debugging in the browser and allows you to make changes to live code to see how it might look/work if you actually coded it that way.
+
+Hope this helps!
+
+Jeffrey Kevin Pry
+    
+    
+Answer 3: 
+
+    
+    
+I suppose, technically if you're just coding HTML and JavaScript then any IDE or text editor would do, even Notepad. You can save files locally and everything would work because HTML and JS don't require a server to run anything, just a browser.
+
+One thing to note is, if you're using ajax at all in your development environment you may get one or two issues with cross-domain scripting errors. I'm not sure if this is still an issue with the latest versions of jQuery (which I'd recommend using a basis framework for your javascript) but I remember it always used to be.
+
+As for IDE, there are so many choices out there it really is probably a case of trying a few and seeing which you like. I would recommend Aptana Studio for the JS/HTML side of things because I've always found to be well-highlighted and easy to use, plus has good control over project management. Plus it's free and open source, so you can't really go wrong.
+
+Edit: Oh, Sencha (as posted here too) is also a really good choice!
+
+And, in answer to your follow-up question: yes, JavasScript is the way to go for DOM manipulation, especially when you use a framework like jQuery that has all the hard cross-browser stuff built in and just works out of the box. On top of that you have 1000's of plug-ins at your disposable to make everything nice and easy :-)
+    
+    
+Answer 4: 
+
+    
+    
+HTML5/Javascript framework : I would recommend Sencha . I've used extjs library in the past which is part of this framework now. The tool set is also useful. 
+
+IDE : Eclipse or Aptana IDE (both are free)
+
+Also see this question on SO : Any good, visual HTML5 Editor or IDE?
+    
+    
+Answer 5: 
+
+    
+    
+To answer the follow up first.
+Yes. JavaScript is the way to manipulate the DOM.
+Not that it is the only way to parse a DOM, but it is the only widely accepted way to do it in a browser. That goes for both desktop versions as well as the mobile browsers.
+
+As for IDE's. I personally use a mix of Visual Studio 2010( it actually has good support for both HTML5 and JavaScript, JQuery included), Monodevelop, JsFiddle.net. And Firefox with Firebug for debugging.
+    
+    
+Title: Visual Studio not showing IntelliSense descriptions anymore
+Description: 
+    
+    
+                    
+Since a month ago, my VS doesn't seem to want to display the summary info in tooltips for any system methods or classes when I hover them with my mouse.
+
+I had ReSharper installed and started noticing this problem. I assumed that ReSharper disabled the default method descriptions, so I wasn't thinking much further about it, only considering it a mere annoyance.
+
+After removing ReSharper though, the problem persisted.
+
+VS now only shows descriptions for my own methods which I've added a &lt;summary&gt; tag for and any descriptions from NuGet packages, but not system methods like Where, Encoding.GetString, etc.
+
+
+
+I've tried repairing VS, resetting settings, un-/checking checkboxes in Options 
+Answer 1: 
+
+    
+    
+This looks more like a framework issue rather that a VS/R# issue. If neither one of them can load the description strings, it probably means the description XML files are missing.
+
+Check if you see the XML files in:
+
+C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2
+
+If you don't, then reinstall the framework to fix the issue.
+
+Link to .NET Framework 4.5.2 Developer Pack: https://www.microsoft.com/en-us/download/details.aspx?id=42637
+    
+    
+Answer 2: 
+
+    
+    
+Try to activate the 'Statement completion' checkboxes in Options 
+Answer 3: 
+
+    
+    
+After removing ReSharper from VS, it will be a framework issue, because in coresponding folder C:\Program Files(x86)\ReferenceAssemblies\Microsoft\Framework\.NETFramework\  will be absent demanded *.xml files (You can simple check it by look this folder, as wrote before @Lucas Trzesniewski ).
+
+Also you can check it in VS by simple press F12 on any standart type or method (e.g. Console.WriteLine), you will see only list of methods in assembly, w/o any comments (also you can find at the top of page which assembly used by your current project, it version and location).
+
+If you using for your project the last version Framework from your computer, you can simple decide this problem by reinstall it (coresponding "Microsoft .NET Framework 4.x.x Developer Pack").
+
+But if you want reinstall some previous version (not the last), it can't be made simply, because the installation process can be blocked with the next explanation:
+
+
+  .NET Framework 4.5.x/4.6.x/4.7.x (ENU) or a later version is already
+  installed on this computer.
+
+
+You can use the next workaround:
+Run installation package with key "uninstall" (e.g. for 4.5.2 - NDP452-KB2901951-x86-x64-DevPack.exe /uninstall
+After that, the installation programm (on the last step before begin real work) give you selection from two option: Recovery or Uninstall, I highly recommend choosing the Recovery, because Microsoft not recommend to remove not the most last Framework.
+
+P.Scode/codecode/codecode/code/p/div
+Answer 4: 
+
+    
+    
+Also, check that your project is referencing the libraries in the C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\ folder. You can do that by selecting each project reference and viewing it in the property window, or by editing your project file with a text editor.
+
+I had one case where my project had references to the actual runtime framework located at C:\Windows\Microsoft.NET\Framework\ which does not have the associated .xml files.
+    
+    
+Title: Rich editors in a Docker development environment
+Description: 
+    
+    
+                    
+So my team and I have bought into Docker - it is fantastic for deployment and testing.  My real question is how to set up a great developer experience, specifically around writing Python apps, but this question could be generalized to nodejs, Java, etc.
+
+The problem:  When writing a Python app, I really like having decent linting/autocomplete functionality, there are some really good editors out there (Atom, VSCode, PyCharm) that provide these, but most really want a Python install on the local disk.  The real advantage of Docker is that all of the core language and any project libraries can all be in the container, so reproducing all of that on the host machine just for developing is a pain.
+
+I know that PyCharm pro does support Docker and docker-compose, but I found it quite sluggish and a lot of the test running capabilities were busted.  On top of that, I really would like something that I can commit to version control so that the team can share dev setup and people don't have to repeat all of the steps for their own system.
+
+A few Ideas that I had were:
+
+
+Install an editor (like Atom) in a sidecar Docker container and use X11 forwarding
+Use a browser based editor such as https://c9.io/ in a container - this seems most promising
+Install some agent in a dev container that could handle autocomplete/linting, etc. and connect to it from a locally running editor - I think this would be the best solution, but I also think that right now it actually doesn't exist.
+
+
+Has anyone had luck setting up a more productive development environment besides just mounting volumes and editing text?
+    
+
+        
+Answer 1: 
+
+    
+    
+You should use an 'advanced' IDE like IntelliJ (Pycharm) and configure a remote Python SDK using SSH-Access to your App-Docker-Container (using a shared ssh-key to auth against the app-container with a preinstalled openssh server and preconfigured authorized_keys file).
+You can share this SDK information in your project file with all devs, so they wlll have this setup out of the box
+
+1) This will ensure, your IDE knows about all the python libs/symbols available/installed in your docker-container during runtime. It will also enable you to properly debug remotely at the same time
+
+2) This ensures, you have an IDE at your hand including a lot of important additional features like the inspector, 3way duff, search in path.. . hardly any of the Browser-Based IDEs will catch up with Pycharm at this point IMHO
+
+Of course, as already mentioned in the comments, you need to share aka mount your code into  the container. On linux, you plainly use host-volume-mounts from your local src folder to the container.
+
+On OSX, you will run into performance issues when using host mounts. You might use something like http://docker-sync.io ( i am biased - there are also a lot of other similar tools )
+    
+    
+Answer 2: 
+
+    
+    
+Could use x11docker
+
+
+x11docker allows to run graphical desktop applications (and entire desktops) in Docker Linux containers.
+Docker allows to run applications in an isolated container environment. Containers need much less resources than virtual machines for similar tasks.
+Docker does not provide a display server that would allow to run applications with a graphical user interface.
+x11docker fills the gap. It runs an X display server on the host system and provides it to Docker containers.
+Additionally x11docker does some security setup to enhance container isolation and to avoid X security leaks. This allows a sandbox environment that fairly well protects the host system from possibly malicious or buggy software.
+
+
+
+https://github.com/mviereck/x11docker
+https://github.com/mviereck/x11docker/wiki (extensive! knowledge)
+https://dev.to/brickpop/my-dream-come-true-launching-gui-docker-sessions-with-dx11-in-seconds-1a53
+
+    
+    
+Title: IDEs that can embed gVim as editor
+Description: 
+    
+    
+                    
+Are there any IDEs that can embed gvim as its editor? I found PIDA for linux, I'm wondering if there are any windows equivalent for this. I'm not looking for Vi emulation, I am looking for IDEs that can fully embed gVim (so I can use all the Vim plugins).
+    
+
+        
+Answer 1: 
+
+    
+    
+Other than PIDA the only one I know is eclim which has a couple of modes (control eclipse from vim or embed vim inside eclipse window). I haven't tried it myself but it looks like it supports Windows...
+
+You can find a more comprehensive discussion of this with lots of projects (past and present) here.
+    
+    
+Answer 2: 
+
+    
+    
+You can use it with Visual Studio:
+
+visual_studio.vim
+    
+    
+Answer 3: 
+
+    
+    
+ViEmu is an add-in for Visual Studio that provides a Vim environment in the editor. It is commercial and highly polished.
+    
+    
+Answer 4: 
+
+    
+    
+NetBeans has support for jvi, which is a Java port of vim. For every day programming, I hardly notice any functional difference between jvi and vim (except sometimes ^W does not work in edit mode.)
+
+Support for code completion, clickable function navigation, inline documentation, syntax highlighting, and other native Netbeans editor functionality is preserved. That is, jvi functionality does not remove native functionality, as I have experienced with other vim plugins that I have tried before.
+    
+    
+Answer 5: 
+
+    
+    
+Eclipse can run with vim embedded if you install eclim.
+    
+    
+Title: Does an (experimental) class browser exist for Ruby?
+Description: 
+    
+    
+                    
+Does an (experimental) class browser exist for Ruby?
+
+I am talking about a class browser/editor combination similar to that of most Smalltalk implementations (i.e. focused on [runtime] classes/objects instead of .rb files)
+
+
+
+P.S.: it looks like pry is already able to do a lot of the things that would be needed by a smalltalk style class browser? https://speakerdeck.com/u/rahult/p/pry-an-irb-alternative-on-steroids
+
+P.S.2: Looks like the Seaside Smalltalk framework has a web browser based class browser
+
+P.S.3: MagLev/Webtools is the closest I have found yet:
+
+
+
+P.S.4: Apparently http://tibleiz.net/code-browser/index.html has Ruby support and is able to present a Smalltalk like class browser:
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Check out the maglev/webtools project on github, as well as the rubymirrors gem. It already provides a class browser and workspace for multiple Ruby implementations, and a graphical debugger works on MagLev as well (not so much on MRI).
+    
+    
+Answer 2: 
+
+    
+    
+If you want to build one, the easiest would be to use MOOSE and build the browser with Glamour, on top of a Ruby parser written in PetitParser. Then you could use Pharo as your Ruby IDE.
+    
+    
+Answer 3: 
+
+    
+    
+You can have a look at the Maglev Database Explorer [1, 2] as well.
+
+[1] Video: http://www.youtube.com/watch?v=27mS1BNP7wQ
+
+[2] Gem: https://github.com/matthias-springer/maglev-database-explorer-gem
+    
+    
+Answer 4: 
+
+    
+    
+There is. It is called Reflexive. https://github.com/dolzenko/reflexive
+
+(I've never taken the time to try it though, so I am curious about other experiences with it.)
+    
+    
+Answer 5: 
+
+    
+    
+I have no experience with it (and it is old), but may be rbbr still works.
+    
+    
+Title: Getting six and six.moves modules to autocomplete in pycharm
+Description: 
+    
+    
+                    
+Is it possible to get imports for the six module to work in pycharm? I realize the module does some playing with imports that confuses pycharm but was hoping there was some type of workaround.
+
+For example, I'd like the following to work properly in pycharm or intellij::
+
+from six.moves import BaseHTTPServer
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The imports are dynamic so pycharm can't do any static analysis of the code to determine the type information.
+
+Pycharm gets around this for languages like javascript by using static type definition files (Settings -
+Title: Re-importing Modules into IntelliJ
+Description: 
+    
+    
+                    
+I am having trouble re-importing previously imported and removed maven modules on IntelliJ. The only way I am able to import them is by renaming them (changing folder names), which I don't want to do. When I go through the wizard I get the message: Unable to proceed. Nothing found to import. My project is grayed out in the Window that says select Maven project to import. I am guessing IntelliJ caches names of imported modules somewhere and doesn't purge them when you remove the modules. Anybody able to help?
+    
+
+        
+Answer 1: 
+
+    
+    
+This happened to me as well, what I did:
+
+Go to File 
+Answer 2: 
+
+    
+    
+Are you aware of this button on the Maven tab?  It may fix your issue.  
+
+
+
+Also, this may be a cache issue.  You can clear your cache by clicking File -/pp/p/div
+Answer 3: 
+
+    
+    
+I was able to fix this in IntelliJ 2016.3 by right-clicking relevant pom.xml file and selecting: Maven /pp/p/div
+Answer 4: 
+
+    
+    
+In my case I could not import because maven item was absent:
+
+
+
+How to fix: Maven Integration Extension - restart (Enable)
+    
+    
+Answer 5: 
+
+    
+    
+As tieTYT said, On Mac OSX, IJ 12.1.4, if you tilt your head to the right, you should see a Maven Projects tab, click on that. There will be a blue refresh button which would say 'reimport all maven projects'. That's the one.
+    
+    
+Answer 6: 
+
+    
+    
+This happened to me when I was in debug mode, even without active breakpoint.
+So, interrupt debug mode may be helpful.
+    
+    
+Answer 7: 
+
+    
+    
+The Above did not work for me.
+This is what worked:
+Right click on the pom.xml and choose option to "Mark as XML".
+    
+    
+Title: Missing dependencies causing Keyring error when opening Spyder3 on Ubuntu18?
+Description: 
+    
+    
+                    
+I'm fairly new to programming and such. I'm trying to use Spyder3, and I keep getting this error (below). I am using Geforce 1080ti, Ubuntu 18.04.01, python3.3.6, python2 is not installed. I tried $ pip3 install keyring, which is now installed but still receiving error.
+
+$ spyder3
+Error initializing plugin EntryPoint('Windows (alt)', 'keyrings.alt.Windows', None, Distribution('keyrings.alt', '3.0')).
+Traceback (most recent call last):
+  File "/home/usr/.local/lib/python3.6/site-packages/keyring/backend.py", line 163, in _load_plugins
+    init_func = ep.load()
+  File "/home/usr/.local/lib/python3.6/site-packages/entrypoints.py", line 77, in load
+    mod = import_module(self.module_name)
+  File "/usr/lib/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "&lt;frozen importlib._bootstrap&gt;", line 994, in _gcd_import
+  File "&lt;frozen importlib._bootstrap&gt;", line 971, in _find_and_load
+  File "&lt;frozen importlib._bootstrap&gt;", line 955, in _find_and_load_unlocked
+  File "&lt;frozen importlib._bootstrap&gt;", line 665, in _load_unlocked
+  File "&lt;frozen importlib._bootstrap_external&gt;", line 678, in exec_module
+  File "&lt;frozen importlib._bootstrap&gt;", line 219, in _call_with_frames_removed
+  File "/usr/lib/python3/dist-packages/keyrings/alt/Windows.py", line 9, in &lt;module&gt;
+    from . import file_base
+  File "/usr/lib/python3/dist-packages/keyrings/alt/file_base.py", line 13, in &lt;module&gt;
+    from keyring.util.escape import escape as escape_for_ini
+ModuleNotFoundError: No module named 'keyring.util.escape'
+Error initializing plugin EntryPoint('file', 'keyrings.alt.file', None, Distribution('keyrings.alt', '3.0')).
+Traceback (most recent call last):
+  File "/home/usr/.local/lib/python3.6/site-packages/keyring/backend.py", line 163, in _load_plugins
+    init_func = ep.load()
+  File "/home/usr/.local/lib/python3.6/site-packages/entrypoints.py", line 77, in load
+    mod = import_module(self.module_name)
+  File "/usr/lib/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "&lt;frozen importlib._bootstrap&gt;", line 994, in _gcd_import
+  File "&lt;frozen importlib._bootstrap&gt;", line 971, in _find_and_load
+  File "&lt;frozen importlib._bootstrap&gt;", line 955, in _find_and_load_unlocked
+  File "&lt;frozen importlib._bootstrap&gt;", line 665, in _load_unlocked
+  File "&lt;frozen importlib._bootstrap_external&gt;", line 678, in exec_module
+  File "&lt;frozen importlib._bootstrap&gt;", line 219, in _call_with_frames_removed
+  File "/usr/lib/python3/dist-packages/keyrings/alt/file.py", line 11, in &lt;module&gt;
+    from keyring.util.escape import escape as escape_for_ini
+ModuleNotFoundError: No module named 'keyring.util.escape'
+Error initializing plugin EntryPoint('pyfs', 'keyrings.alt.pyfs', None, Distribution('keyrings.alt', '3.0')).
+Traceback (most recent call last):
+  File "/home/usr/.local/lib/python3.6/site-packages/keyring/backend.py", line 163, in _load_plugins
+    init_func = ep.load()
+  File "/home/usr/.local/lib/python3.6/site-packages/entrypoints.py", line 77, in load
+    mod = import_module(self.module_name)
+  File "/usr/lib/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "&lt;frozen importlib._bootstrap&gt;", line 994, in _gcd_import
+  File "&lt;frozen importlib._bootstrap&gt;", line 971, in _find_and_load
+  File "&lt;frozen importlib._bootstrap&gt;", line 955, in _find_and_load_unlocked
+  File "&lt;frozen importlib._bootstrap&gt;", line 665, in _load_unlocked
+  File "&lt;frozen importlib._bootstrap_external&gt;", line 678, in exec_module
+  File "&lt;frozen importlib._bootstrap&gt;", line 219, in _call_with_frames_removed
+  File "/usr/lib/python3/dist-packages/keyrings/alt/pyfs.py", line 8, in &lt;module&gt;
+    from keyring.util.escape import escape as escape_for_ini
+ModuleNotFoundError: No module named 'keyring.util.escape'
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Fix it with:
+
+pip3 install --upgrade keyrings.alt 
+
+    
+    
+Title: How to change the highlight variable color in NetBeans IDE?
+Description: 
+    
+    
+                    
+I am talking about this background color underneath droparea variable, see screenshot:  
+
+
+
+My color scheme would be perfect if I get just that resolved.
+    
+
+        
+Answer 1: 
+
+    
+    
+The Category you are looking for is Mark Occurrences, but it is language specific so you won't find it under All Languages. You will see it when you change the Language to Java for instance. Then you have to change the Background field on the right hand side.
+    
+    
+Title: where is ~\.vim folder in mac os? and how to install themes in gvim?
+Description: 
+    
+    
+                    
+I downloaded color sample pack from http://vim.sourceforge.net/scripts/script.php?script_id=625
+
+it says i should unzip and place it into ~/.vim but where is this folder? I tried unzip it to my usr/share/.vim folder but it is not working, I don't see themes added to gvim Edit/pp/pp/pp/p/div
+Answer 1: 
+
+    
+    
+First of all, open vim, and get help from :help colorscheme
+
+:colo[rscheme] {name}   Load color scheme {name}.  This searches 'runtimepath'
+                        for the file "colors/{name}.vim.  The first one that
+                        is found is loaded.
+
+
+After reading the manual above.
+Take the following steps maybe help you:
+
+
+find runtimepath
+
+:set runtimepath?
+
+
+It will print out run-time paths:
+runtimepath=~/.vim,/usr/share/vim/vimfiles,/usr/share/vim/vim71,/usr/share/vim/vimfiles/after,~/.vim/after
+create directory called colors under one of them if not exist(for example: ~/.vim)
+
+$ ls ~/.vim
+ls: cannot access /root/.vim: No such file or directory &lt;== we need create it!!!
+$ mkdir -p ~/.vim/colors
+
+copy your color.vim to your colors directory
+
+$ cp /path/to/your/color.vim  ~/.vim/colors
+
+restart vim to use new colorscheme
+
+:colorscheme color
+
+(optional) put command above to ~/.vimrc file to make it permanent
+
+    
+    
+Answer 2: 
+
+    
+    
+In UNIX parlance, ~ represents your home folder which is /Users/&lt;username&gt; in Mac OS X.
+
+You are supposed to put all your custom scripts/colorschemes/whatever in a .vim folder situated in your home folder. In Terminal.app, type each line (without the $) then hit Enter:
+
+$ cd
+
+
+to be sure you are in your home folder
+
+$ mkdir .vim
+
+
+here you'll have an error message if ~/.vim already exists; if you don't receive a message it means that the folder is created
+
+$ cd .vim
+
+
+to move into it
+
+$ open .
+
+
+to open a Finder window here. At this point you should follow specific indications.
+    
+    
+Title: How do I run JUnit from NetBeans?
+Description: 
+    
+    
+                    
+I've been trying to understand how to start writing and running JUnit tests.
+
+When I'm reading this article:
+
+http://junit.sourceforge.net/doc/testinfected/testing.htm
+
+I get the the middle of the page and they write, "JUnit comes with a graphical interface to run tests. Type the name of your test class in the field at the top of the window. Press the Run button."
+
+I don't know how to launch this program.  I don't even know which package it is in, or how you run a library class from an IDE.  
+
+Being stuck, I tried this NetBeans tutorial:  
+
+http://www.netbeans.org/kb/docs/java/junit-intro.html
+
+It seemed to be going OK, but then I noticed that the menu options for this tutorial for testing a Java Class Library are different from those for a regular Java application, or for a Java Web App.  So the instructions in this tutorial don't apply generally.
+
+I'm using NetBeans 6.7, and I've imported JUnit 4.5 into the libraries folder.  What would be the normal way to run JUnit, after having written the tests?
+
+The JUnit FAQ describes the process from the Console, and I'm willing to do that if that is what is typical, but given all that I can do inside netbeans, it seems hard to believe that there isn't an easier way.
+
+Thanks much.
+
+EDIT:  If I right-click on the project and select "Test" the output is:
+
+init:
+deps-jar:
+compile:
+compile-test:
+test-report:
+test:
+BUILD SUCCESSFUL (total time: 0 seconds)
+
+
+This doesn't strike me as the desired output of a test, especially since this doesn't change whether the test condition is true or not.
+
+Any ideas?
+    
+
+        
+Answer 1: 
+
+    
+    
+One way is to right click on your project in the Projects pane and select "Tests". That will run the JUnit tests. You can also right click on the test file and select "Run Test" and that single file will be ran. The keyboard shortcuts depends on how you have your keymapping set, but you'll see them in the context menus.
+
+You can also have NetBeans autogenerate tests for you by right clicking your source file and then "Tools /p/div
+Answer 2: 
+
+    
+    
+Re-importing does not appear to be necessary.  I had the same issue (imported project, right clicking did not bring up any JUnit test options).  I took these steps, which resolved it, using NetBeans 6.8:
+
+
+Add a folder called "tests" to your project.
+Right-click your project and select Properties.
+Select Sources.
+Under Test Package Folders, click the Add Folder button, and select the "tests" folder.
+Right clicking a file + Tools /lili/li/ol/div
+Answer 3: 
+
+    
+    
+I had the same issue after imported a eclipse project into NetBeans.
+
+To resolve it, I followed the above steps outlined by alangalloway, but instead of
+creating a new folder, I just pointed to the imported test folder.
+
+Maybe in future release, NetBeans can automatically recognize imported test cases.
+
+Thanks.
+    
+    
+Answer 4: 
+
+    
+    
+All the above answers are correct, but if you are using in mac little change needed. 
+
+Step 1 Write your junit class.
+
+Step 2 Right click on the class -
+Answer 5: 
+
+    
+    
+Even though I've accepted an answer, I thought I should mention my difficulty, as someone else may encounter it.
+
+When importing a project from existing sources into NetBeans, if you do not specify a folder for test packages, then NetBeans will not offer the JUnit options on the tools menu.
+
+The only solution I found was to re-import the project.  While primitive, it worked.
+    
+    
+Answer 6: 
+
+    
+    
+Had a similar issue. In Netbeans 7.0.1, what worked for me was to locate the project.xml file (i.e. {project}/nbproject/project.xml) and change:
+
+        &lt;test-roots/&gt;
+
+
+to:
+
+        &lt;test-roots&gt;
+            &lt;root id="src.dir"/&gt;
+        &lt;/test-roots&gt;
+
+
+(in my case the test files are in the same dir as the source dir)
+    
+    
+Title: VS 2008, MFC: add OnInitDialog - how?
+Description: 
+    
+    
+                    
+This is my first MFC application away from VC6, and I feel a little bit stupid:
+
+How do I add the OnInitDialog handler?
+(I know how to add it manually, but that's a pain in the long run).
+
+double-clicking the dialog - nothing.
+right click the dialog - "add event handler" is disabled.
+Properties - Messages has "normal" messages, but not WM_INITDIALOG
+Properties - Events only holds notifications from contained controls
+right-clicking in class view - "Add.." only has functions and variables
+
+scratches head
+
+[edit] d'oh - it's a virtual function in MFC, but still...
+    
+
+        
+Answer 1: 
+
+    
+    
+Don't feel stupid, it took me forever to figure this out when I first moved from VC6 to VS2008!
+
+Anyway, and also for my own reference, here are the complete steps for adding a dialog box and overriding the OnInitDialog method:
+
+
+Select Resource View and expand the .rc file.
+Right-click the Dialog entry in the tree view and select Insert Dialog.
+Select the Properties window. (Note: If you don't see this window, select the View strong/strong
+Answer 2: 
+
+    
+    
+It appears that you don't even have to open the header file and mess around placing the cursor... After creatingthe class, select the class in the ClassView pane and you can change overrides/messages/events in the Property pane as described above.
+    
+    
+Answer 3: 
+
+    
+    
+Open Class Wizard, then go to Virtual Functions Tab.
+Double Click on which functions you want to override
+    
+    
+Title: Deactivate MEvent.CASE in Java IDEs
+Description: 
+    
+    
+                    
+I'm using MATLAB R2014a on my laptop running Ubuntu 14.04 LTS, and am experiencing a rather annoying issue. Whenever I use the two-finger scrolling gesture on my touchpad in either the editor or the main window, the following output appears in the command window:
+
+MEvent. CASE!
+
+While the scrolling works, this line is output over and over again as I continue to perform the gesture.
+
+Any ideas for how to stop this from happening?
+
+NOTE: It also occurs in Processing and Arduino IDE
+    
+
+        
+Answer 1: 
+
+    
+    
+As a user I wouldn't want to type the above command everytime I open MATLAB. So I searched a bit on matlab 'startup' command line section, 
+and the 'search path' section. I solved my problem after doing the following simple steps:
+
+
+See your userpath by typing userpath in MATLAB console:  For
+linux it is:  home/username/Documents/MATLAB/ 
+Create a file
+    'startup.m' having only one line, which will disable Mevent.CASE! 
+    (Below is the text to copy)
+
+!synclient HorizEdgeScroll=0 HorizTwoFingerScroll=0
+
+Place the created startup.m file in your userpath folder as defined in MATLAB.
+Now as soon as you place this file in your userpath, restart MATLAB.
+Verify by seeing ans = 0 in the workspace section. 
+
+
+It worked for me on Ubuntu 15.04 running MATLAB R2015b, I hope it works for you all as well. 
+
+Note: This is an improvement to @someDude and @Slothworks answer.
+    
+    
+Answer 2: 
+
+    
+    
+None of these solutions worked for me. Moreover I like to keep the two finger scrolling.
+This works for me:
+
+MATLAB relies on jdk7, jdk8 will not work with it. It appears 16.04 and later no longer provide openjdk-7-jre in the repos, and it must be installed from external sources. To install it:
+
+sudo add-apt-repository ppa:openjdk-r/ppa  
+sudo apt-get update   
+sudo apt-get install openjdk-7-jdk
+
+
+Ensure that you have correctly set the MATLAB_JAVA variable. This can be checked with:
+
+echo $MATLAB_JAVA
+
+
+If the output is empty, this variable is empty. It can be set with
+
+export MATLAB_JAVA=/usr/lib/jvm/java-7-openjdk-amd64/jre
+
+
+Then, execute MATLAB from the same shell with whatever command you use to call MATLAB, usually
+
+matlab
+
+
+In the MATLAB command window, run
+
+version -java
+
+
+and verify that the output contains "OpenJDK". If all is successful, you should no longer see the MEvent. CASE! error message.
+
+To make this persistent: 
+add 
+
+export MATLAB_JAVA=/usr/lib/jvm/java-7-openjdk-amd64/jre        
+
+
+to the /etc/profile file (for system wide change) or to ~/.profile for local user
+
+Source: https://www.reddit.com/r/matlab/comments/5anydi/how_to_stop_mevent_case_from_appearing/
+    
+    
+Answer 3: 
+
+    
+    
+Deactivating horizontal scrolling may fix the issue. Try running the following at the gnome-terminal:
+
+synclient HorizEdgeScroll=0 HorizTwoFingerScroll=0
+
+
+Or the following in the MATLAB console:
+
+!synclient HorizEdgeScroll=0 HorizTwoFingerScroll=0
+
+
+(source: http://www.mathworks.com/matlabcentral/answers/112528-mevent-case-when-two-finger-scrolling)
+    
+    
+Answer 4: 
+
+    
+    
+GNOME 3.20 ::SYNCLIENT IS OBSOLETE,
+Fixing the MEvent. CASE! error in MATLAB  for  xinput
+
+The suggested solution is to run
+
+!synclient HorizTwoFingerScroll=0
+
+
+as part of your startup file to disable horizontal scrolling. This however does not work on more recent linux versions because the synaptics touchpad driver is being deprecated in favour of libinput. The new solution to this problem is slightly more complex however.
+First we need to find the id of the touchpad device with the xinput list command from a terminal (not the MATLAB command window). You should see something like:
+
+~$ xinput list
+
+⎡ Virtual core pointer                          id=2    [master pointer  (3)]
+⎜   ↳ Virtual core XTEST pointer                id=4    [slave  pointer  (2)]
+⎜   ↳ SynPS/2 Synaptics TouchPad                id=13   [slave  pointer  (2)]
+⎜   ↳ ELAN Touchscreen                          id=11   [slave  pointer  (2)]
+
+
+We are interested in the SynPS/2 Synaptics TouchPad which in this case has id=13. We can see the configuration options supported by this device by running :
+
+~$ xinput list-props 13
+
+
+Remember to change 13 to the id of the touchpad on your machine ! In the output you should see a line like:
+
+Synaptics Two-Finger Scrolling (283):   1, 1
+
+
+This tells you that two finger scrolling is enabled in the vertical and horizontal directions. To change this run :
+
+~$ xinput set-prop 13 "Synaptics Two-Finger Scrolling" 1 0
+
+
+If you couldn't find the "Two-Finger Scrolling" line all is not lost. Look for a line related to horizontal scrolling. In my case that was:
+
+libinput Horizonal Scroll Enabled (266):    1
+
+
+and the command used to disable this property is:
+
+~$ xinput set-prop 13 "libinput Horizonal Scroll Enabled" 0
+
+
+To have this run automatically every time you run MATLAB you can add
+
+!xinput set-prop 13 "libinput Horizonal Scroll Enabled" 0
+
+
+to your startup file.
+    
+    
+Answer 5: 
+
+    
+    
+For people who doesn't have simulink but x-input
+This is an improvement of Riyas Jaleel to only disabled horizontal scroll in matlab but not in others app.
+
+First of all install xdotool that allows to know the current window name
+
+sudo apt install xdotool
+
+
+src : https://unix.stackexchange.com/questions/256713/how-to-execute-a-command-on-window-focus-unfocus
+
+Now create a script named patchScroll.sh in the bin folder of matlab with the following content
+
+  while [ true ]
+    do
+        window=`xdotool getwindowfocus getwindowname`
+        is_enabled=2
+        if [ "$window" = "MATLAB R2017a" ]; then
+            if [ "$is_enabled" != "0" ]; then
+                xinput set-prop 13 "libinput Horizonal Scroll Enabled" 0
+                is_enabled=0
+                echo "is_enable $is_enabled"
+            fi
+        else
+            if [ "$is_enabled" != "1" ]; then
+                xinput set-prop 13 "libinput Horizonal Scroll Enabled" 1
+                is_enabled=1
+                echo "is_enable $is_enabled"
+            fi
+        fi
+        sleep 1
+    done
+
+
+now in the matlab file in bin folder that launch matlab 
+add
+./patchScroll.sh &amp; between first and current second line
+
+We can't directly put the code in matlab file because the loop is infinite and it will block the launch of matlab, it is why we use &amp; at end.
+    
+    
+Title: VS 2015: No highlighting and intellisense in JS files
+Description: 
+    
+    
+                    
+I can't really reproduce the issue, but no highlighting or intellisense is working in .js files, it works just fine in .json files however.
+The default editor for .js files is JSON Editor.
+I tried safe-mode, disabling all extensions, resetting all settings, and I even reinstalled the IDE (repair), but the issue still persists.
+I will add, that when I launch the IDE and a JS file is open on scope, I get the following error message (highlighting and intellisense don't work anyway):
+
+The 'JavaScriptWebExtensionPackage' package did not load correctly.
+The problem may have been caused by a configuration change or by the installation of another extension. You can get more information examining the file 'C:\Users\Shimmy\AppData\Roaming\Microsoft\VisualStudio\14.0\ActivityLog.xml'.
+Restarting Visual Studio could help resolve the issue.
+Continue to show this error message?
+
+Here you can view the ActivityLog.xml file, I pasted in some of the recent lines I think might be relevant:
+&lt;entry&gt;
+  &lt;record&gt;188&lt;/record&gt;
+  &lt;time&gt;2015/08/14 13:00:57.332&lt;/time&gt;
+  &lt;type&gt;Information&lt;/type&gt;
+  &lt;source&gt;VisualStudio&lt;/source&gt;
+  &lt;description&gt;Begin package load [JavaScriptWebExtensionsPackage]&lt;/description&gt;
+  &lt;guid&gt;{30DB8F9B-EC9F-44D6-B377-83C7C27A1A8B}&lt;/guid&gt;
+&lt;/entry&gt;
+&lt;entry&gt;
+  &lt;record&gt;189&lt;/record&gt;
+  &lt;time&gt;2015/08/14 13:00:57.394&lt;/time&gt;
+  &lt;type&gt;Error&lt;/type&gt;
+  &lt;source&gt;VisualStudio&lt;/source&gt;
+  &lt;description&gt;SetSite failed for package [JavaScriptWebExtensionsPackage]&lt;/description&gt;
+  &lt;guid&gt;{30DB8F9B-EC9F-44D6-B377-83C7C27A1A8B}&lt;/guid&gt;
+  &lt;hr&gt;80131500&lt;/hr&gt;
+  &lt;errorinfo&gt;Expected 1 export(s) with contract name &quot;Microsoft.VisualStudio.JavaScript.Web.Extensions.ReferenceAutoSync.IReferencesFilePathProvider&quot; but found 0 after applying applicable constraints.&lt;/errorinfo&gt;
+&lt;/entry&gt;
+&lt;entry&gt;
+  &lt;record&gt;190&lt;/record&gt;
+  &lt;time&gt;2015/08/14 13:00:57.394&lt;/time&gt;
+  &lt;type&gt;Error&lt;/type&gt;
+  &lt;source&gt;VisualStudio&lt;/source&gt;
+  &lt;description&gt;End package load [JavaScriptWebExtensionsPackage]&lt;/description&gt;
+  &lt;guid&gt;{30DB8F9B-EC9F-44D6-B377-83C7C27A1A8B}&lt;/guid&gt;
+  &lt;hr&gt;80131500&lt;/hr&gt;
+  &lt;errorinfo&gt;Expected 1 export(s) with contract name &quot;Microsoft.VisualStudio.JavaScript.Web.Extensions.ReferenceAutoSync.IReferencesFilePathProvider&quot; but found 0 after applying applicable constraints.&lt;/errorinfo&gt;
+&lt;/entry&gt;
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I found answer here: Visual Studio 2015 RTM - Lost JavaScript support after update TypeSript Tools
+
+These are the steps to fix it:
+
+
+  If the “Universal Windows App Development Tools” are still installed: 
+  
+  
+  Go to Programs and Features, select Visual Studio 2015, click Change.
+  In Visual Studio setup, click Modify.
+  Deselect the feature “Universal Windows App Development Tools”
+  Select “Universal Windows App Development Tools” again, and click Update.
+  
+  
+  If you have already uninstalled the “Universal Windows App Development Tools”: 
+  
+  
+  Reinstall “Universal Windows App Development Tools”
+  Or, take the following steps to reinstall the JavaScript project system and language service:
+  
+  
+  Download the installer for your edition of Visual Studio, e.g., vs_community.exe.
+  Open a CMD window, and run the following command: vs_community.exe /modify /installselectableitems JavaScript_Hidden /passive
+  
+  
+
+
+I've followed the first steps and got back Javascript support.
+
+Hope this helps
+
+-UPDATED- 
+
+After I did the above steps, almost everything was working, except that I got an error message every time I opened a .js file, the following did the trick:
+
+My guess is that only reinstalling the SDK didn't update the MEF cache. You can do this manually by following these steps:
+
+
+  Open a command prompt as administrator
+  
+  
+  CD into C:\Program Files (x86)\Microsoft Visual Studio
+  14.0\Common7\IDE 
+  Run devenv /updateconfiguration
+  Run devenv /clearcache
+  
+
+
+That got rid of the last error, and everything is working fine.
+
+Source: https://github.com/Microsoft/TypeScript/issues/4238
+    
+    
+Answer 2: 
+
+    
+    
+The issue seems to be fixed on Update 1. I'm on the professional version but I imagine that it applies to all versions.
+
+To be clear, Intellisense was not working for me for css related stuff on razor files and post update 1 it seems to be working.
+    
+    
+Answer 3: 
+
+    
+    
+I know this question is clearly targeting Visual Studio 2015.
+
+However, I wanted to put my two cents in for those who desperately tried out if the accepted answer also works for Visual Studio 2017.
+
+In my case, the loss of syntax highlighting was caused by the new javascript language service. I got it back right after deselecting the following checkbox and restarting Visual Studio:
+
+
+  Tools 
+Title: SQL server 2012 SP_HELPTEXT extra lines issue
+Description: 
+    
+    
+                    
+I am using SQL server 2012, &amp; always use SP_HELPTEXT to get my previously created Stored Procedures, In previous versions of SQL server there were no issues in this process but in 2012, My Stored Procedures come with extra lines, for example this is the procedure that I wrote
+
+Create proc SP_Test
+as
+begin
+ Select * 
+ from table_ABC
+end
+
+
+Now after using SP_HELPTEXT with this procedure (or any other procedure), I am getting this output
+
+Create proc SP_Test
+
+as
+
+begin
+
+ Select * 
+
+ from table_ABC
+
+end
+
+
+Do any one else also facing this problem or I am the only one on this planet to struggle with this issue ??
+Does any body know how to solve this issue ??
+
+Configuration of my SQL server is as follows (copied from Help -/strong/pprecode/code/prep/p/div
+Answer 1: 
+
+    
+    
+I can replicate this behaviour if I run sp_helptext with Results to grid set, then copy and paste the results from grid into a new query or any other text editor.
+
+This seems to be a change in the behaviour of sp_helptext from previous editions, since this effect isn't displayed with standard grid result sets.
+
+The simplest work-around will be to run sp_helptext with Results to text set (Query -code/code
+Answer 2: 
+
+    
+    
+A better workaround (compared to use Results to text) in my opinion is to create an sp_helptext2 storedproc as explained here: 
+
+http://sql-javier-villegas.blogspot.com/2012/08/a-workaround-for-sphelptext-bug-in-ssms.html
+
+Note: that solution has a bug leaving out the last line if there is no new line at the end. 
+Corrected T-SQL: 
+
+CREATE PROCEDURE [dbo].[sp_helptext2] (@ProcName NVARCHAR(256))
+AS
+BEGIN
+  DECLARE @PROC_TABLE TABLE (X1  NVARCHAR(MAX))
+
+  DECLARE @Proc NVARCHAR(MAX)
+  DECLARE @Procedure NVARCHAR(MAX)
+  DECLARE @ProcLines TABLE (PLID INT IDENTITY(1,1), Line NVARCHAR(MAX))
+
+  SELECT @Procedure = 'SELECT DEFINITION FROM '+db_name()+'.SYS.SQL_MODULES WHERE OBJECT_ID = OBJECT_ID('''+@ProcName+''')'
+
+  insert into @PROC_TABLE (X1)
+        exec  (@Procedure)
+
+  SELECT @Proc=X1 from @PROC_TABLE
+
+  WHILE CHARINDEX(CHAR(13)+CHAR(10),@Proc) &gt; 0
+  BEGIN
+        INSERT @ProcLines
+        SELECT LEFT(@Proc,CHARINDEX(CHAR(13)+CHAR(10),@Proc)-1)
+        SELECT @Proc = SUBSTRING(@Proc,CHARINDEX(CHAR(13)+CHAR(10),@Proc)+2,LEN(@Proc))
+  END
+  --* inserts last line
+  insert @ProcLines 
+  select @Proc ;
+
+  SELECT Line FROM @ProcLines ORDER BY PLID
+END
+
+    
+    
+Answer 3: 
+
+    
+    
+The answer posted by Rufo still produces blank lines. A little change in the last line of code solved the issue for me. Here is the edited code:
+
+CREATE PROCEDURE [dbo].[sp_helptext2] (@ProcName NVARCHAR(256))
+AS
+BEGIN
+  DECLARE @PROC_TABLE TABLE (X1  NVARCHAR(MAX))
+
+  DECLARE @Proc NVARCHAR(MAX)
+  DECLARE @Procedure NVARCHAR(MAX)
+  DECLARE @ProcLines TABLE (PLID INT IDENTITY(1,1), Line NVARCHAR(MAX))
+
+  SELECT @Procedure = 'SELECT DEFINITION FROM '+db_name()+'.SYS.SQL_MODULES WHERE OBJECT_ID = OBJECT_ID('''+@ProcName+''')'
+
+  insert into @PROC_TABLE (X1)
+        exec  (@Procedure)
+
+  SELECT @Proc=X1 from @PROC_TABLE
+
+  WHILE CHARINDEX(CHAR(13)+CHAR(10),@Proc) &gt; 0
+  BEGIN
+        INSERT @ProcLines
+        SELECT LEFT(@Proc,CHARINDEX(CHAR(13)+CHAR(10),@Proc)-1)
+        SELECT @Proc = SUBSTRING(@Proc,CHARINDEX(CHAR(13)+CHAR(10),@Proc)+2,LEN(@Proc))
+  END
+ --* inserts last line
+ insert @ProcLines 
+ select @Proc ;
+
+ --edited here. (where Line&lt;&gt;'')
+ SELECT Line FROM @ProcLines where Line&lt;&gt;'' ORDER BY PLID
+END
+
+
+Even though this removes the "original carriage returns", but this is way better to live with. I migrated by DB from SQL 2008 to SQL 2012 and all the stored procedures (more than 200) were returned with around 5 carriage returns after every line of code when using sp_helptext.
+
+The above code helped me resolve it.
+    
+    
+Answer 4: 
+
+    
+    
+I wrote another workaround that just replaces the CrLf:
+
+DECLARE @results table ([Text] nvarchar(255))
+
+INSERT @results
+Exec sp_helptext spStudyRoleCacheFlushNotificationGet
+
+SELECT REPLACE(REPLACE([Text], CHAR(10), ''), CHAR(13), '')
+FROM @results
+
+    
+    
+Answer 5: 
+
+    
+    
+I've been using Rufo's solution, but I just realized it breaks when the database has a dash. Example: [ST-SALES].
+
+For what it's worth, this is an updated answer based on Rufo's solution.
+
+ALTER PROCEDURE [dbo].[sp_helptext2] (@ProcName NVARCHAR(256))
+AS
+BEGIN
+  DECLARE @PROC_TABLE TABLE (X1  NVARCHAR(MAX))
+
+  DECLARE @Proc NVARCHAR(MAX)
+  DECLARE @Procedure NVARCHAR(MAX)
+  DECLARE @ProcLines TABLE (PLID INT IDENTITY(1,1), Line NVARCHAR(MAX))
+
+  SELECT @Procedure = 'SELECT DEFINITION FROM ['+db_name()+'].SYS.SQL_MODULES WHERE OBJECT_ID = OBJECT_ID('''+@ProcName+''')'
+
+  insert into @PROC_TABLE (X1)
+        exec  (@Procedure)
+
+  SELECT @Proc=X1 from @PROC_TABLE
+
+  WHILE CHARINDEX(CHAR(13)+CHAR(10),@Proc) &gt; 0
+  BEGIN
+        INSERT @ProcLines
+        SELECT LEFT(@Proc,CHARINDEX(CHAR(13)+CHAR(10),@Proc)-1)
+        SELECT @Proc = SUBSTRING(@Proc,CHARINDEX(CHAR(13)+CHAR(10),@Proc)+2,LEN(@Proc))
+  END
+  --* inserts last line
+  insert @ProcLines 
+  select @Proc ;
+
+  SELECT Line FROM @ProcLines ORDER BY PLID
+END
+
+    
+    
+Answer 6: 
+
+    
+    
+Use the below query to get exact SP query without extra spaces:
+(SELECT  OBJECT_DEFINITION (OBJECT_ID('SPname' )))
+
+    
+    
+Answer 7: 
+
+    
+    
+I too faced this issue for a view.
+Below are steps i used to resolve the issue (note only a temporary fix)
+1)select the query
+2)then right click and open in query designer
+3)click ok
+you would notice all the extra spaces are removed.
+Note: this works only for simple queries not for procedures,etc
+    
+    
+Answer 8: 
+
+    
+    
+There are two type of solution which you can use for remove extra space from sp_helptext output
+
+
+Goto Tools
+Title: TypeScript Web-Based IDE
+Description: 
+    
+    
+                    
+Given the fact that TypeScript is Open Source, is this Web-Based IDE also available as a tool that can be downloaded anywhere?
+
+I'm developing a web application in which the client can write a user-defined expression (with user-defined variables and predefined methods) which is evaluated, compiled and used at runtime on the server using C# .Net. Using TypeScript and its wonderful web-based editor's features like syntax or error highlighting, code completion, method signature suggestion, etc,  saves me lots of trouble in the user interface.
+
+So is this editor also part of TypeScript? If not, is there any other open source solutions with similar capabilities?
+    
+
+        
+Answer 1: 
+
+    
+    
+Update 2017: The Monaco editor used in the TypeScript Playground has been made available on GitHub.
+
+You can also take a look at Visual Studio Code, for a more out-of-browser experience.
+
+There is also a TypeScript editor build on the ACE Editor, which is also on GitHub.
+    
+    
+Answer 2: 
+
+    
+    
+There are some web IDEs with support of TypeScript, namely:
+
+
+Cloud9
+CATS
+JSBin (choose TypeScript from dropdown)
+Baz
+
+
+If you think about making a new one, you could base on one of my 2 projects: TypeScript Compile or TypeScript Interpret ;)
+    
+    
+Answer 3: 
+
+    
+    
+The editor used on the playground is informally known as Monaco and it's used in Visual Studio Code.
+
+UPDATE 11.22.2015:
+Visual Studio Code is now open source, which means we have access to the source of the Monaco Editor. I think this should now give us the ability to use the Monaco Editor in a browser, I'm waiting on a response to my question in the VS Code repostiroy.
+
+
+  The 'editor' (the thing that renders the code with syntax highlighting, line numbers, etc..) part of Visual Studio Code is Microsoft's Monaco editor. It is the same editor used for OneDrive, Windows Azure, TypeScript Playground, and Visual Studio Online. I have yet to find any real documentation on this editor from Microsoft but there are some articles about it around the web.
+
+
+Read more about Visual Studio Code here.
+    
+    
+Answer 4: 
+
+    
+    
+There is an implementation of it which is open source:
+
+https://github.com/jbaron/typescript-playground-on-ace
+    
+    
+Answer 5: 
+
+    
+    
+there is goormIDE which is also cloud IDE
+this is open source or service version
+
+
+http://goorm.io 
+http://github.com/xenoz0718/goorm
+
+
+if you use node.js, just type this command
+
+$ npm install goorm -g
+
+    
+    
+Answer 6: 
+
+    
+    
+I've played with TypeScript Compiler API both in node.js and in the browser. Also with monaco-editor:
+
+
+Playground and COmpiler API examples 100% in the browser https://cancerberosgx.github.io/typescript-in-the-browser/typescript-compiler/
+TS compiler examples and playground which are evaluated in the server: https://typescript-api-playground.glitch.me  
+And an effort (WIP) to build a TS project editor using monaco-editor and typescript 100% in the browser. 
+more info here: https://github.com/cancerberoSgx/typescript-in-the-browser 
+
+
+yes, TypeScript and monaco editor look good, enjoy!
+    
+    
+Answer 7: 
+
+    
+    
+Koding provides a VM with Root so you can install whatever tools you need, and in this case, TypeScript via npm install -g typescript.
+
+VM Domain and Apache is included, so previewing your work in your browser is also easy :)
+    
+    
+Answer 8: 
+
+    
+    
+For very simple stuff you can try out 
+https://chrome.google.com/webstore/detail/typescript-editey/liedfkjkedgcgpddoijfeeeeoikcbmaf
+
+Your typescript files will be converted to a js file on the fly and your site will be hosted for free on Google Drive.
+    
+    
+Answer 9: 
+
+    
+    
+I am using CATS, and I really like it because of two things:
+
+
+The IDE is not so bad. It does it job done, and once you practice with it, you'll like it!
+It's portable
+
+
+THe last is the feature I like the most, because I don't have to install anything (at least, under Windows), and you don't need Visual Studio (it's around 9 Gb and two hours installing).
+
+The TypeScript Playground is a nice editor, but if you need to test small scripts, or want to try something that can be done only in one file!
+    
+    
+Answer 10: 
+
+    
+    
+The editor for the Typescript Playground is called Monaco, and it's available on GH / npm / etc.
+
+http://github.com/Microsoft/monaco-editor
+
+https://www.npmjs.com/package/monaco-editor
+    
+    
+Answer 11: 
+
+    
+    
+As TypeScript's playground source code has not been made available until now, I've published an implementation—also based on the Monaco Editor—with some enhancements regarding compiler options and code execution:
+
+GitHub Repository: https://github.com/fabiandev/typescript-playground
+Online Playground: https://fabiandev.github.io/typescript-playground/
+    
+    
+Title: Setting up Emacs for programming Erlang
+Description: 
+    
+    
+                    
+Emacs is the IDE of choice for programming Erlang.
+
+There are plenty of good modes (distel, erlware-mode, the default erlang mode,...), but what are your recommendations for setting up Emacs for professional Erlang development?
+    
+
+        
+Answer 1: 
+
+    
+    
+Set up erlang-mode as described in the README, and then activate Flymake:
+
+(require 'erlang-flymake)
+
+
+That gives you highlighting of warnings and errors as you type.
+
+I'd recommend using erlang-mode from the latest Erlang/OTP release (R14A as I type this), regardless of what release you normally use, as it evolves quite rapidly and is now just as good as erlware-mode, IMHO.
+
+If you're using Emacs 24 or later, I recommend installing erlang-mode from MELPA.  The 'erlang' package tracks the 'maint' branch of the Erlang/OTP Git repository, so it is always reasonably up-to-date.
+    
+    
+Answer 2: 
+
+    
+    
+If you want more than erlang-mode offers, a possible alternative to Distel is EDTS, the Erlang Development Tool Suite.  To quote the readme file:
+
+
+  EDTS is meant to be a able to replace Distel but only provides part of the most
+  commonly used of Distel's features, specifically the equivalents of
+  erl-find-module, erl-find-source-under-point, erl-who-calls and
+  erl-refactor-subfunction. As far as I know, those are the only Distel features
+  that 98% of people use, but if there is anything from Distel that you are
+  missing in EDTS, please let me know.
+  
+  If you are using EDTS, please remove Distel from your configuration, since
+  running both can create some confusion.
+
+    
+    
+Answer 3: 
+
+    
+    
+Look onto this article about different packages for work with Erlang from Emacs. I personally use erlware-mode + distel
+    
+    
+Answer 4: 
+
+    
+    
+erlang.el (for indentation and font-locking) and Distel (debugger, M-. etc.) are essential. ESense, I've never used, and I've no idea what the erlware mode does. You may want to use some of the standard Emacs utilities (flymake, interface to version control, and so forth) when writing Erlang.
+    
+    
+Answer 5: 
+
+    
+    
+I've found erlang-mode ok but it doesn't support kerl (which is a useful thing, kinda like rvm for erlang, except it works).
+
+So I started this:
+
+https://github.com/nicferrier/emacs-erlang-extras
+
+which supports multiple erlangs.
+
+I'm intending that it will support rebar as well:
+
+https://github.com/rebar/rebar/wiki/Getting-started
+    
+    
+Answer 6: 
+
+    
+    
+I found out ESense on emacswiki. Might worth a try.
+    
+    

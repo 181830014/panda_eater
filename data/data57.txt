@@ -1,0 +1,1804 @@
+Title: How to build cross-IDE java GUI&#39;s using &ldquo;interface builders&rdquo;?
+Description: 
+    
+    
+                    
+In a Java project with developers that use different IDEs, say Eclipse and IntelliJ, what's the best way of developing visual components using the tools offered by the IDEs ("Visual Editor Project" for Eclipse and "Swing GUI Designer" for IntelliJ)?
+
+If a developer using Eclipse needs to make changes to a GUI written by another developer in IntelliJ (and vice versa) he will have quite a hard time and maybe even make the code incompatible with the original tool that built it.
+
+Is there a solution or do all developer just need to use the same tool?
+    
+
+        
+Answer 1: 
+
+    
+    
+I see 2 solutions:
+
+
+Don't use GUI design tools at all, code the UI code by hand 
+Use a plug-in available for most of the IDEs (such as JFormDesigner)
+
+    
+    
+Title: More with eclipse cdt
+Description: 
+    
+    
+                    
+What is done when we import an existing project(maybe a visual studio project)?
+
+Which files are used for configuration?
+    
+
+        
+Answer 1: 
+
+    
+    
+Try this one, you may get some information. 
+
+Migrate Visual Studio C and C++ projects to Eclipse CDT
+    
+    
+Answer 2: 
+
+    
+    
+Eclipse manages files completely differently than Visual Studio, files are managed by Eclipse and placed into the project workspace. Adding existing files has the aggravating effect of copying the files from their location into the workspace. There are workarounds for this (adding a link to existing file, makefile-only projects) but the default is to copy files around.
+
+This is great if your project is managed by Eclipse alone, not great if you want a VS project AND an Eclipse project for the same codebase.
+
+I'm don't think you can import a VS project into Eclipse CDT, at least not the way you're thinking.
+
+The files used for configuration are stored in (path to workspace)/.metadata, there are a LOT of files that change constantly and can contain absolute paths. Caveat emptor.
+    
+    
+Answer 3: 
+
+    
+    
+There is no explicit wizard for importing visual studio project files. What you import is a directory tree full of source code files. Basic information about this is worked out and stored in a file called .project, which contains the settings from Project/properties.
+
+If, when you create or import the project, 'use default location' is specified, the tree is copied into a workspace directory. If not, it is left where it is. 
+
+If the project type is 'makefile project', the only real assumption is that there is some external command to be run to build the software. Project properties/C++ build can be used to specify this command - by default, it is 'make'.
+
+DevStudio can export a makefile for one of it's projects - from the Project menu, select 'Export Makefile'. Or you can just write one by hand, or use some other build tool such as ant.
+
+If all else fails, set the build command to 'cat' (e.g. from cygwin) and the build argument to the name of a file that contains the output log from however the software was built. 
+    
+    
+Answer 4: 
+
+    
+    
+Eclipse itself has two kinds of projects - those with makefiles, and those that it manages itself. 
+
+Makefile projects have a separate make file that you generally write on your own.
+
+Eclipse managed projects have a .project file that is used by the IDE to create make files on the fly, when you build your project. 
+
+Are you asking specifically for visual studio projects, or is that just an example?
+    
+    
+Title: Any pitfalls to working on a project created in a &#39;higher&#39; version of Visual Studio?
+Description: 
+    
+    
+                    
+I'm asking this specifically regarding Visual Studio 2008 and also the upcoming Visual Studio 2010.
+
+If we are given a project that has been created in an edition of Visual Studio such as Team Suite or Ultimate, and all we have to work with is Professional, would that interfere with us working with the project? I'm assuming the code would all work as it just uses the Framework, but what about features specific to the higher versions? Any IDE issues?
+
+Edit : Our specific scenario is that we're working with a large software company that uses the top versions, and we don't. There's a significant (and growing) amount of code exchange. Given that Professional 2010 with MSDN is $1200, and Ultimate is about 10 times that, we'll have major budget issues if the whole team needs to upgrade. Knowing that the projects will compile is fine, but I'd want to be sure that we couldn't find aspects of their solutions that we weren't actually able to work on.
+    
+
+        
+Answer 1: 
+
+    
+    
+Nope, there are no issues with moving from Team System / Team Suite to Professional. I have a Professional license at home and a Team System license at work - they interchange and work perfectly with each other.
+
+First hand experience shows no issues.
+
+This is, of course, assuming that you aren't using any of the Team System specific features such as the Team Foundation Server or the Testing capabilities of Team System.
+    
+    
+Answer 2: 
+
+    
+    
+There shouldn't be any issues with opening projects created in different editions of the same version of Visual Studio.
+
+I haven't tried between Professional and Team Suite for example, but there are no issues with opening projects that created in the Express edition in the Professional edition and vice versa.
+
+There may will be aspects of the project you can't access/use any more, but the project should still recompile and run. To clarify this a bit more, in the case of the Express versions plugins (such as ReSharper) won't be run, so if there's any aspect of the project that relies on plugins it won't work). I think with Team Suite or Ultimate going to Professional you should be OK.
+    
+    
+Answer 3: 
+
+    
+    
+You will not be able to use features from the more expensive versions but there are no problems working with everything else.
+
+I have a solution here that contains project types I can't use but I can compile and run everything else.
+    
+    
+Title: Call hierarchy and/or data flow tool for Scala
+Description: 
+    
+    
+                    
+Is there an IDE/Tool/script/something that can show call hierarchy and/or data flow in Scala+Java programs (preferably from source code).
+Or (as a backup plan) is there a tool that can show it using Java bytecode? (And preferably give the option to go to source code, if provided by user).
+All that, preferably integrated into an IDE and/or Maven :-) 
+The requirement to support Scala is crucial in this question. I Already know of and use such tools for Java, in 3 IDEs. They do not work very well (actually: at all) when Scala is involved. 
+TIA
+    
+
+        
+Answer 1: 
+
+    
+    
+Poor man's call hierarchy: Comment the method out and see where your red squigglies show up. [/me ducks]
+    
+    
+Answer 2: 
+
+    
+    
+Did you tried Eclipse? 
+    
+    
+Answer 3: 
+
+    
+    
+SBT can do that. You'll have to check it out to get more information, because I haven't done it.
+
+EDIT
+
+Sorry, I confused things. SBT can generate component dependencies, not call hierarchy.
+    
+    
+Title: TextMate for Java/Maven development
+Description: 
+    
+    
+                    
+Is anybody doing Java/Maven development with TextMate? Any Bundle I can use for it? I am aware of regular bundles for Maven and Java (to generate part of the code), but are there are any bundles to help list classes methods? (like Eclipse/Netbeans/etc. does). And not the current class methods, but say I have FirstDemo.java which has methods demo(String a) and demoThis(String a, int b).
+
+In SecondDemo.java I want to type new FirstDemo().[click something here] and see list of demo(String a) and demoThis(String a, int b) so I can choose from them.
+
+Any chance I can do something like that?
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Now there is: https://github.com/textmate/maven.tmbundle
+    
+    
+Answer 2: 
+
+    
+    
+I don't think so. If you want something more sophisticated, you'll need a real IDE or JEdit with some plugins.
+    
+    
+Title: Is there any equivalent in VS for &ldquo;Type Hierarchy View&rdquo; as with eclipse?
+Description: 
+    
+    
+                    
+I want to see which classes are implement from a particular Interface. I know this is possible with the Eclipse by saying "Type Hierarchy View". Is is possible in VS 2008?
+
+I guess that it may be possible with Resharper. But without it, is it possible? Any workarounds? 
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+You could use Reflector on your assembly. Simply locate your interface in the browser and expand the "Derived Types" subnode.
+
+If you want to stay inside Visual Studio you can still right click the interface type (either in the text editor or in "Class View"). From the context menu select "Find All References". This search will also include places where the interface is used, e.g. as a method parameter.
+    
+    
+Answer 2: 
+
+    
+    
+Finally, an extension (Type Hierarchy Viewer) is launched which works with VS2015, VS2017 and VS2019.
+    
+    
+Title: Why does Consolas in Visual Studio look bold?
+Description: 
+    
+    
+                    
+I have tried installing the Consolas font pack so that I can use it with VS 2005. For some reason it looks a lot bolder than Wikipedia's and Jeff Atwood's examples. I read something about anti-aliasing and I am trying that now. Any ideas on how to get it too look thin and sleak?
+
+EDIT:
+Sorry found out. It has something to do with ClearType fonts. Turning it on sorted out all my problems.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can turn on the clearType by running through the wizard from MS website below,
+
+http://www.microsoft.com/typography/cleartype/tuner/step1.aspx
+    
+    
+Answer 2: 
+
+    
+    
+It looks bolder when your Windows OS (XP?) has Font smoothing turned on.
+
+Right click your Desktop 
+Answer 3: 
+
+    
+    
+Did you make sure you have ClearType activated?
+    
+    
+Title: Whirlwind tour of Eclipse?
+Description: 
+    
+    
+                    
+Does anyone know of a whirlwind tour of Eclipse that would help a (former) Visual Studio user get up to speed with it?
+
+I just want something that tells me where all the basic features are and what all the cool stuff I've heard so much about is?
+
+So far I've been using it mostly as a text editor and have had some luck compiling and running programs in it. But... I'm a bit confused, for instance sometimes I can't seem to get out of debug mode.
+
+I'me sure I'm just looking in the wrong places for everything as I'm used to a different interface.
+
+Are there plugins for Eclipse that make it look and feel more like Visual Studio?
+
+I'm using Europa at the moment because thats what the rest of my team use, howver I'm more than happy to migrate to Ganemede...
+    
+
+        
+Answer 1: 
+
+    
+    
+Try Help -&gt; Help Contents (no joke) and read the Workbench User Guide:
+
+Especially the Chapter Concepts.
+
+The same chapter is also very well in the Java Development User Guide
+
+I'm sure after reading these few pages, you'll already know more then the average Eclipse user (because needs Help this days?).
+    
+    
+Answer 2: 
+
+    
+    
+Try http://help.eclipse.org/help32/index.jsp?topic=/org.eclipse.platform.doc.user/concepts/welcome.htm if you can't access the help directly from Eclipse.
+
+Also IBM have an Introduction to Eclipse for  Visual Studio users (although I've never used visual studio so I can't gauge it's usefulness).
+    
+    
+Title: Eclipse&#39;s WTP translation output
+Description: 
+    
+    
+                    
+How can I view the intermediate translation done to JSP and JSPX pages by WTP?  I'm getting weird syntax errors in my Problems tab of Eclipse in a project that has plenty of .jspx pages.  They don't affect anything in the running application (Tomcat 6.0) and they appeared only over the last 2 weeks, after an update.
+
+The reason why I'd like to view the output is that I'm using the Stripes framework at http://stripesframework.org and the errors disappear for a particular .jspx file after I remove the &lt;stripes:errors /&gt; line of that file.  At the same time, the syntax errors only appeared after I did recent fresh install of Eclipse at work, but then an update of Eclipse at home shortly therafter.  I'd like to see the output to determine whose problem this should be (WTP, Stripes, or maybe just me :).
+
+Remember that this issue is somewhat cosmetic, as it doesn't affect anything functionally.  It simply spams my Problems tab in Eclipse and shows the little red X icons in the project explorer.
+    
+
+        
+Answer 1: 
+
+    
+    
+Right now you'd have to add the separate automated tests download to do this, and only in the 3.1 branch, but it enables a "Show Translation" command through Ctrl+Shift+9.  Beware that the translation generated isn't 100% the same as the server would create at runtime--it's not intended to be executed.  Also, the most recent 3.0.3 builds contain fixes to the translator that should clear up these kinds of problems (NESTED variables + self-closing tags).  3.0.3 is due in November and should update cleanly into Ganymede SR1.
+    
+    
+Answer 2: 
+
+    
+    
+I've seen the eclipse JSP editor get really confused over almost nothing.  You said the problem goes away if you remove the  tag.  Does it come back if you put the tag back?  I know that Eclipse 3.3 sometimes had some issues with JSP files where opening them, and forcing a save would clear the file of error messages (I haven't tried 3.4 yet).  Maybe that's what's happening to you.  Other than that, do you have all the proper includes / xml namespaces defined in the files?
+    
+    
+Answer 3: 
+
+    
+    
+I'm having exactly same problem with JSP and &lt;stripes:errors/&gt; tag in Ganymede. With Europa, there were no errors. Now it displays a couple of weird syntax errors on the problems pane. But as Silvaran stated it's just cosmetic, since the project builds correctly and works. It's still annoying though.
+    
+    
+Title: Automatically open a file, when project is imported into IDE
+Description: 
+    
+    
+                    
+Problem: I am trying to force IDEA/Eclipse to open a README.md file, once project is imported into workspace. After searching for a bit already, I can't find a solution. So my question:
+
+
+  Is there a way to force IDE to open a file automatically?
+
+
+
+
+
+I know that there are plugins for viewing mark-up files, but this is not what I am looking for
+Question is the same as this one : Automatically open a file when a solution/project loads, but I want a new project to be opened with a file. 
+
+    
+
+        
+Answer 1: 
+
+    
+    
+IntelliJ Idea provides a CLI. When you try to open a pom.xml and there are no IntelliJ Idea project files, the project will be imported. Else the project will be opened. 
+
+I assume from your comments, that you import new projects on a regular base. So, open the pom.xml, wait a few seconds to give IntelliJ the chance to create project files and then open the README.md will open that file in your fresh imported project.
+
+The following bash script worked for me:
+
+idea pom.xml &amp; sleep 5 &amp;&amp; idea README.md
+
+
+Don't know if that is an option, because I don't your way to work. Do you like command lines or not aso.
+
+Read How to import a Maven project with Intellij Command line tool with command &quot;idea pom.xml&quot;? in order to get CLI working.
+    
+    
+Title: Selenium WebDriver testing login verification/authentication
+Description: 
+    
+    
+                    
+I am using Katalon to build the base Selenium script of which will allow me to have an automated login for gmail. I do however need to add password and username verification in between my test method code. I just need help understanding and if possible, a base template, for how I should structure my verification code. As my title says, I just need help understanding how to code login verification. Thanks ahead of time. Here is my [Test Method]. I am removing my username and password for security reasons, however my username is in the structure of aaaa.heta97@gmail.com and my password follows this structure asd2098KAM. 
+
+[TestMethod]
+    public void TheUntitledTestCaseTest()
+    {
+        driver.Navigate().GoToUrl("https://www.google.com/");
+        driver.FindElement(By.LinkText("Gmail")).Click();
+        driver.FindElement(By.LinkText("Sign In")).Click();
+        driver.FindElement(By.Id("identifierId")).Clear();
+        driver.FindElement(By.Id("identifierId")).SendKeys("aaaa.ksat97");
+        driver.FindElement(By.Id("identifierId")).SendKeys(Keys.Enter);
+        driver.FindElement(By.Name("password")).Clear();
+        driver.FindElement(By.Name("password")).SendKeys("aln9178JKM");
+        driver.FindElement(By.Name("password")).SendKeys(Keys.Enter);
+    }
+
+    
+
+        
+Answer 1: 
+
+    
+    
+
+You can assert if your username displays. A displayed username would indicate a successful login.
+You can also see if a token/cookie is added to your session on login.
+Or see what response gmail sends back on failure/successful login post. Depending on the response you can assert if it's a successful login or not.
+
+    
+    
+Title: How to see what class was passed into template in Rider as an argument?
+Description: 
+    
+    
+                    
+I am debugging C# templates in Rider a lot and would like to know whether or not it is possible and if yes, then how to see what class is coming into template in Rider?
+
+Example:
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+namespace Rextester
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            //Your code goes here
+            Console.WriteLine("Hello, world!");
+        }
+
+        public void DoSomething&lt;T&gt;() {
+            //What is a type of T?
+        }
+    }
+}
+
+    
+
+        
+Answer 1: 
+
+    
+    
+With a fresh install and the default settings, you can see the variable type in the "Variables" window that you can see when you debug:
+
+
+    
+    
+Answer 2: 
+
+    
+    
+I think the previously marked answer is correct, but only for a specific case scenario.
+If I understand the question correctly, it can be rephrased to &quot;How to inspect the type of a generic parameter using Rider debugger?&quot; If so @nvoigt's answer is correct in the sense that the debugger shows you the type of each variable in the scope of the breakpoint. Thus in the shown example:
+public void DoSomething&lt;T&gt;(T arg)
+{
+    ...
+}
+
+The type of argument is easily readable in the Variables window:
+
+However if the generic argument 'T' is not the type of the method argument 'arg' as in:
+public T DoSomething&lt;T&gt;(string arg)
+{
+    ...
+}
+
+Then arg will be of type string as was defined. In that case you need to look at the Frames window - to the left ot Variables. There, on the first line you will be able to see the method where the execution is halted (by the breakpoint) and if you expand that window you will see something like:
+Program.DoSomething&lt;TypePassedAsGenericArgument&gt;()
+
+where TypePassedAsGenericArgument will be the full name of the type, a.k.a - namespace + class name:
+
+I think this clarification might help some new coders out there. Go get those BUGS!
+    
+    
+Title: Xcode 9.2 editor vertical indent guides or highlight scopes
+Description: 
+    
+    
+                    
+For Xcode 9.2 theres a way to always show editor vertical indent guides, highlight scopes or some other feature that helps you to watch the current editing scope? Similar to the features on Android Studio that i marked with red arrows in the image:
+
+
+
+Or theres a way to make more custom (friendly) Xcode text editor?
+    
+
+        
+Answer 1: 
+
+    
+    
+I think XCode 9.2 doesn't provide vertical indent lines unfortunately. Please see similar question: Show Indent Guide Lines In Xcode
+
+You could try Visual Studio Code for Mac for editing which has the vertical indent line feature (you need to install Swift language extension for VS Code though before being able to write in Swift).
+    
+    
+Title: Is it possible in Pycharm to map a tab to produce 4 spaces. If so how?
+Description: 
+    
+    
+                    
+this is my first time using an IDE.  I was wondering if its possible, as I've done in vim with imap, to make it so that when I press tab 4 spaces are produced in the editor.  If this is possible, please point me how to do it.  I'm not super familiar with key symbols so please be as explicit a possible; I poked around the keymap under settings but it was pretty confusing.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can customize the Tab size in Pycharm. Goto Preference --
+Title: How to install InteliJ on Mac? (MacOS Sierra)
+Description: 
+    
+    
+                    
+Trying to see should I download and install dmg for InteliJ or use brew cask install?
+
+What is recommendation and how to do with brew?
+
+(looking for newest community version)
+    
+
+        
+Answer 1: 
+
+    
+    
+There are multiple version for intelij community and paid, for paid you need a license.Here are some links how to install inteliJ
+
+https://treehouse.github.io/installation-guides/mac/intellij-idea-mac.html
+https://www.jetbrains.com/help/idea/installing-and-launching.html
+
+With brew:-
+
+http://macappstore.org/intellij-idea/
+
+Install the App
+
+Press Command+Space and type Terminal and press enter/return key.
+Run in Terminal app:
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" &lt; /dev/null 2
+Title: Auto-insertion of quotes fail when a closing bracket is on the same line
+Description: 
+    
+    
+                    
+I have gone to Tools 
+Answer 1: 
+
+    
+    
+This issue was opened on Github on 23rd March 2018, and was fixed in this PR on 29th January 2019. The issue can be solved by upgrading Spyder to the latest version.
+    
+    
+Title: Hide JetBrains annotation on popup JavaDoc in IntelliJ
+Description: 
+    
+    
+                    
+Is there a way to hide or turn off those Inferred Annotations Available when I'm reading the popup documentation from a method.
+
+As outlined on the image below.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+There is no setting in IntelliJ IDEA to disable it.
+
+I've submitted a request, please vote.
+    
+    
+Title: PyCharm (JetBrains) IDE - go to declaration on other split screen
+Description: 
+    
+    
+                    
+If i have split screen in JetBrain's pycharm IDE, can I Go To Declaration an object on one screen and have the resulting declaration appear on my other split screen? This would be very helpful in reading code without losing my place. I do realize you can go back to previous caret position as well but this would be better. 
+    
+
+        
+Answer 1: 
+
+    
+    
+AFAIK there is no direct way of doing this. The only option is a 3-step process where you press Ctrl+B/Cmd+B (on Mac) to get to the declaration and then right click on the new file and click the Split Horizontally/Split Vertically option (whichever you prefer). 
+
+This will open the selected file in splitscreen, next step is to select the initial file (PyCharm leaves your split file open in both columns by default) and you have both files open to look at.
+    
+    
+Answer 2: 
+
+    
+    
+I stumbled across this question because I was looking for the same thing.
+I have actually come up with a quick hack about this.
+See if it works for you too.
+
+Configuration
+
+Settings... code/code
+Title: Eclipse IDE installation fails because it can&#39;t the find mars repository
+Description: 
+    
+    
+                    
+I have downloaded "eclipse-inst-win64.exe" from eclipse.org and while running the installation for "Eclipse IDE for Java Developers" I get the error shown below:
+
+ERROR: org.eclipse.equinox.p2.metadata.repository code=1000 No repository found at http://download.eclipse.org/technology/epp/packages/mars.
+  at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.fail(AbstractRepositoryManager.java:395)
+  at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+  at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+  at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+  at java.lang.reflect.Method.invoke(Unknown Source)
+  at org.eclipse.oomph.util.ReflectUtil.invokeMethod(ReflectUtil.java:116)
+  at org.eclipse.oomph.p2.internal.core.CachingRepositoryManager.fail(CachingRepositoryManager.java:283)
+  at org.eclipse.oomph.p2.internal.core.CachingRepositoryManager.loadRepository(CachingRepositoryManager.java:186)
+  at org.eclipse.oomph.p2.internal.core.CachingRepositoryManager$Metadata.loadRepository(CachingRepositoryManager.java:389)
+  at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:96)
+  at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:92)
+  at org.eclipse.oomph.p2.internal.core.ProfileTransactionImpl$RepositoryLoader$Worker.perform(ProfileTransactionImpl.java:1468)
+  at org.eclipse.oomph.util.WorkerPool$Worker.run(WorkerPool.java:416)
+  at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+    
+
+        
+Answer 1: 
+
+    
+    
+There are a few Eclipse bugs related to this. All the threads seem to be resolved by deleting the $HOME/.eclipse/org.eclipse.oomph.p2/cache directory.
+
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=471528#c7
+
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=470900
+
+http://eclipse.1072660.n5.nabble.com/No-repository-found-exception-td175271.html
+
+If this has made its way back into the executable file, you may need to open a new bug.
+
+In the meantime, you may need to install the previous version, Luna, instead though I would try installing the 32-bit version of Mars first.
+    
+    
+Title: Typehinting through Zend_Registry::get() - how to make navigation to declaration understandable to PhpStorm?
+Description: 
+    
+    
+                    
+You can pass anything to Zend_Registry::set('myWidget', $someWidget), so that it's available later on.
+
+However, when you retrieve it elsewhere, PhpStorm IDE has no clues to the type of 'myWidget'.
+
+&lt;?php
+class AwesomeWidget {
+   public function doBazFlurgle() {
+      // doesn't matter what exactly happens here
+      return mt_rand();
+   }
+}
+?&gt;
+
+&lt;?php 
+class FooController {
+
+    public function init() {
+        $someWidget = new AwesomeWidget();
+        Zend_Registry::set('awesome', $someWidget);
+    }
+
+    public function barAction() {
+        $this-&gt;init();
+        $awesome = Zend_Registry::get('awesome');
+        $awesomeNumber = $awesome-&gt;doBazFlurgle();
+    }
+
+}
+
+
+Navigate to declaration on the -&gt;doBazFlurgle() call gets me a "Cannot find declaration to go to".
+
+
+I could add a /** @var AwesomeWidget $awesome */ annotation, but that would require editing in many places in a sizable codebase
+I could also add a return type annotation to Zend_Registry, but that does not look very maintainable (there are many instances of different classes stored this way).
+I could search for the string doBazFlurgle through Find In Path..., but that is not entirely convenient (many keystrokes as opposed to a single Ctrl+click)
+
+
+I noticed that NetBeans is capable of jumping to the method definition in this exact situation; is there a simple way of doing the same in PHPStorm without going through "search the entire codebase for doBazFlurgle"? I have searched available IDE actions, plugins, and fora; all in vain.
+    
+
+        
+Answer 1: 
+
+    
+    
+There is a way: as pointed out by @LazyOne, making a list of "what is returned from where" helps the IDE make sense of such code; this is somewhat documented on Jetbrains' website: 
+
+&lt;?php
+/** @link https://confluence.jetbrains.com/display/PhpStorm/PhpStorm+Advanced+Metadata */
+// note that this is not valid PHP code, just a stub for the IDE
+namespace PHPSTORM_META {
+    $STATIC_METHOD_TYPES = [
+        \Zend_Registry::get('') =&gt; [
+            'awesome' instanceof \AwesomeWidget, // this is the class as seen in the question
+            'fooSetting' instanceof \Zend_Config, // this came in from application settings
+            'quuxData' instanceof \ArrayAccess, // an arraylike object
+        ]
+    ];
+}
+
+
+Including this file (named .phpstorm.meta.php by convention) in the project has resolved the issue. This file is not valid PHP - PhpStorm only uses it for typehinting. That way, Zend_Registry::get('awesome')-&gt;doBazFlurgle() is correctly resolved as calling the method on an instance of \AwesomeWidget.
+    
+    
+Answer 2: 
+
+    
+    
+There is a workaround: 
+
+
+Position cursor into doBazFlurgle method call (click or cursor movement)
+Select word (Ctrl+W)
+Navigate to symbol (Ctrl+Alt+Shift+N)
+method will be offered in dropdown
+Select method (Enter)
+
+
+Although this is not quite as clumsy as a generic string search, it is still not quite as convenient as the usual navigate to declaration.
+    
+    
+Title: Format python code in Spyder IDE
+Description: 
+    
+    
+                    
+Can anyone please advice the key combination to format python code in annaconda/Spyder IDE? In Eclipse IDE when coding in Java I usually use command F, however in Spyder IDEthe key combination causes search window to pop up.
+    
+
+        
+Answer 1: 
+
+    
+    
+I tried this 
+
+
+  Source -/p/blockquotep/p/div
+Title: Edit Arabic text/ content at Android Studio editor is almost impossible
+Description: 
+    
+    
+                    
+It is almost impossible to edit Arabic text in Android Studio!
+
+For example I have the following string-aray:
+
+&lt;string-array name="countries"&gt;
+        &lt;item&gt; - من خارج فلسطين - &lt;/item&gt;
+        &lt;item&gt; أذربيجان &lt;/item&gt;
+        &lt;item&gt; أرمينيا &lt;/item&gt;
+        &lt;item&gt; أستراليا &lt;/item&gt;
+        &lt;item&gt; أفغانستان &lt;/item&gt;
+        &lt;item&gt; ألبانيا &lt;/item&gt;
+        &lt;item&gt; ألمانيا &lt;/item&gt;
+        &lt;item&gt; أنتيغوا &lt;/item&gt;
+...
+
+
+What I do is that I copy it to notepad, edit it, then paste back again!
+
+It comes a real pain when the list is bigger and it is a major drawback for Android Studio! 
+    
+
+        
+Answer 1: 
+
+    
+    
+I think the solution might be to open the string.xml and all other resource files with an external editor since Arabic suport is crappy in android studio.
+
+ٍSo i suggest to select string.xml right click and click show in explorer
+then open it with your preferred text editor and change whatever you want. 
+    
+    
+Title: New line in help insight
+Description: 
+    
+    
+                    
+With tooltip help insight I can display some extra comments when hovering over a classname/fieldname/procedurename etc. like this:
+
+/// &lt;comments&gt;Some comments on e.g. a class.&lt;/comments&gt;
+
+
+How can I force a new line in the text shown?
+    
+
+        
+Answer 1: 
+
+    
+    
+In XE7 and XE8 the following
+
+  public
+    { Public declarations }
+    /// &lt;comments&gt;Some comments&lt;para/&gt;comments on a second line&lt;/comments&gt;
+    procedure SetUp;
+
+
+puts the text 'comments on a second line' on a new line in the Help Insight pop-up.  A minor quirk is the second line is indented a couple of spaces, but if I do
+
+/// &lt;comments&gt;Some comments&lt;para&gt;comments on a second line&lt;/para&gt;third line&lt;/comments&gt;
+
+
+the 'third line' isn't indented. The indentation inconsistency can by masked (at the expense of indenting everything by two spaces) by doing:
+
+///&lt;comments&gt;&lt;para&gt;Some comments&lt;/para&gt;&lt;para&gt;comments on a second line&lt;/para&gt;&lt;para&gt;third&lt;/para&gt;&lt;/comments&gt;
+procedure SetUp;
+
+
+Judging by experiments, the 
+
+&lt;p/&gt;
+
+
+XML tag used to work in XE4, but stopped working by XE7, as in my initial test:
+
+  TForm1 = class(TForm)
+    CDS: TClientDataSet;
+    DataSource1: TDataSource;
+    DBGrid1: TDBGrid;
+    Button1: TButton;
+    procedure CDSCalcFields(DataSet: TDataSet);
+    procedure FormCreate(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+  private
+    ///&lt;comments&gt;Some comments&lt;p/&gt;more&lt;/comments&gt;
+    procedure AddHLIndex;
+
+
+In XE4 the above displays the 'more' on a new line in XE4 but on the same line as 'Some comments' in XE8.
+
+I wondered whether the difference in XE8 was anything to do with the presence of Castalia, but I get the same difference between XE4 and XE8 with XE8 started with the /NOCASTALIA switch.
+
+I haven't tested exhaustively but XE8 ignores all the 'HTML' formatting tags I've tried (except the 
+
+&lt;c&gt;
+
+
+tag mentioned by the questioner), which might be the result of a deliberate change or an accident, of course. On the other hand, it does seem to process HTML escapes such as
+
+&amp;gt;
+
+
+and
+
+&amp;lt;
+
+
+but not, unfortunately,
+
+&amp;#10;
+
+
+, which it just ignores.
+    
+    
+Title: how to know clock cycles, overall performance, etc&hellip; of program?
+Description: 
+    
+    
+                    
+I have 3 different algorithms which all calculate the same stuff.
+My goal is to compare all three algorithms, i.e. clock cycles, "how intensive it is for the processor", time needed to get the final result, the overall performance etc...
+
+How can I see/get/analyze all of this information?
+
+I am programming in Matlab and in C-language in code composer studio for an embedded system.
+
+EDIT: memory usage/management would be usefull as well for the embedded system  especially
+    
+
+        
+Answer 1: 
+
+    
+    
+First you can compare the size of your Output-files. Most times the bigger one is slower.
+
+Get the exactly clock cycles is not easy. you must know how many clock cycles your Assembler command Needs and calculate it for your code.
+
+If you are running it directly on your Hardware, you can toggle a port at the start and end Point and do a Timing measurement. (Regard there are may Interrupts, that can slow you down)
+    
+    
+Answer 2: 
+
+    
+    
+For the MATLAB part, you should use the timeit function to evaluate performance. You can also use profile to inspect which, if any, parts of the code are causing bottlenecks.
+    
+    
+Title: IntelliJ IDEA seems to be ignoring code formatting
+Description: 
+    
+    
+                    
+I've been attempting to get my Intellij IDEA to confirm to a google-like Java standard - however both imports and manual settings seem to be ignored.
+
+Here's how my indentations are currently set:
+
+
+However my code still formats at 4 spaces, and when I reformat it goes to 4 spaces as well.
+
+Thanks in advance!
+    
+
+        
+Answer 1: 
+
+    
+    
+This is the setting for your GoogleStyle scheme. But your project most likely doesn't use it. It's not enough to just select it in the combobox. You need to import this scheme into your project.
+
+Click Manage... and Copy to Project, and it should work as expected.
+
+Also, make sure you're setting language-spefic settings, so instead Code Style select Code Style &gt; Java.
+    
+    
+Title: How do I change the appearance of tab characters in IntelliJ IDEA?
+Description: 
+    
+    
+                    
+Personally I find the tab display character in IntelliJ IDEA noisy.
+
+
+
+I would prefer that tabs would be displayed as in Eclipse:
+
+
+
+Is it possible to change the display of tabs in IntelliJ?
+    
+
+        
+Answer 1: 
+
+    
+    
+The appearance of tab characters in the IntelliJ IDEA editor is currently hard-coded.
+    
+    
+Title: How can I increase the size of the string that IDE debugger visualizer can display?
+Description: 
+    
+    
+                    
+How can I increase the size of the string that IDE debugger visualizer can display? 
+At the moment the limit is 2K (I think).
+
+I am thinking in finding the source code for the current string visualizer and modifying it to show more lines and registering it as a new visualizer. Is this the correct or the cumbersome solution?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  I am thinking in finding the source code for the current string visualizer and modifying it to show more lines and registering it as a new visualizer. Is this the correct or the cumbersome solution?
+
+
+That source code is not available to you. It's buried in the bowels of the IDE's debugger. As I see it your options are:
+
+
+Modify the existing visualizer at runtime, for instance using a detour.
+Replacing the visualizer with one that serves your needs.
+
+    
+    
+Title: Good PHP Ide for debugging Codeigniter?
+Description: 
+    
+    
+                    
+I need a PHP ide for debugging my codeigniter website. I tried PhpStorm, Sublime, PhpEd and Netbeans with no success. Weird problems each time.
+
+I just need an IDE to set a breakpoint and see the value of variables.
+
+I'm tired of googling every day. Is there any stright forward way?
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+Here is how to configure PhpStorm to use XAMPP as the web-server and how to install the debugger.
+
+The first thing you need to do is to configure a debugger in your php.ini. Am currently using Xdebugger, if you use this one then just follow these easy instruction click here. Copy the info form php_info() and paste it into that white box. Then download the *.dll file they give you (for windows) and paste to the folder they ask you to.
+
+The second thing you need to do is to configure the PHP interpreter. Follow the images.
+
+
+
+Click on PHP and then the browse button in the interpreter section.
+
+Click on the plus sign and then other local
+
+Get the PHP home path e.g /xampp/php/
+
+Then test it, you should be able to use with the browser and in the console (if your only doing stuff with PHP)
+
+    
+    
+Answer 2: 
+
+    
+    
+If you want to try something new, Try Cloud9.
+
+
+Online IDE (I love this)
+you can setup project from FTP
+can sync with GitHub, BitBucket,
+can debug/Run
+
+
+I need https for some of my project testing, thats why I searched and found this.
+
+hope this help.
+    
+    
+Answer 3: 
+
+    
+    
+I highly recommend Codelobster.
+It has free PHP debugger and special plug-in for CodeIgniter autocomplete.
+    
+    
+Title: Single file download feature from remote server in phpStorm?
+Description: 
+    
+    
+                    
+I have recently shifted to phpStorm from NetBeans. 
+
+I know I can select to download the single or multiple files from remote server when creating the project. So, I only downloaded some necessary files which need to be edited for the project. But after creating the project I realized that I want to download another specific file from a folder to the project not downloading or syncing the whole folder. How can I do that?
+
+Please see the below NetBeans feature which I am expecting.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I finally got it.
+
+At first I needed to Remove the Path from "Excluded Paths" panel.
+
+Then I was able to download the file by right click and Selecting "Download from here".
+    
+    
+Answer 2: 
+
+    
+    
+Use Remote Host side panel (can also be accessed via Tools | Deployment | Browse Remote Host if panel is closed) and download any files you want.
+    
+    
+Title: Rubymine 7.0: Disable automatic insertion of &ldquo;end&rdquo;
+Description: 
+    
+    
+                    
+I would like to disable automatic insertion of end for def/while/class/etc. in Rubymine 7.0.
+
+For example, if I type def and press enter, an end is automatically added below the new line:
+
+# Before I press enter:
+def|
+
+# After I press enter:
+def
+  |
+end
+
+
+I've looked through the options in File /strongcode/codecode/code/ppa href="https://stackoverflow.com/questions/24318226/how-to-disable-rubymine-code-completion-after-comment-line-ending-in-period"/astrong
+Answer 1: 
+
+    
+    
+Uncheck the line End (on blank line) in File 
+Title: Intellij, How to set JVM parameters for Junit Unit Tests?
+Description: 
+    
+    
+                    
+I have changed JVM options by Run/Debug Configurations(-Xms512m), but when I run testcase, IntellijIdea call use below args, replication option -Xms:
+
+/usr/lib/jvm/java-7-openjdk/bin/java -agentlib:jdwp=transport=dt_socket,address=127.0.0.1:58896,suspend=y,server=n **-Xms512m -Xms256m** -Xmx512m -
+
+
+Why?
+    
+
+        
+Answer 1: 
+
+    
+    
+You need to edit the run configuration - click on the drop-down next to run run icon on the menu bar, and select "Edit Configurations..." then select the tests and enter any JVM options you require.
+    
+    
+Title: How to change the default new/open project directory in PhpStorm 8?
+Description: 
+    
+    
+                    
+When I click open or new project PhpStorm shows the way to C:\User\Myname. Tell me how to change this to C:\xamp\www ?
+    
+
+        
+Answer 1: 
+
+    
+    
+There is no GUI for that.
+
+PhpStorm should remember last used folder (when you successfully created new project) and use it by default for next one (does for me; although I'm using the same path since v1 .. maybe this was broken since then).
+
+If it does not and if you have brave heart .. you can edit config file directly :)
+
+
+Close IDE
+Open this file in any text editor: C:\Users\USERNAME\.WebIde80\config\options\ide.general.xml (path is for PhpStorm v8 on Windows 7; for other OS/versions please see this link: https://intellij-support.jetbrains.com/entries/23358108-Directories-used-by-the-IDE-to-store-settings-caches-plugins-and-logs )
+File is very short -- just find &lt;option name="lastProjectLocation" node and edit value attribute -- put desired path there
+Save changes, Launch IDE and see if it worked for you.
+
+    
+    
+Title: &ldquo;There is nothing to install or update&rdquo; while creating new project on Android Studio
+Description: 
+    
+    
+                    
+I update to latest version 0.85 beta on Android Studio,and when I create a new project at  last step that it prompts me "There is nothing to install or update" and progessbar always on loading.
+
+ps:I use the Android SDK which path from ADT
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I had the same problem and I started anew project and chose a different Minimum API this time, and the problem was solved.
+you can always change the minimum API ;)
+I was choosing Minimum  API 9 before, then I Chose API 14 (Android 4.0)
+
+Hope it helps.
+    
+    
+Answer 2: 
+
+    
+    
+I had the same problem and resolved it by:
+
+
+Downloading and installing the requested build tools or platform from the SDK manager.
+After installation (you can find the downloaded zip files in a temp folder placed in the android-sdk folder in program files - C:\Program Files (x86)\Android\android-sdk\temp), go to the build tools folder, find the dx.bat file and execute it.
+
+    
+    
+Title: Eclipse CSS AutoComplete/Content Assist not working
+Description: 
+    
+    
+                    
+Hi I am running Eclipse 4.3.2 Kepler. My CSS content assist is not working at all. I press ctrl+space to no avail.
+
+I looked at my content assist settings and it is checked as well as having both CSS Proposals and CSS Template proposal checked.
+
+What is going on?
+    
+
+        
+Answer 1: 
+
+    
+    
+This could also be due to the css file location. If you are using maven and have the css in location like \src\main\resources\css\bootstrap.css, it does not work. 
+
+Instead if the css file is placed directly under webapp it works.
+    
+    
+Title: How to use a &ldquo;custom jar&rdquo; in IntelliJ IDEA?
+Description: 
+    
+    
+                    
+I'm trying to set up IntelliJ IDEA -- tried 12 and 13 -- Mac to use a Java class included a jar file for my Java application.  
+
+I've set the jar as a module dependency by the following procedure 
+
+
+Start from the "project window";
+Select my main Java module;
+Use menu File | Project Structure;
+In Project Settings, select Modules, and select my Java application as interested module in the middle window;
+On the window to the right, select "Dependencies" tab, and press "+" and select "Jars or directories" and navigate to the jar file, add select it so the custom jar file is added as a new entry in the window, check the Export checkbox and set Scope pulldown set as "Compile";
+Press OK.
+
+
+However, after setting this, in a Java class file in my Java application, if I use a class defined in the custom jar file, it still prompts me "Cannot resolve symbol 'SomeClass'".
+
+Any idea what I'm doing wrong and how to fix this?
+
+Edit:
+
+my settings:
+
+
+
+
+
+BTW, the Libraries and Global libraries are both empty.  I tried to set the two jars there (separately) and add them as dependencies for the Java app, and had no luck, so I deleted them from Libraries and Global libraries. The above setting is using add module dependency as files directly (without first registering them as libraries), which still does not work.
+    
+
+        
+Answer 1: 
+
+    
+    
+Putting everything in the default unnamed package solved the issue.
+    
+    
+Title: Hot swap Node.js files while debugging in Webstorm 7.0.3
+Description: 
+    
+    
+                    
+I'm getting starting with Node.js and Webstorm 7.0.3. I have created a simple Node.js app with express and I run it locally. I want to edit and save a .js file, refresh the broswer, and see the changes. As I understand it, this should pretty much work out-of-the box.
+
+Here is what does work: 
+
+
+I start the Node.js server
+I navigate to an express path with Chrome
+The page renders correctly.
+
+
+Here is what doesn't work: 
+
+
+I change the JavaScript function that renders the page
+I save the file
+I refresh the browser
+The Web page does not reflect the changes to the JavaScript function
+
+
+Here are the directions I followed from the JetBrains help site:
+
+
+Create a Node.js run/debug configuration called "app.js"
+
+Check the "After launch" and "with Javascript debugger" options
+
+Create a JavaScript Debug configuration called "app.js.JavaScript
+Select "Debug" for the "app.js" configuration.
+The Node.js server starts
+Select "Debug" for the "app.js.JavaScript.
+I can now hit breakpoints in the application.
+
+
+However, if I change the JS function that renders the page, save the file, and refresh the browser, the changes do not appear.
+
+Configuration:
+
+
+WebStorm 7.0.3
+Chrome w/ JetBrains plugin 2.0
+Windows 8
+Node.js
+
+express 3.4.8
+hjs
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+When you say you "change the JavaScript function that renders the page", I'm assuming that function is a route function that is on the server.  E.g.:
+
+exports.form = function (req, res) {
+    res.render('login', { title: 'Login', message: req.flash('error') });
+};
+
+
+Changes to any server-side code do not automatically get picked up when refreshing the browser. You typically have to restart the server in order for those changes to take effect.
+
+However, look into nodemon. Nodemon watches the filesystem for changes and automatically restarts the server if it detects something changed. Very useful for development.
+
+Also, take a look at this post to see how to integrate nodemon with WebStorm:
+
+How can I run nodemon from within WebStorm?
+    
+    
+Answer 2: 
+
+    
+    
+There is a module called hotswap (https://github.com/rlidwka/node-hotswap) that also looks promising - essentially, you access your module's methods through the hotswap module, which checks for changes behind the scenes for you. You access your module's methods through the hotswap object, and if a change has happened, it's reflected without restarting the server.
+
+I haven't dug very deep into the module itself, but I can imagine there's memory issues (Node caches required modules on load, I'm not sure how it cleans them up) and possibly performance issues. Great for development, not sure you'll want it in production.
+    
+    
+Title: Haskell Unit Testing integrated in Leksah
+Description: 
+    
+    
+                    
+I'm writing some Haskell code in the Leksah IDE. As I edit the code, Leksah does background compilation and runs unit tests after the background compilation completes.
+
+I see in the "console" frame the following:
+
+Building UNFI-EIC-0.0.1...
+Preprocessing test suite 'test-UNFI-EIC' for UNFI-EIC-0.0.1...
+Preprocessing executable 'UNFI-EIC' for UNFI-EIC-0.0.1...
+-----------------------------------------
+Running 1 test suites...
+Test suite test-UNFI-EIC: RUNNING...
+test-UNFI-EIC: Prelude.head: empty list
+Test suite test-UNFI-EIC: FAIL
+Test suite logged to: dist/test/UNFI-EIC-0.0.1-test-UNFI-EIC.log
+0 of 1 test suites (0 of 1 test cases) passed.
+
+
+Where are the default test cases that failed? How do I add relevant unit tests to them? There is nothing obvious in the GUI menus... 
+
+How can I edit the test suite for the package that is integrated in Leksah?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can edit the unit test suite by finding the test-suite reference in the .cabal file of the project.
+
+To do this, go to your project directory and open *.cabal in a text editor and search for the line containing test-suite:. This line will be of the form test-suite: ExampleTests, where ExampleTests is the main file of the test suite for the project. 
+
+Simply add tests to this file using the testing framework of your choice. Leksah will run these tests automatically through the IDE GUI.
+    
+    
+Title: new project not created in android studio
+Description: 
+    
+    
+                    
+I've just downloaded android studio 0.3.2 on windows. I have 64bit versions of gre7 and jdk1.7.0 installed on my pc.
+I have also made sure I have gradle and it is also 64bit. but still I can't create a new project with android studio. (note: at the same time everything is ok with intellij13)
+I get the following error message when I try to create a new project.
+
+Cause: error in opening zip file
+Consult IDE log for more details (Help | Show Log)
+
+How do you think I can resolve this issue?
+-- I even don't know where on earth is this log file!!
+    
+
+        
+Answer 1: 
+
+    
+    
+Try this, Start Android Studio, close any open project.
+
+On the right side, click on Configure -&gt; Settings.
+
+On the left side, in Compiler-&gt;Gradle set VM Options to "-Xmx512m" (without quotes)
+On the left side, in Gradle set VM Options to "-Xmx512m" (without quotes)
+
+    
+    
+Title: How to edit the template of comments of method in Intellij Idea
+Description: 
+    
+    
+                    
+The default value is like 
+
+/**
+     * 
+     * @param context
+     * @param fileName
+     * @return
+     */
+
+
+when I print"/**" and enter.
+But I can hardly find somewhere to edit it.
+    
+
+        
+Answer 1: 
+
+    
+    
+Open File /strongstrong
+Answer 2: 
+
+    
+    
+I don't know about editing it, but if all you want to do is turn it off - disable: 
+
+
+  "/Settings/IDE Settings/Editor/Smart Keys/Insert documentation comment
+  stub"
+
+
+After that, it won't insert those javadoc tags anymore.
+    
+    
+Title: Running Go in Geany
+Description: 
+    
+    
+                    
+I am trying to run go code in geany.
+
+Unfortunately I get this error when I try to execute:
+
+./geany_run_script.sh: 5: ./geany_run_script.sh: go: not found
+
+
+I know some posts say that one must compile or build before running but the go run command compiles and runs at the same time, so ...
+
+How does one run go code in geany?
+    
+
+        
+Answer 1: 
+
+    
+    
+The solution is to go to Buildcode/code/p/div
+Title: seleniumIDE - how to store a hyperlinks address and then visit that URL? Was working before
+Description: 
+    
+    
+                    
+I had this working fine a couple of months ago but now when I run the test it fails and I don't know why or how to fix.
+
+Background:
+I have a screen with several links so that the 'admin' user who is currently logged in can login as one of the 'practitioners' via the login hyperlink presented.
+
+Details:
+So for my test I click on the 'Login link' hyperlink(s), enter &amp; confirm a new password as required, and then I get to the practitioners screen 'as them'.  The 'wrinkle' was that the pop-up for the user to enter their (new) password happened on a new window that the selenium IDE used was a new window.  So basically just clicking on the hyperlink didn't work.  To get around this I was able to store the hyperlink's href -a@href- in a selenium variable first_login_link_to and then use open instead of clickAndWait to visit the page, i.e. open ${first_login_link_to}
+
+This was working fine a few months ago.... but it is not working now.  
+
+I get page doesn't exist and when I look at the url - urgh!  It somehow includes the locator stuff and I am getting  
+
+http://dmplanning-stage.herokuapp.com//tr[td[contains(.,'6 Day')]][1]/td[8]/a@href 
+
+instead of
+
+http://dmplanning-stage.herokuapp.com/p/zaH7m3aL7fxuPLvrc21L
+
+in the browsers url address bar.
+
+How can I get selenium to open the url stored in the variable and not use that 'locator' address?
+
+selenium:
+
+open          /admin
+clickAndWait  link=practitioners
+store         //tr[td[contains(.,'6 Day')]][1]/td[8]/a@href
+open          ${first_login_link_to}
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Found it - whew!  Somehow my storeAttribute got changed to plain store.
+Once I changed it back everything worked again!
+    
+    
+Answer 2: 
+
+    
+    
+This one worked for me
+
+1- 
+Command = Store
+Target = stuff you want to paste
+Value = Var
+
+2- 
+Command = sendkeys
+Target = id for area where u wana paste
+Value = ${Var}
+
+3- 
+Command = Fireevent
+Target = id for area where u wanna paste
+Value = paste
+
+    
+    
+Title: Unexpected token NL and LBRACE error in netbean
+Description: 
+    
+    
+                    
+I am using netbean7.3 and in code below 
+
+@keyframes myfirst
+{
+from {box-shadow: 4px 4px 4px #666666;border: 1px solid #444444;}
+to {box-shadow: 4px 4px 4px #DCDCDC;border: 1px solid #d6d6d6;}
+
+}
+
+
+i got error 
+
+
+
+however it can be solved by using { after @keyframes myfirst 
+
+
+
+i just want to know what is difference between first(error one) and another one since AFAIK position of { doesn't matter? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Well, your syntaxes are both correct (you can check it here) as W3C only define a keyframe declaration as
+
+
+  [...] the keyword "@keyframes", followed by an identifier giving a name for the animation (which will be referenced using 'animation-name'), followed by a set of style rules (delimited by curly braces).
+
+
+cf. http://www.w3.org/TR/css3-animations/#keyframes
+
+So it's most probably a netbeans bug
+
+EDIT: the keyframe declaration grammar is
+
+
+  KEYFRAMES_SYM S+ IDENT S* '{' S* keyframes_blocks '}' S*;
+
+
+S is defined as (#x9 | #xA | #xC | #xD | #x20)+, so it includes "space", "tab", "line feed", "carriage return", and "form feed".
+
+Is netbeans NL in this set?
+    
+    
+Title: How to ignore certain javascript libraries with the Html5 template?
+Description: 
+    
+    
+                    
+I just upgraded my NetBeans from 7.3 Beta 2 to 7.3 RC1. In Beta 2 I could only exclude full folders (with the php project type). To ignore specific files I edited the project.properties file. This greatly helped me to ignore multiple versions of included libraries.
+
+In RC1 we have the Html5 project type. I no longer find any option to ignore files, and adding ignore.path to the project.properties no longer seem to do the trick for me.
+
+So my question is, is there a way to ignore files with the Html 5 project type? If so, how?
+
+If not, is my only way of solving this to move the library sources outside of my project and include only the debug-all-with-comments type files, or how would you go about solving this problem with overly many versions of my libraries being parsed?
+    
+
+        
+Answer 1: 
+
+    
+    
+A partial solution can a migration from HTML5 to PHP Project in Netbeans.
+
+
+Rename nbproject folder to nbproject-html in your Project source files folder to store netbeans settings.
+Create Php Project with Existing Sources in Netbeans.
+Go to Project - Properties - Ignored Folders - Add your libraries.
+
+
+Now code completion is much faster. Moreover I could also solve the problem of documenting tags catch-up with Ctrl + Space, as php is evidently better supported in Netbeans than HTML5.
+
+In our case it was netbeans 8 and pure javascript enterprise project based on ExtJS.
+    
+    
+Title: Is there a Visual Studio Plug-In to Sync open tabs across multiple machines?
+Description: 
+    
+    
+                    
+I often work on a solution in Visual Studio at work, commit my changes to version control, and pull the changes at home to work on using my home machine with Visual Studio.  It would be nice if there was a way that I could restore the session that I checked in (maybe some session file that could be version controlled) to automatically open all of the same tabs on my home machine I had open when I checked in at work (and vice versa).  I think the current session is stored in the .suo file, which I have read is bad practice to version control as it is specific to an individual machine environment, so I'm not sure that is the way to go, or if it would work properly.
+
+I find myself having to close a lot of tabs when I open a solution and then having to mentally go through the process of remembering what I was last working on and re-opening those tabs, so something like this would allow me to avoid that and get right to work.
+
+Preferably, this would work with any tab, not just project files.  For example, ReSharper test runner tabs, NCrunch tabs, Object Browser Tab, etc.
+
+Anyone know of anything like this or have a simple work-around?
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+You should put your source code under a cloud based synchronization tool.
+
+For example, I put my projects in my skydrive folder (sync by the official skydrive tool). This will automatically synchronize all files, including the .suo file, and temp files.
+
+This is not mutually exclusive with source code control. The repository (git in my case), will also be synchronized between computers. And then, only legitimate files will go under source control (the .suo is synchronized only between your computers, but won't go into shared source repository)
+    
+    
+Title: Tools for refactoring Perl code and PostgreSQL database structure
+Description: 
+    
+    
+                    
+I write perl in vim. I've always written perl in vim. However, after having a period of writing java in NetBeans a while back, there are some things i now wish i had for my perl projects: Code refactoring.
+
+I have an application consisting of multiple scripts, each of them interacting with a postgresql database. This application started out as a small hack, but suddenly it grew into a myriad of scripts totalling a few thousand lines of code and a monstrosity of a database. While this is fine, there are some things that i would like to fix with the database to make it more maintainable in the long run: Rename a column here, change a datatype there.. you know, small stuff. 
+
+Are there any tools that allow me to do this, while also looking up any references to said columns in the scripts that interact with it? 
+
+I'd rather have some nice automated refactoring than the tedious manual renaming, as that's too prone to fungerfudges, plus, i'd love to have a proper set of dev-tools rather than just vim in the long run.
+
+This is all being done over an ssh session, by the way, so any fancy GUI-based IDEs are also out of the question.
+    
+
+        
+Answer 1: 
+
+    
+    
+App::EditorTools provides some lightweight refactoring CLI tools. Using App::EditorTools::Vim you can incorporate these directly into Vim.
+
+Peter Blair has a little video of it in action at http://petermblair.com/2009/10/perl-vim-refactor/
+    
+    
+Title: KDevelop4 Debugging {&hellip;} cannot be unfolded
+Description: 
+    
+    
+                    
+I am debugging with KDevelop4 which is not showing Types always in its variables window and also Its showing {...} instead of unfolding the data. Is there any way to unfold ? and see types of all variables ?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+KDevelop supports gdb pretty printers for prettier showing variable contents. If matrix is your own class you can write a pretty printer yourself. If you use some library you might find pretty printers for it - or write one yourself too.
+
+Note that gdb pretty printers also work when debugging gdb cli.
+    
+    
+Answer 2: 
+
+    
+    
+I just enabled the pretty printers in gdb and now also run into this problem. You can fix this by disabling the pretty printer. Check /etc/gdb/gdbinit/ and ~/.gdbinit. Then you can expand _matrix to see the std::map implementation variables. Though I doubt they would be very useful.
+    
+    
+Title: How do I make Intellij Idea &ldquo;Spring Dependencies Diagram&rdquo; to show only a subset of the beans?
+Description: 
+    
+    
+                    
+In Intellij Idea 11.1.2 I have the "Spring Dependencies Diagram", but this shows too much information (there are 100+ beans in the app, with lots of dependencies), I see no clear overview of what is important to me at the moment. 
+
+I would like to view only a subset of the beans at a time. I have only one configuration file (the beans are auto-discovered based on their annotations), so filesets wouldn't help me.
+
+The best thing I could come up with was to select some of the interesting beans, then press "show selected nodes with dependencies", but this is very instable, because as soon as I start to rearrange the boxes, they become selected, and the unselected beans disappear.
+
+Is it possible to make "Spring Dependencies Diagram" ignore part of the beans? 
+
+EDIT: I am also interested in other spring dependency graph visualisation tools. Does Eclipse or Netbeans have something like this?
+    
+
+        
+Answer 1: 
+
+    
+    
+FWIW, STS provides some views to overview the Spring specific project structure, but nothing like the visualisation in IDEA
+    
+    
+Title: Spring Eclipse (STS) @RequestMapping view is blank, is it because of Maven projects?
+Description: 
+    
+    
+                    
+I'm using STS 2.7.2 for an existing Maven project. The web app runs perfectly fine in Tomcat. The structure is as follows:
+
+
+core
+service
+web
+war
+
+
+So that's effectively 4 projects by Maven. I have added Spring project nature to all 4 and added the bean configurations (xml) for each project, however the Spring Tools /pp/p/div
+Answer 1: 
+
+    
+    
+To see anything in RequestMappings view(@RequestMappings) do the following: right click on project or config file(applicationContext if you have one)
+Title: Is there any JavaScript IDE that&#39;s able to show all used objects fields and methods in IntelliSense?
+Description: 
+    
+    
+                    
+For example, I am using Google Maps API and I want to see all possible fields and methods.
+
+&lt;script type="text/javascript" src="https://www.google.com/jsapi"&gt; &lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+var ge;
+google.load("earth", "1");
+
+
+If I type google. I want to see every available functions and fields
+
+For now I use Visual Web Developer 2010 Express and it shows only base methods available for all objects like toString().
+    
+
+        
+Answer 1: 
+
+    
+    
+To my knowledge not yet, but you can use this simple code to "print" all that's in an object.
+It is crude but it works :)
+
+// Obj.keys(); strict
+// Object.getOwnPropertyNames( obj ) strict
+get_keys = function get_keys (obj) {    // all inhereted keys
+
+    var keys = [], key;
+
+    for(key in obj)
+    {
+        //if (obj.hasOwnProperty(key)) {keys.push(key);}
+        keys.push(key);
+    }
+    obj = key = null;
+    return keys;
+};
+stringify_object = function stringify_object(obj){
+
+    var keys = get_keys(obj),
+    str = '',
+    i, len = keys.length;
+
+    for(i=0; i &lt; len; ++i)
+    {
+        str += i + ": " +keys[i] + ' : ' + obj['"'+keys[i]+'"'] +'\n\n';
+    }
+
+obj = keys = i = len = null;
+    return str;
+};
+
+    
+    

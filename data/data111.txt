@@ -1,0 +1,638 @@
+Title: how to connect suiteCRM application to IDE
+Description: 
+    
+    
+                    
+I have suiteCRM instance installed using google cloud/launcher. Its also connected to phpMyadmin. However i wanted to gain access to its directory structure that is PHP folder structure. Could someone suggest me how to connect this instance to IDE?
+    
+
+        
+Title: How do I switch perspectives Eclipse?
+Description: 
+    
+    
+                    
+I'm developing a C++ application with Eclipse CDT but sometimes I need to work with Java projects.
+
+How do you switch between the Java and C++ eclipse environments?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can change perspectives by accessing Window&gt;Perspective&gt;Open Perspective&gt;.., however there are some buttons on the right of the toolbar for switching perspectives and a button for adding new perspective switch buttons, so you can use those to switch perspectives rapidly.
+    
+    
+Title: Intellij code format defaults for checkstyle
+Description: 
+    
+    
+                    
+I enjoy clean, consistent code. I think teams should enforce this on their code bases.
+
+However, I want to spend 0 time fudging around with alphabetizing my imports, messing with tab/space characters, and other unpleasantries like that.
+
+I use an IDE (Intellij) with a great auto formatter. It will even re-arrange imports, etc.
+
+I have checkstyle up and running, and I would like to be able to just enforce the code style that results when I autoformat in intellij. Thus the rule of the land all team members will be "just do the autoformat and you good"
+
+Is there a checkstyle.xml out there that meets this requirement? Or a way to achieve this?
+    
+
+        
+Answer 1: 
+
+    
+    
+There is no tool, so I took google's and started tweaking it.
+
+&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE module PUBLIC
+        "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_3.dtd"&gt;
+
+&lt;!--
+  originally from Google checkstyle https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml
+ --&gt;
+
+&lt;module name="Checker"&gt;
+    &lt;property name="charset" value="UTF-8"/&gt;
+
+    &lt;property name="severity" value="error"/&gt;
+
+    &lt;property name="fileExtensions" value="java, properties, xml"/&gt;
+    &lt;!-- Checks for whitespace                               --&gt;
+    &lt;!-- See http://checkstyle.sf.net/config_whitespace.html --&gt;
+    &lt;module name="FileTabCharacter"&gt;
+        &lt;property name="eachLine" value="true"/&gt;
+    &lt;/module&gt;
+
+    &lt;module name="TreeWalker"&gt;
+        &lt;module name="OuterTypeFilename"/&gt;
+        &lt;module name="IllegalTokenText"&gt;
+            &lt;property name="tokens" value="STRING_LITERAL, CHAR_LITERAL"/&gt;
+            &lt;property name="format"
+                      value="\\u00(08|09|0(a|A)|0(c|C)|0(d|D)|22|27|5(C|c))|\\(0(10|11|12|14|15|42|47)|134)"/&gt;
+            &lt;property name="message" value="Avoid using corresponding octal or Unicode escape."/&gt;
+        &lt;/module&gt;
+        &lt;module name="AvoidEscapedUnicodeCharacters"&gt;
+            &lt;property name="allowEscapesForControlCharacters" value="true"/&gt;
+            &lt;property name="allowByTailComment" value="true"/&gt;
+            &lt;property name="allowNonPrintableEscapes" value="true"/&gt;
+        &lt;/module&gt;
+        &lt;module name="LineLength"&gt;
+            &lt;property name="max" value="120"/&gt;
+            &lt;property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/&gt;
+        &lt;/module&gt;
+        &lt;module name="OneTopLevelClass"/&gt;
+        &lt;module name="NoLineWrap"/&gt;
+        &lt;module name="EmptyBlock"&gt;
+            &lt;property name="option" value="TEXT"/&gt;
+            &lt;property name="tokens" value="LITERAL_TRY, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_SWITCH"/&gt;
+        &lt;/module&gt;
+        &lt;module name="NeedBraces"/&gt;
+        &lt;module name="LeftCurly"&gt;
+            &lt;property name="maxLineLength" value="100"/&gt;
+        &lt;/module&gt;
+        &lt;module name="RightCurly"&gt;
+            &lt;property name="id" value="RightCurlySame"/&gt;
+            &lt;property name="tokens"
+                      value="LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_DO"/&gt;
+        &lt;/module&gt;
+        &lt;module name="RightCurly"&gt;
+            &lt;property name="id" value="RightCurlyAlone"/&gt;
+            &lt;property name="option" value="alone"/&gt;
+            &lt;property name="tokens"
+                      value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT, INSTANCE_INIT"/&gt;
+        &lt;/module&gt;
+        &lt;module name="WhitespaceAround"&gt;
+            &lt;property name="allowEmptyConstructors" value="true"/&gt;
+            &lt;property name="allowEmptyMethods" value="true"/&gt;
+            &lt;property name="allowEmptyTypes" value="true"/&gt;
+            &lt;property name="allowEmptyLoops" value="true"/&gt;
+            &lt;message key="ws.notFollowed"
+                     value="WhitespaceAround: ''{0}'' is not followed by whitespace. Empty blocks may only be represented as '{}' when not part of a multi-block statement (4.1.3)"/&gt;
+            &lt;message key="ws.notPreceded"
+                     value="WhitespaceAround: ''{0}'' is not preceded with whitespace."/&gt;
+        &lt;/module&gt;
+        &lt;module name="OneStatementPerLine"/&gt;
+        &lt;module name="MultipleVariableDeclarations"/&gt;
+        &lt;module name="ArrayTypeStyle"/&gt;
+        &lt;module name="MissingSwitchDefault"/&gt;
+        &lt;module name="FallThrough"/&gt;
+        &lt;module name="UpperEll"/&gt;
+        &lt;module name="ModifierOrder"/&gt;
+        &lt;module name="EmptyLineSeparator"&gt;
+            &lt;property name="allowNoEmptyLineBetweenFields" value="true"/&gt;
+        &lt;/module&gt;
+        &lt;module name="SeparatorWrap"&gt;
+            &lt;property name="id" value="SeparatorWrapDot"/&gt;
+            &lt;property name="tokens" value="DOT"/&gt;
+            &lt;property name="option" value="nl"/&gt;
+        &lt;/module&gt;
+        &lt;module name="SeparatorWrap"&gt;
+            &lt;property name="id" value="SeparatorWrapComma"/&gt;
+            &lt;property name="tokens" value="COMMA"/&gt;
+            &lt;property name="option" value="EOL"/&gt;
+        &lt;/module&gt;
+        &lt;module name="PackageName"&gt;
+            &lt;property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/&gt;
+            &lt;message key="name.invalidPattern"
+                     value="Package name ''{0}'' must match pattern ''{1}''."/&gt;
+        &lt;/module&gt;
+        &lt;module name="TypeName"&gt;
+            &lt;message key="name.invalidPattern"
+                     value="Type name ''{0}'' must match pattern ''{1}''."/&gt;
+        &lt;/module&gt;
+        &lt;module name="MemberName"&gt;
+            &lt;property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9]*$"/&gt;
+            &lt;message key="name.invalidPattern"
+                     value="Member name ''{0}'' must match pattern ''{1}''."/&gt;
+        &lt;/module&gt;
+        &lt;module name="ParameterName"&gt;
+            &lt;property name="id" value="ParameterNameNonPublic"/&gt;
+            &lt;property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/&gt;
+            &lt;property name="excludeScope" value="public"/&gt;
+            &lt;message key="name.invalidPattern"
+                     value="Parameter name ''{0}'' must match pattern ''{1}''."/&gt;
+        &lt;/module&gt;
+        &lt;module name="ParameterName"&gt;
+            &lt;property name="id" value="ParameterNamePublic"/&gt;
+            &lt;property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9]*$"/&gt;
+            &lt;property name="scope" value="public"/&gt;
+            &lt;message key="name.invalidPattern"
+                     value="Parameter name ''{0}'' must match pattern ''{1}''."/&gt;
+        &lt;/module&gt;
+        &lt;module name="CatchParameterName"&gt;
+            &lt;property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9]*$"/&gt;
+            &lt;message key="name.invalidPattern"
+                     value="Catch parameter name ''{0}'' must match pattern ''{1}''."/&gt;
+        &lt;/module&gt;
+        &lt;module name="LocalVariableName"&gt;
+            &lt;property name="tokens" value="VARIABLE_DEF"/&gt;
+            &lt;property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9]*$"/&gt;
+            &lt;property name="allowOneCharVarInForLoop" value="true"/&gt;
+            &lt;message key="name.invalidPattern"
+                     value="Local variable name ''{0}'' must match pattern ''{1}''."/&gt;
+        &lt;/module&gt;
+        &lt;module name="ClassTypeParameterName"&gt;
+            &lt;property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)"/&gt;
+            &lt;message key="name.invalidPattern"
+                     value="Class type name ''{0}'' must match pattern ''{1}''."/&gt;
+        &lt;/module&gt;
+        &lt;module name="MethodTypeParameterName"&gt;
+            &lt;property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)"/&gt;
+            &lt;message key="name.invalidPattern"
+                     value="Method type name ''{0}'' must match pattern ''{1}''."/&gt;
+        &lt;/module&gt;
+        &lt;module name="InterfaceTypeParameterName"&gt;
+            &lt;property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)"/&gt;
+            &lt;message key="name.invalidPattern"
+                     value="Interface type name ''{0}'' must match pattern ''{1}''."/&gt;
+        &lt;/module&gt;
+        &lt;module name="NoFinalizer"/&gt;
+        &lt;module name="GenericWhitespace"&gt;
+            &lt;message key="ws.followed"
+                     value="GenericWhitespace ''{0}'' is followed by whitespace."/&gt;
+            &lt;message key="ws.preceded"
+                     value="GenericWhitespace ''{0}'' is preceded with whitespace."/&gt;
+            &lt;message key="ws.illegalFollow"
+                     value="GenericWhitespace ''{0}'' should followed by whitespace."/&gt;
+            &lt;message key="ws.notPreceded"
+                     value="GenericWhitespace ''{0}'' is not preceded with whitespace."/&gt;
+        &lt;/module&gt;
+        &lt;module name="Indentation"&gt;
+            &lt;property name="basicOffset" value="4"/&gt;
+            &lt;property name="braceAdjustment" value="0"/&gt;
+            &lt;property name="caseIndent" value="4"/&gt;
+            &lt;property name="throwsIndent" value="4"/&gt;
+            &lt;property name="lineWrappingIndentation" value="4"/&gt;
+            &lt;property name="arrayInitIndent" value="2"/&gt;
+        &lt;/module&gt;
+        &lt;module name="AbbreviationAsWordInName"&gt;
+            &lt;property name="ignoreFinal" value="false"/&gt;
+            &lt;property name="allowedAbbreviationLength" value="1"/&gt;
+        &lt;/module&gt;
+        &lt;module name="OverloadMethodsDeclarationOrder"/&gt;
+        &lt;module name="VariableDeclarationUsageDistance"/&gt;
+        &lt;module name="CustomImportOrder"&gt;
+            &lt;property name="sortImportsInGroupAlphabetically" value="true"/&gt;
+            &lt;property name="separateLineBetweenGroups" value="true"/&gt;
+            &lt;property name="customImportOrderRules" value="THIRD_PARTY_PACKAGE###STANDARD_JAVA_PACKAGE###STATIC"/&gt;
+        &lt;/module&gt;
+        &lt;module name="MethodParamPad"/&gt;
+        &lt;module name="ParenPad"/&gt;
+        &lt;module name="OperatorWrap"&gt;
+            &lt;property name="option" value="NL"/&gt;
+            &lt;property name="tokens"
+                      value="BAND, BOR, BSR, BXOR, DIV, EQUAL, GE, GT, LAND, LE, LITERAL_INSTANCEOF, LOR, LT, MINUS, MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR, METHOD_REF "/&gt;
+        &lt;/module&gt;
+        &lt;module name="AnnotationLocation"&gt;
+            &lt;property name="id" value="AnnotationLocationMostCases"/&gt;
+            &lt;property name="tokens" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF"/&gt;
+        &lt;/module&gt;
+        &lt;module name="AnnotationLocation"&gt;
+            &lt;property name="id" value="AnnotationLocationVariables"/&gt;
+            &lt;property name="tokens" value="VARIABLE_DEF"/&gt;
+            &lt;property name="allowSamelineMultipleAnnotations" value="true"/&gt;
+        &lt;/module&gt;
+        &lt;module name="NonEmptyAtclauseDescription"/&gt;
+        &lt;module name="JavadocTagContinuationIndentation"/&gt;
+        &lt;module name="SummaryJavadoc"&gt;
+            &lt;property name="forbiddenSummaryFragments"
+                      value="^@return the *|^This method returns |^A [{]@code [a-zA-Z0-9]+[}]( is a )"/&gt;
+        &lt;/module&gt;
+        &lt;module name="JavadocParagraph"/&gt;
+        &lt;module name="AtclauseOrder"&gt;
+            &lt;property name="tagOrder" value="@param, @return, @throws, @deprecated"/&gt;
+            &lt;property name="target" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/&gt;
+        &lt;/module&gt;
+        &lt;module name="JavadocMethod"&gt;
+            &lt;property name="scope" value="nothing"/&gt;
+            &lt;property name="allowMissingParamTags" value="true"/&gt;
+            &lt;property name="allowMissingThrowsTags" value="true"/&gt;
+            &lt;property name="allowMissingReturnTag" value="true"/&gt;
+            &lt;property name="minLineCount" value="2"/&gt;
+            &lt;property name="allowedAnnotations" value="Override, Test"/&gt;
+            &lt;property name="allowThrowsTagsForSubclasses" value="true"/&gt;
+        &lt;/module&gt;
+        &lt;module name="MethodName"&gt;
+            &lt;property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9_]*$"/&gt;
+            &lt;message key="name.invalidPattern"
+                     value="Method name ''{0}'' must match pattern ''{1}''."/&gt;
+        &lt;/module&gt;
+        &lt;module name="SingleLineJavadoc"&gt;
+            &lt;property name="ignoreInlineTags" value="false"/&gt;
+        &lt;/module&gt;
+        &lt;module name="EmptyCatchBlock"&gt;
+            &lt;property name="exceptionVariableName" value="expected"/&gt;
+        &lt;/module&gt;
+        &lt;module name="CommentsIndentation"/&gt;
+    &lt;/module&gt;
+&lt;/module&gt;
+
+    
+    
+Title: Eric IDE: How do I change the shell from python3 to python2?
+Description: 
+    
+    
+                    
+Hey I'm just starting out with Eric6. Is it possible to change the shell to use python 2.* instead of python3? can't find anything related to that in the preferences?
+
+thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+The simple and safe way is using alias. To change to python2, you can use the following command:
+
+alias python=python2
+
+
+This will change the default version to Python2.
+To revert back:
+
+alias python=python3
+
+
+Add required line into your  ~/.bashrc or ~/.bash_aliases file.
+
+Note, using ln could cause problems.
+    
+    
+Answer 2: 
+
+    
+    
+Usually python2 interpreter is opened with the python command, and the python3 interpreter is opened with the python3 command. On linux, you may want to put #!/usr/bin/env python at the top of your code.
+    
+    
+Title: how to remove Breakpoint &ldquo;bar&rdquo; in Eclipse?
+Description: 
+    
+    
+                    
+Don't know if this bar has always been here, I have been messing around with some settings in Eclipse and I do not remember having this bar. 
+
+How do I remove this? 
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+In Preferences-&gt; General-&gt; Text Editors, disable Show range indicator.
+    
+    
+Title: Subversion commands work at the OS shell command-line but not within the IDE
+Description: 
+    
+    
+                    
+I've organized my repository using TortoiseSVN. I was careful to use only svn commands while creating my file structure. Now all Subversion commands are working at the command line but not from within my IDE (Intersystems Cache Studio). Basically I'm trying to write a plug-in for my IDE to use Subversion from within the Studio. Trying to integrate Subversion into my IDE, something like Subversive, but for Cache Studio.  This occurred after reorganizing my code into directories. For example at the command-line, svn info and svn status and all other commands work perfectly. All Subversion commands work at the command prompt!
+
+However, from within my IDE, svn info outputs this error:
+
+svn: warning: W155010: The node 'E:\elive2016\sourcecontrol\storage\XMLManager.xml' was not found.
+svn: E200009: Could not display info for all targets because some targets don't exist
+
+And svn status outputs the same errors:
+
+svn: warning: W155010: The node 'E:\elive2016\sourcecontrol\storage\XMLManager.xml' was not found.
+svn: E200009: Could not display info for all targets because some targets don't exist.
+
+No Subversion command except svnadmin create works from within the IDE. The same command(s) works perfectly well at the command prompt. I run Windows 10, InterSystems Cache Studio 2016 and Subversion 1.8.12. Any help, please? 
+    
+
+        
+Title: run code in pycharm at office then fail to run the same code in pycharm at home?
+Description: 
+    
+    
+                    
+Symptom:
+
+I ran some code in pycharm at office, which I sync in google driver so that I can access them at home. But when I run the same code in pycharm at home, it keeps throwing me an error that it can't find the file specified, which is the path to the python interpreter in my office computer.
+
+Tried:
+
+I tried to locate the project interpreter setting and make sure the path to the interpreter is to the python at my home computer. But it still won't work. I tried to google it, nothing comes up. Anyone has the same issue before?
+
+Error running scraper: 
+
+
+  Cannot run program
+  "C:\Users\Administrator.SUNDAN\AppData\Local\Programs\Python\Python35-32\python.exe"
+  (in directory
+  "D:\baiduyundownload\Tempo\Office\1107\Projects\Code\scraper"):
+  CreateProcess error=2, The system cannot find the file specified
+
+
+Notice that the path:
+
+"C:\Users\Administrator.SUNDAN\AppData\Local\Programs\Python\Python35-32\python.exe" 
+
+
+leads to the python interpreter at office.
+
+Related info:
+
+OS: WINDOWS 10
+
+Python Version: 3.5
+    
+
+        
+Title: Android Studio Cannot Lock Sytem Folder
+Description: 
+    
+    
+                    
+I'm getting the Internal Error shown below. I've found Solutions for cannot bind child loop, but not for this error. 
+
+I tried the following with no luck. Suggestions appreciated.
+
+
+Opened cmd window with Run as Administrator option
+Executed netsh winsock reset on the command line
+Restarted the computer
+Re-installed software
+
+1: 
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I had the same problem and solved it by turning off Hyper-V in Windows feature.
+    
+    
+Title: Show files larger in sidebar in PhpStorm
+Description: 
+    
+    
+                    
+I have a question about the view of files in the sidebar of PhpStorm. I often give lessons about Laravel framework. Then I use PhpStorm to code some examples. I always change the font-size in Preferences &gt; Editor &gt; Colors &amp; Fonts &gt; Font.
+
+But how can I change the size of folders and files in my sidebar?
+
+
+    
+
+        
+Title: Designer view in Xamarin.Forms with Visual Studio 2015 Update 3
+Description: 
+    
+    
+                    
+I just wanted to know that, is it possible to get the designer view in Xamarin.Forms with Visual Studio 2015. It's very hard to compile code every time to check the simple changes.
+Thank You in advance.
+    
+
+        
+Answer 1: 
+
+    
+    
+If you are using XAML to write the code you can use XAML Previewer for Xamarin.Forms You can see the documentation here: 
+
+https://developer.xamarin.com/guides/xamarin-forms/xaml/xaml-previewer/
+
+Few things to keep in mind: 
+
+
+You need to be connected to MAC Agent to make it work (I am not sure
+why this is the case even for Android, For me it does not work without connecting to mac agent)
+The Previewer works on any ContentPage, ContentView, or ViewCell in
+a   Xamarin.Forms application
+To launch the Previewer in Visual Studio, select View -
+Title: Can&#39;t use a transparent BMP with MFC Button control
+Description: 
+    
+    
+                    
+I am really confused here ...
+
+I am trying to add a MFC Button control onto my dialog in the IDE.
+
+I want it to just show a BMP file. I have another already on the dialog that shows with a transparent background.
+
+This is the image for the good button:
+
+
+
+This is the other button image I downloaded. But it is PNG:
+
+
+
+I have tried to convert it so that it is 32 bit BMP so that it is transparent:
+
+
+
+But it is failing. It shows with a black background:
+
+
+
+You can see on that screenshot that the lower image shows OK. But not the new one. How do I fix this image file?
+
+Update:
+
+I used a different image in the end for the question mark. But for others I ended up using PNG and manually using the load method as outlined below:
+
+
+    
+
+        
+Title: Android Studio 2.2.2 preview and design not showing properly
+Description: 
+    
+    
+                    
+I have recently installed Android Studio 2.2.2. But in the IDE the preview and design window for xml not showing complete mobile-like appearance that I used to view in previous version, rather it is showing only the mobile screen with rulers around. How can I see full featured preview/design? Pls advice. 
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I was also looking for this, But its new functionally it will look like this by default. only screen and blueprints, No mobile.
+
+https://developer.android.com/studio/write/layout-editor.html
+    
+    
+Title: Mismatching PHP &amp; HTML blocks in PhpStorm
+Description: 
+    
+    
+                    
+Is it possible to make PhpStorm highlight mismatching tags of mixed PHP &amp; HTML code?
+
+Consider this example:
+
+&lt;? if($name): ?&gt;
+&lt;div class="container"&gt;
+    &lt;h1&gt;&lt;?php echo $name; ?&gt;&lt;/h1&gt;
+    &lt;? endif; ?&gt;
+&lt;/div&gt;
+
+
+How can I make PhpStorm highlight endif and is it possible at all?
+    
+
+        
+Title: Viewing derived class variables while hovering the cursor over a base class pointer (C++) in visual studio code
+Description: 
+    
+    
+                    
+Is it possible to view the member variables of a derived class during debugging by hovering the cursor over a base class pointer that points to an object of the derived class.
+
+Curious to know if visual studio code or debuggers in general support this feature.
+
+Currently, visual studio code only shows the base class variables when I hover the cursor over the base class pointer pointing to a derived class object.
+    
+
+        
+Title: Xcode Interface Builder resizing elements annoyingly
+Description: 
+    
+    
+                    
+Interface Builder often resizes and replaces elements from my app. It does it when I load Interface Builder after launching Xcode. How can I prevent it from doing this? This bug messes things up really annoyingly. For instance the cells from tableviews are 1000 points in width and I can't resize back to screen width. Its subviews are also influenced. I have to delete the old cell and put in a new one.
+    
+
+        
+Title: Linking with static libraries built in previous versions
+Description: 
+    
+    
+                    
+Target OS: Windows DS7 64 Bit;
+
+Our team is Using VS2010 for a C++ Framework development. We statically link with another Custom framework which is Using VS2010 as IDE. Our goal is to deliver static libs and dlls for clients which are using VS2005 or VS2010. Basically, we provide full functionality DLLs, but also a custom API.
+
+Questions:
+
+
+Is it possible that we update our IDE to VS2015 and keep linking to VS2010 deliverable from our "supplier"?
+For our customers now:  Is it possible that we build for all requested VS IDE versions by keeping only the Toolset (target framework) from VS 2010/2005 etc.  and Uninstalling previous versions of MS VS from the Build Machines?
+
+    
+
+        
+Title: Android Device Monitor not launching inspite of running the computer in the administrative mode ?
+Description: 
+    
+    
+                    
+I have tried many ways to get my Android Device Monitor get started. However nothing seems to be working. Can anyone please help
+    
+
+        
+Title: PyCharm autocomplete in folder with many projects, both py2 and py3
+Description: 
+    
+    
+                    
+I work on django website with lots of components and modules. 
+
+In the same folder and git repository, I also have another closely related projects like data downloaders, transformers, validators, uploaders and utilities. Roots of all projects are many levels deep. Projects use both Python 3 and Python 2, because of some outdated dependencies.
+
+Before today, autocomplete did not work for anything, except maybe major dependencies if I also install them system-wide. Every import was underlined in waved red.
+
+Just now I went to "File/Settings/Project/Project Structure/Add content root", removed default root and added main django website. It works for site, but I can't add root directory since it 'overlaps', so I lost view of tree and this is not acceptable.
+
+How to keep full intact view of source tree and still have autocomplete in all and every sub-project, be it main one or one-off utility ?
+
+PyCharm version is 2016.2.3 (latest), community edition. 
+    
+
+        
+Title: Selenium Ide - error element id not found
+Description: 
+    
+    
+                    
+I have two websites that I have to make sure that are completely the same. 
+So far I am only familiar to Selenium Ide. 
+I got stuck on a radio button click command - I am getting: 
+[error] Element id=blabla not found
+I've checked with the inspector both websites, the id-s are the same. What could be the reason for this?
+
+Since I am newbie to selenium I would really appreciate a detailed step-by-step description. 
+Thanks!  
+    
+
+        
+Title: Breakpoints are not working inside the category files
+Description: 
+    
+    
+                    
+I have a category for UIView and added breakpoints in it. While debugging the control is not coming to those break points. I did make sure
+
+
+It is not in release mode.
+Breakpoints are not disabled
+Dwarf with dsym file is enabled under Debug Information Format in build settings.
+
+
+Have anyone experienced and resolved this?
+    
+
+        

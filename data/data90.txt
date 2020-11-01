@@ -1,0 +1,1735 @@
+Title: Mixing tabs and spaces without mixing tabs and spaces
+Description: 
+    
+    
+                    
+I'm a Vim user who (due to my Python background) has grown accustomed to spaces instead of tabs.  I'm working on a PHP project with another developer who uses Windows IDEs and really wants to use tabs.  There really doesn't seem to be any hard and fast style guide for PHP that prefers a specific style, so I'm kind of stuck needing to deal with the tabs.
+
+Is there some way, either through Git or Vim, that I can work with tabbed code and convert it to spaces while I'm editing it?  Then perhaps on git add/commit it could be converted back to tabs?  
+    
+
+        
+Answer 1: 
+
+    
+    
+The one really important thing is that the tracked content be standardized. You and the other developer are just going to have to agree on something there. Whichever of you wants to do something besides the agreed-upon standard is may end up with mixed results. It's not always possible to cleanly convert back and forth. 
+
+I would really recommend just dealing with it. I have my own opinion about tabs and spaces, and I've worked on code using each. The best thing to do is just to set up your editor to match the standardized style, and go with it. In vim, turn off expandtab, set tabstop to what you like.
+
+If you still want to try, there are two primary ways:
+
+
+Use autocommands in Vim to convert on read/write. You'd probably need BufReadPost, BufWritePre, and BufWritePost. (For writing, you convert to the standard, let Vim write it, then convert back to the way you like to edit.) Make sure tabstop is set the way you like, then something like this (untested):
+
+set tabstop=4
+autocmd BufReadPost * set expandtab | retab
+autocmd BufWritePre * set noexpandtab | retab!
+autocmd BufWritePost * set expandtab | retab
+
+
+
+The * is the filepattern that this will apply to; you may have to mess with that, or only add the autocommands for files within a certain directory, to make sure this doesn't happen for everything you edit. Note that this is dangerous; it will for example replace literal tab characters inside strings.
+
+
+Use Git's smudge/clean filters. You can read about them in man gitattributes, or in Pro Git. You could use those to convert for editing, then back to the standard for committing. If there's never any weird indentation, it could be as simple as changing leading tabs to some number of spaces, and leading spaces to a fraction of that number of tabs. Do it with sed/perl/indent, whatever you're comfortable with.
+
+    
+    
+Title: Search and Replace Regex possibilities to add &lt;beg&gt; and &lt;/end&gt; tags to each line:
+Description: 
+    
+    
+                    
+I was wondering my options people know of for adding tags to each line.
+
+Say I have 100 items I need to put in a string array
+
+&lt;resources&gt;
+    &lt;string-array&gt;
+    item001
+    item002
+    item003
+        ...
+    &lt;/string-array&gt;
+&lt;/resources&gt;
+
+
+What I need is to somehow wrap each line or each line with the items in it like:
+
+&lt;resources&gt;
+    &lt;string-array&gt;
+    &lt;item&gt;item001&lt;/item&gt;
+    &lt;item&gt;item002&lt;/item&gt;
+    &lt;item&gt;item003&lt;/item&gt;
+        ...
+    &lt;/string-array&gt;
+&lt;/resources&gt;
+
+
+I'd appreciate a solution achievable on your average Linux box. No windows/osx please. Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+as you wanted, awk solution under Linux
+
+awk '!/&lt;.*&gt;/ &amp;&amp; $0{gsub(/^[ \t]+/,"",$0);$0="&lt;item&gt;"$0"&lt;/item&gt;"}1' yourXml
+
+
+test with your snippet:
+
+kent$  echo "&lt;resources&gt;
+    &lt;string-array&gt;
+    item001
+    item002
+    item003
+        ...
+    &lt;/string-array&gt;
+&lt;/resources&gt;
+"|awk '!/&lt;.*&gt;/ &amp;&amp; $0{gsub(/^[ \t]+/,"",$0);$0="&lt;item&gt;"$0"&lt;/item&gt;"}1'
+
+
+output
+
+&lt;resources&gt;
+    &lt;string-array&gt;
+&lt;item&gt;item001&lt;/item&gt;
+&lt;item&gt;item002&lt;/item&gt;
+&lt;item&gt;item003&lt;/item&gt;
+&lt;item&gt;...&lt;/item&gt;
+    &lt;/string-array&gt;
+&lt;/resources&gt;
+
+    
+    
+Answer 2: 
+
+    
+    
+Select regular expressions checkbox in Eclipse 'Find and Replace' dialog and then replace
+
+(^\s*)([^&lt;\r\n]+$)
+
+
+with
+
+\1&lt;item&gt;\2&lt;\item&gt;
+
+    
+    
+Title: How to unintegrate jprofile with netbeans
+Description: 
+    
+    
+                    
+I installed jprofile to investigate a memory leak and also clicked the integrate IDE with netbeans 6.9.1. Runing my Web application worked well when clicking the Profile Project, However, when I want to debug again the project the jprofile is still being run when I just want to debug [i.e. Clicking the debug button instead of Profile]. This causes the debugging to fail all the time.
+
+Glassfish Server Output Console.
+
+JProfiler&gt; Protocol version 33
+JProfiler&gt; Using JVMTI
+JProfiler&gt; JVMTI version 1.1 detected.
+JProfiler&gt; 32-bit library
+JProfiler&gt; Listening on port: 33200.
+JProfiler&gt; Instrumenting native methods.
+JProfiler&gt; Can retransform classes.
+JProfiler&gt; Can retransform any class.
+JProfiler&gt; Native library initialized
+JProfiler&gt; VM initialized
+JProfiler&gt; Waiting for a connection from the JProfiler GUI ...
+
+
+I did not said to profile but still this log shows in the console. I tried to look at any uninstall or unintegrate option within the jprofile and there is non. But the jprofile is also not registered as a plugin when looking at the Tools /pp/p/div
+Answer 1: 
+
+    
+    
+Debugging should not append the VM parameter for profiling (-agentpath) to the java command, even if the JProfiler integration is installed, so this sounds kind of strange.
+
+Look into the %USERPROFILE%.netbeans\6.9\modules directory and delete com-jprofiler-integrations-netbeans.jar. If that file does not exist either, the -agentpath parameter is added in a different way, maybe explicitly in your debug configuration.
+    
+    
+Title: Will I be able to easily port Qt applications?
+Description: 
+    
+    
+                    
+If I create a Qt binary, then the user that starts it will not need to have Qt installed on their computer right? That is, it's like a native support of MFC - it starts everywhere (on Windows, if it was built as exe)? I know libraries should be static/included and so, but I am asking only about Qt compatibility.
+
+Also, if I create a Qt project on Windows, do I need some extra work to use this project on Linux, given the version of Qt is the same? What about Mac? 
+    
+
+        
+Answer 1: 
+
+    
+    
+The Qt libraries will have to be installed on the target machine, unless you statically link the Qt libraries in your executable. (I do not recommend this, the resulting binaries will be huge.)
+
+Depending on the licence you use Qt with, you could also ship the required Qt DLLs with your application.
+
+As for portability, it's very good with Qt. It should compile and run fine as-is on Mac and Linux. (Possible problems are with file paths and such, but there are ways to make that work reliably and portably if you always use the Qt APIs.)
+    
+    
+Answer 2: 
+
+    
+    
+I disagree with Mat -- unless the application was specifically designed and written with portability in mind at all times, you will have to make many changes to get it to compile, to run, and to look good on Linux and Mac. Qt makes this process easier, but it is not entirely painless.
+    
+    
+Answer 3: 
+
+    
+    
+The UI is pretty much bound to look ugly on other systems on the first run. Qt is, first and foremost, a unified UI creation system; meanwhile, in Windows, the menu is a part of the nonclient area of the window, on Mac, it's outside of the window (on screen top instead), and on Linux it's just one of the controls in the client area. Unify that. And don't get me started on the widget diversity on Linux.
+
+So yeah, there will be a nonzero porting effort.
+    
+    
+Answer 4: 
+
+    
+    
+I think there are several separate issues to consider here:  
+
+
+Getting your Qt program to compile under various platforms
+Deploying your Qt program on various platforms (so that "normal
+users" can install and run it without a lot of hassle)
+Tweaking your Qt program's look and feel (so that it looks as
+"native" as possible under the various platforms it to run on)
+
+
+(1) Is largely a matter of avoiding platform-specific APIs in your program.  If you stick to Qt and STL APIs you should be okay.  Or if you must use something platform-specific feature, you can do so via #ifdefs for each platform, or by providing separate .cpp files for each platform, but that is a hassle that's best avoided if possible.
+
+(2) Requires slightly different steps for different platforms;  There is some documentation about it here.
+
+(3) May or may not be important to you (it depends on how much you care whether your program looks like a native application on each platform).  If it is important, then I don't think there is any way around manually trying your program out on each target platform and tweaking it until it looks "just right" for that platform.  It helps to design your GUI code to make as few hard-coded assumptions at possible (so that Qt's QStyle layer is free to the 'right thing' based on the current platform).
+    
+    
+Title: Netbeans and refactoring
+Description: 
+    
+    
+                    
+I have Netbeans 7. When I have it generate my getters and setters it does:
+
+public void foo() {
+}
+
+
+Whereas I need it to do:
+
+  public void foo() 
+  {
+  }
+
+
+Where the starting brace is on the next line.
+
+The same thing happens when I use Source-/pp/pp/p/div
+Answer 1: 
+
+    
+    
+From the main menu bar, 
+
+
+select tools then options, 
+click on the editor icon, 
+select the formatting tab, 
+select java on the language drop down list 
+and select braces from the category drop down list.
+
+
+Then select new line for the item method declaration in the braces placement group.
+    
+    
+Answer 2: 
+
+    
+    
+Tools-
+Title: Does XCode 4 support Erlang syntax highlighting and code completion?
+Description: 
+    
+    
+                    
+Is there some plugin already? Or should I start writing one? 
+    
+
+        
+Answer 1: 
+
+    
+    
+ErlangXCode as a plugin will not work currently. I have not tried out XCode 4 yet so I don't know if the definition files have changed. If they are still the same you could be able to copy the Erlang FileTypes.xcspec, Erlang Language.xclangspec and Erlang Syntax.xcsynspec from the Github project page 'as is' to get at least basic syntax highlighting. In Xcode 3 you put these files in ~/Library/Application Support/Developer/Shared/Xcode/ for example. But like I say either the spec files or the directory to put them in could have changed. But I doubt that the rest of the specification files, like for compilation, will work as is. But I guess you could try just moving all the specification files over. In worst case you might have to delete some of them again.
+
+I will take a look at upgrading ErlangXCode to XCode 4 later. For now I have little time.
+    
+    
+Answer 2: 
+
+    
+    
+Apparently there is this. I don't know anything about it, but it is possible that it only works with Xcode 3. Perhaps you could update it for Xcode 4?
+
+https://github.com/JonGretar/erlangxcode
+
+http://mac.softpedia.com/get/Developer-Tools/ErlangXCode.shtml
+    
+    
+Title: How do I set the build path for E-P-I-C in Eclipse Galileo?
+Description: 
+    
+    
+                    
+I have E-P-I-C installed on Eclipse Galileo. When I go to run a Perl script nothing happens because I don't believe is any connection from Eclipse to the Perl SDK (is that the right term? I don't know if it is different because it's Perl).
+
+I'm pretty sure it has something to do with C:\Perl\bin
+
+If I click on Perl E-P-I-C project and click on properties I can then see 
+Perl include Path. I have added the above but it didn't change anything.
+
+What this comes down to is: How do I set up the build path for Perl in Eclipse Galileo? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Normally, the PerlDistribution asks to be added to your %PATH%. For me it added D:\strawberry\c\bin and D:\strawberry\perl\bin. My Eclipse Galileo uses that environment variable out of the box.
+
+You can set the perl executable for a .pl file using Window-
+Answer 2: 
+
+    
+    
+Vista user here. I have Activestate Perl and it also installed into c:\perl5.10, and added the executable to the %PATH%. 
+
+Thus, In my Window/Prefrences/Perl EPIC Menu, the executable is called "perl". No .exe, no absolute path. E-P-i-C has probably found it by searching in the default install locations.
+
+In eclipse, you need to run your perl script once using a right mouse click "run as ...perl local". 
+THen this script shows up in the Menu "Run 
+Title: How do I set up NetBeans 7 to download the contents of a GitHub repository?
+Description: 
+    
+    
+                    
+Apologies for the newbishness of my question. I would like to connect and download the contents of a GitHub repository, specifically: https://github.com/residual/residual (with the repository URI being: https://github.com/residual/residual.git).
+
+I have initialized a Root Path for the repository to be created, and then fed in the URI, but when I click Fetch, all I get is:
+
+==[IDE]== 21-Jul-2011 23:02:51 Connecting
+==[IDE]== 21-Jul-2011 23:02:51 Connecting finished.
+==[IDE]== 21-Jul-2011 23:05:29 Fetching...
+git fetch https://github.com/residual/residual.git +refs/heads/master:refs/remotes/origin/master
+No update
+==[IDE]== 21-Jul-2011 23:05:30 Fetching... finished.
+
+
+Which sounds promising except in NetBeans the repository looks like this (i.e. apparently empty):
+
+
+
+How do I get the files from the repository (I only want to edit them locally, but always have the latest version available -- not commit anything) and use them in a C++ project?
+
+Again, apologies for the newb question. I can't seem to find any guides to getting this up and running, despite having had no problems running SVN and SourceSafe version control in the past.
+
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+When you "fetch", you only populate the "remotes" part of the refs (references) of your empty Git repo.
+In other words, you don't modify any of your local files (which you don't have for now, since your repo is empty)
+
+Cf. this visual reference for Git, in order to see how git fetch does not modify the local files.
+
+
+
+Once fetched, you need to checkout a branch based on one of the remotes branches you have just fetched.
+
+Another option would have been to clone directly the repo.
+
+
+
+Your local repo wouldn't be empty, and would be set up right away on a branch (generally by default master).
+    
+    
+Answer 2: 
+
+    
+    
+The answer is simply: You need to pull or clone a repository. Sadly you can presently do neither in NetBeans.
+    
+    
+Title: Symbols thrown in by text editors
+Description: 
+    
+    
+                    
+Sometimes when a file is opened with some editor (in my case a cfm file with ColdFusion Builder), it displayes the text littered with symbols such as [] or �. Can anyone tell me what the proper term for those is (so I don't sound like a troglodyte when referring to them as black rhombus question mark, unless that is the proper term in which case I am sorry), and why they are generated (I'm guessing markup annotations that can't be parsed out)?
+    
+
+        
+Answer 1: 
+
+    
+    
+�, code point U+FFFD, is named REPLACEMENT CHARACTER in Unicode. In normal contexts, referring to it as "the Unicode replacement character" would be the normal thing to do. This character is used when the data being read does not correspond to any valid character.
+
+A simple box is used by some systems to indicate a character for which no glyph is available (i.e. no available font provides that character); other systems use a box with hex digits inside representing the Unicode code point, or other glyphs. I don't know if it has an official name, but "fallback representation" would be appropriately descriptive.
+    
+    
+Answer 2: 
+
+    
+    
+I've always called them invalid characters. 
+    
+    
+Title: Set up &ldquo;toggle comment&rdquo; command in slickedit? Add more than one hotkey to a command in slickedit?
+Description: 
+    
+    
+                    
+Is there a way to do either of these two things?
+
+
+  Add hotkey to "toggle comment". By
+  default slickedit seems to have 2
+  separate commands, comment and
+  erase-comment. I wish to have a single
+  hotkey to handle both (similar to how
+  eclipse/netbeans handles it).
+
+
+█ 
+
+
+  Add 2 separate hotkeys to do the same
+  command.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+In SE16 (probably also in previous versions, I didn't check) you'll find a command toggle-comment (look in source file box.e). You may bind that to a key.
+
+And the second one is simple: Go to Tools -/p/div
+Title: free &amp; fast PHP IDE with svn support under OSX?
+Description: 
+    
+    
+                    
+currently I use eclipse but it is very very slow for few large active projects.
+
+I am not a programmer I use the IDE only for looking up the code or little changes now and then if I do testing.
+
+Eclipse takes soooo much memory and takes time to start up. So exiting after every use is not an option too.
+    
+
+        
+Answer 1: 
+
+    
+    
+Netbeans is very good, and free plus it handles remote project sources via sftp and also supports subversion.  The only downside I find with the latest version (7.0) is that it is very resource-hungry and prone to creaking along.  I get around this by increasing memory in the netbeans.conf file and also by turning off auto-scanning in the preferences-/pp/p/div
+Answer 2: 
+
+    
+    
+I use xcode. It will give you syntax highlighting, svn and code folding. Some of the most important features, if you ask me. Code completion also works (sometimes)
+    
+    
+Answer 3: 
+
+    
+    
+Even though it's not free, TextMate is not really expensive and highly customizable. You have support for Subversion through bundles. It really is from my point of view one of the best code editor on OS X. Version 2 should be there soon.
+    
+    
+Title: Haskell learning environments
+Description: 
+    
+    
+                    
+after using plt-scheme for htdp and lispworks
+personal edition for touretsky's intro to symbolic computation; i
+would like to more about functional programming using haskell.
+But i am spoiled using the above ide's. I started reading
+learnyouahaskell  but when the discussion  goes to use your
+favorite editor i blank out . I did download the haskell platform
+and can use ghci in the terminal but 'linking' to an editor
+seems to be a problem.
+    
+
+        
+Answer 1: 
+
+    
+    
+If developing environments qualify as learning environments:
+
+
+leksah
+WinHugs (Windows)
+EclipseFP
+
+    
+    
+Answer 2: 
+
+    
+    
+You can use tmux, then send from vim to ghci using the tslime plugin.
+
+tmux: http://tmux.sourceforge.net/
+
+tslime: http://www.vim.org/scripts/script.php?script_id=3023
+    
+    
+Title: XAML Split Page selected element tag highlight
+Description: 
+    
+    
+                    
+In Visual Studio looking at a XAML file in split page mode (design one half XAML the other)
+
+I have a &lt;Grid&gt; and I select it in the Design half, the XAML half gets a light grey shading on the element tag.
+
+I can see the highlight fine on my PC but not on my laptop as the LCD screen is bright.  
+
+Can I change the highlight in a setting somewhere?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can set the inactive selected text color here:
+
+
+Tools -
+Title: Python ide with omitting lines while debugging
+Description: 
+    
+    
+                    
+I have 3 lines and I want something like in visual studio where I can execute first line, and then by mouse move execution step to 3rd line and execute it without executing second line.
+
+So in this case 
+
+print('a')
+print('b')
+print('c')
+
+
+I want to have in an input:
+
+a
+c
+
+
+Now I'm using wing ide 4 trial and it hasn't this option.
+    
+
+        
+Answer 1: 
+
+    
+    
+Wing IDE has a contributed add-on script that supports this:
+
+http://wiki.wingware.com/DebugMoveProgramCounter
+
+Drop it into the 'scripts' directory in your user settings directory (which varies in location but is listed 5th in Wing's About box) then select Reload All Scripts from the Edit menu.
+
+Probably easiest to assign a key binding to the command jmp_line (in Keyboard / Custom Key Bindings preference), since it works relative to caret position.
+    
+    
+Answer 2: 
+
+    
+    
+You can do this with the "Run to Line" command in Eclipse Pydev IDE, which is also free and open source.  Note that the debugger cannot jump to a line inside certain blocks, like for/while loops, finally clause, etc.
+
+Given your example, use the following sequence of commands:
+
+
+Set a breakpoint at print('a').
+Run your script in debug mode, menu Run /strong/lilicode/codestrong/strong/lilicode/codecode/codestrong
+Title: How to create a .war file in JDeveloper 11g?
+Description: 
+    
+    
+                    
+How can I create a .war file of an application in JDeveloper 11g?
+    
+
+        
+Answer 1: 
+
+    
+    
+Please refer to "Oracle Fusion Middleware Java EE Developer's Guide for Oracle Application Development Framework 11g Release 1 (11.1.1.4.0) - 8 Deploying an ADF Java EE Application". This should have all the information you need to create WAR deployment profiles for your application.
+    
+    
+Answer 2: 
+
+    
+    
+you can create a war file for an UI application. Click on the application, select project properties and navigate to the deployments tab. Select the type of deployment as WAR and add the dependencies. 
+    
+    
+Answer 3: 
+
+    
+    
+simplest way is just right click on the UI project and hit deployment. it will deploy with a default profile which is good unless you have some specific requirements
+    
+    
+Title: Autocompletion ruby on rails editor for windows
+Description: 
+    
+    
+                    
+I am looking for an editor/IDE on windows doing autocompletion like eclipse (you start to type and there is a list of possible functions/variables). I tried Netbeans but it does not support network drives, I tried ruby mine, and aptana, but the tab gizmo requires you already know ruby on rails very well to be used.
+
+Is there a Rails editor for windows with autocompletion?
+    
+
+        
+Answer 1: 
+
+    
+    
+I think JetBrains makes the best IDEs on the market, hands down.  Take a look at their Ruby Mine.  It's not free, but some things are worth paying for.
+    
+    
+Answer 2: 
+
+    
+    
+Take a look at this thread:
+Ruby on Rails Editor for Windows
+    
+    
+Answer 3: 
+
+    
+    
+Aptana RadRails is an extension for eclipse with ruby on rails support and is open source.  
+
+RubyMine is also another good editor but it is not free.  RubyMine is surely a useful IDE but you might try the open source IDEs first.
+    
+    
+Title: Can I remove unnecessary items from Coderush menus?
+Description: 
+    
+    
+                    
+When you call Coderush to refactor something, sometimes it pulls options altogether with those that we already got in VS by default, like here in the picture. 
+
+
+
+That kinda bothers me. Is it possible to remove VS stuff and keep only that belongs to CodeRush? 
+
+Coderush 10.2.5 
+Visual Studio 2010
+    
+
+        
+Answer 1: 
+
+    
+    
+If I understand it properly, you have installed CodeRush Xpress and Refactor.  If you want to remove the VS refactoring menu, uninstall the CodeRush Xpress and leave Refactor.  If you have CodeRush installed, it should stay installed, too.
+    
+    
+Title: How to download the sourcecode for Neatbeans 6.9 IDE
+Description: 
+    
+    
+                    
+I want to download the source code of NeatBeans IDE 6.9. Is its possible to so and if it is how to do that. I tried to search but could not find the exact point.
+    
+
+        
+Answer 1: 
+
+    
+    
+Latest trunks in zip, or get from Mercurial:
+
+$ hg clone http://hg.netbeans.org/main
+    
+    
+Answer 2: 
+
+    
+    
+Instructions for how to get the NetBeans sources are on the NetBeans website: http://NetBeans.org/community/sources/
+    
+    
+Answer 3: 
+
+    
+    
+http://wiki.netbeans.org/WorkingWithNetBeansSources
+    
+    
+Title: How to enlarge eclipse java editor functionality using plugins?
+Description: 
+    
+    
+                    
+Hope somebody could help me, giving a hint and way out.
+Right now I'm involved in a ambitious project trying to create mixed math and programming IDE.
+After a huge prestudy we decided to use eclipse as a base, and somehow add Mathematica,maple functionality.
+Generally speaking we want to make entering math expressions (a = sin(Pi)+10^2) into java code possible. Also those expressions should be showed in LaTex view, right in the code to make it more readable for engineers, to illustrate the code we want to implement insertion images in comments.
+As we need all th java editor functionality, in my opinion it's correct to use standart eclipse java editor, and learn it to behave with other objects, e. g. images.
+
+So my questions are:
+- Could somebody share experience developing similar products?
+- May be there are something like we are going to develop?
+
+Probably I'll write more questions, especially tighter ones.  
+    
+
+        
+Answer 1: 
+
+    
+    
+That is certainly an interesting sounding project.  As Gilbert Le Blanc mentions, the Java Editor is highly optimized to edit Java code and is not meant to be extensible.  
+
+That being said, I can recommend two options (one that plays by the rules, and one that goes against them).
+
+
+Instead of embedding your images directly in the Java editor, you could implement your own hover, through the org.eclipse.jdt.ui.JavaEditorTextHovers extension point (so it would work like JavaDoc hovers), or in a separate view that sits beside the editor (so it would work like the JavaDoc view). (This is playing by the rules.)
+A while ago, I implemented a prototype editor that allows you to edit Java code with snippets of CAL (a functional JVM language) embedded inside of it.  The snippets were stored in there own little window inside the editor.  This was a prototype and not everything worked smoothly and it was also using Eclipse 3.2, but this is exactly the kind of thing that you want to do.  It won't be easy to compile and run the code, but you can have a look at it....well, maybe. I have to find an EPL variant of the source code.  Until then, just realize that hacking the Java Editor like this requires some specialized knowledge about the JDT and you need to be careful about how you do it so that you do inadvertently break other things.
+
+
+
+
+Edit
+
+Here is a zip of the project I described.  It will not compile as it is, but you can look at the source code:
+
+Try this link. It should be viewable by the world.
+
+The essential thing to realize is that swt StyledText widgets can themselves contain other widgets.  This project leverages that in Java editors.
+
+In particular, look at the class org.openquark.cal.eclipse.embedded.containing.ContainingEditor, which is a sub-class of CompilaitonUnitEditor.  This particular class embeds a second text editor (the contained editor) inside of another editor (the containing editor).
+
+Also, take a look at org.openquark.cal.eclipse.embedded.containing.ControlManager.  This class manages the different controls inside of a styled text of the containing CompilationUnitEditor.
+
+What this project does is creates a Java-like editor, and allows users to embed editors for another language inside of the Java editor.  These editors are actually backed by text in the containing Java editor, but the text is covered by the contained editor.
+
+The contained editors move up and down as text is entered into containing editor.  Also, you can use the keyboard to gain/lose focus in a contained editor.
+
+It's been several years since I looked at this code, but if you have any questions, drop me a line or add to this question.
+    
+    
+Answer 2: 
+
+    
+    
+The Eclipse Java Editor is made up of hundreds of Java classes.  There's an implicit assumption in those hundreds of Java classes that the editor view is just for code.
+
+In my opinion, you'll find it much easier to develop a Mathematica-type editor for your math images, and leave the Java editor alone.  Your engineers can open two editors in Eclipse.
+
+If my comments haven't dissuaded you, here's the Eclipse documentation for Eclipse Helios, otherwise known as Eclipse 3.6
+
+The section you'd start with is called the JDT Plug-in Developer Guide.
+
+The Eclipse web site is responding slowly as I'm typing this.  You can also access the Help from inside of Eclipse Helios.
+
+Help -&gt; Help Contents
+
+    
+    
+Answer 3: 
+
+    
+    
+I know exactly what you can do. First, you can turn-on the unicode character set. This will allow you to have variables such as greeks, which makes the code much more readable. [General-
+Answer 4: 
+
+    
+    
+Ok, as a follow-up to my post above, here is the Eclipse Plug-In Development Environment (PDE) project I developed for this. The Plug-in is named LaTeXHover and will pop-up a tooltip whenever you hover on top of a comment line that contains LaTeX such as:
+
+// $latex i\hbar\frac{\partial}{\partial t}\left|\Psi(t)\right
+Title: Should the Git repository root be the same as the project root on our IDE?
+Description: 
+    
+    
+                    
+I'm developing a PHP application in a IDE, and want to use Git for version control.
+
+How should I arrange my repository layout?
+
+Should the Git repository root be the same as the project root on our IDE, or a sub- or superdirectory?
+    
+
+        
+Answer 1: 
+
+    
+    
+I would recommend a git repository lay out with the project name as the root, under which all your source would lie, including cron jobs, db scripts, unit tests, library code as well as the PHP source in your www root. For example:
+
+projectName
+|
++ cron jobs
++ db_scripts
++ libs (third party libraries)
++ php library code (e.g. database access, models, utilities etc)
++ tests
++ www_root
+  |
+  + images
+  + etc...
+  index.php
+  ...
++ etc...
+
+    
+    
+Answer 2: 
+
+    
+    
+Your git repository should contain everything you'd possibly want under version control.
+This definitely includes your source files, but most likely does not include the compiled binaries.
+
+Personally, I put the repository root at the root of the source folder, because these are the only files I need version control for.
+    
+    
+Title: How to execute programs from geany using the GUI?
+Description: 
+    
+    
+                    
+well i recently installed geany .. the ide is great and worked great for python programs ,
+but when i try executing c/c++ programs from the executed button i get an error saying ./geany_run_script.sh: 5: ./rsa2: not found    ( rsa is the name of my program ) 
+well i did try googling out but could find a case like mine.
+    
+
+        
+Answer 1: 
+
+    
+    
+If you want to run a program, you need to compile it. 
+By default, the compile key in geany is F8.
+Then, you can run the program. (F5)
+You can define flags in project/p/div
+Answer 2: 
+
+    
+    
+I tried doing F8 and F5 and the problem was same as yours. But then i did build, compile and run and it worked.(This post may help someone !!)
+    
+    
+Title: Are there any IDEs with HTML5 IntelliSense support?
+Description: 
+    
+    
+                    
+Are there any tools that show HTML5 tags inside IntelliSense?
+
+What tools do you use to work with HTML5?
+    
+
+        
+Answer 1: 
+
+    
+    
+Excellent IDE WebStorm supports exactly what you are looking for.
+
+
+
+Also see:
+
+
+Enjoy HTML5 excitement with PhpStorm &amp; WebStorm
+
+
+Useful Resource:
+
+
+Dive into HTML5
+
+    
+    
+Answer 2: 
+
+    
+    
+Komodo Edit 6 has support for both HTML5 and CSS3. It's the free version of Komodo IDE.
+    
+    
+Title: Writing a simple web-based IDE - ideas / concepts?
+Description: 
+    
+    
+                    
+This may be a too broad question but how would you develop a simple web-based IDE/editor? For a lecture I was thinking of a simple editor where you could enter some sort of code, press compile and then display the results, error messages etc. in some way.
+
+Does anyone knows some examples (with source code maybe), or any suggestions on how to do this conceptually?
+    
+
+        
+Answer 1: 
+
+    
+    
+Or you could try http://codepad.org/
+    
+    
+Answer 2: 
+
+    
+    
+You might also be interested in taking a look at the very new Eclipse Orion project, in particular the architecture overview: http://wiki.eclipse.org/Orion/Architecture
+    
+    
+Answer 3: 
+
+    
+    
+Koding provides a framework for you to develop html5 applications with access to a real Ubuntu VM with Root. The idea for this post, being that you can develop an IDE that works with Client and Server languages, without having to deal with security of giving people access to machines that you are hosting. Security is hard with machines and avoiding exploits
+    
+    
+Title: jpa/hibernate drag-n-drop/orm/graphical relations
+Description: 
+    
+    
+                    
+Hey all,
+I'm reviewing the IntelliJ ability related to JPA ER Diagrams (http://www.jetbrains.com/idea/features/jpa_hibernate.html), and is something I've been looking for a while.
+
+Does anyone know of other tools that have similar abilities, whether as standalone, eclipse plugin, or other alternatives with the intent that the Graphical Tool does bidirectional updates to the persistence.xml/orm.xml?
+
+thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Maybe have a look at the JPA Diagram Editor for Eclipse that allows to work on a visual model:
+
+
+
+I don't have any particular experience with it though.
+    
+    
+Title: Is there an IDE for java programming on a blackberry?
+Description: 
+    
+    
+                    
+How can I do my java programming on a Blackberry? I am not looking for Blackberry app development. I am looking for a way to work on a java webapp project while not at my PC. Ideally, I would like to be able to connect to a server on my desktop, download some Java code from an existing project... edit it, and send it back to the server to compile.
+    
+
+        
+Answer 1: 
+
+    
+    
+The right question to ask yourself would be more like 'Is there a Java SDK for Blackberry'. So far there is no such SDK by Sun and I don't think that there is any usable one.
+I guess your best shot would be to try some remote desktop application for Blackberry, but then it would still be very inconvenient to use, because desktop UIs are not designed to be used on a handheld device.
+
+Note: I know that Eclipse features its own compiler and could be used for simple tasks running only on JRE, but it is more of an exception than the rule when it comes to java IDEs.
+    
+    
+Answer 2: 
+
+    
+    
+I do not know of any java sdk for the blackberry platform, yet. But there is one for android platform developed by Hans Kratz and his team. http://echo.com.ng/2013/programming-with-your-smartphone/  
+    
+    
+Title: Essential Java IDE Plugins?
+Description: 
+    
+    
+                    
+Until JetBrains released IntelliJ 8 or 9 I went nuts without the Identifier Highlighter plugin (highlight other uses of the identifier at your current caret placement), I also went to a talk last night where John Smart recommended Infinitest (runs relevant unit tests whenever you alter a file) which seems like a great plugin.
+
+Not sure if it counts, but I also use Pulse to manage my Eclipse installation, having spent an entire evening unsuccessfully trying to get various plugins to play nice.
+
+I'm interested if anyone has any killer recommendations, as I'd never heard of Infinitest, and I wish I'd known about it sooner.  To me things like findbugs plugins seem to have limited utility, as you need to remember to run them, and seem to fit better as part of a CI server, so I'm more interested in either productivity or realtime code quality improvements.
+    
+
+        
+Answer 1: 
+
+    
+    
+For Eclipse, InstaSearch doubled my productivity. In a codebase with 10mil+ lines the default file search takes 10 minutes, whereas instasearch...well, is instant...
+    
+    
+Answer 2: 
+
+    
+    
+Using a Regexp Tester is always a win, for example the Eclipse Regular Expression Tester Plugin (Update site: http://brosinski.com/regex/update)
+    
+    
+Title: Netbeans cannot connect to internet (java.net.ConnectException: Network is unreachable)
+Description: 
+    
+    
+                    
+(I'm not sure if this question belongs here or on superuser.com, but it's about IDE so...) So I installed Netbeans with installation bundle from netbeans.org and it can't connect to internet. It can't reload plugin catalog or upload files to FTP. While updating plugin catalog it gives me the error:
+
+Unable to connect to the NetBeans because of java.net.ConnectException: Network is unreachable
+
+
+I'm using Crunchbang Linux statler (a debian-based distro) so I've also tried debian repositories and it actually worked (it could connect to internet), but the newest version there is 6.0 which is very old (at least for me).
+
+Thank you for your answers.
+    
+
+        
+Answer 1: 
+
+    
+    
+I had the same problem. Dual IP stack seems to cause this issue (see http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=560142).
+
+Appending -J-Djava.net.preferIPv4Stack=true to netbeans_default_options variable in netbeans-6.9.1/etc/netbeans.conf has solved the problem for me.
+    
+    
+Title: Project-specific Checkstyle configuration in Eclipse
+Description: 
+    
+    
+                    
+Is there a way to define a configuration XML for Checkstyle in Eclipse that would be project specific, as in "you put a XML file in the project tree and Checkstyle recognizes it"?
+
+As far as I've researched, I've seen how to change the configuration for Eclipse as a whole, and how to include a Supressions Filter, which (as far as I understand) is not what I'm looking for since it works only to supress particular instances of warnings in given files/lines, but I want to supress classes of errors (disabling the "blank space at and of line" - which seriously bothers me because Eclipse's editor/formatter keeps pushing me to do it the 'wrong way' -, for example).
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, it's possible.
+
+It's a project-relative configuration:
+http://eclipse-cs.sourceforge.net/advanced_configtypes.html
+
+Sample .checkstyle:
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;fileset-config file-format-version="1.2.0" simple-config="false"&gt;
+    &lt;local-check-config name="project-checkstyle-config" location="/myProject/checkstyle.xml" type="project" description="Project-specific Configuration"&gt;
+        &lt;additional-data name="protect-config-file" value="false"/&gt;
+    &lt;/local-check-config&gt;        
+&lt;/fileset-config&gt;
+
+    
+    
+Answer 2: 
+
+    
+    
+You can define any specific validation at Project properties (right click on the project node at project explorer). It includes checkstyle validations.
+    
+    
+Title: How to resolve missing server problem in netbeans installed in Debian?
+Description: 
+    
+    
+                    
+I have installed netbeans in Debian and no server is listed in "Available java EE compatible servers" when trying to resolve. Also, cannot "Add server" by giving "platform folder location". By default, it appears "/home/raj/SUNWappserver". The error "provide valid application server location" not disappears whatever is typed in "platform location". 
+
+
+Which is the location?(for glassfish server and tomcat)
+What option should be chosen for domain?( if i am trying to work with web services from 2 machines by creating one server and one client). I can't type anyuthing in "Domain" or "profile"
+3.While installing, is there any plug in to be included?
+Kindly help.  
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Right click your project and next click resolve missing server.
+Open dialog box so you will add server in current glash fish server next solve your problem.
+    
+    
+Answer 2: 
+
+    
+    
+
+Go to File menu.
+Click on Exit (Again Restart Your NetBeans). Auto Added Missing Server.
+
+    
+    
+Title: How to manually organize files and folders in NetBeans?
+Description: 
+    
+    
+                    
+I'd like to be able to manually adjust placement of objects in a project browser tree in netbeans. Reorder, introduce virtual folders, etc. Is it possible? Is there a plugin providing this functionality? Or should I try another IDE?
+    
+
+        
+Answer 1: 
+
+    
+    
+I do not think that NB has that functionality.... yet.
+
+Before you invest in learning a different IDE, please file an issue that describes the functionality that you were looking for: http://netbeans.org/community/issues.html
+
+(That is how open source improves)
+    
+    
+Title: IDE with HTML closing tag highlighting similar to closing brace
+Description: 
+    
+    
+                    
+Is there an IDE that highlights each HTML closing tag (as you highlight over the opening tag, for example), similar to how many IDE's highlight where the opening/closing braces are for functions and such? 
+    
+
+        
+Answer 1: 
+
+    
+    
+There are quite many IDEs that can do that and it's only up to you which one will you choose.
+For example I often use NetBeans and Eclipse for HTML+CSS and PHP, sometime VisualStudio (for ASP.NET). For very fast editing, or something small I use Notepad++. All of them supports highlighting closing and beginning tags when marked. Also Dreamweaver is good for HTML, but I prefer to use OpenSource or freeware software (except for Visual Studio, but Express editions are also available free of charge).
+
+So as you can see there are many options. I have to say that Notepad++ is quite powerful tool, very hight customizable, but for bigger HTML projects I use NetBeans due to it's code completion, syntax highlighting and other useful tools.
+
+Regards,
+Ventus 
+    
+    
+Answer 2: 
+
+    
+    
+There is NotePad++ amongst many other for sure.
+    
+    
+Answer 3: 
+
+    
+    
+Zend Studio does this as well, so I'm assuming Eclipse PDT has it.
+    
+    
+Answer 4: 
+
+    
+    
+Yes lots, you can use notepad++, aptana if you have a better machine, pspad
+
+if you can use aptana and add the ftp site so you can have full access of everything ;)
+    
+    
+Title: CGI IDE on Windows
+Description: 
+    
+    
+                    
+Is there a way to use NetBeans or Eclipse for an old Perl CGI application in a Windows environment?
+
+I currently have NetBeans for PHP.
+
+NOTE:  I am a .NET dev and have done PHP back in the day.  I know very little about CGI, I just need to modify an existing legacy app.
+    
+
+        
+Answer 1: 
+
+    
+    
+If you got only one CGI application: Use a text editor or use the IDEs you know as text editors to edit this file.
+
+Eclipse has a EPIC plugin which could handle Perl files up to some point.
+
+If you want to edit more than one Perl application, try out Padre, the Perl IDE. It's written in Perl and mostly for Perl (but it supports many other languages like PHP and some non-languages like CSS or HTML).
+
+You could get it from CPAN using your installed CPAN client or from the Padre download page at http://padre.perlide.org/download.html if you don't have any installed Perl.
+
+The download package includes Strawberry Perl which is a full Perl interpreter for windows.
+    
+    
+Title: Who uses IntelliJ for real commercial projects?
+Description: 
+    
+    
+                    
+Just a simple question: 
+Would you prefer IntelliJ? If so, what are the Pro- and Cons?
+
+Thx
+    
+
+        
+Answer 1: 
+
+    
+    
+I'd prefer IntelliJ for any Java project.  I'll also point out that ReSharper is a Visual Studio plug-in that provides a lot of the same niceties for .NET.  It's also written by JetBrains.
+
+Pros:
+
+
+Smartest IDE I know.  Everything works together.  It's not a Frankenstein monster stitched together from disparate plug-ins that don't know about each other.
+Best Spring support.
+Keeps getting better with every release.
+Great integration with SVN, databases, Java EE app servers.
+Local and remote debugging with Java EE app servers.
+
+
+Cons:
+
+
+Not free.  If that puts you off, IntelliJ isn't for you.
+Swing UI support isn't the best, but I'm not much of a Swing/desktop developer.
+Not Eclipse.  If you're a dyed in the wool Eclipse lover you may not like IntelliJ.
+
+
+I used Eclipse for many years.  I liked it and felt grateful to have something so good when my employer wouldn't lay out any money for tools.
+
+Then I changed jobs and was given IntelliJ.  I've never gone back.  I buy a personal license every year with my own money so I can use it at home and at work.  It's an essential tool for me.
+    
+    
+Answer 2: 
+
+    
+    
+In the software projects that I participate developers use either Eclipse or IntelliJ, simply because they are used to either one of them. No one of my collegues switched the IDE yet, so there does not seem to be a "killer application/feature".
+
+I heard that NetBeans is better than Eclipse, especially NetBeans is supposed to be more stable with regard to plugins - this is the only aspect of Eclipse that really troubles me: You either do not find a plugin that you need (I'm still looking for a Maven plugin that actually works) or installing one plugin breaks another. 
+    
+    
+Title: Some problems with netbeans 6.9 for PHP - bug or not?
+Description: 
+    
+    
+                    
+Just downloaded and installed netbeans 6.9. At the first run, it asked for importing settings from netbeans 6.8 (which is nice). But after using it for my current PHP project for a while, I found this new version sucks. Here are some problem:
+
+
+"Refactor-/lili/lili/li/ulp/p/div
+Answer 1: 
+
+    
+    
+I'm running 64bit Netbeans (PHP) on a Mac.
+
+Yes to number 1. Selected from the menu and keyboard.
+No to number 2. It does state that once in a while (as in rarely).. though that might depend on the project really.
+
+Number 3; which plugins you looking for?
+    
+    
+Answer 2: 
+
+    
+    
+I've got all the issues you wrote about. I had to split my project into 3 different projects just to make it work reasonably fast (too many files kills 6.9 apparently).
+
+Also, the auto-formatter sucks. Half of the options don't work at all.
+
+And who thought it would be a good idea to add a spell checker to a &amp;^(%£ code editor?!?!?! Worst. Idea. EVER.
+
+I've been using Eclipse for the last 2 days.
+
++1 to version 6.9 being total trash. 
+    
+    
+Title: What features of Visual Studio have you ignored that turned out to be very useful?
+Description: 
+    
+    
+                    
+Bookmarks: In VS 5 they seemed like a great idea but I ended up not using them mainly because they didn't persist between sessions. E.g. If you closed a file that contained bookmarks they would not be there the next time you opened the file. You also could not move between bookmarks in different files etc. and I stopped using the feature.
+
+For years I would kill the bookmarks toolbar whenever I installed VS. It took me years of using VS 2005 until I noticed that the bookmarks feature had actually been greatly enhanced and I use them on a daily basis.
+
+Have you ignored Visual Studio features and later discovered their value?
+    
+
+        
+Answer 1: 
+
+    
+    
+It wasn't so much ignoring VS features as it was being ignorant of them, but for a while I didn't use custom project/item templates and code snippets, even though there was significant boiler plate code at my last job that was easily fixed by using these. I used the default templates for a while until I realized I could customize them for our application, and it's saved me loads of time since then. Code snippets I used to a lesser extent, but I do find them useful for smaller bits of code.
+
+The other "feature" I find infinitely useful these days is "Delete all breakpoints" (CTRL-Shift-F9). I used to keep all of my breakpoints around, and they would persist in each solution...but it would 1) slow down VS load times, and 2) disrupt my debugging behavior by breakpointing in sections of code that I didn't need to breakpoint in anymore. Instead of manually removing them, I got into the habit of removing all of them, and then placing a few key ones around code I really needed to test. This was more contextual though - initially having a ton of breakpoints was useful to learn the codebase, but once I was familiar with it, isolating bugs was a lot easier without all of the breakpoints hanging around.
+    
+    
+Answer 2: 
+
+    
+    
+Macros for repetive keystrokes
+
+The code palate (part of the toolbox) for storing my fave code clips 
+
+T4 toolkit for generating code
+
+Customize the top toolbars to remove stupid shortcuts (like copy/cut/paste, undo/redo) and add ones I ALWAYS use (comment/uncomment block, step into/over/out)
+    
+    
+Title: C#: How can I move my controls on a win form in windows application freely?
+Description: 
+    
+    
+                    
+C#: How can I move my controls on a win form in windows application freely? 
+
+I do NOT want IDE control the position of my controls for me.
+
+Thank you
+    
+
+        
+Answer 1: 
+
+    
+    
+Visual Studio tries to help you align your controls by "snapping" them to an alignment line (e.g. left of another control, right of another control, a short distance from another control or the form edge etc.), so this might be what you experience as not being able to move your controls freely?
+
+If this is the case, you can fine-tune the position by using the arrows on your keyboard. Move the control approximately where you want it with your mouse, and then use the keyboard for the final adjustment.
+    
+    
+Answer 2: 
+
+    
+    
+Do you mean at runtime dragging the controls around? 
+
+If so: you have to check when the mouse is clicked, find the control, and move it around on drag as long as the button is clicked.
+    
+    
+Answer 3: 
+
+    
+    
+it seems u r looking for similar implementation as in visual studio forms designer. system.design assembly defines DesignSurface  that can certainly do what u need. check this out.
+
+http://www.codeproject.com/KB/cs/DesignSurfaceExtended.aspx
+    
+    
+Title: Are there built-in issue tracking and task management in IDEs that integrate into SourceForge, Google Code, etc?
+Description: 
+    
+    
+                    
+This question may not be exactly programming related, but this is about development. I have been trying to find IDEs that support JIRA/Bugzilla so that I could simply integrate the IDE with SourceForge. I do not like to refresh my browser to see issues, bug reports, security problems, etc. I would like to send issues, resolve issues, right from the IDE. I am currently developing with NetBeans, but I see no ways of integrating into any of the services provided by SourceForge. Am I missing something?
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse's Mylyn has a load of free connectors to hook into practically any issue tracking system around. I'm using it with Fogbugz and it Just Works. Really awesome software.
+    
+    
+Title: What are some good references/articles/posts for Eclipse -&gt; Intellij converts?
+Description: 
+    
+    
+                    
+I've been trying IntelliJ for about a month, and mostly like it, but would like any references to good sites to useful features/shortcuts/idioms from the perspective of an Eclipse user.
+    
+
+        
+Answer 1: 
+
+    
+    
+Nothing better than the Jetbrains forums and blogs. 
+
+Make sure you check out the productivity guide under the help.  It's invaluable for learning the shortcuts.  It'll even tell you how frequently you use them so you can keep track of how well you're leveraging them.
+    
+    
+Answer 2: 
+
+    
+    
+You might be past this point if you've beeen using it for a month, but for others, this official Eclipse to IntelliJ migration FAQ from JetBrains might be a good starting point.
+    
+    
+Answer 3: 
+
+    
+    
+A friend pointed out a plugin that will prompt you for keyboard shortcuts after you perform actions - probably the single fastest brain-pusher in my IntelliJ experience
+    
+    
+Title: Update and Install problems with Eclipse
+Description: 
+    
+    
+                    
+When I try to install/update any plugin from Help -/ppre/prep/pprecode/code/prep/pp/p/div
+Answer 1: 
+
+    
+    
+I had the same problem, try running eclipse with these options: 
+ -vmargs -Djava.net.preferIPv4Stack=true 
+
+It worked for me
+
+(see https://lists.launchpad.net/openjdk/msg03123.html)
+    
+    
+Answer 2: 
+
+    
+    
+Try disabling proxies inside Eclipse. This helped me once.
+    
+    
+Answer 3: 
+
+    
+    
+Here are some generic eclipse error resolution steps I use:
+
+1) Try run eclipse with the -clean option. This should cleanup some stuff. No clue if it helps with your problem, but maybe worth a try?
+
+2) Delete .metadata directory (or move it temporarily away) from your workspace and run eclipse with the -clean option again.
+
+3) (Skip if you have tried this) Try download another eclipse installation into another local directory and try to see if that works out of the box.  If it works, your former eclipse installation was bugged. If it does not work, I suggest checking your general network access to the specific urls you mention.
+    
+    
+Title: Most up to date environment for classic ASP development
+Description: 
+    
+    
+                    
+I've inherited a Classic ASP application that requires some maintenance.
+
+What's the most up to date/capable IDE and Operation System that I can use to perform this maintenance?
+
+I'll be setting up the Env in a VM - so won't be tied to it full time.  Hopefully there's something newer than Visual Interdev for me to use.  Ideally I'm hoping for some code completion and a debug capability.
+
+Cost is of interest, but is not a deciding factor.
+
+cheers,
+Ian
+    
+
+        
+Answer 1: 
+
+    
+    
+No need to setup a VM, since all you need is Visual Studio 2008 and IIS installed in your dev machine (Presumably you have both already installed if you are a .net developer).
+
+Be sure to install VS2008 SP1 for proper ASP Classic intellisense support.
+    
+    
+Title: Eclipse won&#39;t check for errors in my code (Java EE)
+Description: 
+    
+    
+                    
+I have been trying to use Spring in my Java EE projects and while everything will compile just fine for some reason Eclipse just refuses to do any sort of live error checking like it normally does. you know like underlining a line of code that is totally wrong for ex:
+
+System.BananaBoat.SetSail();
+
+
+Obviously this class doesn't exist but Eclipse isn't throwing any sort of error at all. It just lets me do it. Is there something I need to enable to make sure that this is getting tested? Is this related to the incremental compiler?
+
+Any insight on this would be great. Feels like being back in the stone age without this.
+    
+
+        
+Answer 1: 
+
+    
+    
+Check if the project has any problems in the "problems" fast view. Sometimes, Eclipse refuses to build automatically if there is a problem such as a cyclic module dependency, or some required .class file being referenced indirectly.
+
+Here are some links:
+Eclipse Problems View not showing Errors anymore 
+Best Practices for Eclipse&#39;s Problems View 
+http://help.eclipse.org/help32/index.jsp?topic=/org.eclipse.platform.doc.user/concepts/cprbview.htm
+    
+    
+Answer 2: 
+
+    
+    
+Make sure that the automatic build isn't turned off.
+    
+    
+Answer 3: 
+
+    
+    
+I found this answer somewhere else.. Anywho, make sure your files are under the "src" file under your project, I had mine in another folder, for some reason eclipse will refuse to error-check in a place other than the src folder. 
+    
+    
+Title: Using Eclipse for C programming?
+Description: 
+    
+    
+                    
+I want to examine and modify some open source programs written in C.
+
+Is it sensible to use Eclipse for this purpose? If so, what plugins should I add? What "gotchas" should I be aware of?
+
+If not, what FOSS C IDEs do you recommend for coding C on a linux box? Emacs, while undeniably powerful, is not to my taste (I'm more a mouser than a keyboarder.)
+    
+
+        
+Answer 1: 
+
+    
+    
+I have found netbeans to be a better ide for C/C++ then eclipse -- C/C++ is a first class citizen in the netbeans world. I am personally using geany these days.
+    
+    
+Answer 2: 
+
+    
+    
+Use Eclipse CDT, you can download Eclipse IDE for C/C++  here . Its not as mature as the Java IDE, and it can be a pain to set up a proper build system with it unless you're happy letting Eclipse handle your builds.
+    
+    
+Answer 3: 
+
+    
+    
+As you asked for alternative open source IDEs, I would recommend Code::Blocks for anything C/C++.
+
+If you want to give it a try, download a nightly build (they don't really keep the "stable" version up-to-date). You can find instructions for installing on Linux in the respective forum thread.
+
+IMO Code::Blocks is really nice because it's fast, portable and you can configure every detail of your project easily. There are also lots of plugins that can help you with development.
+
+But if you're accustomed to Eclipse and like it so far, you should really use CDT because you get the same (nice) look-and-feel as with the other Eclipse development environments (Java, Java EE, Jython, Python, ...).
+    
+    
+Title: Visual Studio 2010 Formatting
+Description: 
+    
+    
+                    
+I have plenty of experience with Eclipse, and now I'm trying out Visual Studio 2010. I find its formatting somewhat counter-intuitive. Here are some things I'm trying to figure out:
+
+
+Is there a way to select all text and format/indent it properly, like SHIFT+A SHIFT+I in Eclipse?
+Why is it that when I type a line like if (n == 0) {, as soon as I type the opening brace, the text cursor is moved to the beginning of the line? Is this some productivity speedup I'm failing to see?
+When I hit ENTER after the aforementioned line, I'd like the closing brace to be put in place automatically for me. How can I do this?
+
+
+I've looked for hotkey documentation, and it's helped a bit, but this still feels clunky to me.
+    
+
+        
+Answer 1: 
+
+    
+    
+The Format Document shortcut key combination is Ctrl K, Ctrl D. Since this command is not supported in C++ ( Visual Studio 2010: Why aren&#39;t key combinations available?), the workaround for C++ files is to Select All then Format Selection: Ctrl A, Ctrl K, Ctrl F.
+
+On your second and third question, see Creating and Using IntelliSense Code Snippets. Short version: for if, type "if {TAB} {TAB}". Again, this not supported for C++. So if you're in C++, what you're seeing is when you typed typed the { on the line after the if, what the editor did was move the { to the same indention level as the if (not necessarily the beginning of the line), because the coding style it's helping you achieve is
+
+if (n == 0)
+{
+    n = 1;
+}
+
+    
+    
+Answer 2: 
+
+    
+    
+The formatting commands are by default bound to Ctrl+K Ctrl+??.  Ctrl+K as the first keystoke, followed by another key stroke that determines the specific formatting option.
+
+Look at the Advanced submenu of the Edit menu.  It will show you that 
+
+
+"format selection" is Ctrl+k Ctrl+f
+"comment selection" is Ctrl+k Ctrl+c 
+
+    
+    
+Answer 3: 
+
+    
+    
+To format a document in visual studio the key combination is: ctrl-k ctrl-d
+    
+    
+Answer 4: 
+
+    
+    
+just FYI in eclipse it's: ctrl-a  -
+Title: ASP IDE on Windows
+Description: 
+    
+    
+                    
+What is the best free alternative to Visual Studio for ASP development on Windows platform?
+    
+
+        
+Answer 1: 
+
+    
+    
+Textpad or Notepad++
+    
+    
+Answer 2: 
+
+    
+    
+Give visual studio webdeveloper expres edition a try. It has excelent code completion, even for thirdparty com objects.
+    
+    
+Answer 3: 
+
+    
+    
+1st Page 2000 understands classic ASP and includes syntax highlighting. I remember quite liking it.
+    
+    
+Title: Navigate files with VisualStudio 2008
+Description: 
+    
+    
+                    
+I am currently developing with VisualStudio 2008. I find it increasingly difficult to find files when the number of files and projects increase. The situation become so bad that I literally have to spend 10-20 seconds to find code I want to work on when switch between files. Sounds like not a lot of time, but this can be very annoying because it breaks the "coding flow".
+
+I believe this is a general problem with all IDEs. But I still find it easier to work with Eclipse. One particular example is that in Eclipse, I could apply some key shortcut to find implementations defined in an Interface.(I have forgotten which key shortcut though, after not working with it for about 1 year.) Another example is that in VS 2008, rightclick-strongem/em/strongstrongem/em/strongstrongem/em/strong/pp/pp/p/div
+Answer 1: 
+
+    
+    
+I agree wholeheartedly about ReSharper. If you don't want a "paid" solution though, a useful Visual Studio shortcut is 
+
+CTRL + ,
+
+it gives a list of recently edited files.
+
+CodeRush is a free alternative to ReSharper which you might find useful too.
+
+Kindness,
+
+Dan
+    
+    
+Answer 2: 
+
+    
+    
+Have a look at Jetbrains Resharper.  Ctrl N or Ctrl Shift N.  To jump quickly to files by type name or by file name.  Also you can control Click Classes to navigate to them instantly.
+
+I can't even work in visual studio without it anymore.  It virtually eliminates the need for the solution explorer
+    
+    
+Answer 3: 
+
+    
+    
+SamTools for Visual Studio 2005/2008 (and I have a build for 2010 if someone needs it). The particular feature that's handy here is the Solution File List.
+
+
+You can right click the tab of any open document and Find In Solution Explorer or Show In Windows Explorer
+You can right click in the Solution File List for the same
+Unlike other solutions to this problem, this is a properly docking tool pane so it fits in great. Ctrl+Alt+F places you in the Filter box with the current text selected, so it's very easy to work with.
+
+
+Oh and it's free/GPL. :)
+
+Solution File List http://wiki.pixelminegames.com/images/8/88/SamTools_SlnFileList.png
+    
+    
+Answer 4: 
+
+    
+    
+Dpack is also a free alternative with some nice file navigation shortcuts, but Resharper is the bomb.
+
+BTW, they should have some more of this stuff in vs2010, which is in beta right now (I think)
+    
+    
+Title: Is there a Delphi IDE plugin for XML file editing, validation, formatting?
+Description: 
+    
+    
+                    
+Are there (free or commercial) IDE editor plugins for Delphi which 
+
+
+show valid XML tags and parameters automatically while editing (like CodeInsight for HTML does it already) or suggest the correct closing tags, matching the current open tag?
+validate a XML file in the IDE editor against its XSD, or to check its well-formedness?
+format a XML file which is open in the IDE editor (this would be useful for configuration files and scripts)?
+
+
+These editing capabilities could also be useful for XHTML web page documents in IntraWeb / WebSnap applications, WSDL (Web Service description) and XSD (XML Schema) files, making web application and web service development easier.
+    
+
+        
+Answer 1: 
+
+    
+    
+No, there is no such addin. All programs suggested above are good. I personally use XML Spy.
+    
+    
+Answer 2: 
+
+    
+    
+As far as an external tool could satisfy your needs, there is the free XmlNotepad which can do all this.
+I use it as (very) good alternative to XmlSpy.
+    
+    
+Answer 3: 
+
+    
+    
+Although your requirements are valid, they are too specialized to be included in a Delphi IDE plugin, I think you best option is to use an IDE especially made to handle XML files as Stylus Studio or Altova XML Editor.
+
+
+(source: altova.com)  
+    
+    

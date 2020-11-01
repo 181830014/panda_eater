@@ -1,0 +1,1799 @@
+Title: Back to old display format in Matlab R2016b
+Description: 
+    
+    
+                    
+In Matlab R2016b, displaying variables of certain data types shows information about the type. This happens when the variable is displayed by typing it without a final semicolon (it doesn't happen when using the disp function).
+
+Compare for example:
+
+
+Matlab R2015b (old format: displays just the data):
+
+&gt;&gt; x = [10 20 30]
+x =
+    10    20    30
+&gt;&gt; x = {10 20 30}
+x = 
+    [10]    [20]    [30]
+&gt;&gt; x = [false false true]
+x =
+     0     0     1
+
+Matlab R2016b (new format: includes type):
+
+&gt;&gt; x = [10 20 30]
+x =
+    10    20    30
+&gt;&gt; x = {10 20 30}
+x =
+  1×3 cell array
+    [10]    [20]    [30]
+&gt;&gt; x = [false false true]
+x =
+  1×3 logical array
+   0   0   1
+
+
+
+As you see, there's an extra line in R2016b telling the type. Apparently this happens for any type that is not double or char.
+
+Is there some setting in R2016b to go back to the old behaviour?
+    
+
+        
+Answer 1: 
+
+    
+    
+Unfortunately there doesn't seem to be a preference for changing that behavior. There is (as always) a bit of a hacky workaround.
+
+When you omit a semi-colon from a line, it's not disp that is called but rather display.  R2016b has apparently modified the display method for a cell datatype to display some type information along with the values themselves.
+
+Thankfully we can overload that display method with something that looks a little bit more like the display of previous releases.
+
+We can create a @cell folder (anywhere on our path) and place a file called display.m inside. 
+
+@cell/display.m
+
+function display(obj)
+    % Overloaded display function for grumpy old men
+
+    if strcmpi(get(0, 'FormatSpacing'), 'loose')
+        fprintf('\n%s =\n\n', inputname(1))
+    else
+        fprintf('%s =\n', inputname(1))
+    end
+    disp(obj);
+end
+
+
+Now, whenever a cell array is displayed due lack of a trailing semi-colon, it will not include any type information.
+
+&gt;&gt; c = {'a', 'b'}
+
+c =
+
+    'a'    'b'
+
+
+Unfortunately, there are other datatypes (such as logical) that also display the type information so you'd have to overload the display method for each of these classes.
+    
+    
+Title: Lombok Eclipse issue: &ldquo;Requesting Java AST from selection&rdquo;
+Description: 
+    
+    
+                    
+I have Lombok plugin installed in my Eclipse. It was working fine till now since many days. All of a sudden I am frequently getting a popup in my Eclipse with the following details:
+
+An error has occurred. See error log for more details.
+lombok/launch/PatchFixesHider$PatchFixes
+
+
+An internal error occurred during: "Requesting Java AST from selection".
+lombok/launch/PatchFixesHider$PatchFixes
+
+
+The Eclipse error log has this:
+
+!ENTRY org.eclipse.ui.workbench 4 2 2016-08-29 13:18:38.631
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.ui.workbench".
+!STACK 0
+java.lang.LinkageError: lombok/launch/PatchFixesHider$PatchFixes
+    at org.eclipse.jdt.internal.ui.search.OccurrencesFinder.addUsage(OccurrencesFinder.java)
+    at org.eclipse.jdt.internal.ui.search.OccurrencesFinder.visit(OccurrencesFinder.java:158)
+    at org.eclipse.jdt.core.dom.QualifiedName.accept0(QualifiedName.java:168)
+    at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2711)
+    at org.eclipse.jdt.core.dom.ASTNode.acceptChild(ASTNode.java:2759)
+    at org.eclipse.jdt.core.dom.PackageDeclaration.accept0(PackageDeclaration.java:225)
+    at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2711)
+    at org.eclipse.jdt.core.dom.ASTNode.acceptChild(ASTNode.java:2759)
+
+
+Eclipse version :
+
+Eclipse Java EE IDE for Web Developers.
+
+Version: Neon Release (4.6.0)
+Build id: 20160613-1800
+
+
+This popup is occurring quite frequently and its very annoying.Does anyone knows the solution to fix this?
+    
+
+        
+Answer 1: 
+
+    
+    
+Removed older jar and updated with latest lombok jar (version 1.16.10).. restarted my system. this fixed this issue. Not sure what was the cause of this issue though.
+    
+    
+Answer 2: 
+
+    
+    
+Had the same issue, restarting Eclipse was sufficient for me.
+    
+    
+Title: in IntelliJ, showing &ldquo;No module named xxx&rdquo;, but &ldquo;xxx&rdquo; is actually installed in my system
+Description: 
+    
+    
+                    
+My IntelliJ version is 15.0.3, and have python plugin installed.
+
+And when I open a python file in IntelliJ it's like below
+
+
+Situation here is like below:
+
+
+when I import these flagged modules in terminal, everything works fine.
+running this python file in IntelliJ, is also fine
+
+
+It's only the red underlying warning annoying me.
+
+I tried this one, this one and this one, but none works for me.
+
+Could anyone please tell me how to get rid of it? Thanks a lot.
+    
+
+        
+Answer 1: 
+
+    
+    
+You have to add the site-packages path of your interpreter.
+
+For that you have to:
+
+
+go to Project Structure
+choose Global Libraries
+choose your Python interpreter
+press + at the upper left corner
+choose the site-package path of your interpreter
+choose "Classes"
+
+
+also add your python interpreter root directory in the same way.
+    
+    
+Answer 2: 
+
+    
+    
+I have similar problems: cannot import manually installed module. I try to add classpath in Mac environment parameters and intellij SDKs, but it doesn't work. My final solution is to add the classpath of the module to Run/Debug Configurations:
+
+Open Run/Debug Configurations and select your unittest class:
+
+
+  Run --/p/blockquotepa href="https://i.stack.imgur.com/k4UdO.jpg" rel="nofollow noreferrer"img src="https://i.stack.imgur.com/k4UdO.jpg" alt="enter image description here"/a/p/div
+Title: How do I beautify (auto-format) a piece of code in Spyder IDE
+Description: 
+    
+    
+                    
+How can I select a piece of code and apply auto-format, aka beautification to it?
+
+I especially mean correctly indenting lists broken into several lines, parentheses and square brackets.
+
+Auto-indent does nothing.
+    
+
+        
+Answer 1: 
+
+    
+    
+One possible solution is to use this plugin:
+autopep8 for Spyder
+
+Although since Python is a language where code functionality depends on the amount of whitespace, beautification tools can never really format the code in an unified way.
+
+Unfortunately, autopep8 does not solve code formatting conventions that are violated (as indicated by Pylint).
+    
+    
+Title: Does AppCode implement all the functionality of CLion
+Description: 
+    
+    
+                    
+The AppCode IDE home page states that:
+
+AppCode natively supports Objective-C, Swift,
+C and C++, including C++11, libc++ and Boost, as well as JavaScript,
+XML, HTML, CSS and XPath. Use your preferred language to create your
+iOS/OS X application.
+https://www.jetbrains.com/objc/
+
+The CLion IDE is also meant for C and C++ but AppCode handles more languages.
+Does AppCode implement all the functionality of CLion?
+A yes answer I would think means it is better to go with AppCode.  An explanation against this is appreciated if you disagree.
+Note: I have not yet used AppCode.
+    
+
+        
+Answer 1: 
+
+    
+    
+Accordingly to various comments / forum threads:
+
+The language support will be the same.
+Main differencies are in the tools support. For example, CLion has CMake build system and it is cross-platform.
+
+Obviously, it's the case as long as you compare similar branches (e.g. builds on 142.xxx branch will have new stuff/fixes compared to 141.xxx). Build numbers can be checked on About screen.
+    
+    
+Title: How to share IDE layout in IntelliJ IDEA?
+Description: 
+    
+    
+                    
+I'm frequently changing projects and creating new ones, but I have a big a project that I work on a lot. The IDE layout (view positions, sizes and docking) evolves as I use it more and more. I'm looking for a way to automatically share IDE layout between projects in IDEA?
+
+I would like to avoid re-setting up my environment every time I do File/New/Project. I also would like to avoid exporting/importing my configuration for every File/New/Project. Handling of updates would be a really nice one too, that is, when I resize the Project/Debug view in one project it changes in all of my projects that are created new or reopened. Essentially I would like to avoid any repetitive clicking whenever I switch context (project).
+
+I'm really used to Eclipse storing the settings tied to the workspace and when a new project is created they have the same settings.
+    
+
+        
+Answer 1: 
+
+    
+    
+The closest functionality that I know of is Window/Store Current Layout as Default. It will save the current layout and it will be used for newly created projects.
+
+But when you modify the layout and want to use that version as default, you have to first save it as default using the action mentioned above and then in other projects use Window/Restore Default Layout (ie. the changes to default layout won't be saved/applied to other projects automatically).
+
+I would suggest opening a feature request on https://youtrack.jetbrains.com to enable sharing the layout automatically between all projects.
+    
+    
+Title: Javascript code editor with intelligence
+Description: 
+    
+    
+                    
+Is there any code editor or even IDE, where you can get some compassion in the form of "method" auto-complete suggestions and "jump to definition", for your javascript code that uses a library like d3.js?
+    
+
+        
+Answer 1: 
+
+    
+    
+I have found that WebStorm does all that.
+Need to follow here to set it up to know your external library (e.g. d3.js in my case) so that it can be smart about it. Download the unminified/debug version of your library first so you can supply it in that dialog. Installing WebStorm was quick and a no-brainer.
+
+If you know of other tools that have these capabilities, please post your answer as well...
+
+WebStorm currently doesn't cost all that much and currently comes with a 30 days trial.
+    
+    
+Title: Work with docker and IDE
+Description: 
+    
+    
+                    
+To share installation, we decided to work with docker. For each project, global dependencies are installed inside the container.
+
+We are developping with Python (and Java, but at this time, let's speak about Python only ;) )
+
+Working with Vim (for example), I want to use code completion, but because the entire libs are installed in container, my vim installation on host cannot access them. This is true with Java, Javascript, and so on and it's absolutly normal...
+
+But is there any solution to be able to work with container, getting access to libs for IDE, without to install IDE in the container itself ?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  But is there any solution to be able to work with container, getting
+  access to libs for IDE, without to install IDE in the container itself
+  ?
+
+
+The trick is to run your IDE from the container. Your IDE is installed on your host, you just run it in the container. 
+
+For this to work, you need an IDE container that has:
+
+
+all the system requirements your IDE needs
+can display GUI applications
+has a volume mounted on the location of your IDE on your host
+
+
+An example of all this with a well known Python IDE instead of vim is discussed here:
+
+Warning: this has been validated on Ubuntu 14.04 only.
+
+PyCharm Docker Integration
+    
+    
+Answer 2: 
+
+    
+    
+Why don't you checkout the official image for python?
+
+
+https://registry.hub.docker.com/_/python/
+
+
+It doesn't provide exactly what you're looking for but it supports a workflow where the container is built the same way as it should be run on your development machine (dependencies listed in the "requirements.txt" and downloaded using pip).
+
+Hope this helps.
+    
+    
+Answer 3: 
+
+    
+    
+You may also try using cloud-based IDEs like eclipse che or cloud9.
+
+It has support for docker and runs in a browser.
+
+Update:
+I just found out that eclipse che and cloud9 are not mature enough to run java apps, so you might want to try Intellij: https://github.com/marioluan/java-data-structures
+    
+    
+Title: How to Run a Java Project on Linux Without Using IDE
+Description: 
+    
+    
+                    
+I am new to Java. 
+Basically, I developed a java projects which contains multiple Java packages inside Eclipse. The project runs OK on my desktop with a redhat Linux installed. However, I need to run it on a more powerful Linux server (redhat enterprise Linux) which does not have X11 installed. Therefore, it is impossible to run Eclipse on that server. 
+Is it possible to do that? If so, how can I move the entire project to that server including the input and output folders?
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+In Eclipse use the "Export Runnable Jar" option. Highlight your project then click file-code/code/p/div
+Answer 2: 
+
+    
+    
+You will need to install the JRE on the machine you want to run it on. This can be done with the following command:
+
+yum install java-1.6.0-openjdk*
+
+
+Once you have java then it is simply a matter of executing your application. I would recommend using eclipse to compile your project to a jar and use the following command to execute it:
+
+java -jar *JarFileName*.jar
+
+    
+    
+Answer 3: 
+
+    
+    
+Running Java is nothing to do with Eclipse . You can run your java program  in linux machine by opening terminal . 
+
+Step1;- Set your JAVA_HOME in your bash profile .
+
+Step2:- open terminal , go to the folder or package where your main program is present.
+
+Step 3:- compile it using  javac -cp lib.jar Filename.java
+
+Step 4:- After compilation class file will be available , run it using java  filename.java
+
+Usually IDE like eclipse is for development not for running the application , but Linux version of eclipse is also available 
+
+http://eclipse.org/downloads/?osType=linux
+    
+    
+Title: IDE with C and embedded Javascript support
+Description: 
+    
+    
+                    
+I have a 100k line C project with about 30k lines worth of embedded Mozilla Spidermonkey Javascript used for scripting GUI. 
+
+What is the best way to edit C and Javascript together or at least have a reasonable editor for the Javascript?
+
+On Linux, I used to use two different instances of Eclipse one configured for C, one for Javascript. IT was not a particularly convenient solution.
+
+Now that I am working on a Windows build, Visual Studio 2008 is doing fine with C support but Javascript support seems a bit ...lacking.
+
+All I really want is to jump quickly between functions in the Javascript code and inspect variables. There are about 30 .js files. I can live without code completion and other niceties.
+
+Ideally, I would see when calls to C code are made and jump to the C code but that is probably asking too much.
+
+Otherwise it seems I am back to Notepad++ and grep.
+    
+
+        
+Answer 1: 
+
+    
+    
+I use the Zeus editor and it has a automatic ctags feature that works well for C, letting you jump between things like functions and structures etc.
+
+I have not used the editor for JavaScript but the ctags web page lists JavaScript as one of the support languages so it might work.
+    
+    
+Title: Eclipse vs Netbeans Benchmark
+Description: 
+    
+    
+                    
+Is there any benchmarks or study done comparing these two IDEs in terms of 
+
+-- stability
+-- developer productivity
+-- features
+-- performance
+-- etc. 
+    
+
+        
+Answer 1: 
+
+    
+    
+I am an Eclipse user (not by choice). Not sure about stability, but performance wise NetBeans is far supperior at least with the lates versions that I worked in; personally, I think NetBeans has enough features to make it a good development environment but I can't tell you for sure, it depends on what is the scope of your task. Overall, eclipse is a good IDE, but NetBeans is just a little better...
+    
+    
+Answer 2: 
+
+    
+    
+Mostly working with eclipse nowadays.
+
+All I can say is M2E is a pain.
+With no disrespect intended to the developers of m2e ...
+This is the simply the absolute worst plugin for maven. It is slow and it is painful to use.
+For big maven projects with more than 70 module components, you can forget about having a quick eclipse evironment.
+
+If you use mvn eclipse:eclipse, the deprecated plugin for configuring eclipse, I believe you are faster with eclipse than with netbeans. Especially when it comes to refactoring.
+
+If instead you use the official m2e plugin ...
+Oh my god!
+
+I am answering to this question due to the pure shear pain of waiting for eclipse.
+" Invoking CDI Builder" because an @Inject collaborator moved around in the class, triggering a massive build wait time delay... god!
+
+Eclipse! Well... Eclipse is a great IDE for getting started, on small projects, but as projects get enterprise level, and if you use m2e ... oh! you will cry!
+And wonder ... how can it be this bad.
+
+Netbeans! Perhaps nota any better in the end.
+Last time I used Netbeans, i had two major complaints, that were total deal brekers:
+(a) Netbeans was simply awful when dealing with massiven class refactoring.
+You change  a class name on sub module A, that affects modules B, C and D.
+And until you class renaming, move over packages is done, you can go take a coffee, and order a cab.
+
+(b) netbeans had a bug in parsing interfaces, namely there was some sort of regular expression that would take the longest time to run.
+So if you can use the old deprecated mvn eclipse:eclipse, you would end up being far better of.
+
+With that said.
+The Netbeans debugger compared to the eclipse debugger is light years better.
+I prefer the graphics of netbeans and I prefer the simplicity of netbeans.
+Just try using the "expressions" where the autocomplete does not work, and you ave to go to "display" to get autcomplete to work and copy it bakc over to expressions! 
+Eclipse is a patch work, with hundreds of thousands of developers making hundreds of different components of the IDE, leading to an overall result of a total inconsistent product.
+
+Eclipse is a never ending set of settings, just open the preferences and ...
+
+Netbeans, UI is always desing for maximum simplicty.
+
+As I wait for my m2e to finish rebuilding prjects based on whatever whim lead eclipse to start a new build, I start considering again if I should not revisit Netbeans and install the eclipse formatter ...
+
+Eclipse is really in bad shape, In my humble oppinion.
+Ther performance of eclipse has to improve 100 fold, especiall eclipse + m2e has to get way way better.
+Intelli J - i have never tried.
+
+The best IDE  have used so far, is wihout any doubt, Microsfot Visual Code for Javascript and TypeScript.
+
+You use Microsoft Visual Code, and just wonder why eclipse is not like that.
+If you are doing Angular Js/Typecipt, simply forget about any other IDE out there. Microsoft Visual Code is the best thing there is, it is fantastic and joy to use.
+Blazing fast and light and good looking on every platform of your desire.
+
+But for java + maven, the echo system is a bit lacking on good options.
+The man is not supposed to wait for the machine.
+A human is always supposed to be slower then a machine ... this is not the case with eclipse m2e, this I can tell you.
+The furstration!!!!
+    
+    
+Answer 3: 
+
+    
+    
+Unless you have lots of hardware to throw at it, go with Netbeans.
+
+I have a VM running CentOS 7. At this time, I am only able to allocate 2G ram to the VM, and running Eclipse Oxygen for PHP on it is painfully slow. Netbeans runs just fine in this configuration.
+
+I'm sure some Eclipse devotee would suggest giving the VM more ram which might probably resolve the issue, but unfortunately that is not currently possible.
+
+Another thing that ought to be mentioned is that Eclipse is rather unique in its UI. For example, virtually every editor on the planet uses Ctrl-F to "Find", then function key F3 to "Find Next". Ctrl-G is "Goto line number". Netbeans follows this convention. Eclipse, however, uses Ctrl-K to "Find Next" and Ctrl-L for "Line number".
+
+This won't be an issue if you use Eclipse and nothing else, but if you're like the more typical developer, you use Eclipse when appropriate along with some other tool when appropriate. You will get confused sometimes and use the wrong shortcut. This creates unpredictable problems, particularly if you're unsure what the wrong shortcut just did to your file.
+
+It's not a "performance" issue as per the application, but it slows down the developer. To me, that's just as bad.
+
+Again, some Eclipse devotee might suggest that Eclipse shortcuts can be configured any way you like, which is true, but really, does anybody have that kind of time? Eclipse comes with literally thousands of configuration options, and it's an Internet Search to figure out how to change almost anything.
+
+Netbeans doesn't have thousands of configuration options, although there are things you can tweak. It just sorta mostly works the way you expect out of the box.
+
+To conclude, the actual slowness on less-than-most-super-powerful hardware is probably the biggest thing against Eclipse. I don't know what the code is trying to do, but Netbeans is somehow able to do it with less hardware.
+    
+    
+Answer 4: 
+
+    
+    
+Eclipse and Netbeans are both good IDE (Integrated Development Environment) programs. If you are just a Java, C++, C or Fortran programmer you can use any of them. 
+If you are WEB base developer (For Example: JSF, Serverlet, Applet) in this case NetBeans is much more powerful then Eclipse.
+On the other hand, If you are mobile developer for Android OS, in this case Eclipse is much more powerful then Netbeans.
+So it depends on your programming league :)))
+    
+    
+Title: Scala-IDE/IntelliJ :: Template support for Scalate, Play, etc
+Description: 
+    
+    
+                    
+EDIT2
+Scala IDE now has template support with type inference, semantic highlighting, etc. for the Play framework as of v3.0 of the IDE. Same deal with routes file(s), woohoo ;-)
+
+Not sure about Play, Scalate, or other template engine support in IntelliJ.
+
+EDIT
+Play 2.0 is unbelievably awesome, so much so that the lack of IDE support is fairly minor -- all the heavy lifting is done via model, controller and javascript (coffeescript + datatables) layers; view layer consists of simple xhtml skeletons, so no biggie not having, for example, autocomplete for Scala code -- your app won't compile if there are errors regardless, so you're safe to boot ;-)
+
+If and when template layer IDE support comes it will be a welcome addition, but nothing that I personally am losing any sleep over...
+
+ORIGINAL
+Just discovered something last night after a couple months of relative joy hacking around in Scala-IDE for Eclipse:
+
+There appears to be NO template layer support whatsoever (code completion, syntax highlighting, etc.).  This is the case even for TypeSafe's new adoptee, Play 2.0, with its Razor style @ syntax. Scalate, same boat, none of the uber cool options (jade, ssp, scaml) are detected by the IDE.
+
+This is not just the case for Scala-IDE mind you, seems to be a given with IntelliJ as well, roughly 2 years after requesting template support:
+http://youtrack.jetbrains.com/issue/SCL-1876
+
+Obviously, must be difficult to implement, otherwise we'd have built-in or plugin support for the main templating languages. Kind of groping in the dark here, the best I've been able to do is have the IDE interpret the .jade extension as Scala code, which highlights scala keywords in a pleasant light-blue and nothing else, no hovers, code completion, arrgggghhh ;-)
+
+What are the alternatives here?? Coming from Groovy/Grails I have gotten spoiled by excellent IDE support for straight scala code and would dearly love to have that tied in with the template layer.
+    
+
+        
+Answer 1: 
+
+    
+    
+Play 2.0 support is planned for IntelliJ IDEA 12, some of Scala template languages are also planned for IntelliJ IDEA 12.
+    
+    
+Title: IDE for Java C/C++ Project Compilation
+Description: 
+    
+    
+                    
+I have joined a project where the application being worked on involves Java, C, and C++ code with some JNI. Up until now, development was done in Linux from the terminal with a messy recursive makefile structure. Recently, I have been importing this code into an IDE (Eclipse) and was wondering something. Is it best to have one project in Eclipse containing the Java code and another separate project for the C/C++ code or everything in one Eclipse project? Why or why not? What would you recommend as the best way to achieve whichever option you suggest?
+    
+
+        
+Answer 1: 
+
+    
+    
+I have single project in Eclipse which mainly use C/C++ code and additional scripting languages - lua, python, bash-scripting and some pieces of java. Build system - makefile, but currently integrate scons build system and remove makefiles trash. So, Eclipse is good and you don't need to create separate projects, you can create all in one project.
+    
+    
+Answer 2: 
+
+    
+    
+I would recommend researching the option of mavenizing your projects. Possibly you can create a multimodule project with some modules as java projects and others as C/C++. Java projects in Maven work out of the box, with C/C++ you can have a look here: Using Maven for C/C++ projects. You can then use your IDE (Eclipse, Netbeans) to execute maven goals.
+I haven't done it, its just an idea and seems doable.
+    
+    
+Answer 3: 
+
+    
+    
+Actually compilation of java is already separate from c/c++. You are just calling separately gcc and javac in makefile. So in eclipse if you point your workspace to your java source code, you can use Eclipse IDE as an great editor and for compilation. You can again compile your code in makefile or use generated class files of eclipse. 
+    
+    
+Title: Drag and Drop IDE for TKX
+Description: 
+    
+    
+                    
+Does anyone know of a good IDE for GUIs made with TKX? Drag and drop capabilities like NetBeans or VS would be nice.
+    
+
+        
+Answer 1: 
+
+    
+    
+"SpecTcl is a WYSIWYG GUI-Builder for Tcl/Tk, with sibblings for generating code in Perl, Java, Python &amp; Ruby. It runs on all platforms where Tcl/Tk runs. It is simple and quick to use, yet still powerful when you know your Tcl/Tk."
+
+See http://sourceforge.net/projects/spectcl/
+    
+    
+Title: Right clicking suddenly unbearably slow in VS 2010
+Description: 
+    
+    
+                    
+I have been using VS2010 without any issues, always on the same application.  Suddenly within the last my solution has become unbearably slow when right clicking.  When doing other projects, it is fine.  The only thing I can think of that I changed was disabling the SQL Server debugging.
+
+It happens if I right click anywhere within the code editor.  Everything freezes for about a minute and a half, then the right click menu shows up.   If I try again right away, the same thing happens.  
+
+Intellisense seems to work fine. It is only the right click.
+
+The project is fairly big, but it has been working fine.  I am working on a 2 month old top of the line MacBook Pro (running Windows 7 64 bit in Boot Camp).  I did do the patch Tuesday big batch of Microsoft patches in the last 24 hours...
+
+Can anyone suggest where to look?  
+    
+
+        
+Answer 1: 
+
+    
+    
+A delay that long is almost always associated with network time-outs.  Use the trouble-shooting strategy demonstrated by Mark Russinovich in this blog post.
+    
+    
+Answer 2: 
+
+    
+    
+Windows 7, x64, 12GB memory, very slow right clicks:  
+
+The following steps fixed the problem for me.  Right click is now instantaneous.  Your Mileage may vary:
+
+I deleted the following directory:
+%AppData%Local\Microsoft\VisualStudio\10.0
+
+and reinstalled these three packages from the Visual Studio 2010 Ultimate DVD
+
+Microsoft SQL Server 2008 R2 Data-Tier Application Framework with this command:
+\WCU\DAC\DACFramework_enu.msi
+
+Microsoft SQL Server 2008 R2 Data-Tier Application Project:
+\WCU\DAC\DACProjectSystemSetup_enu.msi
+
+Microsoft SQL Server 2008 R2 Transact-SQL Language Service:
+\WCU\DAC\TSqlLanguageService_enu.msi 
+    
+    
+Title: Is there an option analogous to Delphi &ldquo;Use debug DCUs&rdquo; in Lazarus
+Description: 
+    
+    
+                    
+I'd like to debug Lazarus library code. In Delphi IDE I would simply check the Project Options -
+Answer 1: 
+
+    
+    
+Yes and no.   It roughly works the same as in Delphi, you need two sets of the compiled units. (.o/.ppu), and some way to switch.
+
+But because FPC/Lazarus are open source, only one set (the one without) is distributed. But you can craft the other byrecompile FPC and Lazarus with -gl. For tips on recompiling FPC/Lazarus see http://www.stack.nl/~marcov/buildfaq.pdf
+
+(it is even possible to do combinations. I debug many of my applications with everything debug except systems and sysutils, so that I don't trace into each and every string and exception helper, a major annoyance on Delphi)
+
+Currently the releases afaik don't distribute the duplicate sets, but this is more a release engineering problem. (specially since by using strip, the non-debug set can be probably crafted from the debug set)
+
+BTW, it might be worth the trouble to ask on the Lazarus maillist if such way exists. Even if the release doesn't set it up, there might still be a possibility that the functionality exists. 
+    
+    
+Title: Edit Comment Template in Netbeans PHP 6.8 [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has an answer here:
+                        
+                    
+                
+            
+                    
+                        Editing method comment template in Netbeans 6.9.1
+                            
+                                (1 answer)
+                            
+                    
+                Closed 2 years ago.
+        
+
+
+    
+
+I would like to ask is there any way change the comment code template in Netbeans PHP 6.8
+
+In eclipse, when I type /** ENTER , it would come out the comment template that I set in the setting, like this:
+
+/**
+* Apr 19, 2010 - Shiro
+* Description
+*
+* @return unknown_type
+*/
+function test()
+{
+
+}
+
+
+by Default Netbeans only will show the parameter in the function.
+
+/**
+  *
+  * @param &lt;type&gt; $order_No
+  * @param &lt;type&gt; $array 
+  */
+
+
+in Netbeans is there any possible I could found any customization about this, anyone know where is the setting for this?
+    
+
+        
+Answer 1: 
+
+    
+    
+In some way I feel NetBeans is just doing it right - Eclipse seems to mimic a "poor man's version control". But there are tons of free VCS, so why bother?
+    
+    
+Answer 2: 
+
+    
+    
+You go to menu:
+
+Tools -
+Title: How to change background color of &#39;code definition&#39; window in Visual Studio 2008?
+Description: 
+    
+    
+                    
+see title for question
+    
+
+        
+Answer 1: 
+
+    
+    
+"Open Tools-
+Answer 2: 
+
+    
+    
+
+On you current install, go to Tools | Import and Export Settings.
+Choose Export selected environment settings and click next.
+Click the top box to remove the check box from everything.
+Expand All Settings | Options | Environment.
+Click to check the box next to Fonts and Colors
+Click Next and save your file
+Restart IDE
+
+    
+    
+Title: embed a java code editor with limited scope in a swing application?
+Description: 
+    
+    
+                    
+Here's what I want to do.  I want to store code objects in my hibernate driven java swing application.  I want to allow the user to create code objects that can affect the data with a limited scope, like in a function with only access to members of that member's class.  I'd even really like to have a full on little ide (though scaled down with all the irrelevencies hidden) in there which would allow auto-completion and have a button to compile and check, then have all that wrapped so I can drop the thing in my database and schedule it's execution.
+
+Anyone have a good idea, know a good component or way to use eclipse or some such to accomplish this without having a roll out a solution myself?
+    
+
+        
+Answer 1: 
+
+    
+    
+you may use Eclipse RCP editor, it has lots of functionality available for reuse. e.g. text highlighting, pair constructions highlighting, text hovers, completion assist, etc.
+its a lot more powerful, but a lot heavier. and RCP is not only editor...
+    
+    
+Answer 2: 
+
+    
+    
+To achieve code highlighting and some simple auto complete functionality it would be worth looking at the jsyntaxpane component.
+
+It's pretty simple and easy to use but you're not going to get the compile functionality from that.
+    
+    
+Title: Developing XNA outside of Visual Studio
+Description: 
+    
+    
+                    
+There are some alternative IDE for developing XNA games? 
+
+By example, can I to integrate XNA in #develop?
+    
+
+        
+Answer 1: 
+
+    
+    
+It depends on what you want to do with XNA.
+
+You can use the assemblies outside of VS.  However, the content creation pipeline is pretty much tied directly to MSBuild, so if you want to use it, you'll want to stick with Visual Studio.
+
+However, XNA is designed to work with Visual Studio Express Edition, so it is a no-cost option.
+    
+    
+Title: VS2005 &ldquo;Add New Item&hellip;&rdquo; dialog - default item
+Description: 
+    
+    
+                    
+After installing a third-party SDK, it very discourteously makes one if its templates the default item in "Add New Item..." dialog in Visual Studio 2005. This is also the case for all other similar dialogs - "Add Class...", "Add User Control..." etc.
+
+Is there a way to change this behavior?
+    
+
+        
+Answer 1: 
+
+    
+    
+You may have to manually modify the SortOrder on the Item templates yourself.  You can do this by following these directions:
+
+1) Find the Item Template(s)
+
+Item Templates for VS2005 are stored in the following locations:
+
+
+
+ (Installed Templates) &lt;VisualStudioInstallDir&gt;\Common7\IDE\ItemTemplates\Language\Locale\
+ (Custom Templates) My Documents\Visual Studio 2005\Templates\ItemTemplates\Language\
+
+
+
+
+2) Open the template zip file to modify the .vstemplate file.
+
+Each Item Template is stored in a .zip file, so you will need to open the zip file that pertains to the template you want to modify.
+
+Open the template's .vstemplate file and find the SortOrder property under the TemplateData section.  The following is a sample file:
+
+
+
+&lt;TemplateData&gt;
+     &lt;Name&gt;SomeITem&lt;/Name&gt;
+     &lt;Description&gt;Description&lt;/Description&gt;
+     &lt;ProjectType&gt;&gt;CSharp&lt;/ProjectType&gt;
+     &lt;SortOrder&gt;1000&lt;/SortOrder&gt;
+     &lt;DefaultName&gt;&lt;/DefaultName&gt;
+     &lt;ProvideDefaultName&gt;true&lt;/ProvideDefaultName&gt;
+   &lt;/TemplateData&gt;
+
+
+
+Modify the SortOrder value using the following rules:
+
+
+The default value is 100, and all values must be multiples of 10.
+The SortOrder element is ignored for user-created templates. All user-created templates are sorted alphabetically.
+Templates that have low sort order values appear in either the New Project or New Add Item dialog box before templates that have high sort order values.
+
+
+Once you've made edits to the template definitions you'll need to open a command prompt and navigate to the directory that contains devenv.exe, and type "devenv /setup". This presumably rebuilds some internal settings and until you do this you won't see any difference.
+    
+    
+Answer 2: 
+
+    
+    
+I've just noticed this file on my PC:  
+
+C:\Program Files\Microsoft Visual Studio 8\VC\VCNewItems\NewItems.vsdir
+
+
+It's a text file, so you could check if the offending third-party stuff is in there.
+    
+    
+Answer 3: 
+
+    
+    
+Try looking at the registry under 
+
+HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\
+
+
+I see some relevant entries on my machine under
+
+HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\9.0
+
+
+for VS2008.
+    
+    
+Title: Disable close icons on editor tabs?
+Description: 
+    
+    
+                    
+After upgrading from Delphi Tokyo 10.2.x to Rio 10.3.1, the tabs for the files in the editor now have close icons:
+
+
+
+Close icons in Delphi Rio 10.3.1 - Mouseover makes others visible/active
+
+
+
+No close icons in Delphi Tokyo 10.2.x
+
+Especially with shorter file names, I regularly click on the little x when I want to switch to a specific file in the editor.
+If the file has pending edits, I can click Cancel to stop it from closing, but often I find myself having to reopen it.
+
+It's a bit of a nuisance.
+
+Can these close icons be disabled in the IDE?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  Can these close icons be disabled in the IDE?
+
+
+No.
+
+What you can do is to completely disable new themes. But that will require editing registry.
+
+Head to following registry key
+
+Computer\HKEY_CURRENT_USER\Software\Embarcadero\BDS\20.0\Theme
+
+
+and change following key-value entry:
+
+Key: Enabled
+Value: 0
+
+
+If you wish to enable themes again just change Value back to 1.
+
+Note: Unthemed IDE is no longer officially supported so you may have issues while using such IDE.
+    
+    
+Title: CLion inconsistent auto indentation for line comment
+Description: 
+    
+    
+                    
+There are some weird auto indentation going on in CLion that I don't understand why. Here is an example
+
+int i1(5); // some comments, then I hit Enter
+// auto indentation goes here. I hit Enter again
+// It goes here
+float f = 5; // some comments, then I hit Enter
+    // then auto indentation goes here. I hit Enter again
+        // It then goes here.
+float f2 = 6;
+// If I don't comment on the previous line, there is no weird indentation
+
+
+It seems like whenever I use = to initialize an variable, and then add comment at the end of the line, it will give me extra indentation on the next line. But in all other instance, it will not give me extra indentation.
+
+I recently installed CLion and it was using default code style. It seems like the the extra indentation is controlled by the continuation indent setting, but I only want this continuation indent setting be application to codes, not comments. Where can I change me setting to disable the continuation indentation for comment when using = for assignment?
+    
+
+        
+Answer 1: 
+
+    
+    
+This bug has been fixed in CLion 2018.2 EAP (https://www.jetbrains.com/clion/nextversion/ ).
+
+I personally uninstalled CLion 2018.1 because of this bug, since the EAP was stable enough.
+    
+    
+Title: The ftp-simple extension in vs code is not showing remote file content
+Description: 
+    
+    
+                    
+I am not using git because I am under the constraints of a hosted CMS and can not SSH into their server.
+
+I am trying to get ftp-simple to work in vs code so that I can edit a remote file save it and I can see the changes in the browser. Currently It can see the files on the remote server but wen I click on the files I can't see the content.
+
+In my config file I have only input the authorization for the sftp and nothing more do I have to do something else in order to actually see the content?
+
+This is what it looks like when I try to open the file. As you can see the file tree to the left is fully visible though.
+
+
+Maybe someone else has had this problem before... 
+    
+
+        
+Answer 1: 
+
+    
+    
+For my situation I needed to specify port 22 in the config file:
+
+"port": "22",
+    
+    
+Title: RAD studio takes very long time to open
+Description: 
+    
+    
+                    
+I was using RAD 10.1 (Berlin) with no problem until now... Last month I applied Windows Creator Update and was occupied by other businesses... Now, each time I start the IDE, the loading progresses quickly up to "All design time packages loaded". At this time RAD studio sits on its splash window and consumes ~25% CPU. It takes at least 10 minutes before the IDE appears...
+
+I've installed RAD 10.2 (Tokyo) and all provided patches, hoping for a fix... But the problem remains the same.
+
+I can't go back to previous version of Windows 10 (more than 10 days after install).
+
+I've already searched for an answer and Matthias E suggested that it was linked to https://quality.embarcadero.com/browse/RSP-17972.
+But, in my case, the (very) long period stands only for IDE loading even when there is no project to (auto)load. I'm not talking about the time-period to load the project or to start project execution or even to start the application execution. Once the IDE has been loaded (after ~20'), everything (editing, compilation, building, debugging, execution) is working quickly...
+I have become accustomed to never close the IDE once opened but this is particularly disturbing.
+
+Could you help me ?
+
+--- Edited ---
+
+For those who cannot access the link above, here is the content :
+
+Details
+
+Type:    Bug Bug
+Status:    Open Open
+Priority:    Major Major
+Resolution:    Unresolved
+Affects Version/s:    10.2 Tokyo, 10.1 Berlin Update 2
+Fix Version/s:    None
+Component/s:    Debugger, IDE (Development Environment), Libraries/Frameworks
+Labels:    None
+Platform:    Windows 10 
+Language Version:    English
+Edition:    Professional
+InternalID:    RS-83785
+InternalStatus:    Open
+
+
+Description
+
+The debugger goes haywire for everyone in our organization with Creators and Tokyo/Berlin. Reverting to Windows Anniversary brings back the sanity.
+Debugger problems with Tokyo/Berlin and Creators:
+    App takes a long time to load with modules loading and unloading and re-loading many times
+    IDE freezes
+    Memory consumption of bds.exe explodes, sometimes (a href="https://forums.embarcadero.com/thread.jspa?messageID=884382" rel="nofollow noreferrer"/a/ppstrong/strong/p/div
+Answer 1: 
+
+    
+    
+Thanks to Lieven Keersmaekers's suggestion to use procmon, I was able to find the cause of the problem. RAD studio was heavily trying to access an enormous (128 GB) zip backup file (see : qed-electronic.com/Download/170808-ProcMonTrace.jpg ). I've simply moved the backup file to another location and RAD studio now starts as before. I have no idea why RAD wanted so much to access this file : none of my project files were located in this zip. The Windows Creator Update was apparently not guilty...
+    
+    
+Answer 2: 
+
+    
+    
+bds.exe  must be launch with only one CPU  !
+
+CPU Affinity CPU=0
+
+Thx to Javorszky
+
+https://community.embarcadero.com/forum/installation-issues/1408-running-from-ide-freezes-windows-10#4173
+
+To run quickly without entring  TaskManager and change Setting CPUAffinity,
+
+just create a batch file on the desktop:
+
+cd "C:\Program Files (x86)\Embarcadero\Studio\19.0\bin\"
+start /affinity 1 bds.exe
+
+Why ?
+
+"The reason for this is that most applications you run these days have been designed with multi-core processors in mind and will work with the operating system to distribute their operations as evenly as possible across all the available cores. "
+
+see :   https://www.techrepublic.com/blog/windows-and-office/change-the-processor-affinity-setting-in-windows-7-to-gain-a-performance-edge/
+    
+    
+Title: Dynamically show/hide properties in the IDE Object Inspector?
+Description: 
+    
+    
+                    
+I came across an interesting feature while using Delhpi 10 Seattle. In Firedac, specifically a TFDConnection component, the Params property has some voodoo magic which can dynamically show and hide the properties in the IDE on the fly, depending on the value of another particular property. (I have no idea how long this has been available since I just started with Firedac). When you change the DriverID property in TFDConnection.Params, the rest of the properties in the Params show up in the IDE Object Inspector to be able to specify driver-specific properties.
+
+Now I've investigated how this works, and it's a bunch of interface definitions, rooting from IFDStanDefinition. I cannot figure out how it's actually performing this in the IDE, other than that there's a TStringList involved utilizing the Name/Value pair functionality.
+
+I would love to implement the same thing in my own component, in particular a TCollectionItem has a property ActionType which is an Enum type. I would like to dynamically show/hide properties depending on what value is selected for that one property.
+
+How can I accomplish the same ability of showing/hiding properties in the IDE Object Inspector in my own component's collection item?
+
+On a side note, I'm afraid part of the answer is that it expects all string values, judging by how you interact with this Params property via code.
+    
+
+        
+Answer 1: 
+
+    
+    
+Write a property editor and include paVolatileSubProperties attribute when GetAttributes returns. The rest is about releasing old sub-property instance, and replacing with the new one (but they can be of any TPersistent class descendant, so it's not tied to the string list class).
+    
+    
+Title: Add header to every file in project setting (gcc -include)
+Description: 
+    
+    
+                    
+I have a project which use gcc -include file.h
+
+As gcc documentation say, this ensures that file.h is included in every file which is compiled this way (meaning like there was #include "file.h" in every other files).
+
+Now I have imported this project into eclipse and I set up the include path where that file is but can't figure out how to do something like gcc -include in eclipse project setting. The result of this is that in editor I have a LOT of "Symbol xy could not be resolved" but the project compiles just fine.
+
+Thanks for any help.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can change the CDT GCC Built-in Compiler Settings on a project-by-project basis.
+
+
+Go to Project -code/code
+Title: invalid imagelist index - Delphi XE8
+Description: 
+    
+    
+                    
+While working with Delphi XE8 multi-device app (android), this error keeps popping up: 'Invalid ImageList Index'.
+
+Details:
+
+[507A7424]{vcl220.bpl  } Vcl.ImgList.TCustomImageList.Delete (Line 664, "Vcl.ImgList.pas" + 2) + $1C
+[0CC0E98C]{MultidevicePreview220.bpl} DesignPreviewFrm.TfrmDesignPreview.UpdateThumb (Line 744, "DesignPreviewFrm.pas" + 50) + $8
+[0CC0E597]{MultidevicePreview220.bpl} DesignPreviewFrm.TfrmDesignPreview.TickTackTimer (Line 653, "DesignPreviewFrm.pas" + 27) + $7
+[5073D11F]{vcl220.bpl  } Vcl.ExtCtrls.TTimer.Timer (Line 3093, "Vcl.ExtCtrls.pas" + 1) + $E
+[5073D003]{vcl220.bpl  } Vcl.ExtCtrls.TTimer.WndProc (Line 3051, "Vcl.ExtCtrls.pas" + 4) + $7
+[50172D80]{rtl220.bpl  } System.Classes.StdWndProc (Line 16882, "System.Classes.pas" + 8) + $0
+[507CB41F]{vcl220.bpl  } Vcl.Forms.TApplication.ProcessMessage (Line 10352, "Vcl.Forms.pas" + 23) + $1
+[507CB462]{vcl220.bpl  } Vcl.Forms.TApplication.HandleMessage (Line 10382, "Vcl.Forms.pas" + 1) + $4
+[507CB795]{vcl220.bpl  } Vcl.Forms.TApplication.Run (Line 10520, "Vcl.Forms.pas" + 26) + $3
+
+
+There is no imagelist used in the unit. In fact, the only component is a button.
+
+EDIT: This happens mostly in design mode and has nothing to do with my code. Might be a bug in the IDE.
+    
+
+        
+Answer 1: 
+
+    
+    
+1) Close Studio, ensure that the process "bds.exe" is not exists in the tast manager.
+
+2) Go to the folder "C:\Program Files\Embarcadero\Studio\x.0\bin", looking for the file "MultidevicePreview240.bpl".
+
+3) Rename it to "!MultidevicePreview240.bpl"
+
+4) Run Studio and test.
+
+another variant:
+
+The trouble in one of TImage in a TLayout. Fully delete TLayout, add this one and image again — the problem should disappear.
+    
+    
+Title: How can I debug JavaScript code that is inside JSP page directly from IntelliJ IDEA?
+Description: 
+    
+    
+                    
+I am working on a Java web application that implement its view using JSP.
+
+Into this JSP I have some JavaScript functions that I want to debug. I know that I can do it using FireBug but I want know if I cand debug this JavaScript functions directly inside IntelliJ IDEA IDE.
+
+It seems to me that I can debug the JavaScript inside HTML directly from IntelliJ (as shown here: https://www.jetbrains.com/idea/help/debugging-javascript.html). 
+
+But is it possible also for the JSP page? If it is possible how can I do it?
+    
+
+        
+Answer 1: 
+
+    
+    
+No, it's impossible. JSP is a server-side technology used by web servers running Java. JavaScript is a client-side technology used by browsers. The debugger can't use both of them simultaneously, or there should be two different debugging sessions that are running in the IJ, but I'm not sure if IJ support this feature. The only option is to use Remote Debugging, that you can use to connect to the running web server. In this way you can debug HTML page generated by the server. Even if that page is a result of JSP output you can't debug JSP in this debugging session.       
+    
+    
+Answer 2: 
+
+    
+    
+In Eclipse you can debug JSP and it has nothing to do with server-side and client-side technologies. It doesnt work in Intellij in some cases depending on the type of project i.e. you can debug war and cannot debug jar in Intellij whereas it is possible in Eclipse 
+    
+    
+Title: delphi - Creating custom frame with new event
+Description: 
+    
+    
+                    
+I'm working on delphi XE2.
+What I need:
+I need MyFrame class with frame without any visible components, but with new event visible in Object Inspector. This event will inform my form (on which will be placed the MyFrame object), that f.e. all datas on the frame are fullfilled.
+
+What I have:
+Based on this post and the TOndrej's answer, and that hint, where Ba shows, that for XE2 we need to replace 
+
+delphivclide := GetModuleHandle('delphivclide160.bpl');
+
+
+with this:
+
+delphivclide := GetModuleHandle('vcldesigner160.bpl');
+
+
+I have that code for new frame:
+
+unit MyFrame;
+interface
+uses
+  System.Classes, Vcl.Forms;
+type
+  TMyFrame = class(TFrame)
+  private
+  protected
+    FOnFilledData : TNotifyEvent;
+  public
+  published
+    property OnFilledData : TNotifyEvent read FOnFilledData write FOnFilledData;
+  end;
+implementation
+end.
+
+
+And that code for the registration unit:
+
+unit MyFrameReg;
+interface
+procedure Register;
+
+implementation
+uses Windows, DesignIntf, Dialogs, wFrame;
+
+procedure Register;
+var
+  delphivclide: THandle;
+  TFrameModule: TCustomModuleClass;
+begin
+  delphivclide := GetModuleHandle('vcldesigner160.bpl');
+  if delphivclide &lt;&gt; 0 then
+  begin
+    TFrameModule := GetProcAddress(delphivclide, '@Vclformcontainer@TFrameModule@');
+    if Assigned(TFrameModule) then
+    begin
+      ShowMessage('I''m here');
+      RegisterCustomModule(TMyFrame, TFrameModule);
+    end;
+  end;
+end;
+end.
+
+
+When i'll build my package, I have the message I'm here, so i supossed, that the MyFrame is registered.
+
+What is my problem:
+Problem is, that it dosn't work to the end.
+When I choose New VCL Application, and want to create MyFrame by choosing File -
+Answer 1: 
+
+    
+    
+A. Frame class registration
+
+There is no need to do it in a "hacky way"
+
+uses
+...
+  DMForm,
+  VCLFormContainer,
+...
+
+procedure Register;
+begin
+...
+  RegisterCustomModule(TYourFrameClass, TFrameModule);   // for frames
+  RegisterCustomModule(TYourModuleClass, TDataModuleCustomModule);   // for data modules
+...
+end;
+
+
+There is another way around to add frames too
+
+type
+  TNestableWinControlCustomModule = class (TWinControlCustomModule)
+  public
+    function Nestable: Boolean; override;
+  end;
+
+function TNestableWinControlCustomModule.Nestable: Boolean;
+begin
+  Result := True;
+end;
+
+
++
+
+  RegisterCustomModule(TYourFrameClass, TNestableWinControlCustomModule);
+
+
+Names of units (tested in XE7):
+
+TCustomModule =strong/strong/pp
+Title: How to set up a git repository for an IDE-based project?
+Description: 
+    
+    
+                    
+I work mostly with embedded applications (FPGAs and microcontrollers) and I'm fairly new to git and version control in general. I've come to learn the power of it and want to set up some of my projects for co-workers and friends to collaborate with me. These projects are typically developed in an integrated development environment (IDE) such as MPLAB-X, Code Composer Studio, Libero, or Quartus, which generate binaries, provide background bugging, and other features.
+I've had some trouble setting up the project in a repository where someone else can clone it and get to working on it. I've found that most recommended .gitignore settings have you ignore the main project file as well as all of the extra binary file and bi-products such as .tcl scripts and text reports. By ignoring these, I find that I am removing all of the information that a collaborator would need to set up the development environment with the same configurations. However, if I track them in the repository, then my repository gets bogged down with extra files (often large ones) that aren't important. Is there a better solution to this problem?
+    
+
+        
+Answer 1: 
+
+    
+    
+My rules are:
+
+
+there needs to be a single command that sets up the environment after a checkout
+files under version control may not change during execution of the setup command or a build.
+
+
+The weaker rules are:
+
+
+there should be no redundant information in version-controlled files
+making changes leads to a minimal difference
+
+
+I have per-file-type filters configured that normalize the files before check-in. For QuartusII, these are:
+
+
+.qpf and .qsf have the datestamp removed. These load just fine, and Quartus just writes a new one, which is then removed again on the next checkin.
+.qsf is run through a normalization step (Quartus has an explicit "save normalized project file" command).
+.vhd files containing IP megafunctions are reduced to the recovery information comments, and regenerated by the setup script.
+.qip files are ignored (these are regenerated along with the megafunction)
+
+
+Granted, there is an initial overhead, and this is difficult to set up, but this allows me to review individual commits as diffs easily.
+
+Introducing these filters later on is possible by git filter-branch, so I wouldn't let that impede development and just check in everything until filters are in place.
+    
+    
+Answer 2: 
+
+    
+    
+The general solution is to:
+
+
+include anything able to rebuild those extra large (often binary) files
+include a reference to an artifact repository (like Nexus) or any other referential you want able to store multiple versions of those large files
+
+
+Tracking rebuild scripts or references are the two ways to keep your repo a source management tool.
+    
+    
+Title: Stuck with Visual Studio 2010 in Administrator (elevated) Mode
+Description: 
+    
+    
+                    
+There are many posts that tell you how to run Visual Studio 2010 as Administrator.
+I will probably be very ashamed when I find my answer but...
+My problem is that I can't start Visual Studio NOT elevated!
+
+I always have the "(Administrator)" text on the title.
+I want to be able to debug my application in a non-elevated environment.
+
+I have no shortcut/application file that is marked with "Run As Administrator".
+Not Devenv.exe and not VSLauncher.exe not shortcuts at Start Menu.. nothing is marked like this and still Visual Studio runs as Administrator.
+
+My user belongs to the local Administrators group.. but that didn't use to enable this administrator mode.
+UAC is disabled but this too didn't matter once.
+
+Also checked 
+
+HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers
+
+
+and removed Visual Studio from the list. Nothing.
+
+Any idea will be appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+I turned UAC back on and what a surprise... Visual Studio runs in normal mode again!
+Thanks again Microsoft, for making things very clear...
+    
+    
+Answer 2: 
+
+    
+    
+You can try downloading VSCommands extension and using its Debug As Normal user feature.
+    
+    
+Title: Link to python modules in emacs
+Description: 
+    
+    
+                    
+I'm looking into emacs as an alternative to Eclipse. One of my favorite features in Eclipse is being able to mouse over almost any python object and get a listing of its source, then clicking on it to go directly to its code in another file.
+
+I know this must be possible in emacs, I'm just wondering if it's already implemented in a script somewhere and, if so, how to get it up and running on emacs.
+
+Looks like my version is Version 24.2.
+
+Also, since I'll be doing Django development, it would be great if there's a plugin that understands Django template syntax.
+    
+
+        
+Answer 1: 
+
+    
+    
+I also switched from Eclipse to Emacs and I must say that after adjusting to more text-focused ways of exploring code, I don't miss this feature at all.
+
+In Emacs, you can just open a shell prompt (M-x shell). Then run IPython from within the Emacs shell and you're all set. I typically split my screen in half horizontally and make the bottom window thinner, so that it's like the Eclipse console used to be.
+
+I added a feature in my .emacs that lets me "bring to focus" the bottom window and swap it into the top window. So when I am coding, if I come across something where I want to see the source code, I just type C-x c to swap the IPython shell into the top window, and then I type %psource &lt; code thing /pp
+Answer 2: 
+
+    
+    
+Check ropemacs (a refactoring library). It has a "go to definition" command (C-c g) that works as expected (and opens the file if it needs to).
+
+If you don't want to spend a lot of time configuring emacs for python, have a look at this package.
+
+I don't know about any plugin that understands Django template syntax, sorry.
+    
+    
+Answer 3: 
+
+    
+    
+opened a feature request on behalf of python-mode.el
+
+https://blueprints.launchpad.net/python-mode/+spec/go-to-definition
+
+py-complete-goto-definition should work already on functions
+    
+    
+Title: How to use LiteIDE for a Go project?
+Description: 
+    
+    
+                    
+I've installed the LiteIDE IDE for Go. I create a new Go project, but I when I try to run it I get:
+
+&lt;action id="Run" cmd="$(TARGETPATH)" args="$(TARGETARGS)"&gt; &lt;start=" " workdir=""/&gt; &lt;error msg="process failed to start" /&gt; &lt;/action&gt;
+
+
+I guess I need to configure LiteIDE, but I don't how and I did not find any relevant documentation.
+    
+
+        
+Answer 1: 
+
+    
+    
+Something like that:
+
+
+Create Go1 Project in YOUR_PATH
+Import  project (in projects window) and set custom GOOPATH to YOUR_PATH.
+Set active project in the context menu on YOUR_PATH.
+
+    
+    
+Title: Eclipse IDE: Line (or mark) between code block start and end like in Notepad ++
+Description: 
+    
+    
+                    
+I'm looking for a way to make eclipse shows a dot-line (or any kind of line) between code block begining and block end like in Notepad++.
+
+See sample image:
+
+http://s14.postimage.org/itrtkupg1/lines.jpg
+
+Does anobody know how can Ido that in Eclipse?
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+This is not possible in Eclipse... bug 84878 has been opened way back in 2005, and has never been fixed.
+    
+    
+Title: Netbeans IDE (6.8/PHP) - Custom Window Arrangement?
+Description: 
+    
+    
+                    
+I'm doing PHP development in NetBeans 6.8 and want to be able to switch between window layouts with a keypress.
+
+I understand the IDE provides different "window groups" depending on whether I'm editing or debugging, but I'm looking for custom control of this.
+
+For instance, I'd like to have a max-editor-view, where the editor takes up the majority of screen real estate... then press Ctrl-Alt-2 and have a second window arrangement display where the projects files heirarchy window appears on the left of the editor...  then press Ctrl-Alt-3 and have the variables/watches/search results appear below the editor... then press Ctrl-Alt-1 and display the max-editor-view again.
+
+Something like that, anyway. Is it possible?
+    
+
+        
+Answer 1: 
+
+    
+    
+http://netbeanside61.blogspot.com/2008/04/top-10-netbeans-ide-keyboard-shortcuts.html
+
+http://www.scribd.com/doc/7629741/netbeans-keyboard-short-cut
+
+try this. I think you will find some thing here.
+    
+    
+Title: Rails 3/1.9.2 debugging&hellip;with an IDE?
+Description: 
+    
+    
+                    
+I was using NetBeans but it seems that support for Ruby is officially dead (with some community element just starting up).  I've seen threads for hacking ruby-debug to support Ruby 1.9 debugging in NB but I just feel like that's not the way to go.  I just installed Aptana3  which will happily hit breakpoints but there's no support for watch expressions which limits visibility.  I can't seem to find a straight answer as to why it's not supported or whether there are any plans to include it.  
+
+Is there a clear winner for debugging Rails3/1.9.2 in some sort of text editor?
+    
+
+        
+Answer 1: 
+
+    
+    
+RubyMine 3.0 by Jetbrains will let you debug Rails 1.9.2 like NetBeans used to do. While RubyMine is not free, it is affordable and a great Rails development environment.
+
+Notice
+I do not work for JetBrains, I'm just a very satisfied customer.
+    
+    
+Title: how to create a project in turbo c++ 16 bit compiler
+Description: 
+    
+    
+                    
+I want to create a project file turbo c++ and link the files in this project. Although i have tried for it but i found only one option that to open a project no option to create a new project. So How to do that.
+    
+
+        
+Answer 1: 
+
+    
+    
+Basically, what you want to do, is to
+"Open Project". There, you type in a projects name. It must end with ".PRJ". When you open it, it will be created. Then you can add files to the project by pressing "Insert". But have a look at the links below.
+
+In case these links disappear from the Internet, I add some redundant links. The first is the best, also cool is the hundreds of pages long Turbo C manual.
+
+Graphical example with images!
+
+Turbo C manual on Scribd
+
+In Turbo C 2.01
+
+Using projects in Turbo/Borland C++
+
+Also, information about porting MSDOS Turbo C programs to Linux
+    
+    
+Answer 2: 
+
+    
+    
+If you use old Borland Turbo C++ (2.0 for DOS) project is text file with .PRJextension.
+You can open it like any text file (for example test.c) and write all your files into it.
+Each row contains one .c or .cpp file without extension followed by its header in parentheses.
+For example 
+
+mcalc (mcalc.h) 
+mcparser (mcalc.h)
+mcdisply (mcalc.h)
+
+
+...
+Here mcalc.c has #include "mcalc.h"  so that is why it is included in PRJ file.
+Other headers for example #include &lt;stdio.h&gt; are not included in .PRJ.
+Of course, if your .c has not any header written by you, .PRJ contains file name of your .c without additional parentheses. 
+
+After you create your PRJ, save it. In TC editor set project name (Project-code/code/p/div
+Title: Change background color of UI elements in eclipse IDE
+Description: 
+    
+    
+                    
+I am using Eclipse 3.5 IDE on Fedora linux. Too much white or light gray color is hurtful to my eyes. I managed to change the background of editor and console window to black but nothing else so I am still seeing 30 to 40% space as not black. How do I change the background color of package explorer? 
+
+If not possible then how to hack into eclipse source code or config files somewhere to do that and also to change all UI panels color to black from the current light grey and text to some other color from black?
+    
+
+        
+Answer 1: 
+
+    
+    
+Much of the appearance of Eclipse is controlled by the GTK+ theme. You can edit the current theme or try different themes out.  The "Nokoka-Midnight" theme, for instance, is almost entirely black.  I like a program called gtk-chtheme to switch them.
+
+Nokoka-Midnight
+
+    
+    
+Answer 2: 
+
+    
+    
+To change only editor without affecting the entire IDE you can try two approaches:
+
+
+http://www.eclipsecolorthemes.org/
+Go to Windows
+Title: ide code information
+Description: 
+    
+    
+                    
+I've been annoyed lately by the fact that PyDev doesn't information about classes and function when it code completes wxPython code.
+
+Can anybody tell me FOSS IDE's or extensions that offer code information (function params, returns etc.) when it code completes for C/C++ and Python.
+
+I am a fan of CodeLite, Eclipse CDT and CodeBlocks in that order for C/C++ (excepting non-FOSS)
+and PyScripter, PyDev for Python in that order.
+    
+
+        
+Answer 1: 
+
+    
+    
+Vim + Exuberant Ctags
+
+See here, here and here for C++ autocompletion (also referred to as IntelliSense, taken from the name for Visual Studio's autocomplete).
+
+And here for Python autocomplete/"intellisense" for vim. (I should point out I found the link to that from this post on SO).
+
+If that doesn't include the ctags for wxPython as you require, you might want to check out this guy's ctags-based highlighting which apparently does work for wxPython (and perhaps take the ctags file from that?)
+
+Probably also worth checking out this enormous list of Python IDEs on SO (specifically those with "AC" tags) if you've not already seen that? I realise your question is a bit more specific than just basic Auto Complete, but perhaps there's some new options in there for you...
+    
+    
+Answer 2: 
+
+    
+    
+I use notepad++ and am vary happy with it.
+    
+    
+Title: C/C++ method parameter hints in Eclipse
+Description: 
+    
+    
+                    
+is there any way how to enable Eclipse to show hints for parameters of C/C++ functions.
+When I press Ctrl + Shift + Space it shows only types of parameters but not the names.
+And is there also any way Eclipse can show parameter hints automatically when ( is pressed?
+
+Thanks for any advice.
+    
+
+        
+Answer 1: 
+
+    
+    
+Are you using the CDT plugin?  If so which version?  The following applies to Eclipse 3.5 (Galileo) with the CDT plugin.  If your setup is different then the rest of this answer may not be accurate.
+
+Ctrl + Space brings up the type and names of parameters for me.
+
+Looking through the preferences (Window -
+Title: Format Java Code in Netbeans / Eclipse, but save it differently
+Description: 
+    
+    
+                    
+I asked a related question before, but I guess the root of the question is.  Let's say I have 2 developers on the team and they both like to look at code in different formats.  One likes the braces to be on a new line and the other doesn't.
+
+The approach I was using before is that anytime we run a build, the code is automatically formatted according to the Java/Sun standards using Jalopy; however, I would like the developers to be as happy as possible.  They can change the font size, font color, background color, etc.
+
+If I am currently using the Jalopy Maven plugin to format code, can/should I write a hook to SVN that calls mvn jalopy:format on the project when it's checked in?  Is this reliable?
+
+That solution doesn't work 100% because it requires the developer to manually format the source code to their liking every time they open a file that hasn't been formatted yet.  I was thinking an IDE plugin would be nice as it could automatically format the source to their liking and then save it as another.
+
+What other options do I have to ensure the code is formatted nicely on checkin?
+
+Thanks,
+
+Walter
+    
+
+        
+Answer 1: 
+
+    
+    
+Hm.. if you use Eclipse you can do the following:
+1. configure the formating you like (Window/Preferences/Java/Code Style/Formatter)
+2. configure clean up (Window/Preferences/Java/Code Style/Clean Up), under edit check "Format source code"
+3. if a developer has a project he can right click on it and source/clean up
+
+The complete project will be then cleaned with the rules you defined there. So therefore after this he would have his own formatting.
+    
+    
+Answer 2: 
+
+    
+    
+IMHO you are wasting your resources with this. Code format is (between certain limits) a question of taste; howewer, people working as a team should be able to agree on using a common coding style.
+
+Once someone has worked on a couple of projects, (s)he knows from experience that one's brain can learn a new code format in a matter of days; after that, it is as easy to interpret as the earlier favourite. Thus, one stops having one "favourite" code format. So I must note that sticking to a specific code format is a beginner's malady; your team would be better trying to get over it to focus on the development itself.
+    
+    

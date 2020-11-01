@@ -1,0 +1,2402 @@
+Title: Running Clojure Box in Windows 7
+Description: 
+    
+    
+                    
+Has anyone had a problem running Clojure Box in Windows 7?
+
+I am trying to run a fresh install of Clojure Box on a fresh install of Windows 7 Professional (64 bit). Java version on system is 1.6.0_16.
+
+emacs starts up but produces the following error messages:
+
+    Warning (initialization): An error occurred while loading `~/.emacs':
+
+    File error: Searching for program, no such file or directory, java
+
+
+As a newbie at emacs, slime, swank, paredit, Clojure and Clojure Box, I'm not even sure where to start. I can't even find `~/.emacs'
+
+Thanks for any help you can provide.
+    
+
+        
+Answer 1: 
+
+    
+    
+Is the directory you installed Java to on your PATH?
+    
+    
+Answer 2: 
+
+    
+    
+I also got the same error by not having Java installed at all prior to installing Clojure Box. It'd be nice if the installer checked for Java's presence and PATH-belonging. Once Java was installed, Clojure Box was working correctly.
+    
+    
+Answer 3: 
+
+    
+    
+You may create .emacs file yourself. See this answer.
+    
+    
+Answer 4: 
+
+    
+    
+One gotcha is that there is a emulation of the 32 bit process on the 64 bit version of Windows so you need to add java files to C:\Windows\SysWOW64 even if you have it in C:\Windows\System32 folder.
+    
+    
+Title: Looking for Windows Text Editor which supports GIT [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        How can I set up an editor to work with Git on Windows?
+                            
+                                (33 answers)
+                            
+                    
+                Closed 7 years ago.
+        
+
+
+    
+
+I am looking for a Text Editor on Windows which is integrated with GIT (check out, check in from the UI). Also, it would be nice is this editor could also support Python syntax highlighting.
+
+Is there anything like that available?
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Here's a list of Editors and IDEs that integrate GIT, not sure if there's something that fits your need. The most fitting would be the Eclipse Plugin.
+    
+    
+Answer 2: 
+
+    
+    
+Eclipse should be able to fit the bill.  I know there's a decent python plugin, and I'm sure there's one for git by now.
+    
+    
+Answer 3: 
+
+    
+    
+E Text Editor is the  text editor for windows that i fell in love with. It "has support" for GIT via the project pane, because the project pane works with TortoiseGit. Depending on your preferences this may or may not be the optimal setup.
+    
+    
+Answer 4: 
+
+    
+    
+Have you tried vim with this plugin?
+
+http://github.com/motemen/git-vim
+    
+    
+Title: How to make Error List window automatically active during compilation in visual studio?
+Description: 
+    
+    
+                    
+How to make Error List window automatically active during compilation in visual studio instead of default Output window?
+    
+
+        
+Answer 1: 
+
+    
+    
+Options / Projects and Solutions / General / Always show error List...
+
+You can also uncheck the "Show Output window when build starts" if needed.
+    
+    
+Title: Distributing a design-time package w/third-party UI elements
+Description: 
+    
+    
+                    
+Now that I am learning more about design time aspects of component development, I have what may turn out to be a couple of IDE "plugins" targeting Delphi 2007 (+ others if compatible).
+
+The forms / UI for these, ideally, will utilize some of the third party components I use regularly.  Assuming the licensing is okay to distribute those components for an IDE plugin, etc., what do I need to do differently to prepare the distribution package, as compared to from what one would do on a package with "full source"?  
+
+(I hope this question makes sense. Please be kind and ask questions if not).
+    
+
+        
+Answer 1: 
+
+    
+    
+You need to distribute the BPL compiled for each version of Delphi you will support (Version + Update) and then only distribute the BPL.  Set up a Virtual Machine to test it in.  The BPL is a special DLL, so you are only distributing a binary, which should work with your licenses.  
+
+Distributing the .PAS or .DCU would violate the license agreement most likely.  
+    
+    
+Answer 2: 
+
+    
+    
+You will probably find that this causes all sorts of problems.
+
+GExperts does it differently. It is a DLL that statically links to some 3rd party controls and references only Delphi's own runtime packages. This cannot cause any conflicts with other packages because the statically linked units are not visible to the IDE. It also means that GExperts does not need to distribute any runtime packages.
+    
+    
+Answer 3: 
+
+    
+    
+Do not distribute those components in your design-time package. It will cause headaches for you and your customers if your customers also happen to want to use those same components in their own projects. If you put those components' units in your design-time package, then your customers will not be able to also have their own copy of those components installed on the Tool Palette because only one copy of a unit may be loaded at a time.
+
+The components you're using should have come in a run-time package from their vendor already. Put that package in your design-time package's "requires" list. Distribute the .bpl file only; I think you can install it in the same directory as your design-time package.
+
+That run-time package will also be a requirement of the vendor's design-time package, which is what your customers will have installed in their IDE.
+    
+    
+Title: Is there any IDE or Visual Studio/Mono/SharpDevelop plugin for braceless C#?
+Description: 
+    
+    
+                    
+When I saw this article about using a python-like sintax (indentation based, without curly braces, syntax) for C#, I begun to wonder: can I have an IDE that parses and compiles it?
+    
+
+        
+Answer 1: 
+
+    
+    
+What about Iron Python? It's python for dotnet.
+
+You can also check out Delphi Prism (runs as a plugin for Visual Studio) if you don't like braces. It can do everything that C# does, plus a few extra things.
+    
+    
+Answer 2: 
+
+    
+    
+
+  : can I have an IDE that parses and compiles it?
+
+
+First off, a bit of pedantry. An IDE neither parses nor compiles. 
+
+I would either suggest to use Iron Python or Delphi Prism (as Wouter suggested faster) or what about this: 
+You use Notepad++ as an IDE and write a small tool that automatically adds the brackets based on the intention before the code is compiled. I think that this can be done within one code "search and replace traversal":
+
+For example:
+
+if true
+   for each a in b
+       foo();
+ foo();
+
+
+The code simply scans each line and adds an opening bracket if: The code in the currentline is further intended than the code in the previous line:
+
+if true
+   {for each a in b
+       {foo();
+ foo();
+
+
+And adds a closing bracket wherever the code of the next line is less intended than in the current line. - Store the indentation depth (I would recommend a stackbased system)!
+
+if true
+   {for each a in b
+       {foo();}
+   }
+ foo();
+
+
+And so on... The problems with Namespaces and "Using" can also be solved that way.
+    
+    
+Answer 3: 
+
+    
+    
+sorry for the delayed reply. I posted an article here that talks about structured editors. Unfortunately it's still in early prototype stages, but can give you an idea of how to build such an editor. I've also published the sources and binaries here.
+
+Let me know if you have any questions.
+    
+    
+Title: How do you manage growing eclipse configurations?
+Description: 
+    
+    
+                    
+I use eclipse for quite a lot of work, including:
+
+
+multiple "utility" projects that include code that most of my java work makes use of
+various plugin-related projects that I sync and use periodically (eg: the Git plugin)
+plugin projects I'm actually developing
+the occasional pydev / non-java project
+etc...
+
+
+It is becoming quite difficult to keep all these things straight, particularly since I never need to use them all at once.  I've tried using Mylyn (and I'm trying it again) but in the past it has caused eclipse to run extremely slow, and I am notoriously horrible at remembering to tell mylyn that I've switched tasks, so it tends to learn very odd (and largely useless) sets of resources.
+
+I've considered using multiple workspaces, but that is problematic when multiple projects need to exist in multiple workspaces, and when I need to synchronize the eclipse metadata directories across workspaces.
+
+What is the best way to manage complex working environments in eclipse?  Other development environments aren't a viable option because there aren't any sane alternatives when it comes to developing eclipse plugins (and that is a requirement).
+
+(I think a very similar question was asked a month or two ago, but I haven't been able to find it...)
+    
+
+        
+Answer 1: 
+
+    
+    
+It isn't quite clear to me what your need is.  But have you tried using working sets in the Package Explorer?  
+
+Open the Package Explorer view, open its menu, and Select Working Set.  That lets you give a name to a subset of all the projects loaded in your workspace.
+
+Switch working sets using the package Explorer menu.  Use working sets to limit the scope of Search, errors, problems, etc.
+
+Define as many working sets as you need to group your projects.  A project can be part of any number of working sets.
+    
+    
+Answer 2: 
+
+    
+    
+Here's a screencast about working sets -- this does look like the right answer.
+
+http://www.peterfriese.de/eclipse-working-sets-part-i/
+    
+    
+Answer 3: 
+
+    
+    
+You want to use "Working Sets".
+    
+    
+Answer 4: 
+
+    
+    
+I would recommend using different workspaces, and then adding the common projects to each workspace (you can specify the location of the project to be outside of the workspace).  I believe this will work, but I haven't tried it, so I can't be sure.
+
+As @JesperE and @Dennis S suggested, working sets will help you organize your projects, but they may not make eclipse run any faster, since the projects will all still be loaded into the workspace.
+    
+    
+Title: Advantages of VS 2008 over VS 2005
+Description: 
+    
+    
+                    
+Could somebody please name a few.  I could given time, but this is for somebody else, and I'd also like some community input.
+    
+
+        
+Answer 1: 
+
+    
+    
+Personally I would say one of the biggest advantages I have found is the product responds quicker i.e. opens faster, compiles and runs projects faster.  In my mind why wouldn't you upgrade for this benefit alone.
+
+Because of the environment that I work in I am restricted to .NET 2.0 so have not been able to take advantages of the many other features of multi targeting etc.  
+
+However for the ASP.NET work I have done the split view and CSS support is great.  Certainly that is the one area I have noticed the biggest functional improvement from VS2005 to VS2008.  With CSS you still need to but in the effort to understand it but why not get as much help as possible from the IDE as well.
+
+Overall I have found it to be a very easy transition so I can't think of a reason not to upgrade.
+    
+    
+Answer 2: 
+
+    
+    
+Well, it supports .NET 3.5, which offers a lot of new features - it depends on whether you need them.
+
+Other than that, they improved (also with SP1) the refactoring tool, compile speed, IntelliSense now works great with C# too, and you get the new C# compiler even when writing .NET 2.0 code. Also, ASP.NET designer performance has improved a lot.
+
+In my opinion, even writing mostly .NET 2.0 code, I find it slightly better than 2005.
+    
+    
+Answer 3: 
+
+    
+    
+One big feature is it lets you target different versions of the .NET runtime, depending on the project.
+    
+    
+Answer 4: 
+
+    
+    
+If you're using The Microsoft Unit Testing framework, it's far better in 2008. i.e. it's usable.
+    
+    
+Answer 5: 
+
+    
+    
+Besides the usual support for latest versions of framework and integrated unit testing, i personally find out VS 2008 to be more stable, with better refactoring support and more mature (read stable) product than VS 2005.
+I was using VS 2005 since it showed up on the market, until the first release of VS 2008, so i can tell the difference.
+    
+    
+Answer 6: 
+
+    
+    
+Depends on your programming language.
+
+
+On .net, the built-in support for .net 3.5 is obvious, although this is mainly project templates. However, SP1 adds .net Client Framework support, which is not possible within VS2005 to my knowledge.
+This also means support for WPF with a XAML Designer, although most people still prefer Expression Blend for WPF Interfaces.
+Apparantly, there is now a JavaScript Debugger, even though it's a bit broken as it seems (not sure if SP1 fixes this)
+
+
+In short: For .net 3.5, it's almost a must-have if you are a professional developer, but that is just my opinion.
+    
+    
+Answer 7: 
+
+    
+    
+The CSS property builder is much better IMHO. 
+    
+    
+Title: Apply Visual Studio Quick Action on multiple entries
+Description: 
+    
+    
+                    
+I am using Visual Studio 2019 and have some warnings in my code. For instance:
+
+
+
+I could apply one at a time but I would like to use the recommended quick action for all of them.
+How can I do that?
+    
+
+        
+Answer 1: 
+
+    
+    
+A code fix is available for this rule in Visual Studio. To use it, position the cursor on the string literal and press Ctrl+. (period). Choose Use nameof to express symbol names from the list of options that's presented.
+
+
+
+The thing to note is use the Fix all occurrences in whatever option you want.
+
+
+Document - will replace it in the current file
+Project - will replace all string literals in current project
+Solution - will replace all string literals in entire solution
+
+    
+    
+Title: &ldquo;Access can be private&rdquo; warning message for public setter/mutator methods in IntelliJ IDEA
+Description: 
+    
+    
+                    
+I have a public class with private fields and public setter methods to set those fields. Why IntelliJ IDEA is warning me saying "Access can be private" for these setter methods?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Simple: because IntelliJ doesn't see any usages for these method that would require them to be public in your project.
+
+In other words: the IDE doesn't "know" that you made the setters public on purpose. It just figured: for what you are doing right now, you don't have to do that.
+
+When writing "truly" public APIs, (maybe to be used by 3rd parties that later rely on your classes), this information is safe to ignore. So you might just go in and disable that warning, see here for example.
+
+Beyond that: understand that you should avoid public setters where possible. Unless you have a "data bean" class, having setters/getters for each and any field is actually bad practice. You avoid outsiders to inspect internal state (using getters), and you very much want to prevent outsiders to overwrite internal state (using setters).
+    
+    
+Answer 2: 
+
+    
+    
+It means they are not used outside of the class and don't need to be public.
+
+Restricting the access of methods keeps your interfaces small and reduces the chance of bugs creeping into your programs.
+    
+    
+Answer 3: 
+
+    
+    
+IntelliJ IDEA is intelligent enough to scan your packages and class references within a package and if it notices that the usage is enclosed primarily to a certain package, then it will try to instill some discipline of adherence to encapsulation principles, and in this case: package privateness.
+ If a class has no modifier (the default, also known as package-private), it is visible only within its own package (packages are named groups of related classes.
+    
+    
+Title: How to replace &ldquo;return optObj.isPresent() ? new Obj2(optObj) : null&rdquo; in a functional style?
+Description: 
+    
+    
+                    
+My IDE (InteliJ) keeps pointing me that my code "Can be replaced with single expression in functional style", highlighting the isPresent():
+
+return timestamp.isPresent() ? new Obj2(timestamp.get()) : null;
+
+
+timestamp is initialised like an Optional:
+
+Optional&lt;Date&gt; timestamp = ...
+
+
+My assumption is that I should use ifPresent. like this timestamp.ifPresent(Obj2::new). But ifPresent is void and I have no opportunity to return the created Object. Also cant then return null. Is there a solution to my code?
+    
+
+        
+Answer 1: 
+
+    
+    
+You're correct in saying ifPresent returns void and hence not suitable in this case. Your IDE is suggesting that you can simply do:
+
+timestamp.map(Obj2::new).orElse(null);
+
+
+This reads as "if the Optional timestamp has a present state then pass the object it contains into the Obj2 constructor and returns this new Obj2 instance otherwise (orElse) return null.
+
+
+
+on another note, IntelliJ IDEA can help you generate the code it's suggesting. 
+
+for example, given the below screenshot:
+
+
+
+I simply clicked on the "highlighted" part and pressed "ALT + ENTER", and IntelliJ suggests whether it should replace the condition with a functional style. 
+    
+    
+Answer 2: 
+
+    
+    
+In addition, Like forEach(), ifPresent() takes Consumer as the parameter so it can introduce side effects. You would typically use it to print or log things.
+    
+    
+Title: How to run custom code when &ldquo;Start Debugging&rdquo; in Visual Studio and attach to debugger
+Description: 
+    
+    
+                    
+VS Code seems to have a file called Launch.json to customize what happens when you run your app for debugging.
+How do we go about that for Visual Studio?
+My goals is to run docker-compose without the VS Docker Tools, and then after the containers are up, telling VS to attach to the container.
+
+My question is not specific to that case though, it could just as well be another custom way of Run with debugger scenario.
+Ideally I could just run some commands to build the project, run the project, and then tell VS to attach to it and associate that logic with VS.
+    
+
+        
+Answer 1: 
+
+    
+    
+Right-click the project in your solution explorer; select "Properties".
+Choose "Debugging" node. Fill in "Command", "Command Arguments" (if needed), and set "Attach" to true.
+    
+    
+Answer 2: 
+
+    
+    
+Based on the answers of Vlad and Jack, I came up with the following solution.
+To have my own code run when I press the Run button, I set up a blank Command Line project with custom launch settings.
+
+{
+  "profiles": {
+    "Build": {
+      "commandName": "Executable",
+      "executablePath": "powershell",
+      "commandLineArgs": ".\\DebugRun.ps1",
+      "workingDirectory": "."
+    }
+  }
+}
+
+
+Whenever I press Run, it will run the DebugRun.ps1 script using PowerShell.
+Here's what I put in the DebugRun.ps1.
+
+docker-compose -f "./docker-compose.debug.yml" --no-ansi up -d --force-recreate --build
+
+Start-Sleep -Seconds 5
+
+$appId = ((docker ps --filter "ancestor=employeemapapp:debug")[1] -split " ")[0]
+$apiId = ((docker ps --filter "ancestor=employeemapapi:debug")[1] -split " ")[0]
+
+$appIp = (docker inspect --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $appId)
+$apiIp = (docker inspect --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $apiId)
+
+docker exec -d $appId C:\\remote_debugger\\x64\\msvsmon.exe /noauth /anyuser /silent /nostatus /noclrwarn /nosecuritywarn /nofirewallwarn /nowowwarn /timeout:214748364
+docker exec -d $apiId C:\\remote_debugger\\x64\\msvsmon.exe /noauth /anyuser /silent /nostatus /noclrwarn /nosecuritywarn /nofirewallwarn /nowowwarn /timeout:214748364
+
+$appTarget = $appId + ":4022"
+$apiTarget = $apiId + ":4022"
+
+#Parameters
+## 1: Solution Name is used to run the code only to the VS instance that has the Solution open
+## 2: Transportation method for remote debugger
+## 3: Target is the hostname/IP/... to the target where remote debugging is running
+## 4: The process name you want to attach tos
+./RemoteDebugAttach.exe "EmployeeMap.sln" "Remote (no authentication)" $appTarget "dotnet.exe"
+./RemoteDebugAttach.exe "EmployeeMap.sln" "Remote (no authentication)" $apiTarget "dotnet.exe"
+
+Write-Host "Api:" $apiIp
+Write-Host "App:" $appIp
+$apiUrl = "http://$apiIp/api/employees"
+$appUrl = "http://$appIp"
+
+start $apiUrl
+start $appUrl
+
+Read-Host "Press any key to quit"
+
+./RemoteDebugDetach.exe EmployeeMap.sln "dotnet.exe"
+
+docker exec -d $appId C:\\remote_debugger\\x64\\utils\\KillProcess.exe msvsmon.exe
+docker exec -d $apiId C:\\remote_debugger\\x64\\utils\\KillProcess.exe msvsmon.exe
+
+docker-compose -f "./docker-compose.debug.yml" --no-ansi down 
+
+
+This script does the following:
+
+
+Bring up my docker containers via docker-compose
+Grab the container id's, ip's, etc
+Start the remote debugger instance inside of the container
+Attach to the dotnet.exe processes inside of the container using a custom executable (RemoteDebugAttach)
+Open the browsers to browse to the websites served from the containers
+Wait for any keypress to bring down infrastructure
+Detach from processes using custom executable
+Kill remote debugger on docker container
+Bring down containers
+
+
+The custom executables come from a separate solution where I just built some Command Line Applications.
+I used the code from this source to get all VS instances running on the machine.
+And combined it with this code to attach:
+
+class Program
+{
+    [STAThread]
+    static void Main(string[] args)
+    {
+        string solutionName = Ask(args, 0, "Solution name?");
+        string transportName = Ask(args, 1, "Transport name?");
+        string target = Ask(args, 2, "Target machine?");
+        string processName = Ask(args, 3, "Process Name?");
+
+
+        var instances = Msdev.GetIDEInstances(true);
+        var dte = (DTE2)instances.Find(d =&gt; d.Solution.FullName.EndsWith(solutionName, StringComparison.InvariantCultureIgnoreCase));
+        var debugger = dte.Debugger as Debugger2;
+        var transports = debugger.Transports;
+        Transport transport = null;
+        foreach(Transport loopTransport in transports)
+        {
+            if(loopTransport.Name.Equals(transportName, StringComparison.InvariantCultureIgnoreCase)) // "Remote (no authentication)")
+            {
+                transport = loopTransport;
+                break;
+            }
+        }
+
+        Processes processes = debugger.GetProcesses(transport, target); // "172.24.50.15:4022");
+        foreach(Process process in processes)
+        {
+            if(process.Name.EndsWith(processName, StringComparison.InvariantCultureIgnoreCase))
+            {
+                process.Attach();
+            }
+        }
+    }
+
+    static string Ask(string[] args, int index, string question)
+    {
+        if(args.Length &lt;= index)
+        {
+            Console.WriteLine(question);
+            return Console.ReadLine();
+        }
+
+        return args[index];
+    }
+}
+
+
+And the following to Detach:
+
+class Program
+{
+    [STAThread]
+    static void Main(string[] args)
+    {
+        string solutionName = Ask(args, 0, "Solution name");
+        string processName = Ask(args, 1, "Process Name?");
+
+        var instances = Msdev.GetIDEInstances(true);
+
+        var dte = (DTE2)instances.Find(d =&gt; d.Solution.FullName.EndsWith(solutionName, StringComparison.InvariantCultureIgnoreCase));
+        var debugger = dte.Debugger as Debugger2;
+
+        Processes processes = debugger.DebuggedProcesses;
+        foreach (Process2 process in processes)
+        {
+            if (process.Name.EndsWith(processName, StringComparison.InvariantCultureIgnoreCase))
+            {
+                process.Detach(false);
+            }
+        }
+    }
+
+    static string Ask(string[] args, int index, string question)
+    {
+        if (args.Length &lt;= index)
+        {
+            Console.WriteLine(question);
+            return Console.ReadLine();
+        }
+
+        return args[index];
+    }
+}
+
+
+I would have preferred to have this code in PowerShell because it would be easier to copy to other project + edit. Though in PowerShell, I was simply not able to get the right code to execute, even when using reflection to apply certain code the COM objects.
+
+I hope it helps some people who want to have their own custom flow build into VS.
+Thank you Vlad and Jack.
+    
+    
+Answer 3: 
+
+    
+    
+If you want to attach to process debugging with script, you could think about using the powershell.
+
+Or as far as I know, we could custom the code to attach to process.
+
+Attach debugger in C# to another process
+
+But if you have to use the VS IDE debugging feature, we often use the remote debugging tool: https://msdn.microsoft.com/library/y7f5zaaa.aspx.
+    
+    
+Title: GoLand IDE not correctly compiling. How to setup correct paths?
+Description: 
+    
+    
+                    
+I am trying to setup GoLand correctly to be able to use it with Go. 
+
+I'm trying to run the follow simple HelloWorld go project.
+
+package HelloWorldProject
+
+
+import "fmt"
+
+func main(){
+    fmt.Printf("Hello")
+
+    fmt.Printf("1+1 = ", 1+1)
+
+}
+
+
+This is my console's results:
+
+GOROOT=/usr/local/Cellar/go/1.10/libexec #gosetup
+GOPATH=/Users/jeanmac/go #gosetup
+/usr/local/Cellar/go/1.10/libexec/bin/go build -i -o /private/var/folders/r5/rfwd1cqd4kv8cmh5gh_qxpvm0000gn/T/___Hello /Users/jeanmac/go/src/github.com/jpere547/HelloWorldProject/Hello.go #gosetup
+
+Compilation finished with exit code 0
+
+
+I am on Mac OS and I installed Go using Brew.
+
+Results of brew info go:
+
+go: stable 1.10 (bottled), HEAD
+Open source programming language to build simple/reliable/efficient software
+https://golang.org
+/usr/local/Cellar/go/1.10 (8,150 files, 336.9MB) *
+  Poured from bottle on 2018-03-22 at 19:38:29
+From: https://github.com/Homebrew/homebrew-core/blob/master/Formula/go.rb
+==&gt; Requirements
+Required: macOS &gt;= 10.8 ✔
+==&gt; Options
+--without-cgo
+    Build without cgo (also disables race detector)
+--without-race
+    Build without race detector
+--HEAD
+    Install HEAD version
+==&gt; Caveats
+A valid GOPATH is required to use the `go get` command.
+If $GOPATH is not specified, $HOME/go will be used by default:
+  https://golang.org/doc/code.html#GOPATH
+
+You may wish to add the GOROOT-based install location to your PATH:
+  export PATH=$PATH:/usr/local/opt/go/libexec/bin
+
+
+The GoLand configurations is below:
+GOROOT
+
+
+GOPATH
+
+    
+
+        
+Answer 1: 
+
+    
+    
+When you do go build something.go or go isntall something.go that only builds/installs the go package to give you an executable. You will need to run that executable.
+
+The easiest way to run simple Golang programs is simply use go run something.go that will run your go file. 
+
+As long as your GOPATH is correctly set it should work
+    
+    
+Answer 2: 
+
+    
+    
+It looks like you are trying to run a non main package. Specifically, instead of package HelloWorldProject, you should use package main. After that the IDE will be able to not only build but also run the package.
+    
+    
+Answer 3: 
+
+    
+    
+you can try to change the package name instead of main
+    
+    
+Answer 4: 
+
+    
+    
+There is an option in configuration to run after build. I think you are missing to set it's configuration.Steps:
+1. Go to Run
+2. Select "Edit configuration"
+3. Select the check-box below output directory field specifying "Run after build".
+    
+    
+Title: SyncedSideBar on Atom IDE
+Description: 
+    
+    
+                    
+Is there away to install SyncedSideBar or something similar to that for Atom IDE ?
+
+I used this one on my sublime text 3, and I was looking for the same plugin that will work for Atom.
+
+I like how it auto highlight the current opened file
+
+
+
+Any suggestions ? 
+    
+
+        
+Answer 1: 
+
+    
+    
+You don't need any extra plugin for this. It there in the default tree plugin. Search for tree in packages
+
+
+
+Click on settings and check the Auto Reveal checkbox
+
+
+
+And now the active file will be automatically highlighted
+
+
+
+Some of the themes may not highlight this properly, so you should change the theme and make sure it works. Sometimes after changing the settings you may need a restart, if it doesn't work
+    
+    
+Title: How can I disable the highlight of PHP echo in PhpStorm?
+Description: 
+    
+    
+                    
+I don't like this highlight:
+
+
+Can you help me to disable it?
+
+I've tried Editor -&gt; Color Scheme, also Editor -&gt; Inspections ... no success.
+
+BTW, how can I change the highlight color of matched variables?
+    
+
+        
+Answer 1: 
+
+    
+    
+This happens because of the br tag at the end of the string; PHPStorm considers the string to be some HTML markup and will apply any HTML styling to it. The background color change is the IDE's way of telling you "oh hey, this is in a different language than the one specified in the file extension of the current file".
+
+To fix it, go in Settings code/code
+Title: Change keyboard shortcut to &ldquo;Run Script&rdquo; in Atom IDE
+Description: 
+    
+    
+                    
+In the "Script" package, The keyboard shortcut to "Run Script" is shift+ctrl+b.
+Does anyone know how to change this to a custom shortcut? 
+
+I have script 3.14.1 installed in Atom (with Windows 10 64bit)
+    
+
+        
+Answer 1: 
+
+    
+    
+go to "Settings", "Packages", find the "script" package and click "Settings".
+
+at the top, select "View Code" button.
+
+
+
+In the new window that pops up, expand the "keymaps" folder and open the "script.cson" file.
+
+Find the shortcut for 'script:run' (line 15) and type in your preferred shortcut.
+
+Save the file.
+
+That's it!
+
+
+    
+    
+Answer 2: 
+
+    
+    
+The previous answer didn't work for me. What worked is using the keymap.cson of the atom editor:
+
+
+
+An there just add, e.g. (to run with Alt-R):
+
+'atom-text-editor':
+    'alt-r': 'script:run'
+
+
+
+
+Then it was working just fine. You can similarly modify any other Atom shortcuts here too.
+    
+    
+Title: Javascripts debug error in Eclipse (Eclipse IDE for JavaScript Web Developers Packages)
+Description: 
+    
+    
+                    
+I have downloaded Eclipse IDE for JavaScript Web Developers Packages. I tried to create a JavaScript project and a .html file inside it. When I tried to debug it by right click it and selected "Chrome and Chromium Debugger" to debug JavaScript inside the .html file. This error prompt out with the message:
+
+
+  "Unable to run Chrome / Chromium. Verify you have a configured Chrome / Chromium runtime environment and try again."
+
+
+May you know how to solve it? I have spent a week to struggle with it.
+    
+
+        
+Answer 1: 
+
+    
+    
+I found the cause. Please refer to this link youtube.com/watch?v=l1FmC7aQzbk You should go to Eclipse Preferences → JavaScript → Runtimes and define Chrome / Chromium there. 
+    
+    
+Title: Eclipse Disable Auto Correct
+Description: 
+    
+    
+                    
+After manually typing a method name that begins with a lower case letter e.g. load() or 
+
+     OpcPackage xlsxPkg = OpcPackage.load(excelFile);
+
+
+Eclipse 'magically' switches the first letter to upper case e.g. Load() or
+
+    OpcPackage xlsxPkg = OpcPackage.Load(excelFile);
+
+
+This is causing a compile error. I looked around the Preferences (e.g. Java 
+Answer 1: 
+
+    
+    
+I realize this is a little dated, but I had the same problem in late 2017 with Eclipse Oxygen.  Here is how I resolved it:  Go to Eclipse preferences-
+Answer 2: 
+
+    
+    
+To resolve this issue, follow the steps below
+
+Eclipse preferences-&gt;Java-&gt;Content Assist.
+
+
+Enable the checkbox with the label 
+
+
+  Disable insertion triggers except 'Enter'
+
+
+That should do the trick
+    
+    
+Answer 3: 
+
+    
+    
+In the Window 
+Answer 4: 
+
+    
+    
+This post shows someone else had a similar issue with Eclipse 3.7.2, though no solution was posted. What version of Eclipse are you using?
+
+Is it possible you have conflicting jars?
+
+I wish I could have added this as a comment, but alas, I don't have 50 reputation points.
+    
+    
+Title: What is auto Automatic-Brace-Completion for?
+Description: 
+    
+    
+                    
+How to turn it off has been asked. But what's the point in it to begin with? After all - when I want to continue after the braces (or parentheses) - I have to press some key anyway. So how can I use this to my benefit?
+    
+
+        
+Answer 1: 
+
+    
+    
+I find the premise to be slightly questionable.  Yes, there are instances where if you want to keep typing lines in sequential order the automatic brace completion probably gains little to nothing.  However, I'd suggest that you (I) frequently program in non-linear lines.  Some examples:
+
+
+When you hit the end of a method, you are often going to jump to some other file to continue, so you don't have to add the ending brace of a method. 
+When you are modifying code inside of a method, you often times are just adding a couple lines of code.
+Even when creating new files, I rarely start with a blank file, either I'm using a code snippet, or copying some other file as a starting point.  Further, even if you're starting with a blank file, probably the first few lines that you're adding are namespace { and class {.  Right there are two closing braces that you don't have to type because you're likely not going to be adding code after them.
+
+
+And I'm sure there are more instances.  Off the top of my head, I'd guess that I write continuous lines of code pretty infrequently.  That may just be me though.
+    
+    
+Answer 2: 
+
+    
+    
+Different people have different preferences, but features like this in a code editor enable faster writing of code to the well-practiced user.  For instance, when creating a function, typing
+
+void foo(){ &lt;enter&gt;
+
+
+will create the following code
+
+void foo () {
+    &lt;cursor here&gt;
+}
+
+
+allowing you to quickly create something without worrying about typing out the syntax of the language (as much).  The same should work with if, while, etc.
+
+Like myself, programmers tend to be lazy (Doh! /pp/pp/ppstrongem/em/strong/pp/pprecode/code/prep/ppem/em/ppstrongem/em/strong/p/div
+Answer 3: 
+
+    
+    
+The point is that when you want to continue after the braces, you will have to press a key as you would have to if the feature didn't exist. However, when you want to type inside the braces or parenthesis, you won't have to type another key, the IDE won't complain about missing braces or parenthesis [and will indent everything correctly]  while you type, and you'll be able to start typing right away. 
+
+Also, remember that there are other languages supported by Visual Studio that can, sometimes, take more advantage from this feature. Visual Basic, for example, does not requires that all method calls have parenthesis in them:
+
+// This is completely valid in VB
+obj.Method1.Method2.Method3()
+
+// So if you open a parenthesis, it is because you probably want to write
+// something inside them, like this:
+obj.Method1(argument).Method(argument2).Method3(argument3)
+
+    
+    
+Title: Angular parameter types on jsdoc
+Description: 
+    
+    
+                    
+I'm wondering what are the "proper" parameter types on angular specified stuff within jsdoc?
+
+Eg. if I have something like:
+
+/**
+ * Some comment
+ *
+ * @param {WhatHere} $http
+ * @param {WhatHere} $timeout
+ */
+function FooBar($http, $timeout) {
+}
+
+
+What are the proper types for those $http and $timeout so that IDE (Web/PhpStorm) can autocomplete those? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Jetbrains products cannot do this by analyzing the code, there's too much magic in Angular's dependency injection system. However, you can do it by installing a typed library in at least Webstorm and PyCharm (probably PHPStorm and other Jetbrains products as well):
+
+
+Go to Preferences code/code
+Answer 2: 
+
+    
+    
+I will complement Blaise's answer, because lib name has changed, now it is: angularjs-DefinitelyTyped. Also, have a look angularjs-DefinitelyTyped doc to know which type to specify, example:
+
+
+(source: joxi.ru)  
+    
+    
+Title: delphi integrate custom file editor into IDE
+Description: 
+    
+    
+                    
+I have deveoped a custom file type, together with a custom editor (basically a tree with several data pages attached and a few extra buttons). OK, I can run it stand alone and that is fine, and even add it to the tools menu, but I would like to integrate it into the Delphi IDE so that my custom editor (or a similar new version) appears in the IDE, rather like a DFM file has a custom editor. I can find references to most extensions in the Delphi IDE, but not this one. Any guiding hands? Note that this is not a property or component editor (the file type has nothing to do with either of these) nor is it simply syntax highlighting of a text file.
+    
+
+        
+Answer 1: 
+
+    
+    
+AFAIK it currently isn't possible to reliably integrate a custom editor into the Delphi IDE. The required API simply isn't there. See QC89028 Custom Module support.
+
+During the Delphi 2010 and XE betas I spent most my spare time trying to get a resource editor integrated. Although the effort had the official blessing of Embarcadero and got some, half hearted, support from the IDE engineer, I was never able to get them to deliver on their promises and surface the module API. I eventually abandoned the project.
+
+Update: I've now checked my old correspondence regarding this and it turns out part of the problem was that IOTAModuleCreator (used to implement File|New for custom file types) and IOTAEditorContent (used to transfer data to/from the custom module) only supports text data. Binary data gets mangled.
+    
+    
+Answer 2: 
+
+    
+    
+You can probably do this via an IDE plugin that uses the ToolsAPI (see ToolsAPI.pas in the IDE's source folder (e.g. Program Files (x86)\Embarcadero\Studio\source\ToolsAPI\ToolsAPI.pas.)
+
+For information on writing a plugin in general, see David G Hoyle's excellent blog. Once you know the basics - i.e., write a 'wizard' and get it to do something - you will need to work on integrating your editor.
+
+I have never done this, and so I can't guarantee it is possible. However, some interfaces that look worth investigating and implementing are INTACustomEditorView, which represents a 'view' (file tab when that file is open - think the code editor, Welcome view, type library editor, etc) and IOTAEditorViewServices, to register your custom view.  I do not know how you associate a view type with a file type, sorry - possibly something to do with the personality interfaces. You might also be interested in INTACustomEditorSubView which is what creates a tab on the bottom of a file.
+
+Good luck, and if you find a solution please write here so that other people can learn too!
+    
+    
+Title: WebStorm failing to start with &#39;idea.system.path&#39; error
+Description: 
+    
+    
+                    
+I was saving a file earlier and webstorm started throwing errors as I was saving saying the an 'idea' file was read only. It was unresponsive so I killed the process. Aftr I tried to restart WebStorm and I got the following error:
+
+Temp directory '/home/xxxxxx/.WebStorm8/system/tmp' is inaccessible.
+If you have modified the 'idea.system.path' property please make sure it is correct,
+otherwise please re-install the IDE.
+
+I am using Linux operating system. LXDE to be specific. Also I have not tried to re install the IDE as that will be my last resort. Any help with this would be greatly appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+For me the cause was my laptop simply ran out of free disk space. After a clean-up WebStorm started flawlessly.
+    
+    
+Answer 2: 
+
+    
+    
+The cause of this was Linux trying to protect the file system from becoming corrupted. When Linux thinks that a file can become corrupted it switches the files to read only to avoid corruption. A simple restart fixed this problem.
+    
+    
+Answer 3: 
+
+    
+    
+i got it working by running it as root once from command line.
+for me it was
+
+cd /usr/bin/webstorm/bin
+sudo ./webstorm.sh
+
+    
+    
+Title: Cloud9 cloud IDE and CakePHP
+Description: 
+    
+    
+                    
+I am currently attempting to get CakePHP running on Cloud9, a cloud based IDE. For those unaware, its a cloud collaboration IDE that intermixes with services such as BitBucket. The site gives sudo rights, and I installed CakePHP using these instructions:
+
+https://www.digitalocean.com/community/tutorials/how-to-install-cakephp-on-an-ubuntu-12-04-vps
+
+When I attempt to run my database that I exported from a machine with CakePHP installed, I get the error message "URL rewriting is not properly configured on your server." I attempted to solve the issue using this official guide from CakePHP:
+
+http://book.cakephp.org/2.0/en/installation/url-rewriting.html
+
+but no cigar, same error message. Has anyone gotten CakePHP working, or aware of a cloud IDE that is free/low cost like Cloud9 that would support CakePHP?
+    
+
+        
+Answer 1: 
+
+    
+    
+Here's how I got it working just now:
+
+sudo apt-get update
+
+sudo apt-get install php5-intl
+
+curl -sS https://getcomposer.org/installer | php -- --filename=composer
+
+./composer create-project --prefer-dist cakephp/app
+
+
+This creates the project in /app by default. Move it to the workspace docroot:
+
+mv app/* ./
+mv app/.* ./
+rm -rf app
+
+
+Then the default url rewriting worked as expected. HTH
+    
+    
+Title: Where do IDEs get completion candidates from?
+Description: 
+    
+    
+                    
+Where? Can someone give me example with source retrieval methods in the IDEs of these popular languages:
+
+
+C/C++ (Visual Studio, Eclipse): Do they use static analysis - built into the IDEs - based on project root (with configuration files, i.e. for include paths) to retrieve candidates? Or do they use compiler backend to get the source, i.e. clang? How does IDE like Visual Studio get completion candidates system wide like Window API and do it so quickly?
+Java (Netbean, Eclipse): Again, do they use any of java binaries (java, javac...) in the JDK or a built-in static parser?
+Javascript: the same as above
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Major IDEs such as Visual Studio, Eclipse and IntelliJ Idea use indexing approach: parsing all of the project files and storing possible completion symbols(i.e. method names). So, when the user presses Ctrl+Space to invoke completion list, the editor looks up through the stored symbols to filter the most appropriate candidates.
+
+These kind of source code parsers named "incremental parsers" and they are distinguish from the ordinary parsers by two features:
+
+
+Incremental parser works continuously. It must always be in touch with the source code's syntax. So the index of completion symbol candidates is always up to date.
+Small and frequent changes that the end user makes to the source code should be indexed without any significant time delays.
+
+
+Incremental parsers reach these goals by utilizing some form of caching. This visual demo illustrates how they work in a nutshell: Incremental JSON parser. I recommend you to try it.
+
+Also you may be interested in reading these sources:
+
+
+An article about source code indexing architecture in IntelliJ Idea: Language plugins in IntelliJ Idea.
+Eclipse built-in Java incremental parser: Eclipse JDT.
+
+
+Unfortunately, there is a real lack of tools to build your own incremental parser. Core parsers of the most IDEs are hardcoded, and they don't share any common approach. The demo I mentioned above is one of the rare exceptions that uses distinct incremental parser library - Papa Carlo for building parsers in Java, Scala and JavaScript. Another example is Parsley - incremental parsing library for Clojure language.
+    
+    
+Title: Turning off the blinking cursor in Qt Creator
+Description: 
+    
+    
+                    
+I was wondering how the blinking cursor in Qt Creator could be turned off?
+
+As a matter of personal preference, I keep cursor blinking off at the OS level since it can get quite annoying after a while. Unfortunately, Qt Creator does not seem to respect that. I tried looking for an option to turn it off in the IDE but couldn't find any.
+
+Any help would be great. Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+I agree that the blinking coursor is VERY annoying! It hardly makes it possible to me to work with QtCreator at all... Unfortunately there is probably no way to turn it off or to change the blinking frequency. So what i suggest is:
+
+1) change the color of the cursor to be less harming... for example to grey instead of black. You can do it in Tools -
+Answer 2: 
+
+    
+    
+
+  I tried looking for an option to turn it off in the IDE but couldn't find any. Nothing yet? :(
+
+
+Unfortunately, there is no such an option. It is somewhat rarity what you are asking for, so that may well explain why there is none implemented yet.
+
+Here you can find the corresponding bugreport on their issue tracker:
+
+Cursor blink rate does not respect system settings
+    
+    
+Answer 3: 
+
+    
+    
+As QtCreator simply follows your operating system settings try to disable it there.
+    
+    
+Answer 4: 
+
+    
+    
+Kind of late to the party... but I've always been annoyed by this as well.
+
+OP didn't specify any OS, this probably applies to Linux only.
+
+Realized that actually all Qt5 applications disregard the DE settings. How rude!
+
+A kind soul has implemented a very slight override that fixes this problem:
+
+https://github.com/igogo/qt5noblink
+
+It's a bit of a hassle to use as LD_PRELOAD must be used, but it's always possible to edit the .desktop file to do this globally, or make a small script to start it.
+
+Someone with some Windows-fu might be able to achieve something equivalent for that platform.
+
+But seriously, the code for this is tiny! How difficult would it be to implement this officially?  :(
+    
+    
+Answer 5: 
+
+    
+    
+I had the same problem in QT Creator (Comunity Edition) Qt Creator 3.5.1 (opensource).
+
+In the Editor, I found the "Use Vim-Style Editing" was on.
+
+In Edit -
+Title: Where can I find XML Data Binding Wizard in Delphi?
+Description: 
+    
+    
+                    
+It seems I have removed XML Data Binding Wizard from Delphi XE IDE, because I can't see it in th IDE.
+
+Which BPL-library should I install for turning on this wizard again? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Delphi Professional only includes the XML Schema Binding Wizard (which creates a object and interface structure based on the schema), not the Data Binding Wizard (which supports transformations to datasets).
+    
+    
+Answer 2: 
+
+    
+    
+You have to have an open project before it's available (of any kind).
+
+
+File-
+Title: Eclipse - Mark line for later editing
+Description: 
+    
+    
+                    
+is there a possibility in eclipse to mark multiple lines in different classes of a project for later editing, so i can write some test code and afterwards before i release my software i got the possibility to show all the marked lines and delete or edit them ?
+
+I know the Tasks in eclipse just not sure if this is the right way to go, because i have to enter the name of the Task everytime and there isn't the possibility to group them together as far as i know.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can also use a comment //TODO. Either will show up in the Tasks view and will give you special markers on the right bar (like you'll see for warnings or errors. //FIXME will work, too.
+    
+    
+Answer 2: 
+
+    
+    
+Checkout the @TODO annotated javadoc tag.
+
+http://docs.oracle.com/javase/6/docs/technotes/guides/javadoc/taglet/overview.html
+    
+    
+Answer 3: 
+
+    
+    
+Just for other folks that will see this question, you can mark a line as a boolmark, see this answer: Highlighting lines in eclipse, like with a textmarker
+    
+    
+Title: What is Eclipse SR1 package?
+Description: 
+    
+    
+                    
+Recently, I was gonna download Eclipse from http://eclipse.org/downloads/. I noticed the recent package is Eclipse Kepler (4.3.1) SR1 Packages. I did some searches online but couldn't gather information about following questions.
+
+
+What does SR1 means?
+What are changes in Eclipse Kepler SR1 packages?
+
+
+Any links or descriptions ? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Here there is an explanation on the letters on Eclipse packages:
+http://download.eclipse.org/eclipse/downloads/build_types.html
+
+SR means Service Release (aka Service Packs)- And is explained here:
+http://en.wikipedia.org/wiki/Software_release_life_cycle#Support
+
+So, SR1 would be the first Service Release for Eclipse Kepler 
+
+[EDIT]
+
+There are not Release Notes yet. But here there is a bugfix list it may give you an idea what was fixed.
+    
+    
+Answer 2: 
+
+    
+    
+SR means "Service Release". Quoting this Eclipse wiki page:
+
+
+  Each year the Eclipse Foundation and its projects produce a release on
+  a coordinated schedule. This release is often referred to as the
+  simultaneous release, coordinated release, release train, or annual
+  release of Eclipse. [...] Each
+  release typically occurs in June, with follow-up service releases in
+  September (SR1) and February (SR2).
+
+
+Emphasis is mine.
+    
+    
+Title: Cannot pull shelves from TFS server in IntelliJ 12.1.4
+Description: 
+    
+    
+                    
+I do not seem to be able to access/pull VCS shelve sets using IntelliJ with Team Foundation Server. 
+
+After reading the documentation on JetBrains, it explains that in the 'Changes' window I should be able to see 'Local | Repository | Incoming | Shelve' this last one is only present if I have any local shelves, otherwise it disappears. 
+
+Is there any way with IntelliJ to access others people uploaded shelves to TFS? A plugin you are aware of maybe?
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+It's not supported, vote for the feature request.
+    
+    
+Title: Delphi: How to create an extra design-time menu for a custom component?
+Description: 
+    
+    
+                    
+I've recently recompiled TDBGrid component, to implement several custom functions, altho i've noticed that the feature of extra design-time context menu item "Columns editor" is gone now.
+
+
+
+I've failed to find any code which creates this menu in original Vcl.DBGrids unit and had a really bad luck looking for a solution online on how to do this.
+
+This also applies to double-clicking. It used to call Columns Editor, now it just creates OnCellClick event.
+    
+
+        
+Answer 1: 
+
+    
+    
+In your design time package for the component, implement a component editor:
+
+type
+  TMyComponentEditor = class(TComponentEditor)
+    procedure ExecuteVerb(Index: Integer); override;
+    function GetVerb(Index: Integer): string; override;
+    function GetVerbCount: Integer; override;
+  end;
+
+procedure TMyComponentEditor.ExecuteVerb(Index: Integer);
+begin
+  case Index of
+  0:
+    Beep;
+  end;
+end;
+
+function TMyComponentEditor.GetVerb(Index: Integer): string;
+begin
+  Result := 'Beep';
+end;
+
+function TMyComponentEditor.GetVerbCount: Integer;
+begin
+  Result := 1;
+end;
+
+
+You need to register this component editor also. Call RegisterComponentEditor in your Register procedure to do so:
+
+RegisterComponentEditor(TMyComponent, TMyComponentEditor);
+
+    
+    
+Title: pl/sql developer IDE
+Description: 
+    
+    
+                    
+I'm using AllRoundAutomatation's Pl/sql developer, and now i'm having quite interesting problem, All I want is to configure CTRL+UP key combination for scoll up!. but I can't manage it, 
+How Can I do This ?
+
+Caution: tools 
+Answer 1: 
+
+    
+    
+Tools -
+Answer 2: 
+
+    
+    
+You can do this as follows:
+
+tools &gt; preferences &gt; go to user interface section &gt; key configuration
+
+
+find item Editor: Scroll up select it and press CTRL+UP keys combination.
+    
+    
+Answer 3: 
+
+    
+    
+For your information, you may add the following entry to the configuration file to enable CTRL+DOWN to scroll down.
+
+Editor: Scroll Down=16424
+
+    
+    
+Title: JDeveloper 11g Not Opening
+Description: 
+    
+    
+                    
+I am trying to open up jdeveloper 11g and it is doing nothing. I am getting the following error when I run jdev.exe
+
+IDE boot startup failed.
+java.lang.NoClassDefFoundError: oracle/classloader/SharedCodeSourceURL
+        at oracle.ide.boot.IdeLauncher.initURLStreamHandlerFactory(IdeLauncher.j
+ava:146)
+        at oracle.ide.boot.IdeLauncher.launchImpl(IdeLauncher.java:87)
+        at oracle.ide.boot.IdeLauncher.launch(IdeLauncher.java:65)
+        at oracle.ide.boot.IdeLauncher.main(IdeLauncher.java:54)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.
+java:39)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAcces
+sorImpl.java:25)
+        at java.lang.reflect.Method.invoke(Method.java:597)
+        at oracle.ide.boot.Launcher.invokeMain(Launcher.java:713)
+        at oracle.ide.boot.Launcher.launchImpl(Launcher.java:115)
+        at oracle.ide.boot.Launcher.launch(Launcher.java:68)
+        at oracle.ide.boot.Launcher.main(Launcher.java:57)
+Caused by: java.lang.ClassNotFoundException: oracle.classloader.SharedCodeSource
+URL
+        at java.net.URLClassLoader$1.run(URLClassLoader.java:202)
+        at java.security.AccessController.doPrivileged(Native Method)
+        at java.net.URLClassLoader.findClass(URLClassLoader.java:190)
+        at java.lang.ClassLoader.loadClass(ClassLoader.java:305)
+        at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:301)
+        at java.lang.ClassLoader.loadClass(ClassLoader.java:246)
+
+
+I attempted to install oracle servicce bus and oracle database express edition, is it possible that some file was overwritten?
+    
+
+        
+Answer 1: 
+
+    
+    
+Next thing to do after deleting the system11.1.x.x.x.x folder is to remove or uninstall the whole JDev and after that install it again. Then all files which might be overwritten by the other installations should be back in their original version.
+
+You should install JDev into a path without spaces in.
+
+Timo
+    
+    
+Answer 2: 
+
+    
+    
+Try removing JDeveloper's system directory 
+Should be under C:\Users\yourUser\AppData\Roaming\JDeveloper
+and then restarting JDeveloper
+
+Looks like it is trying to open a file that it has no access to over the network.
+    
+    
+Title: D language dev environment
+Description: 
+    
+    
+                    
+What is the current state of the art development environment for the D language? 
+
+I know about DDT for eclipse, Visual D and Codeblocks. Each has its disadvantages - DDT doesn't have a debugger, Visual D is for windows (and Visual Studio) and CodeBlocks doesn't have emacs keys  bindings and I have some bad memories about it from my CS intro days.
+
+Using tools like emacs + gdb is good enough for simple programs but when the code gets bigger I find it really hard to get around the code just with emacs. Without smart code completion and code layout (meaning, list of all functions/classes in a file) it gets really tedious and I feel I spend way too much time struggling with the editor instead of just writing the code I want to write.
+
+Additionally, with Java+eclipse for example I have this neat documentation popup window whenever I mouse over a method/class. I find this extremely helpful, and really miss it when working in emacs.
+
+And debugging with gdb is really just... antiquated.
+
+So, for the love of god, save me from the 1970s! :)
+Although, any tips concerning emacs and gdb (if nothing else exists) would be appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+Have you looked at Mono-D?
+
+Further, Sublime Text 2 has pretty good D support. I also maintain an improved highlighter for it.
+    
+    
+Answer 2: 
+
+    
+    
+I switched from Code::Blocks to Mono-D half year ago. However, there is a new kid on the block NetbeansD. For simple stuff Geany and Kate have enough support. :)
+
+All this said, Mono-D beats all competitors at the moment, so try that one first.
+    
+    
+Answer 3: 
+
+    
+    
+Doesn't Emacs have GDB integration that allow you to do stepthough and add brakepoints - all in emacs?
+
+I would suggest you try to configure your Emacs.
+
+I also suggest using a good build tool(I use Rake when I program in Vim, but Emacs might have an elisp build tool), and the ctags and cscope really help in mapping big projects.
+    
+    
+Title: Liferay: Fix the Error in eclipse by using Liferay IDE and own project folder organization
+Description: 
+    
+    
+                    
+I want to use the Liferay IDE, but I don't want to put my portlets to ~/liferay-sdk/portlets/ folder. Is it possible? Currently I get the error in eclipse:
+
+No Liferay Plugin SDK configured on project CMS-portlet
+
+
+And the selection of Liferay SDK is empty.
+
+
+
+When I copy this portlet to ~/liferay-sdk/portlets/ folder then all works fine. But this is no way for me, I don't want to put my projects to sdk-folder.
+    
+
+        
+Answer 1: 
+
+    
+    
+I found the workaround thats work for me. Simple disable the Liferay SDK validaton:
+
+ 
+    
+    
+Answer 2: 
+
+    
+    
+AFAIK the current version of Liferay IDE depends on the ant script integration from the plugins sdk, thus the requirement to have the ant infrastructure available (this lives inside the SDK).
+
+You may have more luck with maven projects, but they're not directly supported by Liferay IDE, however, you can use them with plain eclipse. Also, even if you go without maven, you can work with plain eclipse. 
+    
+    
+Title: Netbeans JDialog size
+Description: 
+    
+    
+                    
+I'm creating a JDialog with netbeans as my IDE.
+I change the size to how I want it in netbeans, and I can see it updating the prefferredSize, but when I run my application it looks like this:
+
+
+
+Is there something else I need to set to set the size? Or at least make it sized properly so I can see the controls... (theres 6 on it)
+    
+
+        
+Answer 1: 
+
+    
+    
+I guess you might be using the Netbeans GUI builder, possible solutions/suggestions,
+
+
+You might be missing  dialog.pack();
+Right click jDialog 
+Answer 2: 
+
+    
+    
+In the form designer switch to the "Code" tab of the properties window. There is a property named "Form Size Policy". 
+
+This defaults to pack() which means that the dialog is resized to be as big as the contained components require it. For more details please read the Javadocs for the pack() method. Without knowing what components you put on the dialog, it's hard to tell why pack() doesn't work for you. 
+
+If you change that to "Generate Resize Code" the dialog will stick to the size you define:
+
+
+    
+    
+Answer 3: 
+
+    
+    
+Use the setSize() method instead. For some reason this works, but setPreferredSize() doesn't (at least not as expected).
+
+By the way, it's usually advised not to set a specific size on components.
+    
+    
+Answer 4: 
+
+    
+    
+Download latest Netbean IDE from https://netbeans.org/downloads/
+
+And set the following property: 
+
+Good luck!
+    
+    
+Title: What is the easiest way to design Java Swing GUIs in Eclipse IDE?
+Description: 
+    
+    
+                    
+I've been coding basic UIs in Java manually and using NetBeans, but recently switched to Eclipse Indigo. I use the visual class builder to design SWT user interfaces in Eclipse but found out that it's painfully slow and laggy. It takes about four seconds for a change to be displayed and it's virtually impossible to build complex and large UIs with it effectively. Is this its usual behavior and is this the preferred way of building a Java Swing GUI in Eclipse?
+    
+
+        
+Answer 1: 
+
+    
+    
+Since Google aquired Instantiations and then donated WindowBuilder to Eclipse foundation it is the preferred free, open source visual GUI editor for Swing, SWT and GWT.
+
+
+    
+    
+Answer 2: 
+
+    
+    
+You can also use Jigloo. 
+
+Their eclipse update site it, http://cloudgarden.com/update-site
+
+I have used it in windows quite well. But when I use it in mac, most of the time it crash.
+
+But windows builder seems better to me. 
+    
+    
+Title: same settings and perspective in aptana for every project/workspace
+Description: 
+    
+    
+                    
+Does somebody know, how to set up Aptana, to have only one .metadata setting for all projects? I don't want to change the default settings every time I start a new workspace!
+
+Thanks for helping
+    
+
+        
+Answer 1: 
+
+    
+    
+You can export the settings through the Preferences (File -&gt; Export -&gt; Other -&gt; Preferences). Than, when you create a new workspace, import those settings through the File-&gt;Import wizard.
+    
+    
+Title: Changing the color of the highlighted line in debugging mode
+Description: 
+    
+    
+                    
+Thing is, after applying a new color theme for my Flash Builder enviroment, the only thing I couldnt find was an option to change the color when you enter in debug mode. When you have a brakpoint there, the color of that line change to light green, and I got dark background and white characters.. so, I dont see anything, I have to manually highlight the line.. really annoying.
+
+I spend some minuts trying to change that color, but no luck so far, do anyone know where can I change that color?
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Thats is simple goto windows-
+Title: IDE for debugging scons
+Description: 
+    
+    
+                    
+I have a project which uses scons and swig. Which IDE I can use for debugging the code? I want to set breakpoints and use "step over", "continue", .... while watching variable.
+    
+
+        
+Answer 1: 
+
+    
+    
+PyDev (Eclipse plugin) worked well for me in the past. Actually, the scons command you run to perform your build is a Python script -- you can replace it by a similar script within your IDE and launch that for debugging.
+
+Having said that -- 
+actually I found the debugging approach not so helpful when working with our SCons based build system. The reason is that SCons uses an declarative approach; your SConstruct defines the "what" of your build, and when stepping with the debugger, mostly you just see how the parsing and evaluation of that kind of "internal DSL" is implemented in Python (which is surely an educational experience, but not helpful for solving problems with my build).
+
+Thus, usually I solve my problems just with adding some print statements to look into this and that variable in the current construction environment while the build script is evaluated. The manpage of SCons has extensive documentation about the various variables you can access in that environment object and in the dependency nodes defined when you add targets.
+    
+    
+Answer 2: 
+
+    
+    
+Any Python debugger should be fine. PyCharm is a good place to start if you want a full IDE.
+    
+    
+Answer 3: 
+
+    
+    
+PyTools and Visual Studio 2010 work great for me, though I settle for PyCharm CE/Pro when I can't use VS+PyTools. All of the VS debugging facilities (for the version that you are running) will be available for debugging Python (which are a bit better than PyCharm's). (There are extra performance debugging facilities in Enterprise.)
+
+PyTools also supports VS2012 and VS2013, in addition to VS2010.
+
+NOTE: Plugins/Extensions/Addons appear to only be available in VS Pro and higher, not Express.
+
+
+PyTools home: http://pytools.codeplex.com
+Visual Studio (trials available):
+http://www.visualstudio.com/downloads/download-visual-studio-vs To
+buy the latest Visual Studio, google "Buy Visual Studio" (as the link
+changes), you can also google for a specific version. Many are
+available on Amazon.
+PyCharm home: http://www.jetbrains.com/pycharm/
+
+
+As an aside, if you (or others on your team) want to also debug Django, PyCharm Pro is definitely the best for that.
+    
+    
+Title: How to use unicode in GNAT Programming Studio?
+Description: 
+    
+    
+                    
+I am using the GPS to programming.
+But I can't use unicode characters in code.
+I set the Character Set as UTF-8 in preferences. But I still could not type the unicode characters as comment in the code. Can anyone tell me how to use unicode characters in source code? I will very appreciate for your assistance. Thanks!
+
+Sun
+    
+
+        
+Answer 1: 
+
+    
+    
+If you just get a box in the edit fields you need to use a different font for GUI and editing. DejaVu is a good one as it contains almost all unicode characters.
+
+Setting them up depends a bit on your OS.
+    
+    
+Answer 2: 
+
+    
+    
+How [&quot;03C0&quot;] match &lt;Ada Reference Manual&gt;&#39;s grammar in Annex P?
+
+Maybe this question&amp;answer can answer your question.
+
+Which is your problem? 
+
+1. Can not type in the unicode character.
+2. Can copy an unicode character but can not paste in GPS.
+3. Can type or paste in GPS, but can not save.
+4. Can type or paste in GPS and can save, but can not compile.
+
+
+I guess your problem is the No. 4, then refer to my previous post as above link.
+You need to use "gnatmake -gnatW8 Hello.adb" to compile. 
+
+
+
+Goto Build | Settings | Targets | Check Syntax
+At the bottom insert -gnatW8 in the command field like:
+%gnatmake -q -gnatW8 -c -gnats -u %eL -P%PP %X %fp
+
+So does to Check Semantic if needed.
+    
+    
+Title: Delphi 7 IDE Stack Overflow Error
+Description: 
+    
+    
+                    
+Could anyone tell me, why I keep getting the following errors?
+
+Background:
+
+The project has 320 Embedded Forms.
+
+The projects search path has 205 folders, at a length of just over 11,000 chars.
+
+If I remark out just 1 of the embedded form units, then it compiles without an error.
+
+IMAGE #1 - From Delphi IDE
+
+
+
+IMAGE #2 - From DCC32.EXE
+
+
+
+Here is the unit I use for my embedded forms
+
+unit EmbeddedForm;
+
+interface
+
+{$INCLUDE '..\INCLUDE\BUILD.INC'}
+
+uses
+  Windows, Controls, Messages, Forms;
+
+type
+  TEmbeddedForm = class(TForm)
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+  private
+    { Private declarations }
+    procedure StopFlicker(var theMessage: TWMEraseBkgnd); message WM_ERASEBKGND;
+  protected
+    { Protected declarations }
+    procedure CreateParams(var Params: TCreateParams); override;
+  public
+    { Public declarations }
+    procedure InitializeForm(); virtual; abstract;
+    procedure FinalizeForm(); virtual; abstract;
+  end;
+
+implementation
+
+{$R *.DFM}
+procedure TEmbeddedForm.StopFlicker(var theMessage: TWMEraseBkgnd);
+begin
+  theMessage.Result := 1;
+end;
+
+procedure TEmbeddedForm.CreateParams(var Params: TCreateParams);
+const
+  ParamStyle = WS_VISIBLE or WS_POPUP or WS_OVERLAPPED or WS_OVERLAPPEDWINDOW;
+begin
+  inherited CreateParams(Params);
+  Params.ExStyle := (Params.ExStyle and (not WS_EX_WINDOWEDGE)
+    and (not WS_EX_STATICEDGE) and (not WS_EX_DLGMODALFRAME) and (not WS_EX_CLIENTEDGE));
+  Params.Style := (Params.Style and (not WS_CAPTION) and (not DS_MODALFRAME)
+    and (not WS_DLGFRAME) and (not WS_THICKFRAME));
+  Params.Style := Params.Style and not ParamStyle;
+end;
+
+procedure TEmbeddedForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  CanClose := False;
+end;
+
+procedure TEmbeddedForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caNone;
+end;
+
+end.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You could try using a PE editor to increase the stack size of IDE or dcc32. But make backups first! Editbin should do the trick.
+    
+    
+Answer 2: 
+
+    
+    
+Try to change these values:
+
+Project-
+Title: Creating a text editor in c++ without using any graphics library [the function is undeclared error]
+Description: 
+    
+    
+                    
+I am creating a texteditor in c++[non gui] , So far i have ended up with this code..
+i get two undeclared errors... Why? 
+
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+
+using namespace std;
+
+
+int main()
+{
+    int op;
+    cout&lt;&lt;"do you want to open example.txt or overwrite?\nIf you want to overwrite enter 1 , if you want to view it enter 2. :\n";
+    cin&gt;&gt;op;
+    if(op==1)
+    {
+        edit();
+    }
+    else if(op==2)
+    {
+        open();
+    }
+}
+
+void edit()
+{
+    int op;
+    string x;
+    ofstream a_file("example.txt" , ios::app);
+    cout&lt;&lt;"HEY ENTER SOME TEXT TO BE WRITTEN TO EXAMPLE.txt [created by rohan bojja]\n--------------------------------------------------------------------------------\n";
+    getline ( cin , x);
+    a_file&lt;&lt;x;
+    cout&lt;&lt;"want to type in an other line?\n1 for YES, 2 for NO";
+    cin&gt;&gt;op;
+   while(op==1)
+   {
+       a_file&lt;&lt;"\n";
+       edit;
+   }
+   cout&lt;&lt;"Do you want to quit?\n1 for YES , 2 for NO";
+    cin&gt;&gt;op;
+    if (op==2)
+    {
+    edit;
+    }
+}
+void open()
+{
+    int op;
+    ifstream a_file("example.txt");
+    cout&lt;&lt;"You are now viewing example.txt [created by rohan bojja]\n--------------------------------------------------------------------------------\n";
+    cout&lt;&lt;a_file;
+    cout&lt;&lt;"Do you want to quit?\n1 for YES , 2 for NO";
+    cin&gt;&gt;op;
+   if(op==2)
+    {
+        open;
+    }
+}
+
+
+but , while compiling i get the error [CodeBlocks Build Log]:
+
+F:\Projects\c++\TextEditor\texteditor.cpp: In function 'int main()':
+F:\Projects\c++\TextEditor\texteditor.cpp:14: error: 'edit' was not declared in this scope
+F:\Projects\c++\TextEditor\texteditor.cpp:18: error: 'open' was not declared in this scope
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Your main function can't see the edit and open functions because they appears after main. You can fix this by either:
+
+1) Moving the edit and open functions above main; or
+
+2) Adding a prototype of edit and open above main. Add this line of code before main, but after using namespace std:
+
+void edit();
+void open();
+
+    
+    
+Answer 2: 
+
+    
+    
+C++ compiler is a one pass compiler. Which means it reads from top to bottom and translates your code. If you are using a function (or any other symbol), the compiler should know about it before it reaches it.
+
+Now you have two options, either put main under edit and open, or write a so-called forward declaration:
+
+void edit();
+void open();
+
+
+That is basically the function you have without its body. Note that this kind of things are what is put in .h files (headers) when you have multiple source files.
+    
+    
+Answer 3: 
+
+    
+    
+You need to declare symbols (functions, variables, etc.) before you use them.  To fix your problem, forward declare your functions.
+
+#include &lt;...&gt;
+using namespace std;
+
+void edit();
+void open();
+
+int main ()
+{
+    // ...
+}
+
+void open ()
+{
+    // ...
+}
+
+void edit ()
+{
+    // ...
+}
+
+    
+    
+Title: c++ IDE on usb?
+Description: 
+    
+    
+                    
+is there any c++ compiler i can put on a usb or external harddrive and use it on any other computer? the school computjers in my library dont have an ide... or a compiler installed...
+
+P.S the school computers are very tight on securty. i cant even download things from the internet, no websites like facebook, so can i install it on one of the computers? or can i just run it as the actual executable file and run it straight from my usb?
+
+there are several computers with windows 7, and 3 imacs
+    
+
+        
+Answer 1: 
+
+    
+    
+I'd try Eclipse.  And if it doesn't work straight away, try one of those USB-stick program-hosting softwares like U3 (it comes on some Sandisk thumb drives).
+    
+    
+Answer 2: 
+
+    
+    
+Code::Blocks can easily be made portable by setting custom environment variables, described here
+
+At the back-end, C::B can use mingw, which doesn't require any specific install information other than a few environment variables. (namely PATH). These can be set temporarily using SET PATH=%PATH%;./mingw/, which should be possible without elevated privileges.
+    
+    
+Answer 3: 
+
+    
+    
+You might try some of the tools at portableapps.com. They're a group that modifies open source software to run off of USB sticks. I've used their versions of Notepad++, Gimp, and Filezilla for years.
+
+In particular, maybe look at they're development tools: http://portableapps.com/apps/development
+
+It looks like they even have some programs to make other apps portable as well, which you might try with Eclipse, as John suggested. (I think Eclipse may also just run off a USB stick without any modification.)
+    
+    
+Answer 4: 
+
+    
+    
+Dev-C++ might be a good choice if you only use Windows.
+
+If you want an IDE that works in both Windows and Mac, you can choose Emacs, which is a very powerful text editor and is a part of the GNU project. But as it's only a text editor, you will need to download the C++ compiler yourself. MinGW might be a good choice in Windows. Since I have never used a Mac, I cannot give you more suggestion for the Mac environment. But as it's a Unix based system, I guess it has a C++ compiler itself.
+    
+    
+Answer 5: 
+
+    
+    
+What you're looking for is a portable c++ ide. Google gave me the following:
+
+
+devcpp-portable
+Netbeans portable config
+
+
+But go through google to find more
+    
+    
+Answer 6: 
+
+    
+    
+There is portable code blocks.
+    
+    
+Title: Modifying code during a debugging session.
+Description: 
+    
+    
+                    
+Does anyone know of a Debugger or Programming Language that allows you to set a break point,  and then modify the code and then execute the newly modified code.
+
+This is even more useful if the Debugger also had the ability for reverse debugging.  So you could step though the buggy code,  stack backwards, fix the code, and then step though it again to see if you fixed the bug.  Now that's sexy,  is anyone doing this?
+    
+
+        
+Answer 1: 
+
+    
+    
+I believe the Hot Code Replace in eclipse is what you meant in the problem:
+
+
+  The idea is that you can start a debugging session on a given runtime
+  workbench and change a Java file in your development workbench, and
+  the debugger will replace the code in the receiving VM while it is
+  running. No restart is required, hence the reference to "hot".
+
+
+But there are limitations:
+
+
+  HCR only works when the class signature does not change; you cannot
+  remove or add fields to existing classes, for instance. However, HCR
+  can be used to change the body of a method.
+
+    
+    
+Answer 2: 
+
+    
+    
+The totalview debugger provides the concept of Evaluation Point which allows user to "fix his code on the fly" or to "patch it" or to examine what if scenario without having to recompile.
+
+Basically, user plants an Evaluation Point at some line and writes a piece of C/C++ or Fortran code he wants to execute instead. Could be a simple printf, goto, a set of if-then-else tests, some for loops etc... This is really powerful and time-sparing.
+
+As for reverse-debugging, it's a highly desirable feature, but I'm not sure it already exists.
+    
+    
+Answer 3: 
+
+    
+    
+http://msdn.microsoft.com/en-us/library/bcew296c%28v=vs.80%29.aspx
+
+The link is for VS 2005 but applies to 2008 and 2010 as well.
+    
+    
+Answer 4: 
+
+    
+    
+Edit, 2015: Read chapters 1 and 2 of my MSc thesis, Combining reverse debugging and live programming towards visual thinking in computer programming, it answers the question in detail.
+
+The Python debugger, Pdb, allows you to run arbitrary code while paused (like at a breakpoint). For example, let's say you are debugging and have paused at the following line in your program, where the variable hasn't been declared in the program itself :
+
+
+
+print (x)
+
+
+so that moving forward (i.e., running that line) would result in :
+
+NameError: name 'x' is not defined
+
+
+You can define that variable in the debugger, and have the program continue executing with it :
+
+(Pdb) 'x' in locals()
+False
+(Pdb) x = 1
+(Pdb) 'x' in locals()
+True
+
+
+If you meant that the change should not be provided at the debugger console, but that you want to change the original code in some editor, then have the debugger automatically update the state of the live program in some way, so that the executing program reflects that change, that is called "live programming". (Not to be confused with "live coding" which is live performance of coding -- see TOPLAP -- though there is some confusion.) There has been an interest in research into live programming (and live coding) in the last 2 or 3 years. It is a very difficult problem to solve, and there are many different approaches. You can watch Bret Victor's talk, Inventing on Principle, for some examples of that. Note that those are prototypes only, to illustrate the idea. Hot-swapping of code so that the tree is drawn differently in the next loop of some draw() function, or so that the game character responds differently next time, (or so that the music or visuals are changed during a live coding session), is not that difficult, some languages and systems cater for that explicitly. However, the state of the program is not necessarily then a true reflection of the code (as also in the Pdb example above) -- if e.g. the game character could access an area based on some ability like jumping, and the code is then swapped out, he might never be able to access that area in the game any longer should the game be played from the start. To solve change propagation for general programming is difficult -- you can see that his search example re-runs the code from the start each time a change is made.
+
+True reverse execution is also a tricky problem. There are a number of commercial projects, but almost all of them only record trace data to browse it afterwards, called omniscient debugging (but they are often called reverse-, back-in-time, bidirectional- or time-travel-debuggers, also a lot of confusion). In terms of free and open-source projects, the GNU debugger, gdb, has two modes, one is process record and replay which also only records the program for browsing it afterwards, the other is true reverse debugging which allows you to reverse in a live program. It is extremely slow, as it undoes single machine instruction at a time. The extended python debugger prototype, epdb, also allows for true reversing in a live program, and is much faster as it uses a snapshot/checkpoint and replay mechanism. Here is the thesis and here is the program and the code.
+    
+    
+Title: IDE for perl on remote linux server
+Description: 
+    
+    
+                    
+I have been working remotely with Putty and pgAdmin III to manipulate a PostgreSQL database on a Linux server, but now need to do some heavier lifting to modify Perl and PHP scripts that are used to parse data input files which are submitted to our website.  
+
+I would prefer something with robust debugging capabilities.  I know (and love) Eclipse for Java, but don't know if it's an option for Perl/PHP and remote access?  Other suggestions?  It's the "remote" part that has me stuck...
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Have you tried Padre?
+
+http://padre.perlide.org/trac/wiki/Features/RemoteEditing
+    
+    
+Answer 2: 
+
+    
+    
+If you are comfortable with using Emacs, you can use cperl-mode and tramp to access the remote files you want to edit. There is support for the Perl debugger (cperl-db), but that probably won't seamlessly for a machine accessed via SSH. Another project you might want to look at is geben.
+
+Update: Apparently, Emacs' debugger interface is quite well-integrated with tramp.
+    
+    
+Title: SQL Server / C# connection
+Description: 
+    
+    
+                    
+I'm using C# Express 2010 and SQL Server 2008 Express.
+
+I want to create a connection to said server in the C# IDE (not in code) by going Database Explorer -
+Answer 1: 
+
+    
+    
+Perhaps you have chosen the wrong kind of Datasource? It should say "Microsoft SQL Server (SqlClient)", not "Microsoft SQL Server Database File (SqlClient)".
+
+You should then get a text box called "Server name" where you need to enter the name of you SQL Express instance. Most often, this should be ".\SQLEXPRESS"
+    
+    
+Answer 2: 
+
+    
+    
+When you choose the datasource, you have to choose "Microsoft Sql Server" instead of "Microsoft Sql Server Database File".
+    
+    
+Answer 3: 
+
+    
+    
+Did you change the Data source to "Microsoft SQL Server"?
+    
+    
+Answer 4: 
+
+    
+    
+I don't know if you solved your problem or not, but I found a solution to get around the problem. 
+
+I found out on another forum that the Express version of C# Visual Studio does not let you connect to the 'live' SQL Express Server using a connection string. They want you to make a local copy of the database file and to use that instead. Microsoft do this 'by design' and is a limitation of the C# Express version. Don't disrepair though as you can get around the limitaton with a little effort. This is what you do:
+
+
+Make a connection to the database as you would normally do in Visual Web Developer. This will produce 2 files called something like Model1.edmx and Model1.Designer.cs
+In your Visual C# application create a EDO model, but this time create an empty model. Use the same name for the model (i.e. Model1).
+Copy the model files you created in Visual Web Developer over the top of the Visual C# 'empty' ones using Windows Explorer.
+Open the Web.Config file in Web Developer and copy the connectionStrings entries. Paste this into the App.Config file in the same place.
+
+
+Everything should now work as expected, the good thing is that you can update the database fields when you change fields in the database tables by going to the model page, right clicking and do the update as you would normally do in Web Developer.
+    
+    
+Answer 5: 
+
+    
+    
+Like most people facing this problem, I'm a novice with these Microsoft IDEs (Interactive Development Environments), but I've successfully used C# Express 2010 to access and update a database created in SS 2008 R2 Express, so I'll share what I did.
+I never could figure out how to use the Data Source Wizard to make it work, but it was easy to just type the connection string and make the value of Data Source=.\SQLEXPRESS
+Then I was able to work with a database in both SS 2008E and C# Express 2010 on a single Windows Professional computer.
+I found this tutorial helpful for getting started with datasets.
+The tutorial avoided the challenge of connecting to a SS Express MDF from C# Express by creating its database from within C# Express; and, as of this writing, it is out-of-date on data connection screens (which I'm not certain can handle the problem anyway), but I thought it was a good intro to using C# to access and update SS data. If you use the tutorial, just build the table they suggest directly in SS Management Studio. Then ignore the steps for using the menus/wizards to create your connection string. Just type what they show in the code except make the Data Source = .\SQLEXPRESS
+    
+    

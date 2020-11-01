@@ -1,0 +1,2171 @@
+Title: Scanf executed before printf in Eclipse
+Description: 
+    
+    
+                    
+I have the following simple code in C language:
+
+#include &lt;stdio.h&gt;
+
+int main(){
+    printf("Give an integer:\n");
+    int x;
+    scanf("%d",&amp;x);
+    printf("10*%d=%d\n",x,10*x);
+
+    return 0;
+}
+
+
+Using CodeBlocks IDE it is executed in the right order but when I use Eclipse IDE it jumps 
+to the scanf command and then prints the messages as it should. Can anyone explain this? 
+
+Thank you in advance
+    
+
+        
+Answer 1: 
+
+    
+    
+Usually stdout is set to line buffered. Apparently one of your IDEs sets it to fully buffered.
+
+You can force prints to dump the associated buffer with fflush(), eg
+
+printf("hello ");   // works in unbuffered stream
+printf("world!\n"); // works in line buffered stream
+fflush(stdout);     // works in fully buffered stream
+
+    
+    
+Title: Windows defender on PyCharm
+Description: 
+    
+    
+                    
+Every time I start PyCharm, there is a popup that indicates that Windows Defender is slowing down the system.
+
+When I select to change configuration to Windows Defender, the popup appears again at next PyCharm restarting.
+
+It exists a way to make this change permanent? I can't find it.
+    
+
+        
+Answer 1: 
+
+    
+    
+You need to exclude paths from Defender so that Pycharm works better.  See this answer: https://stackoverflow.com/a/58433724/1457859
+    
+    
+Title: Is it possible to use CLI along with GUI?
+Description: 
+    
+    
+                    
+I've read a lot about advantages(speed and flexibility for example) of using .NET Command-line interface so i tried it. I created new ASP.NET Web Api project via PowerShell. It was all good until i wanted to install some Nuget packages. I could not do it in the IDE(VS2019) because the Nuget manager is disabled(package menager console gives me 'No default project). I added Entity Framework package using CLI but first i had to created new solution(using CLI) to the project for some reason. Now to make migration i need to use commands for EF... how is it more flexible than using GUI? It seems for me it's one or another.
+My question: how do you guys use CLI? Is there a really good reason to use it?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  Is it possible to use CLI along with GUI?
+
+
+Actually, it can be done and since you want to use CLI to create a project the same as GUI does(have a xxx.sln file). Since dotnet command line is quite simple to create a project but creating it as VS IDE does(xxxx.csproj with SLN files and all levels of projects) requires a further command like these:
+
+1) use cmd to cd a folder called Project and then type this:
+
+dotnet new mvc -o &lt;Solution_Name&gt;/&lt;Project_Name&gt; -n &lt;Project_Name&gt;
+
+
+Then create a solution folder and the project but it lacks the &lt;Solution_Name&gt;.sln file. And you should use dotnet sln command.
+
+2) create the a file named &lt;Solution_Name&gt;.sln under the Solution folder and add these in that file:
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28701.123
+MinimumVisualStudioVersion = 10.0.40219.1
+
+
+Then CMD: 
+
+cd &lt;Solution_Name&gt;
+dotnet sln add &lt;Solution_Name&gt;.sln &lt;Project_Name&gt;\&lt;Project_Name&gt;.csproj
+
+
+3) Then it will created as the GUI does.
+
+Besides, CLI is simple and convenient(apply for a single project) but if should be as GUI does(a solution contains several projects), it needs to do some extra operation like some other commands, by GUI, it will automatically be created without any steps. 
+
+In addition, if you want to install a nuget package by CLI, you could use dotnet add package command without install it in GUI, like this:
+
+CMD
+
+dotnet add package Newtonsoft.Json -v 12.0.1
+
+Update 1
+
+In fact, each has its advantages and disadvantages, the score situation to deal with.
+
+To create a single project and do something about the current project，using CLI is more convenient. It takes a lot less of the computer's system resources and it can react quickly and improve performance. However, if it involves multiple complex projects, and strive to operate on multiple projects, because CLI is too direct and not as visual as GUI, easy to operate, it is too complicated to be suitable for novices.
+
+For more comparisons, you can refer to this link for more detailed info.
+    
+    
+Title: Skipping lines while debugging Python with PyCharm
+Description: 
+    
+    
+                    
+In some point of debugging PyCharm, it would be useful to me to skip some lines, e.g. some lines that slows terribly my code... but I haven't found anything about this.
+
+Does it exists an option in PyCharm debugger (or python debugger) to do such thing?
+    
+
+        
+Answer 1: 
+
+    
+    
+Assuming the program is paused on a breakpoint somewhere before those "heavy lines" - right click after them and select "Jump To Cursor".
+
+Please note there are some limitations to this feature, e.g. one can't jump out of a function scope.
+    
+    
+Title: Intellij Play/debug button disappeared
+Description: 
+    
+    
+                    
+My idea headerbars Play/debug/options menu is missing and I haven't found a way to restore it. Does anyone have an idea how to?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Enable View | Appearance | Toolbar:
+
+
+    
+    
+Title: Ignoring generated protobuf files in pycharm
+Description: 
+    
+    
+                    
+I want my IDE to stop showing me the unreadable generated files when I search. Say I have a protobuf file foo.proto :
+
+message bar {}
+
+
+and I generate the python package foo_pb2.py (and the foo_pb2.pyi). When searching (double up arrow button/shift) for foo I'd like to see the protobuf definition in foo.proto but not the generated code in foo_pb2.py. 
+
+I managed to get the first thing to work by installing the "Protobuf Support" addon but I cannot find anything for the second part.
+
+Similarly, when using the "Declaration" functionality (cmnd + click) I get sent to foo_pb2.py file instead of foo.proto. Is there a way to map these correctly?
+    
+
+        
+Answer 1: 
+
+    
+    
+One way to ignore them is to basically put them in an excluded folder. PyCharm will exclude these folders entirely.
+
+
+    
+    
+Title: Clang format for banner style
+Description: 
+    
+    
+                    
+An open-source project I contribute to uses banner style (also called Ratliff style). It looks like that:
+
+ // In C
+ for (i = 0; i &lt; 10; i++) {
+     if (i % 2 == 0) {
+         doSomething(i);
+         }
+     else {
+         doSomethingElse(i);
+         }
+     }
+
+
+Some IDE's like QtCreator have their own configurations for formatting, but others, like Visual Studio Code, require a .clang-format file.
+
+I looked online for existing configurations, and couldn't find any. Then I tried to make one from scratch using this clang-format generator, but I couldn't manage to indent the braces right.
+
+So, is it possible to create a clang-format file for Ratliff/Banner style, or is there some missing configuration that will force us to use some other generator?
+    
+
+        
+Answer 1: 
+
+    
+    
+This answer is not going to be the "answer" that you were looking for, but it is what I've discovered over the last two days of digging through the code for clang-format. I, too, have been looking for a way to auto-format a variant of banner style with clang-format.
+
+clang-format seems to be missing some capabilities that would enable it to auto-format banner style.
+
+For instance, you need to indent ending (right) braces for code blocks. clang-format does not even appear to track ending braces, but it does track starting (left) braces within its internals.
+
+I started out my studying streak thinking I could understand the way clang-format implements its formatter system, so I could add the features needed to do it. Sadly it was way too complicated for me.
+
+Perhaps someday we will be able to auto-format banner style with clang-format, but not today.
+
+If someone out there knows this answer is inaccurate, please don't hesitate to correct me.
+
+edit: Instead of giving you just a verification of what can't be done with clang-format, perhaps you might find http://astyle.sourceforge.net useful.
+    
+    
+Title: Anyone know how to solve the error of &ldquo;collect2.exe: error: ld returned 1 exit status&rdquo; when a program in C is running?
+Description: 
+    
+    
+                    
+First of all I'm at the first year of computer science so I'm a beginner in programming yet, then forgive me for my lack of knowledge. Well, my problem basically is an error that is shown in the screen everytime when I try to run(by the way I'm using Sublime Text) a program in C. In this case was a simple code:
+
+#include &lt;stdio.h&gt;
+int main() {    
+    //print the heading of the game
+    printf("*****************************************\n");
+    printf("* Wellcome to the our guessing game *\n");
+    printf("*****************************************\n");
+    int secretnumber =  42;
+    int guess;
+
+    printf("What is your guess?");
+    scanf("%d", &amp;guess);
+    printf("Your guess was %d \n", guess);
+}
+
+
+OUTPUT:
+c:/mingw/bin/../lib/gcc/mingw32/8.2.0/../../../../mingw32/bin/ld.exe: cannot open output file Olamundo.exe: Permission denied
+collect2.exe: error: ld returned 1 exit status
+[Finished in 0.3s]
+
+You know, i tried some solutions like move the folder where the executable lies and place it in the root(in my case Mateus(C:)), give all the permissions to the folder, turn off the antivirus(in my case i just using the Windows defender), finish the task using the the Task manager but nothing worked. Please, help me i really don't know what else i can do. 
+    
+
+        
+Answer 1: 
+
+    
+    
+Overall, your problem is that you're trying to run a program that is interactive from within Sublime; it doesn't support that. Sublime captures output your program sends to stdout and stderr and displays it in the output panel, but it does't connect the panel to stdin.
+
+So, the scenario you're encountering works like this:
+
+
+You run your program, which is interactive (in your case it prompts for input via scanf(), and it launches and prompts you for input
+You try to enter input, but nothing happens because stdin isn't connected.
+You try to run your program again (or modify it and build it again thinking you might have an issue). 
+The version you previously tried to run is still running in the background waiting for input you can't provide, and windows locks executable files while the program is running. So, when the linker (collect2) tries to link the executable during the build, it can't because the file is locked, hence the permission error.
+
+
+You can clear the error by killing the program running in the background, which you can do via the Tools &gt; Cancel Build if you do it before this error occurs; if you've already seen the error this likely won't work because this only cancels the most recent build, which would be the one where the error occurred.
+
+The other thing you can do is use something external to kill it; the task manager on windows, kill from a terminal on Linux/OSX, etc. You'll need to do it this way if you're already seeing the error.
+
+Note however that this doesn't solve your underlying problem because you're still trying to run an interactive program. In order to do that from within Sublime you need to create a custom sublime-build that allows for this. Generally you'd either have it spawn an external terminal and run the program in there, or use a package like Terminus if you want to keep it internal.
+
+In order to set this up, you need to be familiar with the sequence of commands that are needed to compile, link and run a program in one command, which you can get by checking what the build system you're currently using is (assuming you didn't create it yourself).
+
+This video on buffering and interactive builds in Sublime (disclaimer, I'm the author) has information and examples of how Terminus can be used for something like this if you'd like more information.
+    
+    
+Title: how to surround a Java statement with if-else or try-catch constructs?
+Description: 
+    
+    
+                    
+Is there a functionality where Visual Studio will automate, to an extent the process of:
+
+
+  Manually surround a piece of code with a Java construct (if-else,
+  try-catch, etc.) is time-consuming process. For a user, it means to
+  jump to the beginning of the code, position the cursor right, type the
+  code, jump to the end, position cursor, write a code. It certainly can
+  be automated. Surround With feature should allow to surround
+  statements easily.
+
+
+Example screenshot:
+
+
+
+I'm coming from Netbeans, where this is an option.
+
+Version info:
+
+Version: 1.41.1
+Commit: 26076a4de974ead31f97692a0d32f90d735645c0
+Date: 2019-12-18T15:04:31.999Z
+Electron: 6.1.5
+Chrome: 76.0.3809.146
+Node.js: 12.4.0
+V8: 7.6.303.31-electron.0
+OS: Linux x64 4.18.0-25-generic snap
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Some of the supported "refactorings and code actions" are described in:
+
+
+https://code.visualstudio.com/docs/java/java-editing#_refactoring-and-code-actions.  
+
+
+When I looked at this, I could not see a code action for enclosing a statement in a try / catch.  However, at the bottom it says:
+
+
+  "The list of Code Actions supported by VS Code keeps growing and only listed the most popular ones above.".
+
+
+So ... my suggestion would be to look in the menu in your Visual Studio / VS Code.  Also, watch the release notes and the issue tracker for the Redhat project that is developing the Java plugin.
+
+
+
+UPDATE - In fact, here is the issue:
+
+
+https://github.com/redhat-developer/vscode-java/issues/300
+
+
+So it looks like there is a code action to do this.  Merged in September 2017.
+    
+    
+Title: Improve the inline image quality in Jupyter notebook
+Description: 
+    
+    
+                    
+I am using the Jupyter notebook with Python right now. When I generate an image, one way to get a high-quality image is using 
+
+plt.savefig('filelocation.png',dpi=900)
+
+
+However, I'm thinking is there a trick that I can improve the inline image quality, so I can just right click this image and 'save as'?
+
+If Jupyter notebook can't make it, is there any other IDE can make it happen? I don't want to save a lot of image files in my folder. 
+    
+
+        
+Answer 1: 
+
+    
+    
+A very easy trick would be to generate a bigger image in your notebook, with a command like this:
+
+fig.set_size_inches(30, 30)
+
+
+And with the bigger figure you get a higher resolution!
+    
+    
+Title: Is it possible to setup in Visual Studio or other IDEs?
+Description: 
+    
+    
+                    
+Is it possible to install flutter on VS 2019 IDE (not Visual Studio Code or Android Studio/IntelliJ)?
+
+I can't find anything for VS 2019, but only for VS Code.
+    
+
+        
+Answer 1: 
+
+    
+    
+From the Flutter FAQ:
+
+Does Flutter work with any editors or IDEs?
+We support plugins for Android Studio, IntelliJ IDEA, and VS Code.
+See editor configuration for setup details, and Android Studio/IntelliJ and VS Code for tips on how to use the plugins.
+Alternatively, you can use a combination of the flutter command in a terminal and one of the many editors that support editing Dart.
+
+So, no
+You cannot get the same tooling in Visual Studio that you can get in Android Studio/IntelliJ and VS Code because the Flutter team does not work on support for any other IDEs.
+If you visit IDEs and editors for Dart, you can see what code editors have support for editing Dart code and you can use that in conjunction with the flutter command to get a similar experience.
+    
+    
+Title: Is there any IDE for OSDEV?
+Description: 
+    
+    
+                    
+Is there any IDE to create operating systems in C/C++/Assembly?
+If there, please tell me how to setup it for OSDEV or point me to a good tutorial.
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+To my knowledge there really aren't any IDEs specifically geared toward operating systems development, although there are several options available for the languages most commonly used for such work. In general there's not much of a difference between OSDev and any other kind of C/C++/Assembly development, so any ordinary IDE equipped for those languages should suffice. My personal favorite is Eclipse CDT, which, like other Eclipse products, can be extended with plugins for Assembly development, etc.
+
+Some other IDEs worth mentioning are Code::Blocks, CLion, or even command-line text editors like vim and nano. Whatever you are most comfortable with for other C/C++ development should work just fine for OS development.
+
+Where OSDev and ordinary C/C++ development may differ, however, is in the build process. Usually a C/C++ project is compiled into a binary file which is then executed on the machine, while a kernel image will be designed to either function as a mountable boot drive, or be loaded by another bootloader. This requires more than just compilation, and as far as I know, there aren't any IDEs which will immediately support, for example, creating a disk image from compiled code. For this, I recommend GNU make, which can run Makefiles that contain the steps to incrementally build and run your operating system. A good resource for learning about how to write makefiles can be found here, with the official manual serving as extra guidance.
+
+In short, any functional C/C++ IDE will suffice for OS development, while a slightly more complex build system will be required to actually run/test your operating system.
+    
+    
+Title: How does IDEs automatically downloads the sources for dependencies
+Description: 
+    
+    
+                    
+Most of the IDEs nowadays supports downloading the sources for added dependencies and it quite work well when we want to look the Class/Interface/Method definitions into source code.
+
+My question is around how IDEs figure out the sources (artifacts containing source code) online and automatically downloads them.
+
+Lets say I want to publish my library as open source and make it the part of maven central repo, what do I need to do in order to support this Download Sources functionality?
+    
+
+        
+Answer 1: 
+
+    
+    
+In the Maven ecosystem, source files are commonly bundled into a specific package with the maven-source-plugin:
+
+
+  The Source Plugin creates a jar archive of the source files of the current project. The jar file is, by default, created in the project's target directory.
+
+
+By convention, the name of the source package ends with -sources.jar such as hsqldb-1.8.0.7-sources.jar. The sources part of the name is known, in Maven, as the classifier:
+
+
+  The classifier distinguishes artifacts that were built from the same POM but differ in content. It is some optional and arbitrary string that - if present - is appended to the artifact name just after the version number.
+  
+  [...] use case for classifiers is to attach secondary artifacts to the project's main artifact. If you browse the Maven central repository, you will notice that the classifiers sources and javadoc are used to deploy the project source code and API docs along with the packaged class files.
+
+
+Knowing this convention, it's easy for an IDE to retrieve the source files of dependencies from Maven central or from other configured Maven repositories.
+    
+    
+Title: Exclude all folders with specified name on &ldquo;Find in Path&rdquo; in WebStorm
+Description: 
+    
+    
+                    
+I want to exclude from search results in "Find in Path" window all folders in the project with a name "__tests__". (I know that there is a file mask option but looks like it works only with file names).
+
+How can I do that?
+    
+
+        
+Answer 1: 
+
+    
+    
+please follow IDEA-130905 and linked tickets for updates.
+
+For now, I can suggest creating a custom scope in Settings | Appearance &amp; Behavior | Scopes with these folders excluded and using this scope in Find in Path
+    
+    
+Title: VS Code :: Cannot edit in read-only editor when Compare Selected [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        Visual Studio Code: can&#39;t edit LEFT-side file during COMPARE
+                            
+                                (2 answers)
+                            
+                    
+                Closed 11 months ago.
+        
+
+
+    
+
+I'm using VS Code 1.140.1 on MacOS Catalina and I need to compare two files. 
+
+
+I open both files with VS Code
+I select both
+I right click on them and I select "Compare Selected"
+
+
+
+
+The comparison works but when I try to edit while comparing I cannot, VS Code says: "Cannot edit in read-only editor".
+
+
+
+That is a bit frustrating because other IDE like Notepad++ they indeed allow you to edit while comparing and this is very useful as it shows you when the 2 files are the same. 
+
+Is there any way around? 
+
+Or do you suggest to change VS Code with another IDE?
+    
+
+        
+Answer 1: 
+
+    
+    
+After exhaustive research I found the solution here:
+
+Visual Studio Code: can&#39;t edit LEFT-side file during COMPARE
+
+In fact only the LEFT side is not editable, the RIGHT side is alright. 
+    
+    
+Title: Lazarus - How to create an own $(CustomRelativeUnitPath)
+Description: 
+    
+    
+                    
+as mentioned quiet similar in the header, may someone tell me, how can I create an own custom-relative-unit-path for the lazarus IDE (version: 2.0.6) .
+
+The IDE has alreaday some internal $(RelativePaths) but I would like to create my own ones and setting them up in the "other unit paths" and finally use them of course ^^
+
+i wanna do somewhere like: "$(MyCustomPath) = C:\Lazarus(someotherpathhere..)"
+
+and put $(MyCustompath) in the "other unit" line and have it work ^^
+
+Below what I would like to see :-)
+
+Best regards
+
+Shpendicus
+
+enter image description here
+    
+
+        
+Answer 1: 
+
+    
+    
+I think the way to do this may be to use Lazarus IDE macros.
+
+See https://wiki.freepascal.org/IDE_Macros_in_paths_and_filenames for full documentation.
+
+In the section IDE Macros it says
+
+
+  IDE macros: they can be used in almost all IDE fields, e.g. search paths, custom options, file names, run parameters. They are replaced with their value before calling external tools like the compiler or the debugger. They are case insensitive.
+
+
+and the IDE macro format section includes a few examples of ones which are already defined.
+
+Creating macros is explained here: https://wiki.freepascal.org/Macros_and_Conditionals
+
+To set a macro up for the current project, do the following:
+
+
+Go to Project | Project Options | Compiler Options | Additions and Overrides
+On the righthand side, click  Add and select IDE Macro from the drop-down menu
+This will open an IDE Macro line in the editor below.  In it, replace
+MacroName by MyCustomPath and Value by whatever you like.  I used D:\Lazarus2\MA
+Close the Project Options pop-up
+
+
+Next, in the directory that MyCustomPath points to, create a unit e.g. Test.Pas that includes a compile stopper like an !  I used
+
+unit Test
+
+interface
+!
+implementation
+
+end.
+
+
+Add Test.Pas to the project's Uses list and attempt to compile.  The compiler should complain that it can't find Test.Pas.
+
+Next, open Project | Project Options | Compiler Options | Paths and in the Other unit files box at the top insert $(MyCustomPath)
+
+Close Project Options  and compile - now the compilation should proceed until it encounters the compile-stopping ! in Test.Pas
+    
+    
+Title: Is There A Way To Enlarge Status Bar Fonts And Icons In Visual Studio 2019?
+Description: 
+    
+    
+                    
+I was able to change the text size for code editor windows in Visual Studio 2019 by searching with CTRL + Q for 'fonts`.  However, I would also like the navigable error/warning list icons and count labels in the status bar at lower left to be a bit larger: 
+
+
+
+Here the Search bar let me down.  The only search results regarding 'Status bar` are to hide/show it altogether.
+
+Are there any ways to customize the status bar in Visual Studio 2019?
+    
+
+        
+Answer 1: 
+
+    
+    
+This has been suggested as a feature in the Visual Studio Developer Community:
+
+
+  
+  https://developercommunity.visualstudio.com/comments/934585/view.html
+  
+
+
+The best solution for the time being seems to be to upvote and comment on this feature suggestion if interested in seeing the setting implemented.
+
+Per Microsoft as of 2020-02-28:
+
+
+  Feature suggestions are prioritized based on the value to our broader developer community and the product roadmap. We may not be able to pursue this one immediately, but we will continue to monitor it up to 90 days for community input.
+
+    
+    
+Title: Android Studio Canary stuck on splash screen
+Description: 
+    
+    
+                    
+Android Studio canary gets stuck on the splash screen and this has been happening since the last few releases of canary but the stable release works with no such issue. I tried the fixes from this Post but it didn't work. I am currently running macOS Mojave 10.14.6.  
+    
+
+        
+Answer 1: 
+
+    
+    
+On Mac OS
+
+Remove these directories:
+
+~/Library/Application Support/AndroidStudioBeta  
+~/Library/Caches/AndroidStudioBeta
+~/Library/Logs/AndroidStudioBeta  
+~/Library/Preferences/AndroidStudioBeta
+
+    
+    
+Title: Tomcat does not reload jsp pages
+Description: 
+    
+    
+                    
+Sometimes a problem of this nature arises.
+
+I use Tomcat and Inteliji Idea. I make changes in jsp pages, and when I deploy the project in a browser, Tomcat opens the old version of the jsp page, and if I make changes in the servlet, the behavior of the jsp pages changes, but the visual component does not change.
+
+What to do so that the volume normally reloads the page ???
+    
+
+        
+Answer 1: 
+
+    
+    
+For the JSP reloading to work you need to use Exploded artifact configuration in IntelliJ IDEA and use the Update action (either explicitly, or by configuring the IDE to perform the Update on frame deactivation). The Update action has to be set to update the classes and resources. More details can be found in this document.
+
+Some frameworks like JSF may introduce caching which will prevent the Update from working properly. In this case you'll need to disable the framework caching. For JSF caching configuration please refer to this answer.
+    
+    
+Title: Add PHP Dynamic Methods in IDE Autocomplete
+Description: 
+    
+    
+                    
+I need to make some dynamic methods in my PHP class. 
+
+Using this class:
+
+class SampleClassWithDynamicMethod
+{
+    public function __call($methodName, $values)
+    {
+        if(!method_exists($this, $methodName)){
+            // Do something...
+            return "You called $methodName!";
+        }
+    }
+
+$sample = new SampleClassWithDynamicMethod();
+echo $sample-&gt;test(); 
+// You called test!
+
+echo $sample-&gt;anotherTest();
+// You called anotherTest!
+
+echo $sample-&gt;moreTest(); 
+// You called moreTest!
+
+
+It works well. But how can I let the IDE know this class has these dynamic methods with these names: test(), anotherTest() and moreTest()?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use PHP DocBlocks. These are supported by major PHP IDEs.
+
+Specifically, the @method annotation. Check the docs.
+
+Using the example from the docs:
+
+/**
+  * @method string getString()
+  * @method void setInteger(integer $integer)
+  * @method setString(integer $integer)
+  * @method static string staticGetter()
+  */
+ class Child extends Parent
+ {
+     // &lt;...&gt;
+ }
+
+
+This would declare that could could do any of the following, which would be recognized by the IDE and offered for auto-completion (obviously, assuming the methods have been implemented in some way):
+
+$child = new Child();
+$child-&gt;setInteger(10);
+$child-&gt;setString(2);
+echo $child-&gt;getString();
+// 2
+
+$string = Child::staticGetter();
+
+    
+    
+Title: WebStorm Vue Unresolved variable or type
+Description: 
+    
+    
+                    
+I have upgraded my WebStorm to version 2019.2.1 yesterday.
+
+
+
+After that I have some issues with Vuex methods:
+
+
+
+Methods and computed added locally works fine and are recognized by WebStorm (green arrows)
+
+But getters and actions are not: Unresolved variable or type... (blue and red arrows)
+
+This is misleading + I can't use shortcut to jump to method.
+
+How can I make it work?
+
+
+
+UPDATE
+
+Adding this. before like: changing canBeEdited to this.canBeEdited solves the error but it seems to be a hack (not very comfortable though)
+    
+
+        
+Answer 1: 
+
+    
+    
+Submitted to developers as WEB-40929, please follow it for updates
+    
+    
+Title: Shortcut to add throws declaration in eclipse IDE
+Description: 
+    
+    
+                    
+I can manually add throws declaration by using mouse(click on error and add throws).But am just wondering is there any shortcut in eclipse to do that without involving mouse. like Ctrl+shift+o does auto imports
+    
+
+        
+Answer 1: 
+
+    
+    
+You can go to preference --&gt; General--&gt; keys to set a hot key for the Command "Add throws declaration" .
+
+Make sure to select Editing Java Source in When 
+
+
+    
+    
+Title: How to run Slenium+Java+Cucumber without ide
+Description: 
+    
+    
+                    
+Hello there are tests written on Java + cucumber
+The structure is as follows:
+
+https://i.imgur.com/moLVY6L.png 
+
+The main question is how to run this tests not from the IDE, say from the console or even wrap it all in jar file
+
+The problems encountered are that you need the main class to create a jar,
+
+It seems as there is a certain java cucumber.api.cli.Main - but how to use it I do not understand. Either way, there's probably a way to run this just from the command line. Please tell us how to do it?             
+    
+
+        
+Answer 1: 
+
+    
+    
+You can download Maven with following terminal script : 
+
+$brew install maven
+
+
+After brew installation, you need to go to the project directory which includes pom.xml file in terminal :
+
+$cd /path/of/your/project
+
+
+And finally you can run following command to run your tests : 
+
+$mvn clean test
+
+    
+    
+Answer 2: 
+
+    
+    
+You can try the below on command prompt.
+
+java -cp "E:\Workspace\CucumberProj\Jars*;E:\Workspace\CucumberProj\bin" cucumber.api.cli.Main --glue stepDefination E:\Workspace\CucumberProj\Feature\Login_Test.feature
+    
+    
+Title: Specify Different Command Prompt for Visual Studio
+Description: 
+    
+    
+                    
+In Visual Studio 2017 or 2019 is it possible to have a different program, say gitbash or powershell, run for:
+
+
+  Team Explorer 
+Answer 1: 
+
+    
+    
+Use the Open Command Line extension.
+
+You can define multiple command line options available from the solution explorer context menu, including a default which has a keyboard mapping.
+
+(I don't know what you mean by actions in Team Explorer: do you have a not-git VCS option set?)
+    
+    
+Title: How to connect mysql with eclipse?
+Description: 
+    
+    
+                    
+How can i connect mysql db with eclipse, can someone please help me.what version of eclipse,JRE i need and how to fetch or what IDE is easy to connect mysql such as netbeans or pycharm if python is easy.
+    
+
+        
+Answer 1: 
+
+    
+    
+Which version? 
+You can use any version. But the latest is always better.
+
+Which JRE? 
+If you are developing applications using Java you need to install JDK. It will install the JRE. And you need to add JDK bin path to your System Variables. And here and here are examples that showing how to do that.
+
+How to setting up JDBC Connection, 
+First, you need to download the MySQL Connector for Java.
+
+And setting up a JDBC connection in Eclipse is much easier. You can try this,
+
+Right-click on your Java Project in the Package Explorer in the Eclipse workspace and go to Properties
+Go down the list that appears until you find Java Build Path and click Libraries and then click Add External Archives.
+Find the downloaded jar file called mysql-connector-java-version number.jar and choose it. This should import your jar file to Eclipse!
+
+Finally, 
+And now you can code. Sample Java JDBC Connection,
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+class MySQLConnection {
+  public static void main(String[] args) {
+    Connection con = null;
+
+    String url = "jdbc:mysql://localhost:3306/some_db";
+    String username = "some_username":
+    String password = "some_password";
+
+    try {
+      Class.forName("com.mysql.jdbc.Driver");
+      con = DriverManager.getConnection(url, username, password);
+
+      System.out.println("Connected!");
+
+    } catch (SQLException ex) {
+        throw new Error("Error ", ex);
+    } finally {
+      try {
+        if (con != null) {
+            con.close();
+        }
+      } catch (SQLException ex) {
+          System.out.println(ex.getMessage());
+      }
+    }
+  }
+}
+
+
+Hope this helps!
+    
+    
+Answer 2: 
+
+    
+    
+You will need java mysql connector jar and add it to java build path.
+Refer this : https://ibytecode.com/blog/jdbc-mysql-connection-tutorial/
+    
+    
+Answer 3: 
+
+    
+    
+You can either use eclipse neon or eclipse IDE for Java Developers.Then you have to attach Mysql connection drivers to your program.Then you can write this code in your program.
+
+Class.forName("com.mysql.jdbc.Driver");
+Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/test","root","root");
+
+test is your db name you can write yours
+    
+    
+Title: How can I use a JSDoc comment to eliminate an &ldquo;Unresolved function or method&rdquo; warning in WebStorm or other JetBrains products?
+Description: 
+    
+    
+                    
+In WebStorm, PyCharm, and other JetBrains products you can use JSDoc comments to inform WebStorm that an object does have a specific property, thereby eliminating a warning.
+
+Either @namespace or @property works well for plain object properties, but I can't find a JSDoc command that works for functions.
+
+const query = require(...);
+...
+Object.keys(record)
+    .forEach(col =&gt; {
+        query.set(col, record[col]);
+    });
+
+
+In the snippet above, .set(...) is not recognized by WebStorm and produces an Unresolved function or method warning.
+
+This is only a single example. My project uses multiple third-party libraries and many of those libraries have object methods that trigger the warning on use. There are no typescript definitions available for these libraries, and WebStorm's file analysis doesn't pick up on them.
+
+I cannot modify the query object, nor can I change how it is imported. Is there a JSDoc comment I can add to eliminate the warning? I've tried multiple variations of @property, @param, @namespace, and @member.
+
+notes:
+
+I know that the warning can be disabled by using a // noinspection JSUnresolvedFunction on the line directly above the use of the function, but this is an inferior solution. The JSDoc comments can be placed in multiple scopes, such as the start of the class or function definition. The JSDoc solution also improves readability and has meaning in other, non-JetBrains IDEs.
+    
+
+        
+Answer 1: 
+
+    
+    
+JSDoc provides the way to explicitly annotate symbols with @type
+
+So in your example it's could be:
+
+/** @type {QueryObjectTypeDef} */
+const query = require(...);
+
+
+Also same effect could be achieved (tested in WebStorm) with inline annotation of function args:
+
+forEach((/* ColTypeDef */ col) =&gt; {...})
+
+    
+    
+Title: IntelliJ is not enforcing right margin
+Description: 
+    
+    
+                    
+I have a checkstyle active that complains if a line is longer than 100 columns, and I've set my intelliJ config to hard wrap at 100 columns.
+
+The issue is that it is not always enforcing this, resulting in cases where the checkstyle fails and the only way around it is disabling the formatting in the IDE and manually do the formatting.
+
+So this is a short (and stupid) example of where it fails
+
+class TestClass {
+
+    public static void main(String[] args) {
+        String superString = "s";
+        String bestString = "b";
+        Arrays.asList(superString.split(""))
+              .stream()
+              .map(superiorString -&gt; Arrays.asList(bestString.split(""))
+                                           .stream()
+                                           .map(otherSub -&gt; Arrays.asList(superiorString.split(""))
+                                                                  .stream()
+                                                                  .map(qwerty -&gt; Arrays.asList(
+                                                                          otherSub.split(""))
+                                                                                       .stream()
+                                                                                       .map(dvorak -&gt; null))));
+    }
+}
+
+
+and here is my intelliJ config:
+
+&lt;code_scheme name="stream-manager" version="173"&gt;
+  &lt;option name="LINE_SEPARATOR" value="&amp;#xA;" /&gt;
+  &lt;option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="999" /&gt;
+  &lt;option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="999" /&gt;
+  &lt;option name="PACKAGES_TO_USE_IMPORT_ON_DEMAND"&gt;
+    &lt;value /&gt;
+  &lt;/option&gt;
+  &lt;option name="RIGHT_MARGIN" value="100" /&gt;
+  &lt;option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="true" /&gt;
+  &lt;JavaCodeStyleSettings&gt;
+    &lt;option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="9999" /&gt;
+    &lt;option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="9999" /&gt;
+  &lt;/JavaCodeStyleSettings&gt;
+  &lt;codeStyleSettings language="JAVA"&gt;
+    &lt;option name="RIGHT_MARGIN" value="100" /&gt;
+    &lt;option name="KEEP_LINE_BREAKS" value="false" /&gt;
+    &lt;option name="KEEP_FIRST_COLUMN_COMMENT" value="false" /&gt;
+    &lt;option name="KEEP_BLANK_LINES_IN_DECLARATIONS" value="1" /&gt;
+    &lt;option name="KEEP_BLANK_LINES_IN_CODE" value="1" /&gt;
+    &lt;option name="KEEP_BLANK_LINES_BETWEEN_PACKAGE_DECLARATION_AND_HEADER" value="1" /&gt;
+    &lt;option name="KEEP_BLANK_LINES_BEFORE_RBRACE" value="0" /&gt;
+    &lt;option name="BLANK_LINES_AFTER_CLASS_HEADER" value="1" /&gt;
+    &lt;option name="ALIGN_MULTILINE_CHAINED_METHODS" value="true" /&gt;
+    &lt;option name="ALIGN_MULTILINE_PARAMETERS_IN_CALLS" value="true" /&gt;
+    &lt;option name="ALIGN_MULTILINE_TERNARY_OPERATION" value="true" /&gt;
+    &lt;option name="ALIGN_MULTILINE_THROWS_LIST" value="true" /&gt;
+    &lt;option name="ALIGN_MULTILINE_EXTENDS_LIST" value="true" /&gt;
+    &lt;option name="SPACE_BEFORE_ARRAY_INITIALIZER_LBRACE" value="true" /&gt;
+    &lt;option name="SPACE_BEFORE_ANNOTATION_ARRAY_INITIALIZER_LBRACE" value="true" /&gt;
+    &lt;option name="CALL_PARAMETERS_WRAP" value="1" /&gt;
+    &lt;option name="METHOD_PARAMETERS_WRAP" value="1" /&gt;
+    &lt;option name="RESOURCE_LIST_WRAP" value="5" /&gt;
+    &lt;option name="EXTENDS_LIST_WRAP" value="1" /&gt;
+    &lt;option name="THROWS_LIST_WRAP" value="1" /&gt;
+    &lt;option name="EXTENDS_KEYWORD_WRAP" value="1" /&gt;
+    &lt;option name="METHOD_CALL_CHAIN_WRAP" value="5" /&gt;
+    &lt;option name="TERNARY_OPERATION_WRAP" value="5" /&gt;
+    &lt;option name="IF_BRACE_FORCE" value="3" /&gt;
+    &lt;option name="DOWHILE_BRACE_FORCE" value="3" /&gt;
+    &lt;option name="WHILE_BRACE_FORCE" value="3" /&gt;
+    &lt;option name="FOR_BRACE_FORCE" value="3" /&gt;
+    &lt;option name="WRAP_LONG_LINES" value="true" /&gt;
+    &lt;option name="SOFT_MARGINS" value="80,120" /&gt;
+  &lt;/codeStyleSettings&gt;
+&lt;/code_scheme&gt;
+
+
+Am I just missing some setting, or is this simply a flaw in the formatter?
+And is there any way around it?
+    
+
+        
+Answer 1: 
+
+    
+    
+From Preferences &gt; Editor &gt; Code Style &gt; Java select the Wrapping and Braces tab and scroll to  Chained method calls then:
+
+
+Set Wrap always
+Tick the Wrap first call option
+Tick the Align when multiline option
+
+
+
+
+With that configuration your code will be formatted like so:
+
+public static void main(String[] args) {
+    String superString = "s";
+    String bestString = "b";
+    Arrays
+            .asList(superString.split(""))
+            .stream()
+            .map(superiorString -&gt; Arrays
+                    .asList(bestString.split(""))
+                    .stream()
+                    .map(otherSub -&gt; Arrays
+                            .asList(superiorString.split(""))
+                            .stream()
+                            .map(qwerty -&gt; Arrays
+                                    .asList(
+                                            otherSub.split(""))
+                                    .stream()
+                                    .map(dvorak -&gt; null))));
+}
+
+
+That's 68 chars at its widest point.
+    
+    
+Title: VSCODE. How to open a file containing a variable or html tag by clicking it?
+Description: 
+    
+    
+                    
+I'm not sure how to describe the question properly. I used to use IDE tools such as IntelliJIdea. One of the useful functions from intelliJ was to open an external file by clicking an imported variable or component. I wonder if there is such functionality in vscode too. Although I tried looking up in the document, I couldn't find information about it. Does vscode really not have that convenient functionality? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Visual Studio Code does provide this feature. 
+
+If you hold down the Ctrl key in VSCode and for example hover over a function call, a small info box appears (like shown below). 
+
+
+
+If you now click on it (while still holding down Ctrl), VSCode automatically opens the corresponding file in a new tab and jumps to the line where the function was defined. 
+
+
+
+This works for variables, instances of classes etc. as well. 
+    
+    
+Title: Spring Initializr pane is blank in IntellJ, for both New Project and New Module
+Description: 
+    
+    
+                    
+In Intellij, the Spring initializr option is available, but the pane where the options for adding dependencies reside is blank. I tried upgrading my IDE to no avail. This is true when either creating a new project or a new module. This was not an issue until my work issued me a PowerMac (was on Windows before).
+
+When I try to access Initializr, idea.log shows the following stacktrace:
+
+2019-02-12 13:52:16,116 [7322253]  ERROR - plication.impl.ApplicationImpl - java.lang.NullPointerException 
+java.lang.RuntimeException: java.lang.NullPointerException
+    at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1488)
+    at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1474)
+    at sun.net.www.protocol.http.HttpURLConnection.getHeaderField(HttpURLConnection.java:3018)
+    at java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:489)
+    at sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:338)
+    at com.intellij.util.io.HttpRequests.openConnection(HttpRequests.java:609)
+    at com.intellij.util.io.HttpRequests.access$300(HttpRequests.java:59)
+    at com.intellij.util.io.HttpRequests$RequestImpl.getConnection(HttpRequests.java:378)
+    at com.intellij.util.io.HttpRequests$RequestImpl.getInputStream(HttpRequests.java:387)
+    at com.intellij.util.io.HttpRequests$RequestImpl.getReader(HttpRequests.java:405)
+    at com.intellij.spring.boot.initializr.SpringInitializrOptionsLoader$1.process(SpringInitializrOptionsLoader.java:104)
+    at com.intellij.spring.boot.initializr.SpringInitializrOptionsLoader$1.process(SpringInitializrOptionsLoader.java:97)
+    at com.intellij.util.io.HttpRequests.doProcess(HttpRequests.java:523)
+    at com.intellij.util.io.HttpRequests.process(HttpRequests.java:499)
+    at com.intellij.util.io.HttpRequests.access$100(HttpRequests.java:59)
+    at com.intellij.util.io.HttpRequests$RequestBuilderImpl.connect(HttpRequests.java:352)
+    at com.intellij.spring.boot.initializr.SpringInitializrOptionsLoader.loadOptions(SpringInitializrOptionsLoader.java:97)
+    at com.intellij.spring.boot.initializr.SpringInitializrApplicationInfoStep.lambda$loadSpringInitializrOptions$3(SpringInitializrApplicationInfoStep.java:151)
+    at com.intellij.openapi.application.impl.ApplicationImpl$1.run(ApplicationImpl.java:314)
+    at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+    at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+    at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.NullPointerException
+    at com.sun.security.ntlm.Client.type3(Client.java:161)
+    at sun.net.www.protocol.http.ntlm.NTLMAuthentication.buildType3Msg(NTLMAuthentication.java:241)
+    at sun.net.www.protocol.http.ntlm.NTLMAuthentication.setHeaders(NTLMAuthentication.java:216)
+    at sun.net.www.protocol.http.HttpURLConnection.doTunneling(HttpURLConnection.java:2096)
+    at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:183)
+    at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1546)
+    at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1474)
+    at java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:480)
+    ... 20 more
+
+
+How can I fix this?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+It looks like a Java bug specific to your NTLM proxy.
+
+It may help if you use IntelliJ IDEA 2019.1 EAP version with JetBrains Runtime 11 version where this issue should be fixed.
+    
+    
+Title: Data-driven dropdown menu Katalon Automation Recorder
+Description: 
+    
+    
+                    
+I'm trying to automate click with Selenium IDE. I was trying to figure out if I can use the "Select" command, but it didn't work. 
+
+I would like to click on the value on the dropdown that I put in my CSV file. Like I want a specific value of the dropdown for each line of my CS.
+
+Here's the code.
+
+
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Katalon [WebUI] Select is meant only to select default html select component. Yours is custom select box.
+
+You need to select that exactly same way as you do manually like
+
+
+Click the menu 
+Wait for dropdown to be visible 
+Select the particular value based on name from your csv
+
+
+Based on your html, your Katalon script will be like this,
+
+TestObject menu = new TestObject('Menu').addProperty('css', ConditionType.EQUALS, "div.md-select-menu-container")
+WebUI.click(menu)
+
+TestObject dropdownValue = new TestObject('DropDownValue').addProperty('xpath', ConditionType.EQUALS, "//md-option[contains(text(), 'AVAN - Advancè')]")
+WebUI.waitForElementVisible(dropdownValue, 30)
+WebUI.click(dropdownValue)
+
+    
+    
+Title: Visual Studio column selection - Select by word, not square
+Description: 
+    
+    
+                    
+This seems like something I would have found hundreds of topics on. Yet I didn't find a single one. I wonder if no one cares or if I just overlooked something obvious.
+
+In Visual Studio when you select a column and want to select the word your cursor is at in each line, when you do CtrlShift+(ARROW KEY), then it doesn't select by word as it SHOULD, but instead it selects a square.
+
+
+
+BAD BEHAVIOUR (which VS has):
+
+
+
+
+
+GOOD BEHAVIOUR (which would be expected, and is in every other IDE):
+
+
+
+
+
+The Visual Studio ALT select is rendered useless in half the cases, actually in every case where you don't have the "coordinates" precisely the same on every line.
+
+
+
+EDIT
+
+I seem to have to explain why the VS behavior is bad, people apparently consider it ok. So the problem is that when you column select in VS, and you have it exactly like in the example, or even without tabs, you'd copy some =, though they won't be everywhere.
+
+If you select a column like VS Code or JetBrains has it, you'll just copy WHAT IS NEEDED and that OBVIOUSLY being just the words in the column.
+    
+
+        
+Answer 1: 
+
+    
+    
+I have a solution for you, but you may not like it. It's using the new Multi-Caret Support in Visual Studio 2017.
+
+Here is my example code where I want to copy only the property names (sorry for lack of inline images):
+Multi-Caret Code Example
+
+
+Using Ctrl + Alt + Click to click and add a caret to the end of each word. (If you screw up and click somewhere you didn't mean, like I do many times, then reclick to remove that caret and click on the correct spot.)
+Multi-Caret End of Line
+Now hold Ctrl + Shift and hit the ← Left Arrow. This will select to the beginning of the current word on each line.
+Multi-Caret Word Selected
+Copy/paste as you wish
+
+    
+    
+Title: IDEA - unmute one breakpoint
+Description: 
+    
+    
+                    
+I have many breakpoints in methods which some times from any places in my code. And at time when I want to catch only one method calling and I don't know any conditions, I necessary to mute some breakpoints.
+How can I mute all my breakpoints and unmute only one of it? 
+Or it is impossible?
+    
+
+        
+Answer 1: 
+
+    
+    
+Window "Breakpoints" (Run -/p/div
+Title: Is there a way to find files without match in the &ldquo;find in path&rdquo; menu in IntelliJ?
+Description: 
+    
+    
+                    
+In grep I can use the -L / --files-without-match option to find files where the pattern cannot be found. Is there a similar option for IntelliJ?
+
+I'm using IntelliJ Ultimate 2018.2. 
+    
+
+        
+Answer 1: 
+
+    
+    
+There is no such option in IntelliJ IDEA Find in Path. Request is welcome.
+    
+    
+Title: There a way to swapping instances of only the application VSCode?
+Description: 
+    
+    
+                    
+I'm new to VSCode (Visual Studio Code) and I'm coming from WebStorm.
+
+When I used WebStorm I was able to use Command + ` to swap instances of WebStorm windows. This behavior is also found in Chrome when you use that shortcut to switch between Chrome windows.
+
+Is there a way to do this on VSCode?
+    
+
+        
+Answer 1: 
+
+    
+    
+Two options using VS Code:
+
+
+The workbench.action.switchWindow keybinding to select the window to switch to. It is bound to ctrlw by default
+The workbench.action.quickSwitchWindow command. Unlike workbench.action.switchWindow, it automatically switches windows when you release the keys. It is not bound by default but you can configure a keybinding for it.
+
+
+The OS may also provide this:
+
+
+Mac: cmd`
+Windows
+
+    
+    
+Title: unable JDBC CONNECT to jdbc:mysql//localhost:3306/database
+Description: 
+    
+    
+                    
+I search all to resolve this problem, but i still with that, i dont know what is...
+
+mysql version is 5.7 and hibernate is 5.2.8.Final, my sql connector is 5.1.2.
+
+im using STS IDE
+
+pom.xml
+
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+  &lt;groupId&gt;com.example&lt;/groupId&gt;
+  &lt;artifactId&gt;hibernate&lt;/artifactId&gt;
+  &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+  &lt;packaging&gt;jar&lt;/packaging&gt;
+
+  &lt;name&gt;hibernate&lt;/name&gt;
+  &lt;url&gt;http://maven.apache.org&lt;/url&gt;
+
+  &lt;properties&gt;
+    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+  &lt;/properties&gt;
+
+
+  &lt;dependencies&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.apache.tomcat&lt;/groupId&gt;
+    &lt;artifactId&gt;tomcat-jdbc&lt;/artifactId&gt;
+    &lt;version&gt;9.0.0.M21&lt;/version&gt;
+&lt;/dependency&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;com.sun.activation&lt;/groupId&gt;
+    &lt;artifactId&gt;javax.activation&lt;/artifactId&gt;
+    &lt;version&gt;1.2.0&lt;/version&gt;
+&lt;/dependency&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;javax.xml.bind&lt;/groupId&gt;
+    &lt;artifactId&gt;jaxb-api&lt;/artifactId&gt;
+    &lt;version&gt;2.3.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.sun.xml.bind&lt;/groupId&gt;
+    &lt;artifactId&gt;jaxb-impl&lt;/artifactId&gt;
+    &lt;version&gt;2.4.0-b180725.0644&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.sun.xml.bind&lt;/groupId&gt;
+    &lt;artifactId&gt;jaxb-core&lt;/artifactId&gt;
+    &lt;version&gt;2.3.0.1&lt;/version&gt;
+&lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;junit&lt;/groupId&gt;
+      &lt;artifactId&gt;junit&lt;/artifactId&gt;
+      &lt;version&gt;3.8.1&lt;/version&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+
+     &lt;dependency&gt;
+            &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+            &lt;artifactId&gt;ejb3-persistence&lt;/artifactId&gt;
+            &lt;version&gt;1.0.2.GA&lt;/version&gt;
+        &lt;/dependency&gt;
+
+    &lt;!-- &lt;dependency&gt;
+        &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+        &lt;artifactId&gt;hibernate-annotations&lt;/artifactId&gt;
+        &lt;version&gt;3.5.6-Final&lt;/version&gt;
+    &lt;/dependency&gt; --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;mysql&lt;/groupId&gt;
+        &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+        &lt;version&gt;5.1.2&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;!-- &lt;dependency&gt;
+            &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+            &lt;artifactId&gt;hibernate-commons-annotations&lt;/artifactId&gt;
+            &lt;version&gt;3.2.0.Final&lt;/version&gt;
+        &lt;/dependency&gt; --&gt;
+
+    &lt;dependency&gt;
+       &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+       &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
+       &lt;version&gt;1.7.5&lt;/version&gt;
+   &lt;/dependency&gt;
+   &lt;dependency&gt;
+       &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+       &lt;artifactId&gt;slf4j-simple&lt;/artifactId&gt;
+       &lt;version&gt;1.6.4&lt;/version&gt;
+   &lt;/dependency&gt;
+
+     &lt;dependency&gt;
+       &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+       &lt;artifactId&gt;hibernate-core&lt;/artifactId&gt;
+       &lt;version&gt;5.2.8.Final&lt;/version&gt;
+    &lt;/dependency&gt;
+
+  &lt;/dependencies&gt;
+
+&lt;/project&gt;
+
+
+hibernate.cfg.xml
+
+i think the problem is here, i guess is the version, but in my investigation i readed is the JDBC not installes but i installed the connector 8.0.12.jar that is compatible with 5.7 mysql.
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE hibernate-configuration PUBLIC 
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN" 
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd"&gt; 
+&lt;hibernate-configuration&gt;
+    &lt;session-factory&gt;
+        &lt;property name="hibernate.connection.driver_class"&gt;com.mysql.cj.jdbc.Driver&lt;/property&gt;
+        &lt;property name="hibernate.connection.url"&gt;jdbc:mysql//localhost:3306/database&lt;/property&gt;
+        &lt;property name="hibernate.connection.username"&gt;username&lt;/property&gt;
+        &lt;property name="hibernate.connection.password"&gt;password&lt;/property&gt;
+
+        &lt;!-- Disable the second-level cache --&gt;
+        &lt;property name="cache.provider_class"&gt;org.hibernate.cache.NoCacheProvider&lt;/property&gt;
+
+
+    &lt;!-- JDBC connection pool (use the built-in) --&gt;
+    &lt;property name="connection_pool_size"&gt;true&lt;/property&gt;
+
+        &lt;!-- SQL dialect --&gt;
+    &lt;property name="hibernate.dialect"&gt;org.hibernate.dialect.MySQL5Dialect&lt;/property&gt;
+    &lt;!-- Echo all executed SQL to stdout --&gt;
+    &lt;property name="hibernate.show_sql"&gt;true&lt;/property&gt;
+
+    &lt;!-- Enable Hibernate's automatic session context management --&gt;
+        &lt;property name="hibernate.current_session_context_class"&gt;thread&lt;/property&gt;
+
+
+        &lt;mapping class="com.example.hibernate.model.SocialMedia" /&gt;
+        &lt;mapping class="com.example.hibernate.model.Course" /&gt;
+        &lt;mapping class="com.example.hibernate.model.Teacher" /&gt;
+        &lt;mapping class="com.example.hibernate.model.TeacherSocialMedia" /&gt;
+    &lt;/session-factory&gt;
+&lt;/hibernate-configuration&gt;
+
+
+configuration
+
+SessionFactory sessionFactory;
+           Configuration configuration = new Configuration();
+          configuration.configure("hibernate.cfg.xml");
+          sessionFactory = configuration.buildSessionFactory();
+          Session session = sessionFactory.openSession();
+
+
+error...
+
+Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+
+
+and...
+
+Unable to make JDBC Connection [jdbc:mysql//localhost:3306/database]
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You have missed : after mysql in your connection URL. Correct one should look like jdbc:mysql://localhost:3306/database
+    
+    
+Answer 2: 
+
+    
+    
+Try Using,
+
+&lt;property name="hibernate.connection.driver_class"&gt;com.mysql.jdbc.Driver&lt;/property&gt;
+
+    
+    
+Title: Apache Spark: Infinite Loop when Running Job Remotely from IDE
+Description: 
+    
+    
+                    
+I have a apache spark standalone cluster and I want to run spark's job on it from remote computer via IDE (Eclipse or IntelliJ). When I create a jar file and send it to master and run it with spark-submit, every thing is ok, but in IDE, I can not run the job. There isn't any errors in output but I think Executors are created and killed repeatedly and this infinite loop continue until I kill the job. Part of the job's output is given below.
+
+So, my question is What is the problem and how can I fix that? 
+(OS in Cluster machines=ubuntu,OS in remote machine=Windows,Hadoop version in all machines=2.7.6,spark version in all machines=2.3). Also, I can see Spark,hadoop,HDFS UIs in my remote machine 
+
+INFO  SparkContext:54 - Submitted application: Spark SQL examples
+INFO  SecurityManager:54 - Changing view acls to: myuser
+INFO  SecurityManager:54 - Changing modify acls to: myuser
+INFO  SecurityManager:54 - Changing view acls groups to: 
+INFO  SecurityManager:54 - Changing modify acls groups to: 
+INFO  SecurityManager:54 - SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(myuser); groups with view permissions: Set(); users  with modify permissions: Set(myuser); groups with modify permissions: Set()
+INFO  Utils:54 - Successfully started service 'sparkDriver' on port 54185.
+INFO  SparkEnv:54 - Registering MapOutputTracker
+INFO  SparkEnv:54 - Registering BlockManagerMaster
+INFO  BlockManagerMasterEndpoint:54 - Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+INFO  BlockManagerMasterEndpoint:54 - BlockManagerMasterEndpoint up
+INFO  DiskBlockManager:54 - Created local directory at C:\Users\myuser\AppData\Local\Temp\blockmgr-bfdb28f1-2d03-4799-927a-5aba5bdc4eb5
+INFO  MemoryStore:54 - MemoryStore started with capacity 1989.6 MB
+INFO  SparkEnv:54 - Registering OutputCommitCoordinator
+INFO  log:192 - Logging initialized @17992ms
+INFO  Server:346 - jetty-9.3.z-SNAPSHOT
+INFO  Server:414 - Started @18089ms
+INFO  AbstractConnector:278 - Started ServerConnector@53325049{HTTP/1.1,[http/1.1]}{0.0.0.0:4040}
+INFO  Utils:54 - Successfully started service 'SparkUI' on port 4040.
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@28a0fd6c{/jobs,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@5c48c0c0{/jobs/json,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@10c8f62{/jobs/job,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@25f7391e{/jobs/job/json,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@3f23a3a0{/stages,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@5ab14cb9{/stages/json,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@5fb97279{/stages/stage,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@31024624{/stages/stage/json,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@25bcd0c7{/stages/pool,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@32cb636e{/stages/pool/json,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@63cd604c{/storage,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@40dd3977{/storage/json,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@3a4e343{/storage/rdd,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@6a1d204a{/storage/rdd/json,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@62dae245{/environment,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@4b6579e8{/environment/json,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@6fff253c{/executors,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@6c6357f9{/executors/json,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@591e58fa{/executors/threadDump,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@3954d008{/executors/threadDump/json,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@2f94c4db{/static,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@669513d8{/,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@3a1d593e{/api,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@285d851a{/jobs/job/kill,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@314b8f2d{/stages/stage/kill,null,AVAILABLE,@Spark}
+INFO  SparkUI:54 - Bound SparkUI to 0.0.0.0, and started at http://12J623S.mydomain.com:4040
+INFO  StandaloneAppClient$ClientEndpoint:54 - Connecting to master spark://176.14.100.110:7077...
+INFO  TransportClientFactory:267 - Successfully created connection to /176.14.100.110:7077 after 35 ms (0 ms spent in bootstraps)
+INFO  StandaloneSchedulerBackend:54 - Connected to Spark cluster with app ID app-20180828223816-0001
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/0 on worker-20180828221707-176.14.100.125-42178 (176.14.100.125:42178) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/0 on hostPort 176.14.100.125:42178 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/1 on worker-20180828222717-176.14.100.117-37298 (176.14.100.117:37298) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/1 on hostPort 176.14.100.117:37298 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/2 on worker-20180828222629-176.14.100.120-45386 (176.14.100.120:45386) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/2 on hostPort 176.14.100.120:45386 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/3 on worker-20180828222629-176.14.100.121-43346 (176.14.100.121:43346) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/3 on hostPort 176.14.100.121:43346 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/4 on worker-20180828222630-176.14.100.119-41350 (176.14.100.119:41350) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/4 on hostPort 176.14.100.119:41350 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/5 on worker-20180828222636-176.14.100.114-45065 (176.14.100.114:45065) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/5 on hostPort 176.14.100.114:45065 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/6 on worker-20180828222718-176.14.100.115-42930 (176.14.100.115:42930) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/6 on hostPort 176.14.100.115:42930 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/7 on worker-20180828222636-176.14.100.112-35929 (176.14.100.112:35929) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/7 on hostPort 176.14.100.112:35929 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/8 on worker-20180828222718-176.14.100.118-42680 (176.14.100.118:42680) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/8 on hostPort 176.14.100.118:42680 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/9 on worker-20180828221707-176.14.100.124-43803 (176.14.100.124:43803) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/9 on hostPort 176.14.100.124:43803 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/10 on worker-20180828222718-176.14.100.116-41357 (176.14.100.116:41357) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/10 on hostPort 176.14.100.116:41357 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/11 on worker-20180828222636-176.14.100.113-43664 (176.14.100.113:43664) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/11 on hostPort 176.14.100.113:43664 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/12 on worker-20180828222629-176.14.100.122-34652 (176.14.100.122:34652) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/12 on hostPort 176.14.100.122:34652 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/13 on worker-20180828221707-176.14.100.123-37211 (176.14.100.123:37211) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/13 on hostPort 176.14.100.123:37211 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/14 on worker-20180828221707-176.14.100.126-42803 (176.14.100.126:42803) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/14 on hostPort 176.14.100.126:42803 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/2 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/0 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/7 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/9 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/1 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/3 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/13 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/8 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/6 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/14 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/5 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/11 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/4 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/12 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/10 is now RUNNING
+INFO  Utils:54 - Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 54207.
+INFO  NettyBlockTransferService:54 - Server created on 12J623S.mydomain.com:54207
+INFO  BlockManager:54 - Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+INFO  BlockManagerMaster:54 - Registering BlockManager BlockManagerId(driver, 12J623S.mydomain.com, 54207, None)
+INFO  BlockManagerMasterEndpoint:54 - Registering block manager 12J623S.mydomain.com:54207 with 1989.6 MB RAM, BlockManagerId(driver, 12J623S.mydomain.com, 54207, None)
+INFO  BlockManagerMaster:54 - Registered BlockManager BlockManagerId(driver, 12J623S.mydomain.com, 54207, None)
+INFO  BlockManager:54 - Initialized BlockManager: BlockManagerId(driver, 12J623S.mydomain.com, 54207, None)
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@7dc51783{/metrics/json,null,AVAILABLE,@Spark}
+INFO  StandaloneSchedulerBackend:54 - SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
+INFO  SharedState:54 - Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir ('file:/C:/Users/myuser/eclipse-workspace/Test/spark-warehouse/').
+INFO  SharedState:54 - Warehouse path is 'file:/C:/Users/myuser/eclipse-workspace/test/spark-warehouse/'.
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@7a94b64e{/SQL,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@3e6f3bae{/SQL/json,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@34237b90{/SQL/execution,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@1d01dfa5{/SQL/execution/json,null,AVAILABLE,@Spark}
+INFO  ContextHandler:781 - Started o.s.j.s.ServletContextHandler@759d81f3{/static/sql,null,AVAILABLE,@Spark}
+INFO  StateStoreCoordinatorRef:54 - Registered StateStoreCoordinator endpoint
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/13 is now EXITED (Command exited with code 1)
+INFO  StandaloneSchedulerBackend:54 - Executor app-20180828223816-0001/13 removed: Command exited with code 1
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/15 on worker-20180828221707-176.14.100.123-37211 (176.14.100.123:37211) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/15 on hostPort 176.14.100.123:37211 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/15 is now RUNNING
+INFO  BlockManagerMaster:54 - Removal of executor 13 requested
+INFO  CoarseGrainedSchedulerBackend$DriverEndpoint:54 - Asked to remove non-existent executor 13
+INFO  BlockManagerMasterEndpoint:54 - Trying to remove executor 13 from BlockManagerMaster.
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/11 is now EXITED (Command exited with code 1)
+INFO  StandaloneSchedulerBackend:54 - Executor app-20180828223816-0001/11 removed: Command exited with code 1
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/16 on worker-20180828222636-176.14.100.113-43664 (176.14.100.113:43664) with 12 core(s)
+INFO  BlockManagerMaster:54 - Removal of executor 11 requested
+INFO  CoarseGrainedSchedulerBackend$DriverEndpoint:54 - Asked to remove non-existent executor 11
+INFO  BlockManagerMasterEndpoint:54 - Trying to remove executor 11 from BlockManagerMaster.
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/16 on hostPort 176.14.100.113:43664 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/7 is now EXITED (Command exited with code 1)
+INFO  StandaloneSchedulerBackend:54 - Executor app-20180828223816-0001/7 removed: Command exited with code 1
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/17 on worker-20180828222636-176.14.100.112-35929 (176.14.100.112:35929) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/17 on hostPort 176.14.100.112:35929 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/16 is now RUNNING
+INFO  BlockManagerMaster:54 - Removal of executor 7 requested
+INFO  CoarseGrainedSchedulerBackend$DriverEndpoint:54 - Asked to remove non-existent executor 7
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/17 is now RUNNING
+INFO  BlockManagerMasterEndpoint:54 - Trying to remove executor 7 from BlockManagerMaster.
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/5 is now EXITED (Command exited with code 1)
+INFO  StandaloneSchedulerBackend:54 - Executor app-20180828223816-0001/5 removed: Command exited with code 1
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/18 on worker-20180828222636-176.14.100.114-45065 (176.14.100.114:45065) with 12 core(s)
+INFO  BlockManagerMasterEndpoint:54 - Trying to remove executor 5 from BlockManagerMaster.
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/18 on hostPort 176.14.100.114:45065 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/18 is now RUNNING
+INFO  BlockManagerMaster:54 - Removal of executor 5 requested
+INFO  CoarseGrainedSchedulerBackend$DriverEndpoint:54 - Asked to remove non-existent executor 5
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/9 is now EXITED (Command exited with code 1)
+INFO  StandaloneSchedulerBackend:54 - Executor app-20180828223816-0001/9 removed: Command exited with code 1
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/19 on worker-20180828221707-176.14.100.124-43803 (176.14.100.124:43803) with 12 core(s)
+INFO  BlockManagerMasterEndpoint:54 - Trying to remove executor 9 from BlockManagerMaster.
+INFO  BlockManagerMaster:54 - Removal of executor 9 requested
+INFO  CoarseGrainedSchedulerBackend$DriverEndpoint:54 - Asked to remove non-existent executor 9
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/19 on hostPort 176.14.100.124:43803 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/19 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/14 is now EXITED (Command exited with code 1)
+INFO  StandaloneSchedulerBackend:54 - Executor app-20180828223816-0001/14 removed: Command exited with code 1
+INFO  BlockManagerMaster:54 - Removal of executor 14 requested
+INFO  CoarseGrainedSchedulerBackend$DriverEndpoint:54 - Asked to remove non-existent executor 14
+INFO  BlockManagerMasterEndpoint:54 - Trying to remove executor 14 from BlockManagerMaster.
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/20 on worker-20180828221707-176.14.100.126-42803 (176.14.100.126:42803) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/20 on hostPort 176.14.100.126:42803 with 12 core(s), 1024.0 MB RAM
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/20 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/0 is now EXITED (Command exited with code 1)
+INFO  StandaloneSchedulerBackend:54 - Executor app-20180828223816-0001/0 removed: Command exited with code 1
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor added: app-20180828223816-0001/21 on worker-20180828221707-176.14.100.125-42178 (176.14.100.125:42178) with 12 core(s)
+INFO  StandaloneSchedulerBackend:54 - Granted executor ID app-20180828223816-0001/21 on hostPort 176.14.100.125:42178 with 12 core(s), 1024.0 MB RAM
+INFO  BlockManagerMaster:54 - Removal of executor 0 requested
+INFO  CoarseGrainedSchedulerBackend$DriverEndpoint:54 - Asked to remove non-existent executor 0
+INFO  BlockManagerMasterEndpoint:54 - Trying to remove executor 0 from BlockManagerMaster.
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/21 is now RUNNING
+INFO  StandaloneAppClient$ClientEndpoint:54 - Executor updated: app-20180828223816-0001/10 is now EXITED (Command exited with code 1)
+INFO  StandaloneSchedulerBackend:54 - Executor app-20180828223816-0001/10 removed: Command exited with code 1
+INFO  BlockManagerMaster:54 - Removal of executor 10 requested
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I solved it. I just should set spark.driver.host option as mentioned in this link. Also if your program has some external jar files you should use setJar method and set path to those jar files as mentioned in that link.
+    
+    
+Title: Making Visual Studio UI smaller
+Description: 
+    
+    
+                    
+I am trying to make the UI of Visual Studio 2017 smaller, but I can't find any settings for that.
+
+I know I can resize the code-content, but I am looking for a way to make the Solution Explorer, Properties, Toolbar, etc. smaller.
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Go to Tools 
+Title: Inherit Viewcontroller in Swift when creating new files
+Description: 
+    
+    
+                    
+I Have created a custom Base Class in my Swift project that I would like to inherit in all the viewcontrollers I used in the app. The problem i see is in Objective-C when we create a new files it gives suggestions if you have created any custom class of yours and would like to inherit from them but in swift it didn't gave me any suggestion i have to create a class by extending  provided classes and then have to manually replace the extended class to my view controller. 
+
+Objective-c project 
+
+
+
+Qestion : why it is not giving me suggestion to subclass from the class that i've created in my project. is this feature is available in swift or not? or is there anything I miss?
+
+
+  Note: I had developed applications in Objective-C and this is the first time i'm using swift. 
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Just type manually subclass name without extension. (No .swift)
+
+OR
+
+class SSTableViewCell: ExpandingTableViewCell
+
+
+where SSTableViewCell is your class &amp; ExpandingTableViewCell is parent
+    
+    
+Answer 2: 
+
+    
+    
+You can just write your class name in the Subclass of: field, it doesn't matter if you get autocomplete there or not. Or you can just leave the subclass of set to UIViewController and then when file is created change from:
+
+class ViewController: UIViewController
+
+
+to 
+
+class ViewController: YourBaseClassViewController
+
+    
+    
+Title: Android Studio renders file content with unreadable characters
+Description: 
+    
+    
+                    
+Any file from any project I open is rendered with these weird unreadable characters.
+
+
+
+It seems only constant field names are displayed correctly, as can be seen in view ids scroll and resultados and the layout name activity_main.The rest of texts in the IDE are correctly rendered. But the file contents are displayed with these strange characters.
+
+However, when I copy and paste them somewehere else outside Andrid Studio, (for example, Notepad++ or Word) they are displayed correctly.
+
+I can't fix it any way! I've tried changing the file enconding, opening a new project, creating a new project, restarting and invalidating cache, rebooting my PC. Only thing I'm left to do is reinstalling Android Studio.
+    
+
+        
+Answer 1: 
+
+    
+    
+The problem was the font was corrupt. I remembered that I had recently reinstalled the Hack font on my Windows, and it seems there is some issue regarding the way you install it. You cannot copy the font files to the Fonts folder in Windows. You must use an installer provided by Hack developers and restart after installing.
+
+So just either change the font under File em/em
+Title: How to convert large text pasted from clipboard into a single string?
+Description: 
+    
+    
+                    
+I want to copy HTTP request's headers from Chrome to either of my Python editors (I am using Geany and Spider).
+
+In the editor, I want to treat the pasted text as a single string, so I am putting ' around it like this:
+
+'Accept:*/*
+Accept-Encoding:gzip, deflate, br
+Accept-Language:en-US,en;q=0.9
+Connection:keep-alive
+Cookie:CONSENT=YES+CH.de+V8; OGPC=19005936-2:19006965-1:19007018-1:; NID=134=DFX2Tsq7MTc9I99-OddiI1DXBW6KXfRgekXqACfJ62eFx6NlrwId4zoqrnZRqgO2GSrAgCtHM8Zt4v7rc56m6uNFhpDQZw2XOOM-6bEue2Kc9fA2POhFl6OdmnMattj8tadWOkd0IEH7KlYg1DRLURSQAqth-zVuVAxgzG9BuUna05kmjAhgcALy18_Mox7gyrhsOeiZ5ridT86ztpXMtA; DV=Qxe7uN9gVY0RECjFbPp1FKB3_LLEShY; 1P_JAR=2018-7-18-7
+Host:www.google.ch
+Referer:https://www.google.ch/
+User-Agent:Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.119 Safari/537.36
+X-Client-Data:CJG2yQEIorbJAQjBtskBCKmdygEIqKPKAQ=='
+
+
+This however results in SyntaxError: EOL while scanning string literal on the first line.
+
+Is this because of spaces or newline characters?
+
+It works if I manually put everything into one line, but is there any way to avoid this manual work?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  Is this because of spaces or newline characters?
+
+
+Yes, using single ' or double " quotes in python doesn't let you write a string longer than one line. If you want to write a multiline string, use triple-quotes:
+
+'''Accept:*/*
+Accept-Encoding:gzip, deflate, br
+Accept-Language:en-US,en;q=0.9
+Connection:keep-alive
+...'''
+
+
+
+
+Alternatively you can use string concatenation methods. But then you'll have to write the linebreaks explicitly (which makes this method inferior if you plan to copy-paste):
+
+request = (
+    'Accept:*/*\n'
+    'Accept-Encoding:gzip, deflate, br\n'
+    'Accept-Language:en-US,en;q=0.9\n'
+    'Connection:keep-alive\n'
+    ...
+)
+
+    
+    
+Title: Tree of files with vertical lines in PhpStorm
+Description: 
+    
+    
+                    
+Ho to make tree of files with vertical lines in PhpStorm for navigation in project?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+There is no previous Windows GUI theme since 2018.1. JetBrains have made their own Windows theme that follows modern MS guidelines (e.g. Windows 10 look alike) and dotted tree lines is not there (as well as bigger spacing between elements etc).
+
+I suggest following these tickets (star/vote/comment) to get notified on any progress. As it stands right now some improvements in this area are expected only for 2018.3 version or later.
+
+
+https://youtrack.jetbrains.com/issue/IDEA-185538
+https://youtrack.jetbrains.com/issue/IDEA-165101
+
+    
+    
+Title: kdevelop: comment on same line as code
+Description: 
+    
+    
+                    
+When I type
+
+some C++ code //
+
+
+and any other symbol comment auto moves to previous line, so
+
+some C++ code // comment to code
+
+
+turns into
+
+// comment to code
+some C++ code
+
+
+How can I disable it?
+    
+
+        
+Answer 1: 
+
+    
+    
+Configure Source Formatter, don't forget to check both kate instruction boxes ( add and override indent mode). Then reformat your files. Now everything is fine!
+    
+    
+Title: AppCode Indent After Comment
+Description: 
+    
+    
+                    
+I'm using AppCode for Objective-C development. It seems like one of the recent updates has changed the behavior of how indents work after a comment.
+
+Now, when I add a comment and then hit return to enter code on the next line I get this:
+
+
+
+Hitting return again will keep the same level of indent, and hitting delete just returns the cursor to the comment line.
+
+What I want is:
+
+// Comment
+self.theCodeStartsHere;
+
+
+which I thought used to be the default.
+
+I have also noticed that when I try to break a statement into multiple lines they no longer line up on the colons. I'm not sure if it's related, but the behavior seemed to start around the same time.
+
+Any help would be appreciated!
+    
+
+        
+Answer 1: 
+
+    
+    
+After posting on YouTrack, this issue seems to be fixed in AppCode 2018.2 EAP.
+
+EDIT: YouTrack Issue Link.
+    
+    
+Title: How to reopen/show Time Tracking panel in JetBrains IDE?
+Description: 
+    
+    
+                    
+I don't understand how to I close content at panel, but now I see this:
+
+
+
+And now I don't understand how to normal show this panel?
+    
+
+        
+Answer 1: 
+
+    
+    
+Just reopen IDE. Thanks for all.
+    
+    
+Title: Unable to find package file warning in Intellij and Perl plugin
+Description: 
+    
+    
+                    
+I've the Intellij ultimate edition with the Perl installed.
+
+I'm getting the title warning for all my *.pm files for keywords like warning, strict, constant, as you can see from my screenshot here:
+
+
+
+Why this happens?
+    
+
+        
+Answer 1: 
+
+    
+    
+I had this issue until I ensured that my local perl was properly configured in the IDE preferences.
+
+
+File 
+Title: VB6 IDE Breakpointing at weird Locations, and Jumping to Random Lines with &ldquo;Step Into&rdquo;
+Description: 
+    
+    
+                    
+I've been experiencing some weird things in the VB6 IDE. When I set a breakpoint on one of the functions, The IDE Pauses on the wrong Sub. If I "Step Into" and follow the code. It "Appears" to be running the correct sub, based on the property gets being accessed. If I then click Stop VB6 Crashes.
+
+I can't Post the entire source as its closed. 
+But here's the Classes that are encountering the issue. 
+Along with this Video Showing the bug.
+
+In the video clip you can see, There is a breakpoint set on the "DoAutoSize" Sub. However the IDE Pauses on "OnChange". And Clicking the "Step Into" button Doesn't seem to follow the code properly.
+
+The only thought I've had is that its related to the "Implements" Statement and that the Class that's Implementing Igui_Control isn't properly implemented.
+    
+
+        
+Answer 1: 
+
+    
+    
+You will need to reinstall as that is the only way to stop this. 
+    
+    
+Title: Does Euphoria language have a shell?
+Description: 
+    
+    
+                    
+I'm studying/learning Euphoria language because it seems the most adequate for a new project.
+I'm used to test commands on the shell when writing Python and Scheme.
+I have been trying to find a shell on OpenEuphoria without success.
+The default interpreter, eui, always ask for a file to run.
+I also tried WEE and RedyCode and didn't find any sign of a shell.
+The question is the one in the title: Does Euphoria language has a shell?
+
+P.S.: It also does not seem to be an Euphoria language group here, on Stack Overflow... I cannot even tag it. I suppose that I might not get an answer, but I'll try anyway. Thank you.
+    
+
+        
+Answer 1: 
+
+    
+    
+No, sorry.
+
+I once made a start on one for Phix and just spent the last 10 minutes resurrecting that, so it is available on my machine, but not uploaded anywhere yet. However it is severely limited, one-shot fashion, eg you cannot declare a variable and then set it!
+
+Probably best to discuss this further on the Euphoria language forum
+    
+    
+Title: How to setup autocomplete for system packages
+Description: 
+    
+    
+                    
+friends!
+I use Jetbrains DataGrip 2017.3.7 Build #DB-173.4674.7, built on February 27, 2018
+for oracle pl sql develop. But I cant to setup autocomplete for system packages, as DBMS* and others.
+
+How I can do it?
+    
+
+        
+Answer 1: 
+
+    
+    
+Add SYS and SYSTEM to the database tree.
+And wai a little bit :)
+
+
+    
+    
+Title: XCode, Visual Studio, and GitHub with C++
+Description: 
+    
+    
+                    
+I just learned the basics for git bash and GitHub, and I want to start using a repository for a simple console-based text game in C++ that I will be making. I have a MacBook laptop that I use to code on the go in XCode, and when I am home I use my Windows desktop in Visual Studio.
+
+My question is "How do I run a C++ program from GitHub for both of these IDE's after I have cloned it?"
+
+Should I just get the same IDE for both computers, like Eclipse? I've done quite a bit of research, but everything seems super complicated. I am hoping that there's an easier way, as I'm just a hobby coder. I'm definitely willing to learn; I just hate copying and pasting commands without understanding what they do. Any help is appreciated :)
+
+Edited: Clarified that I know how to clone. The running part is what I don't know how to do.
+    
+
+        
+Answer 1: 
+
+    
+    
+There really are several ways to do what you're asking.
+
+
+Store the project files with your repo, usually in a dedicated folder
+
+
+msvc (with version)
+xcode
+makefile
+qt creator
+kdevelop
+etc....
+
+generalize the c++ with another build-system like CMake
+
+
+The first option will/can get annoying but it is usually where most people starting to learn to program go. It isn't too bad so long as you realize you'll probably have problems sharing your project as no one has 'quite' the same exact setup as you.
+
+The second option is where most projects usually end up. You need to learn the intricacies of something like CMake but once you learn, projects can be made for almost any IDE/environment.
+    
+    

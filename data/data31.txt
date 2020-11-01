@@ -1,0 +1,2511 @@
+Title: Is the Akka Actors library installed with the Scala IDE for Scala 2.10?
+Description: 
+    
+    
+                    
+I have recently begun exploring Scala, and have started by installing the Scala IDE in my copy of Eclipse (Indigo). I initially installed the Scala IDE for Scala 2.9, but then noticed that there was a newer release available for Scala 2.10. Installing the newer plug-in over the older one seems to have worked, but...
+
+Scala 2.10 has deprecated the older Scala Actors in favor of Akka Actors. Thus I'm trying to add an import to my toy Scala project:
+
+import akka.actor.Actor
+
+
+This is flagged in the IDE with the error
+
+not found: object akka
+
+
+When I look at my Scala project's properties, I indeed do not see any of the akka-* jar files that are mentioned in the Akka documentation.
+
+Do they need to be downloaded and installed separately, even though the Scala IDE plug-in installed the rest of Scala 2.10? Or have package names changed as part of integrating Akka actors in place of the older Scala Actors? (The documentation doesn't say so, but the Scala 2.10 release is fairly recent...)
+    
+
+        
+Answer 1: 
+
+    
+    
+The Akka artifacts are not bundled with the Scala IDE (yet), you will have to add “akka-actor_2.10” and friends to your project’s dependencies.
+    
+    
+Answer 2: 
+
+    
+    
+No, they aren't packaged together.  
+
+The easiest way to make sure the Eclipse IDE can see your dependencies (Akka, and anything else referenced in your build.sbt file) is to let sbt do it using the sbteclipse plugin.  Here's the instructions I wrote up for co-workers:
+
+
+
+Install the "sbteclipse" plugin
+
+This plugin will allow sbt to add the files/references that Eclipse needs to find all the dependencies that you specify in your build.sbt.  Otherwise, you will be able to use the IDE, but you will seek all kinds of "object not found" errors.
+
+Just make sure the plugin is being added in your global plugins.sbt file.  This file (and it's path) may not exist so you may need to create it at the following location:
+
+~/.sbt $ cd ~/.sbt/0.13/
+~/.sbt/0.13 $ mkdir plugins
+
+
+Edit/create the plugins.sbt file:
+
+~/.sbt/0.13 $ vi plugins/plugins.sbt
+
+
+then add this line (it may be the only line in the file):
+
+addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.5.0")
+
+
+Running sbteclipse
+
+To use this, you just navigate to a scala project on the commandline and run the following.  If you already had Eclipse open, go ahead and restart it.
+
+/sites/ewuser (master)$ sbt eclipse
+
+
+References: 
+
+
+How to initialize a new Scala project in sbt, Eclipse and github
+Official sbteclipse plugin
+
+    
+    
+Answer 3: 
+
+    
+    
+Download the akka for eclipse from below location 
+
+http://downloads.typesafe.com/akka/akka_2.11-2.4.1.zip?_ga=1.167921254.618585520.1450199987
+
+extract the zip 
+
+add dependencies from the lib folder into project
+    
+    
+Title: Delphi Designer, Is component inherited?
+Description: 
+    
+    
+                    
+I'm writing a custom component editor, essentially similar to TActionList editor in that it allows creation of sub components.
+Editor has  buttons to add/delete components.
+
+Now, I'd like to find out if selected component is inherited, so that I can disable the delete button.
+I haven't found any such member in IDesigner or related interfaces.
+
+If I just go ahead and delete by Designer.DeleteSelection(True); then I get an exception:
+
+
+  Selection contains a component, xxx, introduced in an
+  ancestor and cannot be deleted.
+
+
+Which is not too bad, but I'd prefer to disable the delete button in the first place.
+    
+
+        
+Answer 1: 
+
+    
+    
+Ok, so apparently there is a way, by checking the TComponent.ComponentState for csAncestor, so:
+
+
+  csAncestor in ComponentState
+
+
+And it's documented:
+
+
+  csAncestor - The component was introduced in an ancestor form. Only set if csDesigning is also set.
+
+    
+    
+Title: How do you automagically minify your JS and CSS on OS X or in Webstorm?
+Description: 
+    
+    
+                    
+I use two different IDE's based on what I'm doing. My primary IDE is Visual Studio, whereby I use Chirpy to mash and minify my code. It works flawlessly and I love it. Problem is that when I'm not on my Windows box, I don't have access to it.
+
+When not using Visual Studio, I'm usually writing Javascript apps in Webstorm on my Macbook Pro. Here in lies the problem. I haven't found a Webstorm plugin or any other app that I can configure to watch my scripts and mash/minify them.
+
+How do you Mac users mash/minify your JS and CSS at design time with minimal effort?
+    
+
+        
+Answer 1: 
+
+    
+    
+For those who have now updated to WebStorm 6, this functionality is in-built. Simply go to File (or whatever the Mac equivalent is) -
+Answer 2: 
+
+    
+    
+I use lessc and uglifyjs to concatenate and minify my css and js files. Here's a makefile from Twitter Bootstrap that I used a modified version of:
+
+https://github.com/twitter/bootstrap/blob/master/Makefile
+
+It's simple since all I do is type make in the command line whenever I want to compile. 
+    
+    
+Answer 3: 
+
+    
+    
+You could use YUI Compressor without Command Line with these little Apps:
+
+
+http://www.webmaster-source.com/minimus/ – free
+http://www.matmartinez.net/delivery/ – free
+
+    
+    
+Answer 4: 
+
+    
+    
+I'm neither a Mac nor Webstorm user, but this might still be relevant. 
+
+For javascript I use the closure compiler as part of an upload script to minify. It doesn't monitor the files, it runs when I run the upload (a bash file).
+
+If you wanted to keep it all in the IDE, it looks like Webstorm has an Ant plugin  http://plugins.intellij.net/plugin/?webide&amp;id=4526 that you could use to execute the closure compiler.
+
+If you can find a command line css minifier then you could put that in the Ant script as well.
+    
+    
+Answer 5: 
+
+    
+    
+I use Minify. It's on the Mac App Store.
+
+I developed it to support my own workflow. minifyapp.com
+    
+    
+Title: Netbeans IDE - Automatic Suggestion while typing
+Description: 
+    
+    
+                    
+hi i am using netbeans 7 IDE for java programming , and i am acutally a C# programmer and in visual studio whenever i type anything it displays a dropdown menu with suggestions , i want that to be enabled on netbeans IDE without having to press CTRL + Space to show the dropdown menu 
+
+thanks in advance .
+    
+
+        
+Answer 1: 
+
+    
+    
+By default, Netbeans gives suggestion only when you put a period (i.e. for class and object fields and methods).
+
+However, you can customize auto-completion by going to
+
+Tools 
+Answer 2: 
+
+    
+    
+Make sure in the Code Assistance (e.g., Tools → Options → C/C++ → Code Assistance), in case of C/C++, you added your compiler's include directories.
+
+You can find the compiler you are using in Project Properties → Build → X Compiler
+    
+    
+Answer 3: 
+
+    
+    
+a common response to your answer suggesting the automatic code completion in netbeans IDE is as follows,
+
+
+Goto Tools
+Select options
+then click on code completion
+Select neccessary checkboxes you want and then click on apply then click ok.  
+
+    
+    
+Title: Working IDE for Rails3 on Windows
+Description: 
+    
+    
+                    
+I´m having a hard time configuring NetBeans for Rails3 in Windows. I got a lot of problems, many o then reported even here.
+
+So my question is: which of the following IDEs are best situated for Rails3 in a Windows Box right now:
+
+RubyMine
+
+Komodo IDE 
+
+RadRails
+
+Look, i dont want to start a discussion (kinda x vs y). I just want to know from people who already are developing in Rails3 with Windows what is the better choice in the long run.
+
+Thanks!
+
+EDIT
+
+Issues with NetBeans
+
+Issue 1
+
+Issue 2
+
+Note: Im using RubyMine by now and facing no problems
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm using
+RubyMine.
+
+You can try it for free for 30 days. Before my time with RubyMine, I've used NetBeans for Rails too. But I have to say RubyMine is the money worth.
+    
+    
+Answer 2: 
+
+    
+    
+I like Redcar. Very beautiful IDE, similar TextMate
+    
+    
+Answer 3: 
+
+    
+    
+When I develop Rails on Windows, I use Aptana RadRails or Aptana Studio (pretty much the same thing).   They are a little bit heavyweight, but I like the Eclipse interface in general.  It often does better at syntax highlighting and autocorrecting than TextMate and has vastly better keyboard shortcuts.  The TextMate/Mac fanboys are probably going to come after me for saying that.  If you have plenty of memory to spare, Aptana is the way to go.
+    
+    
+Answer 4: 
+
+    
+    
+I use RubyMine, but their Java IDE has a free community edition with a Ruby plugin, which does have of what RubyMine does, FWIW.
+
+Though to be honest, you will probably get a lot of responses saying no IDE... VIM, Emacs etc...
+    
+    
+Answer 5: 
+
+    
+    
+Aptana looks good. But I think RadRails supports only Rails 2. Aptana studio 3 Beta has a full fledged Rails 3 interface. 
+
+Also Aptana solves many RoR installation issues in Windows (which can get very messy) . So I think aptana is the way to go
+    
+    
+Answer 6: 
+
+    
+    
+I like RubyMine, as it's pretty fast and does a great job.
+    
+    
+Answer 7: 
+
+    
+    
+I wrote up a brief description of some popular editors as a part of my P2PU course.  Scroll to "Choosing a Programmer's Editor" on the week 1 curriculum.
+    
+    
+Answer 8: 
+
+    
+    
+Starting with an IDE can definitely get you started, especially one like RubyMine since it's mostly cross platform.
+
+However, learning an editor like Vim or Emacs has other benefits like being able to be completely cross-platform.  More importantly, they're lightweight both in disk space and in memory usage.  While using an IDE might assist in you learning a language (because you get syntax completion, documentation, etc), learning an editor can lead to the kind of power usage that one using an IDE can only dream of (but it will take a while to get to that point on something like Vim or Emacs).
+    
+    
+Answer 9: 
+
+    
+    
+e-texteditor would be a good choice.
+    
+    
+Title: Windows application using Python
+Description: 
+    
+    
+                    
+I am used to Windows application development using C# .Net. Now that I got interested in Python I need to know the best way to create a Windows application that has stuffs like minimizing to System tray, nice ide like visual studio that has GUI way of developing apps. Any suggestions pls?
+    
+
+        
+Answer 1: 
+
+    
+    
+Check out this list on GUI programming with Python.
+
+Scroll down to GUI Design Tools and IDEs. Take your pick, there are lots of choices.
+
+Which one is the best? That depends on what you want to do. But for the purposes you mentioned, all should suffice. 
+    
+    
+Answer 2: 
+
+    
+    
+For C# programmer is IronPython good choice. 
+    
+    
+Answer 3: 
+
+    
+    
+I like WingIDE for python. There is an eclipse version too.
+    
+    
+Title: c#: how do i create a program that will run code that i punch into a text box?
+Description: 
+    
+    
+                    
+i was wondering how exactly I can create a small app that will accept my input and run it as code. same light as building an IDE, but I dont want to go that far, but I do want it to use the FCL. So like if I had a text box and i punched in:
+
+string x = "hello";
+int myLength;
+
+myLength = x.length;
+
+
+Then hit a submit button, it would compile this and run it into an output window. Is there a pretty simple way to do this? Or am i going to have to right a pretty involved method that breaks this all up? Sorry if i'm not being totally clear, I wasn't exactly positive on how to ask this question lol. Really what I'm getting at, is I want to create sort of a code "calculator" tool where I can punch in some simple snippets and test what it is returning without having to build a full class and compiling just to test something simple. can anyone point me in the right direction?
+    
+
+        
+Answer 1: 
+
+    
+    
+Here is a good link on the CompilerServices namespace:
+
+http://www.codeproject.com/KB/vb/DotNetCompilerArticle.aspx
+    
+    
+Answer 2: 
+
+    
+    
+You could use CSScript
+
+http://www.csscript.net/
+
+From their web site:
+
+dynamic script = CSScript.LoadCode(@"using System;
+                                 public class Script
+                                 {
+                                     public void SayHello(string greeting)
+                                     {
+                                         Console.WriteLine(greeting);
+                                     }
+                                 }")
+                                .CreateObject("*");
+script.SayHello("Hello World!");
+
+    
+    
+Answer 3: 
+
+    
+    
+I think what you're looking for is LINQPad. It'll let you run small bits of code without the overhead of making little one-off console apps to test things. Just for fun I wrote the following that'll compile and execute whatever is in the textbox.
+
+void Main()
+{
+    TextBox textBox = new TextBox()
+    {
+        Multiline = true,
+        Size = new Size(200, 60),
+        Text = @"string x = ""hello"";int myLength;myLength = x.Length;MessageBox.Show(myLength.ToString());"
+    };
+    Button button = new Button()
+    {
+        Location = new Point(0, 60)
+    };
+    button.Click += new EventHandler(delegate(object sender, EventArgs e)
+        {
+            var csc = new CSharpCodeProvider(new Dictionary&lt;string, string&gt;() { { "CompilerVersion", "v3.5" } });
+            var parameters = new CompilerParameters(new[] { "mscorlib.dll", "System.dll", "System.Windows.Forms.dll" }, "foo.exe", true);
+            parameters.GenerateExecutable = true;
+            CompilerResults results = csc.CompileAssemblyFromSource(parameters,
+            @"
+            using System.Windows.Forms;
+
+            namespace ConsoleApplication
+            {
+                class Program
+                {
+                    static void Main(string[] args)
+                    {
+                        " + 
+                        textBox.Text 
+                        + @"
+                    }
+                }
+            }
+            ");                
+            Process proc = Process.Start("foo.exe");
+        }
+    );
+
+    Form f = new Form
+    {
+        Controls = { textBox, button }
+    };
+    Application.Run(f);
+}
+
+
+I actually wrote it in LINQPad but it would be very easy to get running in Visual Studio
+    
+    
+Answer 4: 
+
+    
+    
+You can start by taking a look at this previous SO post.
+    
+    
+Answer 5: 
+
+    
+    
+In C# this won't be so easy, because C# is a compiled language, not an interpreted language.
+
+In an interpreted language, it's fairly easy to parse raw-text as the language, and see the results.
+
+Maybe you'd be happier typing in JavaScript or Perl and interpreting that?
+    
+    
+Answer 6: 
+
+    
+    
+In addition to the answers already given, PowerShell allows you to run C# code on the fly (or from a file, if you wish). 
+    
+    
+Title: Interactive terminal in VIM
+Description: 
+    
+    
+                    
+I'm using Vim for editing source code, but I would also like to have a terminal embedded in vim's window (just like in Kate, you know). 
+
+Now I have seen the vimsh plugin that turns a vim buffer into an interactive terminal, but I don't like 2 things about it: 
+
+
+It opens automatically at startup. Can I disable it and invoke the terminal with a special command whenever I wish?
+It splits the window in two and occupies the top window, but I would like it to occupy the bottom window. Can this be arranged?
+
+
+PS: I'm not exactly a vim guru :)
+    
+
+        
+Answer 1: 
+
+    
+    
+Maybe this is what you want: Conque Shell - VIM Plugin
+    
+    
+Answer 2: 
+
+    
+    
+There's also an older patch that you can apply. It requires recompilation of the VIM source code though.
+
+
+http://www.wana.at/vimshell/
+
+    
+    
+Answer 3: 
+
+    
+    
+Maybe I am not going to reply exactly to your question but I'll propose anyway a different approach on working with Vim and the terminal.
+
+The first approach is to run shell commands directly from vim in command mode prepending them with a "!":
+
+:!ls
+
+
+will run the shell ls command and display you the output in a temporary window. This is useful if you just want to run a single or few commands.
+
+If you want to mess around longer I suggest to suspend your vim session with Ctrl-z, work in the shell and issue fg as your last command to get back to vim.
+
+Hope it helps you.
+    
+    
+Answer 4: 
+
+    
+    
+Another option you could try is using tmux/screen to split your terminal, so that you can then run vim in one pane and have your shell in another. I also liberally use ControlZ to drop into a shell from vim and then fg to get back to vim after finishing with the shell.
+    
+    
+Title: IDE Suggestion for python and javascript
+Description: 
+    
+    
+                    
+I am using python for web programming and javascript heavily. Currently, i am using NetBeans 
+but i am looking for another IDE. NetBeans is not very good while programming with python and javascript. Any suggestion?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Komodo has support for both Python and Javascript. 
+JetBrains' PyCharm is good for Python but I don't think and it supports Javascript.   
+If you don't mind using Eclipse then use Pydev for Python and get a suitable plugin for Javascript. 
+(Thanks @deif) There is also Aptana. Aptana is based on Eclipse which means that it will support PyDev. It has better JS support too.
+Update You probably know this, but I'll say it for the record. Don't forget the classic editors viz. Emacs and Vi(m). They have a steeper learning curve compared to the other editors listed above but the rewards of mastery are exponentially bigger. 
+
+    
+    
+Answer 2: 
+
+    
+    
+You could try  the version of eclipse for javascript and just add the pydev plugin for python development.
+    
+    
+Answer 3: 
+
+    
+    
+PyCharm (and other IDEs on IDEA platform) is brilliant IDE for python, js, xml, css and other languages in webdev stack.
+    
+    
+Answer 4: 
+
+    
+    
+I use Eclipse with Pydev (Python) and Aptana (Javascript) plugins
+    
+    
+Answer 5: 
+
+    
+    
+It's not quite IDE, but on MacOSX i'm using TextMate, it have many extensions which makes it very powerful.
+    
+    
+Answer 6: 
+
+    
+    
+For web programming I used Espresso, it only work on Mac but it is quite good,this one is an IDE.
+
+I don't think the rest classify as an IDE.
+
+For python I use sublimetext2 because it can be customize and has a great GUI feel.
+
+I used to use notepad++ don't really suggest it.
+
+I think if you are asking for efficiency use vim. 
+    
+    
+Title: How to detect if file in IDE is being edited using Open Tools API
+Description: 
+    
+    
+                    
+I made a small IDE plug-in using Open Tools API that accesses ClearCase. It has menu items "Check In", "Check Out", etc. It works OK but I want it to check out a read-only file automatically if I start typing in IDE editor or if I attempt to save the file. Do you think this is possible?
+
+I tried a few things but gave up eventually. IOTAEditorServices.KeyboardServices has AddKeyboardBinding method which looked promising. Using it I added a notifier with binding type btPartial (and later tried btComplete) and the plug-in started detecting some shortcut key presses but not all keyboard events, far from it... Any ideas would be much appreciated!
+    
+
+        
+Answer 1: 
+
+    
+    
+I think a "cleaner" way is to hook up a IOTAEditorNotifier to each editor and have your IOTAEditor.Modified method called by the IDE whenever the contents of the editor is modified, whether by keyboard, mouse or programmatically from another plugin.
+
+Here's an example which registers an IOTAIDENotifier to be notified of files being opened in the IDE so it can register its IOTAEditorNotifier instances.
+    
+    
+Answer 2: 
+
+    
+    
+I must be possible somehow: we use SourceConexion (http://www.epocalipse.com/scx.htm) here, which auto checks-out the file before you edit the source or change the form.
+
+JVCS has IDE integration support, it is open source, maybe they have implemented this too:
+http://jedivcs.sourceforge.net/
+    
+    
+Title: Delphi IDE treating TFrame as if it were a Form
+Description: 
+    
+    
+                    
+Every once in a while when I am tweaking my TFrame classes (adding properties, methods, etc), the IDE gets confused and acts as if it thinks the frame is a form, complete with header/caption, borders, etc.  Yet, clearly the class is declared as a TFrame descendent.  Any ideas as to what causes this, how to prevent, and how to fix?  
+
+I'm using Delphi 2007 Pro.  Also note (if it matters), the TFrame descendents are typically registered with the IDE (i.e. on the palette) via a design-time package.
+
+
+
+Later: Additional "specifics": The frame that I'm having this problem with at the moment is, visually, a VERY basic TFrame (only change from brand new TFrame is size, and background color).  
+
+Here's its class declaration:
+
+TBasePanel = class(TFrame)
+  private
+    FPanelManager: TPanelManager;
+    procedure SetPanelManager(const Value: TPanelManager);
+  protected
+    procedure Connect; virtual; abstract;
+    procedure Disconnect; virtual; abstract;
+    procedure Refresh; virtual;
+    procedure Requery; virtual; abstract;
+  published
+    property PanelManager: TPanelManager read FPanelManager write
+        SetPanelManager;
+
+
+This frame is used as a base class for a number of others.  I am usually editing it directly from the BPL project it belongs to (because all of these frames install to the palette), rather than as part of an EXE project, with related Forms open etc.  
+
+Also, "Embedded designer" is checked in Tools -/pp/p/div
+Answer 1: 
+
+    
+    
+I have encountered the same problem. The following steps solved the problem for us, it might also work for you:
+
+
+in the IDE: close all forms that use the frame
+open the frame, view as text (*.dfm)
+the dfm probably begins with object MyFrame: TMyFrameClass
+change this to inherited MyFrame: TMyFrameClass
+
+
+I don't know what caused the problem.
+    
+    
+Answer 2: 
+
+    
+    
+Perhaps you had unchecked the 'Embedded designer' check box? (Tools | Options | Environment Options | VCL Designer). Then, indeed, your frame is shown at design time as a form (with caption, border etc.). Also a concrete code of your problematic TFrame descendant or more details about your case would help.
+    
+    
+Answer 3: 
+
+    
+    
+As far as I know, you have to have both the form and the frame open in the editor when you edit the frame. Else there can be update problems. Although I haven't seen this one.
+
+But I gave up on frames a long time ago because I did not find them very reliable.
+
+Right now I only use them for prototyping, creating a custom component (derived of a panel with the apropriate controls on it). 
+    
+    
+Answer 4: 
+
+    
+    
+You may have to register custom module to the IDE
+But your additional properties won't work well unless they are in ancestor class.
+    
+    
+Answer 5: 
+
+    
+    
+I have encounter a lot of problems with TFrame and finally came to such workaround that solves all my problems: I create and design frames visually, but use them only by hand-coding.
+
+As a side effect my applications became smaller, because of less dfm-s.
+    
+    
+Title: How to enable vim mode in RStudio
+Description: 
+    
+    
+                    
+Has anyone been able to enable or use vim mode in RStudio? I'm using a new version of RStudio, (3.3.2 (2016-10-31)). The only instructions are from three or four years ago, and the screenshot of the GUI is different than what I use. (tools-
+Answer 1: 
+
+    
+    
+Here is what RStudio support team says:
+
+Switching to Vim Editing Mode
+
+The option is under options-
+Title: How to supress &#39;star imports&#39; warnings from Spyder IDE?
+Description: 
+    
+    
+                    
+While working on Spyder and importing some libraries as:
+
+from OpenGL.GL import *
+
+
+I get this waning message at every line containing functions from those libraries:
+
+somefunction may be undefined or defined from star imports
+
+
+The warnings are harmless but it is quite annoying to see all my code underlined in yellow. Is there any way to supress specifically those warnings?
+    
+
+        
+Answer 1: 
+
+    
+    
+this seems to work for me
+
+from OpenGL.GL import * # analysis:ignore
+
+    
+    
+Title: Unresolved reference with scapy
+Description: 
+    
+    
+                    
+I am working on a network tool that I write in python using scapy.
+As IDE I am using Pycharm.
+My Code works. So if I run it, everything works just as intended.
+
+My problem is that PyCharm is giving me some errors.
+It marks every use of IP, TCP, Ether, ... as Undefined Reference to ...  
+
+The relevant parts of my Code look like this  
+
+#!/usr/bin/env python
+from scapy.all import *
+
+...  
+...  
+
+syn = IP(src=src_ip, dst=dst_ip) / TCP(sport=src_port, dport=dst_port, seq=src_seq, flags="S")
+
+...
+
+
+I tried many things I found using google, like adding my src folder as source root, I refreshed all caches I could find and restarted PyCharm dozens of times, but nothing worked...  
+
+Since the code works it's a minor problem, but still I'd like to have my IDE working as intended  
+
+I am working under MacOS and I use a Virtual Environment
+    
+
+        
+Answer 1: 
+
+    
+    
+This is a PyCharm issue. Scapy uses dynamic loading (using importlib) to load many modules / custom modules, that pycharm does not detect. This allows the users to select which layers they want to have loaded.
+
+The workaround is to import whatever you need from their related scapy file, without using all. It is cleaner but longer to do. Or you can use "add an exception" in your IDE, if you’re not looking for something clean.
+
+Here are a few useful modules
+
+
+scapy.layers.inet where you can get IP, TCP..
+scapy.layers.inet6
+scapy.layers.dns
+scapy.sendrecv has srp, sr, sr1, sendp, send...
+scapy.supersocket to directly access scapy’s sockets
+scapy.layers.l2 which has Ether, ARP..
+scapy.layers.dot11 for 802.11 stuff
+scapy.utils for wrpcap, rdpcap...
+scapy.config for the conf object (which has properties such as conf.route or conf.route6)
+
+
+What I advise to do is to open the Scapy shell (or import from scapy.all import * in a console) and check from which module a layer/function is by using help(...)
+    
+    
+Answer 2: 
+
+    
+    
+Had the same issue, try importing this way:
+
+from scapy.layers.inet import IP, UDP, wrpcap, Ether
+
+
+it worked for me.
+    
+    
+Title: IntelliJ IDEA won&#39;t load Groovy found on my disk
+Description: 
+    
+    
+                    
+Hi I lately wanted to start developing in Groovy but when I try IntelliJ IDEA it won't load Groovy cause it says:
+
+
+  Looks like Groovy distribution in specified path is broken. Cannot
+  determine version.
+
+
+Whats going on I even tried some older release and it didn't work either :( Did someone have same problem or knows how to work that out?
+    
+
+        
+Answer 1: 
+
+    
+    
+It's a known issue:
+
+
+IDEA-170022 Cannot create Groovy project, because cannot create Groovy library (2.4.10 version)
+
+
+As a workaround you can use Groovy 2.4.9 or rename groovy-2.4.10.jar to groovy-2.4.9.jar.
+
+The problem is fixed for IntelliJ IDEA 2017.1.1 and 2016.3.6 versions.
+    
+    
+Answer 2: 
+
+    
+    
+Ive changed groovy-x.x.x.jar to groovy.jar and it works in IntelliJ 2016.1.2
+    
+    
+Answer 3: 
+
+    
+    
+Changing groovy-x.x.x.jar to groovy.jar solved my issue as well, I am using Intellij Idea 2017.2.2 with Groovy SDK groovy-2.5.0-beta-1
+    
+    
+Answer 4: 
+
+    
+    
+Looks like there is an issue with the IntelliJ! This works by changing the jar. Thanks for sharing this. Just adding more bits. 
+
+Just in case, the jar is in the lib folder. I've downloaded the groovy-2.4.13 and rename the jar from /groovy-2.4.13/lib/groovy.2.4.13 to /groovy-2.4.13/lib/groovy
+    
+    
+Title: Pycharm: How to adjust color of variable/syntax highlighting?
+Description: 
+    
+    
+                    
+I'm not entirely sure if it's called syntax highlighting, but when I have my cursor over certain words in the editor, it will highlight other occurrences of it. The problem is, with the theme I'm using (warm neon), the highlighting is quite blinding on my screen. To be clear, I'm not talking about selecting text with the cursor, I mean when I have my cursor in the middle of certain words, it will change the background and font color of that word, and do so with other occurrences.
+
+How do I adjust the color? I can't seem to figure it out in Preferences.
+    
+
+        
+Answer 1: 
+
+    
+    
+These are defined in the the Colors and Fonts dialog.
+
+Go to File -code/code
+Answer 2: 
+
+    
+    
+Configuring Colors and Fonts
+
+With PyCharm, you can maintain your preferable colors and fonts layout for syntax and error highlighting in the editor, search results, Debugger and consoles via font and color schemes.
+
+PyCharm comes with a number of pre-defined color schemes. You can select one of them, or create your own one, and configure its settings to your taste. Note that pre-defined schemes are not editable. You have to create a copy of a scheme, and then change it as required.
+
+You can view how the new scheme looks in the editor. To do that, just click Apply without closing the Settings dialog box.
+To configure color and font scheme
+
+
+Go to file -/lilistrong/strong/li/ol/div
+Title: Sublime text support for Google style guide
+Description: 
+    
+    
+                    
+I am using sublime text 3 for writing C++ code. 
+We follow Google style guide for CPP. 
+
+I am looking for any plugins which provide auto-reindent and linter support using the style guide as reference.
+    
+
+        
+Answer 1: 
+
+    
+    
+I just tried https://github.com/timonwong/SublimeAStyleFormatter and it seems to be working fine.
+
+You will have to edit the user settings ("Sublime Text" 
+Title: CLion disable C++98 mode in favour of C++11
+Description: 
+    
+    
+                    
+I'm trying to compile some code using C++11 only syntax in JetBrains CLion, so I wish to disable C++98 mode. I followed the instructions accordance of this StackOverflow question, but am unable to get it working.
+
+In order to achieve this goal, I went to ALT + SHIFT + F10 and passed the argument -std=c++11 in Program Arguments. 
+
+Upon building again, C++98 mode still seems to be enabled.
+
+/cygdrive/c/Users/Zarthus/Documents/test/command.cpp: In constructor 'Command::Command(std::vector&lt;std::basic_string&lt;char&gt; &gt;)':
+/cygdrive/c/Users/Zarthus/Documents/test/command.cpp:25:32: error: range-based 'for' loops are not allowed in C++98 mode
+     for (std::string command : commands)
+                                ^
+
+
+in the code
+
+Command::Command(std::vector&lt;std::string&gt; cmds)
+{
+    for (std::string command : cmds)
+    {
+         addCommand(command);
+    }
+}
+
+
+Whilst I'm fairly certain the issue lies not within my code (IdeoneC++11 versus IdeoneC++98 (4.8.1))
+
+Image: CLion Interface
+
+What I'd imagine is the compilation string (per comments):  
+
+C:\cygwin64\bin\cmake.exe --build C:\Users\Zarthus\.clion10\system\cmake\generated\6dd8bed\6dd8bed\Debug --target testProject -- -j 4
+
+
+So it does not appear it includes my content.
+
+I've not a lot of experience with other JetBrains IDE's, but from what I could tell they're mostly the same.
+
+Is anyone able to reproduce this? Should I send feedback to JetBrains that this may not be working 100% (it's still an early release build)? Or am I just botching it up and is there an user error here?
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+This has been resolved by adding add_definitions(-std=c++11) to the end of CMakeLists.txt instead of in ALT+SHIFT+F10's command line arguments.
+    
+    
+Title: Debugging embedded Lua 5.2.2 code
+Description: 
+    
+    
+                    
+How can I debug Lua 5.2.2 code that is embedded inside of my C++ application?
+
+I have already taken a look at this question and all the IDEs provided in it deal with 5.1 and lower and when I try to use them with 5.2.2 they crash.
+    
+
+        
+Answer 1: 
+
+    
+    
+You should be able to debug your application using ZeroBrane Studio by following instructions for Lua 5.2 debugging. Note that you'll need to have luasocket compiled against Lua5.2. (The crash you see is likely because your application loads luasocket that is compiled against Lua5.1, which in turn loads Lua5.1 DLL or fails to find required symbols.)
+
+If you don't want to compile luasocket, you can get binaries for Windows/OSX/Linux from this folder and its subfolders; just make sure that these libraries are in LUA_CPATH before any folders that may have luasocket compiled against Lua5.1.
+
+[Updated based on chat discussion] The reason you may be getting multiple VM issue is that your app is probably statically compiles Lua interpreter. You then load luasocket (directly or through mobdebug), which is compiled against lua52.dll, which loads another copy of the interpreter. To avoid this you have two choices: (1) compile luasocket into your app the same way you include lua interpreter itself; you won't need anything else except one mobdebug.lua file to debug your app, or (2) use proxy dll; it will look like lua52.dll, but will actually proxy your calls to your statically compiled lua library, avoiding problems with multiple VMs. The proxy dll is for Lua 5.1, but you can tweak the script to make it work for Lua 5.2.
+
+(If your interpreter is not statically compiled, you may still get two interpreters if the Lua DLL you load is named differently from lua52.dll.)
+    
+    
+Answer 2: 
+
+    
+    
+In response to OP's commented request, here's how you should open the lua standard library "base" from C++:
+
+#include "lua.hpp"
+
+//...
+int main ()
+{
+  lua_State* L = luaL_newstate();
+  luaL_requiref(L, "base", luaopen_base, 0);
+
+  // ...
+  int error = luaL_loadfile(L, mainLua); 
+  lua_call(L, 0, 0);
+
+  lua_close(L);
+}
+
+
+Note that you can open all the standard libraries at once by replacing:
+
+luaL_requiref(L, "base", luaopen_base, 0);
+
+
+with
+
+luaL_openlibs(L);
+
+
+The Lua 5.2 reference manual Section 6 has more info about this.
+    
+    
+Title: Switching between .ui and .cpp in Qt Creator
+Description: 
+    
+    
+                    
+In Qt Creator, is there an easy way to directly switch between the Design view and the .cpp file associated with the form (and vice-versa)?
+
+When I go from Design mode to Edit mode (Ctrl-2), it annoyingly shows me the XML code of the .ui file, so I have to manually pick the .cpp file.
+
+When I'm in the .cpp file of a form, the Design mode icon and shortcut (Ctrl-3) are disabled, so I have to manually pick the .ui file.
+
+There must be a better way to switch between ui &lt;--/p/div
+Answer 1: 
+
+    
+    
+Buried in the menu, is the Tools -&gt; Form Editor -&gt; Switch Source / Form command. It has the Shift-F4 hotkey and does exactly what I was looking for.
+
+F7 doesn't seem to be bound to any command, so I rebound the  FormEditor/FormSwitchSource command to use F7 as the keyboard shortcut. I can now switch between ui &lt;--/ppstrong/strong/ppa href="https://bugreports.qt-project.org/browse/QTCREATORBUG-4264" rel="noreferrer"/acode/code/p/div
+Title: Emacs ECB Alternative
+Description: 
+    
+    
+                    
+I've been using Emacs as a PHP IDE for quite some time now (with emacs-starter-kit, ECB, &amp; Geben).  With each new release for emacs-starter-kit or Emacs 24, ECB introduces new errors &amp; window issues.  It doesn't seem well-maintained anymore (last release was 2009).
+
+Wondering if there's a project-manager / IDE emacs plugin that's today's defacto? Something that does file-browsing (like sr-speedbar), method list, possibly even auto ctags?
+    
+
+        
+Answer 1: 
+
+    
+    
+The answer is that unfortunately no such thing exists. emacs-nav offer a file browser similar to the one in ECB and you can use something like helm to jump to various stuff in your project (like files, tags, imenu entries, etc). Small utils like projectile might also be helpful to you. 
+
+All in all using heavyweight tools like ECB is not the Emacs way and I guess this is the reason while its development has stagnated - few Emacs users would use a tool like that given there a smaller more flexible alternatives.
+    
+    
+Answer 2: 
+
+    
+    
+I'm use sr-speedbar to file browser
+http://emacswiki.org/emacs/SrSpeedbar
+    
+    
+Answer 3: 
+
+    
+    
+I'm using ecb on emacs-24 with no problems. the only thing I had to add to my .emacs was:
+
+(setq stack-trace-on-error t)
+
+
+it prevents from throwing errors on ecb startup. What kind of window issues do you experience?
+    
+    
+Title: Which IDE to use for Opa programming and how to host Opa code?
+Description: 
+    
+    
+                    
+I am Dot Net developer and would like to try using Opa, my questions are:
+
+
+What's a good IDE to use?
+How to host Opa code?
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use Sublime Text.
+The plugin is here. 
+    
+    
+Answer 2: 
+
+    
+    
+Concerning IDE, check here. Options are a bit limited at the moment but we hope to make some progress on the Eclipse IDE -- you can drop a comment in the manual with a wishlist for an IDE :).
+
+How to host? You can try DotCloud or Amazon Web Services.
+    
+    
+Answer 3: 
+
+    
+    
+You can also read a tutorial to get start with Opa on dotCloud here: http://docs.dotcloud.com/services/opa/
+    
+    
+Answer 4: 
+
+    
+    
+If you port this language file to the Gnome GtkSourceView Language Definition (v2), you (we) will be able to enjoy syntax highlighting in the Gedit editor on Linux. 
+
+I'd rather see it ported to a language file for Netbeans though.
+
+The language is great, but it really needs some more IDE support for it to catch on.
+    
+    
+Title: Java debug using socket vs shared memory
+Description: 
+    
+    
+                    
+In Java development on Windows there are two different transports that can be used while debugging.
+
+
+
+What are the advantages of using Socket transport on the same computer where the app is running?
+
+I know Socket can work on a remote computer. But I am trying to figure out if it makes a difference on my local dev box vs Shared memory?
+
+Thank you.
+
+UPDATE: I am using Intellij IDEA.
+    
+
+        
+Answer 1: 
+
+    
+    
+Shared memory will be faster :-)
+
+The only advantage of sockets on same machine I can think of is that you have the same, universal debugging protocol, so when you deploy your app to a remote server the only visible change will be the ip.
+    
+    
+Answer 2: 
+
+    
+    
+What are the advantages of using Socket transport (...)?
+
+The advantage of using Socket transport on the same machine is to ignore incompatibilities between the IDE JDK and the application's (or web-application) JDK.
+
+Example:
+
+Connect to a application that run on JDK32-bit will fail if the IDE is running a JDK64-bit using shared memory. In this case:
+
+
+You MUST use Socket on the same machine.
+
+    
+    
+Title: Aptana 3 becomes very sluggish with multiple (large) projects, how do I improve performance?
+Description: 
+    
+    
+                    
+Aptana 3 becomes very sluggish with multiple (large) projects, how do I improve performance? 
+
+I have several projects that I checkout of subversion into a dev directory that I can access through Apache as well. Something like this
+
+So if I go to this URL http://local.dev I can see all the project folders. In Aptana it looks like this
+
++ dev (main project folder that Apache uses as well)
+ - project (svn branch I'm currently testing)
+ - another_project (another svn branch)
+ - yet_another_project (yep, another svn branch)
+
+
+So to access the project form the URL I don't need to configure Apache every time, I just need to access the project folder like this http://local.dev/project or http://local.dev/another_project
+
+The problem is these project are very large (Prado, Zend and Drupal frameworks as well as additional Libraries as needed) and I could have multiple branches of the same project checked out into different folders. Aptana indexes all of this which is what I think the problem is. I know I could create a project for each of these within Aptana itself and close the project if I'm not using it but I don't see the option to do this to a folder within the project (which I think should solve my problem), but if I do separate project folders that I also need to setup Apache to point to the new location, which is another pain in itself.
+
+Is there a way to close a sub-folder in a project folder in Aptana? or have a sub-project folder? or Close a folder within a project? or exclude indexing of a folder? or turn off indexing?
+
+NOTE: Sometimes when adding a new folder within a project I get the out of memory warning and/or Aptana crashes. Also when coding Aptana becomes so sluggish that it's very cumbersome to do anything at all. I really love the Aptana IDE but this might be a deal breaker for me.
+
+I was thinking I would move the Apache site to the Aptana root directory so I could access it on a project level but I don't think this will work for the indexing performance on the Aptana side of things.
+
+UPDATE:
+This might be related:
+
+
+http://jira.appcelerator.org/secure/EditComment!default.jspa?id=75032&amp;commentId=169647
+
+
+Looks like Aptana is indexing the .svn folders
+
+UPDATE:
+
+So far the only thing to help is to make a new workspace for each project I need to checkout of svn. This is a pain to switch back and forth between projects but Aptana is usable again.
+
+UPDATE #2
+
+
+http://jira.appcelerator.org/browse/APSTUD-1706
+
+
+Looks like this made the Aptana BUG list, Yeah!
+
+UPDATE #3
+
+After countless tinkering to get Aptana to play nice I decided to test other IDE's. 
+
+Started with Eclipse as that's what Aptana is based from. I have a nice build going but it's still not 100% what I was looking for.
+
+Also trying PHPStorm which is paid IDE but I'm finding it's a top notch IDE
+    
+
+        
+Answer 1: 
+
+    
+    
+You could right-click on the project or folder and select Indexing strong/strong/ppstrong/strong
+Answer 2: 
+
+    
+    
+I've been having the same problem myself and found going to 'Project' /p/div
+Answer 3: 
+
+    
+    
+I keep my projects in separate workspaces, I use ramdisk for the entire workspace and aptana. And i also disable indexing for folders with compiled libraries or stuff aptana can't even index anyway.
+
+I use AMD ramdisk paid version. With the free version you have to make sure you do constant commits in the event of a power loss. THe cost of performance.
+    
+    
+Answer 4: 
+
+    
+    
+Yeah I just moved off Coda on the Mac over to Aptana 3 so I could have code intellisense and some more validators. But their JSLint is working all backwards, and now recently I have projects with 1000+ lines of code and they can barely scroll.  Sometimes I can barely highlight text.  Often I'll highlight a whole section so I can indent and it just removes the code if my mouse isn't in the right spot.  I originally had this performance with Eclipse when I tried it out and abandoned it since it was so slow.  My assumption here since I've got a 4.2Ghz i7 980X w/ 12GB of RAM and RAID'd SSD Drives - the bottle neck isn't the system.
+    
+    
+Answer 5: 
+
+    
+    
+totally agree... the bare-metal eclipse is doing better than Aptana... but i guess it gonna stall on large files and projets (like my todo list with 14.000 lines html file)
+
+i gave more ram to aptana by modifying the config... but it's still sluggish (i5, 4GB of RAM, SSD)
+
+the Clean-Option is greyed out (i am using only "General" Projects)
+
+C'MON IBM YOU CAN DO BETTER :)
+    
+    
+Answer 6: 
+
+    
+    
+Right Click project folder and click "Close Unrelated Projects". Because Aptana live time index all opened project's folders. 
+    
+    
+Title: What are tags like @param and @return in IntelliJ IDEA?
+Description: 
+    
+    
+                    
+I've just started using IntelliJ IDEA for Java programming and I'm seeing tags (are they called tags?) like @param and @return. What is the significance of these tags? IntelliJ actually complains if I don't have those tags in my code!
+
+What are the most important ones to know and what are they used for?
+
+I couldn't find anything relevant in the IntelliJ documentation regarding these tags. 
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, they are called tags. If you see those tags in the comments, they are to document your method's parameters and return value.
+
+They can be automatically processed to generate JavaDoc documentation. The generated documentation will be similar to the the Java API Documentation. See how to write doc comments for the JavaDoc tool.
+    
+    
+Title: How do I get NetBeans to stop using MRU style tabbing when switching between editors using CTRL+TAB?
+Description: 
+    
+    
+                    
+I am accustomed to CTRL+TAB / SHIFT+CTRL+TAB switching to the next and previous tabs, respectively, in the order in which they appear on the tab bar.  NetBeans does it MRU style, where CTRL+TAB will take you to whatever was the last file you were editing.
+
+This often breaks my flow in that I need to keep tabbing and checking if I'm on the right file before continuing rather than just instinctively hitting CTRL+TAB+TAB+TAB because I know the file I want to go to is 3 tabs over on the tab bar.
+
+The default CTRL+PAGEUP / CTRL+PAGEDOWN keymaps behave exactly how I want CTRL+TAB and SHIFT+CTRL+TAB to behave, but changing the mappings to CTRL+TAB don't seem to make a difference - it ignores my keymapping and continues using MRU.
+
+How can I change this behavior?
+    
+
+        
+Answer 1: 
+
+    
+    
+Resolved the issue myself.  The solution is to use AutoHotKey to map CTRL+TAB / SHIFT+CTRL+TAB to CTRL+PAGEDOWN and CTRL+PAGEUP, respectively.  This will prevent NetBeans from hijacking CTRL+TAB / SHIFT+CTRL+TAB to use MRU despite them having been remapped.
+
+AutoHotKey script below:
+
+SetTitleMatchMode, 2 ; So that we can partial match window title
+
+; Fix MRU in NetBeans
+#IfWinActive, NetBeans IDE
+    ; CTRL+TAB
+    ^Tab::SendInput ^{PgDn}
+    return
+
+    ; SHIFT+CTRL+TAB
+    +^Tab::SendInput ^{PgUp}
+    return
+#IfWinActive
+
+
+Hope this will be useful for someone!
+    
+    
+Title: How to import GWT source code into eclipse?
+Description: 
+    
+    
+                    
+I'm trying to contribute to GWT Open Source project. I'm in the very beginning step in importing the project into eclipse and learning how it works.
+
+The GWT Source Code Repository can be found here: http://code.google.com/p/google-web-toolkit/source/checkout
+
+However, there are only ant build files in the source code and there aren't any project file there. I believe we do not usually edit the source files in ... notepad and then compile using javac (correct me if i'm wrong). Hence, I wonder how a normal open source contributor usually do to open the source code in his/her favorite IDE? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Detailed instructions for Eclipse 3.X can be found in the file {svn_working_copy}/trunk/eclipse/README.txt
+
+
+  there aren't any project file there
+
+
+It's not true. Import "Existing Project into Workspace" from {svn_working_copy}/trunk/eclipse, then check projects that you want to import (probably gwt-user and gwt-dev).
+    
+    
+Answer 2: 
+
+    
+    
+Yes, you ca find the detailed Eclipse 3.X GWT Opensource setup instructions can be found here 
+https://github.com/harikishorekuppa/gwt/blob/master/eclipse/README.txt
+    
+    
+Title: C++ IDE for Linux with smart reference searching
+Description: 
+    
+    
+                    
+Is there an IDE supporting C++ with REALLY smart searching of references? By 'reference' I mean usage of a class (or its member), variable, function in the whole Project or Workspace.
+
+There's lots of IDE providing it. Some of them seem just to search for the text with same name giving lots of stuff, others are smarter and check the context (like class boundaries, namespace) but aren't accurate enough.
+
+The best I've tried so far was Visual SlickEdit, but still there's more to wish.
+
+class C1
+{
+    int foo;
+};
+class C2
+{
+    int foo;
+};
+
+
+For example in this situation when searching for C1::foo references I  DON'T  want C2::foo to be shown too.
+
+So, is there an IDE that would be so smart?
+
+Edit2
+
+10x everybody for the answers so far.
+
+I tried Eclipse, reference searching seems relatively good, but it takes it 20 minutes to index medium size project and 4 times of 5 it runs out of memory and crashes. I tried increasing it and some other advice and it got a little better, but still quite slow and annoying with these crashes.
+
+I tried KDevelop3, but the feature mentioned in this question is not very advanced - seems to be just very advanced grep based text searching.
+
+Edit4
+
+KDevelop4 - I tried to make it work, but latest beta it's quite unusable for custom makefile projects, I was unable to do anything with it.
+
+Edit5
+I was surprised, but QT Creator did really well in my tests. It doesn't seem to create some tag/index files, but somehow manages to show very precisely the usage of variable/functions/classes. Unfortunately it seems to not work very correctly with templates, when following definitions of functions.
+
+None of the mentioned IDEs could compete Visual SlickEdit in working with references, virtual functions, etc. QT Creator was the closest though, so I will choose it as an answer to my question.
+    
+
+        
+Answer 1: 
+
+    
+    
+I think Qt-Creator can help you. There few new features added in new preview 2.0.
+    
+    
+Answer 2: 
+
+    
+    
+I think that you could use Eclipse , mainly i think that it will be able to do what you want, or nearly enough. Also here's a brief description of it's search options.
+    
+    
+Answer 3: 
+
+    
+    
+No and I don't think we will ever see implementations that are as good as those in C# or Java editors for two reasons:
+
+1) the preprocessor:
+
+#ifdef _DEBUG
+#define FOO(x) C1(x).foo
+#else
+#define FOO(x) C2(x).foo
+#endif
+
+
+2) templates:
+
+template&lt;class C&gt; void Method(C const&amp; c) {
+    printf("%d", c.foo);
+}
+
+
+In both cases it is hard to determine which class is actually referenced. 
+    
+    
+Answer 4: 
+
+    
+    
+Did you ever try Netbeans. Close competitor of Eclipse it has all its feature like web development, mobile application ide, plugins to almost allow anything to do. All this with lower CPU and memory footprint. And it does resolve the name correctly.
+    
+    
+Answer 5: 
+
+    
+    
+I have not used KDevelop myself, but I get the impression that it does some serious parsing of the source code and is able to access source code information though the editor . It has at least some advanced code assistant functionality.
+    
+    
+Answer 6: 
+
+    
+    
+You have to try KDevelop 4, not the old one.
+    
+    
+Answer 7: 
+
+    
+    
+You can look at CodeBlocks [http://www.codeblocks.org/]. I just started using it, but not tested for your requirement. So I am not claiming 10X now. But you can give it a try. Its open source and good one.
+    
+    
+Title: How can I get Emacs&#39; key bindings in Python&#39;s IDLE?
+Description: 
+    
+    
+                    
+I use Emacs primarily for coding Python but sometimes I use IDLE. Is there a way to change the key bindings easily in IDLE to match Emacs?
+    
+
+        
+Answer 1: 
+
+    
+    
+IDLE provides Emacs keybindings without having to install other software. 
+
+
+Open up the menu item Options -/lili/lili/li/olp/p/div
+Answer 2: 
+
+    
+    
+There's a program for Windows called XKeymacs that allows you to specify emacs keybindings for different programs.  It should work with IDLE.
+
+http://www.cam.hi-ho.ne.jp/oishi/indexen.html
+
+-Mark
+    
+    
+Answer 3: 
+
+    
+    
+'readline' module supposedly provides Emacs like key bindings and even functionality. However, it is not available on Windows but on Unix. Therefore, this might be a viable solution if you are not using Windows.
+
+import readline
+
+
+Since I am running IDLE on Windows it is unfortunately not an option for me.
+    
+    
+Title: Stepwise debugging of selected Python code
+Description: 
+    
+    
+                    
+The essence:
+Using Spyder, it's possible to run parts of code by highlighting it and clicking F9. This works with For Loops as well, but the problem (for me at least) is that it seems impossible to run the selected part step by step. I find this a bit strange since it's possible to run For Loops step by step under other cirmustances (and inspect the state of the variables at each step).
+Allow me to explain:
+
+The snippet below is an operation on two variables names = ['A', 'B', 'C'] and values = [11,12,13] using a For Loop. In order to give a proper description of what I'm unable to do with this setup, I feel it's necessary to explain what I am able to do and also why I think the whole thing is a bit strange if it turns out that what I would like to do is in fact impossible.
+I often find myself messing around with a lot of variables using different routines. The problem I'm facing is that in order to debug these routines, I often have to re-run parts of the code that redefine all my variables before I'm actually able to look for bugs in other parts of the code. And THAT'S why it would be great to be able run a stepwise debugging of a For Loop on pre-existing variables that I can inspect in Spyders Variable explorer. I'm mostly messing around with Python in Spyder, but please suggest other IDEs where this may be possible.
+
+Here's an example:
+def foo():
+    names = ['A', 'B', 'C']
+    values = [11,12,13]
+    i = 0
+    for n in names:
+        variable = str(n)  + ' = ' + str(values[i])
+        print(variable)
+        i += 1      
+foo()
+
+
+Below are my options (if the issue seems clear enough, you can easily jump to the last part Option 5):
+Option 1 - Run code using Run file (F5):
+This unsurprisingly prints the following in the IPython console:
+A = 11
+B = 12
+C = 13
+
+The rest of the environment looks like below. Notice that it doesn't leave any variables in memory and/or to be inspected in the Variable explorer. That's good for memory management, but bad for a small scale wanna-be programmer that doesn't care about these things.
+
+Option 2 - Forget the function and just Run file
+Commenting out def foo() and foo() and clicking Run file (F5) (also fixing the indentation) prints the same thing to the IPython console AND leaves the variables behind in the Variable explorer for further inspection.
+The edited code:
+#def foo():
+names = ['A', 'B', 'C']
+values = [11,12,13]
+    
+i = 0
+for n in names:
+    variable = str(n)  + ' = ' + str(values[i])
+    print(variable)
+    i += 1      
+#foo()
+
+The environment:
+
+Notice that the Variable explorer shows the state of each variable after the execution of the code.
+Option 3 - Same code as option 2 now using Debug File (Cltr+F5) and Run Current Line (Ctrl+F10)
+Clicking Debug File (Cltr+F5) will let me start at the beginning of the routine, and step through it line by line using Run Current Line (Ctrl+f10). Including the lines in the For Loop. At each step, I can easily inspect the state of the variables as they change in the Variable explorer.
+The environment after stepping through the For Loop one time:
+
+To a non-professional programmer like myself, this would look like the easiest and most basic way of both writing and debugging code. However, It's hard to avoid the benefits of wrapping code into functions for greater re-useability. So, back to foo() again:
+Option 4 - Debug function with Debug File (Cltr+F5), Continue Execution Until Next Breakpoint (Ctrl+F12) and Step Into Function or Method of current line (Ctrl+F11) and Run Current Line (Ctrl+F10).
+Using Debug File (Cltr+F5) initiates the debugging and highlights line 2. To progress, I can use Continue Execution Until Next Breakpoint (Ctrl+F12) which halts the execution at line 11. Here I can choose to Run Current Line (Ctrl+f10) which calls the function without any more fuzz, or I can Step Into Function or Method of current line (Ctrl+F11) which brings me to my happy place. Now I can Run Current Line (Ctrl+F10) to define the variables, and even inspect the variables in the For Loop step by step in the Variable explorer. Here's the environment after defining the variables within the function and stepping through the For Loop one time:
+
+So what was the question again??
+Option 5 - Debug a for Loop using existing varibles
+In Spyder, you can run parts of code simply by highlighting it and using Run Selection or Current Line (F9) without even defining the function. So starting from scratch, I can define my variables simply by selecting them and clicking F9. Now they're available in the Variable explorer for further inspection:
+
+You can do the same thing with the rest of the code. The For Loop is run in its entirety and the variables become available in the Variable explorer.
+
+And now, finally, we arrive at the main question. Is it in any way possible to run through the highlighted For Loop step by step instead of the whole thing at the same time like in Option 1? (And without having to run through the function, stop at a breakpoint and continue using F10 like described in Option 4?)
+Ideally, it would be as simple as highlighting the code and do something like Stepwise debug selected code (Ctrl'??) and that's it.
+I hope this makes sense to some of you. And please let me know if this approach is just completely wrong from start to finish!
+Thank you!
+Edit: Adding a breakpoint before running the selected part with F9 has no effect:
+
+Edit 2 - System info:
+
+Windows 7
+Python 3.6.0 Anaconda custom (64-bit)
+Spyder 3.2.5
+
+    
+
+        
+Answer 1: 
+
+    
+    
+(Spyder maintainer here) There is a trick not many people know to introduce breakpoints wherever you want in your Python code: import pdb; pdb.set_trace().
+
+In your case, you need to replace your code with
+
+def foo():
+    names = ['A', 'B', 'C']
+    values = [11,12,13]
+    i = 0
+    import pdb; pdb.set_trace()
+    for n in names:
+        variable = str(n)  + ' = ' + str(values[i])
+        print(variable)
+        i += 1
+
+foo()
+
+
+and then run your file with Run file/F5 or also as a cell with Ctrl + Enter. With this simple change you'll get a debugger session exactly at the line pdb.set_trace() is placed and enter the for cycle below it to iterate line by line through it.
+
+Note: Since Python 3.7 this is even simpler because it adds a new builtin function called breakpoint to replace pdb.set_trace(), but with the exact same effect.
+    
+    
+Answer 2: 
+
+    
+    
+Visual Studio Community Edition
+
+(with some Add-Ins not relevat to python):
+
+Disclaimer: I use it because im familiar with it (C#) and it is free to use - not because it's especially pythonic.
+
+
+
+Coding (Layout configureable):
+
+
+Left: Code 
+Left-low: Output (normally I collaps that down to tabs only at the bottom to get more coding screen estate. Maybe downsized and switched to tab Error List which lists errors in your code (doh). Your code was perfect, so you do not see any of the sqigglies pointing out errors in the code.
+Right: Solution explorer - essentially what files are inside this special python solution.
+Right-low: Properties of a selected file  
+
+
+All the windows can be removed, resized, un-pinned to become "free floating windows" or collapsed into vertical tabs at left/right side of the window to get more screen estate for whats important to you)
+
+
+
+See the red dots on the side of the lines? You place them before running the code. They mark break points, code execution automatically stops running when hitting one (basic use) or you can configure them to 
+
+
+not stop running but print out trace info of variables
+stop only conditionally on f.e. variable value becomes 5 (loop index after that your program crashes all the time or other "conditions")
+they can also only stop on 4th time hit and some other things:
+
+
+
+
+
+
+Debugging Code:
+
+F5 to start code running changes the layout (see above, you can change it and changes persist for next run):
+
+
+
+When stopped you can hover over variables that are already used and inspect them, you can pin those information to the side - if one changes the text of the pin will get red to visualize this.
+
+You can also put stuff in the "watch window" or use "quick watch" to inspect it - window lower half of screenshot. From a break you can continue wiht F5 to run till next breakpoint, or use F10 or F11:
+
+
+F10 "steps over" statements line by line
+F11 "steps into" statements - i.e. if your statement is function call it would execute the function wiht F10 and step into the function with F11
+
+
+If inside a function you can use SHIFT+F11 complete the function and step out again and go from there.
+
+I used F5 and F10 twice and I am currently at the line indicated by the arrow-thingy. You can also dragg the arrow some lines up to reexecute code, but this can have sideeffects - I rarly use it, most times I just restart the program Ctrl+Shift+F5 or stop debugging Shift+F5
+
+The print output of your program is shown in a normal Console window thats cropped from the screenshots.   
+
+AddOn1: You can also simply execute all code, no debugging with CTRL+F5 and the IDE has 'a few' other features for python.
+
+AddOn2: VS naturally comes with a lot of other features useful in an IDE, like integration to git etc. - if you use those they are "usable" from within the IDE via plugins -although some things are better done on the git.bash. 
+    
+    
+Title: Folding/Collapsing functions and subroutines in Visual Basic 6
+Description: 
+    
+    
+                    
+Do you know if there's a way to fold/collapse functions and subroutines (and better yet: ifs and whiles) in the Visual Basic 6 IDE? At least with a plugin or something similar?
+
+I have to deal with files of thousands of lines sometimes and with no cropping it's just impossible (It's a very old app off course).
+
+Please note that it's not Vb.Net, it's VB6.0
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+No, in Visual Basic 6 IDE is no fold/collapse functions. What to do instead?
+
+
+Use Ctrl + Arrow Up or Ctrl + Arrow Dn for skipping between functions
+Use the list of functions in the upper right corner instead of scrolling
+Toggle Procedure View / Full Module View by two buttons in the bottom left corner
+Must-to-have: install Scroll Wheel Fix for VB6 and scroll source with mouse wheel (nirvana!)
+
+    
+    
+Title: How to change the font size in the Properties window in Visual Studio IDE
+Description: 
+    
+    
+                    
+We can change font for VS IDE items in the Options\Environments\Fonts and Colors dialog. However, I still cannot find how to do that for the Properties pane. Can anybody help me with that?
+
+Working mainly with VS 2013 Professional or Community Editions.
+    
+
+        
+Answer 1: 
+
+    
+    
+Use &gt; tools &gt; options &gt; Fonts and Colors  (Show settings drop down) 
+Environment font for menus etc
+Locals Window for properties window
+    
+    
+Answer 2: 
+
+    
+    
+You must restart the IDE to make the properties window changes
+    
+    
+Title: Java Fatal Error: Unable to find package java.lang in classpath or bootclasspath
+Description: 
+    
+    
+                    
+I'm getting this error
+
+
+  Error:java: Fatal Error: Unable to find package java.lang in classpath or bootclasspath
+
+
+in IntelliJ when I try to build/compile any project. Something that should be stated here is that NetBeans, Eclipse and even the javac command line can compile, build, and execute the same project without errors. This is why I suspect that the problem lies with IntelliJ, all other IDEs work well.
+
+In IntelliJ I already:
+
+Restarted, reinstalled
+Invalidate Caches / restarted
+Deleted / readded the JDK in Project JDK
+Deleted / readded the JDK in Platform Settings
+Rebuild / recompile
+
+In Windows I already:
+Deleted / Reinstalled Java SDK
+Deleted / Readded the JAVA_HOME, PATH and CLASSPATH on System Variables
+Tried the above on User Variables
+Deleted and reinstalled IntelliJ IDEA
+
+I already seached for issues like this on the Internet, here on Stack Overflow I found:
+Question #1 | Question #2 | Question #3 | Question #4 | Question #5
+And 30+ sites, and tried every answer...
+Here you can see my IntelliJ Project Structure the last time that I tried to build/compile
+
+I was using Java 1.8 when I got this error, after some hours, I installed Java 1.7 and the project worked fine. Maybe IntelliJ doesn't support Java 1.8?
+
+Anyway, it would be great if anyone knew a way to make Java 1.8 work with IntelliJ.
+    
+
+        
+Answer 1: 
+
+    
+    
+The problem comes from IntelliJ bug (existing at least in version 14). 
+It happens when your JDK directory is under the user profile directory. For example, JDK located in this directory (for Windows):
+
+C:\Users\myuser\jdk1.8.0_20
+
+will be stored in IntelliJ internal configuration (file 'jdk.table.xml') as:
+
+$USER_HOME$\jdk1.8.0_20
+
+But your %USER_PROFILE% environment variable could point at some other (non default) location. Then IntelliJ will look at the wrong directory.
+
+Possible fix:
+Install your JDK at different directory, which is outside your profile directory. Like:
+
+C:\Programs\jdk1.8.0_20
+
+Then register this JDK for use in your IntelliJ project settings.
+    
+    
+Answer 2: 
+
+    
+    
+I just spent quite few hours on this and found a solution which might work for you as well. IntelliJ seems to have a bug which expects the JDK to be in a different directory than is specified. I followed these steps:
+
+
+open intelliJ, click help -/lilicode/codecode/code/lili/lili/li/ulp/pp/p/div
+Answer 3: 
+
+    
+    
+I encountered this on Arch Linux 4.16.13 with IntelliJ 2018.1.4 after importing a Java project using Gradle. I made sure that there is a registered JDK in "Project Settings" -code/code/ppcode/codecode/codecode/code/p/div
+Answer 4: 
+
+    
+    
+If this problem occurs when importing a project in netbeans then try to create a new project then check the properties of your new created project and match those properties with the project that you imported in my case there was a difference between target of android package version.
+    
+    
+Answer 5: 
+
+    
+    
+From what I understood, debugging for hours, the problem is with the location where the jdk1.8 gets installed(/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home), instead of under System/Library). 
+
+So the following has to be done to fix in intellij
+1. For an existing project, right click and select module settings, and SDK and add 1.8 as a version.
+2. Using a terminal go to ~/Library/Preferences//options/. Remove the old JDK specific lines in jdk.table.xml. Update the default version in project.default.xml
+
+Clean you project in intellij and build. It should use the new jdk and sync. 
+    
+    
+Answer 6: 
+
+    
+    
+Had the same problem. Simple fix to others in case the other answers are complex. 
+
+Go to File -/pp/pp/p/div
+Title: How to track execution time of each line / block of lines / methods in PHP?
+Description: 
+    
+    
+                    
+Is there a best practice (IDE-based?), a PHP/bash script or something else to
+
+
+get the execution time of a line
+get the execution time of a block of lines (for example line 17 to 42)
+get the execution time of a certain function or method
+
+
+in PHP ? I'm currently stuck with self-built solutions that use microtime(), but that's a dirty, unhandy and slow method to do so. I'm especially interested in solutions with the major PHP IDEs like Eclipse, Netbeans, PHPStorm and VIM. A perfect solution would be a tool that tracks an entire application and provides execution time tracking for each line, each method and each custom block of actions.
+
+I'll provide 50 bounty for a good answer.
+    
+
+        
+Answer 1: 
+
+    
+    
+This is what you are looking for: http://xdebug.org/docs/profiler. You can set up netbeans to attach to php process, than run scripts step by step, watch current variables content and analyze its running times.
+
+Just add dll to other php extension, configure by php ini:
+
+; xdebug
+zend_extension = "C:\php\v5.4\ext\php_xdebug-2.2.3-5.4-vc9-nts.dll"
+xdebug.remote_enable=on
+;xdebug.remote_log="/var/log/xdebug.log"
+xdebug.remote_host=localhost
+xdebug.remote_handler=dbgp
+xdebug.remote_port=9000
+xdebug.profiler_enable=1
+xdebug.profiler_output_dir="C:\dev\profilling\"
+
+
+Netbeans setup:
+
+
+
+Then press Ctrl+F5 in netbeans (debugging). Than you can run script step by step and watch current variables values:
+
+
+
+To browse generated profilers log use http://sourceforge.net/projects/precompiledbin/ or http://sourceforge.net/projects/wincachegrind/ in windows, or http://kcachegrind.sourceforge.net/html/Home.html for linux.
+    
+    
+Title: Detect UTF-8 encoding (How does MS IDE do it)?
+Description: 
+    
+    
+                    
+A problem with various character encodings is that the containing file is not always clearly marked.  There are inconsistent conventions for marking some using "byte-order-markers" or BOMs.   But in essence you have to be told what the file encoding is, to read it accurately.  
+
+We build programming tools that read source files, and this gives us grief.  We have means to specify defaults, and sniff for BOMs, etc.  And we do pretty well with conventions and defaults.  But a place we (and I assume everybody else) gets hung up on are UTF-8 files that are not BOM-marked.
+
+Recent MS IDEs (e.g., VS Studio 2010) will apparently "sniff" a file to determine if it is UTF-8 encoded without a BOM.   (Being in the tools business, we'd like to be compatible with MS because of their market share, even if it means having to go over the "stupid" cliff with them.)  I'm specifically interested in what they use as a heuristic (although discussions of heuristics is fine)?  How can it be "right"?  (Consider an ISO8859-x encoded string interpreted this way).
+
+EDIT:  This paper on detecting character encodings/sets is pretty interesting:
+http://www-archive.mozilla.org/projects/intl/UniversalCharsetDetection.html
+
+EDIT December 2012:  We ended scanning the entire file to see if it contained any violations of UTF-8 sequences... and if it does not, we call it UTF-8.  The bad part of this solution is you have to process the characters twice if it is UTF-8.  (If it isn't UTF-8, this test is likely to determine that fairly quickly, unless the file happens to all 7 bit ASCII at which point reading like UTF-8 won't hurt).
+    
+
+        
+Answer 1: 
+
+    
+    
+If encoding is UTF-8, the first character you see over 0x7F must be the start of a UTF-8 sequence.  So test it for that.  Here is the code we use for that:
+
+unc ::IsUTF8(unc *cpt)
+{
+    if (!cpt)
+        return 0;
+
+    if ((*cpt &amp; 0xF8) == 0xF0) { // start of 4-byte sequence
+        if (((*(cpt + 1) &amp; 0xC0) == 0x80)
+         &amp;&amp; ((*(cpt + 2) &amp; 0xC0) == 0x80)
+         &amp;&amp; ((*(cpt + 3) &amp; 0xC0) == 0x80))
+            return 4;
+    }
+    else if ((*cpt &amp; 0xF0) == 0xE0) { // start of 3-byte sequence
+        if (((*(cpt + 1) &amp; 0xC0) == 0x80)
+         &amp;&amp; ((*(cpt + 2) &amp; 0xC0) == 0x80))
+            return 3;
+    }
+    else if ((*cpt &amp; 0xE0) == 0xC0) { // start of 2-byte sequence
+        if ((*(cpt + 1) &amp; 0xC0) == 0x80)
+            return 2;
+    }
+    return 0;
+}
+
+
+If you get a return of 0, it is not valid UTF-8.  Else skip the number of chars returned and continue checking the next one over 0x7F.
+    
+    
+Answer 2: 
+
+    
+    
+we just found a solution to this
+Basically, when you don't know the encoding of a file/stream/source you need to check the entire file and/or look for portions of texts to see if you get UTF-8 matches. I see this similar to what some antiviral products does, checking for portions of known viral sub-strings
+
+Maybe I'd suggest you apply call to a function similar to what we did when reading the file/stream, line by line to determine whether UTF-8 encoding is found or not
+
+Please refer to our post below
+
+Ref.
+- https://stackoverflow.com/questions/17283872/how-to-detect-utf-8-based-encoded-strings
+    
+    
+Title: How to create .pri file with Qt creator
+Description: 
+    
+    
+                    
+I'm trying to learn qmake, but can't find a native way to create .pri file with qt creator
+    
+
+        
+Answer 1: 
+
+    
+    
+You can create a new .pri file with Qt Creator as follows:
+
+
+Select File in the menu bar.
+Select New File or Project....
+Choose General under Files and Classes on the New dialog.
+Give the name of your file with extension, for example: test.pri.
+
+
+(I'm using Qt Creator 2.4.1.)
+    
+    
+Answer 2: 
+
+    
+    
+The sequence of actions on Qt Creator 4.12.0 on MacOS
+
+
+
+
+    
+    
+Title: How to add python &ldquo;libraries&rdquo; to Eclypse and pydev
+Description: 
+    
+    
+                    
+I am trying to learn how to use Abaqus Scripting. I just downloaded Eclipse and added the pydev plugin. Everything seems to work fine.
+
+What I want to do now is to add all the built-in Abaqus libraries or modules.
+
+
+I would like, for example, the IDE to display the class members and methods when I press the ".".
+I would like to see if the code compiles fine without running it into Abaqus.
+
+
+How can I do this in Eclipse? Or should I change IDE? Or is it not possible?
+
+
+
+I just tried, but no success, I don't fully understand what I need to do. 
+I am very much a beginner at Python (today is my second day). I have in the abaqus folder the python folder. It leads to two subfolders:
+
+
+-lib: full of .pyc file (I guess precompiled Python files)
+-obj: full of windows dll and the python.exe which I guess is the interpeter.
+
+
+I also tried to add this interpreter but Eclipse said it can not add it (Error getting info on the interpreter)
+
+I just added the whole lib and obj folder. Maybe once I get more involved in Python I can give you more detailed explanations. 
+
+
+
+New information:
+
+When I try to run the script it says:
+
+ImportError: Bad magic number in C:\SIMULIA\Abaqus\6.9-1\Python\Lib\abaqus.pyc 
+
+
+Is there a compatibility problem, maybe with different versions of the Python interpreters?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can add these libraries to the settings to get the effect you want. This can be done in the Libraries setting accessed through Window &gt; Preferences &gt; PyDev &gt; Interpreter - Python &gt; Libraries. Add the .egg or source folder of the libraries you want to add and click Apply followed by OK.
+    
+    
+Title: Which IDE / code editor was the first to introduce a code completion feature?
+Description: 
+    
+    
+                    
+I am trying to identify the point in time where code completion (autocomplete/intellisense/whatever) was first introduced in IDEs and would appreciate any pointers.
+
+By code completion here I mean a feature within the editor that suggests methods or functions based on the code that was already typed, and I am interested in programming language related completions (not word processor style completion).
+
+I remember seeing it in Visual Studio and Microsoft Office in the early-nineties, and I don't remember at what point it was introduced, or whether it was actually available in DOS-based IDEs like Turbo Pascal or Turbo C++. On a hunch, I would guess that this was probably introduced in Smalltalk.
+
+For those wondering, I need this information for a research paper and wasn't able to find a credible answer online.
+    
+
+        
+Answer 1: 
+
+    
+    
+The first IDE that comes on my mind is the IDE of Visual Basic
+    
+    
+Answer 2: 
+
+    
+    
+The Wikipedia article on IntelliSense has a history section and indicates that the first use was in 1996.
+    
+    
+Answer 3: 
+
+    
+    
+VB, Smalltalk, Emacs, Think Pascal, Sun's Forte.
+
+Maybe it worked in some of the early Xerox stuff who knows.
+    
+    
+Answer 4: 
+
+    
+    
+I am quite sure Turbo Pascal had some of these features, and that was even before Windows existed.
+    
+    
+Answer 5: 
+
+    
+    
+Turbo Pascal had auto-indent (woo!) but nothing you'd call auto-complete I don't think.
+
+The first time I ever witnessed auto-complete was circa 1985. It was another pascal development system, with a strange name—maybe it was Alice—at any rate I think it was a woman's name. The editor did auto-indent, auto-completion of control structures (no more typing BEGIN and END), and even some form of syntax coloring. It might have been the first time I saw colors in a code editor. 
+
+The screen was stunning! Bland code was suddenly vibrant. 
+
+Alas, the product disappeared pretty quick. It was real buggy and drove everybody nuts. It seemed like nothing like it showed up until many years after that.
+
+Edit: It was indeed called Alice, by Looking Glass Software, and I found some info on it here. 
+    
+    
+Title: Emacs: pass arguments to inferior Python shell during buffer evaluation
+Description: 
+    
+    
+                    
+recently I started using Emacs as a Python IDE, and it not quite intuitive... The problem I am struggling with right now is how to pass command line arguments to the inferior python shell when the buffer is evaluated with C-c C-c. Thanks for help.
+    
+
+        
+Answer 1: 
+
+    
+    
+This doesn't appear to be easily possible; the inferior process managed by the python.el module is designed to persist across many invocations of python-send-buffer (and friends).  One solution I've found is to write your own function that sets sys.argv programmatically from within the inferior process:
+
+(defun python-send-buffer-with-my-args (args)
+  (interactive "sPython arguments: ")
+  (let ((source-buffer (current-buffer)))
+    (with-temp-buffer
+      (insert "import sys; sys.argv = '''" args "'''.split()\n")
+      (insert-buffer-substring source-buffer)
+      (python-send-buffer))))
+
+
+Execute this function in your *scratch* buffer and/or save it in your .emacs file, then, if you want, bind it to a convenient key sequence.  C-c C-a doesn't seem to be used by python-mode, so perhaps:
+
+(global-set-key "\C-c\C-a" 'python-send-buffer-with-my-args)
+
+
+The command will prompt you for arguments to use, then copy your source buffer into a temporary buffer, prepending it with a code snippet that sets sys.argv to the list of arguments you supplied, and finally will call python-send-buffer.
+
+The above code will just naively split the string you type on whitespace, so if you need to supply arguments that have whitespace in them, you'll need a more sophisticated algorithm.
+    
+    
+Title: How do I enable PerlCritic support in Komodo IDE 5.1 on Windows?
+Description: 
+    
+    
+                    
+I'm trying to enable PerlCritic support in Komodo.
+
+The official word from ActiveState, the makers of Komodo IDE 5.1 (Win 32) is:
+
+"To enable PerlCritic support, please install the 'Perl-Critic' and 'criticism' modules."
+
+Well, installing Perl-Critic was a piece of cake:
+
+ppm install Bundle-Perl-Critic
+
+
+However, I've search every repository in PPM4, (trouchelle and the usual suspects) and they don't seem to have the module called 'criticism'. I've installed lots of modules using CPAN and PPM, but this module proves to be the most elusive so far. Am I missing something here?
+
+Has anyone got any luck enabling PerlCritic support in Komodo 5.1 on Windows? Hope to hear from you. The feature works perfectly in MacOS and Linux though...hmmm.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The criticism module is available on CPAN, and is used as a pragma.
+
+Basically, use of the pragma in your code runs your code through Perl::Critic before each execution, it's an alternative to using the perlcritic command-line tool.
+
+Here's an except from the documentation:
+
+
+  This pragma enforces coding standards
+  and promotes best-practices by running
+  your file through Perl::Critic before
+  every execution. In a production
+  system, this usually isn't feasible
+  because it adds a lot of overhead at
+  start-up. If you have a separate
+  development environment, you can
+  effectively bypass the criticism
+  pragma by not installing Perl::Critic
+  in the production environment. If
+  Perl::Critic can't be loaded, then
+  criticism just fails silently.
+
+    
+    
+Answer 2: 
+
+    
+    
+ppm install criticism should work with ActivePerl.  What error do you
+get when you try it?
+
+Once the two modules are installed in the current version of Perl that
+Komodo is using, the Perl-Critic options in [Preferences|Language|Perl]
+should be enabled.
+    
+    
+Answer 3: 
+
+    
+    
+You still can install modules on ActivePerl with CPAN shell. Of course, you would not be able to install C-based modules if you don't have MSVC (free version is available) or gcc (ppm install gcc), but in your case, criticism is a perl-only modules.
+
+P.S. Which version of ActivePerl do you use?
+    
+    
+Answer 4: 
+
+    
+    
+I downloaded the criticism.pm directly from CPAN - criticism and copied it into the Perl library folder and now it works. However, it didn't work immediately. I had to restart Komodo a few times before the settings took effect. Weird. Anyway, thanks guys for all the suggestions.
+    
+    
+Title: Create a WPF library in Visual Studio Express
+Description: 
+    
+    
+                    
+I am trying to make my code more reusable by placing commonly recurring utility classes and user controls into a packaged library. The IDE is making this difficult, as so far, I have found that it always defaults to Windows Forms user controls and disabling my ability to create xaml files etc from the 'Add a New Item' dialog.
+
+Is it possible to create a library for classes and controls with the aid of the IDE environment (I'm using VS2008 Express)?
+
+If so, what do I need to change to get the preferred behaviour out of the IDE when working  on libraries for WPF? Is it just a case of selecting the right combination of references, or do I need to edit the project file? I'm at a bit of a loss on this one.
+    
+
+        
+Answer 1: 
+
+    
+    
+Here are detailed step-by-step instructions on how to create a template for that.
+    
+    
+Answer 2: 
+
+    
+    
+If there isn't a specific "WPF Class Library" option (I can't recall offhand, and don't have a copy of Visual Studio Express handy), then I'm afraid that you're going to have to modify the project file directly to let Visual Studio know that it is a WPF project. See this question for instructions on how to do that.
+    
+    
+Title: Should I push contentModel.xml to GitHub repository?
+Description: 
+    
+    
+                    
+I am trying to bring a local Git branch up to date with the current Master branch. The local had been set aside for some time, so naturally we have many merge errors. One of these is about the contentModel.xml file.
+
+Is the contentModel.xml file specific to the user environment, or to the project structure? This will determine if I should use the GitHub version or the local version, or try to manually merge them.
+
+Note: We recently switched from Visual Studio 2015 to JetBrains Rider 17.3. I have been unable to determine which IDE actually created the file, or if it is needed by both. We also do switch back to VS occasionally to work on designer files, so we need to maintain that backward compatibility in working with this file.
+
+Anyone have some guidance on this?
+    
+
+        
+Answer 1: 
+
+    
+    
+From JetBrains Rider Support Question:
+
+
+  The contentModel.xml file is auto-generated by Rider and can safely be ignored for source control reasons.
+
+    
+    
+Title: Syntax highlighting for Hugo in WebStorm
+Description: 
+    
+    
+                    
+I have been looking around the internet for a WebStorm plugin that will help with syntax-highlighting when working with Hugo. I have not been able to find one. Does anyone know of a Hugo WebStorm plugin that exists? Thanks for your help.
+    
+
+        
+Answer 1: 
+
+    
+    
+There is Go Template plugin from JetBrains. It allows to highlight and autocomplete the basic syntax at least. The plugin works with *.gohtml files, file extensions can be customised in "Editor/File Types" preferences.
+    
+    
+Title: QtCreator &mdash; show a list of member functions of a class?
+Description: 
+    
+    
+                    
+Ｉrecently just switched to QtCreator for C++ programming. 
+
+I am curious, how do I see a list of the member functions/variables of a class on the right hand side of the screen? I think a lot of IDEs (such as Eclipse) provide this feature and it's quite useful for helping to understand new code. 
+    
+
+        
+Answer 1: 
+
+    
+    
+You can do this by using Sidebar (To see sidebar. Select Window-/strong/ppstrong/strong/ppa href="https://i.stack.imgur.com/XjSej.png" rel="noreferrer"img src="https://i.stack.imgur.com/XjSej.png" alt="enter image description here"/a/p/div
+Title: Hotkey to jump past closing brackets in JetBrains PhpStorm
+Description: 
+    
+    
+                    
+Right now I'm just using PhpStorm to work with some HTML, and it's great in that it auto indents and automatically closes out HTML tags.
+
+The only problem is this feature doesn't really save me any time because I then have to use my mouse or arrow keys to navigate past the closing tag when I reach it. For example I type &lt;p&gt; and it closes it out &lt;p&gt;&lt;/p&gt; with my cursor in between, but when I'm done I either have to manually navigate past the closing bracket or use Shift+Enter to jump down to the next line (which isn't always what I want to do).
+
+Is there a command that will just jump me to the end of the next closing bracket, or is there a way of setting this up? I've googled it but haven't been able to find anything. 
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  I've googled it but haven't been able to find anything. 
+
+
+Well... Help | Default Keymap Reference has the most needed shortcuts and actions listed and the one you need is there.
+
+
+
+In any case:
+
+Ctrl + ] -- Navigate to code block end -- will jump to the closest closing tag (in HTML) or brace/closing keyword (CSS, PHP).
+
+Ctrl + [ will do the opposite -- jump to the opening tag.
+
+There are few other actions that can help here but may not have any shortcuts assigned by default -- check them in Settings (Preferences on Mac) | Appearance &amp; Behaviour | Keymap (it has search by action name and even by already assigned shortcuts).
+
+
+
+Another alternative (or better say -- advanced navigation) would be using AceJump pluign (you have to see it in action -- you either like or hate it).. or even Vim mode navigation (via IdeaVim plugin).
+    
+    
+Answer 2: 
+
+    
+    
+The simplest way to go about this is to press Command + -/kbd/pp/p/div
+Title: Does Scala IDE has *.sbt syntax highlighting support?
+Description: 
+    
+    
+                    
+I'm using Scala Ide 4.0.0-rc3 and for a new Play Framework application, I can't seem to get syntax highlighting enabled for *.sbt files. Do we have support for it in Eclipse yet?
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+As mentioned by @Mirko Stocker, this isn't currently supported. However, I've found that associating *.sbt with the JavaScript Editor produces decent highlighting
+
+Configuration
+
+Open Preferences and configure:
+
+
+
+Result
+
+The following shows an example sbt file after making the configuration above:
+
+
+    
+    
+Answer 2: 
+
+    
+    
+No, this hasn't been implemented yet. There's a project to provide better sbt integration into Eclipse, but it's mainly focused on building and importing projects. If you're using a .scala Build definition, then that's supported by sbteclipse.
+    
+    
+Title: Weird back button (Alt-Left) behavior in Eclipse
+Description: 
+    
+    
+                    
+Not exactly a programming question, but I figured I'd get more response here than in SU. Tag 'java' added because I'm programming in Java. Feel free to edit/move question as appropriate. 
+
+I'm using Eclipse Kepler IDE, and I'm having this annoying weird behavior from the Back function. I can't remember if I had this behavior in Juno version but I think not - that's what I'm here to confirm, if this is a bug or I need to adjust some setting in Eclipse.
+
+Imagine the following code points:
+
+
+Point A
+Point B
+Point C
+
+
+When my editing cursor is at point A and I hit F3 (Open Declaration), Eclipse takes me to B. If I hit F3 again, Eclipse takes me to C.
+
+All that is well, but when I hit the Back button or press Alt+Left from C, I'm being taken back to A. If I then hit Forward (Alt+Right), I'm taken to B and the Forward button is disabled! (I can't go forward to C).
+
+Current Behavior:
+F3:      A -&gt; B -&gt; C
+Back:    C ------&gt; A
+Forward: A -&gt; B
+
+
+This doesn't seem right at all, because I would expect going back from C, I should reach B, and then to A. Following that, going forward from A, I should go to B, and then to C.
+
+Expected Behavior:
+F3:      A -&gt; B -&gt; C
+Back:    C -&gt; B -&gt; A
+Forward: A -&gt; B -&gt; C
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Update your eclipse. They fixed this bug in the last days. :-)
+    
+    
+Answer 2: 
+
+    
+    
+Seeing this as well seems to be new to Kepler and also present in Luna builds
+    
+    
+Answer 3: 
+
+    
+    
+Seems that the guys from eclipse are already working on this.
+
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=413474
+    
+    
+Answer 4: 
+
+    
+    
+I Think that this has already been fixed, see
+
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=417001
+
+The fix is also available in Kepler SR1.
+    
+    

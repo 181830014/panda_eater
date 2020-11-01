@@ -1,0 +1,3327 @@
+Title: As of 2011: Netbeans 7 or Eclipse Indigo for C++?
+Description: 
+    
+    
+                    
+This is basically a duplicate of:
+Netbeans or Eclipse for C++?
+
+But, that question as 3+ years old, and a lot has changed since then.
+
+I have a large code base with a custom (but Makefile based) build system.  The areas I am specifically wondering about include:
+
+
+Syntax highlighting
+Code navigation.
+Code hints.
+"ReSharper style" code helpers.
+Documentation integration.
+Debugger UI and features.
+
+
+Has anyone had the chance to evaluate both Netbeans and Eclipse?
+
+EDIT:  As a followup question, are any of the Netbeans users here concerned with its future given Oracle's recent bad history with "open" efforts?  (Open Solaris, MySQL, Open Office)
+
+Thank you
+    
+
+        
+Answer 1: 
+
+    
+    
+I cannot comment on Netbeans, but I can offer you information on Eclipse.  I work with C++ on UNIX systems, and I have started to use Eclipse when exploring large code bases that I know little about.  I don't use it to build, but it would be easy to integrate our build system with it as one only needs commands.
+
+Eclipse has most of what you are looking for: (I'm speaking of Eclipse/CDT)
+
+
+Not only can you completely customize your syntax highlighting, you can also have it format the code with templates.  My company has a code standard for spacing, tabs and formatting of functions and conditional code, and with little effort I was able to modify an existing template to meet our code standards.
+The navigation is not bad, if you highlight and hover over a variable, it shows you the definition in a small pop-up bubble.  If you do the same for a type, it will you show you where the type is defined.  For functions, it will show the first few lines of the implementation of the function, with an option to expand it and see the whole function.  I find all of these nice for code discovery and navigation.  You can also highlight a variable, and use a right-click menu option to jump to its declaration.
+I suppose by code hints you are referring to something like intellisense?  This is the main reason why I use Eclipse when looking over a large code base.  Just hit the '.' or '-/p/lilip/p/li/olp/pp/pp/p/div
+Answer 2: 
+
+    
+    
+I cannot comment on eclipse, but on netbeans 7 I will say things that are very important for me and that work fine so far:
+
+
+code completion, go to declarations 
+pkg-config automatic include management for parsing
+
+
+stuff that sometimes works and sometimes don't
+
+
+find usages, sometimes it might fail to find usages in other open projects
+debugger sometimes gets confused with unittest-cpp macros and it will not go on the appropiate line
+
+
+stuff that are not yet working and i care deeply:
+
+
+C++0x syntax highlighting (auto, lambdas, enum class, variadic templates, none of them are recognized by the built-in parser)
+
+
+stuff that is not quite working but i could not care less:
+
+
+git integration. I enjoy using git from command-line so this is a non-issue
+
+
+in all, the IDE is very usable. I hope to have a chance to try out latest cdt on Indigo Eclipse, but so far i haven't that much of a real reason to investigate
+    
+    
+Answer 3: 
+
+    
+    
+I'm a huge fan of Netbeans. I am in a similar situation to yours, but creating the project was very easy. Just point Netbeans at where the code is checked out and it figures out most things for itself. I rarely have to do any configuration. One thing to note though, if your tree is very large, it can take some time to fully index - and while it does, memory and cpu will be hosed on the box.
+
+The integration with cvs is awesome, and the Hudson integration is very cool for CB. I've not used Git myself, though I should imagine it's a no-brainer.
+
+One thing that does irritate me no end is that it does not behave very well with code relying heavily on templates. i.e. shows lots of warnings and errors about types not being found etc. 
+
+I have not used the latest version of Eclipse, I tried the major release before the current one and gave up because it did not have the same smooth project integration with the makefiles etc. I find it's not as nice if you don't want to use it's make system - though I could be wrong. 
+
+I don't use any of the code formatting provided, I instead prefer something like AStyle instead. I know that NetBeans does a good job with Java - but have not used it for C++. CDT I seem to remember doing some odd stuff with indentation when formatting C++ code - esp. if templates are involved - but that was atleast two years ago.
+
+Hope some of it helps - the best way to do this is to download and try for yourself and see what works for you. Anything we tell you is purely subjective.
+    
+    
+Answer 4: 
+
+    
+    
+I used to work with Netbeans with MinGW, I Just tried 7.0.1.
+I currently use Eclipse Indigo with CDT and MinGW - It's better performance wise (less CPU &amp; Memory).
+
+Netbeans creates a makefile to compile all the time,
+In Eclipse you can build directly with the CDT-Toolchain or use Makefile - Eclipse is more flexible.
+
+Debugging: Netbeans might be better in Solaris/Linux.
+
+I Personally rather eclipse over Netbeans, I think eclipse is more professional.
+    
+    
+Answer 5: 
+
+    
+    
+One particular issue that causes me quite a lot of grief with Netbeans 7.0 is that it tends to want to work with utf8 files, and not all of out c++ projects are utf8. It will issue a warning about opening such a file, and if you do open it, will corrupt said file, which is a pain.
+
+I've not found out how to properly make netbeans handle this. Apparently the encoding can be changed, but for the entire project. So presumably changing it to us-acii would stop this problem, although non ascii characters wouldn't display properly.
+    
+    
+Title: Is there something like bpython for Ruby?
+Description: 
+    
+    
+                    
+IRb is pretty plain compared to bpython, even when using wirble.
+
+Is there any ruby equivalent of bpython?
+    
+
+        
+Answer 1: 
+
+    
+    
+Use Pry: http://pry.github.com
+
+It is written from scratch and let's you:
+
+
+view method source code
+view method documentation (not using RI so you dont have to pre-generate it)
+pop in and out of different contexts
+invoke at runtime, in any context
+syntax highlighting
+gist integration
+view and replay history
+open editors to edit method using edit-method obj.my_method syntax
+
+
+A tonne more great and original features
+    
+    
+Answer 2: 
+
+    
+    
+You can extend irb to achieve all of bpython's functionality and more with the right gems:
+
+
+wirble: for syntax highlightning (as you already know)
+bond: for more advanced autocompletion
+utilitybelt: for pastebin-like commands
+sketches: for editing and evaluating code easily
+boson: command framework for creating libraries of commands to be loaded as needed
+hirb: framework for associating views per class
+
+
+For more gems, see here.
+    
+    
+Title: Cell mode in Python editors
+Description: 
+    
+    
+                    
+In recent versions of MATLAB, one can execute a code region between two lines starting with %% using Ctrl-Enter. Such region is called a code cell, and it allows for fast code testing and debugging.
+
+E.g. 
+
+%% This is the beginning of the 1st cell
+
+a = 5;    
+
+%% This is the end of the 1st cell and beginning of the 2nd cell
+
+% This is just a comment
+b = 6;
+
+%% This is the end of the 2nd cell
+
+
+Are there any python editors that support a similar feature? 
+
+EDIT: I just found that Spyderlib supports "block" execution (code regions separated with blank lines) with F9, but as the this thread mentions, this feature is still not very robust (in particular in combination with loops).
+    
+
+        
+Answer 1: 
+
+    
+    
+The Interactive Editor for Python IEP has a Matlab-style cell notation to mark code sections (by starting a line with '##'), and the shortcut by default is also Ctrl+Enter:
+
+## Cell one
+"""
+A cell is everything between two commands starting with '##'
+"""
+a = 3
+b = 4
+print('The answer is ' + str(a+b))
+
+## Cell two
+
+print('Hello World')
+
+    
+    
+Answer 2: 
+
+    
+    
+Spyder3 defines a cell as all code between lines starting with #%%.  
+
+Run a cell with Ctrl+Enter, or run a cell and advance with Shift+Enter.
+    
+    
+Answer 3: 
+
+    
+    
+I have written a vim plugin in which cells are delimited by ## . It sends cells to an ipython interpreter running in tmux. You can define key mappings to execute the current cell, execute current cell and move to next or execute the current line :
+
+https://github.com/julienr/vim-cellmode
+
+I recently started working on a similar plugin for Intellij PyCharm. It can send the cell to either the internal python console (which has some issues with plots) or to an ipython interpreter running in tmux :
+
+https://github.com/julienr/pycharm-cellmode
+    
+    
+Answer 4: 
+
+    
+    
+Pyscripter supports block execution. But it's Win only. And it's limited to select code block - kbd/kbdkbd/kbd/p/div
+Answer 5: 
+
+    
+    
+IDLE with IdleX has support for Matlab-like and Sage-like cells using SubCodes. Code in between '##' markers can be executed with Ctrl+Return. It also allows for indented markers so that indented code can be executed.
+    
+    
+Answer 6: 
+
+    
+    
+Spyder3 &amp; PyCharm: #%% or # %%
+
+Spyder3: Ctrl+Enter: to run current cell, Shift+Enter: to run current cell and advance.
+
+PyCharm: Ctrl+Enter: to run and advance
+
+# %%
+
+print('You are in cell 1')
+
+# %%
+
+print('You are in cell 2')
+# %% 
+
+print('You are in cell 3')
+
+
+enter image description here
+    
+    
+Answer 7: 
+
+    
+    
+There is Sage that offers something like this. It is meant to be a python alternative to Matlab, you should take a look.
+
+In a sage notebook, you write python commands within blocks that are pretty similar to matlab's cell.
+    
+    
+Title: Integrating Clang Within NetBeans?
+Description: 
+    
+    
+                    
+What are the steps involved in integrating Clang within NetBeans? I would like to also see the Clang error and warning messages from within NetBeans. This will be used mainly for developing in C.
+    
+
+        
+Answer 1: 
+
+    
+    
+NetBeans 7.2 has supported Clang natively.
+
+Just open up Options Window, switch to C/C++ section, and add a new Tool Collection. Type:  /usr/bin in Base Directory, and select "CLang" in the combo box.
+
+I have been using Clang to build my project, and NetBeans works with Clang perfectly.
+    
+    
+Answer 2: 
+
+    
+    
+Here is a link to the bug report for clang support in netbeans at netbeans.org. Track this bug for official netbeans support.
+    
+    
+Answer 3: 
+
+    
+    
+If you have downloaded and installed the C/C++ plug-in for NetBeans 8+ following the instructions on this page:
+
+https://netbeans.org/community/releases/80/cpp-setup-instructions.html
+
+you have a C/C++ item in the upper menu of the Tools /pp/pp/pp/pp/pp/p/div
+Title: Code folding in RStudio: Creating hierarchy in the code
+Description: 
+    
+    
+                    
+I'm writing R scripts in RStudio and I use the code folding a lot. I found that you can see the hierarchy of the folding by pressing  cmd + shift +  O. This is super helpful.  
+
+# to my dear love ---------------------------------------------------------
+2+2 
+# yo man ====
+x.2 = function (x) {x+2}
+
+### I do love potatoes ####
+
+
+See the result by pressing cmd + shift +  O.
+
+
+
+I don't understand how this is working because when I write the code below, I can create a subsection without text but not when there is text in it (using # ==== but not # yo man ====). 
+
+# to my dear love ---------------------------------------------------------
+2+2
+# ==== 
+
+# yo man ====
+
+### I do love potatoes ####
+x.2 = function (x) {x+2}
+data = "here is some data"
+
+
+See the result by pressing cmd + shift +  O.
+
+
+You can see that under # to my dear love --------------------------------------------------------- everything under is shifted to the right! This is cool!
+
+
+The question is thus, how could it be possible to create a hierarchy of sections that include text in it? 
+Is it a peculiar package or Emac that is doing this? How can I create subsections, with text, and see the hierarchy in the cmd + shift +  O box?
+How can I down shift a section (going to a higher section (say section 2) to a lower section (section 1), by decreasing the visual hierarchy in the right box? 
+
+    
+
+        
+Answer 1: 
+
+    
+    
+As per Chris's answer subheaders within functions 
+
+RStudio Code Folding hierarchy only works within function definitions and if-else structures.  For example:
+
+# Section 1 ----
+a &lt;- 1
+
+testfunct1 &lt;- function () {
+# sect in function=====
+  b &lt;- 2
+  c &lt;- 3
+}
+
+# Section 2 #####
+d &lt;- 4
+
+# Section 3 =======
+e &lt;- 5
+
+testfunct2 &lt;- function () {
+  # sect in function 2 =====
+  f &lt;- 6
+  testsubfunct2_1 &lt;- function () {
+  # sect in subfunction 2_1 -----
+    if (a == 1) {
+      # section in if ----
+      g &lt; 7
+    } else {
+      # section in else ----
+      h = 8
+    }
+  } 
+}
+
+# Section 4 ####
+j &lt;- 9
+
+
+Produces this outline:
+
+
+
+I don't know why the if-else section labels do not line up.
+    
+    
+Title: Why cannot modern C++ IDEs auto-generate header files?
+Description: 
+    
+    
+                    
+I understand the benefits and flexibility that header files provide, symbol discovery,  the speed-up of processing for the compiler, etc. What I don't understand is why modern C++ IDE's don't auto-generate header files based on the members/methods added into the code file, thus reducing the manual labour involved in keeping the header up-to-date with the code file, and vice-versa. Since the IDE only makes incremental changes to the header file, developers may modify the header and changes are preserved.
+
+Refactoring could be provided for adding/renaming/removing method arguments, for renaming methods, for moving methods into another class, and so on. During such refactoring the IDE would take care of updating the header + source files.
+
+The functionality could be similar to the Visual Form Designer in Visual Studio. When you design a form, the IDE auto-generates code for the same, which is stored in a separate, IDE-managed source file. Devs may also modify such code files, or may include additional code in the user-managed source file.
+
+Working with professional C++ source code, I've encountered all kinds of dubious practices :
+
+
+Entire classes defined in the header file, that include function code ("why should I define a class in two places when I can define it in one?!")
+Useful functions defined in the header file ("why bother keeping the header up-to-date, when I can define the function in the header itself?! let other devs use "go to declaration" to find the function if they don't think of looking in the header file!")
+Missing header definitions for public/static functions (reduces compilation time?, or saves dev. time?)
+
+
+Although I am not a professional C++ programmer, coming from a high-level background (JS, C#, AS3), I can feel the "downgrade" working with C++ first-hand and I don't see why some of these disadvantages cannot be eliminated by the IDE itself.
+
+By no means am I mocking the IDE or the compiler in any way. I understand C++ allows for more complex methods of defining a program than modern-day languages do (eg. C#), and though the complexities of templating elude me, I'd like to see some of the benefits of higher level languages brought into C++ application development.
+    
+
+        
+Answer 1: 
+
+    
+    
+The premise of your question, I believe, is not correct.
+
+The Eclipse Luna IDE can auto-generate implementation stubs (in a CPP file) after you define a function (or class member function) in a header file.  
+
+You type the following in the header:
+
+class MyClass 
+{
+  void my_method(const OtherClass&amp; o, const std::string&amp; name) const;
+};
+
+
+Then click "Source /pprecode/code/prepem/em/ppem/em/p/div
+Title: Does NetBeans have any &ldquo;collapse all&rdquo; shortcut for open directories in the navigator view? [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        NetBeans shortcut key for collapsing/expanding a method
+                            
+                                (6 answers)
+                            
+                    
+                Closed 6 years ago.
+        
+
+
+    
+
+NetBeans has a helpful (to me anyway!) feature under the "Views" menu, called "Synchronize Editor with Views".  As the name suggests, toggling this on will cause the navigator view to jump straight to a file when it's opened in the editor.
+
+I generally prefer this to the normal "Ctrl+Shift+1" shortcut for manually jumping to a file.  However, the downside is that after editing several files, your navigator tree is a mess of multiple open directories.
+
+Eclipse has similar functionality, but it also has a "collapse all" button at the top of its navigator view... restoring things with a single click having to scroll around.  Does NetBeans have any similar mechanism for collapsing open directories?  Maybe a poorly-documented keyboard shortcut buried in there or something?
+    
+
+        
+Answer 1: 
+
+    
+    
+Taken from http://ui.netbeans.org/docs/ui/code_folding/cf_uispec.html
+
+Collapse Fold       Ctrl+Minus  
+Expand Fold         Ctrl+Plus   
+Collapse All Folds  Ctrl+Shift+Minus        
+Expand All Folds    Ctrl+Shift+Plus     
+
+    
+    
+Answer 2: 
+
+    
+    
+Unfortunately, after further digging on the NetBeans discussion forums and mailing lists, it seems that this functionality simply doesn't exist.  That's a shame... hopefully they'll add it in the future.
+    
+    
+Answer 3: 
+
+    
+    
+A dirty solution is to close the project and reopen it. It will start collapsed.
+    
+    
+Answer 4: 
+
+    
+    
+Close the navigator (press the x). Then go to Window-
+Title: How to open emacs gui/ide from mac terminal?
+Description: 
+    
+    
+                    
+I'm trying to open files up on emacs outside of the terminal.  I prefer a gui/ide environment when I code instead of doing it through a terminal.  I initially thought that typing emacs filename.py would open that file through Emacs.app, however it only allowed me to edit the file through the terminal.  When this didn't work, I looked into editing the .profile and .emacs files in my home directory but this was to no avail.  
+
+Maybe this is more intuitive than what I've read but I can't seem to figure it out.  Any help is appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+Assuming you have Emacs installed from Homebrew like this:
+
+brew install emacs --with-cocoa
+
+
+Just type the following command to open Emacs.app from terminal:
+
+open -a Emacs filename.py
+
+
+If you want all files opened in the same frame, instead of new frames, put this into your .emacs file:
+
+(setq ns-pop-up-frames nil)
+
+    
+    
+Answer 2: 
+
+    
+    
+The best way to open files in Emacs from the terminal is the emacsclient command, which will open the file in your existing Emacs app (preventing startup time). If you're on OSX and you installed Emacs through Homebrew, the emacsclient binary will already be set up. (In your Emacs config, you have to include (server-start) somewhere.)
+
+If you actually want to spin up a new GUI app instance instead, you can set up your own shell script and put it in your PATH somewhere before the existing emacs binary. It sounds like you're using Homebrew, which sets up the emacs binary as the following shell script:
+
+#!/bin/bash
+/usr/local/Cellar/emacs/24.3/Emacs.app/Contents/MacOS/Emacs -nw  "$@"
+
+
+The -nw is what prevents Emacs from opening in GUI mode. You can make your own emacs shell script and leave out -nw:
+
+#!/bin/bash
+/usr/local/Cellar/emacs/24.3/Emacs.app/Contents/MacOS/Emacs "$@"
+
+    
+    
+Answer 3: 
+
+    
+    
+To do what you want, you'd need to find the location of the actual binary contained in Emacs.app, and use that as the command instead of emacs. Most likely, it's at
+
+/path/to/Emacs.app/Contents/MacOS/Emacs
+
+
+Which, if you have Emacs.app in your Applications folder, as would be typical, would be
+
+/Applications/Emacs.app/Contents/MacOS/Emacs
+
+
+To set it up with a shorter command to use, you could try adding to your .profile (I don't know what shell you use) the following line, or whatever equivalent it has for your shell (This works for bash and zsh, at least):
+
+alias emacsgui='/Applications/Emacs.app/Contents/MacOS/Emacs'
+
+    
+    
+Answer 4: 
+
+    
+    
+The modern way to go about this is by installing Emacs using Homebrew Cask:
+
+brew cask install emacs
+
+
+Source: this comment by Homebrew project leader Mike McQuaid, which reads:
+
+
+  Cocoa support for Emacs will not be accepted. This is provided by brew cask install emacs.
+
+    
+    
+Answer 5: 
+
+    
+    
+One should link emacs to /Applications if not already done,
+
+brew linkapps emacs
+
+
+to link the emacs to symlink emacs installed in Cellar. Once symlinked, you can open emacs by 
+
+open -a emacs
+
+
+as already pointed out by @katspaugh
+    
+    
+Title: Eclipse Android project, how to reference library within workspace?
+Description: 
+    
+    
+                    
+I followed some steps I found here (can't find the URL right now, sorry) to convert my Android project in Eclipse to a layout where 99.9% of my code is in a library project, and then I have 2 other shell projects under the same workspace that are mostly just the AndroidManifest.xml files, and a few resource files.  This was done so I can support 2 builds of the same project, with just some minor text/icon changes between the 2.  The application name is also different so I can publish both on the Android Market at the same time.
+
+Ever since I did this, about every 10 times I compile, maybe once every day or two, I get "dalvik error 1" and something about "Access already exists" (Access being the name of the first Java unit in my library project).
+
+To "work around" the issue I go in to the Java Build path for my stub-project that I am trying to build, and remove the JAR file from my main library from the libraries tab.  Then I can build without the error.
+
+Then a while later (maybe 1 or 2 days) I'll get an error about missing classes when I compile my stub-project (not my library).  So I'll go back to the Java Build path and put the reference to the JAR file back in, and all is good again for 1 or 2 days, then I'm back to the same error as before.
+
+Is this just a known issue and something I need to do, or can I resolve by a restructure of my projects/workspaces?  Currently I have:
+
+Lib Project - only has 2 libs on build path: Android 2.1 and com.android.ide.eclipse.adt.LIBRARIES
+
+First stub project that uses above lib - has the same 2 libs as above project, plus sometimes I use "Add JAR" to include the JAR from the above project's bin\ folder.
+
+2nd stub project - same libs as first stub project
+
+Should I reference the JAR from my "lib project" using one of the other tabs under build path options?  Maybe the "Project" tab instead, or the "Source" tab?  I don't currently have it under any of those other areas.
+
+When I get in to the weird state, doing a "Clean project" also doesn't help, I've tried that several times and open/close the IDE between cleaning, to no resolve.
+
+At this point we are in the final testing stages, so my normal daily task is:
+
+
+Make a minor update (bug fix) in the LIB project
+Use the publish wizard to export both projects and update Android Market and other places we keep the APK files
+
+
+So I'd like those steps to stay simple, without having to open/close multiple workspaces or go through a lot of build steps if possible.
+    
+
+        
+Answer 1: 
+
+    
+    
+The classical Eclipse/Java way
+Add a (workspace) library
+
+Right click the project you want to insert in.
+Click Properties.
+Select Java Build Path.
+Select the Libraries tab.
+
+Now, it depends how you compile your library.
+So either do an Add JARs... or an Add Class Folder.
+Choose the external variant to use an external source.
+That's it.
+Add a workspace project
+
+Right click the project you want to insert in.
+Click Properties.
+Select Java Build Path.
+Select the Projects tab.
+
+Click Add... on the right side and you are done.
+The additional Android way
+Two steps are necessary:
+
+Mark the project you want to use as library project
+Reference the marked project
+
+Mark the library project
+Right click your project and select Properties.
+Select Android on the left and tick the checkbox IsLibrary. Done.
+Reference the marked project
+Right click your project and select Properties.
+Select Android on the left and Add... your marked project. It will be added to the list and is ready to use. Now you are able to access all classes and ressources (e.g. drawables, strings) from the referenced, marked project. Awesome, eh? :)
+    
+    
+Title: Slow context menu in Visual Studio 2015 on right click folder in web project
+Description: 
+    
+    
+                    
+Some of our team who are trialing VS 2015 on Windows 10 Pro 64 bit are seeing this issue:
+
+Visual Studio 2013 context menus slow only in web application project
+
+When right-clicking a folder (only a folder in a web app project) there is a lengthy delay in rendering the context menu, as well as any dialogs.
+
+Installation details:
+
+Microsoft Visual Studio Professional 2015
+Version 14.0.23107.0 D14REL
+Microsoft .NET Framework
+Version 4.6.00079
+
+Installed Version: Professional
+
+Visual Basic 2015   00322-50050-08414-AA353
+Microsoft Visual Basic 2015
+
+Visual C# 2015   00322-50050-08414-AA353
+Microsoft Visual C# 2015
+
+Visual C++ 2015   00322-50050-08414-AA353
+Microsoft Visual C++ 2015
+
+Visual F# 2015 RC   00322-50050-08414-AA353
+Microsoft Visual F# 2015 RC
+
+ASP.NET and Web Tools   14.0.20626.0
+ASP.NET and Web Tools
+
+ASP.NET Web Frameworks and Tools 2013   5.2.30624.0
+For additional information, visit http://www.asp.net/
+
+Common Azure Tools   1.5
+Provides common services for use by Azure Mobile Services and Microsoft Azure Tools.
+
+GenerateUnitTest   1.0
+Generates unit test code for methods in classes under test.
+
+JetBrains ReSharper Ultimate 2015.1.3   Build 102.0.20150724.141603
+JetBrains ReSharper Ultimate package for Microsoft Visual Studio. For more information about ReSharper Ultimate, visit http://www.jetbrains.com/resharper. Copyright © 2015 JetBrains, Inc.
+
+Microsoft Azure Mobile Services Tools   1.4
+Microsoft Azure Mobile Services Tools
+
+NuGet Package Manager   3.0.0
+NuGet Package Manager in Visual Studio. For more information about NuGet, visit http://docs.nuget.org/.
+
+PreEmptive Analytics Visualizer   1.2
+Microsoft Visual Studio extension to visualize aggregated summaries from the PreEmptive Analytics product.
+
+SQL Server Data Tools   14.0.50616.0
+Microsoft SQL Server Data Tools
+
+
+We have tried the following:
+
+Restarting Visual Studio, and re-opening the solution
+Cleaning the solution, and deleting the obj folders.
+Recreating the project
+Clearing Resharper's Cache
+Disabling rich client / hardware graphics acceleration in Options-&gt;Environment-&gt;General
+Disabling Resharper
+Deleting all Temporary ASP.Net folders
+Deleting the contents of %localappdata%\Microsoft\WebsiteCache
+Deleting all *.suo user options files
+Uninstalling all extensions (Web compiler, Bundler and Minifier)
+Probably some other things that I have forgotten.
+
+
+Running process monitor during a right click shows every project reference being processed in a CreateFile/ QueryNetworkOpenInformationFile/CloseFile sequence 4 times, like this:
+
+
+
+Any ideas what is happening here ? The delay is too long to ignore and occurs for the right click and every selection from the context menu. 
+    
+
+        
+Answer 1: 
+
+    
+    
+After we submitted a support request to Microsoft, it turns out the issue was a broken project reference in the Web application project
+
+After removing the reference, the context menus behave normally, without any lag.
+    
+    
+Answer 2: 
+
+    
+    
+I have just solved this problem in a different way.
+
+Simply delete the contents of:
+C:\Users\ username \AppData\Local\Microsoft\WebSiteCache
+
+Credit: http://www.geocortex.com/about/blog/archive/slow-visual-studio-performance-solved/
+    
+    
+Title: How to create directory folder in Android Studio
+Description: 
+    
+    
+                    
+I'm using Android Studio here I want to create a directory folder inside the lib folder. I right-click on the lib folder but the directory option is not showing.
+Can anyone suggest to me how to create a directory folder inside a folder?
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Try to create package instead of a directory. Seems like Create New Package and Create New Directory will both just create a folder under lib directory.
+    
+    
+Answer 2: 
+
+    
+    
+You need to go File -strong/stronga href="https://i.stack.imgur.com/tCxHx.png" rel="noreferrer"img src="https://i.stack.imgur.com/tCxHx.png" alt="enter image description here"/a/p/div
+Answer 3: 
+
+    
+    
+Right click on the package then "Mark Directory as" -/ppa href="https://i.stack.imgur.com/qHX9X.png" rel="noreferrer"img src="https://i.stack.imgur.com/qHX9X.png" alt="enter image description here"/a/p/div
+Answer 4: 
+
+    
+    
+Yeah I had the same problem, so you just have to follow these steps:
+
+1) Go to project structure
+Here:
+
+2) Go to Modules and find "Sources" tab
+Click here
+
+3) Uncheck Sources and click "Apply"!
+(at the beginning it was unchecked and it didn't work, but when I checked "Sources", my folders changed as it was at the beginning(like packages), so I unchecked again and folders changed, and now I can create directories, not packages, hope it helped you!)
+
+Like this:
+    
+    
+Answer 5: 
+
+    
+    
+This was reported here
+
+It's an IntelliJ issue in how they deal with folders marked as source. The lib folder needs to be a source folder for internal flutter purposes. The best way is to use your file manager or terminal to create the folder. 
+    
+    
+Answer 6: 
+
+    
+    
+Step 1: There is no pre featured option in Android for adding raw folder unlike Assets folder. Open App folder and select res folder
+
+Step 2: Right click on res folder, select New/pp/pp/p/div
+Answer 7: 
+
+    
+    
+You can use the in-built IDE terminal to create the folders.
+    
+    
+Answer 8: 
+
+    
+    
+Just select add as a package
+
+
+
+Then import
+
+import 'package:myproject/WhateverDirectory/whatever.dart';
+
+    
+    
+Answer 9: 
+
+    
+    
+For creating the folder in case of flutter framework in Android studio, follow the steps as shown below:-
+
+Right click on the folder with the name of your app i.e. the root folder.
+In the drop down menu click on the new option.
+After this a drop down menu opens here you will see directory option just click on that.
+After this enter the name of your directory / folder and press enter this will create a new folder / directory inside your root folder.
+If you want to make the directory inside the lib folder then just drag the directory from the root folder into the lib folder.
+After this a dialog box will open in this dialog box check if search for references is tick marked or not if not then tick mark it.
+Now click ok this will create your directory inside the  lib folder.
+
+Hope this may help.
+    
+    
+Title: Visual Haskell 2008/2010
+Description: 
+    
+    
+                    
+Does Visual Haskell for Visual Studio 2008/2010 exist? Or what are the alternatives to try it?
+
+EDIT: I've got a lot of alternatives but it seems that there is no Visual Haskell right now. 
+    
+
+        
+Answer 1: 
+
+    
+    
+Leksah is something I've heard a lot of good things about. It's a Haskell IDE written in Haskell. I've never used it, so I can't promise anything. However, it is in active development and some people do use it, so it can't be too bad.
+
+I know you're probably already tired of hearing this, but it would really be worthwhile to invest a day or two getting familiar with Emacs or Vim (I'm biased toward Emacs). It's not very hard to get a working Haskell set up in Emacs, as there is a very good mode for it available. The best thing about learning an editor like Emacs is that once you're familiar with it, it's always there. You can use it to write code in all of your favorite languages. I'm happy I learned to use Emacs just so I don't have to use a different IDE for nearly every language I use, and I don't always have to depend on an IDE, especially considering the fact that some languages don't even have IDEs. Newer ones, anyways.
+    
+    
+Answer 2: 
+
+    
+    
+In late 2005, Visual Studio support for Haskell was "almost finished" by a Russian student who had interned at Microsoft.  Shortly thereafter, the student dropped out of sight, and the project was never finished.   There have been periodic conversations at GHC Central about trying to bring it back, but I think there is just too much else going on: big focus on parallelism, new back end, new optimizer, LLVM back end, maybe a new code generator one day.
+
+Maybe with Haskell Prime finally stable at "Haskell 2010", when the report comes out someone will be willing to do a front end for PLT Scheme, or maybe someone in the Netherlands will do an IDE for Helium.
+    
+    
+Answer 3: 
+
+    
+    
+Not sure if this meets your criteria for what is considered an alternative (looking for a language or an IDE?), but F# is a fully-Microsoft-supported (and VS2008/2010 supported) functional language for .NET.  It's more ML-like than Haskell-like, but it's certainly closer to Haskell than, say VB :)
+    
+    
+Answer 4: 
+
+    
+    
+Looks like there is a new Visual Haskell implementation in the works.
+    
+    
+Answer 5: 
+
+    
+    
+To the best of my knowledge there is no currently published or publicly active project to update the existing visual haskell to newer versions.
+
+The code for visual haskell is written in Haskell and talks via COM to visual studio. Now the problem is, that even if you update the com wrappers to be compatible with the new visual studios you'd still be stuck using a ghc 6.6 simply because it relied on internal structures of the compiler to work, some of which have already been removed from 6.8 going forward.
+
+So any effort on this part will require a complete rewrite of plugin.
+
+Now the good new is I am busy writing a version for visual studio 2010 (sorry no 2008) but supposedly I could release it as a standalone isolated shell for those who don't have vs 2010 (need to check the license more closely).
+
+I'm also taking a different approach in the hope that it'll be more maintainable in the future. e.g. Not writing the interaction with visual studio in Haskell but using C#, not hardcode to the compiler but use the new API etc.
+
+I only have time to work on it in the weekends, So I project (no promises) that I'll have a first version out around july.
+    
+    
+Answer 6: 
+
+    
+    
+There is an Eclipse plug-in for Haskell. It depends on a slightly divergent version of Scion (!) but seems to work. However, I've only tried very simple tasks with it. Good luck!
+http://eclipsefp.sourceforge.net/
+    
+    
+Answer 7: 
+
+    
+    
+There's also a Haskell plugin for IntelliJ IDEA in the works: http://code.google.com/p/ideah/wiki/InstallConfig
+    
+    
+Answer 8: 
+
+    
+    
+Hmm, there certainly don't seem to be binaries for anything since VS .NET 2005... maybe #haskell knows something about what happened to it?
+    
+    
+Answer 9: 
+
+    
+    
+You could create a makefile project and specify a custom build command line. However, code coloring and automatic statement completion won't work.
+    
+    
+Title: Jump to line in vim with relativenumber on
+Description: 
+    
+    
+                    
+In a normal situation it's possible to look at the line number and use [number]G to goto that line. But I like to work with the setting relativenumber on. The disadvantage is that I can't jump to lines anymore by looking at the displayed line number. 
+
+Is it possible to redefine the behavior of [number]G to fix this? Also, would it be possible to make the current line number 1 instead of 0 with relativenumber on? And how?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can simply [number]j or [number]k to do this. 
+    
+    
+Title: Is &ldquo;implicitly imported&rdquo; always a bad thing in Delphi packages?
+Description: 
+    
+    
+                    
+Trying to rearrange my packages for a set of TFrame-descendent components, I'm finding it seemingly necessary to break out some of my utility TFrame descendents separate from the dialog  forms which use them, mainly because the former are registered to the palette as true components and that seems to confuse the IDE sometimes with respect to the dialog forms which use them.  The dialog forms in turn are called by non-visual components, which are part of a third package. This, so far, seems to make most of the compiler's dependency-related complaints / confusions go away. (I'm not out yet, however).
+
+When compiling the package with the dialog forms (which call the Frames), I am getting the warning "Unit 'MyFrames' implicitly imported into package 'MyDialogForms'"
+
+Given that it shows up as a compiler warning, I've long ago gotten the impression that "implicitly importing" a unit is generally not a good thing.  Are there specific instances where that is not the case?  i.e. where implicitly importing a unit is OK, and/or an appropriate practice?... and if so, what are those specific cases?
+    
+
+        
+Answer 1: 
+
+    
+    
+Here's the issue:
+
+You can only have one copy of a unit in your program.  If you try to load the same unit twice via packages, it will raise an exception and the package won't load the second time.  The way to avoid this is to structure your packages so that no unit is used in more than one of them.
+
+The code to every unit you compile has to be in the package. The compiler will start with all the units you declare in the contains section, but any other units used by those units also has to be compiled in so it will be reachable, unless those units are contained in another package which is listed under requires.  These extras are the "implicitly imported" units.  Trouble is, they're imported implicitly, not explicitly stated in the contains section where they'll conveniently show up in the Project Manager off to the right.  This means that you might not notice that your unit is in a package, and end up putting it in another one.  Then when you try to run your program and load the packages, things break.  That's why the compiler warns you about it.
+
+It's a warning, and not an error, for a reason. As long as you understand how the system works, it's technically safe to use implicit imports.  Just remember that those units are ending up in the package whether you declare them or not.  But then again, since they're ending up there whether you declare them or not, it's probably simpler just to officially add them and save yourself the hassle.
+    
+    
+Answer 2: 
+
+    
+    
++1 for Mason's answer. The place where implicitly-imported units become a problem is on a large project where it becomes exponentially more difficult to keep track of units that are linked in from whereever.
+
+I find the best way by far is to have a folder per package, and that folder contains all the files for the package. If I see an "implicit import" warning, I either add the required package, or add the unit to the package. So all units are specified in the package that contains them and they are all in the same folder. I never add folders to the Search Path, because every project knows about all its files directly.
+
+The structure is really not terribly difficult to maintain and it protects you from problems where different units contain different versions of a file.
+    
+    
+Title: IntelliJ Thread Debug
+Description: 
+    
+    
+                    
+Does IntelliJ IDEA provide thread-debugging? That is - Netbeans allows you to debug multiple threads, and halting at those breakpoints (automatically). However all I seem to be getting in IntelliJ is "thread dumping", which seems to be an analysis that is manual, and a snapshot taken when I clicked 'Thread Dump'.
+
+Is there something I'm missing?
+I have google'd and not found sufficient information to assist.
+    
+
+        
+Answer 1: 
+
+    
+    
+I think you can. I have suspended threads via breakpoints by setting the suspend policy. This will suspend the thread that is executing this piece of code. If you have multiple thread then I would think they would carry on.
+
+To quote the suspend policy
+
+
+Item     Description 
+All :      When the breakpoint is hit, all threads are suspended
+Thread : When the breakpoint is hit, the thread where the breakpoint is hit is suspended. 
+None:    No thread is suspended.
+
+    
+    
+Answer 2: 
+
+    
+    
+You have a nice Threads view available.
+
+Press the little gearwheel and you will see all active threads.
+
+
+
+And on each breakpoint you can set the Suspend Policy. You can either make the Thread alternative the default for all breakpoints or you can set them individually on each breakpoint. 
+
+
+    
+    
+Answer 3: 
+
+    
+    
+For me the problem with not accessing thread still occcurs. I set up brakepoints to all. And put brakepoints inside calling methods. What I noticed is that the method in new thread is beeing accessed when i call run() but not start(). Just wondering why, AFAIK the start() method should call run(). Nevertheless, the output from thread occurs even I call .start(), but never access it.
+    
+    
+Answer 4: 
+
+    
+    
+For me the issue was that there seems to be a race condition with resuming threads after breakpoints and evaluating breakpoints in IntelliJ.
+
+My short-term work around was to not set Breakpoints right before I spawn a thread.  If I don't do this the first few Breakpoints in the run() or call() are missed.
+    
+    
+Answer 5: 
+
+    
+    
+I think the problem you have is that the child threads are being closed sooner than you expected because the main thread(the test itself) reaches to the end.
+
+Remember that when you do a Thread.start() an asynchronous call starts, then if you are running your tests using Junit the execution will continue after this call until the end of the test, and as soon as it reaches to the end, it shutdowns the threads you started inside it.
+
+Therefore, if you have something like:
+
+01. import org.junit.Assert;
+02. import org.junit.Test;
+03. public class ThreadTest {
+04.     static boolean didIGetIt = false;
+05.     @Test
+06.     public void testThread() {
+07.         Thread myThread = new Thread(new Runnable() {
+08.             @Override
+09.             public void run() {
+10.                 System.out.println("I am an asynchronous task");
+11.                 System.out.println("and JUnit won't wait for me to finish my job!");
+12.                 didIGetIt = true;
+13.             }
+14.         });
+15.         myThread.start();
+16.         Assert.assertTrue(didIGetIt);
+17.     }
+18. }
+
+
+It will execute the Assert before the code inside the run() leading to a fail test.
+
+But if you add a simple sleep you could stop the main thread and debug and do what you need before the main thread stops.
+
+01. import org.junit.Assert;
+02. import org.junit.Test;
+03. public class ThreadTest {
+04.     static boolean didIGetIt = false;
+05.     @Test
+06.     public void testThread() throws InterruptedException {
+07.         Thread myThread = new Thread(new Runnable() {
+08.             @Override
+09.             public void run() {
+10.                 System.out.println("I am an asynchronous task");
+11.                 System.out.println("and JUnit won't wait for me to finish my job!");
+12.                 didIGetIt = true;
+13.             }
+14.         });
+15.         myThread.start();
+16.         System.out.println("Let's wait for child threads to finish");
+17.         Thread.sleep(5000);
+18.         Assert.assertTrue(didIGetIt);
+19.     }
+20. }
+
+
+Surely there are better ways to do it, but the Thread.sleep may be what you are looking for.
+
+Hope it may help somebody!
+    
+    
+Title: workspace.xml file corrupted (Error on line 1: Content is not allowed in prolog) in IntelliJ, how can I fix it?
+Description: 
+    
+    
+                    
+I am experimenting a very annoying issue using IntelliJ.
+
+I was working on my project (a webapp deployed on a local instance of BEA weblogic application server) and suddenly my PC crash and I restarted it.
+
+Coming back to my project I obtained this error:
+
+
+  Cannot convert project: C:\projects\Main\MyProject\workspace.xml:
+  Error on line 1: Content is not allowed in prolog.
+
+
+and looking inside the workspace.xml file of my project it contains something like it:
+
+nulnulnulnulnul....
+
+
+So, I delete it and I restart IntelliJ (I read onlyne that I have to do in this way) so IntelliJ create it and I can open my project again inside IntelliJ but now the problem is that I can't run it (the Run and Debug icons are disabled).
+
+What could be the problem? and how can I try to solve this issue?
+
+Tnx
+    
+
+        
+Answer 1: 
+
+    
+    
+I experienced the same error. I deleted the workspace.xml and started 'Invalid Caches/Restart" under "File". Then I had to recreate my Run/Debug Configuration. Then everything works like before.
+    
+    
+Answer 2: 
+
+    
+    
+I experienced same problem.you can solve it by deleting ant.xml, then everything will be fine.
+    
+    
+Answer 3: 
+
+    
+    
+In my case the file encoding of the workspace.xml file was wrong. Converting it back to UTF-8 solved it for me.
+    
+    
+Title: Eclipse doesn&#39;t save files before running, debugging,
+Description: 
+    
+    
+                    
+Normally Eclipse saves my unsaved files before starting to debug or run a ant script. This isn't working anymore. 
+
+The general -/p/div
+Answer 1: 
+
+    
+    
+FailedDev pointed me to a thread talking about these kind of issue. Going under Window -
+Answer 2: 
+
+    
+    
+Recently this was happening to me which I found really really annoying on my eclipse 3.8.1 running on Ubuntu 13.4. Below trick fixed it.
+
+Window -
+Title: What does those padlock and plus symbols mean in my solution explorer?
+Description: 
+    
+    
+                    
+
+
+I think it is something related to Team Foundation Service, but what does that mean ?
+    
+
+        
+Answer 1: 
+
+    
+    
+The lock means that the item is checked in, and the + means that an add operation is pending for the item.
+
+You can see the full list of TFS Icons on MSDN.
+    
+    
+Answer 2: 
+
+    
+    
+A plus means the item has not yet been added to source control.
+
+A padlock means the item is in source control but has not been checked out for editing
+
+A check mark (which you don't show) means the item is in source control but has been checked out for editing.
+    
+    
+Answer 3: 
+
+    
+    
++ means it is newly added but not checked in
+lock means it is present on tfs and is checked in.(read able mode only). when you start to type anything in the file it will be checked out(a tick mark will show on the file)
+    
+    
+Title: In Visual Studio 2008, how can I make control+click do a &ldquo;Go To Definition&rdquo;?
+Description: 
+    
+    
+                    
+In the Delphi IDE, you can hold control and click on a method to jump to its definition. In VS2008, you have to right-click and select "Go To Definition".
+
+I use this function quite often, so I'd really like to get VS to behave like Delphi in this regard - its so much quicker to ctrl+click.
+
+I don't think there's a way to get this working in base VS2008 - am I wrong? Or maybe there's a plugin I could use?
+
+Edit: Click then F12 does work - but isn't really a good solution for me.. It's still way slower than ctrl+click. 
+I might try AutoHotkey, since I'm already running it for something else.
+
+Edit: AutoHotkey worked for me. Here's my script:
+
+SetTitleMatchMode RegEx
+#IfWinActive, .* - Microsoft Visual Studio
+^LButton::Send {click}{f12}
+
+    
+
+        
+Answer 1: 
+
+    
+    
+You could create an Autohotkey script that does that. When you ctrl-click a word, send a doubleclick then a F12.
+
+I don't have AHK handy so I can't try and sketch some code but it should be pretty easy; the AHK recorder should have enough features to let you create it in a point 'n' click fashion and IIRC it is smart enough to let you limit this behaviour to windows of a certain class only.
+
+When you have your script ready just run the script in the background while you code. It takes just an icon in the Notify bar.
+    
+    
+Answer 2: 
+
+    
+    
+Not for Visual Studio 2008, but if you upgrade to Visual Studio 2010, you can use the free 
+Visual Studio 2010 Pro Power Tools from Microsoft to achieve this.
+    
+    
+Answer 3: 
+
+    
+    
+Visual Studio 2008 defaults this to F12, but you can set it in Tools | Options | Environment | Keyboard, and change Edit.GoToDefinition - however, I'm not sure how you can get it to CTRL+mouseclick.
+    
+    
+Answer 4: 
+
+    
+    
+Resharper does that but it's not free.
+Highly recommended plugin though, most experienced .NET developers use it.
+    
+    
+Answer 5: 
+
+    
+    
+Just a quick note that the following AutoHotkey script works for me in Visual C++ 2010 Express.
+
+SetTitleMatchMode 2
+#IfWinActive, Microsoft Visual C++ 2010 Express
+^LButton::Send {click}{f12}
+
+
+I also changed the shortcuts for View.NavigateForward and View.NavigateBackward to Alt+Right/Left Arrow since I am used to Eclipse.
+    
+    
+Answer 6: 
+
+    
+    
+Yes, both Resharper (a must have!) and Productivity Power Tools have this feature. 
+
+Interesting quirk, though. 
+
+If you just go with the defaults on both tools (if you install both tools) you can experience a frequent double-jump problem (jump to definition from where you first click and then jump again from what your cursor is above upon getting to that first definition) until you turn off one of the Ctrl-Click features of these add-ons.
+    
+    
+Answer 7: 
+
+    
+    
+Put the mouse cursor on the method name or any identifier, and press F12
+    
+    
+Title: Installing Eclipse (3.4+) plugins in a directory other than ECLIPSE_HOME/plugins
+Description: 
+    
+    
+                    
+There used to be a way to do this, but I can no longer find this in Eclipse 3.4.1 installation I have. Does anyone know how to do this?
+    
+
+        
+Answer 1: 
+
+    
+    
+Update May 2014, Eclipse 4.x
+
+As oberlies kindly points out in the comments:
+
+
+  Dropins are deprecated! Don't use them! 
+
+
+Even though they are still documented (in Kepler 4.3 for instance), this thread adds:
+
+
+  One of the reasons that Eclipse does not recommend the dropins folder method of installation is that there is no feedback if something goes wrong. Any number of things could be getting in the way. 
+  
+  
+  If you were using the install UI, you'd be informed of the problems before any changes are made. 
+  With dropins, Eclipse tries to install and start as much as it can and you don't really know what's going on.
+  
+
+
+A Local deployment, as shown in this tutorial, would rather use File → Export → Plug-in Development → Deployable plug-ins and fragments. 
+
+But the final destination remains in ECLIPSE_HOME/plugins.
+
+
+
+Original answer (2009, Eclipse 3.x)
+
+You should add your plugins in ECLIPSE_HOME/dropins.
+
+If you want to defined common plugins, use bundle pools (also introduced here)
+
+
+
+You can also use an own extra dropins folder: simply add a parameter into eclipse.ini:
+
+-Dorg.eclipse.equinox.p2.reconciler.dropins.directory= /your_path/e34shared_dropin
+
+
+This extra dropins location can be used from more then one Eclipse installations - so you can use it as a shared dropins (watched directory).
+
+For Bundle Pool, you have here a step by step procedure:
+
+
+
+To better address your issue, you might find interesting the following article:
+
+p2: how I install plugins in extension locations (from the Eclipse and Java Blog by Michael Scharf blog)
+
+
+  The following procedure explains how to install plugins into different extension locations and share those extension locations between different eclipse installations using the p2 update manager and link files. For a lengthly discussion see bug 224145
+
+
+(Note: p2 is the "new" way to manage plugins, links is the "old" way to reference plugins outside the eclipse installation directory)
+
+
+  I keep a set of different extensions locations in C:\eclipse\extensions (each extension location is in a subdirectory of that directory).
+  Suppose I want to install foo into the new extension location C:\eclipse\extensions\foo.
+  
+  
+  I start eclipse with:
+  
+
+
+-configuration C:\eclipse\extensions\foo\eclipse\configuration
+
+
+
+  
+  I install foo using the update manager.
+  Now I can use the extension by creating a foo.link file inside the links directory of an eclipse installation (you might have to create the [eclipse]\links directory) containing:
+  
+
+
+  path=C:/eclipse/extensions/foobar
+
+
+
+  That's it :-)
+  
+  Notes: 
+  
+  
+  You have to the forward slashes on windows in the links file.
+  This procedure works for eclipse 3.4 and 3.5.
+  You don't have to create any directory specified by the -configuration parameter. Eclipse will do that for you.
+  It is important to follow the pattern EXTENSION_NAME/eclipse/configuration for the "-configuration" parameter because p2 will put the plugins one directory above the configuration directory and link files require that the directory that contains the plugins is called eclipse.
+  With this structure I can update plugins into the extension locations by running eclipse with the -configuration and then do the update.
+  
+  
+  Advanced use: If I want to install bar based on my foo extension, I create a link file to foo in the bar extension location links directory:
+
+
+C:\eclipse\extensions\bar\eclipse\configuration\links\foo.link
+
+
+
+  and follow my standard procedure described above (the links directory can be populated before the first run of eclipse)...
+  
+  Note for eclipse 3.4: If you are using eclipse 3.4 and you want to use the eclipse default update sites, you have to run eclipse without "-configuration" and export them (Help-&gt;Software Updates-&gt;Available Software (tab)-&gt;Manage Sites-&gt;Export), so you can import them into the "-configuration" eclipse. 
+
+    
+    
+Answer 2: 
+
+    
+    
+Not sure if this is what you are seeking, but if you manually obtain plugins (not via the loader, just as jars), you can use the dropins mechanism.
+
+Go to ECLIPSE_HOME/dropins
+
+Create a directory named "SomeNameForFunctionality"
+Create a subdirectory named "eclipse" underneath
+Create subdirectories named "features" and "plugins" underneath "Eclipse"
+Move the plugins and feature jars to the corresponding subdirectories.
+
+Restart Eclipse and make sure it takes a few more seconds to load. Your plugin should still be there.
+    
+    
+Answer 3: 
+
+    
+    
+The Dropins folder is a good solution if you install plugins manually. If you are installing plugins through the update manager, you cannot select the install location for your plugins through the UI. Not anymore. 
+
+BTW, if you like sharing plugins among several Eclipse installations, you can create a Link file, drop it in the Dropins folder and it works just the same, no need to modify the INI. 
+
+A Link file is a plain text file, which ends with .link extension, and has one line in it: path=/path/to/your/plugins     
+    
+    
+Answer 4: 
+
+    
+    
+I just wasted an hour trying to deploy a plugin in the dropins/ directory in eclipse 3.7 and thought I'd share.
+
+It turns out the preview files generated by MacOS X (starting ._ e.g. .com.example.myplugin.jar) were interfering with the P2 auto-detection and causing it to fail before it reached my plugin. I did a search for all . files and deleted them and the plugin was finally loaded
+    
+    
+Title: How to downgrade IntelliJ to older version
+Description: 
+    
+    
+                    
+I have intelliJ 12 30day free software installed with entire project setup and running ; now I have a license received from my company and it is not allowing to register; then realised it is a license of intelliJ 11 version; please lemme know steps to downgrade to intelliJ 11.   Like running a patch or what is the solution?
+    
+
+        
+Answer 1: 
+
+    
+    
+Download and install the old version from this page.
+
+Another option is to use the JetBrains Toolbox App. It allows to install multiple IDE versions, perform rollbacks if needed, applies updates to the IDE and plug-ins, etc.
+    
+    
+Title: Xcode Error Retrieving Developer Info?
+Description: 
+    
+    
+                    
+I am following this apple doc and trying to add provisioning profiles and signing identities for a new apple-id. The problem is that when I add a new apple-id in Xcode -
+Answer 1: 
+
+    
+    
+This is what worked for me.
+
+XCode 
+Answer 2: 
+
+    
+    
+I had the same problem with Xcode6 GM and found the error in the system.log. When communicating with the developer portal, my name contained special characters like è, ä, ü, ß etc. After the change to ae, ue and ss I could use my AppleID and all certificates were for the use of Xcode6 downloaded.
+
+Check your "system.log" file with your konsole.app and check if you have an DVTDeveloperAccountErrorPortalResponseText in your communication as the following:
+
+DVTDeveloperAccountErrorPortalResponseText=&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+    &lt;dict&gt;
+    &lt;key&gt;firstName&lt;/key&gt;
+    &lt;string&gt;René&lt;/string&gt;
+    &lt;key&gt;lastName&lt;/key&gt;
+    &lt;string&gt;Bärnshofer&lt;/string&gt;
+
+
+If yes, change your developer account name in the developer portal. That solved my problem.
+But I guess there is an issue in the communication of the developer portal. In Xcode5.x all my accounts are working fine and my userLocale is correct. In Xcode6 my locale is US-EN and so I guess the special characters does not match or could not processed. I opened a bug report for that. Maybe Apple will fix the issue
+    
+    
+Answer 3: 
+
+    
+    
+"Error Fetching Developer Info" is also Xcode's way of telling you that the password is incorrect. Luckily it told me so in the console.
+    
+    
+Answer 4: 
+
+    
+    
+"Error Fetching Developer Info" is also Xcode's way of telling you that the password has expired. Make sure you can log into the developer portal - if you haven't changed your password in the past year (?) you will get a message when logging on to the portal telling you to se up a new password. Do this on the portal then put the new password into XCode.
+    
+    
+Answer 5: 
+
+    
+    
+Besides an incorrect/expired password, it might also be that you have Two-Step Verification (2FA) enabled - as was my case.
+
+Disable it, then enter your password, and click on the "General" tab, and then click back on the "Accounts" tab in Xcode's Preferences.
+    
+    
+Answer 6: 
+
+    
+    
+I had to verify my account at https://appleid.apple.com/.
+    
+    
+Title: Disable reformatting code when saving files
+Description: 
+    
+    
+                    
+I made a small change to an old java file in IntelliJ and when I save the file the IDE automatically reformats all the code. Normally this would be preferable, however it seems almost every line has unnecessary white space that gets cleaned up. Now it appears the entire file was modified even though I only made a small fix. This will make looking at the significant changes in VCS more difficult.
+
+Is there a way to disable code reformatting when a file gets saved? So far I haven't had any luck finding the setting in the Project Settings dialog. I'm using IntelliJ IDEA 9.0.2
+
+Alternatively I could perform the reformat, commit the changes, and then make my modification but I feel that this will end up happening a lot and I don't want to impose my formatting preferences on code owned by other groups. 
+    
+
+        
+Answer 1: 
+
+    
+    
+Settings | Editor | General strong/strong
+Answer 2: 
+
+    
+    
+For newer versions (at least WebStorm 2018), Ctrl + S is bound to a save Macro that has a reformat code action followed by save. 
+
+You can remove this reformat with Ctrl + Shift + A search for Macro then modify the save one.
+
+Edit | Macros | Edit Macros | save | - on the Action: Reformat...
+    
+    
+Answer 3: 
+
+    
+    
+You can add these comments to make it temporarily disable formatting on the file, or a specific function:
+// @formatter:off
+
+If you want one section to remain, you can also add this:
+// @formatter:on 
+
+IntelliJ Documentation Link
+If @formatter:off is not working, you can enable it in preferences:
+
+    
+    
+Answer 4: 
+
+    
+    
+Today in 2020 IDEA is silently formatting HTML before commit, which might break your web pages appearance. To disable that unselect this checkbox:
+
+    
+    
+Title: Fastest way to write &amp; compile a C/C++ program in Windows
+Description: 
+    
+    
+                    
+I'm usually using Visual Studio, but several things bother me when I just quickly want to test some code:
+
+
+it has a rather long startup time
+it always needs a project to execute/debug files
+program output gets printed to the console, but the window simply closes when I don't insert a getchar() or a breakpoint in the program and thus I'm not seeing it.
+
+
+I'm looking for a program which is suitable for a really, really quick programming in Windows. Such as, copying some code from an SO question, running it and seeing its output.
+
+I don't think that console programs or g++ under CygWin are a good solution, because there it takes ages to cd into the right dir to save the file, I'm not used to editors such as Vim, and typing in the compiler commandline myself has always annoyed me etc. 
+
+So I guess what I'm looking for is a very lightweight free C/C++ IDE which is preconfigured to work with a free compiler (bonus points if it is even shipped with it.)
+
+What can you recommend which adresses at least two items from the list above?
+
+Is there maybe even a program which can execute/interpret C or C++ in an interactive commandline (like Python)?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  I'm looking for a program which is suitable for a really, really quick
+  programming in Windows. Such as, copying some code from an SO question
+  and executing it and seeing it's output.
+
+
+For quick-and-dirty experimental coding, I really like codepad.org.  Not having to create a file is especially nice as it saves me from coming up with a suitable name and disk location.  Be aware that it uses g++ 4.1.2 behind the scenes so some of the latest C++11 features aren't supported.
+    
+    
+Answer 2: 
+
+    
+    
+"really, really quick (and dirty, throw away?) programming "?
+
+
+Compiler : VC++ command line - you already have it. 
+Editor:      Notepad or somesuch 
+Compilation process: A .BAT file you write once
+and supply a parameter with the name of the single source file.
+Location: Set up some desktop shortcuts to a known directory for your
+test code.
+
+    
+    
+Answer 3: 
+
+    
+    
+Use TCC : Tiny C Compiler
+
+
+start a command prompt
+cd wherever
+notepad main.c
+write code in notepad. save
+back in the command prompt type tcc -run main.c
+notice errors, go back to 4
+
+
+Note that with -run parameter you're invoking tcc like an interpreter
+    
+    
+Answer 4: 
+
+    
+    
+Which compiler you use doesn’t really matter. I prefer G++ but cl.exe (from Visual Studio) works equally well.
+In order to use the compiler quickly from the command line, either
+
+include it into your PATH variable by setting it in the system settings, or
+create a simple .cmd script which launches a console with the right paths included.
+
+Visual Studio incidentally comes bundled with such a .cmd script which is linked in the Start Menu entry of Visual Studio. Personally, though, I prefer adjusting the PATH variable.
+Then you can simply invoke the compiler from any directory in the command line. If you are too lazy to write the whole command line, create a script to do it for you. Or use Cygwin and (C)Make.
+Two additional remarks:
+
+Starting the project using the build configuration (Cntr+F5 (?)) leaves the console open after the program has run, without you having to include getch() calls or similar.
+
+I highly recommend you learn an editor such as Emacs or Vim, unless you plan never to use any other platform than Windows, and even then. These editors are just tremendously powerful, and in some ways light-years beyond what the Visual Studio code editor offers.
+But if you really don’t have the time, use a decent text editor such as Notepad++ instead.
+
+
+    
+    
+Answer 5: 
+
+    
+    
+Open Watcom is easy to install and use, it's fast and it's the closest compiler to MSVC++, although it's noticeably behind in features (especially in C++).
+
+I don't use its IDE at all as I got used to doing most of the stuff in the console, but it's there and the debugger is there too.
+
+Compiling one-filers is easy.
+
+Compiling C code:
+
+wcl386.exe /we /wx /q sourcefile.c
+
+
+Compiling C++ code:
+
+wcl386.exe /xs /we /wx /q sourcefile.cpp
+
+    
+    
+Answer 6: 
+
+    
+    
+On my machine, I have a "empty" project called "Test".  When I want to test some random code on the internet, I simply put it into main.cpp in that project, and compile.  
+
+If you think MSVC takes too long to load, it should be possible to write a batch script that attempts to compile the project and puts the build log in a file.  Then you can simply alter the existing main.cpp with notepad, double click the batch file, then pop open the build log or run the executable.
+
+[Edit] I made a batch file to compile the entire solution.  Turns out that requires loading visual studio.  However, the batch file can compile/run a single cpp file easy enough.
+    
+    
+Answer 7: 
+
+    
+    
+My favorite IDE: http://www.codeblocks.org/
+
+Here is a direct link to the download that includes the MinGW compiler: http://download2.berlios.de/codeblocks/codeblocks-10.05mingw-setup.exe
+
+You're not gonna find any (good) C/C++ interpreters.
+    
+    
+Answer 8: 
+
+    
+    
+Once I used PSPad setting its "compiler" option for C++ files to a reasonable default (cl.exe in the correct directory, speed optimization, all warnings). Then it's just Ctrl+F9.
+    
+    
+Answer 9: 
+
+    
+    
+All of the above compiler recommendations are good. For an editor, I really like Notepad2
+
+I know you didn't ask...
+    
+    
+Answer 10: 
+
+    
+    
+First off, your expectations are not reasonable. no program can guess what you want, over a range of input from the simplest to the most complex. If cd'ing into cygwin is too hard, and starting up visual studio is too time-consuming, you're pretty much toast. Sorry.
+
+That said, you can edit code with notepad (which you can invoke from the command line as notepad foo.cpp). Notepad uses your mouse and the arrow keys on your pc so it's pretty intuitive. 
+
+you can use visual studio tools from the command line, without having to fiddle with project files.
+
+Visual studio comes with a tool called nmake, the most basic usage of which is similar to linux make. If you have very simple input, nmake's default rules may be good enough to produce an executable. If not, you may be able to construct a makefile that will take any single simple file, say foo.cpp, and compile and link it to an executable called foo.exe. You'll still have to learn to use nmake, which some people think is easy, and others think is fiendishly difficult. Try nmake foo.cpp and see if the result is what you want.
+    
+    
+Title: How to display Only spaces (&hellip;) without the &#182; in Netbeans &ldquo;Show Non-printable Characters&rdquo; mode?
+Description: 
+    
+    
+                    
+Is there any way how to hide the annoying ¶ character without hiding white-spaces?
+
+To be specific, I want this:
+
+....public static void main(String[] agrs){
+........Map&lt;Integer, List&lt;Integer&gt;&gt; tableMap = new HashMap&lt;&gt;();
+
+
+I don't want this:
+
+¶
+....public static void main(String[] agrs){¶
+........Map&lt;Integer, List&lt;Integer&gt;&gt; tableMap = new HashMap&lt;&gt;();¶
+
+
+the "show Non-printable characters" option displays both the dots for white spaces and the ¶ character at the end of line.. I just want the dots.
+    
+
+        
+Answer 1: 
+
+    
+    
+I am using Netbeans 8.0.2, there is a plugin ("Editor Whitespace") developed by "Tunnel Vision Labs" available to do somewhat like that. 
+
+Here is the plugin description:
+
+
+  This module provides a generic whitespace highlighter for consistent
+  display when using the "Show Non-printable Characters" option in the
+  IDE. All tab and space characters are shown according to the
+  "Whitespace" color option, and newline characters are made invisible.
+
+    
+    
+Answer 2: 
+
+    
+    
+Looks like a reasonable RFE. +1  So please file an issue at https://netbeans.org/bugzilla/
+
+Since 7.4 you can change the color of trailing whitespaces. May be this will help you.
+
+http://wiki.netbeans.org/NewAndNoteworthyNB74#Indentation_and_Trailing_Whitespace_Highlighting_added
+    
+    
+Answer 3: 
+
+    
+    
+In Netbeans IDE 8.0.2 you manipulate the EOL character's colour this way:
+
+Make sure that View &gt;&gt; Show Non-printable Characters is selected.
+Go to Tools &gt;&gt; Options &gt;&gt; Fonts &amp; Colors &gt;&gt; Syntax tab and adjust Default colour's foreground to match the background (or set it different enough to be visible but not distracting):
+
+
+
+[ Optional ] Modify the Whitespace colour in the same menu, independently.
+[ Optional ] In Highlighting tab change the Trailing Whitespace's colour if you want it to be different than the Whitespace.
+
+So far I haven't noticed any 'disappearing' code.
+    
+    
+Title: Isn&#39;t there a Go To Last Edit Location shortcut in XCode?
+Description: 
+    
+    
+                    
+I'm rather new to XCode and I still miss so many shortcuts and features available in IntelliJ IDEA.
+
+Perhaps the biggest pain point for me is the lack of a keyboard shortcut (or even a menu action) that allows you to move through your most recent change points (points in which you modified files). 
+
+In case you're familiar with IntelliJ, I'm referring to the Ctrl-Shift-Backspace shortcut... (or Shift-⌘-Backspace on a Mac)
+
+I'm NOT referring to navigation through your recent view points (via Alt-⌘-Left &amp; Alt-⌘-Right) - only locations you edited.
+
+You can find some useful XCode tricks here.
+    
+
+        
+Answer 1: 
+
+    
+    
+⌘-Z then redo
+    
+    
+Answer 2: 
+
+    
+    
+I got here via Google. In Xcode 4 &amp; 5 the shortcuts are 
+
+CTRL + Command + Back Arrow 
+
+CTRL + Command + Forward Arrow 
+    
+    
+Answer 3: 
+
+    
+    
+It's not available the way Jetbrains and other do it. Using AppCode might be a choice.
+    
+    
+Answer 4: 
+
+    
+    
+To scroll through your recent changes in Xcode: 
+
+Push and hold Control + Command keys (holding them both down)
+Then press and release the back arrow (in the bottom right of the Apple keyboard)
+While still holding the Control and Command keys down, press the back arrow down again. 
+
+This will scroll through the changes you have made to the files in your project. I believe this will only show you the changes since the project was opened. 
+    
+    
+Title: Visual Studio 2010: Why aren&#39;t key combinations available?
+Description: 
+    
+    
+                    
+I am trying to use VS 2010 for writing C. Frequently, I try to use a hotkey combination, and I get an error message of the form:
+
+
+  The key combination (key, key) is
+  bound to command (Command) which is
+  not currently available.
+
+
+Why is this? Examples include CTRL + R, R for Rename and CTRL + K, CTRL + D for Format Document.
+
+I am trying these commands with my cursor in the code editing window.
+
+I find that this works in 2008 C# but not 2010 C/C++.
+    
+
+        
+Answer 1: 
+
+    
+    
+The C++ text editor does not implement those two commands. If they work in 2008, it's only because you have an extension installed that adds support for those features.
+
+Edit: The OP currently says "for writing C", just in case the question later changes to "for writing C#."
+
+If the OP actually means C#, then the error is occurring because you are editing a document that is not part of a project/solution you currently have open, or the file has the Build Action set to None.
+    
+    
+Answer 2: 
+
+    
+    
+As 020Z28 says, the commands aren't supported in the C++ text editor. The workaround for Format Document is to Select All then Format Selection: Ctrl A, Ctrl K, Ctrl F.
+    
+    
+Answer 3: 
+
+    
+    
+I have at random found the format document command to be "not currently available".  I have found that saving the file and switching to another tab and back, will renable the command.
+    
+    
+Answer 4: 
+
+    
+    
+It may depend on the file extension of the file you are trying to format. 
+
+For example, I was testing a BizTalk map (XSLT) which outputs XML. The output file had a .txt extension, and it repeatedly threw the Ctrl+K, Ctrl+D error. When I changed the file extension to .xml, Ctrl+K,Ctrl+D worked every time.
+
+I don't know if VS uses the content or the extension to determine how to format the file, but my thinking is that VS has no idea how to format a .txt file, but it does know how to format a .xml file.
+    
+    
+Answer 5: 
+
+    
+    
+Remove 'tagprefix="asp"' property from register tag. 
+    
+    
+Title: PyCharm 3.0 fails to find PyQt5
+Description: 
+    
+    
+                    
+I've got Python 3.3.2 installed (both x86 and x64 versions) and PyQt5.1 installed on top of them.
+
+Recently I installed PyCharm 3.0 Community Edition and configured to work with these Python interpreters. The problem is that PyQt5 is not shown in the list of installed packages and documentation is not working (both Ctrl+Space to autocomplete and Ctrl+Q for docs).
+
+When PyCharm is quering skeleton generation it seems to process PyQt but to no use. When I try to install PyQt using packages system inside PyCharm, I get following error:
+
+C:\Program Files (x86)\PyCharm3.0\helpers\packaging_tool.py run on 10/06/13 13:58:52
+Downloading/unpacking PyQt5
+Getting page https://pypi.python.org/simple/PyQt5/
+URLs to search for versions for PyQt5: https://pypi.python.org/simple/PyQt5/
+Analyzing links from page https://pypi.python.org/simple/PyQt5/
+Could not find any downloads that satisfy the requirement PyQt5
+
+No distributions at all found for PyQt5
+
+Exception information:
+Traceback (most recent call last):
+  File "C:\Python\332_x64\lib\site-packages\pip-1.4.1-py3.3.egg\pip\basecommand.py", line 134, in main
+    status = self.run(options, args)
+  File "C:\Python\332_x64\lib\site-packages\pip-1.4.1-py3.3.egg\pip\commands\install.py", line 236, in run
+    requirement_set.prepare_files(finder, force_root_egg_info=self.bundle, bundle=self.bundle)
+  File "C:\Python\332_x64\lib\site-packages\pip-1.4.1-py3.3.egg\pip\req.py", line 1085, in prepare_files
+     url = finder.find_requirement(req_to_install, upgrade=self.upgrade)
+  File "C:\Python\332_x64\lib\site-packages\pip-1.4.1-py3.3.egg\pip\index.py", line 265, in find_requirement
+     raise DistributionNotFound('No distributions at all found for %s' % req)
+
+
+Error:
+
+pip.exceptions.DistributionNotFound: No distributions at all found for PyQt5
+
+
+But it seems that this is unrelated problem.
+
+PyQt5 is installed with binary installer. System is Win 7 x64.
+
+Update:
+I've found log from previous index invalidating I tried to make things work. The log contains no errors or warnings concerning PyQt. Specifically it reads as follows:
+
+INFO - .skeletons.PySkeletonRefresher - Home path is C:\Program Files (x86)\PyCharm3.0 
+INFO - .skeletons.PySkeletonRefresher - Pregenerated skeletons root is C:\Program Files (x86)\PyCharm3.0\skeletons 
+INFO - .skeletons.PySkeletonRefresher - Not found pregenerated skeletons at C:\Program Files (x86)\PyCharm3.0\skeletons\skeletons-win-386-python-3.3.2.zip 
+INFO - .skeletons.PySkeletonGenerator - Rebuilding builtin skeletons took 10947 ms 
+INFO - .skeletons.PySkeletonRefresher - Skeleton for PyQt5.QAxContainer
+&lt;...&gt;
+INFO - .skeletons.PySkeletonRefresher - Skeleton for PyQt5._QOpenGLFunctions_ES2
+
+
+Maybe some problem lies in packaging tool:
+
+INFO - packaging.PyPackageManagerImpl - Running packaging tool: C:/Python/332_x64/python.exe C:\Program Files (x86)\PyCharm3.0\helpers\packaging_tool.py list
+
+
+But there are no errors reported still.
+    
+
+        
+Answer 1: 
+
+    
+    
+Couldn't install in pip either but building from source worked fine for me. As mentioned on the comment the .exe file doesn't come with documentation and i think pycharm wouldn't like that because qt its c++. Download here. 
+
+
+
+if you dont want to build from source then check where did the exe file install qt5. Probably the install went fine but the dir installed is not in the path.
+    
+    
+Answer 2: 
+
+    
+    
+pip install https://github.com/pyinstaller/pyinstaller/tarball/develop
+
+
+
+The above syntax downloads the pyinstaller
+Pip install pyqt5
+Make sure you have pyqt5 file in the pyinstaller in users\appdata..etc
+
+    
+    
+Title: Is it possible to minimize all functions at Android Studio at once?
+Description: 
+    
+    
+                    
+When working on a class with thousands of lines, minimizing some functions on the IDE makes it very handy to manage the code.
+
+
+
+However, everytime we restart the IDE; or close the function: it will be re-opened again.
+
+Is there a way to keep your 'minimizing' preferences?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can go to Code 
+Answer 2: 
+
+    
+    
+(for windows Users)
+
+Same time All Methods Collapse : CTRL + SHFT + -
+
+Same time All Methods Expand :CTRL + SHFT + +
+
+(for Mac Users)
+
+Same time All Methods Collapse : Command + SHFT + -
+
+Same time All Methods Expand :Command + SHFT + +
+    
+    
+Answer 3: 
+
+    
+    
+Here is the current way of expanding/collapsing in Windows...
+
+
+    
+    
+Answer 4: 
+
+    
+    
+You can go to Setting-
+Answer 5: 
+
+    
+    
+On Mac OS use these short keys:
+
+
+   Shift  +  Command  + -
+
+
+OR
+
+
+  Preferences-
+Title: PHPStorm 7.3.1 JSON formatter tool
+Description: 
+    
+    
+                    
+I use PHPstorm IDE and would like to find a plugin to format JSON so that it is easier for me to read.
+
+Currently I have this in a file displayed in the IDE:
+
+{"property":"value1","property2":"value2","array1":[{"attr1":"value1"},{"attr2":"value2"}]}
+
+
+I would like a plugin I can run so that I can look at this instead:
+
+{
+   "property": "value1",
+   "property2": "value2",
+   "array1": [
+      {
+         "attr1": "value1"
+      },{
+         "attr2": "value2"
+      }
+   ]
+}
+
+
+I found the following plugin, but it does not seem to work with PHPStorm : http://plugins.jetbrains.com/plugin/3964?pr=
+    
+
+        
+Answer 1: 
+
+    
+    
+It is possibly because I'm new to PHPStorm, but the option in the menu Code -strong/strongkbd/kbdkbd/kbdkbd/kbdcode/codecode/code/p/div
+Answer 2: 
+
+    
+    
+In phpStorm 2017
+
+File 
+Title: Which environment, IDE or interpreter to put in practice Scheme?
+Description: 
+    
+    
+                    
+I've been making my way through The Little Schemer and I was wondering what environment, IDE or interpreter would be best to use in order to test any of the Scheme code I jot down for myself.
+    
+
+        
+Answer 1: 
+
+    
+    
+Racket (formerly Dr Scheme) has a nice editor, several different Scheme dialects, an attempt at visual debugging, lots of libraries, and can run on most platforms. It even has some modes specifically geared around learning the language.
+    
+    
+Answer 2: 
+
+    
+    
+I would highly recommend both Chicken and Gauche for scheme. 
+    
+    
+Answer 3: 
+
+    
+    
+PLT Scheme (DrScheme) is one of the best IDEs out there, especially for Scheme. The package you get when downloading it contains all you need for developing Scheme code - libraries, documentation, examples, and so on. Highly recommended.
+    
+    
+Answer 4: 
+
+    
+    
+If you just want to test your scheme code, I would recommend PLT Scheme. It offers a very complete environment, with debugger, help, etc., and works on most platforms.
+
+But if you also want to get an idea of how the interpreter behind the scenes works, and have Visual Studio, I would recommend Tachy. It is a very lightweight scheme interpreter written in c#. It allows you to debug just your scheme code, or also step through the c# interpreter behind the scenes to see what is going on. 
+    
+    
+Answer 5: 
+
+    
+    
+Just for the record I have to mention  IronScheme.
+
+
+  IronScheme will aim to be a R6RS conforming Scheme implementation based on the Microsoft DLR.
+
+
+Version 1.0 Beta 1 was just released. I think this should be good implementation for someone that is already using .NET framework.
+
+EDIT
+Current version is 1.0 RC 1 from Oct 23 2009
+    
+    
+Answer 6: 
+
+    
+    
+Google for the book's authors (Daniel Friedman and Matthias Felleisen).  See whether either of them is involved with a popular, free, existing Scheme implementation.
+    
+    
+Answer 7: 
+
+    
+    
+It doesn't matter, as long as you subscribe to the mailing list(wiki/irc/online-community-site) for the associated community. It's probably worth taking a look at the list description and archives to be sure you are in the right one.
+
+Most of these are friendly and welcoming to newcomers, so don't be afraid to ask. 
+
+It's also worth searching the archives of their mailing list(or FAQ or whatever they use) when you have a question - just in case it is a frequent question.
+
+Good Luck!
+    
+    
+Answer 8: 
+
+    
+    
+Guile running under Geiser within Emacs provides a nice, lightweight implementation for doing the exercises. Racket will also run under Geiser and Emacs, though I personally prefer Guile and Chez Scheme a bit more.
+
+Obviously installation of each will depend on your OS. I would recommend using Emacs version 24 and later since this allows you to use Melpa or Marmalade to install Geiser and other Emacs extensions.
+
+The current version of Geiser also works quite nicely with Chicken Scheme, Chez Scheme, MIT Scheme and Chibi Scheme.
+    
+    
+Answer 9: 
+
+    
+    
+LispMe works on a Palm Pilot, take it anywhere, and scheme on the go.  GREAT way to learn scheme.
+    
+    
+Answer 10: 
+
+    
+    
+I've used PLT as mentioned in some of the other posts and it works quite nicely.  One that I have read about but have not used is Allegro Common LISP Express.  I read a stellar review about their database app called Allegro Cache and found that they are heavy into LISP.  Like I said, I don't know if it's any good, but it might be worth a try.
+    
+    
+Answer 11: 
+
+    
+    
+I am currently working through the Little Schemer as well and use Emacs as my environment, along Quack, which adds additional support and utilities for scheme-mode within Emacs.
+
+If you are planning on experimenting with other Lisps (e.g. Common Lisp), Emacs has excellent support for those dialects as well (Emacs itself can be customized with its own dialect of Lisp, appropriately named Emacs Lisp).
+
+As far as Scheme implementations go, I am currently using Petit Chez Scheme, which is an interpreted, freely distributable version of Chez Scheme (which uses a compiler and costs money to obtain a license).
+    
+    
+Title: Unable to rename a group folder in Xcode
+Description: 
+    
+    
+                    
+I added a new group from selection today in Xcode containing several files. For some reason, this has consisted for a while, I am unable to name or rename the group folder.
+
+Has this happened to anyone else before, if so have you come across a fix?
+    
+
+        
+Answer 1: 
+
+    
+    
+What have you tried to do in order to rename it?
+
+The contextual menu (right click) does not provide a rename option. Therefore I either 
+
+
+Select the group
+Hit return which selects it for editing
+
+
+OR
+
+
+Select the group
+After a short delay (long enough to not count as a double click) click it again
+
+    
+    
+Answer 2: 
+
+    
+    
+Sometimes it happens. 
+
+Workaround:
+
+
+Quit Xcode.
+Launch Xcode.
+Tada
+
+    
+    
+Answer 3: 
+
+    
+    
+For anyone that has my issue: Check your files in Finder. I had a folder that was already using that name. Delete that folder and it will allow you to change name.
+    
+    
+Answer 4: 
+
+    
+    
+You cannot rename the folder probably because that folder already exists in that directory.
+
+To solve it:
+
+
+Select the folder you want to rename, press the right button, press show in finder.
+Delete the folder(s) that already have the name you want.
+Go to Xcode and try again.
+Good luck :)
+
+    
+    
+Answer 5: 
+
+    
+    
+Some times its not related to xcode, its finder problem, because directory still exists and finder doesn't show that, you can see directory exists by entering ls in terminal.
+
+How to solve this?
+
+Open terminal and navigate to parent directory of desired directory : cd ~/../parent or just right click parent directory and choose New Terminal at Folder
+Remove desired directory : rm -rf MyGroup
+Now you can try to create your group with MyGroup name.
+    
+    
+Title: How to replace a character by a line break in VS or SQL Server Management Studio
+Description: 
+    
+    
+                    
+How to replace a character (or many characters) by a line break in VS or SQL Server Management Studio using the Find and Replace dialog?
+    
+
+        
+Answer 1: 
+
+    
+    
+At the bottom of the "Find and Replace" dialog, check the box "Use" and select "Regular expressions"
+
+Then in the "Replace with" box put \n
+    
+    
+Answer 2: 
+
+    
+    
+You can do a regular expression find and replace on \x0d\x0a, which represents a line break.
+    
+    
+Title: Is there a way for NetBeans to automatically create brackets in a separate line?
+Description: 
+    
+    
+                    
+When I create a new class for instance, I get this:
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package helloworld;
+
+/**
+ *
+ * @author Sergio
+ */
+public class WordManipulations{        
+}
+
+
+I hate it when brackets are placed this way. Is there a way to make it create things like this:
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package helloworld;
+
+/**
+ *
+ * @author Sergio
+ */
+public class WordManipulations 
+{
+
+}
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Simply follow these steps:
+
+
+Navigate to Tools -&gt; Options -&gt; Editor
+Navigate to Editor -&gt; Formatting
+Select the following
+
+
+Language: Java
+Category: Braces
+
+In "Class Declaration, Method Declaration, etc."
+
+
+Braces Placement: New Line
+
+
+    
+    
+Answer 2: 
+
+    
+    
+Also there's the JIndent plugin.
+    
+    
+Answer 3: 
+
+    
+    
+In Netbeans go to Tools strong/strongstrong/strongstrong/strong/pp/p/div
+Title: No code completion and syntax highlighting in Pydev
+Description: 
+    
+    
+                    
+I just configured Eclipse with PyDev latest version, but when I import external modules, neither code completion nor syntax highlighting works. How do I enable it?
+
+Komodo Edit does a better synax highlighting, apparently. - But Ctrl+R doesnt run the program. 
+
+I prefer a SciTE kind of editor with similar highlighting and fonts (aesthetics) and F5 working but with display of folder and files dynamically like Komodo Edit and a better code completion and vi emulation. Suggestions, please.
+
+If I want to buy a Py IDE, Komodo or Wingware, which is better?-- Wrt syntax highlighting and code completion
+    
+
+        
+Answer 1: 
+
+    
+    
+To enable code completion, go to Window 
+Answer 2: 
+
+    
+    
+The typical reason that code completion doesn't work under PyDev is that the libraries aren't in the PYTHONPATH.  If you go into the Project Properties, and setup PyDev PYTHONPATH preferences to include the places where the code you are trying to complete lives, it will work just fine...
+
+Project 
+Answer 3: 
+
+    
+    
+Make sure you use 'Open With' as 'Python Editor' by right clicking on the file - It worked for me  
+    
+    
+Answer 4: 
+
+    
+    
+Check to see if the 'P' icon is appearing for your items and in the top of your editor after opening it. If it's not appearing, it may be that there's a problem with the file association, so, go to window 
+Answer 5: 
+
+    
+    
+It sounds like you have to specify the location of the Python interpreter.  Do this under Preferences 
+Answer 6: 
+
+    
+    
+Well, I tried the Wing Professional and I think its really the best Py IDE out there.
+    
+    
+Answer 7: 
+
+    
+    
+Between komodo and wingide i would go for wing. The license is not that expensive and the fact that it is commercial gives you a bigger probability of more updates and bug fixes. If you, like me, prefer a free solution, then stick with pydev. At least until aptana closes the free door :)
+    
+    
+Answer 8: 
+
+    
+    
+Check your Theme configuration. Python highlighting uses Theme Colors
+    
+    
+Answer 9: 
+
+    
+    
+In case anyone else makes the embarrassing mistake that I did:  be sure your source code file actually ends with ".py". Even if its in a Python project, PyDev won't guess without the extension. 
+    
+    
+Answer 10: 
+
+    
+    
+If you want to work with Eclipse please have a look at these pluggins.
+
+-To make your eclipse editor work like vim. I use this plugin.
+            http://vrapper.sourceforge.net/home/
+
+-Then if you do something with HTML,CSS etc. This plug in might be useful.
+       https://github.com/emmetio/emmet-eclipse
+
+If you are looking for a Text editor. I suggest you to use:-
+
+Either Notepad++ (in Windows)
+    - with plugins like - ViSimulator
+                        - Emmet
+                        - Explorer
+                        - Python Script
+                        - NppExec
+
+Kate(KDE Advanced Text editro),[In Linux],
+   which have vim mode and many features. In my view, it has better syntax support too. I am not sure it have pluggins or not.
+
+I am sure you have read the answers of DNS and tim-white
+    
+    
+Answer 11: 
+
+    
+    
+When syntax highlighting was not working for me using PyDev, I discovered that there were somehow two 'Python Editor' associations defined for .py files in my installation of Eclipse/PyDev.  From the Eclipse Main Menu, go to Window  
+Title: Good C++ Debugging/IDE Environment for Linux?
+Description: 
+    
+    
+                    
+I have a friend who is trying to make the switch to Linux, but is hung up on the apparent lack of debugging/IDE environments for C++, especially as they relate to template programming. He has been using visual studio for years and is maybe a little spoiled by their awesome IDE. Does anyone have any good suggestions for an environment where he can, under Linux, develop and debug with all of the usual things (Breakpoints, line highlighting for compilation errors, step in/over/out/etc, etc) that he's accustomed to? Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Although many people think of it as a Java IDE, he could try NetBeans. I've used it on Windows for C and C++ development without a problem, and I know NetBeans is supported on Linux, so it would be worth a shot.
+
+It looks like most of the features he wants are included in the C/C++ development toolkit, including integration with GDB, a profiler, and more.
+    
+    
+Answer 2: 
+
+    
+    
+How about Eclipse + CDT  ?
+    
+    
+Answer 3: 
+
+    
+    
+Visual Studio is good, indeed.
+
+On the free side:
+
+Qt Creator is getting quite good too, it's worth a try. There are advantageous by-products coming from the Qt framework:
+
+
+huge library - not only to build GUI applications but for other domains as well
+portability on multiple platforms
+
+
+A version 1.3 beta is available as a preview of the upcoming release but the current 1.2.1 is already all you need to manage projects.
+
+Eclipse has already been mentioned, it's a very good environment offering many plug-ins (Mylyn, SVN, ...).
+
+MonoDevelop somewhat supports C++ (more and more, I didn't check the latest version).
+    
+    
+Answer 4: 
+
+    
+    
+I've used Eclipse for C/C++ and it's pretty useful. It's also used at ACM ICPC World Finals http://cm.baylor.edu/welcome.icpc
+    
+    
+Answer 5: 
+
+    
+    
+I'd recommand Code::Blocks (but use a nighty build). It can be coupled with gdb to enable step by step debugging and all that stuff.
+    
+    
+Answer 6: 
+
+    
+    
+I havn't explored it personally, but Emacs has a C++ development addon that looks very much like a full IDE. 
+    
+    
+Answer 7: 
+
+    
+    
+Not exactly an IDE but SublimeText 2/3 is available on Linux now. There may be a debugger plugin for it too, who knows.
+
+Edit
+
+Here's a gdb plugin for SublimeText
+    
+    
+Answer 8: 
+
+    
+    
+About 7 years ago I used KDevelop that was shipped with KDE. I found it quite good back than, and I hope it also improved with the time. I found it quite comparable to VC++ 6 at this time.
+
+It also contains Qt support, if you are in need for some GUI toolkit.
+    
+    
+Answer 9: 
+
+    
+    
+Depends, Code::Blocks is good, Eclipse is very nice too, but you will need a very good computer. In my opinion the best choice iss gcc, gdb and ViM or Gedit.
+    
+    
+Answer 10: 
+
+    
+    
+My buddies from work use Eclipse + Scons, they also use Valgrind(spelling?) for tracking memory leaks and such.
+    
+    
+Answer 11: 
+
+    
+    
+Many of the IDE features you listed were debugger features.  The ddd (Data Display Debugger) debugger is quite a nice GUI wrapper for gdb, allowing graphical representation of data structures, a non-crappy source listing window (ie. unlike the l command of gdb where you don't get context), and also allows you to use any and all native gdb commands directly if desired.
+    
+    
+Answer 12: 
+
+    
+    
+Have a look at CodeLite. It's available for Ubuntu and Fedora out of the box and even for Windows and Mac. So you can have the same IDE on different platforms.
+
+We tried Eclipse and NetBeans but left them due to their huge CPU and memory usage. We have a development server and all the developers connect to it via RDC. Thats why these IDEs miserably failed in our model.
+
+So, we looked for some native IDE. Found CodeBlocks to be very good and super fast. We sort of settled on it but later found CodeLite and liked it better than CodeBlocks. 
+    
+    
+Title: Is it possible to include a library from another library using the Arduino IDE?
+Description: 
+    
+    
+                    
+I'm trying to write an Arduino library (effectively a C++ class) which itself references another library I have installed in my Mac's ~/Documents/Arduino/libraries directory.
+
+At the top of the .cpp of the library I'm writing, I've tried
+
+#include &lt;ReferencedLibrary.h&gt;
+
+
+and
+
+#include "ReferencedLibrary.h"
+
+
+... neither of which work. I can successfully #include &lt;ReferencedLibrary.h&gt; from sketches in my ~/Documents/Arduino directory. Am I missing something or is this a limitation of the Arduino IDE/makefile? Is there a workaround?
+    
+
+        
+Answer 1: 
+
+    
+    
+This issue was solved in the Arduino 1.6.6 release. The release notes of 1.6.6 mention that library to library dependencies have been fixed.
+
+
+  Library to library dependencies: when your sketch imports a library, and that library uses another, the IDE will find out without you having to add a useless #include to your sketch
+
+
+Updating your version to 1.6.6 or newer will resolve your problem.
+    
+    
+Answer 2: 
+
+    
+    
+I have been able to include a library in another Arduino library by using a relative path. For example, to include the AbstractSwitch library into the DigitalSwitch library, assuming that both of these libraries live in their own separate folders within Arduino's standard library folder, you can use the following include statement:
+
+#include "../AbstractSwitch/AbstractSwitch.h"
+
+
+In other words, your include statement should read: 
+
+#include "../LibraryFolder/LibraryHeaderFile.h"
+
+    
+    
+Answer 3: 
+
+    
+    
+The documentation here https://github.com/arduino/Arduino/wiki/Build-Process states:
+
+
+  The include path includes the sketch's
+  directory, the target directory
+  (/hardware/core//) and
+  the avr include directory
+  (/hardware/tools/avr/avr/include/),
+  as well as any library directories (in
+  /hardware/libraries/) which
+  contain a header file which is
+  included by the main sketch file.
+
+
+This means that if you #include "ReferencedLibrary.h" from your main sketch file, this causes that file's libraries directory to get added to the include path for other libraries to include. A bit of a hack but it does work on my Mac.
+    
+    
+Answer 4: 
+
+    
+    
+Using the Arduino environement, as I understand it, you cannot access your own library from another of your own libraries. There is no way to add paths, so there is simply no way for the compiler to find the code. That makes it hard to write libraries that use code in another of your libraries. My web research indicates this has been a problem for years but to my knowledge has not been solved. I suspect there are difficulties in the implementation details or perhaps a desire to keep the system simple at the expense of capability.
+
+Of course, you can always cut and paste code into each new library, but that's exceedingly sub-optimal. You can also write one huge library with all of your code in one pair of .h and .cpp files. That's also not very satisfactory, but I've done it on occasion.
+
+There is a work around, however, for using standard Arduino libraries in your own library that you're placing in your sketchbook/libraries directory. Since sketches include paths to the standard library locations, and link the standard library code, you can include the header file for the standard library of interest in your sketch. Below that, also in your sketch, include your own library header file. The standard library will then become available to your library as well as to your sketch.
+    
+    
+Answer 5: 
+
+    
+    
+Not recommended method: It is possible to add basically any external library code to Arduino IDE build by knifing boards.txt file. Headers in c/cpp flags and libraries in ld flags. This may be useful for library dev using external tools (cmake/QT creator for me today). 
+
+I modified /home/pekka/arduino-1.8.5/hardware/teensy/avr/boards.txt by adding "/coderoot" to gcc include path and E_OS_arduino define, modified lines below:
+
+teensy36.build.flags.cpp=-fno-exceptions -felide-constructors -std=gnu++14 -Wno-error=narrowing -fno-rtti -I/coderoot -DE_OS_arduino
+
+teensy36.build.flags.c=-I/coderoot -DE_OS_arduino
+    
+    
+Title: PHPStorm 4 cursor
+Description: 
+    
+    
+                    
+I don't know if anyone has tried the all-new PHPStorm 4, but I've got a problem with this new version that I didn't have with the previous major version (PHPStorm 3).
+
+Basically, when I click anywhere in the blank space of my code view, the cursor is set at this position, instead of going at the first char available on the line where I clicked:
+
+
+
+I first thought this was an intended choice from the PHPStorm team, but my co-worker installed this software on his Mac (I'm on Windows), and for him the cursor does go to the beginning of the line.
+
+This is pretty annoying, do you have a pointer to a configuration option for this?
+    
+
+        
+Answer 1: 
+
+    
+    
+In the settings go to IDE Settings -&gt; Editor -&gt; Allow placement of caret after end of line and untick the option.
+
+
+    
+    
+Title: Clojure Development: IDE or REPL?
+Description: 
+    
+    
+                    
+I've been using Clojure for a little while and want to create some projects that are bigger and more complicated than toys. I've been using Java for the past few years and have become accustomed to what IDEs do for me -- compile lots of classes, package them up in jars, create batch files for users to start them with.
+
+When I look at examples of development in Clojure they seem to be along the lines of load files into the REPL, see how they work, edit the file, reload, repeat. Nary a class or jar being generated anywhere. In Stuart Halloway's terrific "Programming Clojure" I couldn't find a single example of ":gen-class", for example. The Clojure IDEs that I have used (ClojureBox and the enclojure NetBeans plugin) seem to promote that same work flow.
+
+Is this intentional? Are the tools too immature or do I just not "get it"?
+
+I'd like to hear some work flow examples from folks who have created some non-trivial programs to be used by regular users (not other devs) if possible.
+
+Thanks for sharing your opinions.
+    
+
+        
+Answer 1: 
+
+    
+    
+I think there are really 2 questions here:
+
+A) how to deploy (and build and manage dependencies). All I can say to that is look at other projects with similar goals/domains and copy them.
+
+B) Workflow:
+
+My work-flow is like this:
+
+
+open a file and write some high level wishful thinking declarations
+start writing some functions to support it
+
+
+2.5 copy the function definitions to REPL as I create them
+
+
+open another file and write some basic tests to check the function works
+
+
+3.5 copy these to the REPL
+
+
+iterate between the two buffers building the tests up to an example and the program toward an end goal. These eventually become similar activities and I know I’m done.
+wrap the secondary file up in deftest
+
+
+Now when I come back in a month, I can just run my tests and be happy! Saving your REPL buffers can provide some value with little effort. That’s just what works for me at present, and I’m happy to be educated to better approaches.
+
+As for selection of IDE vs REPL - most IDEs have plugins which have REPLs so I'm not sure its a one or the other choice - really its just about which text editor you are productive in, and how you want to manage your project structure. There aren't any 'do it this way' structures pre-made AFAIK so at this point it is easier to look at specific projects (like Clojure itself, or penumbra or compojure or any of the libraries listed on the main site.
+    
+    
+Answer 2: 
+
+    
+    
+The REPL development approach has been encouraged by most LISP family (and other functional language) IDE's for a long time.  Some of these REPL's also feature the auto-complete features you might associate with a Java IDE.
+
+REPL gives you a couple major advantages over the standard approach.  The first is that it allows you to execute arbitrary code during the run-time of your program, which can make debugging multi-threaded systems much simpler.  Second, and more importantly, it makes it easy to test your functions while you code.  You don't need to build a framework around a new function or class, you can play with it directly in the REPL, and see how it responds to a variety of use cases.
+    
+    
+Answer 3: 
+
+    
+    
+Well, to start off, virtually any decent development plugin for any editor or IDE will give you a way to use the Clojure REPL from within the IDE. Probably even allow you to load files into the REPL for testing and such. You don't need to choose one or the other.
+
+Enclojure is going a long way, that is for sure. However, most people are perfectly happy with using Emacs, including myself. Emacs uses a Lisp as its configuration language, so it's usually the most natural choice to a Lisper.
+
+For languages that have REPLs, using the REPL as a major part of the development process is the norm. Editing files, loading them into the REPL, playing with them to see if a work, rinse, repeat. This is one of the major advantages of languages with REPLs like Clojure and Haskell and CL and such.
+
+As for building jars, and compiling Clojure code and stuff, that's simple. You don't even really /have/ to Compile Clojure code most of the time if you don't want to. When you do, you AOT compile it with gen-class, which compiles it to class files that you can then put into a jar. There are tons of examples and even tutorials spread amongst the interwebs. The easiest and most efficient way is to use something like Ant and writing a build script that compiles Clojure code and generates the .jar for you. The first time I did it, I thought it was going to be hard to do, but it was actually really simple. I just looked at the Clojure and Clojure-Contrib Ant build files, and referenced the Ant help pages for everything else I needed.
+
+One thing I should mention is the fact that Enclojure /does/ actually build executable .jar files for you, if you request it to do so. I'm sure more advanced things you're used to will be added in the future. They are, indeed, still quite new.
+    
+    
+Answer 4: 
+
+    
+    
+I use both - Eclipse IDE and Counterclockwise plugin which provides a REPL. This is a particularly nice combination if you develop Java code alongside Clojure (as I do).
+
+My general approach is:
+
+
+Write Clojure code in the editor
+Keep a REPL open for testing things out (Ctrl+Enter is a useful shortcut here: it executes whatever code is selected in your editor in the REPL)
+Use the generic IDE tools for project management, building, testing, SCM etc.
+
+
+At times , I also work purely in the REPL. This is usually better for testing things out quickly. If I particularly like a piece of test code, I will simply copy/paste it from the REPL into my test suite.
+    
+    
+Answer 5: 
+
+    
+    
+What I do is to create a project with Leiningen. If you just want to whack away for a while, you can just type lein repl and your project classpath will be set up for that repl.
+
+Actually though, I use Emacs, slime and swank clojure. After navigating to the project, you simply type M-x clojure-jack-in. This starts the swank server and slime connects to it and you have a repl in a buffer. Of course just that is not worth more than running a repl in a shell. What you do get is the ability to write code in another buffer, and with a keybinding select sexps or larger units and execute them in the repl to see if it works. Also slime gives you handy keybindings for common tasks. See swank-clojure on github for more info.
+
+JohnJ, You can do the same thing in Emacs. Actually that phrase is probably a tautology.
+
+(add-hook 'after-save-hook etc.
+
+
+Here is someone's example after-save-hook for git: https://gist.github.com/449668
+    
+    
+Answer 6: 
+
+    
+    
+With Eclipse, you can have unit tests (or any program) run every time you save a file in the project.  The whole process takes less than a second -- it's great for test-driven development, and removes the need for cut-and-paste into the REPL for most situations.  Plus you get to keep the tests! :-)
+
+You'll want to use cake to avoid the JVM startup time every time you launch your tests.   You can run cake test on the command line, or just have Eclipse run it for you when you save any file in your project.
+
+I got this to work by setting up a project with Leiningen, installing cake, and installing the counterclockwise Eclipse plugin.  To set up Eclipse to run tests every time you save, select Project-
+Answer 7: 
+
+    
+    
+
+  "When I look at examples of development in Clojure they seem to be along the lines of load files into the REPL, see how they work, edit the file, reload, repeat. Nary a class or jar being generated anywhere......I'd like to hear some work flow examples from folks who have created some non-trivial programs to be used by regular users (not other devs) if possible."
+
+
+The examples at Debugging clojure functions which are invoked in java code (eclipse) are trivial, but illustrate how in eclipse one can link projects such that one can invoke clojure/scala functionality from within java.
+    
+    
+Title: Customizing Cut line in eclipse with Ctrl-X
+Description: 
+    
+    
+                    
+Is it possible to configure Eclipse to cut lines with Ctrl+X? Is it more intuitive and leave Ctrl+D to duplicate lines? I am trying IntelliJ now and keep typing Ctrl+D to delete lines which duplicates.
+
+EDIT : Wow, already five responses. I want Ctrl+X to cut the whole line if nothing is selected, otherwise do a regular cut. Same thing with Ctrl+C. It is a nice feature in IntelliJ.
+    
+
+        
+Answer 1: 
+
+    
+    
+Every time I istall Eclipse I forget it doesn't have this functionality by default and have to search to fix it.
+
+This plugin works for me and does exactly (and only) what the original poster asks for
+
+http://code.google.com/p/copycutcurrentline/
+    
+    
+Answer 2: 
+
+    
+    
+
+Click Window -/strong/lilistrong
+Answer 3: 
+
+    
+    
+Yes, use the Preferences dialog to configure the keyboard shortcuts. But I find the defaults to be more useful:
+
+
+Alt+Down duplicates line below current line (Up duplicates above)
+Ctrl+Alt+Down swaps the current line with the line below it (Up swaps with line above), essentially moving the current line up or down
+
+    
+    
+Answer 4: 
+
+    
+    
+I've searched for the same functionality - moving the line (Alt-arrow) or duplicating (Ctrl-Alt-arrow) is not the same - not when you want to get the line into completely different file, for instance.
+
+There is an issue on Eclipse's bugzilla for this - since 2002.
+
+IntelliJ IDEA has Ctrl+X/C when nothing is selected (and hardly was first editor to do it that way) and it just works really nicely. You can somehow imitate this behavior for copy - duplicate the line and cut it (Ctrl-Alt-arrow down, then Ctrl+x).
+    
+    
+Answer 5: 
+
+    
+    
+You can already delete lines with CTRL+X! (In fact you cut them, but however they are not there anymore)
+    
+    
+Answer 6: 
+
+    
+    
+
+  I want Ctrl+X to cut the whole line if nothing is selected, otherwise do a regular cut. Same thing with Ctrl+C. It is a nice feature in IntelliJ.
+
+
+I created an Eclipse Plugin for this.
+
+Eclipse Marketplace: https://marketplace.eclipse.org/content/lineshortcuts
+
+GitHub: https://github.com/achimmihca/EclipseLineShortcuts
+    
+    
+Title: How to improve IntelliJ code editor speed?
+Description: 
+    
+    
+                    
+I am using IntelliJ (Community Edition) for several months, and at first I'm pleased about its speed &amp; simplicity. But now, after upgrading to version 10, it's extremely slow. Sometimes I click a file then it takes 5 - 15 seconds to open that file (it freeze for that time). 
+
+I don't know if I have done anything which cause that: I have installed 2 plugins(regex, sql), and have 2 versions of IntelliJ on my machine (now the version 9 removed, only version 10 remains).
+
+Is there any tips to improve speed of code editor, in general, or specifically IntelliJ? I have some experience when using IntelliJ:
+
+
+Should open IntelliJ a while before working, cause it needs time for indexing.
+Don't open too many code tabs
+Open as less other program as possible. I'm using 2 GB RAM WinXP, and it just seems fairly enough for Java, IntelliJ &amp; Chrome at the same time.
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Try to increase using memory size at %IDEA_HOME%\bin\idea.exe.vmoptions 
+
+-Xms128m
+-Xmx512m
+-XX:MaxPermSize=250m
+
+
+
+Xms128m means that at startup there will be allocated 128 mb for heap.
+Xmx512m means that maximum heap size available for IDEA is 512 mb
+-XX:MaxPermSize=250m  PermGen related to java heap.
+
+
+Also you can set maximum garbage collector pause
+
+-XX:MaxGCPauseMillis=10
+
+
+That means that java's GC will take max 10ms to do his work.
+
+And use concurrent Mark-Sweep (CMS) Collector (But i'm not sure that this will help for latest version of IDEA)
+
+-XX:+UseConcMarkSweepGC 
+
+    
+    
+Answer 2: 
+
+    
+    
+You should submit a CPU performance snapshot to the issue tracker as described in the FAQ.
+    
+    
+Title: How to declare unlimited/variadic parameters in DocBlock?
+Description: 
+    
+    
+                    
+Lets say I have a function (obviously a trivial example):
+
+public function dot(){
+    return implode('.', func_get_args());
+}
+
+
+Now I know I could modify this to be 
+
+public function dot(array $items){
+    return implode('.', $array);
+}
+
+
+but with some functions that is not an option. So, how would you document the first version of the function with a docBlock so an IDE can interpret that it can receive unlimited parameters?
+
+I have seen some methods that use:
+
+/**
+ * Joins one or more strings together with a . (dot)
+ * @param string $string1
+ * @param string $string2
+ * @param string $_ [optional]
+ * @return string
+ */
+public function dot($string1, $string2, $_ = null) {
+    return implode('.', func_get_args());
+}
+
+
+Which in an IDE looks like 
+
+But that feels like a hack to me, is there no way to do it just with docBlock?
+    
+
+        
+Answer 1: 
+
+    
+    
+[UPDATED 2015-01-08]
+
+Old way to do this in PHPDoc was:
+
+http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.param.pkg.html
+
+/**
+ * @param int $param,...
+ **/
+
+
+However, this is no longer supported. As of PHP 5.6 Variadic Method Parameters are a part of the PHP language, and the PHPDoc's have been updated to reflect this as of PHPDoc 2.4 if I recall correctly. This is also in the PhpStorm IDE as of EAP 139.659 (should be in 8.0.2 and up). Not sure about implementation of other IDEs.
+
+https://youtrack.jetbrains.com/issue/WI-20157
+
+In any case, proper syntax for DocBlocks going forward for variadic parameters is:
+
+/**
+ * @param int ...$param
+ **/
+
+    
+    
+Answer 2: 
+
+    
+    
+As Variadics are implemented in PHP 5.6 PHPDocumentor should support the following syntax as of version 2.4.
+
+/**
+ * @param Type ...$value
+ * Note: PHP 5.6+ syntax equal to func_get_args()
+ */
+public function abc(Type ...$value) {}
+
+
+This should be the correct way to describe such a signature. This will likely be included in PSR-5. Once that is accepted IDE's should follow to support this "official" recommendation. 
+
+However, in the mean time some IDE's have an improved understanding of what they consider correct. Hit hard on the IDE vendor to support the offical PHP syntax that is supported as of 5.6 or use whatever works in the meantime.
+    
+    
+Answer 3: 
+
+    
+    
+In php the concept of valist or list of "optional arguments" does not exist.
+
+the $_ variable will just contain, here the third string you give.
+The only way to allow an array OR a string is to test the first argument with is_array()
+
+public function dot($arg1){
+   if(is_array($arg1)){
+       return implode('.',$arg1);
+   }
+   else if $arg1 instanceof \Traversable){
+       return implode('.',iterator_to_array($arg1));
+   }
+   else{
+       return implode('.',func_get_args());
+   }
+}
+
+
+Now that you handled the behaviour you want, you have to document it. In php, as overloading is not allowed, a convention is to use "mixed" as a type if you want to provide multiple types.
+
+/**
+*@param mixed $arg1 an array, iterator that will be joined OR first string of the list
+*@return string a string with all strings of the list joined with a point
+*@example dot("1","2","3"); returns 1.2.3 dot(array(1,2,3)); returns 1.2.3
+*/
+
+
+Moreover, according to phpdocumentor documentation you can declare sort of valist with
+
+/**
+*@param string ... list of strings
+*/
+
+    
+    
+Title: SharpDevelop or Express editions
+Description: 
+    
+    
+                    
+Since there is a Sharpdevelop 3.0 ( http://www.icsharpcode.net/OpenSource/SD/Download/ ) can anybody tell me how it compares to the Express Editions ? ( http://www.microsoft.com/Express/ )
+
+I tried to find differences, but could only find this old post http://community.icsharpcode.net/blogs/mattward/pages/VisualStudioExpressComparison.aspx
+    
+
+        
+Answer 1: 
+
+    
+    
+I wrote a blog-post about it, you can find it here
+
+In my conclusion I say:
+
+Conlusion
+If I have to choose for web applications than the express edition wins easily. The build in webserver, the graphical designer with split screen functionality and javascript debugging just make it too good.
+If you think you really need to work with a database from within the IDE than also SharpDevelop is not for you. If you want to create a windows forms or console application both will work fine, if you want to build these applications more seriously and use a source control system, static code analysis and stylecop from the IDE you need SharpDevelop !
+
+If the express editions would allow third party extensibility (Resharper) and solve my little annoyances,  it would be number one.
+If SharpDevelop would get a resharper add-in, a graphical designer for web pages and a build in web server, it would be number one.
+    
+    
+Answer 2: 
+
+    
+    
+SharpDevelop is a free/opensource project. Where as Microsoft Visual Studio Express Edition is a crippled Visual Studio lacking some of the tool/features that help in release commercial software.
+
+If you are planing on using Visual Studio in the future, then use express edition. Otherwise I would highly recommend SharpDevelop.
+
+In terms of features, they both have debuggers, they both have syntax highlighting and code completion. They both will have all the features you expect from a full out RAD IDE for .Net.
+    
+    
+Answer 3: 
+
+    
+    
+The other issue that is worth mentioning is the unit testing support in Sharpdevelop. Nunit can be integrated into the IDE and that is a huge gain IMO. Unit testing in #Develop is far superior to MSTest and Nunit with VS is not integrated into the IDE. 
+    
+    
+Title: Unnecessary boxing inspection reported by IDE
+Description: 
+    
+    
+                    
+Unnecessary boxing inspection reported by IDE
+
+I was recently checking out some code that was posted on Oracle tutorials regarding Swing#JTable. There were a few warning messages that were returned by IntelIJ regarding the boxing of primitive variables inside the multidimensional array holding the Table data.
+
+
+
+Here is the array found which is taken from docs.oracle.com:
+
+Object[][] data = {
+            {"Kathy", "Smith",
+                    "Snowboarding", new Integer(5), new Boolean(false)},
+            {"John", "Doe",
+                    "Rowing", new Integer(3), new Boolean(true)},
+            {"Sue", "Black",
+                    "Knitting", new Integer(2), new Boolean(false)},
+            {"Jane", "White",
+                    "Speed reading", new Integer(20), new Boolean(true)},
+            {"Joe", "Brown",
+                    "Pool", new Integer(10), new Boolean(false)}
+    };
+
+
+
+
+All the wrapped variables were receiving this message:
+
+
+  "Unnecessary boxing 'new Integer(5)' 
+  Reports "boxing", e.g. wrapping of primitive values in objects. Boxing is unnecessary under Java 5 and newer, and can be safely removed.
+  This inspection only reports if the project or module is configured to use a language level of 5.0 or higher."
+
+
+
+
+I know the concept of boxing and unboxing in Java, my question would be as to why it's 'irrelevant' in newer version of Java as I've seen many developers discuss it or use it recently.
+
+Also, since boxing is not required what should 'new Integer(5)' be replaced with?
+    
+
+        
+Answer 1: 
+
+    
+    
+Thanks to autoboxing in Java 5 and newer, you don't have to call the Integer and Boolean constructors to manually "box" the primitive values. The IDE seems to recommend you write the code as:
+
+Object[][] data = {
+            {"Kathy", "Smith", "Snowboarding", 5, false},
+            {"John", "Doe", "Rowing", 3, true},
+            {"Sue", "Black", "Knitting", 2, false},
+            {"Jane", "White", "Speed reading", 20, true},
+            {"Joe", "Brown", "Pool", 10, false}
+    };
+
+    
+    

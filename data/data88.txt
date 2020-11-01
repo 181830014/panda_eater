@@ -1,0 +1,2610 @@
+Title: Is it possible to set different colours for different types of comments in PhpStorm?
+Description: 
+    
+    
+                    
+Is it possible to set one colour for // comments and another for # in PhpStorm IDE?
+
+I would like to use # comments for short descriptions on how the code works or for indicating some sections in classes (like # Accessors, # Calculations etc followed by adequate methods) and // for temporary comments. For this it would be extremely helpful to have different colours.
+
+I don't think this is possible with default PhpStorm setup (hope I am wrong), but maybe is there an plugin for such thing?
+    
+
+        
+Answer 1: 
+
+    
+    
+Not possible ... and existing ticket has "Backlog" state (maybe one day, low priority).
+
+Watch this ticket https://youtrack.jetbrains.com/issue/WI-18806 (star/vote/comment) to get notified on any progress.
+
+
+
+Ticket that describes your reasoning WI-38657 is marked as duplicate for more general ticket (see above).
+    
+    
+Title: How to see exception info while debugging without declaring &ldquo;ex&rdquo; variable
+Description: 
+    
+    
+                    
+While debugging, I've always been able to see information about the exception once a catch block was entered even if my catch just looked like this:
+
+catch 
+{
+}
+
+
+Since updating to Visual Studio 2017 though, I am only able to get exception information if I've actually declared a variable like so:
+
+catch (Exception ex)
+{
+}
+
+
+This is super annoying because there are a number of places where the exception is not declared (and normally does not need to be) but I do need to see what the exception is while debugging if there is one. How can I get the behavior back where it always shows me about the exception regardless of whether I've declared a variable for it or not?
+    
+
+        
+Answer 1: 
+
+    
+    
+In the locals window you should see a pseudo variable $exception that has the exception object for you to inspect. You can also add a watch expression for $exception in any of the watch windows.
+
+Docs with more info and other pseudovariables is at: https://docs.microsoft.com/en-us/visualstudio/debugger/pseudovariables?view=vs-2017
+    
+    
+Title: Can Pycharm autocomplete the left side of an assignment operator like eclipse?
+Description: 
+    
+    
+                    
+Can Pycharm  autocomplete the left side of an assignment operator like eclipse can with ctrl+shift+L?
+
+Assume I have a function such as :
+
+def file_list(self, pattern=None):
+    ...
+    return matching_filenames
+
+
+I enter/auto complete the following code snippet elsewhere to use that function:
+
+self.file_list(pattern)
+
+
+Can PyCharm auto complete to something like:
+
+matching_filenames= self.file_list(pattern)  // or even
+file_list = self.file_list(pattern)
+
+
+How? 
+
+I cannot find anything in the PyCharm docs at:
+
+https://www.jetbrains.com/help/idea/auto-completing-code.html
+https://www.jetbrains.com/help/pycharm/mastering-keyboard-shortcuts.html
+
+I know that Eclipse can do this, can PyCharm?
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, it can. 
+the default option should be:
+
+
+select self.file_list(pattern) (mark it)
+hit Ctrl + Alt + V
+it should add a new variable to your code.
+
+
+link for JetBrains's Pycharm documentation about this shortcut
+
+side note: there are a lot of useful shortcuts and something called live templates. i recommend reading on both since they help you write code faster and you will look cooler doing so.
+    
+    
+Title: Formatting HTML with Nunjucks extension installed
+Description: 
+    
+    
+                    
+I have some Angular component HTML some.component.html that I'm trying to format.  When I hit ctrl-shiftp, and selectFormat Document` I get the message:
+
+
+  There is no document formatter for 'nunjucks'-files installed.
+
+
+So it seems VSCode thinks that the .html file is a nunjucks file.
+
+Is there a way to make it think that it's a html file? 
+    
+
+        
+Answer 1: 
+
+    
+    
+You can switch back to HTML by clicking on the word "Nunjucks" in VS Code's status bar. This "Language Indicator" is near the bottom-right of VS Code's window.  Clicking it will display a "Select Language Mode" drop-down-list where you can select "HTML".
+
+After that, things that normally work for HTML files (like Format Document) will work again; however, things like the special syntax highlighting applied to Nunjuck files will not, but you can switch back and forth as needed.
+
+Here's VS Code's documentation for Changing the language for the selected file.
+    
+    
+Answer 2: 
+
+    
+    
+Explicitly adding a "file.associations" in settings.json seems to solve the need to switch back-and-forth. 
+
+"files.associations": {
+    "*.html": "html",
+} 
+
+    
+    
+Title: How can I quickly start typing SQL in Microsoft Access?
+Description: 
+    
+    
+                    
+In Microsoft Access 2016, I would like to click somewhere and start typing SQL of new query right away. But the shortest way to start typing SQL (which I found so far) is:
+
+
+Select menu Create strong/strong/lilistrong/strongstrong/strong/lili/lili/li/olp/ppkbd/kbdkbd/kbdkbd/kbdkbd/kbdkbd/kbd/p/div
+Answer 1: 
+
+    
+    
+The function below creates or alters a simple placeholder query, opens it in Design View, switches to SQL View with its text highlighted, and then deletes the text. 
+
+Use the function as the RunCode action of a macro and add the macro to the Quick Access Toolbar.  Then you can click that icon and start typing your SQL.
+
+Public Function NewQuery()
+    Const cstrQueryName As String = "USysQuery0"
+    Dim db As DAO.Database
+    Dim qdf As DAO.QueryDef
+    Dim strSql As String
+
+    strSql = "SELECT Date() AS Today;"
+
+    Set db = CurrentDb
+    For Each qdf In db.QueryDefs
+        If qdf.Name = cstrQueryName Then
+            Exit For
+        End If
+    Next
+    If qdf Is Nothing Then
+        Set qdf = db.CreateQueryDef(cstrQueryName)
+    End If
+    qdf.SQL = strSql
+    qdf.Close
+    DoCmd.OpenQuery cstrQueryName, acViewDesign
+    DoCmd.RunCommand acCmdSQLView
+    DoCmd.RunCommand acCmdDelete
+End Function
+
+    
+    
+Answer 2: 
+
+    
+    
+Option 1: deal with it.
+
+By default, Access doesn't support anything faster than this. 
+
+Option 2: create a macro in your Access database to automate the task, and bind this to a key combination
+
+You could write a macro to automate command bar actions, and bind that macro to a shortcut. I currently don't have time to look up the required commands but am certain it's possible.
+
+Option 3: buy a plugin
+
+There are plugins out there that immediately go to SQL view, support having the SQL and results on the same pane, have syntax highlighting, etc.
+
+An example of such a plugin is Access SQL editor (I'm not affiliated in any way)
+
+Option 4: Create your own.
+
+Writing your own SQL editor that's better than what Access offers by default is very simple, because Access offers very little by default.
+
+You can start off with a form with a textbox that takes the SQL, a save button, an execute button (requires a little VBA), and a subform that displays the query results. Then you already have something that allows you to open it and start typing right away.
+    
+    
+Answer 3: 
+
+    
+    
+While waiting for better answer, I created an AutoHotKey solution – a keyboard shortcut (restricted only to Access) to perform the above steps in English language version of Microsoft Access 2016:
+
+ 
+
+SendMode Input                                      ; // Choose mode of sending keystrokes
+
+#IfWinActive, ahk_class OMain ahk_exe MSACCESS.EXE  ; // Only in scope of MS Access app
+
++^n::                                               ; // Routine for Ctrl+Shift+N starts
+    Send !cqd                                       ; // Run "Query Design" menu command
+    WinWaitActive,Show Table ahk_class #32770       ; // Wait for "Show Table" window
+    Send {Esc}!jqwq{End}{Left}{Space}               ; // Send the rest of the keys
+    Return
+
+#IfWinActive                                        ; // end of #IfWinActive section
+
+
+After pressing Ctrl+Shift+N and waiting a bit*, a new query window is open in SQL view and I can start typing SQL.
+
+*) Sometimes, MS Access can be really slow on keyboard shortcuts accessing the ribbon and on switching from query Design View to SQL View.
+    
+    
+Title: Missing intellisense, autocompletion in for loop
+Description: 
+    
+    
+                    
+I'm doing simple for loop through my node lists.
+
+nodeList = obj.get_nodes_list()
+for node in nodeList.items:
+    print node.
+
+
+Node is type of V1Node  and I want to access status property (field)
+
+This is what I get in PyCharm IDE in debugging session:
+
+
+
+And this is what I have using intellisense:
+
+
+
+Question: Where I have all the public fields ?!
+    
+
+        
+Answer 1: 
+
+    
+    
+In a debug session, PyCharm has access to the instance of an object, and can inspect and see exactly which attributes it has. When you're editing the code, PyCharm does not run anything, and can only analyze the code statically. Its capabilities to do so are limited by Python's lack of type declarations, so it's perfectly normal that it does not display all available members.
+
+To make PyCharm's intellisense work better, you can add type hints to your code, as described in the documentation.
+    
+    
+Title: Debugger doesn&#39;t show new variable in stack frame
+Description: 
+    
+    
+                    
+Can someone tell me, why the debugger doesn't show variable j in stack frame(Using IntelliJ IDEA)? 
+
+for (int i = 0 ;  i &lt; 10; i++) {
+        int j = 100;
+    }
+
+
+when i = 0, variable j should be created once, then, being removed from the stack, then i = 2, j should be loaded into the stack, but IntelliJ debug tool doesn't show the creation of j once, Where is the problem? Thank you
+
+Screenshot:
+
+
+
+
+
+
+
+There is a tool, please try it out https://cscircles.cemc.uwaterloo.ca/java_visualize/#
+    
+
+        
+Answer 1: 
+
+    
+    
+This variable is not used and javac compiler optimizes the bytecode by completely removing it. You can add some usage for the variable, like log it so System.out and then you should be able to see it in the debugger.
+    
+    
+Title: In VSCode how do you select a whole word with - in it?
+Description: 
+    
+    
+                    
+IE: say I double click "LAYOUT:MENU-TRADE": I want to select the entire constant. Or at least the entire MENU-TRADE part.
+
+
+
+In atom I can accomplish this by removing - as an ignored character. How is this accomplished in VSCode?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can accomplish this by customizing your editor.wordSeparators. Simply remove "-" from the list.
+
+
+    
+    
+Title: How to show recent projects at right click for PyCharm?
+Description: 
+    
+    
+                    
+I'm using JetBrains PyCharm 2018.2.1.
+
+I've added the app icon to the taskbar (Windows 10, at the bottom of screen). Everytime I click it, it starts and open the last project. But sometimes I want to open a recent project. I don't want to open the last project first and then switch to a recent project I want to open. 
+
+I notice that someone with MacOS can right click the icon and it will show recent projects list to be chosen. How can I achieve that?
+
+The taskbar:
+
+
+
+What I want (take MS Visio for example, when I click the icon with right button it shows recent opened files):
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Please vote for IDEA-75238 in order to move it up in the queue and receive notifications regarding the progress of the issue. See more information on working with tracker at https://intellij-support.jetbrains.com/hc/en-us/articles/207241135-How-to-follow-YouTrack-issues-and-receive-notifications .
+
+As for now, http://jetbrains.com/toolbox/app provides similar functionality for managing projects and even various IDE versions and other products. It even handles automatic updates without any need to click anywhere or go to websites and download anything.
+    
+    
+Title: How to search in multiple directories in Atom editor
+Description: 
+    
+    
+                    
+I have several folders in my project as the sample structure below.
+
+parent-directory
+ | sub-directory-1
+ | sub-directory-2
+ | sub-directory-3
+ | ....
+ | sub-directory-n
+
+
+While searching for a string in all the files in the parent-directory using Atom editor, it takes a lot of time to fetch the results. 
+
+But if the search is limited to a particular folder like 'parent-directory/sub-directory-n' the search time gets reduced considerably.
+
+Now the challenge is that I'm unable to search inside specific folders at once. I tried all the different combinations below, but nothing seems to be working fine.
+
+parent-directory/sub-directory-1;parent-directory/sub-directory-2
+parent-directory/sub-directory-1+parent-directory/sub-directory-2
+parent-directory/sub-directory-1,parent-directory/sub-directory-2
+
+
+Please let me know if there is such an option available in the Atom editor.
+    
+
+        
+Answer 1: 
+
+    
+    
+The issue is your are using the parent directory name also. You need to use the child and path in there. See below screenshot
+
+
+
+As you can see I am able to search multiple directory. But I don't use the main folder insomnia in my path
+    
+    
+Title: VB6 designer doesn&#39;t display opened modules
+Description: 
+    
+    
+                    
+Forms and Modules in VB6 don't show when I double click them. In order to have them appear on screen I have to click Window /pp/p/div
+Answer 1: 
+
+    
+    
+The form windows positioning, and which forms are open, is stored in the ProjectName.vbw file.  Delete that file then open your project and the previous form windows settings are forgotten.  The .vbw file should not be added to your source control system, there's nothing in it that is needed for code history reasons.
+    
+    
+Title: how move buffer vim the position 4 to 2
+Description: 
+    
+    
+                    
+I want know how to move a buffer in the position 4 to position 2.
+
+How can do it?
+
+Buffer:
+
+
+
+Buffer list:
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Once a buffer is added to the buffer list its index can not be changed.
+Once an index has been used it is unusable for other buffers.
+It is impossible to specify the index at which you want to add a buffer to the buffer list.
+It is impossible to swap two buffers.
+It is impossible to nudge the buffers in the buffer list.
+
+
+So no, you can not.
+    
+    
+Answer 2: 
+
+    
+    
+I think you can use the arglist instead of bufflist, the arglist is a subset of bufflist. There is a vimcast about it.
+
+Basically you can creat a file with the correct order of your files and do:
+
+vim `cat list-of-files`
+
+    
+    
+Title: How can I tell my IDE to compile my CMake project a specific way?
+Description: 
+    
+    
+                    
+I have a CMake (mostly C, with some C++) project whose installation instructions are as follows:
+
+mkdir build
+cd build
+cmake /*some options*/ ../
+make
+
+
+This works perfectly if I compile from the command-line.
+
+I would like to use an IDE to compile this program so that I may debug it with a graphical debugger. However, when I attempt to compile using the IDE, I get linker errors. 
+
+I am unfamiliar with the internal workings of CMake and so am not sure how to achieve the desired behavior. In fact, I'm unsure if this is a CMake question at all; perhaps this is simply a question of IDE configuration. If it helps, the IDE I'm using is JetBrains' CLion.
+
+The error given in the IDE is 
+
+The CMake file is 
+
+set(CMAKE_CXX_COMPILER "/Library/Developer/CommandLineTools/usr/bin/c++")
+set(CMAKE_C_COMPILER "/Library/Developer/CommandLineTools/usr/bin/cc")
+project(mpmc)
+cmake_minimum_required(VERSION 3.8)
+option(MPI "Use MPI to parallelize the calculations (requires MPI)" OFF)
+option(CUDA "Use CUDA to offload polarization calculations to a GPU (requires CUDA)" OFF)
+option(OPENCL "Use OpenCL to offload polarization calculations to a GPU (requires OpenCL)" OFF)
+option(QM_ROTATION "Enable Quantum Mechanics Rigid Rotator calculations (requires LAPACK)" OFF)
+option(VDW "Enable Coupled-Dipole Van der Waals (requires LAPACK)" OFF)
+
+
+configure_file (
+"${PROJECT_SOURCE_DIR}/src/include/cmake_config.h.in"
+"${PROJECT_BINARY_DIR}/src/include/cmake_config.h"
+)
+
+set(CMAKE_BUILD_TYPE Release)
+
+if(CMAKE_COMPILER_IS_GNUCC)
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall")
+    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Wall")
+endif()
+
+set(LIB m)
+
+set(INCLUDE src/include/ src/mersenne/ ${PROJECT_BINARY_DIR}/src/include)
+
+set(SRC
+src/mc/mc_moves.c
+src/mc/surface_fit_arbitrary.c
+src/mc/qshift.c
+src/mc/single_point.c
+src/mc/mc.c
+src/mc/replay.c
+src/mc/pimc.c
+src/mc/surface.c
+src/mc/surf_fit.c
+src/mc/fugacity.c
+src/mc/cavity.c
+src/mc/checkpoint.c
+src/histogram/histogram.c
+src/energy/lj_buffered_14_7.c
+src/energy/bessel.c
+src/energy/dreiding.c
+src/energy/energy.c
+src/energy/polar.c
+src/energy/pbc.c
+src/energy/disp_expansion.c
+src/energy/vdw.c
+src/energy/pairs.c
+src/energy/bond.c
+src/energy/coulombic_gwp.c
+src/energy/exp_repulsion.c
+src/energy/coulombic.c
+src/energy/sg.c
+src/energy/lj.c
+src/energy/axilrod_teller.cpp
+src/mersenne/mt.c
+src/mersenne/dSFMT.h
+src/mersenne/dSFMT.c
+src/mersenne/dSFMT-common.h
+src/mersenne/dSFMT-params.h
+src/main/quaternion.c
+src/main/CArng.c
+src/main/memnullcheck.c
+src/main/main.c
+src/main/cleanup.c
+src/main/usefulmath.c
+src/io/dxwrite.c
+src/io/simulation_box.c
+src/io/average.c
+src/io/output.c
+src/io/check_input.c
+src/io/input.c
+src/io/mpi.c
+src/io/read_pqr.c
+src/io/setup_ocl.c
+src/polarization/thole_field.c
+src/polarization/polar_wolf_lookup.c
+src/polarization/thole_polarizability.c
+src/polarization/thole_matrix.c
+src/polarization/polar_ewald.c
+src/polarization/thole_iterative.c
+)
+
+if(MPI)
+    message("-- MPI Enabled")
+    find_package(MPI REQUIRED)
+    if(NOT MPI_C_FOUND)
+        message(FATAL_ERROR "-- MPI not found! Exiting ...")
+    endif()
+    set(INCLUDE ${INCLUDE} ${MPI_C_INCLUDE_PATH})
+    set(LIB ${LIB} ${MPI_C_LIBRARIES})
+else()
+    message("-- MPI Disabled")
+endif()
+
+if(CUDA)
+    message("-- CUDA Enabled")
+    find_package(CUDA REQUIRED)
+    set(SRC ${SRC} src/polarization_gpu/polar_cuda.cu)
+else()
+    message("-- CUDA Disabled")
+endif()
+
+if(OPENCL)
+    message("-- OpenCl Enabled")
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
+    find_package(OpenCL REQUIRED)
+    if(NOT OPENCL_FOUND)
+        message(FATAL_ERROR "--OpenCl not found! Exiting ...")
+    endif()
+    set(SRC ${SRC}
+        src/polarization_gpu/polar_ocl.c
+        src/io/setup_ocl.c)
+    set(INCLUDE ${INCLUDE} ${OpenCL_INCLUDE_DIRS})
+    set(LIB ${LIB} ${OpenCL_LIBRARIES})
+else()
+    message("-- OpenCl Disabled")
+endif()
+
+if(QM_ROTATION)
+    message("-- QM Rotation Enabled")
+    set(SRC ${SRC}
+        src/quantum_rotation/rotational_basis.c
+        src/quantum_rotation/rotational_eigenspectrum.c
+        src/quantum_rotation/rotational_integrate.c
+        src/quantum_rotation/rotational_potential.c)
+    set(LIB ${LIB} lapack)
+else()
+    message("-- QM Rotation Disabled")
+endif()
+
+if(VDW)
+    message("-- CDVDW Enabled")
+    if(NOT QM_ROTATION)
+        set(LIB ${LIB} lapack)
+    endif()
+else()
+    message("-- CDVDW Disabled")
+endif()
+
+include_directories(${INCLUDE})
+if(CUDA)
+    cuda_add_executable(${PROJECT_NAME} ${SRC})
+else()
+    add_executable(${PROJECT_NAME} ${SRC})
+endif()
+target_link_libraries(${PROJECT_NAME} ${LIB})
+
+if(MPI)
+    if(MPI_C_COMPILE_FLAGS)
+      set_target_properties(${PROJECT_NAME} PROPERTIES
+        COMPILE_FLAGS "${MPI_C_COMPILE_FLAGS}")
+    endif()
+
+    if(MPI_C_LINK_FLAGS)
+      set_target_properties(${PROJECT_NAME} PROPERTIES
+        LINK_FLAGS "${MPI_C_LINK_FLAGS}")
+    endif()
+endif()
+
+
+And the directory structure is 
+    
+
+        
+Answer 1: 
+
+    
+    
+You can point CLion to the build directory from your command line compile. Go to "File -
+Title: about Eclipse for Java
+Description: 
+    
+    
+                    
+If eclipse has a compiler (see Wikipedia article on IDEs, third line), itself why do I have to download the jdk for compiling .java files? Doesn't eclipse convert my file to bytecode?
+    
+
+        
+Answer 1: 
+
+    
+    
+Eclipse has its own compiler and it can work with JRE only. JRE is needed because Eclipse itself is run with java. However if we have JDK installed we can see Java platform class sources during develepment. Also Eclipse's Maven plugin uses JDK compiler.
+    
+    
+Title: PHP code showing syntax error in IDE
+Description: 
+    
+    
+                    
+I am using the following function as suggested by a friend here to get the innerHTML. While the function works fine and solves my purpose, it is showing syntax error in my IDE. I am not an expert in coding hence not able to figure out. Requesting help in correcting the code.
+
+My code:
+
+&lt;?php
+
+$body = $doc-&gt;getElementsByTagName('body')-&gt;item(0);
+
+$content = implode(
+    "",
+    array_map([$doc, 'saveHTML'], iterator_to_array($body-&gt;childNodes))
+);
+
+echo $content;
+
+
+My IDE is showing error on this line array_map([$doc, 'saveHTML'], iterator_to_array($body-&gt;childNodes))
+
+UPDATE
+
+I use Adome Dreamweaver CS6 as my code editor.
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+The Dreamweaver CS6 PHP syntax version is 5.3. All 5.4 and later functions/syntax will not be available to it.
+
+https://forums.adobe.com/thread/1393664
+
+Longer explanation for this specific example, shorthand arrays aren't allowed in your editor. If you want the editor to stop complaining you can swap to array() or upgrade to the CC version.
+
+This code will work fine if your actual server is running 5.4 or later.
+    
+    
+Title: Gogland Test Configuration always executed with ./
+Description: 
+    
+    
+                    
+No matter how I set my build configuration for running my tests the go test tool is always run with ./...
+
+E.G.
+
+
+
+runs:
+
+go test -v -cover ./... -run ./svs
+    
+
+        
+Answer 1: 
+
+    
+    
+Depending on what you need to run you can select different configuration types.
+
+For the one in your picture, Run Kind Directory is selected and that means the IDE will run the tests in the directory you point it at and since the working directory is in the same directory, it will run ./... as that's what it means.
+
+For the Run Kind Package, it will run only the specified package and no other packages, so no /... appended to it.
+
+For the Run Kind File it will run the tests in a single file. 
+
+The pattern that you've added, ./svc tells the go tool how to match test names. There you should put valid patterns for test names. If you want to control for which directory / package the tests are run you can use a different run configuration per directory / package since multiple configurations are possible.
+
+Based on your reply you want to run the tests in your whole projects, recursive, without the vendor folder. To do so, create a Run Kind Directory, as you have one already, and make sure sure you are using Go 1.9 as it will automatically ignore the vendor directory when using ./... matching.
+
+Please let me know if you need further details.
+    
+    
+Title: WebStorm PhpStorm: how to skip specific extensions from indexing
+Description: 
+    
+    
+                    
+WebStorm / PhpStorm IDEs allow the user to mark certain directories as "excluded", so that they will not be indexed and the classes contained will not show up in autocomplete etc... (see here)
+
+Is it possible to mark specific extensions as excluded.  All my components have a pair of files such as:
+
+my.component.ts  &lt;-- actual component
+my.component.spec.ts &lt;-- for testing only
+
+
+I've seen this doc about how to exclude an individual file, but that doesn't scale well. I would like all the .spec.ts files to be ignored by the indexer because they pollute a lot of the autocomplete UI and slow down my work.
+    
+
+        
+Answer 1: 
+
+    
+    
+Since WebStorm/PhpStorm 2017.2 it will be possible to exclude files by pattern - see  IDEA-127753.
+Note also that you can use Ignore files and folders option to exclude certain files by name ( see https://youtrack.jetbrains.com/issue/IDEA-127753#comment=27-868409 )
+    
+    
+Title: PhpStorm &ldquo;Save as&rdquo; open new file
+Description: 
+    
+    
+                    
+This always catches me out, but it appears to be another PhpStorm only quirk. Normally when you "Save as" a document, it will open the new file. This happens in all Adobe products, all Office products, and every other app I can think of... except PhpStorm.
+
+So many times I've forgotten about this quirk and started working over the old file, thinking it was the new one. It's most frustrating.
+
+Is there a way to change this behaviour?
+    
+
+        
+Answer 1: 
+
+    
+    
+
+  Is there a way to change this behaviour?
+
+
+Unfortunately no.
+
+Save as is basically a shortcut for Save and then Refactor | Copy.
+
+https://youtrack.jetbrains.com/issue/IDEABKL-332 I guess (based on "duplicate" tickets)
+
+
+
+General suggestions (Captain Obvious):
+
+
+Invoke Refactor | Copy on desired file before making changes in it (so it will sit deep in your mind that the currently edited file will keep changes)
+Use Local History to rollback unwanted changes in old/original file.
+
+    
+    
+Title: Can I force the console to keep both price and tiprate on the same line?
+Description: 
+    
+    
+                    
+import java.util.Scanner;
+public class Tipping {
+
+  public static void main(String[] args) {
+    Scanner s = new Scanner(System.in);
+    System.out.print("Please enter initial price followed by tip percentage: ");
+    double Price = s.nextDouble(); double TipRate = s.nextDouble();
+    double TipAmount;
+    TipAmount = (Price*TipRate)/100;
+    System.out.println("Tip amount: " + TipAmount);
+    System.out.print("Total price: " + (TipAmount + Price) +".");
+  }}
+
+
+I always get the price on the first line and the tiprate on the other.
+    
+
+        
+Answer 1: 
+
+    
+    
+Judging by your wording, you don't like that when input is handled via the Scanner, pressing Enter on the first double value (The Price) it advances to the next line and waits for the second double value (The TipRate). First of all, the character "Enter" is essentially the system dependent new-line character, so the Scanner immediately splits the input when the enter key is pressed. Specifically, the Scanner uses the Character.isWhiteSpace(char ch); function to evaluate where to split the tokens. 
+
+It all depends on how you want your input handled. Sadly, without importing a Curses-esque library and using a custom command prompt, the "\n" character cannot be reversed. What you can do is write your input and separate it by a space, for example writing "23.4 12.3" will write the input in the same line and correctly break the line into the 2 tokens you want. 
+
+If it is purely for aesthetic reasons you could catch the token as a String, evaluate if the "\n" character exists within and ask the user to re-input the variables in a single line or, if the "\n" character doesn't exist, split the String on the " " character and then use the Double.valueOf(String str); function. 
+
+Beware not to use the (Scanner in).setDelimiter(String str) since that will avoid breaking the tokens on the "\n" character (If the str String is for example " ") and will only freeze your program until the user splits 2 inputs with the space character and then throw an InputMismatchException because 12.3\n12.3 32.3 would be "valid" input but the token "12.3\n12.3" can't be evaluated to a single Double variable.
+    
+    
+Answer 2: 
+
+    
+    
+Sure, avoid calling:
+
+System.out.println()
+
+
+As the name (somehow) indicates, that prints a whole "line"; ending with a line break.
+
+So, either call System.out.print() multiple times; or better practice: call System.out.println() once, but give all the strings you wanted to be printed to that call.
+
+And as I just saw your comment: you are calling println() - in the line before you call print()!
+
+Given your comment: you have to understand how that scanner works. The scanner reads strings; and by default, line by line.
+
+In other words: when you use nextDouble() then the scanner assumes that you will enter a string that represents a number - but that your input is "terminated" by the user pressing ENTER. In other words; those line breaks are inevitable! 
+
+So, simply deal with them like:
+
+System.out.print("Please enter initial price: ");
+double Price = s.nextDouble(); 
+System.out.print("Please enter tip percentage: ");
+double TipRate = s.nextDouble();
+
+double TipAmount = (Price*TipRate)/100;
+System.out.println("Tip amount: " + TipAmount + " results in Total price: " + (TipAmount + Price) +".");
+
+
+Long story short: when using the console in/out like this; you can't prevent certain line breaks. Simply accept that, and don't get to much into perfectionism.
+    
+    
+Answer 3: 
+
+    
+    
+Use instead of System.out.println (which stands for print line) with System.out.print. The System.out.println will print an line break after the given string on the output stream.
+
+You could also combine the print's with a single print line.
+
+For example you could use this:
+
+System.out.println(String.format("Tip amount: %f Total Price: %f", TipAmount, (TipAmount + Price)));
+
+
+Update
+
+Simple solution for the scanner problem would be to input the numbers in one line separated with a whitespace.
+    
+    
+Title: arch linux CCS install stuck at com.ti.debug
+Description: 
+    
+    
+                    
+when I start to install CCS it works normall untill it went to install com.ti.debug.linux... and it stucks at this line.
+I have opened task manager to watch the activity and it just runs some java then stuck.
+
+
+
+03/22/2017 00:04:35(GMT) - my - creating constructor MSP-EXP430G2 MSP-EXP430FR5739 MSP-EXP430FR4133 MSP-EXP430F5438 EZ430-F2013 EZ430-CHRONOS image1 image2 image3 image4 image5 image6
+03/22/2017 00:04:35(GMT) - Validation::linuxGlibCheck - LD_LIBRARY_PATH == :/tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/tcl/lib
+03/22/2017 00:04:35(GMT) - Validation::linuxGlibCheck - tempLD == {}
+03/22/2017 00:04:35(GMT) - Validation::linuxGlibCheck - cmd = /tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/dependency-checker/check_depends.sh --ldpath 
+03/22/2017 00:04:36(GMT) - Validation::linuxGlibCheck - ran /tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/dependency-checker/check_depends.sh --ldpath :Installed versions of glibc and glibcxx: 2.25, N/A
+Required versions of glibc and glibcxx:  2.15, GLIBCXX_3.4.19
+GLIBC_INSTALLED: 2.25
+GLIBC_REQUIRED: 2.15
+Checking availability of libraries in ext-depends.txt ...
+Done.
+03/22/2017 00:04:36(GMT) - Validation::linuxGlibCheck - Line: Installed versions of glibc and glibcxx: 2.25, N/A
+03/22/2017 00:04:36(GMT) - Validation::linuxGlibCheck - Line: Required versions of glibc and glibcxx:  2.15, GLIBCXX_3.4.19
+03/22/2017 00:04:36(GMT) - Validation::linuxGlibCheck - Line: GLIBC_INSTALLED: 2.25
+03/22/2017 00:04:36(GMT) - Validation::linuxGlibCheck - GLIBC_INSTALLED: 2.25
+03/22/2017 00:04:36(GMT) - Validation::linuxGlibCheck - Line: GLIBC_REQUIRED: 2.15
+03/22/2017 00:04:36(GMT) - Validation::linuxGlibCheck - GLIBC_REQUIRED: 2.15
+03/22/2017 00:04:36(GMT) - Validation::linuxGlibCheck - Line: Checking availability of libraries in ext-depends.txt ...
+03/22/2017 00:04:36(GMT) - Validation::linuxGlibCheck - Line: Done.
+03/22/2017 00:04:36(GMT) - Validation::linuxGlibCheck - Installed version 2.25 is greater than or equal to 2.15
+03/22/2017 00:04:36(GMT) - Validation::linuxGlibCheck - 
+03/22/2017 00:04:36(GMT) - Validation::linuxLibChecks - LD_LIBRARY_PATH == :/tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/tcl/lib
+03/22/2017 00:04:36(GMT) - Validation::linuxLibChecks - tempLD == {}
+03/22/2017 00:04:36(GMT) - Validation::linuxLibChecks - cmd = /tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/dependency-checker/ldcheck
+03/22/2017 00:04:37(GMT) - Validation::linuxLibChecks - ran /tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/dependency-checker/ldcheck:
+03/22/2017 00:04:37(GMT) - Validation::linuxLibChecks - cmd = /tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/dependency-checker/check_depends.sh --ldpath 
+03/22/2017 00:04:38(GMT) - Validation::linuxLibChecks - ran /tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/dependency-checker/check_depends.sh --ldpath :Installed versions of glibc and glibcxx: 2.25, N/A
+Required versions of glibc and glibcxx:  2.15, GLIBCXX_3.4.19
+GLIBC_INSTALLED: 2.25
+GLIBC_REQUIRED: 2.15
+Checking availability of libraries in ext-depends.txt ...
+Done.
+03/22/2017 00:04:38(GMT) - Validation::linuxLibChecks - Line: Installed versions of glibc and glibcxx: 2.25, N/A
+03/22/2017 00:04:38(GMT) - Validation::linuxLibChecks - Line: Required versions of glibc and glibcxx:  2.15, GLIBCXX_3.4.19
+03/22/2017 00:04:38(GMT) - Validation::linuxLibChecks - Line: GLIBC_INSTALLED: 2.25
+03/22/2017 00:04:38(GMT) - Validation::linuxLibChecks - Line: GLIBC_REQUIRED: 2.15
+03/22/2017 00:04:38(GMT) - Validation::linuxLibChecks - Line: Checking availability of libraries in ext-depends.txt ...
+03/22/2017 00:04:38(GMT) - Validation::linuxLibChecks - Line: Done.
+03/22/2017 00:04:45(GMT) - ::installDirPane0 - InstallDir selected: /home/islam/ti
+03/22/2017 00:04:45(GMT) - my - numRootsSelected 0
+03/22/2017 00:04:45(GMT) - my - numRootsSelected 0
+03/22/2017 00:04:45(GMT) - my - numRootsSelected 0
+03/22/2017 00:04:48(GMT) - my - numRootsSelected 1
+03/22/2017 00:04:49(GMT) - my - numRootsSelected 2
+03/22/2017 00:05:11(GMT) - writeDebugFile - 
+
+Install Information:
+
+
+03/22/2017 00:05:11(GMT) - writeDebugFile - Install Version: 7.1.0.00016
+03/22/2017 00:05:11(GMT) - writeDebugFile - Install Source	: /home/islam/Downloads/CCS7.1.0.00016_linux-x64
+03/22/2017 00:05:11(GMT) - writeDebugFile - Install Temp	: /tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0
+03/22/2017 00:05:11(GMT) - writeDebugFile - Install Type	: Offline
+03/22/2017 00:05:11(GMT) - writeDebugFile - OS				: Linux
+03/22/2017 00:05:11(GMT) - writeDebugFile - OS Name		: Unknown Linux
+03/22/2017 00:05:11(GMT) - writeDebugFile - OS	Version		: 4.10.3-1-ARCH
+03/22/2017 00:05:11(GMT) - writeDebugFile - OS	Platform	: unix
+03/22/2017 00:05:11(GMT) - writeDebugFile -            	: 64-bit
+03/22/2017 00:05:11(GMT) - ::programArgs0 - OSD: UnknownLinux-64-bit
+03/22/2017 00:05:11(GMT) - writeDebugFile -            	: UnknownLinux-64-bit
+03/22/2017 00:05:11(GMT) - writeDebugFile - User ID		: islam
+03/22/2017 00:05:11(GMT) - writeDebugFile - Timezone		: EET
+03/22/2017 00:05:11(GMT) - writeDebugFile - IPAddress		: 
+03/22/2017 00:05:11(GMT) - writeDebugFile - Update/Rerun	: 0
+03/22/2017 00:05:11(GMT) - writeDebugFile - Command line	: installersrc /home/islam/Downloads/CCS7.1.0.00016_linux-x64 installertmp /tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0 buildid 7.1.0.00016 installer /home/islam/Downloads/CCS7.1.0.00016_linux-x64/ccs_setup_linux64_7.1.0.00016.bin bitness 64-bit os linux-x64 osname {Unknown Linux} spversion NONE timestamp 20170322020429 AVon false
+
+03/22/2017 00:05:11(GMT) - writeDebugFile - CCS_WARNING: {Failed to locate system libraries required for CCS operation:
+
+}
+03/22/2017 00:05:11(GMT) - writeDebugFile - 
+Product families selected: 
+03/22/2017 00:05:11(GMT) - writeDebugFile - PF_MSP430
+03/22/2017 00:05:11(GMT) - writeDebugFile - PF_TM4C
+03/22/2017 00:05:11(GMT) - writeDebugFile - 
+Components to be installed: 
+03/22/2017 00:05:11(GMT) - writeDebugFile - EMU_TI
+03/22/2017 00:05:11(GMT) - writeDebugFile - IDE_MSP430
+03/22/2017 00:05:11(GMT) - writeDebugFile - MSP430_BUILD_DEBUG
+03/22/2017 00:05:11(GMT) - writeDebugFile - MSP430_GCC_SUPPORT
+03/22/2017 00:05:11(GMT) - writeDebugFile - EMU_MSP430
+03/22/2017 00:05:11(GMT) - writeDebugFile - TIVA_STELLARIS_DRIVERS
+03/22/2017 00:05:11(GMT) - writeDebugFile - JRE
+03/22/2017 00:05:11(GMT) - writeDebugFile - P2APP
+03/22/2017 00:05:11(GMT) - writeDebugFile - ECLIPSE
+03/22/2017 00:05:11(GMT) - writeDebugFile - ECLIPSECORE
+03/22/2017 00:05:11(GMT) - writeDebugFile - P2TOOLS
+03/22/2017 00:05:11(GMT) - writeDebugFile - GMF
+03/22/2017 00:05:11(GMT) - writeDebugFile - IDE_MAIN
+03/22/2017 00:05:11(GMT) - writeDebugFile - IDE_WORKFLOW
+03/22/2017 00:05:11(GMT) - writeDebugFile - DVT_COMMON
+03/22/2017 00:05:11(GMT) - writeDebugFile - DVT_UIA
+03/22/2017 00:05:11(GMT) - writeDebugFile - DVT_VIA_CCS
+03/22/2017 00:05:11(GMT) - writeDebugFile - TIREX
+03/22/2017 00:05:11(GMT) - writeDebugFile - XULRUNNER
+03/22/2017 00:05:11(GMT) - writeDebugFile - INSTALLER
+03/22/2017 00:05:11(GMT) - writeDebugFile - IDE_CHROME
+03/22/2017 00:05:11(GMT) - writeDebugFile - IDE_TOOLS_COMMON
+03/22/2017 00:05:11(GMT) - writeDebugFile - IDE_GC
+03/22/2017 00:05:11(GMT) - writeDebugFile - TARGET_CONTENT_CORE
+03/22/2017 00:05:11(GMT) - writeDebugFile - TARGET_CONTENT_CORE_LEGACY
+03/22/2017 00:05:11(GMT) - writeDebugFile - NODEJS
+03/22/2017 00:05:11(GMT) - writeDebugFile - PINMUX
+03/22/2017 00:05:11(GMT) - writeDebugFile - DS
+03/22/2017 00:05:11(GMT) - writeDebugFile - DS_FLASH
+03/22/2017 00:05:11(GMT) - writeDebugFile - CLOUDAGENT
+03/22/2017 00:05:11(GMT) - writeDebugFile - MSP430_CGT_HELP
+03/22/2017 00:05:11(GMT) - writeDebugFile - CGT_DEFAULTLIBS_MSP430
+03/22/2017 00:05:11(GMT) - writeDebugFile - DMED
+03/22/2017 00:05:11(GMT) - writeDebugFile - DVT_ENERGYTRACE
+03/22/2017 00:05:11(GMT) - writeDebugFile - IDE_ARM
+03/22/2017 00:05:11(GMT) - writeDebugFile - DVT_TRACE
+03/22/2017 00:05:11(GMT) - writeDebugFile - TIVA_TM4C
+03/22/2017 00:05:11(GMT) - writeDebugFile - TIVA_TM4E
+03/22/2017 00:05:11(GMT) - writeDebugFile - ARM_CGT_HELP
+03/22/2017 00:05:11(GMT) - writeDebugFile - CGT_DEFAULTLIBS_TMS470
+03/22/2017 00:05:11(GMT) - writeDebugFile - GCC_ARM_COMPILER
+03/22/2017 00:05:11(GMT) - my - Finish Status Num of families selected: 2 ; num families available: 20
+03/22/2017 00:05:11(GMT) - ::programArgs128 - OSD: UnknownLinux-64-bit
+03/22/2017 00:05:11(GMT) - my - installdir for ARM_CGT_HELP: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for C2000_CGT_HELP: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for C6000_CGT_HELP: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - Did not find matching component in InstallIni CCS_DOC. Using Defaults.
+03/22/2017 00:05:11(GMT) - my - Did not find matching component in InstallIni CCS_LAUNCHER. Using Defaults.
+03/22/2017 00:05:11(GMT) - my - Did not find matching component in InstallIni CCS_UTILS. Using Defaults.
+03/22/2017 00:05:11(GMT) - my - installdir for DVT_COMMON: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for DVT_ENERGYTRACE: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for DVT_TRACE: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for DVT_UIA: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for DVT_VIA_CCS: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for ECLIPSE: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for EMU_SD: /home/islam/ti/ccsv7/ccs_base
+03/22/2017 00:05:11(GMT) - my - installdir for IDE_ARM: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for IDE_C2000: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for IDE_C5500: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for IDE_C6000: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for IDE_CHROME: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for IDE_GC: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for IDE_MAIN: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for IDE_MSP430: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for IDE_TOOLS_COMMON: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for IDE_WORKFLOW: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for MSP430_BUILD_DEBUG: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for MSP430_CGT_HELP: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for MSP430_GCC_SUPPORT: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for MSP432_BUILD_DEBUG: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for P2APP: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - installdir for P2TOOLS: /home/islam/ti/ccsv7/
+03/22/2017 00:05:11(GMT) - my - Did not find matching component in InstallIni TARGETDB_DEF_PROPS. Using Defaults.
+03/22/2017 00:05:11(GMT) - my - installdir for TARGET_CONTENT_CORE: /home/islam/ti/ccsv7/..
+03/22/2017 00:05:11(GMT) - my - installdir for TARGET_CONTENT_CORE_LEGACY: /home/islam/ti/ccsv7/..
+03/22/2017 00:05:11(GMT) - Util::getProperty - No /home/islam/ti/ccsv7/eclipse/ccs.properties file found
+03/22/2017 00:05:11(GMT) - Util::getProperty - No /home/islam/ti/ccsv7/eclipse/ccs.properties file found
+03/22/2017 00:05:12(GMT) - ProgressPane::Run - non-threaded
+03/22/2017 00:05:12(GMT) - ProgressPane::Run - RunInstall /home/islam/ti/ccsv7/eclipse/ccs_config.xml 0 0 0 0 /home/islam/ti/ccsv7/install_logs/20170322020429/ccs_setup_7.1.0.00016_install.log ::progressPane0 -1
+03/22/2017 00:05:12(GMT) - RunMain - CCS_INFO: Started with params pConfigFile=/home/islam/ti/ccsv7/eclipse/ccs_config.xml pProfiling=0 pUpdate=0 logfile=/home/islam/ti/ccsv7/install_logs/20170322020429/ccs_setup_7.1.0.00016_install.log progress=::progressUpdate0
+03/22/2017 00:05:12(GMT) - RunMain - CCS_INFO: encoding = utf-8
+03/22/2017 00:05:12(GMT) - readConfigFile - Start installing components:
+03/22/2017 00:05:12(GMT) - readConfigFile - read config file /home/islam/ti/ccsv7/eclipse/ccs_config.xml
+03/22/2017 00:05:12(GMT) - readConfigFile - found /home/islam/ti/ccsv7/eclipse/ccs_config.xml
+03/22/2017 00:05:12(GMT) - readConfigFile - Parsing Root Elements
+03/22/2017 00:05:12(GMT) - readConfigFile - Done Parsing
+03/22/2017 00:05:12(GMT) - readConfigFile - CCSDIR=/home/islam/ti/ccsv7
+03/22/2017 00:05:12(GMT) - readConfigFile - EclipseDir=/home/islam/ti/ccsv7/eclipse
+03/22/2017 00:05:12(GMT) - readConfigFile - InstallDir=/home/islam/ti
+03/22/2017 00:05:12(GMT) - readConfigFile - TempDir=/tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0
+03/22/2017 00:05:12(GMT) - readConfigFile - platform=linux-x64
+03/22/2017 00:05:12(GMT) - readConfigFile - LocalBaseRepository=/home/islam/Downloads/CCS7.1.0.00016_linux-x64/baserepo
+03/22/2017 00:05:12(GMT) - readConfigFile - baserepourl=/home/islam/Downloads/CCS7.1.0.00016_linux-x64/baserepo
+03/22/2017 00:05:12(GMT) - readConfigFile - featureurl=/home/islam/Downloads/CCS7.1.0.00016_linux-x64/featurerepo
+03/22/2017 00:05:12(GMT) - readConfigFile - LocalRepository_Exists=1
+03/22/2017 00:05:12(GMT) - readConfigFile - componentinstaller=false
+03/22/2017 00:05:12(GMT) - readConfigFile - eclipseexe=eclipse
+03/22/2017 00:05:12(GMT) - readConfigFile - in install components
+03/22/2017 00:05:12(GMT) - readUserProfile - userprofile = 
+03/22/2017 00:05:12(GMT) - RunMain - Update = 0
+03/22/2017 00:05:12(GMT) - downloadIfRequired - deleted /tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/jre_root.gtk.linux.x86_64_1.8.0.122
+03/22/2017 00:05:12(GMT) - downloadIfRequired - copying /home/islam/Downloads/CCS7.1.0.00016_linux-x64/featurerepo/binary/jre_root.gtk.linux.x86_64_1.8.0.122
+03/22/2017 00:05:12(GMT) - downloadIfRequired - copied /home/islam/Downloads/CCS7.1.0.00016_linux-x64/featurerepo/binary/jre_root.gtk.linux.x86_64_1.8.0.122 to /tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/jre_root.gtk.linux.x86_64_1.8.0.122
+03/22/2017 00:05:12(GMT) - downloadIfRequired - File /tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/jre_root.gtk.linux.x86_64_1.8.0.122 already exists. Not attempting to download
+03/22/2017 00:05:12(GMT) - extract - cmd = "unzip" -q -o -d "/tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0" "/tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/jre_root.gtk.linux.x86_64_1.8.0.122"
+03/22/2017 00:05:14(GMT) - extract - successfully unzipped /tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/jre_root.gtk.linux.x86_64_1.8.0.122
+03/22/2017 00:05:14(GMT) - extract - cmd = "unzip" -q -o -d "/home/islam/ti/ccsv7/eclipse" "/tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/downloads/jre-8u112-linux-x64.zip"
+03/22/2017 00:05:21(GMT) - extract - successfully unzipped /tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/downloads/jre-8u112-linux-x64.zip
+03/22/2017 00:05:21(GMT) - installEclipse - In InstallEclipse for linux-x64
+03/22/2017 00:05:21(GMT) - downloadIfRequired - File /home/islam/Downloads/CCS7.1.0.00016_linux-x64/baserepo/eclipse_core_4.5.1.custom-160121.zip already exists. Not attempting to download
+03/22/2017 00:05:21(GMT) - extract - cmd = "unzip" -q -o -d "/tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0" "/home/islam/Downloads/CCS7.1.0.00016_linux-x64/baserepo/eclipse_core_4.5.1.custom-160121.zip"
+03/22/2017 00:05:22(GMT) - extract - successfully unzipped /home/islam/Downloads/CCS7.1.0.00016_linux-x64/baserepo/eclipse_core_4.5.1.custom-160121.zip
+03/22/2017 00:05:22(GMT) - findLauncher - launcher version = 1.3.100.v20150511-1540
+03/22/2017 00:05:22(GMT) - installEclipse - CCS_INFO: eclipse does not exist
+03/22/2017 00:05:22(GMT) - installEclipse - using /home/islam/ti/ccsv7/eclipse/jre/bin/java
+03/22/2017 00:05:22(GMT) - installEclipse - "/home/islam/ti/ccsv7/eclipse/jre/bin/java" -Xmx512m -Dorg.eclipse.ecf.provider.filetransfer.retrieve.readTimeout=30000 -Dorg.eclipse.ecf.provider.filetransfer.retrieve.closeTimeout=10000 -Dsun.net.client.defaultConnectTimeout=10000 -Dsun.net.client.defaultReadTimeout=30000  "-Dosgi.configuration.area=/tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/eclipse/cfg" "-Dosgi.instance.area=/tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/eclipse/ws" -jar "/tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/eclipse/plugins/org.eclipse.equinox.launcher_1.3.100.v20150511-1540.jar" -application org.eclipse.equinox.p2.director -repository "file:/home/islam/Downloads/CCS7.1.0.00016_linux-x64/baserepo/eclipserepo" -installIU org.eclipse.platform.ide,org.eclipse.help.feature.group,org.eclipse.equinox.p2.discovery.feature.feature.group,org.eclipse.equinox.p2.user.ui.feature.group,org.eclipse.cdt.feature.group,org.eclipse.cdt.debug.ui.memory.feature.group,org.eclipse.tm.terminal.feature.feature.group,org.eclipse.epp.mpc.feature.group,org.eclipse.egit.feature.group,org.eclipse.cdt.build.crossgcc.feature.group,org.eclipse.rse.feature.group,org.eclipse.cdt.launch.remote.feature.group,org.eclipse.gef.feature.group,gnu.io.rxtx.feature.group,org.eclipse.gmf.runtime.thirdparty.feature.group -destination "/home/islam/ti/ccsv7/eclipse/" -profile epp.package.cpp -profileProperties org.eclipse.update.install.features=true -bundlepool "/home/islam/ti/ccsv7/eclipse/" -p2.os linux -p2.ws gtk -p2.arch x86_64 -roaming 
+03/22/2017 00:05:22(GMT) - runEclipseApp - running cmd "/home/islam/ti/ccsv7/eclipse/jre/bin/java" -Xmx512m -Dorg.eclipse.ecf.provider.filetransfer.retrieve.readTimeout=30000 -Dorg.eclipse.ecf.provider.filetransfer.retrieve.closeTimeout=10000 -Dsun.net.client.defaultConnectTimeout=10000 -Dsun.net.client.defaultReadTimeout=30000  "-Dosgi.configuration.area=/tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/eclipse/cfg" "-Dosgi.instance.area=/tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/eclipse/ws" -jar "/tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/eclipse/plugins/org.eclipse.equinox.launcher_1.3.100.v20150511-1540.jar" -application org.eclipse.equinox.p2.director -repository "file:/home/islam/Downloads/CCS7.1.0.00016_linux-x64/baserepo/eclipserepo" -installIU org.eclipse.platform.ide,org.eclipse.help.feature.group,org.eclipse.equinox.p2.discovery.feature.feature.group,org.eclipse.equinox.p2.user.ui.feature.group,org.eclipse.cdt.feature.group,org.eclipse.cdt.debug.ui.memory.feature.group,org.eclipse.tm.terminal.feature.feature.group,org.eclipse.epp.mpc.feature.group,org.eclipse.egit.feature.group,org.eclipse.cdt.build.crossgcc.feature.group,org.eclipse.rse.feature.group,org.eclipse.cdt.launch.remote.feature.group,org.eclipse.gef.feature.group,gnu.io.rxtx.feature.group,org.eclipse.gmf.runtime.thirdparty.feature.group -destination "/home/islam/ti/ccsv7/eclipse/" -profile epp.package.cpp -profileProperties org.eclipse.update.install.features=true -bundlepool "/home/islam/ti/ccsv7/eclipse/" -p2.os linux -p2.ws gtk -p2.arch x86_64 -roaming 
+03/22/2017 00:07:56(GMT) - runEclipseApp - Installing org.eclipse.platform.ide 4.6.0.I20160607-1100.
+Installing org.eclipse.help.feature.group 2.2.0.v20160606-1100.
+Installing org.eclipse.equinox.p2.discovery.feature.feature.group 1.0.400.v20160504-1450.
+Installing org.eclipse.equinox.p2.user.ui.feature.group 2.2.200.v20160606-1311.
+Installing org.eclipse.cdt.feature.group 9.0.0.201606062011.
+Installing org.eclipse.cdt.debug.ui.memory.feature.group 9.0.0.201606062011.
+Installing org.eclipse.tm.terminal.feature.feature.group 4.1.0.201606052351.
+Installing org.eclipse.epp.mpc.feature.group 1.5.0.v20160608-1804.
+Installing org.eclipse.egit.feature.group 4.4.0.201606070830-r.
+Installing org.eclipse.cdt.build.crossgcc.feature.group 9.0.0.201606062011.
+Installing org.eclipse.rse.feature.group 3.7.1.201603211627.
+Installing org.eclipse.cdt.launch.remote.feature.group 9.0.0.201606062011.
+Installing org.eclipse.gef.feature.group 3.11.0.201606061308.
+Installing gnu.io.rxtx.feature.group 2.1.8.0_201606281300.
+Installing org.eclipse.gmf.runtime.thirdparty.feature.group 1.10.0.201606071959.
+Operation completed in 142787 ms.
+03/22/2017 00:07:56(GMT) - runEclipseApp - done.
+03/22/2017 00:07:56(GMT) - installEclipse - eclipse installed successfully, looking for binary
+03/22/2017 00:07:56(GMT) - installEclipse - new state: feature installed
+03/22/2017 00:07:56(GMT) - downloadIfRequired - File /home/islam/Downloads/CCS7.1.0.00016_linux-x64/baserepo/updateinstaller.zip already exists. Not attempting to download
+03/22/2017 00:07:56(GMT) - extract - cmd = "unzip" -q -o -d "/home/islam/ti/ccsv7/eclipse" "/home/islam/Downloads/CCS7.1.0.00016_linux-x64/baserepo/updateinstaller.zip"
+03/22/2017 00:07:56(GMT) - extract - successfully unzipped /home/islam/Downloads/CCS7.1.0.00016_linux-x64/baserepo/updateinstaller.zip
+03/22/2017 00:07:56(GMT) - installP2app - "/home/islam/ti/ccsv7/eclipse/eclipse" -application org.eclipse.equinox.p2.director -repository "file:/home/islam/Downloads/CCS7.1.0.00016_linux-x64/baserepo/p2appfRepo" -installiu com.ti.ccstudio.p2appf.feature.group -nosplash 
+03/22/2017 00:07:56(GMT) - runEclipseApp - running cmd "/home/islam/ti/ccsv7/eclipse/eclipse" -application org.eclipse.equinox.p2.director -repository "file:/home/islam/Downloads/CCS7.1.0.00016_linux-x64/baserepo/p2appfRepo" -installiu com.ti.ccstudio.p2appf.feature.group -nosplash 
+03/22/2017 00:08:28(GMT) - runEclipseApp - Installing com.ti.ccstudio.p2appf.feature.group 6.0.0.201703152000.
+Operation completed in 7323 ms.
+03/22/2017 00:08:28(GMT) - runEclipseApp - done.
+03/22/2017 00:08:28(GMT) - removeURL - cmdline = "/home/islam/ti/ccsv7/eclipse/eclipse"  -data "/tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/workspace" -application com.ti.ccstudio.p2app -removerepo "file:/home/islam/Downloads/CCS7.1.0.00016_linux-x64/baserepo/p2appfRepo" -nosplash
+03/22/2017 00:08:48(GMT) - removeURL - successfully ran "/home/islam/ti/ccsv7/eclipse/eclipse"  -data "/tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/workspace" -application com.ti.ccstudio.p2app -removerepo "file:/home/islam/Downloads/CCS7.1.0.00016_linux-x64/baserepo/p2appfRepo" -nosplash
+03/22/2017 00:08:48(GMT) - processOtherFeatures - length of features = 75; 1; 0
+03/22/2017 00:08:48(GMT) - processOtherFeatures - processing JRE
+03/22/2017 00:08:48(GMT) - processOtherFeatures - JRE state: feature installed; does not need to be processed
+03/22/2017 00:08:48(GMT) - processOtherFeatures - length of features = 75; 2; 0
+03/22/2017 00:08:48(GMT) - processOtherFeatures - processing ECLIPSECORE
+03/22/2017 00:08:48(GMT) - processOtherFeatures - ECLIPSECORE state: feature installed; does not need to be processed
+03/22/2017 00:08:48(GMT) - processOtherFeatures - length of features = 75; 3; 0
+03/22/2017 00:08:48(GMT) - processOtherFeatures - processing ECLIPSE
+03/22/2017 00:08:48(GMT) - processOtherFeatures - ECLIPSE state: feature installed; does not need to be processed
+03/22/2017 00:08:48(GMT) - processOtherFeatures - length of features = 75; 4; 0
+03/22/2017 00:08:48(GMT) - processOtherFeatures - processing DS
+03/22/2017 00:08:48(GMT) - processOtherFeatures - state:initial
+03/22/2017 00:08:48(GMT) - processOtherFeatures - binary:ti_dspack_ibsetup_linux-x64_7.1.0.1971.run
+03/22/2017 00:08:48(GMT) - processOtherFeatures - location = /home/islam/Downloads/CCS7.1.0.00016_linux-x64/featurerepo
+03/22/2017 00:08:48(GMT) - processOtherFeatures - newloc:file:/home/islam/Downloads/CCS7.1.0.00016_linux-x64/featurerepo
+03/22/2017 00:08:48(GMT) - processOtherFeatures - counting = 6; 4  75
+03/22/2017 00:08:48(GMT) - processOtherFeatures - fullrepolist file:/home/islam/Downloads/CCS7.1.0.00016_linux-x64/featurerepo
+03/22/2017 00:08:48(GMT) - processOtherFeatures - fullfeaturelist com.ti.ccstudio.debugserver.linux.feature.group
+03/22/2017 00:08:48(GMT) - processOtherFeatures - found_msp_repo: false
+03/22/2017 00:08:48(GMT) - runEclipseApp - running cmd "/home/islam/ti/ccsv7/eclipse/eclipse" -data "/tmp/ccs_9126e521-a4d2-4701-753f-7c660d522ea0/workspace" -application com.ti.ccstudio.p2app -repository "file:/home/islam/Downloads/CCS7.1.0.00016_linux-x64/featurerepo" -installiu com.ti.ccstudio.debugserver.linux.feature.group -nosplash 
+03/22/2017 00:09:19(GMT) - runEclipseApp - Installing com.ti.ccstudio.debugserver.linux.feature.group 7.1.0.1971.
+Downloading com.ti.ccstudio.debugserver.linux
+Downloading com.ti.ccstudio.debugserver.linux_root.gtk.linux.x86_64
+Installing com.ti.ccstudio.debugserver.linux.feature.group
+Installing com.ti.ccstudio.debugserver.linux.feature.jar
+Installing com.ti.ccstudio.debugserver.linux_root.gtk.linux.x86_64
+Configuring com.ti.ccstudio.debugserver.linux.feature.group
+Configuring com.ti.ccstudio.debugserver.linux.feature.jar
+Configuring com.ti.ccstudio.debugserver.linux_root.gtk.linux.x86_64
+Preparing to commit the provisioning operation.
+Committing the provisioning operation.
+Operation completed in 19338 ms.
+03/22/2017 00:09:19(GMT) - runEclipseApp - done.
+03/22/2017 00:09:19(GMT) - processOtherFeatures - Processing DS to install
+03/22/2017 00:09:19(GMT) - processOtherFeatures - current state = initial
+03/22/2017 00:09:19(GMT) - processOtherFeatures - false false initial
+03/22/2017 00:09:19(GMT) - processOtherFeatures - location = /home/islam/Downloads/CCS7.1.0.00016_linux-x64/featurerepo
+03/22/2017 00:09:19(GMT) - processOtherFeatures - Binary=/home/islam/ti/ccsv7/eclipse/downloads/ti_dspack_ibsetup_linux-x64_7.1.0.1971.run
+03/22/2017 00:09:19(GMT) - processOtherFeatures - Setting state to feature registered
+03/22/2017 00:09:19(GMT) - get_percentage - values 15722706 701337160 35
+03/22/2017 00:09:19(GMT) - get_percentage - increase by 0.7846364650063602
+03/22/2017 00:09:19(GMT) - processOtherFeatures - CCS_INFO: binary ti_dspack_ibsetup_linux-x64_7.1.0.1971.run; ext = .run
+03/22/2017 00:09:19(GMT) - InstallBins - .run: ti_dspack_ibsetup_linux-x64_7.1.0.1971.run --mode unattended --ccs true  --prefix "/home/islam/ti/ccsv7" --eclipseprefix  "/home/islam/ti/ccsv7/eclipse" 
+03/22/2017 00:09:19(GMT) - InstallBins - cmd = "/home/islam/ti/ccsv7/eclipse/downloads/ti_dspack_ibsetup_linux-x64_7.1.0.1971.run" --mode unattended --ccs true  --prefix "/home/islam/ti/ccsv7" --eclipseprefix  "/home/islam/ti/ccsv7/eclipse" 
+03/22/2017 00:09:19(GMT) - InstallBins - CCS_INFO: Installing com.ti.ccstudio.debugserver.linux
+
+
+
+My version is the latest CCS7.1.0.00016_linux-x64
+What is wrong with the installer?
+Are there better  alternatives?
+thanks in advance
+    
+
+        
+Answer 1: 
+
+    
+    
+I also experienced this hanging. On my system (Archlinux) I identified glibc-2.25 to be the cause of the problem. Downgrading to glibc-2.24 solved this issue.
+
+Tested with CCS7.1.0.00016_linux-x64.tar.gz
+
+Regards,
+
+Robert
+    
+    
+Answer 2: 
+
+    
+    
+Some updates on this issue : ccs 7.4. solves glibc dependency.
+    
+    
+Answer 3: 
+
+    
+    
+Downgrading glibc can break lot of dependencies. 
+
+Another approach uses chroot, but it consumes /ppcode/codecode/code/ppcode/codecode/code/p/div
+Title: WebStorm &ldquo;Before Launch&rdquo; –&#160;Wait for completion
+Description: 
+    
+    
+                    
+I am trying to set up this (more than slightly ridiculous) stack:
+
+
+Bundler: Webpack
+Library: ReactJS
+Language: TypeScript + JSX (tsx)
+IDE: WebStorm
+
+
+Now, this was all working fine, until I realized that my app wasn't being compiled by WebStorm unless I manually ran the webpack command before running the app.
+
+What I tried next was editing my Run/Debug Configuration (JavaScript Debug) to run webpack as an External Tool "Before Launch". Note the "Before".
+
+This was all working fine, too, until I then realized that WebStorm was asynchronously starting webpack and running the app immediately after starting, meaning that none of the changes since the last compile were saved (since webpack didn't have time to finish compiling before the app was run)!
+
+"Simple", thought my naïve self, "all I must do is toggle the 'Wait For Completion' checkbox, which surely must exist!" But as is always the case, that was not the case. I could find no such checkbox.
+
+~30 minutes and a few brain cells later, here I am. Now, the question is:
+
+How do I get my Webpack application to be compiled before it is run in WebStorm?
+
+
+
+What I have tried so far:
+
+
+Adding the webpack command to the "Before launch" section of my Run/Debug configuration. As described above, WebStorm does not wait for it to complete before running the app, causing the previous version to be run instead.
+Configuring a NPM build script to simply run webpack, then adding that to the "Before launch" section. Same problem. Now I'm starting to wonder if anything in the "Before launch" section is run synchronously...
+
+
+What I have not tried so far (and why):
+
+
+Creating a custom NPM run script that runs webpack then starts the debugger. This is far from ideal because (as far as I know) it would be extremely difficult to make this work with the WebStorm debugger.
+Manually running webpack each time before debugging. Well, I have tried it and it works; but I hope it's pretty clear why this is not a good long-term solution.
+Manually including each script in my HTML. As the app grows, I may have many more scripts, and I am not looking forward to adding each one manually to HTML just so I can debug them easier.
+
+
+I am open to any solutions, including those suggesting alternatives to Webpack (but any alternatives to WebStorm, ReactJS, or Typescript must be REALLY good because I have already put a lot of thought into picking those).
+    
+
+        
+Answer 1: 
+
+    
+    
+It's a known issue, please follow WEB-21022 for updates. Problem is not specific to webpack, and the only workaround is running webpack manually (via run configuration or external tool) before starting the app. Note that I can't recreate it when debugging, only when running the application
+    
+    
+Title: Will a C program compile in a C++ workspace?
+Description: 
+    
+    
+                    
+I'm new to C/C++ and I have just downloaded the CodeLite IDE (any other suggestions for free ones would be welcome). 
+I intend to write a C program, but it only gives me an option to create a C++ workspace. Can I write my C in this workspace all the same?
+    
+
+        
+Answer 1: 
+
+    
+    
+It depends on your IDE, your compiler (which is invoked by IDEs to compile code, and usually [not always] not a part of the IDE), and the type of code you write.
+
+Practically, quite a few C++ compilers have a "C mode" - for example, command line switches or other settings that may be configurable through your IDE - to compile as C.   You'll need to read your compiler and IDE documentation.   Bear in mind that some compilers, even in C mode, support C++ features that are not valid in C (and that the reverse is also true).
+
+It also depends on what sort of C code you intend to write, and how well you know the features of C that are not part of C++, and vice versa.  
+
+But, yes, as a general rule you can write a C program in a C++ workspace.   Just be aware of concerns like the above when doing so.
+
+Also, don't be surprised when you proudly show some of your lovingly crafted code to a seasoned C or C++ developer, only to be informed you are writing a hybrid of C and C++.   Unfortunately, writing a hybrid of C and C++ is considered poor form by both C and C++ developers - mostly because the code is likely to work with some compilers and fail with others.     Too many compiler vendors intermix C and C++ in their documentation, and too much learning material (introductory texts, etc) does the same.    If writing C code in a (suitably configured) C++ environment, there is a fair chance your compiler won't complain about your code doing that.    This isn't a problem inherent to writing C in a C++ environment - too many vendors of C compilers support C++ features as an extension, and vice versa - but it is a phenomenon you are more likely to encounter if you write your C code in a C++ environment, unless you go out of your way to learn the differences between standard C and standard C++ independently of your compiler and compiler documentation.
+
+I've lost track of the number of beginners who end up writing code that is some hybrid of C and C++  (e.g. using C++-specific features while believing they are writing C, or vice versa).   Only to have their code break when they build it with a different compiler (or, worse, an update of their compiler).
+
+If you actually intend to write code that includes a mix of C and C++ (by which I mean pure C functions interfacing with pure C++ functions, not a hybrid like I mentioned above), you will need to allow orchestration of the build process - particularly linking - to be controlled by C++ settings, even if compilation settings for particular files mean they are compiled as C or C++.
+    
+    
+Answer 2: 
+
+    
+    
+Yes its possible. You must use your C++ compiler when compiling main() (e.g., for static initialization)
+Your C++ compiler should direct the linking process (e.g., so it can get its special libraries)
+Your C and C++ compilers probably need to come from the same vendor and have compatible versions (e.g., so they have the same calling conventions
+    
+    
+Answer 3: 
+
+    
+    
+Non-trivial C programs will not compile as C++ code without modification — C is not a subset of C++.  See Where is C not a subset of C++?
+
+Set compiler options to treat your code as C.
+
+For free compiler with IDE on linux check this one:
+Code::Blocks and
+for windows:
+Microsoft Visual Studio Community
+
+You can find extensive list of free C and C++ compilers here.
+    
+    
+Title: Can Intellij open files for editing at the top/start, not the last edit position
+Description: 
+    
+    
+                    
+If you open a big java file, scroll to 'somewhere' and make a change. Then close the file and re-open it, Intellij will open it at the last point that you made the change. This is annoying, can it be changed so it always opens the file at the top like most file reading applications do
+    
+
+        
+Answer 1: 
+
+    
+    
+I don't really remember seeing such an option, but you can work around with some small tricks.
+
+1) include line number of the file, eg to open MyUI at line 10: CTRL + N &amp; type myui:10
+
+
+
+2) navigate to symbol, et to navigate to method init of MyUI: CTRL + SHIFT + ALT + N &amp; type myui.init
+
+
+    
+    
+Answer 2: 
+
+    
+    
+This same misfeature annoyed me to the point of doing something about it, as I prefer to open files by double-clicking them in the Project tree (which doesn't present the option of typing in a line number).  Also, it bothers me to be typing in line numbers on every single file option simply to get the text editor to not jump to wherever I was editing six months ago.
+
+Sadly, there's still no option to toggle this behavior.  (JetBrains really, really doesn't like it when users prefer simpler behavior than their flagship defaults.)  But it's very easy to strip the "last edited position" history out of the saved workspace.
+
+Optional first step:  If you have more than one workspace, you need to find its configuration file.  Wherever you designated the project root location should contain a .idea subdirectory with a workspace.xml file, for example $HOME/IdeaProjects/MyProjectName/.idea/workspace.xml.  There will be a ProjectId key and some "nonsense looking" value, for example
+
+&lt;component name="ProjectId" id="wZadhKS8vnOD4GBBT2Pz93rDw" /&gt;
+
+
+You'll need that unique ID.
+
+Actual steps:
+
+
+Exit IDEA.  You can't do this while the IDE is running.
+Go to your personal IDEA directory.  This can vary based on version; for me it is currently %HOME%/.IdeaIC2019.3.  It will have a config/workspace subdirectory containing an XML file for each of your workspaces, named after the ProjectId above.  For example,
+
+$HOME/.IdeaIC2019.3/config/workspace/wZadhKS8vnOD4GBBT2Pz93rDw.xml
+
+
+For 2020.1 and later, this location has moved; for me the default is now %APPDATA%/JetBrains/IdeaIC2020.1 and there is no config subdirectory, so:  C:/Users/me/AppData/Roaming/JetBrains/IdeaIC20201./workspace instead.
+
+That XML file contains the saved last-edit positions in a node like this:
+
+&lt;component name="editorHistoryManager"&gt;
+this is all the stuff that causes annoyances
+&lt;/component&gt;
+
+
+
+Make a backup copy of the wZa...3rDw.xml file, whatever it's called for you.
+Use your favorite programmatic XML editor tool to remove that node.  For example:
+
+xmlstarlet ed --omit-decl -d '//component[@name="editorHistoryManager"]'  wZa...3rDw.xml &gt; tmp
+
+mv  tmp  wZa...3rDw.xml
+The next time IDEA is launched, all files will open at their beginning, the way God and nature intended.
+For bonus points, automate the above in a script that runs behind the scenes as appropriate.  :-)
+
+
+IDEA does something a little unusual with its XML involving whitespace, and tools like XMLStarlet often do something else.  As XML is whitespace agnostic this makes no difference at runtime, but it does mean that if you want to compare for correctness or  you're keeping the IDEA configuration in revision control, there will be a lot of extraneous "churn" in the diffs.  If this causes too much noise, you can augment step (4) to something like
+
+xmlstarlet ....  |  sed -e 's@"/&gt;$@" /&gt;@'  &gt; tmp
+
+
+to insert extra whitespace back, in most of the places where IDEA had originally put some.  (I didn't test this heavily, as the lack of whitespace isn't important to me or to the IDEA runtime.  It would have been nice to have a cleaner diff, but whatever.)
+
+Caveats:  As IDEA can save its config in either a directory-based layout, or in a all-in-one-file layout, the steps to find the workspace config file may vary wildly.  What I wrote above works for the default directory-based layout.
+    
+    
+Title: Pycharm search files with same name
+Description: 
+    
+    
+                    
+When I double press Shift I can write a part of a filename and Pycharm suggests which files match. However in Django framework there a lot of files with the same name (e.g. views.py). Is there a way to search for a file by multiple words which match not only the filename but the path of the file?
+
+For example if there are 2 apps - app1 and app2 and they both have views.py, and if I write "app views" then both files should be suggested. And if I write "app1 views" only the file from app1 should be suggested.
+
+Is there such an action or a configuration option in Pycharm?
+    
+
+        
+Answer 1: 
+
+    
+    
+If you just type app1/views.py or app2/views.py, only the correct views.py will be shown. It even works for partial matches - 1/iews.py will do a partial match and still show the correct thing.
+    
+    
+Title: How can i make special live template in IntelliJ?
+Description: 
+    
+    
+                    
+I have been make Live Template in IntelliJ which name is syso [ System.out.println($END$); ] 
+
+But i want to make like sout or par. didn't find anything information.
+
+
+
+How can i do this??
+    
+
+        
+Answer 1: 
+
+    
+    
+I did not find the release number bringing this feature, but as of 2019.2.1 you can now edit and create custom Postfix Completion really easily in File | Settings | Editor | General | Postfix Completion.
+
+
+  Note: to my knowledge, you cannot edit some built-in postfix templates (e.g.: !).
+
+
+Source: https://www.jetbrains.com/help/idea/settings-postfix-completion.html
+    
+    
+Answer 2: 
+
+    
+    
+Each postfix live template is implemented as a custom Java class that performs the necessary transformation of the expression in the editor. The only way to add your own postfix template is to write a plugin.
+
+You can find implementations of postfix live templates for Java here.
+    
+    
+Title: WebStorm formatter isn&#39;t good with TSLint
+Description: 
+    
+    
+                    
+I am working with TypeScript in WebStorm for quiet a while, and recently I added TSLint to my setup in order to write better code. I successfully integrated it into the IDE (WebStorm 2016) but I have a bad experience with the IDE formatter combining the TSLint formatting rules.
+
+For example I write:
+
+let bar: foo;  // fine by tslint standarts 
+
+
+And then I press Ctrl + Alt + L to format everything automatically and I get:
+
+let bar:foo; // without space between the variable ":"
+             // and its type the tslint complains
+
+
+I haven't found any solution on the web and couldn't find a manual way to change this behaviour in the IDE.
+
+Any help will be much appreciated ! :)
+    
+
+        
+Answer 1: 
+
+    
+    
+update: since the version 2016.3 the path is: Settings 
+Title: Format C++ code with corresponding elements over multiple lines
+Description: 
+    
+    
+                    
+I'm looking for a tool that makes out of the ugly block
+
+if   ( str == "str" ) decorator["str"] = &amp;Props::goodstr;
+  else if ( str == "strM" )
+      decorator["strM"] =     &amp;Props::goodstrM;
+  else if ( str == "strXL" )     decorator["strXL"] =     &amp;Props::goodstrXL;
+  else if ( str == "strXXXL" ) decorator["strXXXL"] = &amp;Props::goodstrXXXL;
+
+
+the nice block that is easily editable over multiple lines in the visual-block mode in vim:
+
+if      ( str == "str"     ) decorator["str"    ] = &amp;Props::goodstr    ;
+else if ( str == "strM"    ) decorator["strM"   ] = &amp;Props::goodstrM   ;
+else if ( str == "strXL"   ) decorator["strXL"  ] = &amp;Props::goodstrXL  ;
+else if ( str == "strXXXL" ) decorator["strXXXL"] = &amp;Props::goodstrXXXL;
+
+
+Or something very similar.
+It doesn't have to be in vim! I just tagged it vim, because that's what I normally use. Please recommend other tools that can do this job.
+    
+
+        
+Answer 1: 
+
+    
+    
+I know actually a tool that could help on aligning all that "ugly" block. It is called Align. All you have to do is give him the pattern that you would like to align. 
+
+So for the above code you can do that:
+
+:%normal! ggJ
+:%s/;/;\r/g
+:%left
+:AlignCtrl =Clp1P1IW 
+:% Align (\|)\|]\|[\|&amp;.\+ 
+:% Align ;
+
+
+As you can see from the 5th command you need manually reorganise the code by providing the pattern
+
+Result:
+
+if      ( str == "str"     ) decorator [ "str"     ] = &amp;Props::goodstr     ;   
+else if ( str == "strM"    ) decorator [ "strM"    ] = &amp;Props::goodstrM    ;   
+else if ( str == "strXL"   ) decorator [ "strXL"   ] = &amp;Props::goodstrXL   ;   
+else if ( str == "strXXXL" ) decorator [ "strXXXL" ] = &amp;Props::goodstrXXXL ; 
+
+    
+    
+Title: Cannot Import MySQLdb in PyCharm, runs fine in terminal.
+Description: 
+    
+    
+                    
+I have problems trying to run a script which imports MySQLdb within PyCharm.
+Running the script from terminal works just fine while running within PyCharm fails with
+
+ImportError: No module named MySQLdb
+
+
+I have tried this thread and it helped making things work in the terminal.
+Trying to set the environment variables in the IDE though does not seem to work.
+In PyCharm Run Config I set the environment variables 
+
+DYLD_LIBRARY_PATH - /usr/local/mysql/lib/libmysqlclient.18.dylib
+PATH - /usr/local/mysql/lib/
+
+
+but I still get the ImportError.
+    
+
+        
+Answer 1: 
+
+    
+    
+As @Dilettant pointed me to https://stackoverflow.com/a/34992894/1989141,
+I realised there are two different places I was supposed to set the Python interpreter in PyCharm.
+
+The first is in the main preferences (as in phil’s solution in the link) and allows me to specify a path to a local folder for mysqldb module. 
+The second is in the edit configuration settings for the script I want to run. I noticed the interpreters were different. 
+
+The script was set to run with the Python 2.7.6 /System/Library/Frameworks/...... version (which I believe is the OSx pre-installed version).
+In the terminal and in PyCharm general settings I am using Python 2.7.9 in /usr/local/bin/python.
+
+Matching the script interpreter to the one in the main settings (for which I manyally added mysqldb folder) solves the ImportError. Also I removed the environment variables I set up in the Edit Configuration as they are not needed.
+
+Hope this helps. Thanks to both @Dilettant and @julivico for their suggestions.  
+    
+    
+Title: Lock or Freeze VBA Code to Prevent Editing
+Description: 
+    
+    
+                    
+Is there any way I can lock or freeze the VBE editor to prevent others from accidentally editing the VBA code? 
+
+I don't want to lock down the whole workbook where people can run macros but can't see the code. 
+
+I want to let others see the code but don't want them accidentally deleting something and break the program (something even I am prone to doing to my code). 
+    
+
+        
+Answer 1: 
+
+    
+    
+Just go to Visual Basic, right click your module, select VBA Project Properties..., under protection tab, you can lock your VBA code with password. 
+
+Hope this help. ^^
+    
+    
+Answer 2: 
+
+    
+    
+If you want the code to be visible and executable, then you can't stop people from making changes to it.
+You can however, stop them from saving those changes, by opening the workbook as read-only.
+You can mark a workbook as read-only in the File Properties from within File Explorer. Or, if your workbook is opened via Automation, then you can specify read-only in the open method.
+    
+    
+Title: How to install Sqelectron in Linux?
+Description: 
+    
+    
+                    
+I'm a new Linux user and I want to install a MySQL IDE. I use Sqlectron in Windows, so I want to install this IDE now in my Linux computer. I downloaded the .zip file but I don't know what to that after unzip it. 
+
+I'm using Elementary OS based on Ubuntu
+    
+
+        
+Answer 1: 
+
+    
+    
+The latest version of sqlectron has a .deb file to install in debian like distro https://github.com/sqlectron/sqlectron-gui/releases/latest
+    
+    
+Title: How do I change the displayed file templates on new file creation in WebStorm?
+Description: 
+    
+    
+                    
+When trying to create a new file in WebStorm, I can't see the file template I'd like to use (in this case - Less). It exists in my File templates, but doesn't show up in the New File selector dropdown.
+
+Here's my New File selector dropdown:
+
+
+
+And here are my File templates:
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+To reduce "New File" menu size, some of the bundled (default) similar file templates are grouped under the single menu entry which has drop down box where you can choose the particular kind of template to use. Examples of such grouped/gateway entries are: "HTML File", "Stylesheet", "JavaScript File", "PHP Class" etc.
+
+In your particular case you need to use "Stylesheet" entry where you can choose "Less File":
+
+
+
+Some notes: 
+
+
+IDE will remember the "Kind" value that you have used when you use this dialog again.
+There is no need to use mouse or keyboard to switch to the "Kind" filed at all -- just use Arrow Up/Down keys when typing file name -- they will switch the "Kind" directly from there.
+If you create custom file template (e.g. "Less file 2") it will not be grouped/accessible via such dialog -- it will be listed as separate entry in "New" menu.
+
+    
+    
+Title: Developing TypeScript without an installed IDE or editor
+Description: 
+    
+    
+                    
+I work in a place that restricts me from downloading and installing any applications, regardless of job roles. I have several web apps that I want to migrate to Angular 2 with TypeScript. I'm a C# developer in my own time and TypeScript is very appealing as it's statically typed and just compiles down to JavaScript.
+
+How can I develop with TypeScript without having access to an installed IDE or code editor? Are there any online environments that allow the use of TypeScript definition files that provide code help/intellisense?
+    
+
+        
+Answer 1: 
+
+    
+    
+Use Codenvy:
+It needs some manual tweaks but somebody figured them out already: https://groups.google.com/a/codenvy.com/forum/#!topic/codenvy/R4myXA9MygA
+    
+    
+Answer 2: 
+
+    
+    
+
+  How can I develop with TypeScript without having access to an installed IDE or code editor
+
+
+I am hoping you can do npm install typescript. If you can just run npm install typescript -g and then run typescript as tsc -w -p tsconfig.json in your code directory. This will allow you to run the compiler in the background leaving you free to use even notepad if you have to. 
+
+Alternatively you can just download the zip file from : https://github.com/Microsoft/TypeScript/releases and if you have node you can run node ./bin/tsc etc from the extracted directory.
+    
+    
+Answer 3: 
+
+    
+    
+You can try the playground: http://www.typescriptlang.org/Playground
+Although it doesn't allow references to other files.
+    
+    
+Title: Custom Code Templates for SuiteCloud IDE
+Description: 
+    
+    
+                    
+I'm planning on making my own Code Templates for when I generate my new scripts. Since SuiteCloud IDE is only configured for SuiteScript 1.0, I was hoping to create new templates for SuiteScript 2.0.
+
+That said, I've got to the part where I can specify the directory for my custom templates, and I've gone ahead and created my templates, however, since I'm lacking the templates.xml, SuiteCloud IDE doesn't recognise my custom templates.
+
+NetSuite Help doesn't really help that much except state that that file exists. But it doesn't say what it should contain, or even the structure of the data.
+
+If anyone can help out here, it'd be much appreciated. TIA.
+    
+
+        
+Answer 1: 
+
+    
+    
+We've done the same exercise long ago for SuiteScript 1.0, and I've just recently done it for our SuiteScript 2.0 set.
+
+You can find the default templates inside of P2_POOL_HOME/plugins/com.netsuite.ide.core_2016.2.0.e4.jar/templates/ where P2_POOL_HOME is usually ~/.p2/pool/
+
+The general format of templates.xml is:
+
+&lt;configuration&gt;
+    &lt;templates&gt;
+        &lt;template label="TEXT YOU WANT IN DROPDOWN"
+                defaultFilename="DEFAULT NAME FOR FILE"
+                typesControl="radio|checkbox"
+                headerFilename="PATH/TO/FILE/HEADER"
+                startFilename="PATH/TO/START/FILE"
+                endFilename="PATH/TO/END/FILE"
+                rename="false"&gt;
+            &lt;types&gt;
+                &lt;files label="TEXT LABEL FOR CHECKBOX" bodyFilename="PATH/TO/FILE/WHEN/SELECTED" /&gt;
+            &lt;/types&gt;
+        &lt;/template&gt;
+    &lt;/templates&gt;
+&lt;/configuration&gt;
+
+
+Here are two examples from our templates:
+
+&lt;configuration&gt;
+    &lt;templates&gt;
+        &lt;template label="2.0 Portlet"
+                defaultFilename="360CUSTOMER_PROJECT_PL_DESCRIPTION.js"
+                typesControl="radio"
+                headerFilename="header.ss2.js"
+                startFilename="portlet_start.ss2.js"
+                endFilename="portlet_end.ss2.js"
+                rename="false"&gt;
+            &lt;types&gt;
+                &lt;files label="Render" bodyFilename="portlet.ss2.js" /&gt;
+            &lt;/types&gt;
+        &lt;/template&gt;
+
+        &lt;template label="2.0 RESTlet"
+            defaultFilename="360CUSTOMER_PROJECT_RECORDTYPE_RL_DESCRIPTION.js"
+                typesControl="checkbox" headerFilename="header.ss2.js"
+                startFilename="RESTlet_start.ss2.js"
+                endFilename="RESTlet_end.ss2.js"
+                rename="true"&gt;
+            &lt;types&gt;
+                &lt;files label="GET" bodyFilename="RESTlet_get.ss2.js" /&gt;
+                &lt;files label="POST" bodyFilename="RESTlet_post.ss2.js" /&gt;
+                &lt;files label="PUT" bodyFilename="RESTlet_put.ss2.js" /&gt;
+                &lt;files label="DELETE" bodyFilename="RESTlet_delete.ss2.js" /&gt;
+            &lt;/types&gt;
+        &lt;/template&gt;
+    &lt;/templates&gt;
+&lt;/configuration&gt;
+
+
+For scripts that only have one entry point method (e.g. Suitelet, Portlet, Scheduled), you use radio for the typesControl setting and just have a single &lt;file&gt; tag under &lt;types&gt;. For those that have multiple entry points to choose from (e.g. Client, Map/Reduce, User Event), you use checkbox for the typesControl and then list each option that you want using &lt;file&gt; tags under &lt;types&gt;.
+
+I do not actually know what the rename setting does.
+
+The basic file structure of the generated file will be:
+
+/* CONTENTS OF HEADER FILE */
+
+/* CONTENTS OF START FILE */
+
+/* CONTENTS OF ENTRY POINT 1 FILE */
+
+/* CONTENTS OF ENTRY POINT 2 FILE */
+
+/* ... */
+
+/* CONTENTS OF ENTRY POINT N FILE */
+
+/* CONTENTS OF END FILE */
+
+    
+    
+Answer 2: 
+
+    
+    
+I have tried the same thing using 2017. You will find some js and template files inside the jar file. I have modified the ss_2.0_suitelet.js and ss_header.js file.
+Just pick those file from the jar and place in your own local library. Then modify. Dont forget to point the template directory in the preference-/pprecode/code/pre/div
+Title: toggle form/unit view (F12 key) in RAD studio 2010
+Description: 
+    
+    
+                    
+Is there a way to fix view-/p/div
+Answer 1: 
+
+    
+    
+I think you have changed the IDE setting Tools - Options - Environment Options - VCL Designer - Embedded Designer to be False. Probably to be able to see both the designer and code at the same time. In this state the designer view stays in front of the IDE and the F12 only toggles focus between the designer form and the IDE.
+
+You don't really have to close the Designer view, you can also just minimize it.
+
+If you revert the above setting (to enable Embedded Designer) the switch between Designer view and Code view happens as you wish with F12, but you will not be able to see both simultaneously.
+
+Another option is to keep the present disabled Embedded Designer setting and open up a new edit view, with menu item View - New Edit view. In this case F12 toggles between the secondary code view and the form designer and also brings the focused window into front.
+
+Thanks to @dummzeuch, there's also the possibility to change to "Classic undocked" desktop layout. You can change the desktop layout either by menu "View" - "Desktops" or by the dropdown in the toolbar.
+    
+    
+Title: Increase size of PhpStorm error squiggly line (underwave)
+Description: 
+    
+    
+                    
+Stupid tiny thing. 
+
+PhpStorm is great but when I cut and paste code sometimes I leave off a ; or a } or sometimes I have another dumb problem. PS is good at finding these trouble is it uses a fine underwave which is quite difficult to see. I know all about F2 going to next error etc. I would just love to be able to make the error pointer more obvious so I can just look at the screen and see it - a bright red highlight over the missing character or whatever. (Spot the missing ; below.)
+
+
+
+I have trawled SO and the rest of the Interweb and have spent ages in Settings but cannot find anyway to beef this up. Any ideas where the setting for this might be? 
+
+EDIT: Just in case anyone comes this way again this is what a missing semicolon looks like now. Basically I never forget the closing semi colon or { as I have a great big red light shining in my face - perfect for a typing clutz like me.
+
+ 
+
+(If you found this useful please uptick - but there seem v few phpStorm Troopers here.) 
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Settings/Preferences | Editor | Colors &amp; Fonts
+
+General | Errors &amp; Warnings
+
+Choose the right style (e.g. Error or Warning) and change its settings.
+You will not be able to make underwave bolder, but you can choose more brighter color (which may look a bit bolder to human eye) or change underwave to another style.
+
+
+    
+    
+Title: PHPstorm scrolling with keyboard
+Description: 
+    
+    
+                    
+I'am looking for an option to force scroll code when entering with keyboard cursor in example at 5 line from the end.
+
+Default behavior is to scroll code when entering 1st or last visible line of code.
+
+I would like to change it even for 10th from the beginning and 10th before last.
+    
+
+        
+Answer 1: 
+
+    
+    
+It appears the base IDE does not have an option for this. However, the behaviour is available in the IdeaVIM plugin (docs) under the scrolloff option.
+
+'Scroll offset' mode can be enabled for the current session with the command:
+
+:set scrolloffset=10
+
+
+Add that to your ~/.ideavimrc to make it permanent.
+
+NB: IdeaVIM changes the IDE to behave more like vim*, which may require some re-training. 
+
+
+
+If you're not familiar with Vim:
+
+
+Install the IdeaVIM plugin (via Settings → Plugins → Browse Repositores → type 'ideavim' in search)
+Restart the IDE
+Open a file
+Note the caret is a block like █; this indicates 'normal' mode
+Press : to enter the 'command' mode
+Type set scrolloff=10 then Enter
+Scroll around, notice the editor scrolls before the caret gets to the very top (or bottom)
+Press i to enter 'insert' mode, and edit your file as usual
+Press ESC to return to 'normal' mode
+
+
+Interactive vim lessons
+
+
+openvim.com
+vim-adventures.com
+
+
+
+
+* It seems difficult to have the plugin only modify the scrolloffset behaviour and leave the rest per the default IDE.
+    
+    
+Answer 2: 
+
+    
+    
+You can set "EditorMoveUpAndScroll" shortcut.
+    
+    
+Title: Method refactoring in Eclipse
+Description: 
+    
+    
+                    
+I try to do the following refactoring steps in Eclipse IDE (JDT) and can not find the required refactoring and can not remember the name of all of the steps. I checked the refactoring at SourceMacking and do not find the correct one.
+
+Let's take for example the following scenario:
+
+
+
+class A {
+
+    method(B b) {
+      doSomethingWithA();
+      b.doSomethingWithB();
+    }
+
+    [...]
+}
+
+class B {
+    [...]
+}
+
+
+
+1) Make method static (missing name of the refactoring?):
+
+class A {
+
+    static method(A a, B b) {
+      a.doSomethingWithA();
+      b.doSomethingWithB();
+    }
+
+    [...]
+}
+
+class B {
+    [...]
+}
+
+
+
+2) Move method:
+
+class A {
+    [...]
+}
+
+class B {
+
+    static method(A a, B b) {
+      a.doSomethingWithA();
+      b.doSomethingWithB();
+    }
+
+    [...]
+}
+
+
+
+3) Convert to instance method:
+
+class A {
+    [...]
+}
+
+class B {
+
+    method(A a) {
+      a.doSomethingWithA();
+      doSomethingWithB();
+    }
+
+    [...]
+}
+
+
+
+So anyone knowing something to do this step by step in Eclipse or do know the name of the refactoring is welcome. The goal is to have IDE support for every step.
+    
+
+        
+Answer 1: 
+
+    
+    
+Unfortunately, Eclipse's refactoring functionality is not as complete as other IDEs (for example Jetbrains' IntelliJ). I'll include instructions on how to perform each of the refactorings you requested with both IntelliJ and Eclipse.
+
+With IntelliJ
+
+
+Make Method Static
+Move Instance Method
+Convert to Instance Method
+
+
+
+
+With Eclipse
+
+
+Make Method Static: Eclipse doesn't directly support it, but we can achieve this using two other refactorings.
+
+1.1. Introduce Indirection
+
+
+
+Result
+
+
+
+public static void method(A a, B b) {
+    a.method(b);
+}
+
+public void method(B b){
+    doSomethingWithA();
+    b.doSomethingWithB();
+}
+
+
+1.2. Inline
+
+
+
+Result
+
+
+
+public static void method(A a, B b) {
+    a.doSomethingWithA();
+    b.doSomethingWithB();
+}
+
+Move Static Members
+Convert to Instance Method: Now, this is where it gets tricky. If you want to go from step 1 to step 3, you could just use Eclipse's Move Method and it'll handle everything perfectly fine. However, there are no ways that I know of to go from step 2 to step 3 using Eclipse's automated refactorings.
+
+    
+    
+Answer 2: 
+
+    
+    
+After having learned the refactoring is called 'Convert to Instance Method' I searched the bug database of Eclipse JDT and I found bad news:
+
+Bug 10605
+Bug 118032
+Bug 338449
+
+So basically it is a Won't-Fix noone cares feature request and so it might be time that I also switch to IntelliJ. I have to contemplate about this... . 
+
+Emond Papegaaij suggested in the discussion of Bug 118032 a work around:
+
+
+  A simple workaround is to create the static method, call this static method from the method you want to become static and inline the method call. This works for me in 4.3.1.
+
+
+This is interesting but again would not be an automatic refactoring and defeat the purpose of refactoring in the first place. Adding someone's own code introduce the chance of failure and requires the rerun of the test-suite resulting in no chance of safely refactoring legacy code.
+    
+    
+Title: Hide file extensions from tab labels in PhpStorm
+Description: 
+    
+    
+                    
+I use PhpStorm for a project that has some very lengthy class names. As a result, not many files can fit in the tab bar above the editor before they get truncated and I have to go into the dropdown.
+
+I was thinking, I could probably at least slightly decrease the impact of this issue if I could get PhpStorm to hide the extensions from the end of the file names (the icons in the tabs make them redundant anyway). Does anyone know a way to make PhpStorm do this? Any help is much appreciated!
+
+Here's a screenshot, showing the tab bar I'm talking about (it's got a big red box around it), and showing what I want to change (I striked through the file extensions).
+    
+
+        
+Answer 1: 
+
+    
+    
+You can change it in the settings:
+
+File, Settings, Label IDE Settings, Editor, Editor Tabs, check Hide file extensions in editor tabs.
+    
+    
+Title: Java - setVisible only works after clicking on screen
+Description: 
+    
+    
+                    
+I have a jframe with a jcheckbox and a jtextfield (it has many more components).
+
+I set the label to setVisible(false) and when the checkbox is checked, it should turn the label visible. It actually does, but you just can´t see it until you click anywhere else on the frame.
+
+Here is some of the code:
+
+jTextField17 = new javax.swing.JTextField();
+jTextField17.setText("Quantas?");
+jTextField17.setVisible(false);
+jTextField17.setMinimumSize(new java.awt.Dimension(52, 20));
+
+
+jCheckBox1 = new javax.swing.JCheckBox();
+jCheckBox1.setBackground(new java.awt.Color(153, 255, 153));
+jCheckBox1.setText("Cabecinhas");
+jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+   public void actionPerformed(java.awt.event.ActionEvent evt) {
+    jCheckBox1ActionPerformed(evt);
+   }
+});
+
+
+private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    if (jCheckBox1.isSelected()){
+        jTextField17.setVisible(true);
+    }else{
+        jTextField17.setVisible(false);
+    }
+}                                       
+
+
+I don´t think there´s anything wrong with the code.
+
+To sum up:
+
+user clicks checkbox. checkbox gets marked, nothing else seems to happen. user clicks anywhere on screen (after checking checkbox) and the textfield appears. 
+
+I´m using netbeans GUI editor. I would like to show the whole code, but it´s 3000+ lines. If you need to see more, ask me what part you need and I´ll edit here. Thanks for reading this and thank you even more for trying to help.
+    
+
+        
+Answer 1: 
+
+    
+    
+Try using this.repaint(); and this.revalidate();
+
+private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    if (jCheckBox1.isSelected()){
+        jTextField17.setVisible(true);
+        this.repaint();
+        this.revalidate();
+
+    }else{
+        jTextField17.setVisible(false);
+    }
+}          
+
+    
+    
+Answer 2: 
+
+    
+    
+You need to repaint it make it, otherwise it waits until it is repainted.
+
+private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    if (jCheckBox1.isSelected()){
+        jTextField17.setVisible(true);
+        jTextField17.repaint();
+    }else{
+        jTextField17.setVisible(false);
+    }
+}    
+
+    
+    
+Answer 3: 
+
+    
+    
+If you will not initially set the textfield's setVisible method to false, you may do away with this issue.
+    
+    
+Title: Visual Studio 6.0 and Git (source control)
+Description: 
+    
+    
+                    
+I have a project developed some years ago (in my company) with VS 6.0, and I want to make some changes. I have installed Visual Studio IDE (6.0), but I want - and I have - to control the source code of this project, with GIT, or another source version control.
+
+Do you have any idea of how can I do this? or, Do you known a plugin for VS 6.0 and GIT (or another one)? Or should I control this code directly with the folder and Git Bash (command line)?
+
+Any comment, suggestion, or advice is welcomed!
+    
+
+        
+Answer 1: 
+
+    
+    
+There's no built-in support for Git in VS 6.0 but you can use Git with it just fine. (You can use any source control system with any version of VS - it may not be integrated into the IDE but it'll work.)
+
+If you prefer the Git command-line, use that. If you prefer using a GUI tool, one of them is SourceTree or TortoiseGit. I'm sure there are others, too.
+
+As you're making changes in the project, when you're ready to commit things, just switch to the command-line (or the GUI tool) and perform the source-control operations you need. In Tools-/p/div
+Answer 2: 
+
+    
+    
+There is no support for Git in VS 6.0, I do not even think that Git was a "thing" when VS 6.0 was released.
+
+Is there a reason you cannot use the free VS 2015 Community version. It does support Git. Also VS Code is fairly nice and supports Git as well.
+    
+    
+Title: Android Studio .iml git issue
+Description: 
+    
+    
+                    
+When I try to make a "git pull" I get the following message :
+
+
+  error: The following untracked working tree files would be overwritten by merge:
+      blablabla.iml
+  Please move or remove them before you can merge.
+  Aborting
+
+
+I try to checkout the .iml and add it to my gitignore but I keep receiving this message. Does someone know how to fix it?
+
+Regards
+
+Jose
+    
+
+        
+Answer 1: 
+
+    
+    
+Git will not allow you to execute a pull that would cause you to lose changes in your working directory (this is good for obvious reasons).
+
+Adding the file to your .gitignore will tell git not to push your changes to that file to other repositories, but it does not prevent you from pulling other repositories changes of those files. So this actually has no effect on the operation you are trying to do. As a side note, it is not recommended to put iml files in a .gitignore: What should be in my .gitignore for an Android Studio project?.
+
+Here's what I would do:
+
+
+Stash your local changes: git stash save "My iml changes"
+Then checkout the code: git pull
+Optionally, get your local changes out of the stash: git stash pop. Or, if you prefer, git stash drop stash@{0} (As pointed out by @LoyalRayne, you might not need these changes). See the differences with git stash show stash@{0}.
+
+    
+    
+Answer 2: 
+
+    
+    
+If you want the contents that are currently in the repo, you can revert your local changes first with git checkout blablabla.iml, then pull. Or, if you want to keep your local changes, do git stash, then git pull, then git apply. 
+
+After doing the above steps, you may add the file to .gitignore. Make sure to remove it from source control as well with git rm --cached blablabla.iml. Note that when it is remove from source control, it will get deleted on other people's machines when they do their next git pull, so they will want to create a backup. 
+    
+    
+Title: WebStorm: Hide html selector toolbar
+Description: 
+    
+    
+                    
+In WebStorm I want to hide the toolbar that appears on html files at the top.  It shows the html selectors and ids drill down.  I've circled it in the below picture...
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Go to File -
+Title: Clean install pycharm 4.5 over 4.0
+Description: 
+    
+    
+                    
+I want to update from pycharm 4.0 to 4.5. From what I understand it's just extracting the archive and use it. However my previous installation (4.0) was not done similarly see the result of : find / -name pycharm 2/pprecode/code/prep/p/div
+Answer 1: 
+
+    
+    
+If it was installed outside of the package manager, I don't see what's wrong with just removing those directories.
+
+# find / -name "pycharm" -exec rm -rf {} \;
+
+If it was installed with your package manager, just use it to remove.
+    
+    
+Title: Android Development with Device [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        Eclipse - Target &ldquo;unknown&rdquo; in Android device chooser
+                            
+                                (30 answers)
+                            
+                    
+                Closed 5 years ago.
+        
+
+
+    
+
+I'm trying to use Eclipse with the ADT plug in enabled and whenever I try to load my test application onto my device I am prompted with the following screenshot 
+
+How do I resolves this? I've tried adding driver from extra/google/usb_driver or whatever the directory is but still not working. 
+
+As well as this, as an extra aside, my layout view isn't rendering properly and I've no idea why (see below). Thanks in advance, any help is appreciated.
+
+
+
+EDIT : as per BeardFaces suggestion I checked out his link, restarted it and now it recognizes it. My second problem still stands though in that I am left without a Graphical interface for what the layout will look like. I suspect this is due to something with my Java set up but am not sure. 
+    
+
+        
+Answer 1: 
+
+    
+    
+BeardFaces reference solved it.
+    
+    
+Answer 2: 
+
+    
+    
+Try opening your XML layout file in eclipse with Open With-/p/div
+Answer 3: 
+
+    
+    
+Several solutions for this:
+
+
+turn off and and Usb Debugging then on again.
+restart your device.
+Select "unknown" and Restart adb (it works for me).
+
+
+for the rendering of the layout be sure to have installed the API 22 then 
+
+Refresh &gt; Clean Project &gt; Build Project!
+
+    
+    
+Title: How do I modify Darcula error highlights in IDEA?
+Description: 
+    
+    
+                    
+I love the Moonrise UI theme for Eclipse. However I have grown less fond of Eclipse and am trying to switch to IDEA. One of the things I miss most though with the Moonrise theme is how nicely it highlights compile errors and warnings. It highlights the text background red and yellow respectively. 
+
+
+
+Errors and warnings in IDEA's Darcula theme, however, are not so obvious. 
+
+
+
+How do I modify the Editor pane colors in IDEA to format errors/warnings exactly like Eclipse Moonrise and highlight the background red/yellow?
+    
+
+        
+Answer 1: 
+
+    
+    
+Go to Settings/Editor/Colors and Fonts. If you haven't modified the theme before, save it first using Save As... button, because you can't modify the default one.
+
+Then go to General and find Error and Warning items in the list. Uncheck the Error Stripe Mark and Effects checkboxes and check the Background checkbox. You can then select the color by clicking on the color selector next to the checkbox.
+
+Screenshot:
+
+
+    
+    
+Title: PyDev can&#39;t recognize all module members correctly
+Description: 
+    
+    
+                    
+I have two examples:
+
+
+
+As you can see PyDev marks Process in first example and PULL in second as "Undefined variable from import (...)". However, code is executed without any problems. It's just PyDev can't resolve those names.
+
+Taking a closer look on multiprocessing and zmq modules I found that members that can't be recognized are imported in some weird way by updating globals.
+
+Is there a way to make PyDev evaluate those import files more thoroughly?
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, you can ask PyDev to analyze modules through a shell.
+
+See: http://pydev.org/manual_101_interpreter.html for more details (mostly the forced builtins part).
+    
+    
+Answer 2: 
+
+    
+    
+This has been a real pain with getting PyDev to recognize all the objects from pyzmq. As Fabio suggests via the link, set zmq as a forced built-in and it should solve the issue. I'm using zmq with gevent so in my case I import zmq as follows ...
+
+
+  import zmq.green as zmq 
+
+
+Using the latest PyDev in Eclipse: Windows 
+Title: Pycharm type hinting of custom modules
+Description: 
+    
+    
+                    
+Consider this file system:
+
+
+a
+
+__init__.py
+b.py
+
+c
+
+__init__.py
+d.py
+
+main.py
+
+
+b.py:
+
+class B:
+  def foo(self):
+    print("foo")
+
+
+d.py:
+
+ class D:
+      def bar(self):
+
+        x = None
+        """:type : B"""
+        #^- working
+
+        y = None
+        """:type : a.b.B"""
+        #^- nope :(
+
+
+My goal is to use full path to class for type hinting (as shown in second example of :type). Problem of first syntax is that pycharm does not consider duplicities and simply makes hint of "closest" class of desired name. Execution of this project starts in main.py.
+
+Question:
+How can I make second syntax (absolute path to class) work in PyCharm 3.4.1 ?
+
+Thanks in advance
+    
+
+        
+Answer 1: 
+
+    
+    
+Unfortunately, this is a defect in PyCharm right now.
+
+See: https://youtrack.jetbrains.com/issue/PY-12870
+    
+    
+Title: How to debug lua script in a unity project?
+Description: 
+    
+    
+                    
+We are embedding lua scripts into a unity project, but getting no IDE to debug.
+Any suggestion?
+    
+
+        
+Answer 1: 
+
+    
+    
+There is KopiLuaDebug project that provides debugging capabilities for Lua scripts in Unity3d and integrates with ZeroBrane Studio IDE, although I'm not sure if it works with uLua. I've also seen posts on using ZeroBrane Studio to debug uLua, but don't have any further details.
+    
+    
+Answer 2: 
+
+    
+    
+If you are using visual studio as your IDE, you can try babelua
+    
+    
+Title: Android Studio - Deploys my app without new changes
+Description: 
+    
+    
+                    
+My problem is basically that Android Studio wont deploy my app with my changes in the new code. Heres my case scenario:
+
+I have a wifi direct code working like this (just testing with its methods):
+
+    public void peerDiscovery(){
+
+    mWifiDirectManager.discoverPeers(mChannel,
+
+      new WifiP2pManager.ActionListener() {
+        @Override
+        public void onSuccess() {
+             Log.v(TAG,"Discovery Peers Success");
+
+
+        }
+
+        @Override
+        public void onFailure(int reason) {
+            Log.e(TAG,"Error on Discovery Peers, code: "+reason);
+
+
+        }
+     });
+}
+
+
+The above code works and then I decided to change it by adding the method: setPeerDiscoveryHandler(boolean isSuccess);
+
+After the changes my code was as follows:
+
+ public void peerDiscovery(){
+
+    mWifiDirectManager.discoverPeers(mChannel,
+      new WifiP2pManager.ActionListener() {
+        @Override
+        public void onSuccess() {
+            setPeerDiscoveryHandler(true);
+            Log.v(TAG, "Message Sent");
+        }
+
+        @Override
+        public void onFailure(int reason) {
+            Log.e(TAG,"Error on Discovery Peers, code: "+reason);
+            setPeerDiscoveryHandler(false);
+        }
+    });
+}
+
+
+But guess what, even after doing this new code and clicking on the Run button, it was like I didnt do nothing! And I realized that was happening after I started to check my logcat and the message:
+
+"Discovery Peers Success" 
+
+was being printed, but I had it removed from the code (as you can see in my new code). I tried to rebuild and clean the project, uninstall the application from the mobile before deploying it again, but nothing seems to take effect. Any thoughts about it ?
+
+Thanks in advance for all help guyz.
+    
+
+        
+Answer 1: 
+
+    
+    
+Well guyz, turns out that I found the solution for that problem of mine. Actually, I dont know why, but when that starts to happen you need to click on a button called "Sync Project with Gradle Files", and it will sync all your project files all over again. Like I said before, I really dont understand why that is needed, but in case someone have this problem in the future thats a solution. Thanks.
+    
+    

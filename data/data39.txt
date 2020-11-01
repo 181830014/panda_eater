@@ -1,0 +1,1562 @@
+Title: Advice for setting up Aptana for CodeIgniter?
+Description: 
+    
+    
+                    
+I've used Aptana for a good number of web projects and like it a lot. I've also used CodeIgniter for a couple projects and liked it, as well. Now I'm hoping to combine the two in a happy marriage of cross-platform productivity. Any advice on setting up Aptana's more useful features? I'm hoping to get any of the following:
+
+
+Code completion
+Functional built-in previewing
+Debugging
+
+
+If completely infeasible, what IDE would you suggest? Generic Aptana PHP setup tips would also be welcome, as they might guide me toward the ideal setup.
+    
+
+        
+Answer 1: 
+
+    
+    
+I would install Aptana as an Eclipse plug-in. Allows you to latter down the road install GWT or Flex with no fuss. Plus, Aptana as a plug-in has worked much better for me. Both in terms of stability and of usability.
+
+I used to have Aptana crash on me every two days and since I'm running Eclipse with Aptana as a plug-in it never again crashed.
+
+Eclipse with Aptana as a plug-in also has some handy features, like spell-checking, that Aptana did not have and has greatly improved my comments. That said, I must agree with you on the great level of detail and attention Aptana team has put in their software.
+    
+    
+Answer 2: 
+
+    
+    
+i have found the solution for this in codeigniter forum.
+
+http://codeigniter.com/forums/viewthread/187641/
+
+I came up with a slightly “safer” solution. rather than modifying the system files, create a folder called “autocomplete” (or whatever name you want)
+
+ie
+
+application
+autocomplete
+system
+user_guide 
+
+then create a file (in autocomplete) called controller.php with the code below (class CI_Controller etc) . then copy this file and with the name model.php and change the class in that file to CI_Model. Aptana then uses these to remap it’s autocompletion. Just add any more functions you want autocompletion for for each file. (for instance i added CI_Cart which wasn’t in the original example in that link
+
+(Note currently this only gives autocomplete for Models and Controllers. I guess if you’re extending other Classes and need autocompletion in those you’ll need to make a new file in the autocomplete folder with a list of all the classes that you want that class to see)
+
+class CI_Controller {
+
+/**
+  * @var CI_Config
+  */
+ var $config;
+ /**
+  * @var CI_DB_active_record
+  */
+ var $db;
+ /**
+  * @var CI_Email
+  */
+ var $email;
+ /**
+  * @var CI_Form_validation
+  */
+ var $form_validation;
+ /**
+  * @var CI_Input
+  */
+ var $input;
+ /**
+  * @var CI_Loader
+  */
+ var $load;
+ /**
+  * @var CI_Router
+  */
+ var $router;
+ /**
+  * @var CI_Session
+  */
+ var $session;
+ /**
+  * @var CI_Table
+  */
+ var $table;
+ /**
+  * @var CI_Unit_test
+  */
+ var $unit;
+ /**
+  * @var CI_URI
+  */
+ var $uri;
+ /**
+  * @var CI_Pagination
+  */
+ var $pagination; 
+
+/**
+ * @var CI_Cart
+ */
+var $cart;
+
+}
+
+?&gt; 
+
+    
+    
+Title: Access the stage in the Flash CS4 IDE
+Description: 
+    
+    
+                    
+The stage in the Flash CS4 Authoring Enviroment is a running SWF. That what makes thing like the 3D and Bone Tools to work in the IDE. 
+
+Is it possible to access that swf ? I suspect the immediate answer would be no because that would raise some security issues maybe and cause lots of developers to crash the IDE every 5 minutes :).
+
+That said I don't expect this to be a straight forward process, but I guess there should be a way to access that.
+
+Any thoughts ?
+    
+
+        
+Answer 1: 
+
+    
+    
+I can only tell you how components work on the stage, where we've attempted the type of access you talk about. 
+
+I suspect that at their core, the 3d and bone tools are implemented using component-like tech to display the "live" stage instance. In general this would involve a compiled instance of a live preview swf that is placed on the stage. It is misleading to think of the stage as a single player. Each component preview runs in its own sandbox that, as far as I can tell, has no means of communication with other component previews on the IDE stage. There is no common storage location. 
+
+Of course, if you were in charge of the preview swf (as with the case of a component), you could try LocalConnection to chat, but the previews you want to penetrate are closed. I suspect if you dig hard enough, you'd find the bone/3d preview hidden in the installation folders (perhaps in a swc.. ik.swc looks interesting) and might be able to hack about at it with a decompiler, but straight out the box, I'm not sure there's a solution to what you ask.
+    
+    
+Title: How do I have Emacs load a font from a file?
+Description: 
+    
+    
+                    
+In the interest of making my emacs setup more portable, I'd like to be able to set the current font by specifying a file rather than a font name, i.e. "Load ~/config/myfont.ttf and use size 12". Is there a way to do that in my .emacs? All the instructions I've found assume the font is already installed on the system. I'm using the XFT support on Linux, so a linux specific hack would be OK but I'd prefer something that would work on all targets. 
+
+Update: To be clear, I'm using a font that isn't standard on Windows / OS X / Linux. I'm not just looking to set a different font based on platform, but to specify a specific font file that I have (TTFs work on Windows and Linux, if not on Mac I'll get another version of the file but I still want to specify the font via file rather than name).
+    
+
+        
+Answer 1: 
+
+    
+    
+Unfortunately, you can't.
+
+Emacs on different platforms uses different windowing toolkits, all of which take care of font handling for it. I don't believe you can specify a font filename in Emacs on any platform - it just doesn't work that way.
+
+As for how to find the font:
+
+
+On Linux, you could use XFT's support for a user-specific font config file which is usually ~/.fonts.conf (but check /etc/fonts/font.conf to be sure) to add whatever directory you place your fonts into.
+On a Mac, you can add the font into ~/Library/Fonts. TTFs work fine on Macs, BTW.
+On Windows, I think you'd just have to add it to the system fonts directory.
+
+
+From there, you then go and tell Emacs (through customize or not) to use your font. You'll find the naming schemes to be different on each platform (not sure what Windows looks like), but customize should help take care of this for you - just keep a separate customize file per machine if need be.
+
+...so basically your portable Emacs setup has to encompass more than just an Emacs config file (which, given that you're carrying a font file around, it already does).
+    
+    
+Answer 2: 
+
+    
+    
+Emacs uses platform-specific widgets on every platform, so you should use system routines to setup concrete fonts.
+I have system-dependent configurations in different files, that are loaded from .emacs with something like
+
+(load (concat "~/.emacs.d/rc-" system-type))
+
+    
+    
+Title: Debugging with FF3 in VS2008
+Description: 
+    
+    
+                    
+I am using Firefox 3 to debug my ASP.NET applications in Visual Studio 2008. How can I configure either FF3 or VS2008 so that when I 'x' out of Firefox I don't have to hit the stop debugging button in Visual Studio? (The behavior you get with IE)
+    
+
+        
+Answer 1: 
+
+    
+    
+My solution to this has been to manually attach the debugger to the relevant browser and the aspnet_wp process. When I'm finished, I simply detach all.
+    
+    
+Answer 2: 
+
+    
+    
+Extending upon Raithlin's suggestion, Ctrl+Alt+P is a useful shortcut to bring up the Attach to Process window.
+    
+    
+Answer 3: 
+
+    
+    
+I have the same thing. I assume you're working with Cassini (the integrated web server).
+
+I've yet to find an answer to that (I just go back to VS and press Shift+F5 to stop the debugger), but I can tell you that if you check the "Edit and Continue" box in the project's properties (web tab), your web server will stop and restart whenever you run your application.
+
+It doesn't solve the whole of the problem, but it suffices for me.
+    
+    
+Title: Angular multiple templates in one component based on id (with template store)
+Description: 
+    
+    
+                    
+I have a special project and I haven't been able to find any information on how I can achieve this.
+So on this website companies can register and login.
+When a company is logged in they have an overview of devices and groups where devices can be divided in different groups for easy recognition.
+Now the hard part of the website is template management. Each device will display a template which could be a general specified template, a template that was assigned to a specific group or to an individual device. The templates that are chosen are either standard provided templates, custom templates made by the company or custom templates tailored by me. (The last 2 options are only visible for the company itself)
+The main reason for this is to display different templates with that I mean structural differences like a table, cards and even custom structures.
+So at the moment I am able to display templates based on the id of the company. These templates are integrated within the angular app.
+So now it kinda looks like this (its just a small example):
+this.companyName = this.route.snapshot.params['company'];
+if(this.companyName == &quot;Google&quot;){
+    this.template = `&lt;div [ngStyle]=&quot;{'border-left':(tr.state=='busy')?'10px solid #D4061C':'10px solid #2CC52E'}&quot;&gt;{{data}}&lt;/div&gt;`;
+    this.styles = &quot;div{color: red}&quot;;
+}
+
+What happens afterwards is the creation of a component on the fly by keeping the compiler in the build.
+So this means that this project cannot be build in production mode as the compiler is required.
+Which means that deploying the project is awful because the code is visible in the browser and the size is much larger so it takes too much time to load everything in. I kinda want to step away from this method and use something else which is easier to use
+So what I want to know is:
+
+is it possible to load in html from either data in the database or from HTML files.
+is this possible by using any other library with Angular.
+is there a way to create an overview of templates that I offer to companies that displays a preview of that template as well?
+Is there a way to retrieve the ip and mac address of the device that is displaying the template.
+
+If it isn't possible to use Angular for this what environment like language, frameworks, etc. do you advise to use instead?
+If more information is required don't hesitate to ask away!
+Thanks in Advance!
+Edit 1:
+I have tried to use [innerHTML] to load in the template but this doesn't work properly with data binding or data interpolation strings.
+I'll give you an example of HTML I would like to load in:
+&lt;div class='exellys' style='width: 1080px ;height: 1920px;background-color: #212121;'&gt;
+    &lt;div class='clr-row' style='padding:45px 0px 10px 25px; position: relative; width: inherit; height: 115px;'&gt;
+        &lt;div class='clr-col-5' style='float: left;'&gt;
+            &lt;div style='width: 230px; height: 60px; background: url(/assets/exellys/exellys.png); background: url(https://www.exellys.com/App_SkinMaster/images/sprite-new.svg), linear-gradient(transparent, transparent); background-repeat: no-repeat; float: left;'&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class='clr-col-7' style='padding-top: 10px; float: right;'&gt;
+            &lt;div class='exellys medium' style='text-align: right;'&gt;{{date | date: 'EEEE d MMMM y'}}&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class='clr-row' style='position: relative; width: inherit;'&gt;
+        &lt;div class='exellys medium' style='width: inherit;padding-right:10px; text-align: right;'&gt;{{date | date: 'HH:mm'}}&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class='clr-row' style='position: relative; width: inherit;'&gt;
+        &lt;div class='exellys large' style='padding-top: 150px; width: inherit; text-align: center; font-weight: bold;'&gt;WELCOME TO EXELLYS&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class='clr-row' style='position: relative; width: inherit;'&gt;
+        &lt;div class='exellys medium-large' style='padding-top: 75px; width: inherit; text-align: center;'&gt;Training Schedule&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class='clr-row' style='position: relative; width: inherit;'&gt;
+        &lt;table class='table table-noborder exellys' style='table-layout: fixed; padding: 100px 20px 0px 35px;'&gt;
+            &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th class='left exellys hcell' style='font-weight: bold; font-size: 37px; width: 15%; padding-left: 0px;'&gt;HOUR&lt;/th&gt;
+                    &lt;th class='left exellys hcell' style='font-weight: bold; font-size: 37px; width: 40%;'&gt;ROOM&lt;/th&gt;
+                    &lt;th class='left exellys hcell' style='font-weight: bold; font-size: 37px;'&gt;SUBJECT&lt;/th&gt;
+                &lt;/tr&gt;
+            &lt;/thead&gt;
+        &lt;/table&gt;
+        &lt;table class='table table-noborder exellys' style='table-layout: fixed; border-collapse: separate; border-spacing: 0 5px; padding: 0px 20px 0px 35px; margin-top:0px;'&gt;
+            &lt;tbody style='padding-left: 0px;'&gt;
+                &lt;tr *ngFor='let tr of bookings'&gt;
+                    &lt;td class='left exellys dcell' style='font-size: 37px; padding-left: 10px; width: 15%;' [ngStyle]=&quot;{'border-left': (tr.state=='busy')? '10px solid #D4061C' : '10px solid #2CC52E'}&quot;&gt;{{tr.localeStart | date: 'HH:mm'}}&lt;/td&gt;
+                    &lt;td class='left exellys dcell' style='font-size: 37px; width: 40%;' [innerHTML]=&quot;tr.scheduleLocation&quot;&gt;&lt;/td&gt;
+                    &lt;td class='left exellys dcell' style='font-size: 37px;'&gt;{{tr.subject}}&lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/tbody&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+Next to this HTML I am also loading following styles:
+.main {
+    color: #b0943c;
+    font-family: 'Omnes-Medium', Helvetica, sans-serif;
+    width: 1080px;
+    height: 1920px;
+    background-color: #212121;
+}
+
+.exellys {
+    color: #b0943c;
+}
+
+.exellys.medium {
+    font-size: 43px;
+    font-family: 'Omnes-Regular', Helvetica, sans-serif;
+}
+
+.exellys.medium-large {
+    font-size: 55px;
+}
+
+.exellys.large {
+    font-family: 'Refrigerator-Deluxe-Regular', Helvetica, sans-serif;
+    font-size: 75px;
+}
+
+.exellys.dcell {
+    line-height: 45px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 0px;
+}
+
+.exellys.hcell {
+    padding: 0px 0px 20px 0px;
+}
+
+table.table.table-noborder th {
+    border-bottom: 5px solid #996633;
+}
+
+table td {
+    border-top: 2px dashed #996633;
+}
+
+Entering this kind of template can easily generate issues especially in innerHTML because of XSS protection. So I would like to know whether there is a different solution to this since there might be hundreds of customers with hundreds of different templates.
+An example how a template could look like:
+
+EDIT 2:
+What I mean with:
+
+is this possible by using any other library with Angular.
+
+is if it is not possible to achieve this using standard methods are there any libraries to could enable me to achieve this anyways.
+EDIT 3:
+So the idea of a template suggestion system is really nice, but the customer wants to create it and add it directly without other customers to see this.
+This way I need to be able to save HTML files in the backend (whether it are templates or full pages doesn't matter) and load it inside of the angular application.
+For as far as I am understanding all the answers below this will not be possible in Angular.
+My question now is in which environment or language can I achieve this template mechanism? Or is there still a unknown method that is safe to use for production in Angular?
+Thanks in advance!
+    
+
+        
+Answer 1: 
+
+    
+    
+I believe the easiest solution will be to bind to [innerHTML] as earlier mentioned by @capc0
+You raised below concern
+
+Hi @capc0 your answer is completely correct. But, yes there is a but! I am using interpolation strings inside my html, innerHTML works fine but that is with static HTML. I am talking about HTML that has data interpolation strings which doesn't work properly with innerHTML
+
+Consider below approach to deal with this problem
+Lets say we are to interpolate title and cost from the below object
+  templatingInfo$ = of({
+  title: 'Template Title',
+    cost: 200
+  });
+
+I will also assume that the templates are received in the form of an Observable
+  templates$ = of([
+    { 
+      id: 1,
+      name: 'Alpha',
+      value: `
+        &lt;div class='red'&gt; 
+          &lt;h1&gt;{{ title }}&lt;/h1&gt;
+          &lt;p&gt; This is my lovely Template! Purchase it at \${{ cost }} &lt;/p&gt;
+        &lt;/div&gt;
+      `
+    },
+    { 
+      id: 2,
+      name: 'Beta',
+      value: `
+        &lt;div class='blue'&gt; 
+          &lt;h1&gt;{{ title }}&lt;/h1&gt;
+          &lt;p&gt; This is my lovely Template! Purchase it at \${{ cost }} &lt;/p&gt;
+        &lt;/div&gt;
+      `
+    },
+   ...
+
+
+Now the only challenge is to replace the interpolated section with the correct info
+I will solve this with the below approach
+Define variables to track the selected template
+  selected = 1;
+  selectedTemplateSubject$ = new BehaviorSubject(this.selected);
+  selectedTemplate$ = this.selectedTemplateSubject$.asObservable();
+
+use combineLatest to combine the variables with template
+  template$ = combineLatest([this.templates$, this.selectedTemplate$]).pipe(
+    map(([templates, selected]) =&gt; templates.find(({id}) =&gt; id == Number(selected)).value),
+    )
+  templateString$ = combineLatest([this.templatingInfo$, this.template$ ]).pipe(
+    map(([info, template]) =&gt; 
+      Object.entries(info).reduce((prev, next) =&gt; 
+        prev.toString().replace(new RegExp(`{{\\s${next[0]}\\s}}`), next[1].toString())
+            , template)
+        ),
+    )
+
+The above works unfortunately styles will not be applied.
+Option 1
+With that we can use
+encapsulation: ViewEncapsulation.None, in our @Component({}) object see Angular 2 - innerHTML styling
+NB: WE ARE LITERALLY DEACTIVATING ANGULAR PROTECTION AGAINST XSS ATTACK
+With the above said, you now have a few options
+
+Sanitize the template string before saving it to the database
+Manually sanitize the template string before rendering it
+Only make the template available for the individual users who posted it. This way they probably will only attack themselves :)
+
+See this Sample
+Option 2
+The other option is to use DomSanitizer as explainer in This Post
+Lets assume users have included inline styles like below
+  templates$ = of([
+    {
+      id: 1,
+      name: &quot;Alpha&quot;,
+      value: `
+        &lt;div&gt; 
+          &lt;h1 style='color: red'&gt;{{ title }}&lt;/h1&gt;
+          &lt;p style='color: blue'&gt; This is Alpha! Purchase it at \${{ cost }} &lt;/p&gt;
+        &lt;/div&gt;
+      `
+    },
+    {
+      id: 2,
+      name: &quot;Beta&quot;,
+      value: `
+        &lt;div&gt; 
+          &lt;h1 style='color: brown'&gt;{{ title }}&lt;/h1&gt;
+          &lt;p style='color: green'&gt; This is Alpha! Purchase it at \${{ cost }} &lt;/p&gt;
+        &lt;/div&gt;
+      `
+    },
+    ...
+
+We can add the line map(template =&gt; this._sanitizer.bypassSecurityTrustHtml(template)) to map the resultant string to a trusted string. The code will look like
+import { Component } from &quot;@angular/core&quot;;
+import { of, BehaviorSubject, combineLatest } from &quot;rxjs&quot;;
+import { map } from &quot;rxjs/operators&quot;;
+
+import { DomSanitizer } from &quot;@angular/platform-browser&quot;;
+
+@Component({
+  selector: &quot;my-app&quot;,
+  templateUrl: &quot;./app.component.html&quot;,
+  styleUrls: [&quot;./app.component.css&quot;]
+})
+export class AppComponent {
+  constructor(private _sanitizer: DomSanitizer) {}
+  templatingInfo$ = of({
+    title: &quot;Template Title&quot;,
+    cost: 200
+  });
+  selected = 1;
+
+  selectedTemplateSubject$ = new BehaviorSubject(this.selected);
+  selectedTemplate$ = this.selectedTemplateSubject$.asObservable();
+  templates$ = of([
+    {
+      id: 1,
+      name: &quot;Alpha&quot;,
+      value: `
+        &lt;div&gt; 
+          &lt;h1 style='color: red'&gt;{{ title }}&lt;/h1&gt;
+          &lt;p style='color: blue'&gt; This is Alpha! Purchase it at \${{ cost }} &lt;/p&gt;
+        &lt;/div&gt;
+      `
+    },
+    {
+      id: 2,
+      name: &quot;Beta&quot;,
+      value: `
+        &lt;div&gt; 
+          &lt;h1 style='color: brown'&gt;{{ title }}&lt;/h1&gt;
+          &lt;p style='color: green'&gt; This is Alpha! Purchase it at \${{ cost }} &lt;/p&gt;
+        &lt;/div&gt;
+      `
+    },
+    {
+      id: 3,
+      name: &quot;Gamma&quot;,
+      value: `
+        &lt;div&gt; 
+          &lt;h1 style='color: darkred'&gt;{{ title }}&lt;/h1&gt;
+          &lt;p style='color: green'&gt; This is Alpha! Purchase it at \${{ cost }} &lt;/p&gt;
+        &lt;/div&gt;
+      `
+    }
+  ]);
+
+  template$ = combineLatest([this.templates$, this.selectedTemplate$]).pipe(
+    map(
+      ([templates, selected]) =&gt;
+        templates.find(({ id }) =&gt; id == Number(selected)).value
+    )
+  );
+  templateString$ = combineLatest([this.templatingInfo$, this.template$]).pipe(
+    map(([info, template]) =&gt;
+      Object.entries(info).reduce(
+        (prev, next) =&gt;
+          prev
+            .toString()
+            .replace(new RegExp(`{{\\s${next[0]}\\s}}`), next[1].toString()),
+        template
+      )
+    ),
+    map(template =&gt; this._sanitizer.bypassSecurityTrustHtml(template))
+  );
+}
+
+
+See Below Demo on Stackblitz
+    
+    
+Answer 2: 
+
+    
+    
+You should load different components, rather than different templates. (it is still possible to apply different template for one component, but it is hard to do as well as it makes performance of your application worse, and also it harder to maintain. look for dynamic compilation if you still want this option)
+you can register a set of components for example as some token and then show them
+{
+ provide: COMPONENTS_OF_CHOICE,
+ multi: true,
+ useValue: OneOfMyComponents
+}
+
+or
+{
+ provide: COMPONENTS_OF_CHOICE,
+ useValue: [OneOfMyComponents, SecondOfMyComponents]
+}
+
+it is impossible to retrieve  the ip and mac address of the device. it would be not secure and browser does not expose that data
+    
+    
+Answer 3: 
+
+    
+    
+
+is it possible to load in html from either data in the database or
+from HTML files.
+
+Yes. You can for example create a &quot;template editor&quot; where the customer can build a template and you store that view in the database. It is not very simple but possible. You can extract the HTML from the database and display it e.g. via &lt;div [innerHTML]=&quot;data&quot;&gt;&lt;/div&gt;. You have to sanitze user input etc. though, because of injection security risks (xss). It might be better If you define a set of &quot;building blocks&quot; where the companies can combine multiple of those blocks into a template and you construct that UI dynamically (and do not store any inline HTML in the database).
+
+is this possible by using any other library with Angular.
+
+what kind of library, can you specify? Generally I dont see a problem why not.
+
+is there a way to create an overview of templates that I offer to
+companies that displays a preview of that template as well?
+
+Yes. As mentioned above, if you store all templates in a database table e.g. templates you can query all templates (maybe with a key on the companyId) and show them with dummy data.
+
+Is there a way to retrieve the ip and mac address of the device that
+is displaying the template.
+
+I dont know, but as @Andrei mentioned I suppose it is not possible.
+    
+    
+Answer 4: 
+
+    
+    
+If I am getting you right, you want to create something like website builder platform for end users so that they can add their design.
+If yes, I will say add some designs (by several component for a specific part) and give them choice to add that specific design which is already in your application.
+This way you do not need to use innerHTML and will use angular security too.
+By the way I dont think this question is related to angular. It should be part of your design
+    
+    
+Answer 5: 
+
+    
+    
+From what I understand from the problem, You need customized templates for different companies but you are faced by risk of XSS attacks if you bind your templates to innerHTML and also large bundles that may lead to slow page loads.
+This is How I would go about the problem
+
+Define a Mixin that would hold general information about each company, for example if each template has groups and devices, we may have a mixin that looks like below
+
+export type Constructor&lt;T = {}&gt; = new (...args: any[]) =&gt; T;
+export const templateMixin = &lt;T extends Constructor&gt;(BaseClass: T = class { } as T) =&gt;
+  class extends BaseClass {
+    devises$ = Observable&lt;any[]&gt;;
+    groups$ = Observable&lt;any[]&gt;;
+    data: any = { };
+    // All other variables and functions that may be common in template file
+  };
+
+
+Create the templates as angular components... I know this sounds weird because of bundle size but we will solve this problem next
+
+@Component({
+  selector: 'app-alpha-template',
+  template: `
+    `&lt;div 
+       [ngStyle]=&quot;{'border-left':(tr.state=='busy')?'10px solid #D4061C':'10px solid #2CC52E'}&quot;&gt;
+     {{data}}
+    &lt;/div&gt;`
+  `,
+  styleUrls: ['./e-learning-edit-course.component.css']
+})
+export class AlphaTemplate extends templateMixin { };
+
+The above is just an example, you may need a better naming style if you have more templates than the greek letters
+Now we have solved the problem of XSS attacks. The next problem is bundle size
+
+We note that different groups of individuals will load different templates, so the best approach would be to use lazy loading
+
+You may define a route and set the children routes as the lazy loaded templateComponents
+    
+    
+Title: Python Visual Studio extension doesn&#39;t show errors
+Description: 
+    
+    
+                    
+I'm used to use VS to code C++ and Eclipse to code python but lately I have tried VS for both languages. 
+
+I found something very difficult to understand that while VS autocompletes it doesn't warn you about errors before runtime.
+
+ 
+
+There is no warning regarding non existent variables or methods. I can't believe that VS does not warn about this kind of typical coding issues as it does for C++ code (as every IDE does).
+
+What am I missing?
+
+I tested this with VS2013 and VS2015.
+
+I'm expecting something like:
+
+
+
+Thanks
+    
+
+        
+Answer 1: 
+
+    
+    
+In order to get the python detailed IntelliSense support in VS2015 you have to install python tools for visual studio which provide the following:
+
+
+CPython, PyPy, IronPython and more
+Detailed IntelliSense
+Interactive debugging
+Integrated with Visual Studio features
+Free and open-source
+
+
+And the best thing, it's completely free.
+
+Just download it from here:
+
+https://www.visualstudio.com/en-us/features/python-vs.aspx
+
+I hope it supports your question.
+
+Update after comment:
+
+You just need to refresh the Database. It works for me. Check to make sure the environment options are set (specifically path variable to PYTHONPATH) and the DB is refreshed.
+
+Sometimes Deleting the __init__.py file in my source root directory did the trick
+    
+    
+Answer 2: 
+
+    
+    
+It seems that with a regular Python installation (2.x or 3.x in 32bit or 64bit) there are limited "warnings" (hovering over an undefined variable gives "unknown type"), but Syntax Highlighting / Intellisense doesn't seem to work. 
+
+Intellisense NOT Working:
+
+
+
+Getting Intellisense to Work:
+
+After some research I tried installing another Python interpreter for Visual Studio to work with. I went with Iron Python because it is "tightly integrated with the .NET Framework". 
+
+Download it from here --a href="http://ironpython.codeplex.com/downloads/get/970325" rel="nofollow noreferrer"/a/pp
+Title: Using tensorflow in IDE on windows
+Description: 
+    
+    
+                    
+I have used the docker installation as suggested at https://bishnusarker.wordpress.com/2015/11/11/how-to-install-google-tensorflow-in-your-windows-machine-using-docker-image/ to run tensorflow on my windows 7 machine. I have it up and running on the docker terminal. I would like to know how to import the tensorflow library from the PyCharm IDE. Any help or pointers will be highly appreciated as information on the matter is rather sparse.
+    
+
+        
+Answer 1: 
+
+    
+    
+Since I am currently struggling with a similar issue, I came across your question. You can run PyCharm on your Windows machine and configure a remote interpreter to mount your python code to the docker image, in which your libraries reside and run it there as described here: https://blog.jetbrains.com/pycharm/2015/12/using-docker-in-pycharm/
+For tensorflow in particular, this might be interesting as well: http://killianlevacher.github.io/blog/posts/post-2016-07-22/post.html
+    
+    
+Answer 2: 
+
+    
+    
+There is no way to make it work. Your tensorflow installation is inside the docker container, while PyCharm running on Windows searches for your available Python libraries in Windows; it has no access to docker.
+
+You could, instead, try to install and run PyCharm in docker as well (I'm not sure if it is viable though).
+    
+    
+Title: Qt Creator help: Font size is too small
+Description: 
+    
+    
+                    
+I am using Qt Creator 3.3.0 on Gentoo linux.
+Qt docs are displayed in help mode. The main text there is too small to read. Font size settings in Qt Creator settings changes size of headers and images only. So does zooming with mouse wheel.
+How can I set size of text? How can I enable zooming with mouse wheel?  
+    
+
+        
+Answer 1: 
+
+    
+    
+Qt Creator uses QWebView to display help. Zooming with Ctrl+mouse wheel should be working. This is Qt Creator help plugin source:
+
+void QtWebKitHelpWidget::wheelEvent(QWheelEvent *event)
+{
+    if (event-&gt;modifiers()&amp; Qt::ControlModifier) {
+        event-&gt;accept();
+        event-&gt;delta() &gt; 0 ? scaleUp() : scaleDown();
+    } else {
+        QWebView::wheelEvent(event);
+    }
+}
+
+
+Apparently your Qt build on Gentoo is compiled with some features being disabled. Either use the official SDK or rebuild Qt with ./configure -webkit, paying attention that QtWebKit builds fine.
+    
+    
+Answer 2: 
+
+    
+    
+The problem still persists even though I installed newest QtCreator 4.10.2 right from official online installer. And if you just wonder how the problem looks like, here is a snap.
+
+
+Ctrl+Scroll changes only header font which is perfectly readable on my screen. Rest of text can't be changed and it looks unreadable. Is there any workaround? I don't believe only 5 people who upvoted use reference in qt on ubuntu.
+    
+    
+Title: PyCharm 3.4.1: Unresolved reference &#39;map&#39;
+Description: 
+    
+    
+                    
+As we know, map is a python built-in function.
+
+I use PyCharm 3.4.1 currently, and it reports an
+
+Unresolved reference 'map' 
+
+
+in my code:
+
+a = map(int, [1,2,3])
+
+
+where the map word was with red waved underscore, and shows this tip of message.
+
+
+
+I've been reading about the question: PyCharm shows unresolved references error for valid code
+
+And did File | Invalidate Caches... and restarting PyCharm helps.
+
+But problem still unsolved.
+
+
+
+For more info, I'm working on a django 1.6 object.
+
+and the project interpreter is as below:
+
+
+
+Could anyone tell why and how? Thanks a lot!
+    
+
+        
+Answer 1: 
+
+    
+    
+Finally I found the point myself:
+
+Pycharm generates a file builtins.py for code prompt.
+
+It's path is probably under: 
+
+C:\Program Files (x86)\JetBrains\PyCharm 3.4.1\helpers\python-skeletons\builtins.py
+
+Randomly choose a built-in function, click it with Ctrl key, then this file is open in PyCharm.
+
+Then I see the error, but still without knowing how and when it happens:
+
+
+
+I see the multiline comment block was closed incorrectly.
+
+I manually fixed it, and everything goes well!
+    
+    
+Title: How to debug Drools File (.drl) in eclipse IDE
+Description: 
+    
+    
+                    
+I am using drools version : 5.5.0.Final
+
+I have added installed drools plugin following below link:
+Is there any Drools plugin for Eclipse?
+
+and getting nice colorful DRL file editor and drools perspectives.
+
+But the reason I wanted to install drools plugin was to be able to debug and inspect each rules in drl file which does not work. 
+
+Basically below steps here doesnt work : http://docs.jboss.org/drools/release/5.2.0.Final/drools-expert-docs/html/ch08.html#d0e8236
+
+I put the debug point in file and run the application in debug mode but it doesnt stop there.
+
+Can anyone please help me in debuging drl files.
+    
+
+        
+Answer 1: 
+
+    
+    
+Declare Dialect type as dialect "mvel" in drl file. Debug control will move to break points which you have pointed in the respective drl file.
+    
+    
+Title: Strange Java variable type with &ldquo;cannot access&rdquo; error, but in compilable code
+Description: 
+    
+    
+                    
+While coding, I have ran into a type that "behaves" neither like a primitive nor Object in my NetBeans IDE. The type is IoBuffer from Apache MINA (but propabably the exact type has nothing to this question).
+
+From my perspective:
+
+
+my project compiles well, despite that this type is used in lot places underneath
+my NetBeans don't recognize this type ("cannot find symbol" hint when i wrote IoBuffer)
+I can't create IoBuffer variable/instance (compile error: "cannot find symbol")
+I can't invoke any method on that type, like toString.
+
+
+Of course, this is a standard Java class, but it looks unusual from current perspective (Maven project of one of examples bundled with Red5 Media Server)
+
+Simple invocation:
+
+// videoData.getData() returns IoBuffer
+videoData.getData().toString()
+
+
+Causes hint &amp; compile-time error:
+
+org/red5/demos/oflaDemo/StreamMultiplexer.java:[89,30] error: cannot access IoBuffer
+
+Same error if I write only videoData.getData() - hint in this case is The type od getData() is erroneous
+
+What caused this situation?
+    
+
+        
+Answer 1: 
+
+    
+    
+Have you tried clearing netbeans cache? To clear cache: Shutdown Netbeans, rename %AppData%\Local\NetBeans\Cache\7.2\index, restart, wait for background scanning to complete and try again...
+    
+    
+Answer 2: 
+
+    
+    
+Apologies if my answer isn't specific enough. If you can provide some more code, that may help.
+
+I believe the best way is to recreate that particular project and re-import the dependencies.
+There's a number of people with seemingly similar errors:
+http://forum.ragezone.com/f566/netbeans-compile-error-713536/
+http://www.moparscape.org/smf/index.php?topic=645055.0
+
+If that doesn't work, try:
+
+
+Changing the java version you are using. (http://www.java-forums.org/new-java/43174-constructor-cannot-find-symbol-compile-error.html)
+Clear your cache, delete all class files, recompile everything. (http://www.coderanch.com/t/402221/java/java/Compiler-Error-find-symbol)
+Close and Open the NetBeans project.
+Load the project in a different IDE, say eclipse.
+
+
+Let me know if it helps.
+    
+    
+Title: how to make &ldquo;open resource&rdquo; dialog in eclipse only find *.js files, not *.jsp?
+Description: 
+    
+    
+                    
+Is there any way in the Eclipse Open Resource (Ctrl+Shift+R) dialog, to find *.js files, but NOT *.jsp or *.jspx or any other *.js* file?  Someone asked a related question, but the solution given just doesn't work in my Eclipse Indigo.
+    
+
+        
+Answer 1: 
+
+    
+    
+The non-obvious actual solution is provided in this eclipse forum thread. I'm going to look into posting a bug indicating that this mechanism should be advertised in the interface somehow.
+    
+    
+Answer 2: 
+
+    
+    
+Use ?.js. This works for me in Eclipse Kepler
+    
+    
+Answer 3: 
+
+    
+    
+The solution may differ depending on the version of Eclipse but in the version I'm using (Kepler Service Release 1, build 20130919-0819), the only way of displaying Javascript files but not JSP files is to type the following in the Open Resources dialog: 
+
+*js&lt;
+
+
+Note the absence of any dot before the js - this was stopping it from working for me (appears to be a bug?) It could of course be further filtered, e.g. to start*js&lt; or *middle*js&lt; etc. as appropriate.
+    
+    
+Answer 4: 
+
+    
+    
+You need to enable regular expression in Open Resources dialog. Then type .*\.js$. Basically this matches file names that end with js.
+
+To enable RE in Open Resource dialog, you need to tweak eclipse plugin. Replace the attached jar file in your eclipse plugin folder. NOTE the jar file only works for eclipse 4.5.1.
+    
+    
+Title: How to list all the classes on the class path that implements a given set of interfaces
+Description: 
+    
+    
+                    
+Most IDEs allows you to do this easily for a single interface, but I am looking for classes that implements two interfaces at the same time. Is there anyway to automatically do this (without having to manually open every implementer and check)?
+
+If no IDE supports, does Spring have such feature. (I know I can get a list of beans implementing a specific interface, but I am not sure if I can do it for all classes.)
+    
+
+        
+Answer 1: 
+
+    
+    
+Possibly org.reflections has what you need - unless I still misunderstand your requirements.
+    
+    
+Answer 2: 
+
+    
+    
+from System.properties you will get the classpath.
+
+TRY use TRY,  to open it like a zip. (Inflater or Deflater stream) you will have the class
+
+load the class with a classloader
+
+use instanceof xInterface &amp;&amp; instance of yInterface
+
+upvote if it helped :)
+    
+    
+Title: How to quickly move to the end of a code block in Aptana Studio 3
+Description: 
+    
+    
+                    
+Is there a keystroke combo to quickly move the cursor to the end of a code block or past a closing tag (in HTML document)?  For example, you are done editing or filling in some function/class/tag and you just want to quickly navigate without using arrow keys.
+    
+
+        
+Answer 1: 
+
+    
+    
+Aptana is built off Eclipse.
+So often they share the same shortcuts.
+What you are appear to be looking for is the Home and End keys (if you're on windows).
+
+Just checked for Mac its (Apple) Command + Left or Right on the arrow keys.
+
+More info available here:
+http://www.shortcutworld.com/en/win/Eclipse.html
+    
+    
+Answer 2: 
+
+    
+    
+To navigate from on opening/closing parenthesis or bracket to its partner, select the opening/closing parenthesis or bracket and hit Ctrl+Shift+P.
+    
+    
+Title: True-type fonts that I installed not rendered in Visual Studio 2010 Text editor
+Description: 
+    
+    
+                    
+I am trying to change the font for the Text Editor in VS 2010 Ultimate on a machine running Win XP Professional SP3 (32bit), and it does not render any installed fonts correctly - works fine with the default fonts though. (At first, I thought it was only with Monaco font, but I recently realized that it's more than that.)
+
+I have tested with some fonts, including Inconsolata, Futurist fixed-width and Monaco on my PC, and if I change the font to any true-type font that I installed, the font renders as Consolas although the font name in the Fonts and Colors window shows the new font name. 
+
+I was successfully able to apply Monaco font on a colleague's machine (we both have the same OS and VS editions). I could also change the font in VS 2008 on my machine, that looks fine as well. Also, I can change the font to any of the above said fonts in my MS Word and Excel applications, so I don't think it is a system-wide problem. 
+
+I came across this very old post on SO that addresses a similar issue (which might not even be relevant to the 2010), but I did try some of the techniques listed for what it's worth without any success.
+
+This is what I did so far (not necessarily in the same order), and nothing worked - 
+
+
+Resetting the Visual Studio as per the suggestion in the comments
+Restart the IDE after installing the font
+Close VS, un-install and re-install the font, and open VS again 
+Open VS in safe mode, disable the extensions, re-open VS again  
+Repair/reinstall the Visual Studio
+
+
+Is it a possibility that my VS is corrupted? (If that's the case, wouldn't repairing have fixed that?)
+
+I also learnt from a Microsoft Connect bug that VS 2010 text editor has been rebuilt using WPF - could that be what is causing the issue? The strange thing is, I can successfully set the environment font (the font for VS menus, solution explorer window, etc.) to any font I like - I cannot set the font only for the windows where we can type text, like the Text Editor, Watch window, Immediate Window, etc.
+
+Did anyone else come across this kind of problem? Does anyone have a solution? I am out of ideas now, and my last resort seems to be uninstalling VS completely and re-installing (but again, I am not sure if that will work either).
+    
+
+        
+Answer 1: 
+
+    
+    
+The issue looks to be with the way I had Visual Studio installed on my machine - last week, my PC started freezing and giving the fabled BSOD all of a sudden - the tech support guys suggested to re-image the machine, which I reluctantly agreed to since that was the cure-all for my aging machine. Today, the support engineer stopped by and swapped my existing hard drive with the new one they built for me - they had been kind enough to push my current applications onto the new image. 
+
+After the swap finished uneventfully, and the support guy did some sanity checks and gave a thumbs up, I installed the Monaco font again (from the same source as I did originally), and applied the new font, and opened a new project - and, lo and behold, I now see my code in Monaco font! Feels good to see Monaco font on my machine - this has been eluding me for about 8 months. I still am not sure what fixed the issue, but I am glad I could finally put an end to the frustration I had been having.
+    
+    
+Title: Android Back End Technology - Language (Java, Python) &amp; IDE (CoderBuddy, exo Cloud, Cloud 9)
+Description: 
+    
+    
+                    
+I've done my research and narrowed this down.  OK, so I am deciding on the language and and tool to use for backend (server side) of developing cloud based android applications..  I've decided on Google App Engine as my framework.  As I am going to be  developing on my android tablet I want a cloud based IDE.  (I am going to use a native android IDE app for client side).
+
+App Engine supports the Go Programming Language, Java and Python.  As there doesn't appear to be a stable cloud IDE that supports Go, I am left with Java &amp; Python.  I've narrowed my vast list of IDEs down to:
+
+Coderbuddy - (Designed for App Engine but Python only)
+exo Cloud - (Java &amp; Python supported)
+Cloud 9 - (Java &amp; Python supported)
+
+I know neither language.  I have to learn Java in any case for Android client side development.  I understand that Python is faster to code in and so that's definately a factor but I absolutely don't want to sacrifice performance or scalability.  I will be doing lots of SQL database stuff.
+
+Finally if you think I am way off and should look in another direction please let me know.  Thanks!
+
+Edit: My background language is Delphi (Object Pascal)
+    
+
+        
+Answer 1: 
+
+    
+    
+My guess is that using Java you will have lots of frameworks to find solutions and I really don't think Python will offer you that.
+
+About IDE, I don't think you should worry about it with Python, you can use SublimeText 2 or Eclipse(have to install python editor). Both work great and Python is easy to deploy.
+
+With Java I use Eclipse but a friend is using NetBeans and it has some "shortcuts" to create things like services, for instance.
+
+Also with Java, you'll be more familiarized because of Android so I think it is a plus, makes more sense.
+
+You need to at least start so you can have a better idea of what is best for you.
+
+And get ready, it will be a LOT different from Delphi ;)
+    
+    
+Title: In VS2010 is there a way to correct the cursor icon from getting stuck on pointer without restarting the page?
+Description: 
+    
+    
+                    
+I am working along in VS2010 and moving code around to make more functions and less clutter, so I copy/paste nine times out of ten my mouse cursor "locks up" and it gets stuck on the arrow pointer rather than the | for text, which is only mildly annoying when you are trying to copy/paste a lot of code around. It clears up whenever I close the file and reopen it, but it interrupts my work flow. Has anyone run into this before, if so, did you figure out how to fix it without closing the file? 
+    
+
+        
+Answer 1: 
+
+    
+    
+I submitted this as a report to MS. I am paraphrasing here, "it is in the bug list and we will look into it." 
+
+The only solution is to close the file and re-open it. If MS replies with anything else I will post it here. 
+    
+    
+Title: VSCode is not saving changes in Jupyter Notebook (unless I run the cells with changes)
+Description: 
+    
+    
+                    
+I've been losing changes I've made to some of my cells because although I saved the notebook file, I didn't actually run the cell (this is for both code and markdown cells). And when I close the file down there is no warning of the sort "do you want to save changes?".
+
+I know the workaround is to just run cells before saving. But it's just not a robust working setup.
+
+Anyone got solutions? I would even switch editor to something with a similar feel if there's an alternative.
+    
+
+        
+Title: connect Spyder IDE to remote Cloudera environment
+Description: 
+    
+    
+                    
+I have installed Anaconda3 (64 bit) in my local windows machine, where Spyder IDE is installed. I want to connect the Spyder IDE to the Cloudera Hadoop cluster, so that I can write my PYSPARK scripts in Spyder IDE for that remote Cloudera Hadoop cluster. What are the steps I have to follow to connect to the remote cluster &amp; to execute pyspark code from my local windows machine.
+    
+
+        
+Title: Is there a way to add Python f-string support to Visual Studio 2017?
+Description: 
+    
+    
+                    
+I'm switching back to using VS2017 for most of my Python development after using VSCode for the majority of the time. In VSCode I was able to use f-strings nicely with syntax highlighting and intellisense.
+
+In VS2017, when I use an f-string, it'll just display as a raw string without highlighting. This works when the program runs, but for debugging and writing, it makes things more of a pain.
+
+Does anyone know if this can be added to VS2017? Both are running off of python 3.6 so I wouldn't think there should be an issue.
+
+Just to clarify, I'm referring to these:
+
+f'Hello My Name Is { user.Name }'
+
+    
+
+        
+Title: Intellij: Cannot select &ldquo;Groovy&rdquo; in &ldquo;Add Framework Support&rdquo;
+Description: 
+    
+    
+                    
+I would like to add Groovy support to my project in Intellij Idea 2018.1. But when I open "Add Framework Support..." from the project context menu, I don't see "Groovy" in the list of frameworks:
+
+
+
+I have Groovy installed on my machine and configured it as a global library in in IntelliJ:
+
+
+
+Not sure whether this should be possible, but I also cannot add Groovy as an SDK:
+
+
+
+I added Groovy as a module dependency:
+
+
+
+My underlying problem is that IntelliJ does not properly recognize Groovy code, e.g. I get 
+
+Cannot resolve symbol `String`
+
+
+when I use the String class:
+
+
+
+Any hints on how I can make Groovy available as a Framework and an SDK?
+
+Solution
+
+Thanks to CrazyCoder pointing me to the broken JDK. Fixing the JDK and adding Groovy as a module dependency fixed the problem. See https://www.jetbrains.com/help/idea/creating-and-managing-modules.html
+    
+
+        
+Title: How to auto format code on file save in KDevelop 5.2
+Description: 
+    
+    
+                    
+I try to play with KDevelop 5.2 on Windows 10 and try to auto format code on CTRL+S
+Now I add custom source formatter (clang-format) and it works on click - Edit -/p/div
+Title: How to typehint context in an IDE?
+Description: 
+    
+    
+                    
+I am using Closure::call (http://php.net/manual/en/closure.call.php) to call an external closure inside a class context.
+
+Here's a simple repro:
+
+class Foo {
+    private $bar = 'baz';
+
+    /**
+     * Executes a closure in $this context and returns whatever the closure returns.
+     *
+     * @param \Closure $closure
+     * @return mixed
+     */
+    public function callClosureInThisContext(\Closure $closure) {
+        return $closure-&gt;call($this);
+    }
+}
+
+class Closures {
+    /**
+     * @return \Closure
+     */
+    public function getClosureForFoo() : \Closure {
+        return function () {
+            // how do I tell my IDE that in this context $this is actually class Foo,
+            // and not the class Closures?
+            print $this-&gt;bar;
+        };
+    }
+}
+
+$foo = new Foo();
+$closures = new Closures();
+$foo-&gt;callClosureInThisContext($closures-&gt;getClosureForFoo()); // prints "baz"
+
+
+This works as expected, but my IDE is of course, not happy, and is warning me about the "field bar not found":
+
+
+Can I somehow tell the IDE (in this case PhpStorm) that the closure is going to be used inside another class and that it should assume its context?
+    
+
+        
+Answer 1: 
+
+    
+    
+try
+
+/** @var $this Foo */
+print $this-&gt;bar;
+
+
+It will add autocomplete for class Foo additionally to Closure
+    
+    
+Title: Rodeo 2.5 change terminal color theme
+Description: 
+    
+    
+                    
+I was looking for a decent IDE for data science, and Rodeo seems about right.
+
+I want to change the theme color to dark, but in Preferences -
+Title: Slow response for right click context menu in Eclipse Package Explorer view
+Description: 
+    
+    
+                    
+I am using Spring Tool Suite 3.7.3 (Eclipse Mars based) IDE. I have noticed that the right click context menu takes time (5-6 sec) to load in the Package Explorer view. 
+
+Is there any tweak to load it fast?
+    
+
+        
+Title: Is there a Typescript editor for Android?
+Description: 
+    
+    
+                    
+I see that this is not a specific progamming question, however I have asked it in a binary way so perhaps this will pass scrutiny.
+
+I've been using Quoda on my Android phone and have started needing to edit .ts / Typescript files, which it does not support.  At the moment I am using SGit which just opens whatever Android app to edit a file type based on the extension. Quoda (and general text editors) can open a .ts if opened within the app, however do not have syntax highlighting.
+
+So I have searched high and low, the only .ts editor I have found is CodeAnywhere, which is really great in a desktop browser but definitely has a few issues on the Android app version.
+
+So, the question is NOT 'can you recommend one', it's can you tell me of any obscure apps apart from CodeAnywhere please? Or I suppose another way of editing .ts from github on my phone?
+    
+
+        
+Answer 1: 
+
+    
+    
+You can use stackblitz.com, its almost exactly the same as VSCode and also allows you to make Angular and React apps. If you add it to your homescreen it looks just like a native app
+    
+    
+Title: IDE freezes when cancelling the &ldquo;Validating breakpoint location&rdquo; dialogbox
+Description: 
+    
+    
+                    
+I'm using Visual Studio Enterprise 2015 Update 3 (build 14.0.25424.00).
+When I load a relatively large solution and all projects have been loaded, a debugger dialog box appears displaying "Validating breakpoint location..:"
+
+
+
+The process of validating breakpoint locations never ends. If I press the Cancel button, the IDE freezes completely and I have to kill the devenv process.
+
+I've tried devenv /ResetSettings but it didn't help.
+
+My solution contains 20+ class library projects, two web-projects (using node/gulp)
+
+Anyone else experienced this? Any solutions?
+    
+
+        
+Title: Workflow for Python with Docker + IDE for non-web applications
+Description: 
+    
+    
+                    
+I am currently trying to insert Docker in my Python development workflow of non-web applications.
+
+What are the current best practices in Python development using Docker and an IDE?
+I need the possibility to isolate my environments with Docker and debug my code.
+
+On the web I found many articles about the use of Docker to deploy your code:
+
+
+Production deployments: how to build Docker images ready to spin with your application already packaged inside
+Development environments that mirror production: extension of the above, where you can use a container to fully QA the current status of a project before deploying to production while developing
+
+
+I found a lot less about an actual development workflow, apart from some tips on how to use containers with shared volumes mapped to the directories on the host while developing web applications. This approach does not apply to non-web applications and it has some issues where a simple reload (with a LiveReload-like mechanism) is not enough so you need to restart your container(s).
+
+The closest writing I could find is this "Eight Docker Development Patterns" blog post, but it does not consider an IDE (like PyCharm I am using now).
+
+Maybe this question is the result of the 3-4 hours (and counting) spent configuring PyCharm to use a remote Python interpreter running in a Docker container. I expected a much better integration between the two.
+    
+
+        
+Answer 1: 
+
+    
+    
+Actually, I believe that using the Docker interpreter in PyCharm is the way to go. Which version of PyCharm do you have? If you have the 2016 version, it should be set up within seconds. You just have to make sure your docker machine is running and you must have your image built that you would like to use with your project. PyCharm will find the Docker machine in the "add remote interpreter" dialog automatically. Then select your image and you're all set up.
+
+You can run your code as usual then, almost without any delay.
+
+Here's what worked for me: https://www.jetbrains.com/help/pycharm/2016.1/configuring-remote-interpreters-via-docker.html
+
+And make sure to update PyCharm, that solved some issues I had.
+    
+    
+Title: Is there &ldquo;Hippie Completion&rdquo; in Atom Editor?
+Description: 
+    
+    
+                    
+Such as "Cyclic Expand Word" in WebStorm:
+
+
+    
+
+        
+Title: Android Studio Start Failed: fatal error initializing &#39;com.intellij.util.net.ssl.certificatemanager&#39;
+Description: 
+    
+    
+                    
+
+  Android Studio Stard Failed: java.lang.runtimeexception:
+  com.intellij.ide.plugins.pluginmanager$startupabortedexception: fatal
+  error initializing 'com.intellij.util.net.ssl.certificatemanager'
+
+
+When I try to open Android Studio, Start fails and that pops up. Btw, my PC is Windows 8.1 Single Language, 64-bit and I opened Android Studio before. I don't know if downloading and using TeamView for first time effected,too. These are some related links about my problem:
+
+https://code.google.com/p/android/issues/detail?id=183295
+
+Andrioid studio start fail: Fatal error initializing &#39;null&#39;
+
+Android Studio does not start anymore: Fatal error initializing &#39;[...].FrameworkDetectionIndex&#39;
+
+Internal Error. Please report to https://code.google.com/p/android/issues
+
+java.lang.RuntimeException: com.intellij.ide.plugins.PluginManager$StartupAbortedException: Fatal error initializing 'com.intellij.util.net.ssl.CertificateManager'
+    at com.intellij.idea.IdeaApplication.run(IdeaApplication.java:178)
+    at com.intellij.idea.MainImpl$1$1$1.run(MainImpl.java:52)
+    at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:312)
+    at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:745)
+    at java.awt.EventQueue.access$300(EventQueue.java:103)
+    at java.awt.EventQueue$3.run(EventQueue.java:706)
+    at java.awt.EventQueue$3.run(EventQueue.java:704)
+    at java.security.AccessController.doPrivileged(Native Method)
+    at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+    at java.awt.EventQueue.dispatchEvent(EventQueue.java:715)
+    at com.intellij.ide.IdeEventQueue.dispatchEvent(IdeEventQueue.java:362)
+    at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:242)
+    at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:161)
+    at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:150)
+    at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:146)
+    at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:138)
+    at java.awt.EventDispatchThread.run(EventDispatchThread.java:91)
+Caused by: com.intellij.ide.plugins.PluginManager$StartupAbortedException: Fatal error initializing 'com.intellij.util.net.ssl.CertificateManager'
+    at com.intellij.ide.plugins.PluginManager.handleComponentError(PluginManager.java:250)
+    at com.intellij.openapi.components.impl.PlatformComponentManagerImpl.handleInitComponentError(PlatformComponentManagerImpl.java:39)
+    at com.intellij.openapi.components.impl.ComponentManagerImpl$ComponentConfigComponentAdapter$1.getComponentInstance(ComponentManagerImpl.java:590)
+    at com.intellij.openapi.components.impl.ComponentManagerImpl$ComponentConfigComponentAdapter.getComponentInstance(ComponentManagerImpl.java:610)
+    at com.intellij.util.pico.DefaultPicoContainer.getLocalInstance(DefaultPicoContainer.java:245)
+    at com.intellij.util.pico.DefaultPicoContainer.getComponentInstance(DefaultPicoContainer.java:211)
+    at com.intellij.openapi.components.impl.ComponentManagerImpl.createComponent(ComponentManagerImpl.java:125)
+    at com.intellij.openapi.application.impl.ApplicationImpl.createComponent(ApplicationImpl.java:354)
+    at com.intellij.openapi.components.impl.ComponentManagerImpl.createComponents(ComponentManagerImpl.java:116)
+    at com.intellij.openapi.components.impl.ComponentManagerImpl.init(ComponentManagerImpl.java:87)
+    at com.intellij.openapi.components.impl.stores.ApplicationStoreImpl.load(ApplicationStoreImpl.java:101)
+    at com.intellij.openapi.application.impl.ApplicationImpl.load(ApplicationImpl.java:499)
+    at com.intellij.openapi.application.impl.ApplicationImpl.load(ApplicationImpl.java:481)
+    at com.intellij.idea.IdeaApplication.run(IdeaApplication.java:170)
+    ... 16 more
+Caused by: java.lang.UnsatisfiedLinkError: C:\Program Files\Java\jdk1.7.0_79\jre\bin\sunmscapi.dll: Devingen bağlantı kitaplığını (DLL) başlatma işlemi başarısız
+    at java.lang.ClassLoader$NativeLibrary.load(Native Method)
+    at java.lang.ClassLoader.loadLibrary1(ClassLoader.java:1965)
+    at java.lang.ClassLoader.loadLibrary0(ClassLoader.java:1890)
+    at java.lang.ClassLoader.loadLibrary(ClassLoader.java:1872)
+at java.lang.Runtime.loadLibrary0(Runtime.java:849)
+    at java.lang.System.loadLibrary(System.java:1088)
+    at sun.security.mscapi.SunMSCAPI$1.run(SunMSCAPI.java:53)
+    at sun.security.mscapi.SunMSCAPI$1.run(SunMSCAPI.java:51)
+    at java.security.AccessController.doPrivileged(Native Method)
+    at sun.security.mscapi.SunMSCAPI.&lt;clinit&gt;(SunMSCAPI.java:51)
+    at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+    at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+    at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+    at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+    at java.lang.Class.newInstance(Class.java:379)
+    at sun.security.jca.ProviderConfig$2.run(ProviderConfig.java:221)
+    at sun.security.jca.ProviderConfig$2.run(ProviderConfig.java:206)
+    at java.security.AccessController.doPrivileged(Native Method)
+    at sun.security.jca.ProviderConfig.doLoadProvider(ProviderConfig.java:206)
+    at sun.security.jca.ProviderConfig.getProvider(ProviderConfig.java:187)
+    at sun.security.jca.ProviderList.getProvider(ProviderList.java:232)
+    at sun.security.jca.ProviderList.getService(ProviderList.java:330)
+    at sun.security.jca.GetInstance.getInstance(GetInstance.java:157)
+    at java.security.Security.getImpl(Security.java:695)
+    at java.security.AlgorithmParameters.getInstance(AlgorithmParameters.java:146)
+    at sun.security.x509.AlgorithmId.decodeParams(AlgorithmId.java:121)
+    at sun.security.x509.AlgorithmId.&lt;init&gt;(AlgorithmId.java:114)
+    at sun.security.x509.AlgorithmId.parse(AlgorithmId.java:381)
+    at sun.security.x509.X509Key.parse(X509Key.java:168)
+    at sun.security.x509.CertificateX509Key.&lt;init&gt;(CertificateX509Key.java:75)
+    at sun.security.x509.X509CertInfo.parse(X509CertInfo.java:705)
+    at sun.security.x509.X509CertInfo.&lt;init&gt;(X509CertInfo.java:169)
+    at sun.security.x509.X509CertImpl.parse(X509CertImpl.java:1781)
+    at sun.security.x509.X509CertImpl.&lt;init&gt;(X509CertImpl.java:196)
+    at sun.security.provider.X509Factory.engineGenerateCertificate(X509Factory.java:97)
+    at java.security.cert.CertificateFactory.generateCertificate(CertificateFactory.java:339)
+    at sun.security.provider.JavaKeyStore.engineLoad(JavaKeyStore.java:747)
+    at sun.security.provider.JavaKeyStore$JKS.engineLoad(JavaKeyStore.java:55)
+    at java.security.KeyStore.load(KeyStore.java:1214)
+    at sun.security.ssl.TrustManagerFactoryImpl.getCacertsKeyStore(TrustManagerFactoryImpl.java:221)
+    at sun.security.ssl.TrustManagerFactoryImpl.engineInit(TrustManagerFactoryImpl.java:51)
+    at javax.net.ssl.TrustManagerFactory.init(TrustManagerFactory.java:250)
+    at com.intellij.util.net.ssl.ConfirmingTrustManager.getSystemDefault(ConfirmingTrustManager.java:65)
+    at com.intellij.util.net.ssl.ConfirmingTrustManager.createForStorage(ConfirmingTrustManager.java:58)
+    at com.intellij.util.net.ssl.CertificateManager.&lt;init&gt;(CertificateManager.java:110)
+    at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+    at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+    at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+    at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+    at org.picocontainer.defaults.InstantiatingComponentAdapter.newInstance(InstantiatingComponentAdapter.java:193)
+    at org.picocontainer.defaults.ConstructorInjectionComponentAdapter$1.run(ConstructorInjectionComponentAdapter.java:220)
+    at org.picocontainer.defaults.ThreadLocalCyclicDependencyGuard.observe(ThreadLocalCyclicDependencyGuard.java:53)
+    at org.picocontainer.defaults.ConstructorInjectionComponentAdapter.getComponentInstance(ConstructorInjectionComponentAdapter.java:248)
+    at com.intellij.util.pico.ConstructorInjectionComponentAdapter.getComponentInstance(ConstructorInjectionComponentAdapter.java:58)
+    at com.intellij.openapi.components.impl.ComponentManagerImpl$ComponentConfigComponentAdapter$1.getComponentInstance(ComponentManagerImpl.java:550)
+    ... 27 more
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Ok I'm not a gravedigger but I got the same issue with latest as of today Android Studio (3.0)
+
+To fix it I needed to remove it's preferences files. On Mac OS it's located at ~/Library/Preferences/AndroidStudio3.0 where 3.0 is version. 
+
+Hope it helps anyone who encounters the issue
+    
+    
+Title: Autocomplete in IDE during electron app development
+Description: 
+    
+    
+                    
+I have
+
+. . . 
+"scripts": {
+    "start": "electron main.js"
+},  
+"devDependencies": {
+    "electron-prebuilt": "^0.35.0"
+}
+
+
+in package.json of my electron app. I use Intellij Idea with installed node.js plugin.
+
+main.js:
+
+var BrowserWindow = require('browser-window');
+
+
+Intellij Idea IDE underlines require('browser-window') and shows warning Module is not installed and doesn't provide autocompletion to BrowserWindow.
+    
+
+        
+Title: Set syntax for current file in PHPStorm
+Description: 
+    
+    
+                    
+Simple question: Can I make PHPStorm to display the current file with a certain syntax highlighting?
+
+Maybe even make the IDE remember it for that particular file in that particular project?
+
+Background: I got a Laravel .env file which I'd like to display with the highlighting for .ini files without generally setting that highlighting for all .env files.
+    
+
+        
+Title: can Eclipse Che be used for traditional monolithic application development? Application that does not make use of Docker
+Description: 
+    
+    
+                    
+Can Eclipse Che be used for traditional monolithic application development? An application that does not make use of Docker. If possible is it a good decision to move to Eclipse Che from a desktop Eclipse? Does Che provide all kind of plugins?
+    
+
+        
+Answer 1: 
+
+    
+    
+Definitely - Che uses Docker under the hood as a way to create replicable and portable environments, but the code that's edited in Che is pushed to the repo like any other. So if you have a build system / CI setup to pull those changes from the repo and deploy forward a monolithic app that will all still work.
+
+To set it up you'll need to build out a Dockerfile that matches your runtime. You can find examples of most environments on Dockerhub and there are just a couple of things you need to add to make the container "Che-ready."
+    
+    

@@ -1,0 +1,2912 @@
+Title: How to debug cinnamon applet?
+Description: 
+    
+    
+                    
+I wish to write a cinnamon applet.  These are based in JavaScript.  The code I wish to write changes services (turning them on and off, similar to WebDeveloperMenuApplet).  I don't expect the debugging for the service start/stop/restart to work, but I was wondering how I would debug the menu items and the calls to the functions.  I also wish to write a configuration applet that would involve some more complex coding or calls to a external server.  
+
+Is it possible to load this into a web browser or is there a better way to debugging this?  I don't know where the imports command is pulling so I am not sure how to duplicate this in a web browser.  
+
+Currently using IntelliJ IDEA as IDE, but quite will to switch to anything for this project.  
+    
+
+        
+Answer 1: 
+
+    
+    
+Your best bet here is the old trick of printing messages to the terminal.  Use global.log(...) for it, the lines are sent to the ~/.cinnamon/glass.log file, to watch them just do:
+
+tail -f ~/.cinnamon/glass.log 
+
+
+Also, as stated by @elParaguayo, type Alt+F2 to bring the Cinnamon prompt, type in lg and press ENTER to show the Looking Glass Debugger topmost dialog, there you can evaluate expressions by typing them in the Exec: input box and watching the results listed in the Results tab.
+    
+    
+Answer 2: 
+
+    
+    
+I know this is over a year old now, but I came across it as I was trying to write my own applet so I though I'd share my experiences.
+
+In terms of debugging, I'm not sure these can be done in a browser. I debugged mine by updating my code, re-activating the applet in Cinnamon and then looking at the error log (Alt+F2 and then type lg).
+
+Not a great solution at all, but it's the only solution I've found.
+    
+    
+Answer 3: 
+
+    
+    
+Use the browser is not possible. You need to read:
+
+
+~/.xsession-errors (because not all errors can appear as a cinnamon errors if you interact with other system applications) or you also can read the terminal output of cinnamon (same as xsession-errors, but will be update dynamically). Execute "cinnamon --replace" to enable the output mode, is possible that this will required to be execute more than one time.
+~/.cinnamon/glass.log or you can use Melange - Cinnamon Debugger.
+Just click on cinnamon panel, TroubleShoot and find the application.
+
+    
+    
+Title: Netbeans - fix imports on entire project
+Description: 
+    
+    
+                    
+I'm using netbeans IDE 8.0. When I hit right click inside the editor, one option is Fix imports(CTRL + SHIFT + I). This option adds useful imports and removes unused imports. But How can I use Fix Imports on entire project(not single file)? Is there any way for doing that? 
+    
+
+        
+Answer 1: 
+
+    
+    
+Right click on the project (or a package if you want), then choose "Inspect and Transform". 
+
+In the dialog box, choose "Organize Imports" , from browse choose imports --
+Title: Is there an online IDE for Google App Engine?
+Description: 
+    
+    
+                    
+I am learning Google App Engine / Python and I love it. Unfortunately I am not allowed to use my own computer in the office and not allowed to install anything on the corporate machine.
+
+It would be so great to have an online IDE for Google App Engine where I could play with my Python code using any browser, including the one on my iPad.
+
+Maybe http://www.devunity.com/ will be an online IDE for GAE some day. Do you know any existing way to program GAE in a browser?
+    
+
+        
+Answer 1: 
+
+    
+    
+Google Cloud Shell provides you with command-line access to your cloud resources directly from your browser:
+Introducing Google Cloud Shell’s new code editor
+    
+    
+Answer 2: 
+
+    
+    
+cloud-ide.com offers Exo IDE. This is a richly featured, cloud-based IDE that you use in the browser.  Importantly for you, it supports the full cycle of deployment to various Platform as a Service (PaaS) providers, including Google App Engine!
+
+I've used this before, and it's as simple as saying you want a new GAE project.  You'll be redirected to Google pages when necessary to register details such as the app's name and domain. It even supports accessing GAE's log records for your app, although I've found this to be quite a bit slower than just using the Google-provided dashboard.
+
+You can sign in with a Google account, and while I don't think that's necessary, I'd recommend it since this allows it to automatically associate the app you make with that account.
+
+HTH
+    
+    
+Answer 3: 
+
+    
+    
+Py I/O: not quite a full IDE, but more like a console where you can try out some of your Python code. And it is written and running on GAE.
+
+I don't think there is a full online IDE out there at the moment that will allow you to write a full GAE/Python project.
+    
+    
+Answer 4: 
+
+    
+    
+For now and probably for quite some time you won't be able to edit your app directly on an app engine account (as @Wobble notes: the file system on the instances are indeed read-only, for good reasons that hardly will change). Things like Py I/O or similar are also to limited, as you note yourself.
+
+To get forward you minimally want a file system that you can write to, preferably a machine that also  will run the development server for you. Rent space on some VPS provider (e.g. gandi.net, http://www.gandi.net/hosting/), then you can mount your VPS home directory onto an office machine and create your app at the VPS, then deploy from it. It certainly won't be an IDE, you need to use (/learn) how to handle the system mainly through the command line, but it will be something. And as an added bonus, you could try non GAE python stuff on it (Turbo Gears, twisted stuff, your choice of fancy database etc)
+    
+    
+Answer 5: 
+
+    
+    
+One option is to use web2py. All of the files in a web2py project can be edited by the framework's own web-based editor. A fairly good overview of how this works, and some of the features of the site is available on this video:
+
+http://vimeo.com/13485916
+    
+    
+Answer 6: 
+
+    
+    
+I feel this is better than all other online ides 
+
+codenvy.com
+
+
+    
+    
+Answer 7: 
+
+    
+    
+Google Cloud Source Repositories provide an integrated source code editor for projects hosted on Google Cloud:
+
+
+    
+    
+Answer 8: 
+
+    
+    
+Found this question while I was looking for a similar solution. As mentioned by threed above, Cloud9 was demoing an integrated version with Goolge App Engine, which has been recently released: http://googlecloudplatform.blogspot.ie/2016/01/Cloud9-IDE-now-supports-Google-Cloud-Platform.html
+
+
+  Your GCP-ready Cloud9 workspace comes preinstalled with the Cloud SDK and gcloud command line tool, and allows you to build and deploy your application to Google App Engine directly within the IDE.
+  With Cloud9, you can edit your project’s code and push changes back to your cloud source repository. When you’re ready, build and deploy to App Engine directly from the IDE. 
+
+
+There's more information and a walkthrough on the Cloud9 for Google Cloud Platform tutorial here: https://docs.c9.io/v1.0/docs/google
+    
+    
+Answer 9: 
+
+    
+    
+Looks like there's no real online solution at the moment. I still think that it would be great to share simple examples and test out bugs without having to register a new application yourself.
+
+However, it turns out to be quite comfortable to access my home computer via my 3G iPad using the Screens VNC app through an SSH tunnel. I set the computer's screen resolution to 1024×768 and I can quite comfortably use it to try out things when I have some free time. Not perfect because full keyboard support is missing but very powerful and usable.
+    
+    
+Answer 10: 
+
+    
+    
+Cloud 9 IDE (c9.io).  They are NOT yet integrated but supposedly will be soon.  They demoed a beta version at Google I/O 2011, but it hasn't been released to the public yet.
+    
+    
+Answer 11: 
+
+    
+    
+There are two GAE Dev Environments that seem to work best IMHO.  PyCharm can be configured to run/debug a GAE app by launching the dev_appserver.py from within.  While PyCharm is definitely one of the nicest IDEs for Python the fact that that's all it does is a shame.  
+
+Personally (cringe if you want) the best for me and my students seems to still be Eclipse.  Start with the latest Release (Oxygen.2) with either the Web Developer or PHP flavor from the installer.  I then add WebClipse and PyDev from the Marketplace.  No eclipse isn't the IDE that I think is "best"; however, it is a swiss army knife of IDEs and can do it all.  
+
+Choose the Python perspective after installation and create a new Project... (NOTE this is not a Python Project, rather a generic project)  From the dialog choose the Python Google App Engine Project.  Fill in the blanks (it will want you to identify where Python27 is and where google_appengine are located.
+The project can then be launched by right-clicking and selecting "debug GAE Project".  It will auto start the dev_appserver, host your app at localhost:8080 and allow you all the native Python Debugging in Eclipse that PyDev can offer.   
+
+Hope this helps. 
+    
+    
+Title: sublime text 3, indexing, and goto symbol/goto definition
+Description: 
+    
+    
+                    
+so I downloaded sublime text 3 which allegedly "Sublime Text now scans the files in your project, and builds an index of which files contain which symbols. This backs the new features Goto Definition and Goto Symbol in Project".
+
+I created a new project containing the source code of zend framework...I then attempt to do goto definition and goto symbol but they are all still only allow you to "Goto" definitions/symbols in the current file instead of the entire project.
+
+How exactly should I configure sublime text 3 such that I can use the goto definition/symbol to any method in the project and not just the current file (akin to Eclipse's Ctrl + Shift + M Open method feature).
+    
+
+        
+Answer 1: 
+
+    
+    
+First off, make sure the relevant folders are added to your project by checking that they appear in the side bar under FOLDERS (which you can toggle using ⌘-K ⌘-B). If the Zend folder isn't there, add it by going to Project » Add Folder to Project....
+
+Then you should use Goto » Goto Symbol in Project... (or ⇧-⌘-R). Goto Definition should search in the whole project. At least this is what it behaves like for me on Sublime 3 build 3019 for OS X.
+
+Replace ⌘ with CTRL and ⇧ with SHIFT if on Windows.
+    
+    
+Answer 2: 
+
+    
+    
+Assuming this is not a shortcut issue (You can test this by trying to find symbol from the menu)
+
+Try:
+
+
+Quit Sublime Text 3.
+Clear out the Sublime Text 3 Index folder
+
+
+In OS X, delete the contents of ~/Library/Application
+Support/Sublime Text 3/Index
+In Windows, delete the contents of AppData\Local\Sublime Text 3\Index\
+
+Open ST3 and your project
+
+
+Open Console (View -/lili/li/ul/li/olp/pp/p/div
+Title: ORA-00900: invalid SQL statement- when run a procedure in oracle 10g
+Description: 
+    
+    
+                    
+I am using Oracle 10g database and trying to run a procedure using SQL commands.
+
+create or replace procedure "exam" is
+begin
+  DBMS_OUTPUT.PUT_LINE('Test');
+end;
+
+
+Then click on Run button. It shows: "procedure created".
+
+When I try to execute it using:
+
+execute exam;
+
+
+then click on Run button, it shows:
+
+ORA-00900: invalid SQL statement
+
+
+Thanks for your help.
+    
+
+        
+Answer 1: 
+
+    
+    
+Just noticed a detail in your question. You press run button. Thus, you must be using an IDE. 
+
+You cannot use execute in IDEs - it is an sql*plus command. It might work in Oracle SQL Developer though, but I wouldn't use it there anyway;
+
+Try 
+
+begin
+  exam;
+end;
+
+    
+    
+Answer 2: 
+
+    
+    
+Lose the double-quotes around the name. They're a bad practice in Oracle.
+    
+    
+Answer 3: 
+
+    
+    
+See: Syntax error while trying to call an Oracle package using ODBC in C#
+
+You have to put "{" and "}" before the command.
+Example:
+
+    processListCmd.CommandType = CommandType.StoredProcedure;
+    processListCmd.CommandText = "{ call rep_invnr_proclist }";
+    processListCmd.ExecuteNonQuery();
+
+    
+    
+Title: C++ vim IDE. Things you&#39;d need from it
+Description: 
+    
+    
+                    
+I was going to create the C++ IDE Vim extendable plugin. It is not a problem to make one which will satisfy my own needs.
+
+This plugin was going to work with workspaces, projects and its dependencies.
+This is for unix like system with gcc as c++ compiler.
+
+So my question is what is the most important things you'd need from an IDE? Please take in account that this is Vim, where almost all, almost, is possible.
+
+Several questions:
+How often do you manage different workspaces with projects inside them and their relationships between them? What is the most annoying things in this process.
+Is is necessary to recreate "project" from the Makefile?
+Thanks.
+
+Reason to create this plugin:
+
+With a bunch of plugins and self written ones we can simulate most of things. It is ok when we work on a one big "infinitive" project.
+Good when we already have a makefile or jam file. Bad when we have to create our owns, mostly by copy and paste existing.
+All ctags and cscope related things have to know about list of a real project files. And we create such ones. This &lt;project#get_list_of_files()&gt; and many similar could be a good project api function to cooperate with an existing and the future plugins.
+Cooperation with an existing makefiles can help to find out the list of the real project files and the executable name.
+With plugin system inside the plugin there can be different project templates.
+
+Above are some reasons why I will start the job. I'd like to hear your one.
+    
+
+        
+Answer 1: 
+
+    
+    
+
+debugger
+source code navigation tools (now I am using http://www.vim.org/scripts/script.php?script_id=1638 plugin and ctags)
+compile lib/project/one source file from ide
+navigation by files in project
+work with source control system
+easy acces to file changes history
+rename file/variable/method functions
+easy access to c++ help
+easy change project settings (Makefiles, jam, etc)
+fast autocomplette for paths/variables/methods/parameters
+smart identation for new scopes (also it will be good thing if developer will have posibility to setup identation rules)
+highlighting incorrect by code convenstion identation (tabs instead spaces, spaces after ";", spaces near "(" or ")", etc)
+reformating selected block by convenstion
+
+    
+    
+Answer 2: 
+
+    
+    
+There are multiple problems. Most of them are already solved by independent and generic plugins.
+
+Regarding the definition of what is a project.
+
+Given a set of files in a same directory, each file can be the unique file of a project -- I always have a tests/ directory where I host pet projects, or where I test the behaviour of the compiler. On the opposite, the files from a set of directories can be part of a same and very big project.
+
+In the end, what really defines a project is a (leaf) "makefile" -- And why restrict ourselves to makefiles, what about scons, autotools, ant, (b)jam, aap? And BTW, Sun-Makefiles or GNU-Makefiles ?
+
+Moreover, I don't see any point in having vim know the exact files in the current project. And even so, the well known project.vim plugin already does the job. Personally I use a local_vimrc plugin (I'm maintaining one, and I've seen two others on SF). With this plugin, I just have to drop a _vimrc_local.vim file in a directory, and what is defined in it (:mappings, :functions, variables, :commands, :settings, ...) will apply to each file under the directory -- I work on a big project having a dozen of subcomponents, each component live in its own directory, has its own makefile (not even named Makefile, nor with a name of the directory)
+
+Regarding C++ code understanding
+
+Every time we want to do something complex (refactorings like rename-function, rename-variable, generate-switch-from-current-variable-which-is-an-enum, ...), we need vim to have an understanding of C++. Most of the existing plugins rely on ctags. Unfortunately, ctags comprehension of C++ is quite limited -- I have already written a few advanced things, but I'm often stopped by the poor information provided by ctags. cscope is no better. Eventually, I think we will have to integrate an advanced tool like elsa/pork/ionk/deshydrata/....
+
+NB: That's where, now, I concentrate most of my efforts.
+
+Regarding Doxygen
+
+I don't known how difficult it is to jump to the doxygen definition associated to a current token. The first difficulty is to understand what the cursor is on (I guess omnicppcomplete has already done a lot of work in this direction). The second difficulty will be to understand how doxygen generate the page name for each symbol from the code.
+
+Opening vim at the right line of code from a doxygen page should be simple with a greasemonkey plugin.
+
+Regarding the debugger
+
+There is the pyclewn project for those that run vim under linux, and with gdb as debugger. Unfortunately, it does not support other debuggers like dbx.
+
+Responses to other requirements:
+
+
+  
+  When I run or debug my compiled program, I'd like the option of having a dialog pop up which asks me for the command line parameters. It should remember the last 20 or so parameters I used for the project. I do not want to have to edit the project properties for this.
+  
+
+
+My BuildToolsWrapper plugin has a g:BTW_run_parameters option (easily overridden with project/local_vimrc solutions). Adding a mapping to ask the arguments to use is really simple. (see :h inputdialog())
+
+
+  
+  work with source control system
+  
+
+
+There already exist several plugins addressing this issue. This has nothing to do with C++, and it must not be addressed by a C++ suite.
+    
+    
+Answer 3: 
+
+    
+    
+Things I'd like in an IDE that the ones I use don't provide:
+
+
+When I run or debug  my compiled program, I'd like the option of having a dialog pop up which asks me for the command line parameters. It should remember the last 20 or so parameters I used for the project. I do not want to have to edit the project properties for this.
+A "Tools" menu that is configurable on a per-project basis
+Ability to rejig the keyboard mappings for every possible command.
+Ability to produce lists of project configurations in text form
+Intelligent floating (not docked) windows for debugger etc. that pop up only when I need them, stay on top and then disappear when no longer needed.
+Built-in code metrics analysis so I get a list of the most complex functions in the project and can click on them to jump to the code
+Built-in support for Doxygen or similar so I can click in a Doxygen document and go directly to code. Sjould also reverse navigate from code to Doxygen.
+
+
+No doubt someone will now say Eclipse can do this or that, but it's too slow and bloated for me.
+    
+    
+Answer 4: 
+
+    
+    
+Adding to Neil's answer:
+
+
+integration with gdb as in emacs.  I know of clewn, but I don't like that I have to restart vim to restart the debugger.  With clewn, vim is integrated into the debugger, but not the other way around.
+
+    
+    
+Answer 5: 
+
+    
+    
+Not sure if you are developing on Windows, but if you are I suggest you check out Viemu.  It is a pretty good VIM extension for Visual Studio.  I really like Visual Studio as an IDE (although I still think VC6 is hard to beat), so a Vim extension for VS was perfect for me.  Features that I would prefer worked better in a Vim IDE are:
+
+
+The Macro Recording is a bit error prone, especially with indentation.  I find I can easily and often record macros in Vim while I am editing code (eg. taking an enum defn from a header and cranking out a corresponding switch statement), but found that Viemu is a bit flakey in that deptartment. 
+The VIM code completion picks up words in the current buffer where Viemu hooks into the VS code completion stuff.  This means if I have just created a method name and I want to ctrl ] to auto complete, Vim will pick it up, but Viemu won't.
+
+    
+    
+Answer 6: 
+
+    
+    
+For me, it's just down to the necessities
+
+
+nice integration with ctags, so you can do jump to definition 
+intelligent completion, that also give you the function prototype
+easy way to switch between code and headers
+interactive debugging with breaakpoints, but maybe
+maybe folding
+extra bonus points for refactoring tools like rename or extract method
+
+
+I'd say stay away from defining projects - just treat the entire file branch as part of the "project" and let users have a settings file to override that default
+
+99% of the difference in speed I see between IDE and vim users is code lookup and navigation.  You need to be able to grep your source tree for a phrase (or intelligently look for the right symbol using ctags), show all the hits, and switch to that file in like two or three keystrokes.
+
+All the other crap like repository navigation or interactive debugging is nice, but there are other ways to solve those problems.  I'd say drop the interactive debugging even.  Just focus on what makes IDEs good editors - have a "big picture" view of your project, instead of single file.
+
+In fact, are there any plugins for vim that already achieve this?
+    
+    
+Title: Generating a Maven POM from an existing project?
+Description: 
+    
+    
+                    
+Do any of the IDEs (or any other tool for that matter) have the ability to generate a POM based on an existing project?
+
+
+
+I ended up generating the POM with a Maven archetype as Peter and Sal suggested and then moving the existing source in. Thanks for the help guys.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can do this in IntelliJ, but the POM it generates may be more complex than if you write by hand.  If your project is currently in JBuilder or Eclipse you can import this first.
+
+Instead I would suggest you describe your project in a POM and use it to generate your project information.  You can do this for eclipse and idea (and I assume other IDEs)
+    
+    
+Answer 2: 
+
+    
+    
+One way to do this it to create a template project via maven archetype then move your existing code to the template. I would recommend this only for really simple projects. It would work something like this. 
+
+mvn archetype:generate 
+mv src/* src/main/java
+mv test/* src/test/java
+mvn package
+
+
+You'll get errors. To add the missing dependencies, go here: http://www.mvnrepository.com/ and start looking them up. If you pick an archetype close to what you need, you'll be half way there.
+
+Once it all works.
+
+svn commit -m "hacky maven port"
+
+    
+    
+Answer 3: 
+
+    
+    
+Your existing project probably does not use Maven, so creating a POM based on it isn't trivial.
+
+The simplest way I can think of is to get the Maven plugin for Eclipse, generate a new maven project and then add your code.
+
+You'll also need to manage external jars using Maven's method.  In this case, they would probably be system jars.
+    
+    
+Answer 4: 
+
+    
+    
+In eclipse Galileo if you have the maven2 plugin you can select the project and then right click and go down to Maven2 in the context menu and there should be an option to convert the project to a maven project.
+    
+    
+Title: How to set up debugging in GoLand?
+Description: 
+    
+    
+                    
+I am trying out GoLand and hear that the debugger is supposedly awesome, but I can’t find any documentation explaining how to set it up (GoLand is in preview stage, so that’s not really surprising). My use case: I am writing a REST API to which I send requests using curl. Could someone please tell me, step by step, how to get started with the debugger ?
+
+[edit 1] (moved from comment) When I click Run/Debug (or Run/Run), a window is displayed, asking me to edit configurations. I am given a choice of several kinds of configurations, I try to choose "Go application" but the Debug button never is grayed and I can't get it to become clickable. I am very new to GoLand, I may be missing something obvious, but I can’t find whatever settings are missing.
+
+[edit 2] It turns out that my workspace did not conform to the Go specifications : my code was not in a directory named src. Now that it is the case, I can click Run/Debug and GoLand seems to be doing the right thing, except it doesn’t stop at breakpoints or otherwise behave like a debugger, my code just runs.
+
+[edit 3] Tried again, and it works. Sort of. I have no idea why it works now, even though it didn’t previously and I didn’t change anything. Now breakpoints work at some lines, and not at others. Or the debugger stops at the breakpoint, but I wait forever for the list of variables to be loaded. Well, it is a preview, after all...
+
+[edit 4] I was notified just today that a new version of GoLand was available. I upgraded, and debugging is working well for me now.
+    
+
+        
+Answer 1: 
+
+    
+    
+GoLand will not enable the debug action (although run is available) if your code does not reside inside src. There is no warning about this, so it might be really a pain to solve this.
+Additionally, depending on your project’s structure it might be possible, that debugging is still not working. In that case, it might help to remove all run configurations and create a new one. There’s is a bug report about this behavior.
+PS: Although the OP mentions the first part in an edit of the question, but it think it’s worth mentioning in an answer.
+    
+    
+Answer 2: 
+
+    
+    
+I was facing this same issue and I solved by using the "Go Application" configuration (at the Run/Debug Configurations window), instead of the "Go Single File" configuration.
+
+So, go to the upper right corner of the Gogland and "Edit configurations". 
+
+
+
+Then, add a new configuration using the "Go Application" profile.
+
+
+
+After saving, you should be able to debug your code. o/
+
+An easy way to enable this configuration is to use the @user1793301 method and right click on the file you want to run and select "Debug 'go run .go'".
+
+
+
+POSSIBLE EXPLANATION
+
+NOTICE: I did not look any further details about it.
+
+Fact: "Go Application" configuration does build the binary executable before running it.
+
+Fact: I could see looking at the console output (inside of the Goglang) is that the IDE uses the DLV as debugging tool.
+
+Fact: I found a dlv debug at the DLV documentation and it seems to compile and debug the code.
+
+Hypothesis: The guys from Jetbrains did not implement it. Or at least not YET.
+    
+    
+Answer 3: 
+
+    
+    
+Things changed in goland since @Jamillo Santos added his reply.
+
+To start with, there's no more "Go Application".
+
+The easiest way is to locate the file containing the main() function.
+There should be a small triangle pointing to it, like in the attached screenshot:
+
+
+When you click on the small green triangle, you get a menu with Run/Debug options.
+Each will create a go build configuration.
+
+You can edit that go build configuration and add the program arguments for your application.
+For example, if your program have a command line argument of --arg=value you can add it like this:
+
+    
+    
+Answer 4: 
+
+    
+    
+I had this exact problem. 
+
+Deleted and recreated the Debug run configuration. Debugging then worked perfectly.
+    
+    
+Answer 5: 
+
+    
+    
+On version 2019.1.1 there's no more Go Application. Use Go Build instead. Here I am debugging a single script file, but if you have a server app or smth, just point to the main app file:
+
+
+
+Notice that in the Files field you have to specify the actual file path. You can put more files (if you want to have more starting points) by separating them with a pipe |. For each file you want to be able to debug, you need to specify the full path.
+
+Again, if you are debugging a server app or something else, that has a single starting point, you only need the startup file specified in the config. :)
+    
+    
+Answer 6: 
+
+    
+    
+I right click on project (main.go inside) and choose "Debug ..." and it work
+
+
+    
+    
+Title: IntelliJ Idea with Git: when automatic merge crashed, how can I continue to merge manually
+Description: 
+    
+    
+                    
+I use IntelliJ Idea with Git.
+When I pull from repository, I get following error:
+
+"
+...CONFLICT (content): Merge conflict in server..."
+
+Then pull fails.
+
+Questions are:
+
+
+Does IntelliJ Idea displays any log of what happend exactly? How do I see it?
+How can I continue merge manually from the same point (where it failed)?
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Looks like you've got a conflict during merge. Go to the Changes View and see if there are any unmerged files. Then invoke Resolve Conflicts, choose what to take from your changes and theirs, and commit.
+
+You may also want to try Update Project for more intelligent pulling from the tracked branch.
+    
+    
+Title: Can IntelliJ IDEA open more than one editor window for files from the same project?
+Description: 
+    
+    
+                    
+I can split editor panes horizontally or vertically, but it does not seem possible to view code in two separate physical windows.  I am aware that Idea can open multiple projects in separate windows, but I'd like to be able to do this for two files in a single project.  
+
+One answer suggested unpinning the tab, but I haven't been able to make that work (I'm on Mac OSX if that matters.)
+
+This seems like a basic feature in today's world of multi-headed workstations.  Before moving to an IDE I used to do this regularly with good old Emacs.  Is there some trick I am not aware of to make this happen?
+    
+
+        
+Answer 1: 
+
+    
+    
+Unfortunately there is no way (as of IDEA 8.0.1) to do what you're asking for. As you pointed out, you can split the editor pane but there is always exactly one editor per IDEA project.
+
+UPDATE: As of IDEA 10 (currently the latest is 10.5), the answer is yes, you can :-)
+    
+    
+Answer 2: 
+
+    
+    
+This is now possible in IDEA X. Hopefully you're still an IDEA user and can take advantage of this :)
+    
+    
+Answer 3: 
+
+    
+    
+I work around the limitation by opening one source file in vi, on a second head monitor.
+Then work main file within Idea (actually Pycharm).
+
+Update: even with the feature built into pycharm, I still use vi.  Works better.
+    
+    
+Answer 4: 
+
+    
+    
+As per @9000's comment, an editor tab can be turned into a new window by dragging the tab outside of IDEA.
+    
+    
+Answer 5: 
+
+    
+    
+Yes- with IDEA X, it is finally possible to open multiple editor windows. 
+    
+    
+Title: Android Tablet IDE for Python and Java
+Description: 
+    
+    
+                    
+Are there any ARM-based programming environments (IDE) for Android tablets which are not emulated? (preferably Python or Java)
+
+Tablets are becoming a more popular utensil in schools and a stable environment will be useful in a Computer Science program.
+    
+
+        
+Answer 1: 
+
+    
+    
+Not specifically ARM, but here is an IDE for Android tablets that can compile Java/Android apps: Terminal IDE.
+    
+    
+Answer 2: 
+
+    
+    
+As of now there are only a few good tools available. One is AIDE. It has a great editor with code completion, on-the-fly error checking and supports the full edit-compile-run cycle for Android Apps. 
+
+It works fine on my devices (Transformer Prime and Samsung Galaxy S2).
+    
+    
+Answer 3: 
+
+    
+    
+Try to use DroidDevelop. This is written special for tablets.
+
+https://market.android.com/details?id=com.assoft.DroidDevelop
+
+http://en.assoft.ru/droiddevelop
+    
+    
+Answer 4: 
+
+    
+    
+easyGUI is a little IDE for Android XML Files. You can design your Layout Files on the phone or tablet. Also good for teaching.
+
+easyGUI Android XML IDE
+    
+    
+Title: Intellij project view: not show multiple classes in same file
+Description: 
+    
+    
+                    
+One frustrating thing I find in Intellij's project view is that it shows all the classes in a file instead of just the class for which the file is named.
+
+The problem with this is that to open a file I have to double click twice: once to expand the file and show the classes in the file, and then a second time to actually open the file.
+
+In most cases I don't want to see the classes inside of a file. I just want to see the file in the project view and when I double click on the file I want to open the file, not drill down into its structure.
+
+Is it possible to configure my UI this way?
+
+UPDATE: further explanation
+
+
+
+Apparently people are having problems understanding this question. See the above picture of the Intellij Project navigation pane. Notice that some classes (the blue circles) have a + sign and others do not. The ones with a plus sign are files that have multiple classes inside of them.
+
+The problem is that if you double click on a file with only one class (no plus sign) it opens (GOOD), but if you double click on a file with multiple classes in it (has plus sign) then the file does NOT open, it just expands the plus sign to show you the individual classes in the file as BoxArray.java, for example (BAD).
+
+For example, if I double click on the file Coastline.java in the view above it will NOT open the file, it will expand the plus sign. I want it to open Coastline.java when I double click on Coastline.java, not expand it. I do not care about seeing the classes inside of a class file, I just want to open it in one double click.
+
+I know that I can use the hotkey F4 to do this. I do not want to reach for the F4 key. I want to double click on the file and have it open.
+    
+
+        
+Answer 1: 
+
+    
+    
+When you enable Autoscroll to Source in the little menu of your Project tool window (View 
+Answer 2: 
+
+    
+    
+You could bind Jump to Source function to double click in Settings -
+Answer 3: 
+
+    
+    
+There is a way to open a file without unfolding/drill down via "jump to source" action. Unfortunately, you need a keyboard to do this. On Mac you use F4/⌘↓/⌘Enter, on linux/windows it is F4/Ctrl+Enter. 
+
+
+    
+    
+Answer 4: 
+
+    
+    
+go to file -
+Answer 5: 
+
+    
+    
+You can avoid navigating through mouse and even double clicking on the file by making use of the shortcut ctrl + shift + n and just start typing the file name or even just first letters of the words( ex: BA for BoxArray) and select the file. Which will open without asking the class name!!
+    
+    
+Title: Save All Files Before Build Gone in Visual Studio 2012?
+Description: 
+    
+    
+                    
+In Visual Studio 2010, there was a setting under Tools --
+Answer 1: 
+
+    
+    
+According to the answer provided by Vicky Song (Microsoft), the feature is no longer available.  If you wish to submit a feature request, they will consider it.
+
+Reference:
+http://social.msdn.microsoft.com/forums/vstudio/en-US/be441ff6-682f-4534-b653-99632a7975a4/before-building-settings
+    
+    
+Answer 2: 
+
+    
+    
+This feature is very useful mainly when considering that many users have the Visual Studio to crash randomly (myself as well). So when I want to run a compile-build-test, I would like to save everything open (including the environment that gets lost on those nasty events)...
+    
+    
+Title: Pet slept on keyboard, weird colors in IDE [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        How does this Color marker happen in eclipse IDE ,and what should I do to clear the Color marker
+                            
+                                (2 answers)
+                            
+                    
+                Closed last year.
+        
+
+
+    
+
+Please stop laughing. My cat slept on my keyboard. When I came back I wonder what these colors are:
+
+I like to get rid of them but I don't know how to remove them.
+
+Close and reopen of the file does not work.
+Close and reopen of the project does not work.
+
+Any idea?
+    
+
+        
+Answer 1: 
+
+    
+    
+Upvote for the cutest question ever.
+
+Regarding the colors: Reminds me of visualization of test coverage with EclEmma, which shows its results with coloured markers for fully (green), partly (yellow) or not (red) covered source code.
+
+You can get rid of the coloured markers by deleting the coverage results by clicking the single or double grey "x" in the coverage view like shown at the bottom of the following screenshot.
+
+
+    
+    
+Answer 2: 
+
+    
+    
+I'll put this here for reference purposes from the Eclipse code coverage FAQs.
+
+
+  How can I remove the coverage coloring from the Java editors again? If you remove the coverage session, also the coverage
+  coloring will disappear. For this, hit Remove Session or Remove All
+  Sessions in the Coverage view's toolbar.
+
+
+From Using the coverage view
+
+
+  The Coverage view automatically appears when a new coverage session is
+  added or can manually opened from the Window → Show View menu in the
+  Java category. It shows coverage summaries for the active session.
+
+
+
+    
+    
+Title: How to prevent IntelliJ IDEA from deleting unused packages during Rename refactoring?
+Description: 
+    
+    
+                    
+In Intellij IDEA, when I rename a method using Rename refactoring tool (which essentially replaces occurences of method's old name for its new one), IDEA also removes unused imports from files, where method name is replaced.
+
+This is not what I want to do. And even if I want to remove this redundant imports, I would like to do it in the whole project in a separate action, so it could be a separate commit.
+
+How can I disable this behavior? 
+
+The version I use is 14.1.3 Ultimate.
+
+There is already similar question How to prevent IntelliJ IDEA from deleting unused packages?, but the option mentioned there (Optimize imports on the fly) has nothing to do with my problem. Actually I have it unchecked.
+
+Update: 
+It seems for me now that the only solution is to delete all unused imports before applying other refactoring tools.
+    
+
+        
+Answer 1: 
+
+    
+    
+I've asked this from IntelliJ support, and the response referred me to this issue in their issue tracking.
+
+Basically, it's been a bug/feature since 2005. There has been discussion back and forth about if the behaviour should be changed, but as it stands, there hasn't been any changes and there is nothing you as a user can do about it.
+    
+    
+Title: How to get property values of classes that implement an interface in the Locals window?
+Description: 
+    
+    
+                    
+This is really bothering me and hindering my development/debugging. Whenever I declare a variable type of the interface I'm implementing, the Locals Window doesn't show it's property values. Instead it just reads
+
+
+  Object doesn't support this property or method
+
+
+Which is silly, because it absolutely does. In fact it has to in order to fulfill its contract with the Interface.
+
+If I declare the variable as the concrete implementation of the interface, the window works as expected. However, that completely defeats the purpose of coding to the abstraction to begin with. 
+
+How can I get the locals window to properly display the class' property values?
+
+Minimal, Complete, and Verifiable Example:
+
+Create an IClass class to use as an interface.
+
+Option Explicit
+
+Public Property Get Name() As String
+End Property
+
+
+Create a Class1 that implements the interface.
+
+Option Explicit
+
+Implements IClass
+
+Public Property Get Name() As String
+    Name = "Class1"
+End Property
+
+Private Property Get IClass_Name() As String
+    IClass_Name = Name
+End Property
+
+
+And lastly, some test code in a regular .bas module to illustrate the issue.
+
+Option Explicit
+
+Public Sub test()
+    Dim x As Class1
+    Dim y As IClass
+
+    Set x = New Class1
+    Debug.Print x.Name
+
+    Set y = New Class1
+    Debug.Print y.Name
+
+    Stop
+End Sub
+
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+I could be wrong, but I think this may be something to do with the way classes are instantiated in VBA.
+
+For example:
+
+Dim oClass1 as Class1
+Set oClass1 = new Class1
+
+
+Is different than
+
+Dim oClass1 as New Class1
+
+
+In the second case I believe the constructor doesn't get called until the property is accessed.
+
+If you try this, it is sees the property in the Watch window. Notice the New for the IClass - just for Demonstration - I know its not the way to do that :) 
+
+Public Sub test1()
+
+    Dim x As Class1
+    Dim y As IClass
+
+    Set y = New IClass
+    Set x = New Class1
+    Debug.Print x.Name
+    Debug.Print y.Name
+    Stop
+
+End Sub
+
+
+I suspect its something to do with that and the watch window requires this ... maybe...
+    
+    
+Title: What is the benefit of using things such as emacs, vim, and nano over any other IDE or text editor?
+Description: 
+    
+    
+                    
+From what Ive seen. emacs etc.. run in terminal. Is there any benefit to this? It seems that it would be more of a hassle to write and organize things. I'm not trying to be subjective I literally know nothing of emacs, vim, nano etc.. and would like to know more, maybe use one of them.
+    
+
+        
+Answer 1: 
+
+    
+    
+Your question is a tough one. Even if they do run in terminal, it's not their primary advantage. I'm talking about Emacs and Vim right now. To be short, they've been around for at least 20 years (Vim) or more (Emacs), they have a pretty active community, they're scriptable so you can do pretty much anything with them if you know how and they're extremely powerful.
+
+They have a pretty big learning curve, so you'll probably end up fumbling around in them for weeks, if not months, before becoming proficient. The primary motivation for learning them is productivity. You can do some pretty amazing things in a minimal amount of keystrokes compared to, let's say, Notepad.
+
+Try one. If you like it, stick with it for some time, endure the pain and then you'll see the benefits. It's almost like going to the gym.
+    
+    
+Answer 2: 
+
+    
+    
+Most people use IDEs nowadays. They help with things that you can get through analysis of things you have already written. That stuff can be very useful and helpful, but they don't really help with the core task of actually editing code. What toolmakers are banking on is that those extra things provide enough of a benefit that it will outweigh how effective vim and emacs are as editors. They have pretty much won that battle in most communities, mostly because new developers faced with a choice between great code completion and refactoring support that is simple to use, and an editor that they won't see any benefits from for about 6 months go the easy way. I know I did.
+
+I am a vim guy now. Vim doesn't really seem to have the same upper bound of productivity, I have been using it for over a year and semi-regularly still run into things I didn't know about that make me faster. Even without that, the more I use it, the less thinking goes into what I am doing, which again, makes me faster. Also, vim exists for every language and platform, and is installed on any UNIX server out of the box. It doesn't have any load screens, virtually leaps on to the screen, works fantastically with large files, and never slows down or crashes. The skills that you learn with it will be applicable to everything you ever do for the rest of your career, as opposed to an IDE which will change when you change platforms.
+
+Vim is an investment, but if you are talking about something you will use for 8-10 hours a day for almost the rest of your life, learning curve becomes completely irrelevant.
+    
+    
+Answer 3: 
+
+    
+    
+There's no real reason to use nano. Pretty much anything is better.
+
+As for vim and emacs, here's what I said last time this came up:
+
+I'm semi-competent with vi keybindings, but I prefer Emacs overall. The reason these editors have such fervent adherents is because the editing model they provide is more powerful than newer systems, which is why providing "vi keybindings" or "emacs keybindings" isn't enough, even if you aren't using any extension features or customizations for emacs or vi.
+
+I'm only going to talk about Emacs' model because I understand it best. The common model for text editing today involves a buffer of text, in which text can be inserted, deleted, selected, and cut/copied/pasted to the system clipboard.
+
+Emacs buffers, of course, can support these operations. Along with tracking cursor position for each window they're visible in, they also keep track of "marks" made in them. The text between the "point" (cursor position) and the "mark" is called the "region", and roughly corresponds to the selection in mainstream editors.
+
+The difference is that Emacs keeps track of the last several locations the mark was set at in the mark ring, and you can return to them with a keystroke (or two, depending on your configuration). I find this extremely useful, especially since a lot of Emacs commands that change your location in the buffer set the mark at your old location. An example is when I'm editing a Python module and need to add an import statement to the top of the file. The keystroke for going to the top of the buffer (Alt-&lt;) sets the mark. I add the import statement. I press Ctrl-u Ctrl-Space and I'm back where i started. I can keep doing this to cycle back to previous positions as well. (Maybe I needed to select some text while adding that import statement.)
+
+The other (and more well-known) Emacs difference is the kill ring. Most of the keystrokes for removing text from the buffer save text to the kill ring, which can then be recalled with the "yank" command (Ctrl-y). The essential feature is that subsequent yank commands retrieve older killed text. So you can kill several sections of text in a row, then retrieve them in order. You can also cycle through the kill ring with Alt-y after a yank, removing the retrieved text and inserting the next entry in the ring.
+
+Emacs had these features in 1978. The only other major system to adopt them to any extent is NeXTStep (and now inherited by Cocoa). Other tools provide more features for specific tasks, can be extended in languages way easier to use than Emacs Lisp, and have nicer visual interfaces... but Emacs remains better at text editing. Which is why, once you know how to use it, it's so hard to quit.
+    
+    
+Answer 4: 
+
+    
+    
+Vim rocks
+
+Vim is harder to learn (you have to memorize the commands you want to use) but vastly more powerful than any IDE or GUI editor I've seen.
+
+Part of the secret to vim is the line mode it inherited, ultimately, from the ed(1) text editor that was written by Ken Thompson himself. It is remarkably powerful: it can be used for refactoring and even placed into scripts. It is based on regular expression pattern replacement.
+
+And with all this power, because it's an old-school Terminal/xterm app, it's starts up instantly and never has a detectable lag.
+
+I've switched to IDE and gui editors many times but keep coming back to vim. I think this time I'll just stick with it and save myself the detour.
+
+
+
+
+Notes:
+
+
+If your IDE supports refactoring, that's a find reason to use the IDE. I'm just using that as a complex-editing-task example.
+
+Remarkably, vim seems to help fight RSI and leave your hands more relaxed. The commands are unmodified keys, so you don't need to tense up your wrists holding down control or meta or command or bletch or whatever.
+    
+    
+Answer 5: 
+
+    
+    
+There are two things (roughly) that you get from using VIM/Emacs:
+
+
+Customizability
+They run everywhere
+
+
+Both take an investment in time to learn.  But once you learn them using any other editor will feel inferior.
+    
+    
+Answer 6: 
+
+    
+    
+Emacs and Vim are the most polished and multi-purpose software I can think about.
+
+This is more specifically true when working in a unix environment, where plain text files are used for everything (code, scripting, config, processes,... etc).
+
+These tools takes some time to learn, even more to master, but then they can give you an unexpected productivity all day long.
+
+I start using them both around 1990. Twenty years later, they are sill at the top of my list. They are the first tools I install when I configure a machine and they can always bring me one step further when my current IDE is stuck... think about regexrename thousands of files, apply a complex reformatting of a text file, or any other text oriented task.
+    
+    
+Answer 7: 
+
+    
+    
+emacs - and, I suppose, vim, maybe - have several advantages:
+
+
+More screen real estate.
+Real Ultimate Extensibility
+Minimal memory usage. I've had over 100 files open, including multiple remote editing files, using under 35 MB of ram.
+Emacs never has to close unless you have to restart your computer or upgrade emacs. I usually run a single emacs process for weeks on end.
+Trivially easy to modify. I can bang out a highlighting mode for a DSL in a day, if I want. With indentation that more or less works. And I'm not even that good at emacs.
+Easier on the hands since you can remap keys easily to support your personal hand shape and preferred keyboard shape.
+Reliable. I might have forced an emacs crash once.
+Runs everywhere I can access. Possibly some older IBM 390 systems might not run it...
+
+
+I've used Visual Studio and eclipse somewhat. They are not as good at
+raw text editing as emacs. They are considerably slower and support
+less languages.
+
+The only meaningful objection I hear raised in regards to emacs is "no
+intellisense". I don't use VS/Eclipse Intellisense when I do edit
+there. Further, the auto-complete mechanisms in emacs are superior,
+from what I can tell. (e.g., autocompleting variable names).
+
+Of course, it does take a learning curve. For emacs, I'd judge 1 months of daily use will take you to the point of comfortable competency for everyday use.
+    
+    
+Answer 8: 
+
+    
+    
+I use vi a lot (I'm using it now at work because I can't be bothered to start an xserver and because it's quick to start up), but only because I had to learn it (and by 'it' I mean a fairly small subset of commands) many years ago, it's useful for remotely editing files and sometimes gedit or whatever isn't available.
+
+Just for old times sake, I've just started emacs again to see how much I hate it and then I had to google for a cheatsheet to tell me how to close it. So I think it's fair to say it's not intuitive. 
+
+It's my opinion that it's a lot easier to think of yourself as Neo (Matrix) when working on a green on black terminal using arcane key combinations than to sit there using a friendly GUI.
+    
+    
+Answer 9: 
+
+    
+    
+Vim has an enormous number of commands, and if those aren't sufficient for tasks you do repeatedly, you can define your own. But, you can use Vim effectively after you know only a very small number of those commands, so you don't have a huge amount to learn to get started (though you will fumble around for a few days). You can also apply commands based on regular expression searches, which can be enormously handy if you want to apply a particular change to every line which meets some complex condition. I can't imagine not coding in Vim these days.
+    
+    
+Title: Why do errors no longer appear in Eclipse&#39;s package explorer?
+Description: 
+    
+    
+                    
+My project used to be fine - errors showed up in the file margin, the editor breadcrumb, the problems view and in the package explorer tree as little red X marks.
+
+Somewhat spontaneously though, it's stopped working properly.
+
+If I introduce an error into my code, it shows up in the file margin, and nowhere else. It takes a 'project clean' to make the red X's show up elsewhere.
+
+Then if I fix the problem, the error is cleared from the file margin but the red marks persist elsewhere until I do another clean.
+
+Why is it no longer showing errors properly in an automatic way?
+
+I'm using Eclipse 3.5
+    
+
+        
+Answer 1: 
+
+    
+    
+Did you uncheck Build Automatically?
+    
+    
+Answer 2: 
+
+    
+    
+I had a similar problem.
+I imported a project which also uses aspectj. 
+compile errors were shown in the editors, but not in the package/navigator-explorers. And the project was marked as java-project, maven2 and aspectj.
+
+Build path seemed ok.(jre was there, maven and aspectj.) 
+
+After long search i found that in the .project file the following entry was missing:
+
+    &lt;buildCommand&gt;
+        &lt;name&gt;org.eclipse.jdt.core.javabuilder&lt;/name&gt;
+        &lt;arguments&gt;
+        &lt;/arguments&gt;
+    &lt;/buildCommand&gt;
+
+
+pasted that in and problem was solved!
+    
+    
+Answer 3: 
+
+    
+    
+Try fixing your build path, Java compiler, JRE first. If still no luck, You may want to take a look at project Properties--/p/div
+Answer 4: 
+
+    
+    
+None of the answers so far applied to my situation, but they steered me towards this solution:
+
+Project -
+Answer 5: 
+
+    
+    
+Yet another reason for this type of problem: you might not be viewing your project with the correct perspective selected. I recently had this problem with 4 projects in my workspace, 3 of which were PyDev projects and the other was an Android project. In my case, only the Package Explorer was misbehaving, not showing up warnings or errors, but the Problems view and the files themselves were showing the errors and warnings.  
+
+It turned out that the PyDev perspective was active even while I had the Android project selected. To change perspective, go to Window -&gt; Open Perspective --&gt; [Perspective Name] or alternatively hit the Perspective shortcut button in the top-right corner of Eclipse.  
+
+This is relevant to Eclipse Indigo, I can't speak for other versions.
+    
+    
+Answer 6: 
+
+    
+    
+I had a missing project in the buiding dependencies config
+
+removing it resolve the problem
+    
+    
+Title: How do you prevent PHPStorm from opening a project on start?
+Description: 
+    
+    
+                    
+It takes a while to open some larger projects and I am just wondering if I get to the "Welcome to PHPStorm" screen by default instead of the last opened project.
+    
+
+        
+Answer 1: 
+
+    
+    
+
+Settings/Preferences
+Appearance &amp; Behavior | System Settings 
+Reopen last project on startup
+
+
+
+
+P.S.
+Settings screen has very handy search box (top left corner) which will narrow possible options a lot.
+    
+    
+Answer 2: 
+
+    
+    
+On UBUNTU OS In PHP-Storm 8.0.3, It was as 
+
+
+File
+Settings
+Appearance &amp; Behavior
+System Settings
+Reopen last project on startup ( uncheck this checkbox )
+
+    
+    
+Answer 3: 
+
+    
+    
+If you try to check uncheck Reopen last project from the Settings | General Preferences on startup but are not able to reach the General Settings box (perhaps because PHPStorm is hanging when it tries to reopen the last project) you can do the following (instructions for Mac but similar for other OS):
+
+vim ~/Library/Preferences/WebIde90/options/ide.general.xml
+
+
+Add/edit the following to the &lt;application&gt; tag:
+
+&lt;option name="reopenLastProject" value="false" /&gt;
+
+
+This should allow you to restart without any problem.  In my case, I was not able to even finish starting PHPStorm until I made the change.  After I modified the file I restarted and went to File --/ppa href="https://intellij-support.jetbrains.com/hc/en-us/articles/206827437-Directories-used-by-the-IDE-to-store-settings-caches-plugins-and-logs" rel="nofollow noreferrer"/a/p/div
+Answer 4: 
+
+    
+    
+Go here:
+
+Settings /pp/p/div
+Answer 5: 
+
+    
+    
+On Linux Mint 17.3 Rosa
+
+vi .PhpStorm2016.2/config/options/ide.general.xml
+
+
+Adding &lt;option name="reopenLastProject" value="false" /&gt; does the trick
+
+&lt;application&gt;
+  &lt;component name="GeneralSettings"&gt;
+    &lt;option name="confirmExit" value="false" /&gt;
+    &lt;option name="reopenLastProject" value="false" /&gt;
+  &lt;/component&gt;
+  &lt;component name="Registry"&gt;
+    &lt;entry key="dumb.aware.run.configurations" value="true" /&gt;
+  &lt;/component&gt;
+&lt;/application&gt;
+
+    
+    
+Answer 6: 
+
+    
+    
+In case people can't find it: It has been changed in newer versions of PHPStorm. 
+It can now be found at Preferences 
+Answer 7: 
+
+    
+    
+For MAC, open Command line and run below command
+
+open -e Library/Preferences/PhpStorm2017.2/options/ide.general.xml
+
+
+The ide.general.xml file should be fire up in TextEditor
+
+Add the below under "showTipsOnStartup"
+
+&lt;option name="reopenLastProject" value="false" /&gt;
+
+
+So the file should now look like the below
+
+&lt;application&gt;
+  &lt;component name="GeneralSettings"&gt;
+    &lt;option name="showTipsOnStartup" value="false" /&gt;
+    &lt;option name="reopenLastProject" value="false" /&gt;
+  &lt;/component&gt;
+  &lt;component name="Registry"&gt;
+    &lt;entry key="dumb.aware.run.configurations" value="true" /&gt;
+  &lt;/component&gt;
+&lt;/application&gt;
+
+
+Then Save and Restart PHPSTORM. Yup. That's all
+
+NOTE: Replace "PhpStorm2017.2" with your current PHPStorm name/version.
+
+For Windows or Linux, locate the file and follow the same process.
+    
+    
+Title: Complete solution for writing Mac OS X application in C++
+Description: 
+    
+    
+                    
+I am looking for alternatives for my current box and Mac OS X seems very appealing.
+
+My main area of interest is C++ programming. Currently I'm using Eclipse + CDT and g++ for creating my software; sometimes it is KDevelop.
+
+I know that primary IDE for Mac is Xcode and primary language is Objective-C. I would like to avoid learning Objective-C if at all possible. I've also heard/read that there are some issues in accessing Mac OS X APIs from C++.
+
+Hence my question:
+what is the complete solution for developing/debugging/testing C++ applications that access all aspects of hardware (UI, sound, video/accelerated video, etc.) for Mac OS X?
+
+Edit: how does Xcode compare to the Eclipse+CDT combo? If this comparison is at all possible...
+    
+
+        
+Answer 1: 
+
+    
+    
+If you want to use C++ instead of Objective-C, and still want to avoid an intermediate layer of libraries (such as QT), you can use Carbon.
+
+I would use XCode instead of Eclipse simply because Eclipse is way slower when dealing with hardcore C/C++ programming (compiling, debugging, testing).
+
+When I first started to program in Mac OS X, I was in the same page you are now. I thought it was better to stick to the language I knew (C++) and use an older library (Carbon). For some reason I don't remember now, I forced myself into Cocoa (Objective-C). Looking back, I think it was a good thing because:
+
+
+Objective-C is not fundamentally different to C++
+Cocoa is better, faster and simpler than Carbon
+iPhone Dev is exclusively Cocoa (Carbon is not supported)
+
+    
+    
+Answer 2: 
+
+    
+    
+You should not avoid learning Objective-C and Cocoa. It should in fact be the first thing you do. Unless you have a solid background in Smalltalk, you're unlikely to have been exposed to a large (set of) framework that is as well-designed.
+    
+    
+Answer 3: 
+
+    
+    
+Objective-C is not that hard. If you know C++ it will take you a day or three of applied effort to learn the conventions.
+
+The Cocoa APIs and conventions take longer, but those come in time.
+
+Good luck!
+    
+    
+Answer 4: 
+
+    
+    
+I've been playing around using Objective-C++ to write the UI, making it easier to use C++ to write the application back-end. It seems to work pretty well for me. Objective-C &amp; Objective-C++ are pretty easy to pick up and this lets me keep using my hard-won C++ knowledge.
+    
+    
+Answer 5: 
+
+    
+    
+Unless you're looking at using an intermediate layer like QT, I think you're pretty much stuck with Objective C to interface with parts of the API like the GUI as it is their native language.
+
+That said, it has been mentioned that you can easily mix Objective-C code and C++ code so you may still be able to write the majority of your application in C++.
+
+I'm mainly a C++ programmer but I'm always dabbling in other languages and I've had a play with XCode (yes, I've got a Mac). I liked it, it's a bit different but as a way of nailing together an OS X GUI it's superb and the rest is between you and your favourite editor if you don't like XCode that much.
+    
+    
+Answer 6: 
+
+    
+    
+C++ works very well with Xcode. If you want cocoa, you can learn a minimal (and I mean really minimal) amount of Obj-C for the gui layer and have the bulk of your code in C++.
+
+Another option is using one of the scripting language frameworks for hooking into the Cocoa API (such as PyObjc) and the bulk of your logic in C++.
+
+The third and final option is using a cross platform gui kit such as Qt4. If there's a desire to make your libraries cross platform, this would be the route to go.
+
+I would recommend against going with Carbon. It's definitely a dying beast. You could also use combinations of the above providing a library with your C++ code then creating gui specific UI's that link them them.
+    
+    
+Answer 7: 
+
+    
+    
+It's no problem using gcc or g++ from OS X. The XCode install gives you these compilers anyway, and if you really wanted, you could load up an x server instance and get KDE working. I like the XCode editor myself though. Eclipse also works with OS X, so you should be able to use your current environment.
+
+I've used an OS X box for cross-compiling C code from PPC arch to ARM arch before, with no problems. It's just another *nix style system, so all the tools you are familiar with will already exist, and if they don't, just use fink or macports to get them yourself.
+
+Also, if you really wanted to use C++ for developing GUI OS X apps, you could always use Carbon instead of Cocoa. It's a perfectly viable choice, only slightly deprecated. 
+    
+    
+Answer 8: 
+
+    
+    
+Carbon on Mac OS X is effectively deprecated - it does not and will not support 64 bit apps.
+
+If you really really want to use c++, use Qt Creator
+
+Which is now free and the trolltech SDK includes Qt 4.5, which while it is a c++ framework it internally uses Objective-C to interact with MAC OS X, so then you are not limited by Carbon.
+
+The downside is that the trolltech libraries are not standard on the mac, you must provide them with your app.
+    
+    
+Answer 9: 
+
+    
+    
+I agree with Pablo Santa Cruz and would like to add that it's trivial to mix Objective-C with C++ in the same app (and the same source file). This is referred to as Objective-C++ and discussed in this article. 
+
+XCode compiles with GCC so you have Objective C, C, and C++ ready at your finger tips.
+    
+    
+Answer 10: 
+
+    
+    
+I haven't used it on OSX myself (I can recommend it on Windows), but the Code::Blocks C++ IDE is implemented using, and supports, the cross-platform wxWidgets GUI library. It is supported on OSX - see this page.
+    
+    
+Answer 11: 
+
+    
+    
+I would advice you to stick with whichever IDE you are most comfortable with. Personally, I hated Xcode the first time I used it and refused to give up Eclipse. After a few days, I warmed up to Xcode and don't mind using it from time to time. However, I still use Eclipse whenever possible. 
+
+Just remember that you cannot write Cocoa applications using only C++, you need to dive into Obj-C for that. Carbon applications don't quite look or behave like a Cocoa app. Most people won't really mind but it's something to think about. I jumped into Obj-C from java/C# without any issues. The language takes a little getting used to but it's not very difficult.
+    
+    
+Answer 12: 
+
+    
+    
+For some small hobby projects, and an iPhone app I'm making, I'm using a mix of objective C++ and 'real' C++. XCode supports the mixing of both languages fairly well. I use objective C/objective C++ for the user interface and as a thin layer between the OSX frameworks and my own code. So far, this has turned out to be a great way of working.
+    
+    
+Answer 13: 
+
+    
+    
+The development environment that I am using right now for development in the Mac is QTCreator which is a free IDE for development in QT with gcc as compiler. It gives all the features I need and it is cross platform (one requirement of the application I am developing).
+
+I have to say that I've been fairly impressed. I didn't have high hopes for such a focused (specifically designed for QT) and recent IDE. The environment is easy but powerful (including GUI editing) and has the better code completion I've ever seen. It is a breeze programming in this environment and don't miss a bit Visual Studio.
+
+Really worth a try.
+    
+    
+Answer 14: 
+
+    
+    
+If you really want to use C++ on Mac OS X, use something like SDL / wxWidgets / Qt.
+There's the option of combining Objective-C with C++, called Objective-C++. You could use it for all your model-stuff and just use Objective-C for the stuff, that isn't possible without the Foundation-framework.
+As a last option, Carbon comes to mind. This is a native framework that was used in the pre-OSX times but runs on Mac OS X. The problem is, it's not supported for newer technologies and I think the next release of OS X, Snow Leopard, isn't going to support it at all.
+Apple says:
+
+Carbon enables C/C++ developers to
+take advantage of Mac OS X features,
+including the Quartz 2D graphics
+library, an efficient event-handling
+mechanism, and multiprocessing
+support. In addition, other
+industry-standard C/C++ APIs are
+available to Carbon developers,
+providing access to such services as
+the OpenGL drawing system, the Mach
+microkernel, and BSD operating-system
+services.
+
+Don't expect Carbon applications to look 100% native and it's much more complicated for programming than Cocoa.
+However, I recommend learning Objective-C, it's not hard and there are lots of powerful frameworks like CoreData, CoreGraphics and the like.
+    
+    
+Title: Change Project Explorer tree view font size in Eclipse Oxygen
+Description: 
+    
+    
+                    
+I am using Eclipse Version: Oxygen.1a Release (4.7.1a) and I want to enlarge the Project Explorer tree view font size because I have some sight issues and thus I searched many places to enlarge the project tree view font size.
+
+
+
+I only founded the font change in project explorer tree view for older eclipse versions releases which are older or equal to eclipse luna version.
+
+for the information I would like to say that this Oxygen version release is latest in Eclipse IDE, please somebody help me. 
+    
+
+        
+Answer 1: 
+
+    
+    
+I assume that it is important for others also, so I am posting this, for below requireds in eclipse ide,
+
+Increase java editor font size
+
+Window Menu -&gt; Preferences -&gt; General &gt; Appearance &gt; Color and Fonts &gt; Java &gt; Java Editor Text Font &gt; Edit &amp; Apply
+
+
+Increase console output font size
+
+Window Menu -&gt; Preferences -&gt; General &gt; Appearance &gt; Color and Fonts &gt; Debug &gt; Console font &gt; Edit &amp; Apply
+
+
+Increase xml bean file font size
+
+Window Menu -&gt; Preferences -&gt; General &gt; Appearance &gt; Color and Fonts &gt; Basic &gt; Text Font &gt; Edit &amp; Apply
+
+
+Increase dialog view font size
+
+Window Menu -&gt; Preferences -&gt; General &gt; Appearance &gt; Color and Fonts &gt; Basic &gt; Dialog Font &gt; Edit &amp; Apply
+
+
+Increase project explorer tree view font size
+
+
+
+If using Windows 7 or higher architecture, then reach to the eclipse home directory,
+go inside of eclipse\plugins\org.eclipse.ui.themes_X.X.X.vXXXXXXXX-XXXX\css directory,
+find two css files which are "e4_default_gtk.css" and "e4_default_win.css",
+open and add below said css script part in tail of above two files, save those and close accordingly,
+
+.MPart Tree {
+    font-family: Consolas;
+    font-size: 14;
+}
+
+
+if eclipse is opened, restart, it all worked for me on eclipse oxygen.1a release version,
+
+and hope on other OS type, you have to edit the same e4_default_gtk.css and other e4_default_os-type.css, thanks.
+    
+    
+Answer 2: 
+
+    
+    
+I'm using eclipse-neon on Ubuntu on Windows-10. The graphical interface is not supported by Microsoft at this time, but I have been using Eclipse Neon and it works decently enough. I added the following to the end of one file:  eclipse/plugins/org.eclipse.ui.themes_1.1.300.v20161107-1827/css/e4_default_gtk.css:
+
+.MPart Tree {
+font-family: Sans Regular;
+font-size: 8;
+}
+
+
+My intent was to make the font smaller, and it worked successfully.
+    
+    
+Answer 3: 
+
+    
+    
+I have been searching this for every version of Eclipse and finally I got something which helped me to increase the font size and font type of of the project explorer.
+
+1.go to below path on your local environment
+
+.p2 -
+Answer 4: 
+
+    
+    
+There is now (Eclipse 4.17, July 2020) an official setting:
+
+The font used for tree and table views can now be customized with a font preference. This preference is called &quot;Tree and Table font for views&quot; and can be found in Window &gt; Preferences &gt; General &gt; Appearance &gt; Colors and Fonts under the &quot;View and Editor Folders&quot; category.
+
+
+
+The Project Explorer is an example of a view that gets affected by this font preference.
+
+
+    
+    
+Answer 5: 
+
+    
+    
+Thanks for the help. In my case, I use the Dark [Mac OS X] theme in Eclipse Photon on Windows 7, so the file I had to alter was e4-dark_mac.css in  eclipse\plugins\org.eclipse.ui.themes_X.X.X.vXXXXXXXX-XXXX\css. Also the .MPart Tree was not in the file so I had to add it as opposed to editing it. I added right under another .Mpart entry so my file looked like below.
+
+...
+
+.MpartStack, .Mpart {
+    font-family: '#org-eclipse-ui-workbench-TAB_TEXT_FONT';
+}
+
+.Mpart Tree {
+    font-size: 12;
+}
+
+...
+
+    
+    
+Answer 6: 
+
+    
+    
+Ankit Fulzele's answer helped me with minor adjustments.
+
+I use Dark Theme on Mac and the following worked for me for Eclipse 2019-06:
+
+Add the following lines to ~/.p2/pool/plugins/org.eclipse.ui.themes_{version}/css/dark/e4-dark_basestyle.css
+
+Tree {
+        font-family: '#org-eclipse-ui-workbench-TAB_TEXT_FONT';
+}
+
+
+Instead of setting a fixed font, this will pin it to whatever the "Preferences -
+Answer 7: 
+
+    
+    
+In my case using a MacBook 13", I had to edit the following file /Users/myuser/.p2/pool/plugins/org.eclipse.ui.themes_1.2.800.v20191030-0746/css/e4-dark_mac1013.css
+
+Then I searched for this existing item and added the font-size and font-size-adjust. Doing that prevents the tree line to be cropped:
+
+CTabFolder Tree, CTabFolder Canvas {
+    background-color: #2F2F2F;
+    color: #CCC;
+    font-size-adjust: none;
+    font-size: 14px;
+}
+
+    
+    
+Answer 8: 
+
+    
+    
+Answer from Al Breight worked perfectly on Oxygen.3a Release (4.7.3a), Ubuntu 18.04. @pkeller comment (Oct 16 at 14:05) confirmed and solved editing 'Git Uncommited Change Font' size option in Window-
+Answer 9: 
+
+    
+    
+Thanks so much!  I can finally see the Eclipse Project Explorer clearly!
+I was able to change the project explorer tree font size by making the css file addition shown above in Windows 7 with Eclipse 2018-9 (4.9.0).  
+
+The specific folder location I found was at: 
+
+C:\Users\myUserName\.p2\pool\plugins\org.eclipse.ui.themes_1.2.200.v20180828-1350\css
+
+
+Apparently, from my investigation of solving this problem the specific folder location varies based on different factors like Eclipse Version and OS.
+So I searched on the css file names to find the latest folder.  
+
+I had 7 eclipse themes folders on my workstation, I used the most recent one, corresponding to the specific install/update of Eclipse being currently used.
+    
+    
+Answer 10: 
+
+    
+    
+I'm using Eclipse 2018-09 and could't found .css file similar gtk at Eclipe directory.
+But I discover custom css menu on Jeeyul's theme(plugin for Eclipse Color UI).
+Just typing css style above comments. And apply and close.
+In the end, change UI style.
+    
+    
+Answer 11: 
+
+    
+    
+ECLIPSE FONT CHANGE - Change below to 2 css files.
+
+
+  eclipse/plugins/org.eclipse.ui.themes_x.x.x.vxxxxx/css/e4_basesetyle.css
+  eclipse/plugins/org.eclipse.ui.themes_x.x.x.vxxxxx/css/dark/e4-dark_globalstyle.css
+
+
+#org-eclipse-jdt-ui-PackageExplorer Tree,
+#org-eclipse-ui-navigator-ProjectExplorer Tree {
+    font-size: 10px; /* &lt;-- Desired font size */
+    font: Consolas;  /* &lt;-- Font you want to have */
+}
+
+
+and change preference -
+Answer 12: 
+
+    
+    
+To increase font size of eclipse project explorer window for eclipse 2020-06.
+First check the theme, you are using in the eclipse from preferences.Increase the value of below property for that theme. For example, if you are using light theme.
+In file:
+/Applications/Eclipse.app/Contents/Eclipse/plugins/org.eclipse.ui.themes_1.2.1000.v20200528-1125/css/light/e4-light_partstyle.css,
+Add property if missing or if it is already present, just increase value of font size.
+.MPart Tree {
+    font-size: 13;
+}
+
+    
+    
+Title: How to prevent Eclipse from auto-importing packages when pasting code?
+Description: 
+    
+    
+                    
+Frequently I copy and paste code from my existing code base. Eclipse frequently brings in erroneous import statements that I don't need
+
+example, I copy and paste code into my project package named com.myproject.utilities into a file named twitter_class.java
+
+and in the java file it adds
+
+import com.pigmal.android.ex.twitter4j.TwitterConstants;
+
+and this causes an error The import cannot be resolved. Of course it can't why, why did it even attempt to import that part when I didn't even select that for copying
+
+I can imagine places where this is convenient, but it is never convenient for me and it is time consuming to repair so often.
+
+How do I turn this off, in Eclipse, using Eclipse.
+    
+
+        
+Answer 1: 
+
+    
+    
+To turnoff the auto import while pasting  
+
+windows /strongstrong
+Title: Intellij exclude file from being compiled
+Description: 
+    
+    
+                    
+I am trying to exclude a particular file in my project from being compiled.
+
+According to the Intellij IDEA documentation you do this by "marking the file as plain text".
+
+However, the context menu in the project view where this functionality is supposedly located has no such action. I am using version 13.02 of Intellij. Here is what my context menu looks like:
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Under File 
+Answer 2: 
+
+    
+    
+Just to compound on Makoto's answer (would comment but don't have reputation), it looks like this feature does not apply to classes (.java) or assets (images)...for these types of files, it looks like you will need to actually go to the compiler and explicitly state that the file(s) should be excluded.  
+
+However, for .htm, .xml, or really anything that isn't a class or asset you will find and can use the 'Mark as plain text' option.
+
+Edit: It looks like you can also go to the 'Messages Make' error / warnings view and Exclude from there, a little less work IMHO.  
+    
+    
+Title: Delphi IDE Project &ldquo;Clean&rdquo;Command &mdash; What does it do?
+Description: 
+    
+    
+                    
+Running Delphi 2007 (and probably other versions as well, I'm guessing), if I right-click on a project in the Project Manager (either EXE of BPL in this case), there is a "Clean" command  above Compile and Build.  What exactly does it do?
+    
+
+        
+Answer 1: 
+
+    
+    
+To "clean" a build means to delete all intermediate and output files generated by the compiler. Some compilers or IDEs also have a "clean &amp; build" or "rebuild all" option which essentially performs a clean, followed by a build.
+
+When you rebuild an existing project, compilers generally only rebuild files it determines are changed or new. This is, of course, to save time by not completely recompiling the entire project each time. However, sometimes this has problems; you will find your program getting strange errors or not working right. This increases with the number of dependencies within your project - they may not be rebuilt properly. In this case, you will find that cleaning the output and re-building from scratch will solve the problem.
+
+It is also generally recommended to do a clean before building any release versions for the same reason.
+    
+    
+Answer 2: 
+
+    
+    
+Yes, it removes the DCU files and the EXE file, BUT it doesn't clean :
+
+
+DCUs in other directories than the project dir (even if the PASes are added included to the project),
+.MAP file
+.RES files (compiled from corresponding .RC files)
+.DRC file
+.TLB file
+...
+
+
+So, ... the implementation is really, really bad, ....
+
+Using Delphi 2009.
+    
+    
+Answer 3: 
+
+    
+    
+Clean is one of the commands of MSBuild, now used as underlying engine for every compilation or build. This commands removes temporary files (like DCU) but also final output (like EXE).
+    
+    
+Title: Running javascript standalone engine?
+Description: 
+    
+    
+                    
+Bit of a strange question here i know.
+
+but i wanted to know if some kind of standalone engine for javascript exists..
+
+basically i want to test running of my javascript without having to load a web page...
+
+Maybe it doesn't exist? Like some kind of ide where i can run commands directly without launching IE etc...
+
+I have a great editor but it doesn't support that.. i still need to launch ie / firefxo
+
+What i was thinking of some kind of standalone javascript engine existed that i could write my code here and make debugging a bit easier... and then copy to my webpage.
+
+I know firebug exists but you can't specifically do what i am asking cna you?
+
+Any ideas?
+    
+
+        
+Answer 1: 
+
+    
+    
+Check out Rhino or Spidermonkey. You might want to grab an implementation of the ServerJS standard, like Narwhal while you're at it.
+    
+    
+Answer 2: 
+
+    
+    
+As for the engine - it's actually built in Windows itself and IE just uses it for webpages. Try it - you can make a simple .js file and run it. It's a great replacement for .bat files actually. :) You can also cscript.exe (for console) and wscript.exe (for windows app) to run your scripts. It's actually what Windows internally runs when you double-click a .js file.
+
+As for debugging - I don't know. I know that:
+
+
+Visual Studio supports script debugging, at least for browsers (but probably in other apps to that integrate with the Windows Scripting Host);
+There is a separate "Script Debugger" downloadable for free from Microsoft, though last I checked it was pretty crappy;
+The above mentioned cscript.exe and wscipt.exe have command-line parameters that have something to do with script debugging, although I don't know what they do.
+
+    
+    
+Answer 3: 
+
+    
+    
+You can also try out Google Chrome's JavaScript engine, V8:
+http://code.google.com/p/v8/
+    
+    
+Answer 4: 
+
+    
+    
+Rhino is an open-source implementation of JavaScript written entirely in Java.
+    
+    
+Answer 5: 
+
+    
+    
+Many people here have recommended Rhino or other server-side implementations. But from what I read, you want something that should emulate the browser environment. In that regard, what I'd try (that means I haven't used this combination before) is Mozilla Rhino and env.js. While I've been using Mozilla Rhino for quite some time now, I can't say too much for env.js.
+
+env.js is an emulation of the browser environment. It was originally developed by John Resig, but Chris Thatcher made it look as it is right now. Which in my opinion looks very promising. Haven't tried it before but I'd give it a chance.
+    
+    
+Answer 6: 
+
+    
+    
+I have found out recently that if you have Visual Studio installed you can debug JScripts with it by invoking a script like cscript test.js //X which pops up the Just In Time debugger window.
+
+Then you can step line by line through the script with all the benefits of a real debugger.
+    
+    
+Answer 7: 
+
+    
+    
+JSC.exe and a command prompt interface will allow you to compile JScript/JavaScript into a .Net executable right on your desktop.
+
+JSC [JScript Compiler] has a -? or -help function that displays all of the compiler options and flags and is a standalone executable itself. Copy it to a folder of your choice then copy cmd.exe to the same folder and get to coding.Save your source with a .js file extension in the folder with your cmd and jsc executables. Yes, jsc.exe works with regular .js files, but JScript.net tutorials can show you how to build a GUI with buttons and everything for your .js file!
+
+Compile your .js file by starting up the command-line shell (cmd.exe), in the same folder as jsc.exe and your .js file,type jsc then a space and then your .js file's name - hit enter - done. Additionally, jsc outputs debugger errors and warnings to the same cmd.exe that started it with the line and character positions in your .js file where the issue was encountered. You can also get debugging object output saved to a .pdb, for your .js file by typing jsc, a space then typing /debug a space and your .js file name.
+
+
+'/debug' = a forward slash then the word debug or... 
+'-debug' = a minus or dash character then the word debug.
+
+
+/ and - before a flag are managed/read identically, use what's best for you just make sure you don't put debug or any flags in quotations of any sort.
+
+Easy peasy; jsc.exe will run from a usb thumb drive and flash memory cards alike with the only requirement being that the .Net Framework is installed in the host operating system. If you are running newer versions of Windows the .Net framework comes pre-installed anyway; go to the Windows directory/folder of your Windows OS and do a search for jsc.exe and you'll probably get a .Net version of jsc.exe for 2.0 and 4.0 minimally. Copy the version(s) you want to your chosen folder repeating the process to find the cmd.exe.
+
+DONOT cut and paste jsc.exe and cmd.exe - only copy these executables to the directory you wish to run them from. Right click the file(s) and from the context menu click the copy menu selection option. Right click in the directory you created for jsc.exe and cmd.exe and click the context menu selection option paste. You can also single click the file to highlight it then press and the Ctrl key then press the C key to copy the file to the clipboard; single click to highlight or double click to open the directory you created then pressing and holding the Ctrl key press the V key to paste your files in your chosen directory.
+
+Little known facts:
+
+
+
+JScript is Microsoft's implementation of ECMAScript Specification 5 compliant JavaScript and MSDN has excellent documentation on it as well as current JavaScript.
+
+
+cmd.exe supports drag and drop; so, you can drag and drop the jsc.exe on the command prompt, type a space then drag and drop your .js file on it, press enter to compile and enjoy.
+
+
+I don't work for Microsoft, but probably should.
+
+
+
+The Mono .Net Framework for Linux might be able to support JScript.Net applications as well, but I have not looked into this topic for some time. The Mono Framework is a Linux compatible .Net Framework following the ECMA specifications for the .NET Framework following the CLS (Common Language Specification [generic com]). The Mono Framework supports a huge part of the ECMA specification and is largely compatible with the Microsoft .Net Framework.
+
+Have a good one.
+    
+    
+Answer 8: 
+
+    
+    
+I had a similar question, that wasn't too promising: Is there a Javascript IDE that has nothing to do with a browser?
+
+I think the best answer there was Mozilla Rhino - although for your purposes, a server-side javascript-related bundle may fit the bill.  The engines they use tend to be either Rhino or Spidermonkey, with a few other random ones.
+    
+    
+Answer 9: 
+
+    
+    
+jslibs is a good standalone JavaScript runtime based on Firefox's JavaScript engine.
+    
+    
+Answer 10: 
+
+    
+    
+Using Rhino or SpiderMonkey you can have a standalone JS engine, or include it in other applications you write; but you won't be able to test anything to do with the Document Object Model (DOM), such as manipulating elements and attributes or responding to events.
+
+Everything to do with the DOM is supplied by the browser as a host environment in which the JavaScript engine runs. No browser means no DOM.
+
+If the code you are planning to work on has absolutely no dependency on anything provided by the browser environment then you could start by looking at the Rhino Shell.
+
+EDIT: Microsoft's JScript is also a standalone COM component which you can run under Windows Script Host. The object model available in that environment offers a basic level of access to the Windows shell.
+    
+    
+Answer 11: 
+
+    
+    
+I'm using Scratchpad that is in Firefox under Web Developer tools and JSDB. 
+There is also a list of Javascript shells at MDN.  This is when I just want to quickly run javascript code snippets.
+    
+    
+Title: How do I restore the default VS toolbar configuration?
+Description: 
+    
+    
+                    
+How do I restore the default VS toolbar configuration?
+
+By that, I mean:
+
+
+the set and location of enabled toolbars
+the set and order of items on each toolbar
+
+
+I know how to reset the set and order of items on a given toolbar, so if I knew which are the default-enabled toolbars (and their location) then I would be able to enable and reset each of them one by one.
+
+I don't want to reset all VS settings.
+    
+
+        
+Answer 1: 
+
+    
+    
+Tools 
+Title: Text editor vertical lines on statements
+Description: 
+    
+    
+                    
+In other text editors, such as Notepad++, if statements among other things had a vertical line connecting the if to the else, and the else to the end, which makes visual parsing much easier.
+
+Example (Vertical lines highlighted by black boxes):
+
+
+I was wondering if there was a way to do this in Visual Studio.
+    
+
+        
+Answer 1: 
+
+    
+    
+Have a look at the indent guides extension, this can do what I think you want.
+    
+    
+Answer 2: 
+
+    
+    
+This feature is now available as part of Visual Studio Productivity Power Tools. This is a free extension from Microsoft.
+
+Productivity Power Tools 2013 
+
+Productivity Power Tools 2015
+
+It comes bundled with a large number of other tools which you may or may not want. These features can be enabled or disabled in the Visual Studio options screen under Productivity Power Tools.
+
+This is specifically part of the Structure Visualizer feature, which includes other sub features, such as code outlining in the margin, that can also be enabled or disabled individually.
+    
+    
+Answer 3: 
+
+    
+    
+There is an easier way to get what you want in VS(not sure the versons preceding 2012 has it). For example if you write C++, it's:
+Tools &gt;&gt; Options &gt;&gt; Text Editor &gt;&gt; C/C++ &gt;&gt; Outline Statement Blocks, set it to True.
+
+
+
+Then you can find a code block easily if you move mouse to the left column of the code editor. Here is what you get.
+
+
+
+It doesn't show the block lines and it doesn't mark the block all the times unless you require it. When you need it, it will mark all the current block out.
+    
+    
+Answer 4: 
+
+    
+    
+(Contemporary update)
+
+In Visual Studio 2017 (C++, at least), this is the default:
+
+
+
+To switch it Off/On: Tools (menu) -
+Answer 5: 
+
+    
+    
+For Visual Studio 2017 VB.NET:  Tools 
+Title: Emacs as a C Programming IDE Configuration?
+Description: 
+    
+    
+                    
+I use emacs as my main IDE for programming in C. I am exploring ways of configuring emacs to function more as an IDE rather than as a simple text editor. Of course I want syntax highlighting and preferably some code completion. I also want separate buffers to allow shell commands and to M-x compile. I want it to open into this multi-buffer form automatically when visiting a C source file, rather than having to launch each buffer separately. I will be using this mainly for Linux/BSD Unix development, though I also code on Mac OS X (again Unix) and Windows (Windows 7 64bit).
+
+I explored the Emacs starter kit posted by Phil Hagelberg (technomancy), but it seems very oriented towards dynamic languages and use of git. I use emacs mainly for developing in C and use mercurial for VC. I am also a relative newbie making configuration of emacs relatively daunting for me.
+
+I am now playing with CEDET and the Emacs Code Browser (ECB) package which is more along the lines of what I want, but is still not perfect. 
+
+Any suggestions on customizing emacs as a C programming IDE welcome.
+    
+
+        
+Answer 1: 
+
+    
+    
+It's been a while since I've done C but here are a few pointers. 
+
+
+Use flymake for on the fly error analysis. I have used it for Python and C and it's really awesome. 
+Syntax highlighting is there by default in the C mode. 
+M-x compile is geared towards make so if you have a Makefile in your setup, it should work fine (the defauly flymake rules use this as well). A rule like this
+
+check-syntax:
+
+      gcc -Wall -o nul -S ${CHK_SOURCES}
+
+
+would take care of flymake. This is useful when you edit in subdirectories but want to compile fromt he top. 
+etags is useful to jump around the code. GnuGlobal also seems to be popular. 
+Can't comment on ECB since I've never really gotten it to work completely and when I sort of did, I never found it that useful. I use autocomplete.el to do completions but it's not context sensitive.
+There is no suggestion 6. 
+The inbuilt vc integration is not so hot for git and so I use magit instead. There should be similar issues with mercurial.
+There are some notes here on setting up your indentation. 
+You should use which function mode. It's saved me a lot of headache in the past. 
+The defaults for GUD are pretty decent but you should take a while and familiarise yourself with them to use it's power completely.
+I heavily use org-capture to move TBDs into my org mode buffers so that I can track them as TODO items. This is for all languages. I also use org-mode to maintain a development diary for all my projects. 
+
+
+Good luck.
+    
+    
+Answer 2: 
+
+    
+    
+Read this excellent guide on how to configure CEDET. I'd also advise you to use cscope and ECB alongside it. As Noufal already mentioned autocomplete and flymake are very helpful. I'd also recommend you autopair mode.
+    
+    
+Answer 3: 
+
+    
+    
+i didn't try out Emacs-IDE but it seems useful and may help you
+    
+    
+Title: PyCharm change working directory of console
+Description: 
+    
+    
+                    
+How do I change the default working directory when I open a new Python Console? I have multiple projects open in my PyCharm view and the Python Console seems to be defaulting to an arbitrary one. Of course I can work around by modifying sys.path but I want a definite solution :) 
+    
+
+        
+Answer 1: 
+
+    
+    
+Settings → Build Execution Deployment → Console → Python Console
+    
+    
+Title: Linked Files and Folder in IntelliJ
+Description: 
+    
+    
+                    
+As previous Eclipse user switched to IntelliJ I would like to be able to access folder external to my project from inside the IDE, while developing.
+
+In Eclipse I was using the feature Creating linked resources. 
+
+I wonder if there is any feature in IntelliJ that helps me to access external files and folder in a similar way (for instance, if I want to edit the configuration of my application server which is located outside my project).
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes you can do it by adding an new content root in your module.
+You do that from 
+Project Structure (alt+ctrl+shift+s) - Modules - "My-Module" - + Add Content root 
+
+
+Now you have the contents of the added folder available in your project.
+    
+    
+Answer 2: 
+
+    
+    
+I was searching for a way to get the asset folder link working in IntelliJ as it was working in Eclipse and I found following link in the wikis of libgdx itself.
+
+Linking the asset directories
+
+It describes basically three approaches:
+
+
+Just copy the asset folder into the desktop folder. (BAD)
+Use the asset folder in the android project as working directory for the desktop project through 'Run-Configurations'. (GOOD)
+Create a symbolic-link (GOOD)
+
+
+I tested the 2nd option and it's working fine for me.
+    
+    
+Title: Configure Eclipse to use VS.Net shortcuts?
+Description: 
+    
+    
+                    
+I've started doing some Python Programming using Eclipse.  However, I'm a .Net programmer and I'm use to the keyboard shortcuts in VS.Net 2008.  Is there any quick way to reconfigure VS.Net to use the visual studio shortcuts.  I've found this other question, but the suggested methods don't work.  I've installed CDT and selected the Visual Studio Keys, but it doesn't seem to change any of the key mappings.
+    
+
+        
+Answer 1: 
+
+    
+    
+That's strange because after installing the C/C++ Development Tools (CDT):
+
+alt text http://img39.imageshack.us/img39/4002/screenshot001ey.png
+
+And picking up the Microsoft Visual Studio scheme (from Windows 
+Answer 2: 
+
+    
+    
+If the CDT Visual Studio mapping does not work, you need to import custom shortcut files for the usual Visual Studio shortcuts.
+
+This SO question mentions this article, with this minimal set:
+
+
+New PHP File: Ctrl+N
+Next Editor: Ctrl+Tab
+Previous Editor: Ctrl+Shift+Tab
+Find and Replace: Ctrl+F
+Find Next: F3
+Find Previous: Shift+F3
+Open Search Dialog: Ctrl+H
+New File: Ctrl+N
+Go to line: Ctrl+G
+File.Close: Ctrl+W
+
+    
+    
+Title: PyCharm &ldquo;Run configuration&rdquo; asking for &ldquo;script parameters&rdquo;
+Description: 
+    
+    
+                    
+While writing an application parsing command line arguments I would like to run it with various parameters.
+
+I don't want to create a Run Configuration for every possible command line argument that I want my script to test with. Is there a way in PyCharm (and I guess with any JetBrains IDE) to make a Run Configuration that asks for the Script parameters when executed?
+
+I am currently using PyCharm 3.1 (EAP).
+    
+
+        
+Answer 1: 
+
+    
+    
+Currently the only possibility is to use the "Before launch | Show this page" option.
+    
+    
+Answer 2: 
+
+    
+    
+Although yole's answer is the de facto way to be prompted for thw arguments before running a program, it is slightly annoying because:
+
+
+the dialog is visually overwhelming and cluttered instead of focused on what you want to do;
+you have to tab to reach the arguments field if you want to use the keyboard exclusively (and why not?);
+
+
+Nothing you could do about that. (Except maybe file a ticket. Have you done that?)
+
+
+
+I'm just adding what I used to do before I knew about Googled for this option for the sake of completeness (obvously, this is a hack in the least glamorous sense of the term). But it did suit my workflow as I often only had discrete lines to test with, and didn't switch that often.
+
+
+Create a new configuration set to the same file, but with a special 'magic' parameter;
+Add code to your script to check if the magic is there;
+Use a string variable instead of sys.argv (pass it through lambda args: [__name__] + args.split() to reduce the boilerplate);
+???
+Profit;
+
+    
+    
+Answer 3: 
+
+    
+    
+I'm doing this on a Mac, but hopefully this will be helpful for Windows or Linux.
+
+Go to Run /pp/p/div
+Answer 4: 
+
+    
+    
+I've found today that now is possible to ask for parameters using the "Prompt" macro on the "Run configuration" parameters field.
+
+https://www.jetbrains.com/help/pycharm/code-running-assistance-tutorial.html#parameter-with-macros
+    
+    
+Answer 5: 
+
+    
+    
+My simple answer is adding another wrapper as the cover in the source code which will run on the selection you made through code branch or external command or file, so choosing different branch is just a 'ddp' tap distance in vim(line change for parameter settings). You dont have to depend on pycharm updating by building your own code world:)
+    
+    
+Title: How can I make all of the IDisposable classes colored differently in the Visual Studio IDE?
+Description: 
+    
+    
+                    
+Title covers it all.  I'd like classes which implement IDisposable to show up in a specific color so I can know if I should wrap them in a using block.  Is there a setting or a process by which you can extend the IDE?
+    
+
+        
+Answer 1: 
+
+    
+    
+It is certainly possible to do this though it isn't as simple as just changing a setting. You would need to write a Visual Studio addin to accomplish this.
+
+Visit http://msdn.microsoft.com/en-us/vsx/bb980955.aspx to get started. As others will point out. This is not for the faint of heart.
+
+Here's a link that may point you toward what you are looking for:http://msdn.microsoft.com/en-us/library/bb166778.aspx
+    
+    
+Answer 2: 
+
+    
+    
+I assume this will become easier/extension-free once Roslyn comes out, but this is presently not easy because you can't access the code as C# from an extension easily.
+
+In Resharper it's easy, though! My example was tested in ReSharper 9.0. Sadly, there's no easy way to give this to you.
+
+
+Extensions -
+Answer 3: 
+
+    
+    
+You cannot.  This would require language service support and neither C# or VB.Net provide this functionality.  
+
+Cannot is probably too strong of a word.  It's certainly possible to do this with an Add-In which does deep inspection of the code and figures out hierarchies.  However it's a very non-trivial task.
+    
+    
+Answer 4: 
+
+    
+    
+I am not sure, if FXCop or StyleCop can do this already. But then, it will be a post-compile suggestion/warning.
+
+Resharper suggests this, I guess.
+    
+    
+Answer 5: 
+
+    
+    
+Sure, there is a large set of tools to build VS extensions, see Visual Studio 2008 SDK 1.1
+But time required to build such an add-in will require more time that you will spend by browsing components and determining whether they are Disposable or not
+    
+    
+Answer 6: 
+
+    
+    
+The word on the street is this kind of thing will be much easier in VS.NET 2010.  The editor is being rewritten in WPF.
+    
+    
+Answer 7: 
+
+    
+    
+Maybe I'm a bad person for doing this, but I've been using this piece of code recently:
+
+public static void BulkDispose(object[] objects)
+{
+  foreach (object o in objects)
+  {
+    if (o != null)
+    {
+      if (o is IDisposable)
+      {
+        IDisposable disposable = o as IDisposable;
+        disposable.Dispose();
+      }
+    }
+  }
+}
+
+    
+    
+Title: PyCharm remote deployment: user name not being saved
+Description: 
+    
+    
+                    
+Working with Professional edition of PyCharm, I'm trying to configure a server for remote deployment of my project over SFTP with OpenSSH + authentication agent as auth type. I have tried to configure PyCharm in Settings &gt; Build, Execution and Deployment &gt; Add server. However, even though I setup and verify successful configuration by Test SFTP connection button, as soon as I click Apply or OK, the User name becomes blank for some reason. Thereafter, when I try to sync with the remote server, the connection fails. 
+
+I've found a possible workaround by changing Host name to user@host form instead, which works, but then I can't use the same server configuration when I try to setup a remote interpreter under Project &gt; Project Interpreter &gt; Add SSH interpreter. (there it shows my host url as ssh://null@host). I'm guessing the null is there because PyCharm is somehow not saving the username. I've tried to edit the .idea/webServers.xml file, but couldn't find appropriate key-value pair to change there for user name to be preserved.
+
+Any help would be great!
+    
+
+        
+Answer 1: 
+
+    
+    
+I solved it by changing the standard way to change credentials in Pycharm. 
+
+To do this go to Settings/Preferences | Appearance &amp; Behavior | System Settings | Passwords and choose the KeePass option. 
+That solved the problem for me. 
+
+Apparently there are problems storing on native keychain. (I'm on Mint 18.3) 
+    
+    
+Answer 2: 
+
+    
+    
+What worked for me was first going to the following tab:
+Preferences -&gt; Build, Execution, Deployment -&gt; Deployment [Connection Tab]
+and then inserting my  in the &quot;User name&quot; blank.
+Note: your user name appears in the ip address of you ec2. e.g. username@@xxx.amazonaws.com
+    
+    
+Title: PyCharm and filters for external tools
+Description: 
+    
+    
+                    
+I'm trying out PyCharm for Django development and so far am extremely happy. My team strictly follows PEP8 formatting and we use the pep8 command line program to check to make sure our code conforms.
+
+I've configured an external tool command to run pep8 and it works good. I see the capability to create filters that will cause the output to be parsed into something PyCharm can use. I've read the docs and searched Google but can't find an example to make this work. Docs are http://www.jetbrains.com/pycharm/webhelp/add-filter-dialog.html
+
+I'm using PyCharm 1.2 and the output filter I'm using looks like this:
+
+$FILE_PATH$:$LINE$:$COLUMN:.*
+
+
+Example output looks like this:
+
+/home/matt/.../settings.py:13:30: E261 at least two spaces before inline comment
+/home/matt/.../settings.py:20:80: E501 line too long (126 characters)
+
+
+What would be even more awesome is if this could be run each time the file is saved.
+    
+
+        
+Answer 1: 
+
+    
+    
+You're going to kick yourself when you hear this. You've missed a $ off the end of COLUMN. Thank you very much for this by the way, I followed your steps and I have it working perfectly. Your filter should be.
+
+$FILE_PATH$:$LINE$:$COLUMN$:.*
+
+
+UPD: To have it work for PyCharm 1.5 use
+
+$FILE_PATH$\:$LINE$\:$COLUMN$\:.*
+
+    
+    
+Answer 2: 
+
+    
+    
+PyCharm expects full file path for the links to work, not just the name.
+    
+    
+Title: How to get Spyder to open python scripts (.py files) directly from Windows Explorer
+Description: 
+    
+    
+                    
+I have recently installed the Anaconda distribution on Windows 7 (Anaconda 3-2.4.0-Windows-x86_64). Unlike IDLE, I can't right-click and open a py file in the Spyder IDE. I will have to open Spyder first and then navigate to the file or drag and drop it in the editor. Is there any way to open the file in the editor directly from Widows Explorer?
+    
+
+        
+Answer 1: 
+
+    
+    
+With the current version of Anaconda (4.1.0) you can simply right-click on a python script in Windows File Explorer and choose "Open with". The first time you do this you need to select "Choose default program" and then browse to spyder.exe in the Script directory in your Anaconda installation. Also make sure that the "Always use the selected program to open this kind of file" is unchecked and then click OK. From now on spyder.exe will always be listed as one of the options when you select "Open with" from the right-click menu in Windows File Explorer.
+    
+    
+Answer 2: 
+
+    
+    
+Right now there is no way to open a file in Spyder from the Windows File Explorer when using Anaconda. But we are working to have this functionality in a future version.
+
+It will work by adding an entry to the Open with menu you can see when doing a mouse right-click over a file on the Explorer.
+    
+    
+Answer 3: 
+
+    
+    
+I have had a similar problem with another piece of software that I use. 
+
+My work around for this problem is to set the file association for .py files to C:\Anaconda\Scripts\spider-script.py via the Open with dialog. If you now try to open your File.py by double clicking you'll receive an error like
+
+
+  ~\file.py is not a valid Win32 application.
+
+
+This can be resolved by editing the spyder-script.py registry key:
+
+HKEY_USERS\S-1-5-21-3559708500-1520960832-86631148-1002\Software\Classes\Applications\spyder-script.py\shell\open\command
+
+
+and replacing the default value "C:\Anaconda\Scripts\spyder-script.py" %1 with "C:\Anaconda\python.exe" "C:\Anaconda\Scripts\spyder-script.py" %1. Use the search function for this key if the path isn't the same for your machine, and of course use the appropriate path for your python installation. spyder-script.py should now execute in a python shell.
+
+From the docstring of ftype, 
+
+
+  ...Within an open command string, %0 or %1 are substituted with the file name being launched through the association.
+
+    
+    
+Answer 4: 
+
+    
+    
+What is working very well for me in Windows (10), is associating the *.py files with a batch file (let's say "SpyderBATCH.bat") containing this line :
+
+[ANACONDA_FOLDER_PATH]\pythonw.exe" "[ANACONDA_FOLDER_PATH]\cwp.py" "[ANACONDA_FOLDER_PATH]" "[ANACONDA_FOLDER_PATH]/pythonw.exe" "[ANACONDA_FOLDER_PATH]/Scripts/spyder-script.py" %1  
+
+
+Where [ANACONDA_FOLDER_PATH] has to be replaced with the full path to the Anaconda folder (usually under "Program Files").  
+
+What Windows does, when double-clicking on a python script (let's say "file.py"), is pass to SpyderBATCH, as parameter number %1, the full path to "file.py".
+
+Then Spyder is launched and displays the script "file.py" in the editor view.
+    
+    
+Answer 5: 
+
+    
+    
+I figured I would post my solution for this as well.
+
+I have Spyder installed in multiple different environments. You can't simply call the spyder-script.py script without errors, because the environment must be activated.
+
+@echo off
+call [YOUR_CONDA_PATH]\Scripts\activate.bat [YOUR_CONDA_PATH]
+call conda activate [YOUR ENVIRONMENT]
+call start [YOUR_CONDA_PATH]\envs\[YOUR ENVIRONMENT]\pythonw.exe "[YOUR_CONDA_PATH]\envs\[YOUR ENVIRONMENT]\Scripts\spyder-script.py" %1
+
+
+You can remove the second line and remove the environment extension from the third line if you have Spyder installed in your base environment.
+
+Hopefully for anyone experiencing any weirdness with the other solution, this one will do the trick by activating the environment correctly.
+    
+    
+Answer 6: 
+
+    
+    
+I was unable to find a spyder.exe on my installation of conda. However in my users/.anaconda/navigator/scripts I found a spyder.bat file. Using this to open the file opens an anaconda prompt and shortly after spyder will open the file. The file icon is broken but it works for me. Hope this might help. 
+    
+    
+Answer 7: 
+
+    
+    
+The solution from JoeB152 worked perfectly for me!
+
+If you are interested in adding the spyder icon (or any other) to the .py-files and if you would like to avoid the cmd-pop-up, I found out the following workaround which is feasible without admin rights:
+
+
+Download the portable version of Bat To Exe Converter (I used v3.0.10).
+Open your custom .bat-file in the Bat to Exe Converter.
+In the options settings, activate "Icon" and give the path to the respective icon (for me it's in: .../AppData/Local/Continuum/anaconda3/Scripts/spyder.ico).
+Set Exe-Format to Invisible (no empty cmd window would pop up anymore)
+Convert your .bat-file to an .exe-file.
+As usual, set to open .py-files with the newly created .exe.
+
+
+Enjoy!
+
+Environment:
+Windows 10,
+Conda 4.8.2,
+Spyder 4.0.1,
+Python 3.7
+    
+    
+Answer 8: 
+
+    
+    
+This problem is related to anaconda installation defaults - it does not register itself in PATH by default an dicourages users to do so. After proprly registering all directories in path, spyder.exe works as expected.
+How to know, what to register?
+locate and activate.bat an run it in cmd, then run echo %PATH% and manually register all directories mentioning anaconda.
+Alternatively, reinstall anaconda with PATH registratin enabled.
+Then you can associate .py files wit spyder.exe and association will work.
+    
+    
+Title: How to update Xcode beta?
+Description: 
+    
+    
+                    
+For Mac / iOS developers, there is a period that we have to use Xcode beta version so as to build a test environment for the new/pre-released version of OS X / iOS. So my question is:
+
+What is the standard process of updating Xcode beta version, for example, from beta 1 to beta 2?
+
+Is it necessary to remove beta 1 completely and then install a newly downloaded beta 2?
+
+Is there any shortcut to achieve this process?
+    
+
+        
+Answer 1: 
+
+    
+    
+Since Beta releases are generally released to developers with Apple Developer Account, a standard process of updating:
+
+
+Login to Apple Developer Account
+Go to iOS Dev / Mac Dev / Safari Dev Beta content
+Follow links to download and install Beta releases
+
+
+Multiple versions of Xcode can be Maintained. E.g I have Xcode Beta 1 installed in /Applications/Xcode 6/Beta 1/ and Beta 2 installed in /Applications/Xcode 6/Beta 2/. As of speaking now, Xcode 6 Beta 3 is released, you can install that on /Applications/Xcode 6/Beta 3/. Here is link to get started.
+
+Also note that to setup app testing environment with Beta releases, there is good reference here.
+
+Beta releases are not on iTunes so we can't take advantage of one click update.
+    
+    
+Title: Is there a way to make intelliJ idea display folding toggles for &ldquo;if&rdquo; statement?
+Description: 
+    
+    
+                    
+I'm using intelliJ IDEA and by default, it displays a pair of folding toggles for methods and javadoc comments, but not "if", "for" or "while" statements: 
+
+I wonder if there is a way to display toggles for all the code blocks surrounded by braces?
+
+PS: too bad that I cannot upload an image. Hope you can understand what I'm talking about.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can fold any code block with Ctrl+Shift+. (also available in the Code &rarr; Folding menu).
+
+Ctrl+. (same menu) folds a selection.
+
+(Use &#8984; instead of Ctrl on OSX.)
+    
+    
+Title: Run a PHP script directly in PhpStorm
+Description: 
+    
+    
+                    
+
+How can I instantly run the current PHP file in PhpStorm?
+How can I execute PHP command in PHPstorm like PyCharm?
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Right click in the editor, choose Run (or press ctrl+shift+f10) for command line script execution. If you want to test it on a web server, use Open in Browser from the same menu (you must have browser and server with mappings properly configured for this).
+    
+    
+Answer 2: 
+
+    
+    
+On top of @CrazyCoder's solution, in version 2016.3 I came across this issue where I just saw 2 icons like this,
+
+
+
+You should hit the 2nd one!
+
+IF you hit the 2nd (like me) next thing I know, it opened in a browser tab. It is a configuration to open in an embeded web server. 
+
+So I wanted to delete this configuration and start a new one. So, I found the entry to through this drop down in the top right corner,
+
+
+
+While picking Edit Configuration, I could change the test configuration.
+
+Hope that helps someone like me, although clearly not the initial poster.
+
+Cheers 
+    
+    
+Title: Visual Studio Attach To Process takes a -long- time to show up
+Description: 
+    
+    
+                    
+Since about a month or 2, the Visual Studio 2015 Attach to Process dialog takes 1-2 minutes to show up on one of my machines. It used to take just a few seconds, it feels as if it is suddenly taking an enormous effort to retrieve the process list.
+
+Needless to say, this is taking the swiftness out of my ad-hoc debugging sessions. Any tips to get it back into the previous working state, or insights into the underlying cause, would be much appreciated.
+
+
+
+Restarting the computer (e.g. after a Windows Update reboot) temporarily fixes the issue. 
+
+Note: The attaching itself works fine, and is as fast / slow as ever. Most related questions seem to be about symbol loading, but that bit is working nicely.
+
+Additional details
+
+
+My computer has modest specs (16GB mem, fast SSD, i5-6600) for a dev machine.
+According to the task manager, it is not working particularly hard while retrieving the process list. Will inspect more in detail.
+As an experiment, I waited until things got slow again, and randomly started shooting down processes using Process explorer, reducing the number of processes from 261 to 209. Fast as ever now. Seems one of these processes is the culprit (or perhaps there is a bit flip in VS at /li/ul/div
+Answer 1: 
+
+    
+    
+I solved this in VS2017 15.5, (mot likely)by uninstalling support for nodejs and python in VS.
+I got the idea when reading about someone who solved it by uninstalling PowerShell tools, which I didn't have installed.
+
+I use connection type default, but noticed a some new connection type in the drop down, for example pyhton and nodejs.
+
+I trimmed away some stuff from my VS installation that I don't really use at the moment, nodejs and python support and also Azure and Boost &amp; Google test support. After that it was fast and smooth again. It's a bit sad that the performance is affected by the unselected connection types as it seem, I hope it will get fixed soon.
+    
+    
+Answer 2: 
+
+    
+    
+Visual Studio 2015
+
+In Visual Studio 2015 the attach process dialog doesn't open until all the processes are ready. This has been changed in more recent versions to open immediately and then progressively show the processes as they become ready.
+
+Quoting a support response from the Visual Studio Team
+
+
+  Visual Studio 2015 wouldn't open the dialog until the list of
+  processes was ready, but for 2017 we changed the dialog to open
+  immediately and show the processes list once it is ready.
+
+
+Source: Visual Studio Developer Community: Attach to process really slow
+
+So I suspect that there may be something else related to the machine that is slowing down the processes.
+
+The machine
+
+Now you say it's on one machine and with all things being equal with your Visual Studio usage, settings, project type, etc. Then it's likely an issue with your machine.
+
+I've had similar difficulties with all my windows machines over the years. They start off fast and then end up painfully slow for developing. 
+The fact the problem is rectified on reboot, indicates there's some issue, perhaps a memory leak? that's causing the pc to slow down.
+
+What I would do to attempt to improve performance:
+
+
+Go through all the startup programs and disable most of them.  
+Uninstall any third party security software. They take up a hideous amount of processing. Use the inbuilt Windows 10 security features.  
+Ensure the pc is regularly defragmented and unused files are deleted.   
+Check task manager for which processes are using up the CPU or memory (or disk). There may be things that can be done if you find the troublesome area.     
+Reinstall Visual Studio and it's dependencies from scratch.  
+Reinstall Windows and then reinstall VS.    
+The pc may not be adequate for the job.  Upgrade or even better replace it.  
+
+
+I switched from Windows to Mac earlier this year, as I'd had enough of the bugs in Windows and the gradual decrease in performance. I forked out for a brilliant machine and haven't looked back. 
+
+The up and download speeds alone, on the same network as the Windows machine is 10 times faster. Everything about it is faster. The CPU on the Windows running on Parallels is actually faster. I can have Android studio stable, plus the beta open and run Visual Studio on Parallels, have chrome running and many other smaller apps and it will run faster. 
+
+I'll come back to you if this changes, but I honestly think it's a superior machine, OS, and hardware. This is coming from using State of the Art Windows machines. The best Windows machine was a gaming laptop, for performance. It too deteriorated until it just stopped working.
+    
+    
+Answer 3: 
+
+    
+    
+See if Python installed as Visual Studio Workloads. If yes, then Uninstall Python Workload.
+Its easy to uninstall workloads. Open Visual studio installer
+
+
+Uncheck the checkbox for Python and click modify button. It will take a while. When setup
+is finished. You are good to go.
+
+    
+    
+Title: Using Spyder IDE, how do you return from &ldquo;goto definition&rdquo;?
+Description: 
+    
+    
+                    
+Description of the problem:
+
+I like to jump around code a lot with the keyboard but I am hitting a wall of usability in Spyder IDE. I can use the "goto definition" feature to jump to the definition of some function but then I can't go back to where my cursor was (so it takes a while to manually find where I was before because there might be many lines of code). 
+
+So for example there is a constant X=5 in the same file and when I use "goto definition" I can see what that constant is but then there is no way to go back. Or another example is a function from another file where "goto definition" takes me to that other file... but now I can't find the other file I was on (because there may be many files open).
+
+In the 30+ year old vi you can goto the definition and return with ctrl-] and ctrl-t. In the 14+ year old Eclipse the equivalent to "goto definition" would be approximately F3 to go to the definition. And then to return would be alt-left.
+
+running Spyder version 2.2.4.
+
+Question:
+
+Using Spyder IDE, can you return from "goto definition"? If you can, how do you return from "goto definition"?
+
+What I've tried:
+
+I have a keyboard shortcut for "previous cursor position" set to Alt Left but "previous cursor position" doesn't do anything when I hit the key. (The default keyboard shortcut is ctrl-alt-left which conflicts with the Cinnamon-dekstop-manager keyboard shortcut for switching workspaces and so I had to remap the above mentioned keyboard shortcut.)
+    
+
+        
+Answer 1: 
+
+    
+    
+Spyder have a one strange bug. Shortcut "Previous cursor position" only work if "Source toolbar" is present.
+
+Turn on "View -

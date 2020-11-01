@@ -1,0 +1,1009 @@
+Title: eclipse setting questions
+Description: 
+    
+    
+                    
+1. Can we make eclipse automatically refresh its buffer?
+
+
+When we make changes to project files behind eclipse's back, eclipse won't update its buffer automatically. Instead, we have to manually click Refresh. When we forget to do so, we might be running old code.
+
+2. Can we make eclipse to eliminate automatically the
+   leading whitespaces in source code files?
+
+
+Auto indention in eclipse is inserting whitespaces to source code files. Each time we leave a line empty, leading whitespaces are left over. Consider the following code:
+
+1 public void f() {
+2   // init
+3   a = b;
+4
+5   // do it
+6   for (...) { ... }
+7 }
+
+
+After typing line 3, we hit ENTER. At this point, we realize that we want to separate the different logical sections of the code, so we hit ENTER again. It's obviously a reasonable thing to do, but unfortunately there are some leading whitespaces left over on line 4. Source code control tools (e.g., git) are not happy with that. So can we remove them from inside eclipse?
+
+3. Can we save preference settings across workspaces?
+
+
+Every time I create a new workspace, I need to change the preference settings. For example, I would typically make the fonts bigger. It's sort of redundant. So can I reuse existing settings?
+    
+
+        
+Answer 1: 
+
+    
+    
+3. Can we save preference settings across workspaces?
+
+You can export the old workspace preferences and import into new workspace. Another read: Create New Eclipse Workspace - With All Your Old Settings
+    
+    
+Answer 2: 
+
+    
+    
+To answer your first and second questions:
+1. You can turn on automatic workspace refreshing which will call refresh every 2 seconds or so, I'm lazy to find it so here is a link with the shot of the prefs tab where you can set it.
+2.You can set your own code formatting template, also in the preferences. And then add formatting to the save actions. You can easily google how to do these.
+
+The third one is already answered well by Pangea.
+    
+    
+Answer 3: 
+
+    
+    
+Through Eclipse preferences menu (editor/appearence), there is a checkbox to remove trailing whitespaces.
+
+If you want to do a (barbarian) backup of your settings, you can zip your workspace (eclipse must be shut down before this).
+
+If you want to save your settings only, you can zip only the eclipse files/folders in the workspace folder, ignoring the source code.
+
+I'm aware with the second method, since I use it weekly .
+    
+    
+Title: When moving from 32bit machine to 64bit I have to uninstall my app
+Description: 
+    
+    
+                    
+So this might sound like a complete and total noob question, but I'm going to ask and see what I find anyway.
+
+I'm working on an Android application using Eclipse IDE.  I have two development machines that I use (one for work, one for home) and one is 64bit while the other is 32bit.  The phone that I'm using to test my application is a Google Nexus (Verizon flavored, most up to date drivers).  If I build and run the application using one machine, then try to do the same on the other machine I get a console error that tells me to run an ADB command to uninstall my app because the signature has changed.
+
+From what I understand it's because "debug.keystrore" (located in %USER_HOME%/.android) is different for each machine.  Why does it do this?  I assumed that the application signature was unique to the app not the app + dev machine.  Is this normal behavior?  If so, is there something I can do to get around it?  I'm worried that copy/pasting the file between machines could cause problems, so I haven't tried it yet.  Would I have to move this file every time I switch machines?  Also, if I release my app into the wild; then loose my computer and have to start using a new computer (thus, changing the application sig) will everyone who installed my app have to uninstall the app because the application sig is different?
+
+Bonus round: is there some way I can configure my IDE so that I don't have to change where eclipse looks to find the SDK every time I switch machines (i.e. make it look in both the ProgramFiles directory and the ProgramFiles (x86) directory.
+    
+
+        
+Answer 1: 
+
+    
+    
+To make sure the app was built by the same developer, Android wants the signature to be the same.  Feel free to copy your debug key between machines.  It has nothing to do with your machine or whether it's 32/64 bit; it only proves that you're the same developer.
+
+When it comes time to release your app, you want to be very careful to
+
+
+Keep your release key private, and
+Keep your release key backed up in several places.
+
+
+If you ever lose your release key, you won't be able to update your app, as you suspected.
+
+Update: To make my answer more complete, it looks like the way to tell Eclipse which key to use is under Preferences -
+Answer 2: 
+
+    
+    
+I guess that for different platforms Google team has created different debug keys (I guess for tracking purposes). These debug keys do not depend on your application. If you want to distribute your application you need to create your own key. If you sign your application with your own certificate there should not be such kind of problem (because in this case, certificate depends only on attributes that you've entered when you create certificate). Under the Preferences -
+Answer 3: 
+
+    
+    
+The signature is unique to each of the developers. From what I understand, if you are using the debug key, it uses your mac address or other unique characteristic to create an arbitrary key. So when you build and install your app onto a device with one machine, and then go to use another, you have different signatures, and thus your issue. 
+
+To be able to not have this issues, you should create your own key, as others have mentioned, and then use that to sign when you build. 
+
+You will NEVER want to release an app with your debug key, this is just for developing and when you go to release your app, you want to use your unique key that you created. 
+
+These keys are used to keep others from updating your apps, without your permission, so create a your own dev key and you won't have this issue. 
+
+Here is a link that should help you get started and pointed in the right direction: http://developer.android.com/tools/publishing/app-signing.html
+    
+    
+Answer 4: 
+
+    
+    
+I've copied "debug.keystore" from one machine to another, there are no ill side-effects.  You can simply overwrite one with the other, and the un-install/re-install problem is fixed.  The debug key is there only to protect the developer's own devices from other developer's binaries.
+
+As others have mentioned, you do not publish your app with the debug key, you must make a release key and sign it, per the instructions on developer.android.com.
+
+Also it's worth noting that the "debug" key is only valid for 1 year from the date it was created (when the SDK was installed).  After a year, the SDK will say it's expired, and generate a new debug key.  You'll have to re-copy the new key to the other machine, and you'll have to un-install the app signed with the old debug key.
+
+As for the other problem you mention, you should have separate Eclipse workspaces that both reference the same Android project, using different SDK locations.  The project does not need to be in a sub-folder of the workspace, so you can make this separation.
+    
+    
+Title: .style .backgroundColor error
+Description: 
+    
+    
+                    
+Here is my script (in Selenium IDE): 
+
+storeEval |   var form =window.document.forms[0];
+
+elements = form.elements; for (var i = 0; i &lt; elements.length; i++) 
+{window.document.getElementsByTagName("elements").item(i).style.backgroundColor}
+| result
+
+
+here is my error: 
+
+[error] Threw an exception: window.document.getElementsByTagName("elements").item(i) is null
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Instead of this:
+
+window.document.getElementsByTagName("elements").item(i).style.backgroundColor
+
+Just use this:
+
+elements[i].style.backgroundColor
+    
+    
+Answer 2: 
+
+    
+    
+Your code is looking for elements of type element, like this:
+
+&lt;element&gt;Something&lt;/element&gt;
+
+
+but there aren't any in the document.
+
+Did you really mean to search for &lt;element&gt; elements?  It looks like the content of your loop wants to be something like this:
+
+elements.item(i).style.backgroundColor
+
+    
+    
+Title: Does PHP support regions?
+Description: 
+    
+    
+                    
+In C# I can write #region and #endregion, is there an equivalent in PHP that works with all IDEs?
+
+Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+This isn't natively supported, but instead it would be IDE-specific. And this doesn't strictly mean #region support per se, but rather 'code folding' in whatever fashion any IDE (or extension/plugin) supports. Here, and here are a couple of examples.
+    
+    
+Answer 2: 
+
+    
+    
+No there is no #region in PHP. Its related to IDE/Editor actually. Not related to language.
+    
+    
+Answer 3: 
+
+    
+    
+Try this:
+
+// &lt;editor-fold defaultstate="collapsed" desc="user-description"&gt;
+  ...any code...
+// &lt;/editor-fold&gt;
+
+    
+    
+Title: What are the advantages and disadvantages of real time collaboration in an IDE?
+Description: 
+    
+    
+                    
+I can think of a few disadvantages of having real time collaboration in an IDE like no two people code in the same way so there are chances of semantically conflicting edits that can break the work.
+
+But are there any advantages to it? What are the other disadvantages? 
+
+Thank you for you answers in advance.
+    
+
+        
+Answer 1: 
+
+    
+    
+Real time collaboration in an IDE can be used in case of distant learning.
+It can also be used to review and correct code.
+
+The gretest disadvantage of this is that it will cause many errors when many people code together on the same document. There are chances that they use the same variables for different tasks. So, even if the program is compiled right, there are many changes of getting bugs in the code.
+    
+    
+Answer 2: 
+
+    
+    
+There are advantages such as using it for teaching and as a code review tool.
+    
+    
+Answer 3: 
+
+    
+    
+It also has its advantages in telephonic interviews.
+    
+    
+Answer 4: 
+
+    
+    
+In live project we get more knowledge about requirements of the client directly,
+by this interaction of user we done and deploy our project with in specified period.
+    
+    
+Title: PyQT - How to implement Syntax Highlighting?
+Description: 
+    
+    
+                    
+I want to write a little IDE for Cython using PyQT, but I don't have any idea how to implement Syntax Highlighting.
+I know how to parse the Python-source, but I don't know how I can set the color for different words within the Textfield in PyQT.
+I could use HTML for this, but how does it work in realtime ? I mean when the user edits the text I need to be able to immediately change the text's format, etc.
+
+Do you know how I can achieve this ?
+    
+
+        
+Answer 1: 
+
+    
+    
+I would recommend checking out the code in KhtEditor which is written in Python using PyQt.  I believe the author is also working on a port from QWidget to QML.
+    
+    
+Answer 2: 
+
+    
+    
+Have you considered using QScintilla?
+
+"As well as features found in standard text editing components, QScintilla includes features especially useful when editing and debugging source code. These include support for syntax styling, error indicators, code completion and call tips."
+    
+    
+Title: A suitable text editor for C that includes lint &amp; cstyle?
+Description: 
+    
+    
+                    
+I'd like to use a nice C code-editor, that would have built-in support for:
+
+
+Code-colouring for C, Make, XML, Java, etc.
+Lint
+Cstyle
+Works under Ubuntu
+Possibly a nice visual debugger integrated, too?
+
+
+I'd rather not use an IDE, as most of them seem to me somewhat clumsy with C.
+
+I am a former Java dev, so I'm sorry if I sound boring to some.
+
+Thanks guys!
+    
+
+        
+Answer 1: 
+
+    
+    
+You can try using VIM. VIM has a high learning curve in the beginning but it's excellent once you are highly acquainted with it. VIM also has many excellent plugins like NERD-Tree and Command-T which allows you to search for file names in your directory tree with just a couple keystrokes. VIM is also fast with many nice built in functionalities and it requires minimized computer resource so it's very fast on most computer (works real well for computers with limited resources). VIM also has syntax highlight and formatting for almost all the languages that you can name. It can be a standalone editor or you can equip it with enough plugins to make it the fastest IDE ever built. Good luck with your choices :)
+    
+    
+Answer 2: 
+
+    
+    
+Emacs will probably do, but it might be cumbersome to adjust everything to your needs and to get used to it.
+
+Emacs comes bundled with C, Java, XML, Make, and support for other languages. Almost every language can be plugged in and is already plugged in by someone else.
+
+Works of course under Ubuntu and integrates well with GDB.
+    
+    
+Title: Eclipse IDE project directory structure help [Java]
+Description: 
+    
+    
+                    
+I have been learning Java and have had no problem with projects in which multiple .java files were in the same Default Package. 
+I am now trying to separate code and create folders for images, but everything I have tried has failed.
+
+How do I properly add folders for images and other classes, and properly set the path to it?
+All paths should be relative to the project, I know that much ;_;
+
+Here's a link to a picture of my IDE and error message from program output:
+
+http://img262.imageshack.us/img262/8415/directory.png
+
+Thanks!!
+    
+
+        
+Answer 1: 
+
+    
+    
+First off, your Java code itself should go into a package, not the default package. Next, you may be able to refer to the image file by prepending src/ to your path:
+
+"src/Textures/Crate.png"
+
+But better would be to get the image as a resource, not as a file using the Class#getResourceAsStream.
+    
+    
+Answer 2: 
+
+    
+    
+Drag using the mouse your Textures folder to the LWJGL 6 project folder.
+    
+    
+Answer 3: 
+
+    
+    
+Try giving src/Textures/Crate.png  as the path to the FileInputStream constructor.
+    
+    
+Title: Using Embarcadero Borland
+Description: 
+    
+    
+                    
+As I'm more and more dissapointed with VS 2010 I'm trying to find some alternative and I was looking at Embarcadero's new edition of C++ env.
+Is there any point of learning new (not popular I think) product when VS practically dominates market?
+Thanks.
+    
+
+        
+Answer 1: 
+
+    
+    
+I've been using both the Embarcadero Borland, now RAD Studio 2010, c++ and VS2008 every day for the last 6 months. My programming philosophy has always been to use the right tool for the project, no matter what that particular tool is.   So a couple of my observations/opinions are -
+
+Advantages
+
+
+The WYSIWYG screen designer is good.  It acts a lot like the WinForms editor in VS2008, but for c++.   In VS2008, the only package for c++ that I've used that is close is Qt.   My biggest compliant is documentation, but that applies to most software, so it isn't just their problem.
+For many builtin classes, they are built on TObject class.  This base class functions a lot like Object in C#.  The biggest advantage this gives you as a c++ programmer, if you follow a few rules, is mostly automatic memory management.   It's not garbage collection, rather, list of related objects that are deleted together.
+
+
+Disadvantages-
+
+
+The RAD Studio 2010 C++ environment exists primarily to support Delphi.  That is their real strength anyway.  Nowhere does anything say this.  It is just an overall feel that I've gotten from using system.
+Limited support for 3rd party libraries. 
+
+
+It cannot link with any Microsoft compatible c++ library.  This includes both Microsoft and 3rd party libraries. They use a different "name mangling" format from Microsoft.  So everything has to wrapped in a c language wrapper.
+We use the Boost Libraries a lot in VS2008.  But in Rad Studio, it only has limited support for Boost.
+
+I've found the overall speed of the generated code to significantly slower than that produced by VS2008.
+
+
+Please remember, that these are just one person's opinions.    
+
+I would suggest that you download a demo version of the product and try it for yourself.
+    
+    
+Answer 2: 
+
+    
+    
+Although I'm not really a Windows programmer, I have been using Borland/Embarcadero to-and-fro during the past 10 years. Here are my personal opinions of why you should not consider it:
+
+
+The general quality of Builder has dropped significantly over the years. Borland Builder 6 was the last high-quality product, from there the IDE itself has become more and more buggy. The IDE typically crashes once per 1-2 weeks of usage.
+No undo in the RAD design. Yes I know, it is quite unbelievable. Even the earliest versions of utter crap like VB had this. But Builder year 2011 doesn't! If you slip on your keyboard and accidentally alter a component, you shall be punished!
+The debugger is next to useless. This might have been fixed in the latest version, but in several versions you can't single step through the program without collapsing struct/class variables in the watch window, which is of course very frustrating.
+Documentation is very poor, often non-existant, and may be written in Object Pascal, even though you ordered the C++ IDE. The help files also have a tendency to linger as evil ghost processes in your computer, making it impossible to shut down Windows before the ghost is busted. 
+
+
+Personally I'm considering switching to Visual Studio.
+    
+    
+Answer 3: 
+
+    
+    
+If you want to be 100% up-to-date, you have to use the development environment provided by the platform's vendor.
+
+If you do not mind waiting few months/years for new things to get ported over (or your market allows for it) then you surely you can venture into the unknown.
+
+It's not that Borland's IDEs (unlike MS' VS family) needed any advanced training to start using them and be already productive. That is the main reason why they remain popular in many niches.
+    
+    
+Title: Editor or IDE supporting django templates and HTML/CSS validation?
+Description: 
+    
+    
+                    
+Is there a IDE that supports editing django templates and that is able to validate HTML and CSS?
+
+Requirements:
+
+
+be able to detect and highlight errors in CSS, example: forgot to close "}", or invalid css attribute
+be able to make it learn new css attributes (like css3 ones or browser specific ones) - we don't want to see them invalidating the css
+validate partial-HTML, like the one from inside django templates.
+has to run on Windows
+Python support (optional / bonus)
+
+
+I know that there are many cool Python IDEs but I found none that can be used to edit and validate HTML/CSS django-templates.
+    
+
+        
+Answer 1: 
+
+    
+    
+PyCharm from IntelliJ.
+    
+    
+Answer 2: 
+
+    
+    
+You can use geany (http://geany.org/) that support html/css and allows you to define your own snippets (http://configer.net/config/show/geany-html-and-django-snippets/) for django template language.
+    
+    
+Answer 3: 
+
+    
+    
+PyDev for Eclipse/Aptana
+    
+    
+Title: how can i search a lots of .js and .php files for a specific phrase?
+Description: 
+    
+    
+                    
+Windows has a go at it but only gets a few when i seach a directory.
+
+Is there an IDE or similar that allows for searching within the files of an entire directory?
+
+
+  for example, if I need to make sure no files require to a redundant
+  class (old_class.php)
+  I'd like to
+  search for 'old_class.php'
+
+
+or alternatively if anyone knows a way to do this in Aptana (my text editor of choice) that would be amazing...
+    
+
+        
+Answer 1: 
+
+    
+    
+What you want is easy with Aptana : 
+Doc: How to search with Aptana
+    
+    
+Answer 2: 
+
+    
+    
+Notepad++ can search through multiple files.
+
+http://notepad-plus-plus.org/
+
+Edit: Oh and it's free!
+    
+    
+Answer 3: 
+
+    
+    
+Try Windows GREP.
+It works like a charm for me.
+    
+    
+Answer 4: 
+
+    
+    
+Yes, Dreamweaver has amazing search capabilities for searching within folders. Very useful and used all the time. Obviously, it's not free. Would be happy to learn a way in Aptana
+    
+    
+Answer 5: 
+
+    
+    
+Nothing better than ack (better than grep)
+    
+    
+Answer 6: 
+
+    
+    
+Try Windows Grep...
+    
+    
+Title: Which IDE to use for ATMega32 micro controller coding
+Description: 
+    
+    
+                    
+I am involved in a project which requires designing a mini rover (mars rover types). I am using ATMega32 micro controller. I have other hardware like DC motors, IR sensors etc. My query is that is there any IDE that I can use to code the micro controller? It must be user friendly since I am new to the concept of micro controller coding, and also it must have simulators. I did look it up on the net, but there are so many terms associated with it, that it confused me in the end. I think a simple IDE where I can write code, test it using simulator would be enough. Any suggestions?
+    
+
+        
+Answer 1: 
+
+    
+    
+I would try the Arduino's IDE: http://www.arduino.cc/en/Main/Software
+
+It supports a lot of things such as building and debugging and interfacing with avrdude all from inside the IDE, so definitely a good one for embedded work, though I've never used it myself. 
+
+Also, while you are there, you may want to give the Wiring libraries a try. They are really nice for new people and are specifically for the ATMega32(I think). 
+    
+    
+Answer 2: 
+
+    
+    
+There's no silver bullet. 
+Start here http://www.atmel.com/dyn/products/tools_v2.asp?family_id=607
+Look for some videos on Youtube to learn.
+Arduino is also a very good choice like Earlz wrote.
+    
+    
+Answer 3: 
+
+    
+    
+The best IDE to use would be ATMEL STUDIO 6.  You can find it here http://www.atmel.com/microsite/atmel_studio6/. Also you would need a ICSP programmer to burn the .hex file into the Atmega32. Note: The ICSP programmer can also be use to program other atmega chips
+    
+    
+Title: Which IDEs Provide a Visual Design View for JSF using JSP?
+Description: 
+    
+    
+                    
+NetBeans used to do that but with the deprecation of Woodstock (rather merging with ICEFaces) and with ICEFaces not supporting Visual Web Project it is difficult to choose NetBeans now [1].
+
+Eclipse (the J2EE version) has a very basic version that provides drag and drop etc. of JSF controls.
+
+So, I wanted to know which free IDEs (if any!) are there that provide good support for web  development using JSF.
+
+[1] http://www.icefaces.org/JForum/posts/list/13622.page
+    
+
+        
+Answer 1: 
+
+    
+    
+I'm really not a fan of it1 but Oracle JDeveloper has a JSF Visual Editor and is free to download (I wasn't aware of that). 
+
+1 Actually, I never used JDeveloper, only some poor customers did but it had many many flaws last time I checked it. Maybe Oracle did improve it since then.
+    
+    
+Answer 2: 
+
+    
+    
+You can have a look at the JBoss Tool plugin for Eclipse.
+    
+    
+Answer 3: 
+
+    
+    
+You can still do Visual JSF development on NetBeans, but you will need to use NetBeans 6.7.1 which was the last supported version. Please see the answer on how to install it here: Netbeans VisualJSF (Woodstock) Design view not available in 6.7.1 which details how to install the Visual JSF (Woodstock) plugins. This is still a good choice for JSF 1.2 development with JSP.
+
+I would recommend using JSF 2.0+ today for development. JSP based applications will still run on JSF 2.0, but JSP as a View Definition Language (VDL) is deprecated. The new VDL is Facelets which will allow you to edit it in any HTML editor.
+    
+    
+Answer 4: 
+
+    
+    
+Visual design using drag 'n drop was an original design goal of JSF, but one that IMHO never has been correctly implemented.
+
+In Visual Basic or Cocoa (Apple) this stuff just works, but in JSF it just doesn't. Even what are supposedly the best visual editors give you an experience that's much worse than even the early Visual Basic alpha releases from the early 90-ties.
+
+JSF is great, but at this point it's more than 2 decades behind. 
+    
+    
+Title: Is there some way to load the TSQLConnection params from an ini file in design time?
+Description: 
+    
+    
+                    
+I have a SQLConnection which is shared between projects, in runtine it reads the configuration from an ini file, is there some way to load this same configuration in design time?
+    
+
+        
+Answer 1: 
+
+    
+    
+One way is to write your own TSQLConnection descendent.
+    
+    
+Answer 2: 
+
+    
+    
+You have to create your own custom component for it, let's call it TCustomSQLConnection. Just drop this component on the form or on a datamodule, set up a custom property called ConfigurationFile to your ini file, and you're good to go. If I understand correctly, this is what you want - my appologies if not.
+
+Please take a look at the following code, 
+
+
+unit uSQLCustomConnection;
+
+interface
+
+uses
+  SysUtils, Classes, DB, SqlExpr;
+
+type
+  TCustomSQLConnection = class(TSQLConnection)
+  private
+    FConfigurationFile  : String;
+    procedure SetConfigurationFile(Value: TStrings);
+    procedure LoadConfiguration(AConfigurationFile: String);
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor  Destroy; override;
+  published
+    property ConfigurationFile : String read FConfigurationFile write SetConfigurationFile;
+  end;
+
+procedure Register;
+
+implementation
+
+constructor TCustomSQLConnection.Create(AOwner: TComponent);
+begin
+  inherited;
+  FConfigurationFile := '';
+end;
+
+destructor TCustomSQLConnection.Destroy;
+begin
+// free memory if needed
+  inherited;
+end;
+
+procedure TCustomSQLConnection.SetConfigurationFile(Value: String);
+begin
+  FConfigurationFile := Value;
+  if FileExists(FConfigurationFile) then
+    LoadConfiguration(FConfigurationFile);
+end;
+
+procedure TCustomSQLConnection.LoadConfiguration(AConfigurationFile: String);
+begin
+// Put the code that loads the configuration here
+end;
+
+procedure Register;
+begin
+  RegisterComponents('Samples', [TCustomSQLConnection]);
+end;
+
+end.
+
+
+All you have to do is to install this component after adding your own code that loads the configuration, and you're good to go.
+
+I would drop this component on a Data Module, alongside with some other components that are shared between projects.
+
+Hope it helps.
+    
+    
+Answer 3: 
+
+    
+    
+I assume you are using Delphi 2009 or 2010.  You may refer to my blog article first: http://chee-yang.blogspot.com/2008/09/delphi-2009-using-dbx4-framework.html
+
+I have track this problem for quite some time.  In the article, there are quite a number of QC report raised.  Some already solved in Delphi 2010.  Please have a look first and we may discuss in later stage.
+    
+    
+Title: Easy to learn 3D IDE for Java
+Description: 
+    
+    
+                    
+I need create a 3D model of and animate a robotic arm.  The arm is going to receive inputs on how to move via serial I/O.
+
+What is the best Java IDE for me to create this 3D model with?  It doesn't have to be fancy or anything, just a proof of concept.  Unfortunately, I haven't had any experience with animation before, so I'd appreciate something that's easy to pick up.
+
+Thanks a lot, I really appreciate any help.
+
+Zain
+
+PS: I could potentially do this in 2D as well, except I imagine that would probably entail more work since I'd have to draw a lot more images.  If I'm wrong please let me know.  
+
+Below I've made an approximate ascii drawing of what the arm needs to look like, with the x's showing all the joints that need to rotate.  If I didn't have to rotate the base as well, this would probably have been pretty easy to do in 2D.
+
+               ____
+              / ___|
+       ______/ /
+      /x_____x|
+     / /     \ \___
+    / /       \____|
+   /x/
+   | |
+   | |
+___| |___
+|___x___|
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Java3D or JOGL are common libraries for creating 3D graphics in Java.  If you have a simple 3D model, you can just create it programmatically using simple 3D shapes.  Anything more complex will probably require a 3D modelling tool like Chad and Alex mentioned.
+
+
+http://java.sun.com/javase/technologies/desktop/java3d/
+https://jogl.dev.java.net/
+
+    
+    
+Answer 2: 
+
+    
+    
+You seem to have programming confused with 3D modeling. This isn't something a Java IDE is going to do for you. If you actually need a real 3D model, you could look into free 3D modeling programs like Blender.
+    
+    
+Answer 3: 
+
+    
+    
+You're going to need to create/use something like a game engine. You'll need to model your 3D object in something like 3ds Max or Blender, and have your engine control the models movements based on inputs received from whatever your outside source is. I would suggest something like this for your rendering/model controlling. As far as IO goes, you'll have to figure that out yourself, as I have no experience working with serial IO in Java.
+    
+    
+Answer 4: 
+
+    
+    
+Check out Processing.  It is both an IDE and a 3D modeling environment -- and it is 100% java.  You will finds lots of examples and a straight forward api to get you started.  
+    
+    
+Title: How do you handle different character encodings?
+Description: 
+    
+    
+                    
+I'm trying to understand the basics of practical programming around character encodings.
+
+A few things to consider:
+
+
+I know how to read a file whose encoding is different, and convert it to the console's encoding.
+But when I try to convert literal strings that appear in source code, for some reason, it doesn't always work:
+
+
+In IntelliJ's console for the clojure language (its REPL or interactive interpreter), it doesn't work at all. I haven't look if this particular console is different than IntelliJ's standard java console.
+In Apple's Terminal, it sometimes works fine, depending on the source file's encoding.
+In Eclipse and Netbeans, it always works fine.
+
+
+
+There's lots of resources to learn about Unicode and character encodings. But AFAIK, not much to learn practical usage guidelines. Some other questions here on StackOverflow have been useful, but none has been enough for what I'm trying to do.
+
+UPDATE:
+I have greatly simplified this question after having understood how general the problems I was facing were. Originally, it was specifically targeted at the Java platform, with a code example in the clojure language. To see these, have a look at the first version of this question.
+    
+
+        
+Answer 1: 
+
+    
+    
+Your problem is related to how your IDE tells the Java compiler to interpret the source file's encoding. (Console output might be another problem. don't know)
+
+If you run the javac program with no arguments you get a help print (excert below) that hints you as to how it works.
+
+ -encoding &lt;encoding&gt;       Specify character encoding used by source files
+
+
+Javac thus interprets the source file, with its literal strings and all, turning it into UTF8 i think in the byte code. I'm sure the Closure compiler has a similar option.
+
+In Eclipse, the option to decide what encoding source files have is under General 
+Answer 2: 
+
+    
+    
+As a record of the knowledge that is good to have to be able to solve this kind of problems, here are some highlights:
+
+
+Verify the encoding of each file your program uses. This includes source files and data files, be they fetched locally or on any network.
+
+
+Make sure that what reads the source files knows their respective encodings:
+
+
+If you use an IDE, verify which encoding it uses for its following settings:
+
+
+IDE-wide encoding
+Project-wide encoding
+Module-wide encoding
+And its file-specific encoding.
+Of course, you'll probably want to standardize them all with a unique encoding.
+
+If you use any kind of build tool or compiler outside of an IDE, verify its settings.
+
+Make sure that what reads the data files knows their respective encodings. You'll use your programming language's features to decode each data file from its original encoding.
+
+Verify what encoding is needed by the users of every kind of character data your program produces. You'll use your programming language's features to encode everything how it should be:
+
+
+User interface
+Files created or modified by your program, including:
+
+
+Network communications
+Log files.
+
+
+
+
+The following tips contributed by other people, might prove highly useful:
+
+
+Don't use the default platform encoding unless you're really, really sure you mean to.
+Prefer formats that carry their own encoding information. XML is a good example: All valid XML files have a very clearly defined encoding; parsing them doesn't depend on the encoding being specified by some external means.
+
+
+See also the following learning resources:
+
+
+Jon Skeet's Debugging Unicode Problems article, with a few more technically-inclined tricks.
+
+
+How Jon Skeet applies his knowledge to Java.
+
+
+
+And to widen the subject, see What Issues prevent Java applications from working on multiple platforms?.
+    
+    
+Answer 3: 
+
+    
+    
+Besides the point that the code you show is not Java I would recommend to look at ICU (http://site.icu-project.org/) the open source Unicode library that is available in Java and C++.
+    
+    
+Answer 4: 
+
+    
+    
+The -encoding option of javac tells the compiler what character encoding the source files use. 
+
+IDEs usually default to the platform character encoding, but can be set to use an encoding that you specify. Then they go another step to let you override the encoding on a single file.
+
+If your editor or IDE is using something other than the platform default, then you compile or edit the files with a different tool, you need to make sure both tools have explicitly specified the same encoding.
+    
+    
+Title: Delphi&#39;s RAD Studio\5.0\lib\debug Folder
+Description: 
+    
+    
+                    
+Perhaps a stupid question, but what exactly is the purpose of this Delphi folder?:
+C:\Program Files\CodeGear\RAD Studio\5.0\lib\debug
+
+..and why/when are *.dcu files put there rather than 
+C:\Program Files\CodeGear\RAD Studio\5.0\lib\
+?
+
+I'm trying to find duplicate DCU and BPL files, based on an aswer I received to another question here, and it seems that the lib and lib\debug folders sometimes contain the same or similar *.DCU files.  Is this OK, or not... and when/why?
+
+Thanks in advance for any and all help. : )
+    
+
+        
+Answer 1: 
+
+    
+    
+The DCUs and BPLs in the debug folder(s) were compiled with debug information so you can step into the functions provided by them using the debugger. If you check "Enable debug DCUs" (or something similar, don't remember) in the project options, the linker will use the DCUs and BPLs in the debug folder instead of the release ones.
+    
+    
+Title: How do I enforce a package-level build order in eclipse
+Description: 
+    
+    
+                    
+Explanation:
+Say package A is always built first and then package B. I need to configure my eclipse workspace such that it mimics the build environment and shows compilation errors when sources in package A refer package B. Is this possible? If yes, how?
+    
+
+        
+Answer 1: 
+
+    
+    
+Take a look to: Arquitecture Rules or Macker
+
+These tools are able to warn you when some rule is broken. They both support the rule "some package should not invoke some other package".
+
+I do not know if there is an eclipse plugin for any of them, sorry.
+    
+    
+Answer 2: 
+
+    
+    
+You'd need to build them as separate projects, with project B referring to project A but not the other way round.
+    
+    
+Answer 3: 
+
+    
+    
+If you want even tighter enforcement, you can make your projects OSGi bundles/Eclipse plugins. This allows you to specify which packages are exported from a bundle, and you can even specify that only specific bundles can access certain packages.
+    
+    
+Title: How select the rest of the word in incremental search in Intellij IDEA?
+Description: 
+    
+    
+                    
+When in incremental search mode in Intellij IDEA, is there a way to select the rest of the word. For example, suppose I want to find the word “handleReservationGranted”. I type Ctrl-f to enter incremental search mode, and start typing the letters “han”. Now suppose I have found the beginning of “handleReservationGranted”. In my search box I have “han”, but I would now like to be able to select the rest of the word, so that the search box contains “handleReservationGranted” instead of “han”.
+
+In Xemacs, I can type Ctrl-s, type “han”, and then type Ctrl-w. Now my search term is “handleReservationGranted”, and not “han”. So now if I press Ctrl-s, I find the next occurrence of “handleReservationGranted”.
+
+Is there a similar feature in Intellij IDEA? The best I can do now is either to keep typing in the rest of the letters (dleReservationGranted), or exit incremental search, select the word with Ctrl-W, then enter search again with Ctrl-f.
+
+I am using Intellij IDEA 7.0.3.
+    
+
+        
+Answer 1: 
+
+    
+    
+Yes, you can use autocomplete during an incremental search.
+
+After you type "han", press CTRL-SPACE (autocomplete) and it will give you a list of potential matches in the file.  Just pick "handleReservationsGranted" from the list and that will become your search term.
+    
+    

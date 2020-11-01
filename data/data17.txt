@@ -1,0 +1,3417 @@
+Title: In Delphi 7, can I set up &#39;Debug&#39; and &#39;Release&#39; modes?
+Description: 
+    
+    
+                    
+In most modern IDEs, you can have Debug and Release build configurations, and you can quickly switch between them.
+
+In Delphi 7, this does not seem to be possible. I have to go to Project Settings and toggle optimization and all the debug information stuff manually.
+
+It would be great if there was a plugin or some such that handled this for me.
+
+Does anyone know of one? Any other suggestions?
+
+Edit: I can't upgrade to Delphi 2007 or 2009 as we have a large Delphi 7 codebase which would have to be converted. I agree that would be the best solution in theory though :P
+    
+
+        
+Answer 1: 
+
+    
+    
+You can very easily add project configurations, similar to what other IDEs offer, using Andreas Hausladen's great DDevExtensions IDE expert. Just make sure to download the 1.6 version from the link I mentioned, since later versions only work with Delphi 2009. The 1.6 version works with any Delphi version between 5 and 2007, inclusive.
+
+The expert adds a submenu under the Project menu, in case you can't find it at first.
+    
+    
+Answer 2: 
+
+    
+    
+I don't know of any build-configurations plugin for Delphi 7, but you could however simulate this;
+
+Just apply an include-file in every unit of your project(s) (which is a smart thing to do anyways) and let it adjust itself to one single define, like this :
+
+--- ExampleIncludeFile.inc ---
+
+{$IFDEF DEBBUG}
+
+{$OPTIMIZATION OFF}
+{$RANGECHECKING ON}
+// etc
+
+{$ELSE}
+
+{$OPTIMIZATION ON}
+{$RANGECHECKING OFF}
+
+{$ENDIF}
+
+
+
+
+Now, if you add DEBUG to the Compiler defines in your .dof project settings, you'll get a Debug-build, and if you remove it, you get a release build. Other setups are entirely possible too ofcourse.
+
+Delphi 2005 does have Build Configurations embedded in the Project Manager (Release and Debug only), and Delphi 2009 add even more to this, with nice little things like 'Option sets' and custom 'Configurations' (that you could even mark as Default for all new projects). Give it a look, it's a really great product!
+    
+    
+Answer 3: 
+
+    
+    
+Not directly in Delphi 7, but you have options:
+
+
+Wrap the compiler directives for all the changes (debug, optimization, etc.) inside a user defined compiler directive, and then set a compiler directive to change between debug and release.  
+Additionally you can use FinalBuilder or other similar build tools to create builds that use different settings.  
+Delphi 2005 has this functionality added.  So upgrade to Delphi 2007 or 2009 and get it built in.  They are both very stable versions with a lot of new features.
+
+    
+    
+Answer 4: 
+
+    
+    
+This feature was added only in Delphi 2009.
+
+For older versions of Delphi you can write two copies of .cfg file, one with debug options and one with release options, and compile your program calling dcc32.exe from within a batch file.
+
+Something like this:
+
+rem release.bat
+copy release.cfg myprog.cfg
+dcc32 -B myprog.dpr
+
+rem debug.bat
+copy debug.cfg myprog.cfg
+dcc32 -B myprog.dpr
+
+    
+    
+Title: Eclipse tasks from specific files
+Description: 
+    
+    
+                    
+In Eclipse (Galileo) is it possible to filter the list of TODO and FIXME tasks by a specific  file, or several files? Instead of having the whole list for the entire project.
+    
+
+        
+Answer 1: 
+
+    
+    
+You can select through the upper right arrow of the Task View the option "Configure Content"
+
+From there, you should select a narrower filter like:
+
+"On selected element only"
+
+
+
+
+
+Steve Chambers mentions in the comments:
+
+
+  To get this to work in Kepler (Eclipse 4.3), I had to tick the checkbox on the "TODOs" configuration in the top left (rather than "Show all items", which is ticked by default).
+
+    
+    
+Answer 2: 
+
+    
+    
+I am not running Galileo, but slightly older version of Eclipse. However, you can at least filter the task list by task description, if not the file name. Open the menu of the Tasks view and from there choose Configure Filters... Configure Contents.... From there, you can set up a filter that filters data based on the content of task description. Perhaps you can use this to achieve what you want.
+
+(Plus I'm sure that in case new functionality has been added to the filter configuration in Galileo, it will be obvious from the Configure Contents window.)
+
+Hope this helps.
+    
+    
+Answer 3: 
+
+    
+    
+A better approach for your problem would likely be to chose "On working set" from that dialog, "Select...". Then create a working set, it will ask you what files are part of the working set and only display tasks from those files.
+
+I use this to exclude the "vendors" directory in Symfony2, and the "Zend" directory in Zend Framework, which are full of TODOs and errors that pollute these views.
+    
+    
+Answer 4: 
+
+    
+    
+I couldn't see a way to do exactly what you wanted.
+
+In a single file you can open the file and locate the TODO items by the icons in the margin.
+
+You can also open the Tasks view (Window-
+Title: Reconnecting Emulator to Eclipse
+Description: 
+    
+    
+                    
+My main problem with developing in Android is that the emulator seems to continually get disconnected from eclipse. This always happens the 2-3 time I try to upload my .apk from eclipse without rebooting the emulator. Eclipse indicates this with an empty DDMS -/pp/pp/ppstrong/strong
+Answer 1: 
+
+    
+    
+In eclipse go to Window-
+Answer 2: 
+
+    
+    
+Try to call 'Reset adb' menu item from DDMS /p/div
+Answer 3: 
+
+    
+    
+At most of the time you don't need to restart the emulator.
+
+AFAIK the only workaround for this is to restart Eclipse (I always use this), or use a real phone.
+    
+    
+Answer 4: 
+
+    
+    
+Try adb kill-server, followed by an adb connect
+    
+    
+Answer 5: 
+
+    
+    
+I've had luck reconnecting to the disconnected emulator by entering an adb-over-tcp command line which you can look up in the docs.  I think the address and port to use are the ones in the title bar of the emulator window, if not try the next higher port.   Once it's back in adb devices eclipse should use it.
+    
+    
+Answer 6: 
+
+    
+    
+in terminal:
+
+$adb kill-server &amp;&amp; adb start-server
+
+    
+    
+Title: Integrate Spring with IntelliJ
+Description: 
+    
+    
+                    
+I have downloaded the Spring toolsuite, and installed. Now when I try to create a new project in IntelliJ it doesn't show Spring in Libraries..
+How can I get Spring in there?
+
+Thanks in advance!
+    
+
+        
+Answer 1: 
+
+    
+    
+The SpringSource Tool Suite has nothing to do with IntelliJ Idea, in fact it is a different IDE (it's a specialized Eclipse distribution).
+
+So while it does make sense to download the Spring framework (although it's better to access it through a build tool like Maven), it does not make sense to use both Springsource Tool Suite and IntelliJ Idea. It's one or the other (and both support Spring perfectly well).
+    
+    
+Answer 2: 
+
+    
+    
+When creating a project with a wizard, you can select the Spring Framework and specify the new library or let IntelliJ IDEA download it. Libraries can be also managed later or you can Add Framework from the context menu of the root of the module in the Project View.
+
+Check the Enabling Spring Support help section for details.
+    
+    
+Answer 3: 
+
+    
+    
+I am answering this question so late, but I need to contribute to the answer in order to clarify things so it may help others in future. 
+
+There is something you need to know clearly, there are two different types of IntelliJ IDEA, the first one is INTELLIJ IDEA ULTIMATE which is a comercial product, it means it is not free, and there is INTELLIJ IDEA COMMUNITY, which is free.
+
+The first one (IntelliJ IDEA ULTIMATE) support everything regarding java and kotlin plus other languages, with that you can create any type of project in java, it doesn't matter if it is a desktop application, mobile app or web app with java2ee platform. But the second one (IntelliJ IDEA COMMUNITY) it has limitations. You can create different types of projects of your choice but you cannot go with java2ee project if you are not creating it with maven or gradle.
+
+So, if you want to create SpringBoot aoolication, it may be possible with IntelliJ IDEA Community. You don't need to download Spring Tool Suite for that. There are 2 or three possibilities.
+
+
+You need to go to create project, then you choose maven, then you set everything, then after the project has been created, you open the xml file called pom, you add dependecies which will tell maven to download all needed libraries for springboot application. And you start your coding. But this first step, is not the best choice, because once you created project in this way, there are other maven-plugins that you will miss in your project so it will be a big problem when it comes to deployment.
+The second way which is the best is to go to https://start.spring.io/ the you create springboot project there, the you download it, it will be a .zip file, you unzip in, then you import it in IntelliJ IDEA. There you will get everything needed to work with.
+
+    
+    
+Title: TFS support for netbeans ide
+Description: 
+    
+    
+                    
+I need to checkout and manage a project from TFS (Team Foundation Server) and was wondering if there is an easy way to do this. 
+
+I usually use SVN, but for this particular project, TFS is a requirement.
+
+The best way I've found so far with a bit of Googling is at http://marceloverdijk.blogspot.com/2009/01/grails-netbeans-and-microsoft-team.html 
+    
+
+        
+Answer 1: 
+
+    
+    
+Short answer, no I don't think there is any easy way to integrate the Netbeans IDE and TFS. However there are some options. 
+
+Firstly you could use the SVN bridge this allows subversion clients to connect to TFS. If that is viable then you should be good to go. Here are a couple of blog posts that you may find useful when using TFS if you have a SVN background. SVN to TFS. If SVN Bridge doesn't meet your needs then there are other ways to use TFS but none of them are integrated in to the Netbeans IDE.
+
+If you're developing on Windows then you can install Team Explorer (Use the version that matches the version of TFS you're using e.g. if you're connecting to TFS 2010 then install Team Explorer 2010), this will install a Visual Studio Shell and the Team Explorer plugin. Along side that it will install the "tf" command line utility, you then have a choice of using either a GUI with the VS plugin, or the command line. 
+
+You should also install the TFS power tools, they add some usefull functionality such as extra command line tools (using the "tfpt" command) they will also install windows explorer integration, this will allow you to do some basic Source Control functions from the Right Click menu in windows explorer (Check out, check in, diff etc)
+
+
+
+You should also look at Team Explorer Everywhere, I don't think it does Netbeans integration but it does do Eclipse.  If you're developing on an OS other than Windows then this is your only option. 
+
+To use any on these tools you must have a TFS CAL to be licenced properly. If you have an MSDN licence that will probably include a CAL, if not then someone needs to spend some cash and buy one :-). 
+    
+    
+Answer 2: 
+
+    
+    
+Since TFS started to support Git repositories, it is possible to:
+
+
+create TFS project for Git
+after project creation use url from Code tab
+to configure Git Repository Location in NetBeans IDE
+
+
+
+
+
+    
+    
+Answer 3: 
+
+    
+    
+Once you have the tf.exe (from Visual Studio or Team Explorer) there is a plugin that can be configured to do the TFS commands from NetBeans:
+
+
+Download plugin from: http://plugins.netbeans.org/PluginPortal/faces/PluginDetailPage.jsp?pluginid=676
+Install the plugin in NetBeans: Tools\Plugins\Downloaded\Add Plugins…
+Configure the plugin in NetBeans: Tools\Options\Path Tools
+At Edit Commands For File enter: "c:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\tf" checkout "{path}"
+Press Ok
+With a file selected in the editor, or the package explorer press the “Edit Path…” toolbar button.
+The file is now checked out in TFS.
+
+
+Make sure to use the proper path to tf.exe.
+There are 3 buttons, so you can configure 3 TFS actions (I use checkout, add, delete).
+    
+    
+Answer 4: 
+
+    
+    
+Microsoft actively supports only Eclipse for TFS integration.
+
+At this page there are more info and the possibility to upvote, to report your interest in such a feature directly to Microsoft.
+    
+    
+Answer 5: 
+
+    
+    
+In NB 8.2 you can setup Kenai Team Server.
+then you will be able to login into a team server : menu Team-
+Title: IntelliJ IDEA: Increase size of bar on the right side of editor
+Description: 
+    
+    
+                    
+I'd like to increase the size of the bar on the right side of the Editor in IntelliJ IDEA. It's simply way too small for my taste.
+
+It is the bar where the warnings or usages are displayed.
+
+P. S.: The bar is called Error Stripe.
+    
+
+        
+Answer 1: 
+
+    
+    
+I agree, the scrollbar is far to small, and hard to see.
+
+Another option you could try is installing the "CodeGlance" plugin which adds a full view of the code and makes scrolling far more intuituve.
+
+
+Grab it from (as of 15-04-27) https://plugins.jetbrains.com/plugin/7275?pr=clion
+    
+    
+Answer 2: 
+
+    
+    
+Press Ctrl + Alt + Shift + / and select Registry... from the menu that appears.
+
+Look for editor.full.width.scrollbar and tick the box on the right. The change should take effect after clicking the close button. The width of the scroll bar should be marginally wider, it's not a lot but every little bit helps :-)
+
+Unfortunately this setting only affects the scroll bar on the right of the editor window. All the other scroll bars are unaffected.
+
+For those that find transparency effects annoying then look for editor.transparent.scrollbar and untick the box on the right. This change should take effect after clicking the close button and restarting IntelliJ.
+    
+    
+Answer 3: 
+
+    
+    
+It seems like it – or the scrollbar as a whole – can't be resized.
+    
+    
+Answer 4: 
+
+    
+    
+You could scroll to the bottom of the bars properties in the GUI section  and change the width to example (100dp). Or you could play around with the XML file that contains the width and height property.
+    
+    
+Title: How to move NetBeans Workspace?
+Description: 
+    
+    
+                    
+I have installed NetBeans in C drive and now I want to move it to another drive.
+
+Is there any option available in NetBeans?
+    
+
+        
+Answer 1: 
+
+    
+    
+There is the option of project group.
+
+
+  File /p/blockquotep/pp/pp/pp/pp/p/div
+Answer 2: 
+
+    
+    
+
+Right click on your project
+In the context menu, select "Move..." option
+Choose the location you want to move your project to
+
+    
+    
+Answer 3: 
+
+    
+    
+You want to copy the so called "userdir".
+
+For details, please refer to the FAQ:
+
+http://wiki.netbeans.org/FaqWhatIsUserdir
+
+http://wiki.netbeans.org/NetBeansUserFAQ#Configuration
+    
+    
+Answer 4: 
+
+    
+    
+I am using NetBeans 8.0.2 on Windows 7.
+
+The projects in my workspace are also in a "Project Group" by root directory for a suite of projects. (What Eclipse would call a "workspace" for all projects, or a "Working Set" for a subset of projects.)
+
+In C:\Users\&lt;myname&gt;\AppData\Roaming\NetBeans\8.0.2\config\Preferences\org\netbeans\modules\projectui\groups\&lt;mygroup&gt;.properties is listed the path to the group of projects.
+
+In Explorer, move (: or copy if you are paranoid enough :) your workspace directories to the new drive.
+
+Edit this file and change the drive location for the group.
+
+NetBeans will now see the new location when it opens and loads the workspace and groups.
+
+Use File / Project Groups ... to ensure you are looking at the group you think you are looking at.
+    
+    
+Title: Simple JavaScript IDE
+Description: 
+    
+    
+                    
+I am brand new to JavaScript and I would like practice my skills using a simple windows based IDE. While learning I do not want to use any CSS or HTML. I would like if possible to have colour single stepping, highlighting and syntax checking. 
+
+So for example you could type in your function(s), call it and receive the result
+
+function squareNumber(x) {
+  return x*x;
+}
+
+squareNumber(5)
+
+25
+
+
+I would like something better than the Internet Explorer console.
+    
+
+        
+Answer 1: 
+
+    
+    
+There are a lot of good online IDEs at the moment.
+One of my favorites is JSFiddle, but you said you don't want to use CSS and HTML so it's superfluous in this case. You can use JSBin, opening only the Javascript and Console panels. Another very good one is, in my opinion, Ideone, which has a lot of languages(for JS you have to select Javascript Spidermonkey). The last one I suggest you is JSConsole, from the creator of JSBin, which is basically an enhanced Javascript console(as the name states).
+    
+    
+Answer 2: 
+
+    
+    
+Have a look at either,
+
+
+WebStorm: real JavaScript IDE (possibly the best.)
+Sublime Text 2: text editor with syntax highlighting, and possibility to install plugins.
+
+
+You can use either software, together with node.js, to get what you want.
+
+Executing the file,
+
+function squareNumber(x) {
+    return x * x;
+}
+
+console.log(squareNumber(5));
+
+
+with node.js will output,
+
+25
+
+    
+    
+Answer 3: 
+
+    
+    
+Ended up using this IDE as I could run it on a low powered Laptop. Free Version
+
+http://brackets.io/
+
+There is also a free offering from Microsoft with Visual Studio 2015 called "Visual Studio Code" runs on Macs and linux too. Only used it for a day but it work great on my low powered tablet.
+
+https://code.visualstudio.com/
+    
+    
+Answer 4: 
+
+    
+    
+Besides the options listed in the answers above; these are additional options I use when I need to write/test JS without HTML/CSS :
+
+1) Firefox Developer Edition - ScratchPad
+
+The Firefox Developer Edition browser offers a good console with all the necessary features to write JavaScript. 
+
+To cite a specific feature - ScratchPad provides you with a good option to write JS code and you can use the run button to view it on the console.
+
+As you can see below it has the syntax coloring and even the options to save and open files directly from your computer. 
+
+
+You can open the Firefox ScratchPad as an independent window using the shortcut - SHIFT+F4
+
+
+
+It features code completion, inline documentation and much more, you can learn more about using it from the official documentation here - https://developer.mozilla.org/en-US/docs/Tools/Scratchpad
+
+Keyboard Shortcuts 
+
+CTRL + L - To display selected code 
+
+CTRL + SPACE - Code Hinting
+
+CTRL + R   - Run Command 
+
+CTRL + I  - Inspect Command 
+
+2) Node CMD or CMD + Node
+
+I also like using node + CMD since they work seamlessly. For this option, you need to install node.js and use the CMD to write and test your JS code. 
+
+
+
+You can also consider using the node.js CMD that works like the windows CMD.
+
+You can change the background color and the text color of the Node CMD by clicking on the top bar and choosing properties 
+
+
+
+For syntax coloring on Node when using node, you can add one of the syntax coloring npm packages as illustrated below : 
+
+
+
+I installed the cli-color npm package in these four steps :
+
+1) Check if npm is installed using the nmp -v 
+
+2) Install your preferred package using npm install &lt;name of package&gt;
+
+3) Include the package 
+
+4) Test the package and view the results  
+
+NOTE: It important to check out the documentation of each package esp on the usage since there may be differences. 
+
+These are two of my favorite Node.js syntax highlighting packages : 
+
+https://www.npmjs.com/package/cli-color and https://www.npmjs.com/package/cli-highlight
+    
+    
+Title: File Version Vs. Product Version
+Description: 
+    
+    
+                    
+In the Delphi Project Properties dialog, there are settings for the "Product Version" and the "File Version". Can anyone explain the philosophical differences between the two?
+    
+
+        
+Answer 1: 
+
+    
+    
+The Product Version will be the version number of your whole application.
+
+The File Version will be the version number of this component.
+
+The two are usually in sync, but don't have to be. It would depend upon how modular your application was.
+
+So for example you might have an application that's at version 2.3.4.0 (say), but one file reader component that's at version 5.6.7.0 as it was inherited from a different application and another at version 1.2.0.0 as it's a more recent addition.
+
+Additionally, some components might not change between releases so theoretically they should remain at their original file version.
+
+However, as this might well cause confusion (not least with the developer) about which file goes with which version of the product these numbers are often kept in sync.
+    
+    
+Answer 2: 
+
+    
+    
+Not all the files are to be changed when the product version changes.
+E.g. you've written a dll implementing the core functionality that remains unchanged during following product version changes.
+    
+    
+Answer 3: 
+
+    
+    
+Product version is the version of the product the executable is a part of, like Firedox 3.5.2 - all files in the product should have the same version (for a given version, obviously). The file version is normally the version of the specific file, like the firefox executable, for example, without respect to the product. This doesn't seem to get used much.
+    
+    
+Answer 4: 
+
+    
+    
+In contrast to the file version the product version is not necessarily numerical. E.g. we use the pre-build scripts to set it to the current date. This way, we can easily check when an executable was built.
+    
+    
+Title: Android Studio - How to disable the scrolling code preview overlay?
+Description: 
+    
+    
+                    
+In Android Studio (and IntelliJ IDEA), when you hover your cursor in the scrollbar area of the editing window, the cursor changes to a pointing hand and displays a 10-line preview of the code in that location in the file.  Here's a screenshot:
+
+
+
+As you move your cursor up and down that scrollbar area, the code preview overlay shifts with it.  I've dug through the preferences and searched online, but I can't figure out how to turn off this feature.  Does anyone know what this is called and how to disable it?
+    
+
+        
+Answer 1: 
+
+    
+    
+It's called the &quot;code lens&quot; and it's configurable in:
+Editor -&gt; General -&gt; Appearance
+
+In some versions, it's called &quot;editor preview tooltip&quot; instead of &quot;code lens.&quot;
+
+Also can be disabled by right-clicking on the scroll bar area.
+    
+    
+Answer 2: 
+
+    
+    
+If you right click on the scroll bar you can very easily disable it.
+
+Uncheck 'Show code lens on scrollbar hover' and it'll disable it. Alternatively you can disable from preferences using that as a search filter.
+    
+    
+Title: What does &ldquo;link with editor&rdquo; feature do in Eclipse?
+Description: 
+    
+    
+                    
+I'm new to Eclipse (and don't know NetBeans too). I'm reading eclipse tutorial. But I'm stacked and can't understand what "Link with editor" does exactly.It is said in Eclipse-/pblockquotep/p/blockquotep/pblockquotep/pp/p/blockquotep/p/div
+Answer 1: 
+
+    
+    
+It ensures that the file you have open (are currently editing) is selected and visible in the Navigator/Project Explorer.  So that if you want to see other classes in the same package, e.g. you don't have to drill all the way into it manually.
+
+If you want to see it work, have the Navigator view open and enable this setting.  Then switch to editing a new file (without using the Navigator, e.g. use CTRL-T and type the class name directly, or click a different editor tab).  The selection in the Navigator should update to the file you're now editing.
+    
+    
+Answer 2: 
+
+    
+    
+Link with editor is useful when you open many files in your project.
+When you select a file in the editor, the Project Explorer or the Navigator show you the same file in its document tree.
+    
+    
+Answer 3: 
+
+    
+    
+Whenever you choose an open file (JSP, Java, etc) in the editor, the Navigator will jump to that file in the project structure, opening any folders needed.
+
+I personally found it to be a pain... I like to keep the area of a project I'm working with stable and I'm using Ctrl+Shift+R to skip around looking for files. If I'm doing that, the navigator is skipping all over the place.
+    
+    
+Answer 4: 
+
+    
+    
+In simple words, Link with editor sets default editor for file types, for example, xml editor will be used for editing xml files etc.,
+    
+    
+Title: How can I enable the Box (or Block) Selection in Eclipse IDE?
+Description: 
+    
+    
+                    
+I have been using Visual Studio IDE and I use Box Selection a lot.
+Is the same possible for Eclipse IDE?
+    
+
+        
+Answer 1: 
+
+    
+    
+Since Eclipse 3.5 there is a button called Block selection mode in the main toolbar or you could use its hotkey as well:
+
+
+Windows: Alt+Shift+A
+Mac: Command+Option+A
+
+
+See a blog entry about block selection for more details.
+    
+    
+Answer 2: 
+
+    
+    
+youtube walkthrough: How to enable block selection in eclipse and you'll be done in 2 minutes.
+
+also explains how to setup custom hotkey, if Alt+Shft+A is already taken
+    
+    
+Title: How can I get Delphi 2010 IDE to show a split view with a form and its code at the same time?
+Description: 
+    
+    
+                    
+I program in Delphi 2010, and I have enough screen space to show both a form and its code (that is, the code and design tabs of a form) at the same time, but so far I haven't had any luck trying to make that happen. Is there a way to customize the IDE to show both at the same time?
+    
+
+        
+Answer 1: 
+
+    
+    
+Set your desktop to "Classic Undocked"
+
+
+
+Then you need to uncheck the embedded designer option in the VCL Designer options page:
+
+
+
+You'll also have to restart the IDE for those changes to take effect.
+    
+    
+Answer 2: 
+
+    
+    
+The option Andreas is talking about is located under Tools | Options | Environment options | VCL Designer. It is called Embedded designer.
+
+When you uncheck that a form will be displayed free-floating at its designed position instead of embedded in the docked editor. You need to restart the IDE for the option to take effect. 
+
+To show both form and code you will have to change your layout and/or move the form to a position where it doesn't cover the code editor.
+
+As an alternative you could opt for the classic undocked layout. That way you can certainly position form and code editor not to overlap. To activate that you need View | Desktops | Classic Undocked.
+
+Note: be aware that the position of the form at designtime is reflected at run-time if you have a form's Position property set to poDesigned.
+    
+    
+Answer 3: 
+
+    
+    
+Cool hack for Delphi XE4-XE7:
+
+Changing 'HKEY_CURRENT_USER\Software\Embarcadero\BDS\11.0\Form Design\Embedded Designer' to FALSE will bring the classic designed back.
+    
+    
+Title: Meaning of a red wave line in a single file in PhpStorm
+Description: 
+    
+    
+                    
+I am using a PhpStorm IDE, and only in one particular file, it started to display the name of the file and the name of the folders routing to that files with red waved underline (like a spell mistake in text-processors). Nothing important it catches my eyes all the time. Anyone know the reason and better how to get rid of it?
+    
+
+        
+Answer 1: 
+
+    
+    
+The lines mean that there is an inspection error. The error can be located by looking at that file an examining the right margin for a red bar like this:
+
+
+
+Then you will see, similar to Word, a squiggle under the line of text, something like the following:
+
+
+
+If the inspection looks incorrect, check your settings for the PHP version (File 
+Answer 2: 
+
+    
+    
+guess I'll just phrase that as an answer...
+
+Would guess it considers those files (rolled up to folders) to contain errors.  Look on left margin of editor for the files in question.  Guessing they all have a perceived error(s).  PDT / Zend Studio does the same.
+
+see the red X's:  http://imagebin.org/231026
+    
+    
+Answer 3: 
+
+    
+    
+Have you tried hovering over the red lines?  When you do, the actual error message should pop up. 
+    
+    
+Answer 4: 
+
+    
+    
+Some times this can happen from if you copy code from the web (gii for example)
+with "auto copy" js.
+The encoding get mixed up.
+
+If you copy source from Gii, select it manually with the mouse.
+    
+    
+Title: VIM as an IDE - Suggestions
+Description: 
+    
+    
+                    
+I am looking for recommendations on using VIM as an IDE. I generally code in a number of programming languages, including C, C++, assembler, MATLAB, Maple, BASH scripts, to name a few.
+
+In general, I like to use a single IDE for the bulk of my projects for the sake of consistency, and I have found that I perform about 90% of all my coding in VIM, and occasionally use Eclipse instead for certain projects in C/C++ (ie: projects people have already put together as an Eclipse project, or PIC24/32 projects from www.microchip.com).
+
+I am already very familiar with the basic functionality of VIM (windows vs buffers, text manipulation, scripting), and would like to use it as my primary IDE. I have already taken a few tips from here:
+http://vim.wikia.com/wiki/Use_Vim_like_an_IDE#Writing_Code
+
+I already use the nerdTree plugin for directory browsing in a project, etc, but I need to do something about code completion and symbol resolution, as those are my two greatest concerns.
+
+
+Symbol resolution
+
+I have some limited experience in the use of C-tags, and wanted a suggestion on what I should use if I am working with a VERY large code-base that changes frequently. The projects I work on typically are pulling in header files from at least a dozen other projects, and I would like to be able to jump to the file where a function, constant, or macro is defined quickly (ie: like the CTRL-G feature in Eclipse, "jump to definition"), as well as rapidly get a list of all calls/references to a function/macro/constant/etc (ie: like the CTRL-SHIFT-G feature in Eclipse, "Show all references in project or current working directory").
+
+Tab completion
+
+One of the features I really like in Visual Studio and Eclipse, for example, is when I type in a variable name (ie: pointer to struct) and it resolves the names and types of all structure members and gives me a tab completion list to choose the appropriate member. They also point out when I've incorrectly used "." vs "-/li/ul/liliulli/li/ul/li/olp/pp/p/div
+Answer 1: 
+
+    
+    
+
+http://eclim.org/ - bring Eclipse functionality to the Vim editor
+https://github.com/scrooloose/syntastic - syntax checker warnings in quickfix list
+
+
+I think (but haven't checked) that Eclim satisfies #1 and #2 while I'm sure that Syntastic satisfies #3. More things of interest:
+
+
+https://github.com/Lokaltog/vim-powerline - just nice
+https://github.com/kien/ctrlp.vim - quick file finder
+https://github.com/tpope/vim-pathogen - plugin manager (to install the others)
+
+
+And are you aware of omnicompletion via Ctrl-p and Ctrl-n (prev and next) in insert mode? That's not code completion, but frequently does the job.
+    
+    
+Answer 2: 
+
+    
+    
+For the auto-completion part (point 2), I am proficiently using clang_complete.
+
+For a quick setup and reference, try this page: http://zwiener.org/vimautocomplete.html
+
+EDIT: this is for C, C++ and Objective-C only.
+    
+    
+Answer 3: 
+
+    
+    
+I use the following configuration in vim:
+
+zipped file
+
+It has autocomplete based on tag list, ctags, nerd commenter and some more plugins.
+
+Hope it helps.. :)
+    
+    
+Answer 4: 
+
+    
+    
+I have been using Vim as an IDE for about a year now.  All of my customization is online at github.
+
+That said, I don't think a Vim beginner should start using vim like this; rather I think the Vim beginner should learn vim incrementally.  The only changes that I think are so essential I would make them from the very beginning are:
+
+
+Remap ESC to jk
+Switch : and ;
+Set leader key to ,
+
+    
+    
+Title: IDE with refactoring support for Ruby on Rails
+Description: 
+    
+    
+                    
+I am a java developer and use the Eclipse IDE for developing java code. I use the built-in refactoring features a lot, since good refactoring support from the IDE helps to speed up and leads to higher code quality. I would not like to miss it and use a simple text editor instead. Now I am looking for an IDE for Ruby on Rails with good refactoring capabilities.
+
+Basic refactorings
+
+Wanted basic refactoring methods include:
+
+
+Extract method
+Extract variable
+Rename (class, method, variable etc.)
+
+
+and so on.
+
+Aptana Studio 3, RadRails 2, RubyMine 3 and Netbeans 7
+
+So far I've tried Aptana Studio 3 and was quite disappointed regarding its refactoring capabilities. Aptana RadRails 2 seemed much better for refactoring ruby code, but it lacks other nice features that the newer Aptana Studio 3 offers. Since Aptana Studio 3 seems to be RadRails' successor I would expect that it has at least the same refactorings as the older RadRails 2, but it does not. Using an old unmaintained IDE does not seem a good option. Receiving updates for the IDE should still be possible.
+
+I've read that Jetbrains RubyMine 3 has decent ruby refactoring capabilities, but it costs money. I am rather looking for a free one. Netbeans 7 seems not to support Ruby on Rails anymore.
+
+Are there good IDEs with refactoring support?
+
+That confuses me, it seems like modern IDEs drop (refactoring) support for Ruby on Rails.
+What are nowadays (Jan 2012) the most powerful IDEs for refactoring Ruby on Rails code? 
+
+Update: Netbeans 7
+
+As suggested by Jörg W Mittag I've tried Netbeans 7 with the ruby plugin provided by the community. I have to say that this combination is much better than Aptana RadRails 2 or Aptana Studio 3 for developing Ruby on Rails apps. The integration of css and html for views is well done and the integration of rails tests into the JUnit Netbeans view comes in handy.
+
+However, the refactoring support seems to be too basic. It supports rename, move, copy and safely delete of methods. It does not support to select lines of code and extract a method out of it nor the similar behaviour for extracting variables.
+
+Update: RubyMine 3
+
+dynex suggested to use RubyMine. I've just played around with it and think its suitability as an Ruby on Rails IDE is at least as good as Netbeans'. The refactor capabilities are by far the best I've seen in a Ruby on Rails IDE so far. 
+
+From what I've discovered it features renaming, moving, copying, safe deletion, method extractation, variable introduction, constant introduction, field introduction, parameter introduction, inlining, pulling members up, pushing members doen, module extraction and superclass extraction.
+
+My conclusion is that from the set of IDEs I tested RubyMine was the only one with decent refactoring capabilities. RubyMine costs money, but it seems worth it. The free ones cannot compete regarding refactorings.
+
+Thanks for all answers and comments.
+    
+
+        
+Answer 1: 
+
+    
+    
+RubyMine was my choice and I use refactoring once in a while. When using 'rename' it's never complete, but better than global-search-replace. Extraction etc works well.
+
+Overall it's a great tool, albeit a memory hog, but I use it all the time now, especially for debugging.
+I know, it costs money, but I wanted to put in a good word for them anyway...
+    
+    
+Answer 2: 
+
+    
+    
+
+  Netbeans 7 seems not to support Ruby on Rails anymore
+
+
+That's not true. Quite the opposite actually. Yes, Oracle dropped support for the Ruby on Rails plugin and gave maintenance over to the Ruby community. But the plugin is still available from the same place it was before, the community is still using the same infrastructure to develop, maintain and distribute the plugin as before. And since most of the people who originally wrote the plugin work for Google now, they can now again work on the code, now that it is no longer owned by the company that is suing their employer.
+    
+    
+Answer 3: 
+
+    
+    
+Thanks for this question firstly, coming from java platform I was not comfortable with the text editors or IDEs available for RoR. I just started using RubyMine for 2 days now and yes it has a reasonable support for refactoring compared to text mate editor. Apart from the other features  mentioned here I like code formatting, column selection mode (especially for .haml files), I use Ctrl+Tab to browse between the tabs (as in Netbeans) and of course find usages. I am not yet comfortable with the git integration part yet, need to explore that. If I find anything amazing will update my post.
+    
+    
+Title: A Python IDE with Debugging and iPython Integration?
+Description: 
+    
+    
+                    
+Does anyone know of a python IDE that has iPython as the interpreter?  
+
+Using the standard interpreter just drives me nuts, as I've just grown to love using iPython and all the features it provides.  To be honest, I'd rather code with a simple text editor + ipython than an IDE, but I love being able to set breakpoints with a click of a mouse, etc., so I'd like to combine both.
+
+Sorry if there's something out there and this is common knowledge.  Any information/tips you can provide  is GREATLY appreciated.  Thanks!
+    
+
+        
+Answer 1: 
+
+    
+    
+Btw, I've seen Spyder (formerly Pydee), and that indeed will have iPython integration in September, but it still lacks a debugger.  ::sigh::
+    
+    
+Answer 2: 
+
+    
+    
+As of 28/04/2012 Spyder provides a debugger and iPython(v 0.10.2) integration and Python Tools for Visual Studio provides a debugger and iPython(v 0.12) integration.
+    
+    
+Answer 3: 
+
+    
+    
+Sypder(2) comes closest to what you may need. I have used this for some time and falling in love with it. It comes with handy code completion, code analysis and other utilities. It was in my ubuntu software centre, ready for a one click install :). 
+give it a shot
+
+https://code.google.com/p/spyderlib/
+    
+    
+Answer 4: 
+
+    
+    
+pudb is a full-screen, text-mode "console" debugger with iPython integration.
+
+I don't know of other Python debuggers (or IDEs) which integrate with iPython, which seems to be the core of your request.
+    
+    
+Answer 5: 
+
+    
+    
+
+  IPython can be used as the backend for the PyDev interactive console.
+
+
+This quote is from the instructions written in August 2011 by Fabio Zadrozny on his blog.  He is currently maintaining PyDev.
+    
+    
+Answer 6: 
+
+    
+    
+http://pydev.org for eclipse is great and debugger works well. Not sure what ipython provides but the interactive terminal in pydev is pretty good (completion , etc) 
+    
+    
+Answer 7: 
+
+    
+    
+Closest I've found is using GEdit with the ipython plugin from
+
+http://code.google.com/p/gedit-ipythonconsole/
+
+Personally I use pycharm most of the time and have found that I can get SOME IPython functions by executing code from
+http://folk.uio.no/steikr/doc/python/ipython/node9.html
+
+import IPython.Shell
+IPython.Shell.start().mainloop()
+
+
+If you are a PyCharm user and want to see IPython support then vote up the ticket at
+http://youtrack.jetbrains.net/issue/PY-4504?projectKey=PY
+    
+    
+Title: How to run a project in Jetbrain&#39;s Rider IDE?
+Description: 
+    
+    
+                    
+I've started to learn c# recently and I really like the Jetbrains IDEs, so I decided to pick up Rider in it's early developement phase. Since it's a brand new environment I could barely find any information about it at all.
+
+My problem is I simply cannot run my project, I have Mono installed and I gave it's path to the IDE but it still sais "no projects to run".
+
+Do I need something aside Mono? Or what would you recommend me to check?
+
+Screenshot
+    
+
+        
+Answer 1: 
+
+    
+    
+Create a new project:
+
+
+
+Write your code:
+
+
+
+Press Ctrl + F5 and you should see this window:
+
+
+
+Now simply click on Run. The next time you need to build it, you won't see the configuration settings, but it will still run the project. :)
+    
+    
+Answer 2: 
+
+    
+    
+It's solved in the comments, create Console App instead of empty solution, or if the problem already happened you should go to project properties and choose your language.
+    
+    
+Answer 3: 
+
+    
+    
+I had the exact same problem and I think I figured it out (without having to recreate a project from scratch).
+
+The list in front of  "Project:" is empty when there is no runnable project.
+A "Class library" for instance is not runnable.
+Just pick up one of your solution's projects (in your case there is only one), right click, then "Properties", and in front of "Output type:" (where you should see "Class library"), simply select "Console application".
+
+Now you should see it in the window appearing when you click on "Edit configurations".
+    
+    
+Answer 4: 
+
+    
+    
+This happened to me just now, coming from a dotnet new angular generated project.
+
+What I did to solve it was to right-click solution and then add existing project.
+
+
+    
+    
+Title: Export single Eclipse Perspective and Settings
+Description: 
+    
+    
+                    
+I customized my Eclipse for a special Latex Perspective and saved this perspective as "MyLatex". I even added shortcuts in my texlipse preferences, so that I can type "tab"+strg+space to insert a table.
+
+Now I would like to offer this to friends. I found out that I can use Export-
+Answer 1: 
+
+    
+    
+There exists another way to do this. 
+
+Share Eclipse perspective layouts across multiple workspaces
+
+
+  To save your perspective, select Window /pp/ppa href="https://i.stack.imgur.com/bRZ5x.jpg" rel="nofollow noreferrer"img src="https://i.stack.imgur.com/bRZ5x.jpg" alt="enter image description here"/a/pp
+Answer 2: 
+
+    
+    
+I don't know of a nice way to export/import one perspective from eclipse, but maybe try the following:
+
+open this file -
+
+workspace/.metadata/.plugins/org.eclipse.ui.workbench/workbench.xml
+
+and copy the part that relates to your new perspective to the same file for the users you want to share it to. If this doesn't work you may have to replace the entire file in their workspace with your one.
+    
+    
+Answer 3: 
+
+    
+    
+In my case I had to copy from one workspace to another
+
+
+  .metadata.plugins\org.eclipse.e4.workbench
+
+    
+    
+Title: How to make use of Grails Dependencies in your IDE
+Description: 
+    
+    
+                    
+So I finally got my dependencies working with Grails. Now, how can my IDE, eg IntelliJ or Eclipse, take advantage of it? Or do I really have to manually manage what classes my IDE knows about at "development time"?
+
+If the BuildConfig.groovy script is setup right (see here), you will be able to code away with vi or your favorite editor without any troubles, then run grails compile which will resolve and download the dependencies into the Ivy cache and off you go... 
+
+If, however, you are using an IDE like Eclipse or IntelliJ, you will need the dependencies at hand while coding. Obviously - as these animals will need them for the "real time" error detection/compilation process.
+
+Now, while it is certainly possible to code with all the classes shining up in bright red all over the place that are unknown to your IDE, it is certainly not much fun...
+
+The Maven support or whatever it is officially called lives happily with the pom file, no extra "jar directory" pointers needed, at least in IntelliJ. I would like to be able to do the same with Grails dependencies. 
+
+Currently I am defining them in the BuildConfig.groovy and additionally I copy/paste the current jars around on my local disk and let the IDE point to it. 
+
+Not very satisfactory, as I am working in a highly volatile project module environment with respect to code change. And this situation ports me directly into "jar hell", as my "develop- and build-dependencies" easily get out of sync and I have to manage manually, that is, with my brain...
+
+And my brain should be busy with other stuff...
+
+Thanks!
+Raoul
+
+P.S: I'm currently using Grails 1.2M4 and IntelliJ 92.105. But feel free to add answers on future versions of Grails and different, future IDEs, as the come in...
+    
+
+        
+Answer 1: 
+
+    
+    
+If you have Eclipse with Grails plugin just run:
+Grails Tools-/strong/p/div
+Answer 2: 
+
+    
+    
+This is fixed in the latest EAP build: 94.173 -a href="http://youtrack.jetbrains.net/issue/IDEA-50459#content-tab=1" rel="nofollow noreferrer"/a/ppa href="http://www.jetbrains.net/confluence/display/IDEADEV/Maia+EAP" rel="nofollow noreferrer"/a/pp/pp/p/div
+Answer 3: 
+
+    
+    
+Did you try 
+
+grails integrate-with --intellij
+
+
+At least in 1.2.0RC1 this creates the intellij project files - but I'm not sure if the dependencies are also managed by this one. 
+    
+    
+Title: Which IDEs and text editors can deduce type of variables declared using auto keyword in C++11
+Description: 
+    
+    
+                    
+In "Almost always auto" article Herb Sutter lists several reasons for declaring variables using auto keyword.
+
+He says that actual variable type can be automatically deduced by IDE and shown by hovering over variable name.
+
+I would like to know which IDEs and text editors (or plugins) currently support "auto" variable type deduction.
+
+Edit:
+
+List of IDEs from answers:
+
+
+Visual Studio 201x
+Eclipse
+Qt Creator 2.7.0
+KDevelop 4.5.1
+
+
+Text editors
+
+What about Vim, Emacs, Sublime Text, etc. - are there plugins which supports type deduction?
+    
+
+        
+Answer 1: 
+
+    
+    
+Visual Studio 2010, Visual Studio 2012, and Visual Studio 2013 support type deduction for variables declared with the auto keyword. This applies both to the IntelliSense tooltips as well as auto-complete suggestions.
+
+Starting with Visual Studio 2010 the C++ IntelliSense support was completely reworked (see Rebuilding Intellisense). IntelliSense is now driven by the Edison Design Group (EDG) C++ compiler frontend. Whatever EDG can do you will see reflected in IntelliSense.
+
+Note that IntelliSense tooltips will display the underlying type for auto variables. It will not work up the tree again and replace portions with appropriate typedefs. On Visual Studio 2012 the following code
+
+std::string str;
+
+std::string::iterator i1 = str.begin();
+auto i2 = str.begin();
+
+
+will display the iterators as
+
+std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt;::iterator i1
+
+
+and
+
+std::_String_iterator&lt;std::_String_val&lt;std::_String_base_types&lt;char,std::allocator&lt;char&gt; &gt;::_Val_types&gt;::_Myt&gt; i2
+
+
+Given that I would happily disagree with Herb Sutter on his assessment that an IDE is enough to deduce a type when you need it. auto is great with respect to robustness, correctness and flexibility, but it surely fails to meet a developer's needs working on a large code base.
+    
+    
+Answer 2: 
+
+    
+    
+Native support
+
+
+Visual Studio 2010+
+
+
+Caveat: Does not behave terribly well with typedefs; see iinspectable's answer
+
+KDevelop 4.5.1+
+
+
+Caveat: Some incorrect deductions (e.g. float literals); see Johnny's answer
+
+Qt Creator 2.7.0+
+Eclipse (not sure if via plugin or native)
+
+
+Support via plugins
+
+
+Vim plugins:
+
+
+YCM (since merging this pull request: https://github.com/Valloric/ycmd/pull/88)
+others? Syntastic, maybe?
+
+Emacs plugins:
+
+
+....SURELY there is such a plugin somewhere.
+
+
+
+
+
+Note: the first draft of this answer was created by simply combining the existing answers plus the Eclipse comment, then adding a note about Vim. Without such an "aggregate" answer, this question (and its existing answers) appears to violate the "one right answer" rule.
+
+This should really be formatted as a table; too bad we don't have that capability here.
+    
+    
+Answer 3: 
+
+    
+    
+KDevelop 4.5.1 also supports type deduction. Although it probably does small mistakes.
+
+Examples:
+
+auto i = 3;    // Deduces int
+auto d = 3.0;  // Deduces double
+auto f = 3.0f; // Deduces double - wrong
+
+    
+    
+Answer 4: 
+
+    
+    
+Qt Creator 2.7.0  can do it too, judging from this testing source code:
+
+class A
+{
+    void f();
+};
+
+int main()
+{
+    auto a = A();
+    return 0;
+}
+
+    
+    
+Title: Nested Linq Min() crashes Visual Studio
+Description: 
+    
+    
+                    
+I have a piece of code that makes the Visual Studio 2008 IDE run very slow, consume vast amounts of memory and then eventually causes it to crash. I suspect VS is hitting an OS memory limit.
+
+The following code is not my real application code, but it simulates the problem. Essentially I am trying to find the minimum value within a tree using LINQ.
+
+class LinqTest
+{
+    public class test
+    {
+        public int val;
+        public List&lt;test&gt; Tests;
+    }
+
+    private void CrashMe()
+    {
+        test t = new test();
+
+        //Uncomment this to cause the problem
+        //var x = t.Tests.Min(c =&gt; c.Tests.Min(d =&gt; d.Tests.Min(e =&gt; e.Tests.Min(f=&gt;f.Tests.Min(g=&gt;g.Tests.Min(h =&gt; h.val))))));
+    }
+}
+
+
+Has anyone else seen something similar?
+    
+
+        
+Answer 1: 
+
+    
+    
+A while ago I submitted a bug report on MS Connect. This morning I got a response:
+
+
+  Thanks for the bug report for Visual Studio 2008!
+  
+  As you point out in your linked post from Eric Lippert's blog, we have limits on our ability to do type inference on such nested lambda expressions in a reasonable amount of time. That said, we could certainly try to timebox such inference or put a hard limit on lambda nesting to prevent this type of issue. Unfortunately, we're starting to lock down on what we can fix in Visual Studio 2010 and we won't be able to enforce such limits in this release.
+  
+  We'll definitely keep this issue in mind when planning for future releases!
+  
+  Alex Turner
+  
+  Program Manager
+  
+  Visual C# Compiler
+
+
+and
+
+
+  The following feedback item you submitted at Microsoft Connect has been updated: Product/Technology - Visual Studio and .NET Framework - Feedback ID – 476133 Feedback Title – Nested Linq Min() crashes Visual Studio 2008 IDE The following fields or values changed: Field Status changed from [Active] to [Resolved]
+  
+  Field Resolution changed from [None] to [Won't Fix]
+
+    
+    
+Answer 2: 
+
+    
+    
+I was able to repro this on my Visual Studio 2008 install.  It looks like the language service is hitting an infinite loop and eventually running out of memory.  Can you please file a bug on the connect site? 
+
+Connect: http://connect.microsoft.com
+
+If you do file the bug, please add a comment to my answer with the bug number.  
+    
+    
+Answer 3: 
+
+    
+    
+Type inference for nested lambda expressions takes exponential time. So it's not surprising the compiler gets slow when you do too much nesting.
+
+However, the IDE ideally would handle such cases and abort type inference if its taking too long.
+    
+    
+Answer 4: 
+
+    
+    
+Using basic recursion instead of trying to 'guess' the depth, increasing complexity at every level
+
+public static class TestExt
+{
+    public static int Min(this Test test)
+    {
+        return Math.Min(test.val, test.Tests.Min(x =&gt; x.Min()));
+    }
+}
+public class Test
+{
+    public int val;
+    public List&lt;Test&gt; Tests;
+}
+
+public class LinqTest
+{
+    public void GetMin()
+    {
+        Test t = new Test();
+        var min = t.Min();
+    }
+}
+
+
+As pointed out by Ryan Versaw, you can also do this without extension methods like so:
+
+public class Test
+{
+    public int val;
+    public List&lt;Test&gt; Tests;
+
+    public int Min()
+    {
+        return Math.Min(val,Tests.Min(x =&gt; x.Min()));
+    }
+}
+
+    
+    
+Answer 5: 
+
+    
+    
+You don't even have to go that far. VS froze for me when typing in the d part of the nested LINQ expression.
+    
+    
+Answer 6: 
+
+    
+    
+Thought i'd point out that it also freezes VS 2010, and what's more it nearly froze my whole system!
+    
+    
+Answer 7: 
+
+    
+    
+I think I just experienced something similar.  I was going through my code and using var on lines where I was declaring and initializing variables to new SomeClass().  My code compiled.  When I tried to run any Visual Studio 2008 unit test, Visual Studio would crash with CLR20r3 as the error name/type.  Reverting all my var changes, the tests run fine.
+    
+    
+Title: Vi editing for Visual Studio
+Description: 
+    
+    
+                    
+I'm used to the Vi(m) editor and am using MS Visual Studio 2005 at work. I couldn't find a free Vi add-in (there's only one for the 2003 version). I googled a bit, saw that there was a 'Google summer of code' project this year to write such an add-in, and am eagerly awaiting the result. I've also heard of ViEmu (not free, and I can't test it at work).
+
+Has anyone in my situation has found a solution (and/or tested ViEmu)?
+
+Edit: I can't test ViEmu at work because they are paranoid about what we install on our boxes: it has to go through required channels, and for 30 days I don't reckon it's worth it (and I have no Windows box at home).
+
+Edit: Since both answers were equivalent, I ended up accepting the first one that came in.
+    
+
+        
+Answer 1: 
+
+    
+    
+ViEmu works great with Visual Studio.  I used Vi(m) strictly in Linux, but I was turned on to bringing the Vi(m) editing process into the Windows world by JP Boodhoo.  JP praises about it also.
+    
+    
+Answer 2: 
+
+    
+    
+ViEmu works great. I've been using it for about a year now and couldn't imagine coding in Visual Studio without it.
+
+Why can't you test it at work? It has a 30 day free trial.
+    
+    
+Title: Eclipse IDE last edit location history - multiple steps back?
+Description: 
+    
+    
+                    
+I'm now in a process of transition from Netbeans to Eclipse (Indigo).
+
+Ctr+Q seems to have the same function - going back to the last edit location. But in Netbeans I was able to press Ctr+Q repeatedly and go further back without the need of altering the file content (undo and redo hack).
+
+Is there such functionality in Eclipse?
+
+Some info:
+
+I'm using the JavaScript Development Toolkit, PDT, and YAML editor.
+    
+
+        
+Answer 1: 
+
+    
+    
+It seems that Back action (Alt+Left) is more or less the same. The difference is that it tracks any action, not only edits. Actions as "Go to declarations" are also included in the history of Alt+Left.
+
+I think, in a way, it's more useful because I track back my real actions as in "real browsing" the code. Though I will switch the keyboard shortcuts for Last Edit and Previous Action so that I keep the Ctr+Q habit.
+    
+    
+Answer 2: 
+
+    
+    
+It is currently not possible in Eclipse. There is an old feature request for this functionality with Bugzilla id 72773 (https://bugs.eclipse.org/bugs/show_bug.cgi?id=72773).
+    
+    
+Answer 3: 
+
+    
+    
+You can use the local history if you lost your undo redo functions.
+to do that: 1/ right click anywhere on your code, 2/ Team, 3/ Show Local History, then choose the version you want according to edit time.
+    
+    
+Answer 4: 
+
+    
+    
+9 years later, check out Eclipse 4.17 (2020_09)
+
+Multiple Last Edit Locations
+
+
+Previous Edit Location navigation (formerly named Last Edit Location) is now expanded to remember multiple edit locations.
+The last 15 edit locations are now remembered.
+For convenience, similar edit locations in close proximity to each other are also merged so that each of the 15 remembered locations remains distinct.
+
+How to use
+Two new keyboard shortcuts are introduced:
+
+Ctrl+Alt+LEFT_ARROW (or on Mac Ctrl+Opt+LEFT_ARROW) navigates to the most recent edit location, just as Ctrl+Q always has in prior releases.
+However, now continuing to hold Ctrl+Alt and then pressing LEFT_ARROW again begins a traversal through the history of prior edit locations, with each additional press of LEFT_ARROW moving a step further back in history.
+Once traversal stops, future Ctrl+Alt+LEFT_ARROW actions are now temporarily anchored to this older historical location for easy exploration of that code region.
+
+The classic Ctrl+Q mapping has been likewise enhanced with this new functionality, so that Ctrl+Q and Ctrl+Alt+LEFT_ARROW are synonymous.
+
+Ctrl+Alt+RIGHT_ARROW (or on Mac Ctrl+Opt+RIGHT_ARROW) conversely moves the anchor forward through edit history, so after traversing backward with Ctrl+Alt+LEFT_ARROW, you can go forward again by holding Ctrl+Alt and repeatedly pressing RIGHT_ARROW.
+A new menu item has likewise been added for this forward navigation as well.
+
+New edit locations are always inserted at the end, so original historical ordering is always maintained.
+New edits also reset the last location &quot;anchor&quot; back to the most recent edit, so that pressing Ctrl+Alt+LEFT_ARROW once again brings you to the most recent edit rather than a historical one.
+
+    
+    
+Title: How do I setup a Clang Toolchain in Eclipse on Windows?
+Description: 
+    
+    
+                    
+I am apologizing for a stupid question. But I could not find the answer on the Internet. I'm struggling to set up Clang compiler/linker/... for Eclipse in Windows 7 on a 64 bit machine. I have very outdated knowledge of C++ and never worked in Eclipse. What I am trying to achieve is to compile a simpliest hello world application using Clang under Eclipse on a Windows 7 x64 machine.
+
+I've managed to follow the instruction at http://clang.llvm.org/get_started.html on getting and building LVVM + Clang. I installed the Eclipse plugin as described at http://marketplace.eclipse.org/content/llvm-toolchain-eclipse-cdt. I set the PATH environment variable to the c:\lvvm\debug\bin; that contains the built executables.
+
+Now, how do I switch the Eclipse to use LVVM? Particularly what do I put to:
+
+
+include directories
+libraries
+serarch path
+
+
+in the following dialog?
+
+
+
+Also I found the following dialog in preferences of a project:
+
+
+
+It is completely unclear what I should make it look like.
+
+Thank you for your help! Sorry for the nooby question, I am a C# developer trying to get back to C++.
+    
+
+        
+Answer 1: 
+
+    
+    
+For what it's worth, I just had to do this today, and I found all I had to do was change 
+
+project -
+Title: Test PHP Script Online [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has an answer here:
+                        
+                    
+                
+            
+                    
+                        Is there a PHP Sandbox, something like JSFiddle is to JS? [closed]
+                            
+                                (1 answer)
+                            
+                    
+                Closed 7 years ago.
+        
+
+
+    
+
+Last Month codepad.viper-7.com was down and a lot of stackoverflow answers with code pasted there became broken include some of mine. When it was back all scripts where lost.
+
+Am looking for a free anonymous alternative to codepad.viper-7.com where i can test php scripts with minimal restriction (fopen, curl , mb_strlen etc); on different versions.
+
+There so many of them recommended here but its difficult to find suitable replacement to codepad.viper-7.com
+
+Simple Testing Script 
+
+&lt;?php
+   echo strlen(file_get_contents("http://google.com"));
+?&gt;
+
+
+Output 
+
+
+codepad.viper-7.com  = 43736
+sandbox.onlinephpfunctions.com = disabled 
+writecodeonline.com = disabled 
+exorithm.com = 43736 but non-anonymous func, print_r  etc disabled 
+codepad.org = failed 
+ideone.com = disabled 
+coderun.com = 43736 but Only PHP Version 5.3.1 supported
+codeanywhere.net = Registration Required 
+eval.in = Forbidden syscall socketcall
+3v4l.org = failed 
+
+
+Question:
+
+Is there any anonymous alternative with minimal restrictions ? 
+    
+
+        
+Answer 1: 
+
+    
+    
+You can try phpfiddle.org. But be aware that http://google.com is redirected to https://www.google.com, so file_get_contents will return 301 Moved.
+    
+    
+Title: multiple Output windows in Visual Studio 2010
+Description: 
+    
+    
+                    
+Is there a way to have more than one Output window open in Visual Studio at the same time?
+    
+
+        
+Answer 1: 
+
+    
+    
+It is not possible with the built-in Visual Studio settings. 
+
+You could vote for implementing this feature in the future here: Provide multiple debug channel output windows 
+
+The only workaround would be to develop VS extension which adds an additional custom Output Window maybe.
+    
+    
+Title: Is there a PHP IDE that can handle Magento&#39;s code base?
+Description: 
+    
+    
+                    
+Magento has a large code base (6000+ php files), uses a complex autoloading logic, and has a lot of configuration in XML.  I'm looking for an IDE that can get its little brain around this code base - show me where a function is declared, where it's called, etc. Is there any IDE that can handle this beast?  
+
+EDIT - Adding examples
+
+Here's an example of how to load a product the Magento way:
+
+ $product = Mage::getModel('catalog/product')-&gt;load($productID)
+
+
+Getting a helper class looks similar:
+
+ $helper = Mage::getHelper('catalog/product')
+
+
+Additionally, the getters and setters of attributes are often assumed from the model, which may very well have been declared in an XML file somewhere, rather than in code.
+    
+
+        
+Answer 1: 
+
+    
+    
+Probably not the answer you want, but the number of files probably won't be your foil here. Since Magento uses strange methods to instantiate objects (Mage::getModel etc), normal code completion is completely at a loss. On top of that, Magento makes heavy use of PHP's magic functions, which of course are totally exempt from code completion.
+
+I've worked with a few IDEs using Magento (Komodo, Zend Studio, Eclipse), and I've never had a very good result. Komodo was the only one that didn't have a coronary trying to guess, so I've been using that for some time now.
+
+Hope that helps. Thanks!
+
+Joe
+    
+    
+Answer 2: 
+
+    
+    
+A Netbeans fan myself.  What you are looking for is Class Type Hints that both Zend Studio and Nebeans support. Magento has been slow in setting these, but there are some occasions of it in the code.
+
+http://files.zend.com/help/Zend-Studio-7/code_assist_concept.htm
+
+
+ /* @var $myVar TestClass */
+ $myVar = new getClass();
+
+    
+    
+Answer 3: 
+
+    
+    
+I've developed an open source plugin for PHPStorm, maybe you want to take a look:
+http://www.magicento.com
+
+The plugin can handle what you are asking for and also has more features, like autocomplete in xml files. I will add more features every week, because I use the plugin in my everyday work. I hope it becomes useful for you too.
+    
+    
+Answer 4: 
+
+    
+    
+If you are going for a free IDE, then Eclipse PDT will work just fine. It can handle all those files without problem. If you want a more full-featured IDE, I would choose Zend Studio. Zend Studio is essentially Eclipse PDT with additional features (like a really nice debugger/profiler built into a browser toolbar, and better code formatting out of the box).
+    
+    
+Answer 5: 
+
+    
+    
+This is going to be down to two factors: IDE smartness (Is it going to recognize all the autoloaded classes?) and plain performance (How long does it take the IDE to walk through the file tree to build a lookup lexicon? How often is it going to refresh?)
+
+Whether an IDE can handle those amounts of files depends strongly on how your machine is equipped. I recommend you go through the trial versions of the most popular PHP IDE's, and look which one suits you best. It should be quite easy to find out whether you can work with them or not.
+
+I for one work with Nusphere's phpEd (14-day Trial here). I have never worked with that large a project, but big ones and I'm satisfied with the code lookup functionality. Like probably most IDE's, it allows manual addition of includes in case it misses an autoload.
+
+Then there's Zend Studio (Download here) and Eclipse PDT (here), and a whole lot more to look at in this question. Not all of them do Code Completion for PHP, so you'll have to pick out those that do.
+    
+    
+Answer 6: 
+
+    
+    
+Try Magento Plugin for Eclipse based IDE's that can handle Magento instantiate of objects (like Mage::helper('helper'), Mage::getModels('module/model'), etc).
+
+http://code.google.com/p/magento-plugin
+    
+    
+Answer 7: 
+
+    
+    
+I've found that using any flavor of Eclipse (Aptana, PDT, or Zend), and making good use of documentation features like the /* @var ... */ comment does wonders.
+
+For example, if I am working on a custom module called Strube_MyModule with the following structure:
+
+
+   Strube\
+      MyModule\
+          Block\
+              Custom.php
+          template\
+              mymodule\
+                  custom.phtml
+
+
+Strube\MyModule\Blocks\Custom.php
+
+&lt;?php
+  class Strube_MyModule_Block_Custom extend Mage_Core_Block_Template {
+    public function _construct() {
+      $this-&gt;setTemplate('../../../../path/to/template/mymodule/custom.phtml');
+    }
+
+    /**
+     * Eclipse is smart enough to follow PHP-Docs
+     *
+     * @return Mage_Customer_Model_Customer
+     */
+    public function getCustomer() {
+      return Mage::getSingleton('customer/session')-&gt;getCustomer();
+    }
+  }
+
+
+template\mymodule\custom.phtml
+
+&lt;?php
+  /**
+   * PHP DOC!
+   */
+  /* @var $this Strube_MyModule_Block_Custom */
+  // Now you can auto-complete $this-&gt;...
+  // You can also &lt;ctrl&gt; + click on functions that descent from $this
+  echo $this-&gt;getChildHtml();
+
+  // It will also autocomplete based on PHP-doc @return tags
+  echo $this-&gt;getCustomer()-&gt;getName();
+
+    
+    
+Answer 8: 
+
+    
+    
+Look this extension fo PHPSTORM IDE. I do use this and is very good.
+    
+    
+Answer 9: 
+
+    
+    
+I've used Netbeans to work on large PHP projects (it also handles large Java and C projects). My current CakePHP projects has 35000 files, 4000-5000 of them are PHP files including external libraries etc. 
+
+The IDE is responsive for some time, but if you keep it running overnight the IDE becomes sluggish and you need to restart it. 
+    
+    
+Answer 10: 
+
+    
+    
+JetBrains just released a version of PHPStorm that addresses the factory methods in Magento.
+http://blog.jetbrains.com/webide/2013/04/phpstorm-6-0-1-eap-build-129-177/
+http://confluence.jetbrains.com/display/PhpStorm/PhpStorm+Advanced+Metadata
+    
+    
+Answer 11: 
+
+    
+    
+Using what @Laizer sad, Vinai created a shell script that generates that class map that PhpStorm knows to read and autocomplete functions and classes. 
+
+See the git repository:
+https://github.com/Vinai/phpstorm-magento-mapper 
+    
+    
+Title: Getting weird symbols in the Eclipse IDE that I can&#39;t highlight or delete [duplicate]
+Description: 
+    
+    
+                        
+            
+        
+            
+                
+                    
+                        This question already has answers here:
+                        
+                    
+                
+            
+                    
+                        How do I disable the formatting symbols in eclipse?
+                            
+                                (5 answers)
+                            
+                    
+                Closed 7 years ago.
+        
+
+
+    
+
+I've been getting these weird symbols all of a sudden. I'm assuming I accidently turned something on but I'm unsure what it is. Any help would be apprecitated. 
+
+The picture of the problem: Imgur picture for the problem
+    
+
+        
+Answer 1: 
+
+    
+    
+Look for this button:
+
+and disable it.
+    
+    
+Answer 2: 
+
+    
+    
+You've accidentally set Eclipse to show whitespace. You can fix it here: 
+
+Window &gt;&gt; Preferences &gt;&gt; General &gt;&gt; Editors &gt;&gt; Text Editors:
+  [x] Show whitespace characters
+
+    
+    
+Answer 3: 
+
+    
+    
+That is "visible whitespace". Shows tabs, spaces, and line breaks.
+
+In Preferences, Go to General 
+Answer 4: 
+
+    
+    
+Those are whitespace symbols.  The hotkey for disabling them is CTRL . (that's a period).
+
+This question was also answered here, but I'm not sure we should mark as duplicate.
+How do I disable the formatting symbols in eclipse?
+    
+    
+Title: What is the Java equivalent to C#&#39;s Windows Forms for building GUI apps easily and rapidly
+Description: 
+    
+    
+                    
+I wanted to learn to program and looked at both Java and C#. I decided to go with C# because it was so easy to just open a form and plop some buttons and text boxes on it. With just one download, C# Express got me going. 
+
+From what I saw with Java that couldn’t be done. At least not without downloading and configuring other software. All of which I found no easy instructions for. But I really wanted to learn Java. 
+
+I really don’t want to learn how to create UIs AND a new language. I’d rather just to concentrate on the code itself.  Is there an easy way (like C# basically) to create Java apps?
+    
+
+        
+Answer 1: 
+
+    
+    
+Are you talking about a GUI builder?
+
+There are many GUI builders out there.  Some IDEs like Netbeans come with nice GUI builders for Java.
+    
+    
+Answer 2: 
+
+    
+    
+There are options in the Java community for 'one-stop downloads' like you mention.  They are out there, they're just not as public as Visual Studio is. EasyEclipse is one of my favorites.
+    
+    
+Answer 3: 
+
+    
+    
+I've done a fair bit of work (/pollipem/em/p/lilip/p/li/ol/div
+Answer 4: 
+
+    
+    
+It seems to me the best and easier way to get what you want is to use Netbeans (JDK 6u14 with NetBeans IDE 6.5.1 Bundle).
+
+It has both the JDK and the IDE in one download. And it has a easy and very good GUI builder.
+
+Java is a very good platform and as you said it is easier to create cross platform applications, however, don't except this from the Desktop UI which, although still cross platform, not always gets right on all platforms with out modification. 
+
+You would have to add some code specific for each target desktop, but definitely that's a lot easier than write three different application ( One in Visual C#, other in GTK, and other in Cocoa )
+    
+    
+Answer 5: 
+
+    
+    
+I been learning to program in C# for a few months, but recently I signed up for a course which required Java.  So I started playing around with java, first tried Netbeans then Eclipse.
+
+I'm kinda a computer programming noobie (background mainly in web design) so take my perspective as a student.  After messing around with Java for a bit i still prefer C#.  While both are excellent the factors that tipped C# in my case are as follows
+
+
+Easier documentation and a large variety of easy to view Video Tutorials, yes I know netbeans have a very large collection of video tutorials as well, they are encoded at such a terrible resolution and bitrate that they are largely unwatchable
+Slightly easier to learn, maybe it's cause of the IDE or the syntax, but I found C# easier to pick up.
+More functionality exposed right after using the IDE, you will find more controls in visual studio than compared to Netbeans.  Eclipse was quite confusing for a noobie like me wading through it's massive plugins.
+
+
+I think the only thing java has going for it, is that it's supported on more platforms.  Though Mono is making up for the linux and Apple side so i guess it's not that bad.  Either way they are both extremely productive environments, just in my humble noobie opninion C# is just slightly more intuitive to pick up.
+    
+    
+Answer 6: 
+
+    
+    
+The ability to learn to program in one language or another should most certainly not be based upon how to drag and drop GUI controls, especially since that measure is irrelevant to the language itself. 
+
+Side note: Java and C# are so similar that you'll pretty much be learning both as you go regardless.
+    
+    
+Answer 7: 
+
+    
+    
+I'd have to agree with dxmio, I switch back and forth between c# and java quite often.  The two languages are quite similar.
+    
+    
+Answer 8: 
+
+    
+    
+The best way of learning programming .. is to write code!
+If you know your way around Java, It's a mater of syntax to learn C#.
+Programming is just as much a way of thinking in code, as knowing a language. 
+
+Personally, I didn't start with GUI. I started with BlueJ, a free "learning" compiler, for Java code.
+
+No programmer in the world knows any language 100%. Their all sitting in their office, and playing with stackoverflow and google all day. Remember, Google is your best friend! (May be a bit of caffe too !)
+
+Reminder: The best way to learn to write code, is to write code! If it's C, C++, C#, Java, PHP, Python or whatever you prefer, it's a matter of framework and syntax.
+    
+    
+Answer 9: 
+
+    
+    
+If you have Java in your browser, all you need is the latest Eclipse bundle.
+
+I would suggest the Java EE edition for your platform from http://www.eclipse.org/downloads/
+
+It appears that there are video tutorials starting from scratch at http://eclipsetutorial.sourceforge.net/totalbeginner.html
+    
+    
+Answer 10: 
+
+    
+    
+Using Netbeans, you can create Java based Swing GUIs pretty easily.  Netbeans comes with a pretty nice GUI builder.
+
+If you learn how to program in Java, I don't think it would really be that much of a stretch to create Java Swing applications from scratch.  It's just a matter of learning the Swing libraries.
+
+Not being from a .NET background, I can't comment on learning C# GUIs, but from my experience Swing was very easy to learn and it helps A LOT to understand the code underlying what the GUI builder in Netbeans generates.
+    
+    
+Answer 11: 
+
+    
+    
+
+  I decided to go with C# because it was so easy to just open a form and plop some buttons and text boxes on it. 
+
+
+You can do this using builders in either language without writing any code.
+
+
+  With just one download, C# Express got me going. 
+
+
+Netbeans is the same deal for Java.
+
+
+  From what I saw with Java that couldn’t be done. At least not with out downloading and configuring other software. 
+
+
+True, you cannot develop Java with C# Express and you cannot develop in c~ using Netbeans. You do need to install two pieces of software.
+
+
+  All of which I found no easy instructions for. 
+
+
+I suggest you try http://www.google.co.uk/search?q=netbeans+gui+builder+tutorials 55,100 hits or http://www.google.co.uk/search?q=java+gui+tutorials 1,340,000 hits
+
+
+  But I really wanted to learn Java. 
+
+
+It doesn't appear you want to actually write any code or install more than one program at a time.  You will find that learning to program in a language will be asking more from you than this.
+
+
+  Was I missing something? 
+
+
+Quite a bit I imagine.
+
+
+  I really don’t want to have to learn how to create UI’s AND a new language. 
+
+
+You can use a GUI builder to layout your windows, but if you want your program to do something useful, you will have to do some programing in a language.
+
+
+  I’d rather just want to concentrate on the code itself. 
+
+
+That appears to contradict everything you have just said.  You can't concentrate on the code  without learning the language.
+
+
+  Is there an easy way (like C# basically) to create Java apps?
+
+
+To write apps that do something useful you are going to have to learn how to program and at least one language. I suggest you also learn how to debug and profile your program.
+    
+    
+Answer 12: 
+
+    
+    
+i found this for designing java winform application for you .
+please check out
+www.formdev.com
+JFormDesigner™ is a professional GUI designer for Java™ Swing user interfaces. Its outstanding support for JGoodies FormLayout, GroupLayout (Free Design), TableLayout and GridBagLayout makes it easy to create professional looking forms.
+    
+    
+Title: No error window in Dev cpp
+Description: 
+    
+    
+                    
+I am sorry for this silly doubt.
+
+But when I compile this program, it only shows error line. It does not show error window.
+
+(I have purposely made an error here, I know the correct solution in code ).
+
+I tried view section in menu bar, but couldn't find the solution.
+
+
+
+Any settings help will be appreciated.
+    
+
+        
+Answer 1: 
+
+    
+    
+No need to be sorry.. it happens..
+
+
+Right click the status bar
+Click on floating report window.
+A movable window will come up.
+Click on the inner tabbed close button. (You may have to right-click the report window to resize it and see the close button)
+After that just randomly resize the window so that it doesn't hide again.
+
+
+Happy Coding..!!!
+
+Edit - As @Alex suggested in one comment below - 
+
+You probably hid Error window while you were changing it's size. So it's hidden between Editor window and Statusbar. Try to close Statusbar first (right mouse click -/pp/p/div
+Answer 2: 
+
+    
+    
+
+Click the "View" at the top of the window.
+Then Click on the "Floating Report Window".
+A floating window will appear at the botton of the screen.
+Then Resize that floating Window.
+At last click on the inner tabbed close button.
+
+    
+    
+Answer 3: 
+
+    
+    
+I had same problem. If you restart your devcpp you will see report bar(including compile log). But if you try to click it it will dissapear. The problem is that this window is shrunk in size to a bar. All you need is just after restarting devcpp click and stretch this bar to small size window.
+    
+    
+Answer 4: 
+
+    
+    
+simple!
+
+Goto &quot;view&quot; at the top of the window.
+A whole bunch of options shall drop down.
+Check &quot;floating report window&quot;.
+Thats it!
+
+    
+    
+Answer 5: 
+
+    
+    
+Go to Tools menu then select Environment Options
+then go to compilation progress area, check the Show during compilation option and uncheck the Auto close after compilation option.
+    
+    
+Answer 6: 
+
+    
+    
+I tried all of these answers, couldn't find it yet. I tried pressing the F key buttons and it popped up. So all that needs to be done is press F2! 
+    
+    
+Title: Portable Programming IDE
+Description: 
+    
+    
+                    
+Frequently I'm brainstormed with programming ideas that I would like to directly code. More or less like "Wow, that algorithm will rock! I need to write it now!".
+
+For this kind of "impulse" to write, I use http://www.jarte.com/ that is a cool portable text editor. If I'm near a cybecafe or a friend computer, I just plug the usb pen drive and start to write...
+
+So, I would like:
+1) a portable minimalist IDE
+2) with minimal OS requirement (ie.: I want run from XP, Vista, etc...)
+3) any modern language (I can learn a new language if needed. I just want write/test the algoritm)
+4) Syntax Highlight/intellisense is good, but not required
+5) Free
+
+Is there something like this?
+    
+
+        
+Answer 1: 
+
+    
+    
+alt text http://sts.bkukr.de/l-davoss/blog/Lists/Blog/Attachments/21/SharpdevelopPortable.jpg
+
+Sharp Develop Portable:
+
+Dave blogged all you need to know to get you started!
+
+C# support on the run, and much, much more.
+    
+    
+Answer 2: 
+
+    
+    
+Eclipse isn't "minimalist", but it does work installation-less. So as long as your USB key, or whatever, is large enough, you can put Eclipse in there and be ready to go.
+    
+    
+Answer 3: 
+
+    
+    
+Please have a look at ideone.com - supports 40+ langugages
+    
+    
+Answer 4: 
+
+    
+    
+Well, IDEs are often better suited depending on the programming language you want to use. I'm not really sure if you're looking for a text editor or an IDE, but:
+
+As far as I'm concerned, I'd use:
+
+Java: Eclipse (though not very minimalist)
+
+C/C++: vim and g++, Code::Blocks
+
+Ruby/Python/Perl: vim + interpreter
+
+TextMate (best editor ever) on Mac OS X ($39.99) and e editor (Windows' TextMate equivalent)
+I also find NotePad++ to be a decent text editor, very minimalist.
+
+Some people are crazy in love with emacs, you might want to check it out.
+    
+    
+Answer 5: 
+
+    
+    
+You can also carry NetBeans on your USB drives: http://nbide.blogspot.com/2008/03/portable-netbeans.html and http://nbide.blogspot.com/2008/04/portable-netbeans-part-ii.html
+    
+    
+Answer 6: 
+
+    
+    
+I'm late to the game, but a something worth mentioning is Squeak Smalltalk, or one of its derivatives like Pharo or Croquet. No changes to the registry or OS, no installers, no Services, no Admin rights needed, and only a few files needed- a full install in half a dozen files. 
+
+1) binary and source portable code; nice IDE, but with a minimalist disk footprint (5-50 MB)
+
+2) Runs on almost any OS- one cross-platform binary image and a small virtual machine executable for each platform- one for 95/98/ME/XP/2k/XP/Vista/7/2003/2008; one for WinCE, one for OS X, one for Linux x86, etc.; (0.5-2 MB) for each platform. You can even boot onto bare metal, if you're hardcore.
+
+3) It's Smalltalk. Birthplace of most buzz-worthy Ruby features...
+
+4) Syntax Highlight and some level of intellisense is good built-in.
+
+5) Free as in speech and beer. 
+
+Smalltalk isn't for everyone, but it's my personal fave. The fact that I can use the same binary image on my XP desktop, Linux server, iPhone and WinCE PDA without recompilation is a great bonus.
+    
+    
+Answer 7: 
+
+    
+    
+We are actively developing an online development environment at http://gnymb.us. This may suit your needs when it's ready.
+    
+    
+Answer 8: 
+
+    
+    
+Emacs + a compiler/interpreter sounds like what you want.
+    
+    
+Answer 9: 
+
+    
+    
+For C/C++, DevC++ works off of a usb drive.  It runs off of XP, and I believe Vista as well (never tried that).  It also has syntax highlighting.
+
+Only problem is (I'm assuming this) is that it doesn't work for other languages.
+    
+    
+Answer 10: 
+
+    
+    
+I frequently use Firefox + Firebug when I want to quickly hack together something.
+    
+    
+Answer 11: 
+
+    
+    
+You may be looking for vim. Now, it won't be easy to learn how to use vim, but I'd count it time well spent. This is an unix utility that has been ported to basically every architecture and operating system see Portable GVim for the portable version. For info on using vim as an IDE, see here and here
+    
+    
+Answer 12: 
+
+    
+    
+i use Instant rails with netbeans from my stik
+    
+    
+Answer 13: 
+
+    
+    
+
+
+Try BlueJ (Running BlueJ from a USB (thumb) drive). 
+
+Other alternatives;
+
+
+Snippet Compiler
+
+(source: sliver.com)  
+CodeIDE an online IDE.
+
+    
+    
+Title: Netbeans autocomplete stopped working?
+Description: 
+    
+    
+                    
+I'm using Netbeans 6.9.1, everything was just fine however suddenly, it has stopped detecting any changes made to the code, e.g new variables, functions, etc. If I try to refactor/rename a variable, e.g by pressing CTRL + R, it says 'Refactoring not available in this context'.
+
+Its in a PHP project if that matters.
+
+Any ideas?
+    
+
+        
+Answer 1: 
+
+    
+    
+Apparently deleting the contents of .netbeans/var/cache/index in your user directory (application data on windows etc) fixed it.
+    
+    
+Answer 2: 
+
+    
+    
+Since NetBeans 7.2 the cachedir has been moved to the following locations:
+
+C:\Users\&lt;username&gt;\AppData\Local\NetBeans\Cache\7.2\ on Windows
+/Users/&lt;username&gt;/Library/Caches/NetBeans/7.2/ on Mac OS X
+/home/&lt;username&gt;/.cache/netbeans/7.2 on Unix-like systems
+
+Source: http://wiki.netbeans.org/FaqWhatIsUserdir
+    
+    
+Answer 3: 
+
+    
+    
+Another Solution to the problem is just start a new project and once you've started a new project. also note if you have a syntax error whilst typing it may not work. But try and see if it helps.
+    
+    
+Answer 4: 
+
+    
+    
+Remove nbproject folder from project directory and then create a new project is works for me:
+
+Steps:
+
+
+Close project 
+Open project directory in windows explorer  
+Delete nbprojectfolder
+Go to netbeans, open file menu and select "New Project" 
+Create project with existing source
+
+
+:)
+    
+    
+Answer 5: 
+
+    
+    
+Finally works after adding the path of the project in Tools 
+Answer 6: 
+
+    
+    
+For those who use Netbeans 11.2, autocompletion could stop working if you set JDK 8 as default for running netbeans (netbeans_jdkhome in netbeans.conf) instead of newer JDK 13.
+    
+    
+Title: How do I add execution environment 1.8 to Eclipse Luna?
+Description: 
+    
+    
+                    
+I have jre8 installed and set as the default for the jre but under compiler compliance I can't find 1.8 and under execution environment I can't find javaSE 1.8. I'm using the latest build of Eclipse EE. 
+
+I took a look at this manual
+http://help.eclipse.org/luna/index.jsp?topic=%2Forg.eclipse.jdt.doc.user%2Ftasks%2Ftask-add_new_jre.htm
+But I couldn't find any .ee files in my jre8 or JDK1.8 installation directories.
+    
+
+        
+Answer 1: 
+
+    
+    
+Open Preferences and look in 'Java /pp
+Answer 2: 
+
+    
+    
+If the eclipse version is old as @mike stated in his answer then you would be unable to view the JavaSE-1.8 on the Execution Environments list in your eclipse; You can do the following to use it even on older versions:
+
+
+Help --/lili
+Answer 3: 
+
+    
+    
+Older versions of Eclipse might not work with javaSE-1.8
+
+You need to find out what version of Eclipse you have by going into its help menu and clicking on About Eclipse.
+
+If your version is older than the one at https://www.eclipse.org/downloads/
+then you need to uninstall your older version and install the latest version.
+
+I had the same problem with my Eclipse on Linux Mint.  And the only way I could solve it was by following above instructions.  
+    
+    
+Title: Change menu and window theme in IntelliJ
+Description: 
+    
+    
+                    
+I'm using the Darcula theme in Intelli IDEAJ because it is easier on the eyes, but it seems to only affect the editor.
+
+It really doesn't do much for me, since everything else (menus, etc.) are unaffected and contrast harshly.
+
+Is there a way for me to change these as well?
+
+
+
+I believe I saw someone do this once, but I may have been mistaken and looking at another IDE.
+    
+
+        
+Answer 1: 
+
+    
+    
+Quickest way: View menu -code/code
+Answer 2: 
+
+    
+    
+You need to also change Appearance theme in Preferences.
+
+(It's confusing that changing the theme doesn't actually change the theme in the whole IDE.)
+    
+    
+Title: Literate programming
+Description: 
+    
+    
+                    
+Literate programming is a way of developing software where documentation comes first, then the coding. One writes the documentation of a code snippet, and then writes the implementation of the snippet. The visual appearance of the software source code would be a plain document like word, with code paragraphs in it. 
+
+I am trying to convert the dev shop I work to use only literate programming, as it brings great advantages to code readability and maintenance. However, due to the lack of tools the LP usage is limited in the company. For example, the ideal way to program literate is to write a paragraph using word markup, and then insert a subparagraph with the implementation. But i cannot seem to find any good tools for VS200x to perform LP with. 
+
+Ideally, such a tool would look just like Word 2007, but integrated into the IDE. When the coder sets the cursor on a code paragraph, it would have all the functionality provided just like we have now in our IDE. 
+
+What are good tools for LP, with .NET and VS200x in particular?
+    
+
+        
+Answer 1: 
+
+    
+    
+Kudos to you for trying to improve the way your team works.  As long as you're trying to do that, you have an advantage over those that do not.
+
+I used Literate Programming for a project once.  It was really hard, and the results were really good.  Seemed like a reasonable tradeoff.
+
+However, today I'd rather take a different approach: instead of prose for humans and code for machines, I'd rather write code that is so clear that humans don't mind reading it.  When I feel the urge to write a comment, I think "I could make this code clearer".  That means I'm writing less documentation, not more.
+
+Well, good luck with whatever path you choose.
+    
+    
+Answer 2: 
+
+    
+    
+I can only suggest you markup your code with doxygen comments, then you can generate the documentation from your code, which I know is almost a backwards ways of doing what you want, but at least you end up with the desired result: code and documentation that comes from the same source files. Obviously this has the advantage that you use your existing IDE for coding that comes with all the usual code-friendly goodies.
+
+If you're trying to convert your dev team, this approach might be easier for them to swallow than a full-blown literate methodology, they're still happy with the coding being the same, but they have to write better documentation embedded in the code.
+
+That's the best I can suggest, see what your team thinks of the idea.
+    
+    
+Answer 3: 
+
+    
+    
++1 for trying to improve your team's process
+
+-1 for going down a dead-end path
+
+with all due respect to Knuth, unit tests are better than documentation 
+
+
+unit tests cannot become out of date
+polluting the code with prose is a huge distraction when debugging
+if your code really requires that much exposition, it is probably poorly designed and buggy
+
+    
+    
+Answer 4: 
+
+    
+    
+The only non-esoteric language I know of which actually has support for LP is Haskell, and to be honest, I haven't heard much demand for LP in modern programming languages. Most people seem to be satisified with using inline documentation formats (javadoc, rdoc, etc.)
+    
+    
+Answer 5: 
+
+    
+    
+My apologies. I should have mentioned that we are already using Doxygen with an automated doc build script. We use the .NET doc tags where possible, and where the .NET XML doc tags come short we mix in doxygen tags. This works quite well. The point is that production decreases quite much when writing documentation: We (humans) are very bad in producing documentation without any WYSIWYG editor. Not to mention error sensitive. 
+
+The team is currently in the phase to convert the mindset from coding straight ahead to first writing documentation, then code. This is the most important step, as it lets the coders embrace the LP paradigm. 
+
+There is a market here for a VS plugin that does it, i guess.
+
+Also, Doxygen indeed seems to be a nice tool for actively using the LP method solution to this problem. Though it is very limited in use. 
+    
+    
+Answer 6: 
+
+    
+    
+
+  However, today I'd rather take a different approach: instead of prose for humans and code for machines, I'd rather write code that is so clear that humans don't mind reading it. When I feel the urge to write a comment, I think "I could make this code clearer". That means I'm writing less documentation, not more.
+
+
+Thats what we do also. Though for a lot of code we produce, writing clear, human readable code just isn't enough. What if you want to explain an image rendering function? Better explain it using an image, instead of writing half a page describing it.
+    
+    
+Answer 7: 
+
+    
+    
+I'm not aware of any modern tooling for Literate Programming. I have done some WEB programming 15 years ago. 
+
+Doxygen is a nice tool, but doesn't help at all with LP. The problem is that LP focuses on writing code for humans to read. There is no good support for successive refinement/disclosure. LP needs a view on the source code that has a different structure than the file-class-attribute/method in VS. NSpec might be somewhat better, but also is too much bottom-up.
+    
+    
+Answer 8: 
+
+    
+    
+Hello source novel authors,
+
+As some one referred to DOxygen here : although this does not allow real Literate Programming (as an example of limitations, this does not allow to have a reordered view on sources), it however seems to be recognized as a valuable tools in this area, by its own advocates (LP advocates) : it is mentioned right at the top of this reference page about LP tools : Literate Programming Tools
+    
+    
+Answer 9: 
+
+    
+    
+The main idea of literate programing is to write programs as mathematical texts. One can define what does it mean every concept needed in the program as clear as possible, then explain how it is implemented in the language and why one decided to do it in such way and not other or what is going to be changed later.
+
+The changes can be also documented by commenting the piece of code to change and inserting the new one explaining the reason for the change.
+Some changes may depend on transformations of the code to optimize it's performance. For example making one loop, instead of 2 loops in some C like language, change one expression for a simpler one, etc. Or something more complex like changing other data structure to represent information.
+Every change is well justified and documented. 
+One can understand about the problem domain of the program, just reading the source code, understanding it in depth. Avoiding mistakes due to ambiguities. 
+The genesis of the program is completely documented, one can recall everything later, because every thought is in the program. 
+
+Strictly speaking one can write literate programs with plain text, if the program is developed, but typesetting it in TeX/LaTeX is the most aesthetic, functional and easiest way, because it is not difficult to place LaTeX markup within the most programming languages.  
+
+It is natural to write literate programs in Haskell, because a Haskell script contain a set of declarations not instructions. You can place all declarations in any order. That is different in other languages where it is important to order the instructions in a particular way. 
+
+I have not used web nor cweb or similar programs, but those programs help to typeset the programs in a logical order for a human, whereas the program modules can be generated for proper compilation.
+
+There is a LaTeX package called listings which is easy to use you can start every piece of code closing the comment and ending the code opening a new comment, as far as I remember, something like this:  
+
+% /* begin of literate program 
+\documentstyle{article}
+\usepackage{listings}
+
+\lstdefinitions here I do not remember the syntax. Here one can define 
+                a replacement for startcode*/ and /*endcode for spaces.
+
+more definitions here
+
+\begin{document}
+Your explanation including formulas like $s=c\times\sum_{i=0}^{i=N} x_i$ etc.
+\begin{lstlising}
+startcode*/
+
+s=0
+for(i=0;i&lt;=N;i++) s=s+x[i];
+s=c*s;
+
+etc..
+
+/*endofcode
+\end{lstlisting}
+
+More explanation ...
+\end{document} 
+% end of literate program */
+
+
+in the preamble of the text you can define startcode*/ and /*endofcode as keywords to replace by spaces in the extra definitions for the listings package. See the package documentation.
+
+at the end of the LaTeX source simply type:  
+
+% end of literate program */ 
+
+
+which is a comment in LaTeX
+in the beginning you can place the opposite:
+
+% /* start of program
+
+
+Removing the % LaTeX comment sign when you want to compile the program, and putting it again when compiling by LaTeX.
+
+If you have never used LaTeX before, you can start with plain text first.
+Maybe combining it with doxigen to index everything.
+Doxigen is not needed with LaTeX because it is a typesetting system, where you can create several indexes, hyper-links, structure the documentation as a book. 
+
+Haskell programs are usually written in literate style. Maybe it is a good idea to browse some book or article to see one.
+    
+    
+Title: Hiding Duplicate Toolbars Items in Eclipse
+Description: 
+    
+    
+                    
+I don't know how, but my STS has got duplicate toolbars items and I am not sure how to remove them. Here is how my duplicated toolbar looks like.
+
+
+
+I want to get rid of these. I tried to hide the toolbar but that didn't help. Does anybody have any idea how to get rid of the duplicate ones?
+    
+
+        
+Answer 1: 
+
+    
+    
+I've been having the same problem since upgrading to Oxygen. I haven't been able to reliably reproduce the issue.
+
+The workaround suggested by @howlger has helped and is less intrusive than blowing away the entire workspace:
+
+
+Close Eclipse.
+In the Eclipse workspace directory, delete the .metadata\.plugins\org.eclipse.e4.workbench\workbench.xmi file or just rename it so you can bring it back in case you need to revert.
+Open Eclipse.
+Rearrange the UI elements to your liking.
+
+
+This is a pain, but does remove the duplicate elements from toolbars.
+
+I also found that customizing the perspective doesn't work for duplicated items, but does for non-duplicated: 
+
+
+Window -
+Answer 2: 
+
+    
+    
+This appears to be an issue in the core Eclipse platform.  While the screenshot shows pretty icons thanks to Darkest Dark, it does not appear related at this time to Darkest Dark plugin as Howlger has indicated.  Instead, it appears that duplicate contribution entries appear in the workbench.xmi file.  In our testing (I contribute to Darkest Dark), we can see these entries happening in a standalone Eclipse, though haven't been able to track down the root cause yet in where entries get added again to the workbench.xmi.
+
+Interestingly, a user has posted on an old Eclipse bug with what looks like a screenshot of Eclipse Classic exhibiting the same problem today.
+
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=402561
+
+Screenshot from Eclipse Bug
+    
+    
+Answer 3: 
+
+    
+    
+It looks like you have installed the Darkest Dark Theme plug-in. Try to uninstall it.
+
+This closed source plug-in does load-time weaving to patch Java bytecode of the Eclipse platform (for legal reasons, to not have to publish their changes). In contrast of using a public API, load-time weaving patches have to be adapted for each (new) Eclipse version: an error in the plug-in can cause strange behavior of the Eclipse platform.
+
+See also: Keyboard shortcuts in Eclipse Oxygen stopped working 
+    
+    
+Answer 4: 
+
+    
+    
+Not an actual answer, more additional info that I hope will help track down the problem. I am having the same issue with Version: 2018-12 (4.10.0), Build: 20181214-0600.
+
+I opened the workbench.xmi file mentioned above. This was the section I found by searching for "Open a Terminal", which is the tooltip on a repeated icon.
+
+&lt;children xsi:type="menu:ToolBar" xmi:id="_tODFlzriEem5AdcasuU54g" elementId="org.eclipse.tm.terminal.view.ui.toolbar"&gt;
+  &lt;tags&gt;Draggable&lt;/tags&gt;
+  &lt;children xsi:type="menu:HandledToolItem" xmi:id="_tODFmDriEem5AdcasuU54g" elementId="org.eclipse.tm.terminal.view.ui.commands.launchToolbar"
+       iconURI="platform:/plugin/org.eclipse.tm.terminal.view.ui/icons/eview16/console_view.png" tooltip="Open a Terminal" command="_tOOFADriEem5AdcasuU54g"&gt;
+    &lt;persistedState key="IIdentifier" value="org.eclipse.tm.terminal.view.ui/org.eclipse.tm.terminal.view.ui.commands.launchToolbar"/&gt;
+  &lt;/children&gt;
+  &lt;children xsi:type="menu:HandledToolItem" xmi:id="_tODFmTriEem5AdcasuU54g" elementId="org.eclipse.tm.terminal.view.ui.commands.launchToolbar"
+       iconURI="platform:/plugin/org.eclipse.tm.terminal.view.ui/icons/eview16/console_view.png" tooltip="Open a Terminal" command="_tOOFADriEem5AdcasuU54g"&gt;
+    &lt;persistedState key="IIdentifier" value="org.eclipse.tm.terminal.view.ui/org.eclipse.tm.terminal.view.ui.commands.launchToolbar"/&gt;
+  &lt;/children&gt;
+  &lt;children xsi:type="menu:HandledToolItem" xmi:id="_tODFmjriEem5AdcasuU54g" elementId="org.eclipse.tm.terminal.view.ui.commands.launchToolbar"
+       iconURI="platform:/plugin/org.eclipse.tm.terminal.view.ui/icons/eview16/console_view.png" tooltip="Open a Terminal" command="_tOOFADriEem5AdcasuU54g"&gt;
+    &lt;persistedState key="IIdentifier" value="org.eclipse.tm.terminal.view.ui/org.eclipse.tm.terminal.view.ui.commands.launchToolbar"/&gt;
+  &lt;/children&gt;
+  &lt;children xsi:type="menu:HandledToolItem" xmi:id="_tODFmzriEem5AdcasuU54g" elementId="org.eclipse.tm.terminal.view.ui.commands.launchToolbar"
+       iconURI="platform:/plugin/org.eclipse.tm.terminal.view.ui/icons/eview16/console_view.png" tooltip="Open a Terminal" command="_tOOFADriEem5AdcasuU54g"&gt;
+    &lt;persistedState key="IIdentifier" value="org.eclipse.tm.terminal.view.ui/org.eclipse.tm.terminal.view.ui.commands.launchToolbar"/&gt;
+  &lt;/children&gt;
+  &lt;children xsi:type="menu:HandledToolItem" xmi:id="_tODFnDriEem5AdcasuU54g" elementId="org.eclipse.tm.terminal.view.ui.commands.launchToolbar"
+       iconURI="platform:/plugin/org.eclipse.tm.terminal.view.ui/icons/eview16/console_view.png" tooltip="Open a Terminal" command="_tOOFADriEem5AdcasuU54g"&gt;
+    &lt;persistedState key="IIdentifier" value="org.eclipse.tm.terminal.view.ui/org.eclipse.tm.terminal.view.ui.commands.launchToolbar"/&gt;
+  &lt;/children&gt;
+  &lt;children xsi:type="menu:HandledToolItem" xmi:id="_tODFnTriEem5AdcasuU54g" elementId="org.eclipse.tm.terminal.view.ui.commands.launchToolbar"
+       iconURI="platform:/plugin/org.eclipse.tm.terminal.view.ui/icons/eview16/console_view.png" tooltip="Open a Terminal" command="_tOOFADriEem5AdcasuU54g"&gt;
+    &lt;persistedState key="IIdentifier" value="org.eclipse.tm.terminal.view.ui/org.eclipse.tm.terminal.view.ui.commands.launchToolbar"/&gt;
+  &lt;/children&gt;
+  &lt;children xsi:type="menu:HandledToolItem" xmi:id="_tODFnjriEem5AdcasuU54g" elementId="org.eclipse.tm.terminal.view.ui.commands.launchToolbar"
+       iconURI="platform:/plugin/org.eclipse.tm.terminal.view.ui/icons/eview16/console_view.png" tooltip="Open a Terminal" command="_tOOFADriEem5AdcasuU54g"&gt;
+    &lt;persistedState key="IIdentifier" value="org.eclipse.tm.terminal.view.ui/org.eclipse.tm.terminal.view.ui.commands.launchToolbar"/&gt;
+  &lt;/children&gt;
+  &lt;children xsi:type="menu:HandledToolItem" xmi:id="_tODFnzriEem5AdcasuU54g" elementId="org.eclipse.tm.terminal.view.ui.commands.launchToolbar"
+       iconURI="platform:/plugin/org.eclipse.tm.terminal.view.ui/icons/eview16/console_view.png" tooltip="Open a Terminal" command="_tOOFADriEem5AdcasuU54g"&gt;
+    &lt;persistedState key="IIdentifier" value="org.eclipse.tm.terminal.view.ui/org.eclipse.tm.terminal.view.ui.commands.launchToolbar"/&gt;
+  &lt;/children&gt;
+&lt;/children&gt;
+
+
+
+Stopped eclipse.
+Edited this down to one menu:HandledToolItem child.
+Started eclipse.
+
+
+When I refreshed workbench.xmi I found this (two icons appear):
+
+&lt;children xsi:type="menu:ToolBar" xmi:id="_FzpBgzrrEemLeYohrjtX4w" elementId="org.eclipse.tm.terminal.view.ui.toolbar"&gt;
+  &lt;tags&gt;Draggable&lt;/tags&gt;
+  &lt;children xsi:type="menu:HandledToolItem" xmi:id="_FzpBhDrrEemLeYohrjtX4w" elementId="org.eclipse.tm.terminal.view.ui.commands.launchToolbar"
+       iconURI="platform:/plugin/org.eclipse.tm.terminal.view.ui/icons/eview16/console_view.png" tooltip="Open a Terminal" command="_Fzw9IzrrEemLeYohrjtX4w"&gt;
+    &lt;persistedState key="IIdentifier" value="org.eclipse.tm.terminal.view.ui/org.eclipse.tm.terminal.view.ui.commands.launchToolbar"/&gt;
+  &lt;/children&gt;
+  &lt;children xsi:type="menu:HandledToolItem" xmi:id="_FzpBhTrrEemLeYohrjtX4w" elementId="org.eclipse.tm.terminal.view.ui.commands.launchToolbar"
+       iconURI="platform:/plugin/org.eclipse.tm.terminal.view.ui/icons/eview16/console_view.png" tooltip="Open a Terminal" command="_Fzw9IzrrEemLeYohrjtX4w"&gt;
+    &lt;persistedState key="IIdentifier" value="org.eclipse.tm.terminal.view.ui/org.eclipse.tm.terminal.view.ui.commands.launchToolbar"/&gt;
+  &lt;/children&gt;
+&lt;/children&gt;
+
+
+I notice, also, that the ids have been updated.
+
+John
+    
+    
+Answer 5: 
+
+    
+    
+I can't say why this happened in the first place, but I do know how to get rid of the duplicate entries.  We've experienced the same problem on our Eclipse based product.
+
+Window /strong/pp/p/div
+Title: Delphi 2010 - hide welcome page
+Description: 
+    
+    
+                    
+Does anybody know how can i disable welcome page without using the &lt; -np /p/div
+Answer 1: 
+
+    
+    
+You can disable it in the registry: under HKEY_CURRENT_USER\Software\CodeGear\BDS\7.0\Known IDE Packages, find the entry named $(BDS)\Bin\startpageide140.bpl and modify the value by prepending an underscore (so it looks like '_Borland Start Page IDE Package'). You can re-enable it later by removing the underscore.
+    
+    
+Answer 2: 
+
+    
+    
+Easier, rename Bin\startpageideXXX.bpl and it won't ever show the welcome page again. Rename it back to reactivate. No registry needed.
+
+Tested with latest Rad Studio XE as well.
+    
+    
+Answer 3: 
+
+    
+    
+You already know the answer to this, use the -np command line option.  Simply change your file association for .dproj, .groupproj, .dpr etc. to include this option and it's all good!
+    
+    
+Title: Project and Structure navigation splitting in PhpStorm 7/8/9
+Description: 
+    
+    
+                    
+Anyone know how to make project and structure navigation set in splitting mode?
+
+See images ( I was able doing this, but don't know how )
+
+
+    
+
+        
+Answer 1: 
+
+    
+    
+This took me a really long time to figure out. 
+
+For you to set this up, you need to 
+
+First: make sure each Tool Window is set to "Pinned Mode" and "Docked Mode" (you can do this by right clicking on the Project/Structure tab)
+
+Second: the Tool Window you want on top should have the "Split Mode" NOT checked
+
+Third: the Tool Window you want at the bottom should have the "Split Mode" checked
+    
+    
+Answer 2: 
+
+    
+    
+Step :
+
+
+Preferences
+Appearance &amp; Behaviour
+Appearance then untick side-by-side layout on the left at Window options
+Project tab move to the left side and make sure untick split-mode
+Structure tab move to the left side and make sure tick split-mode
+
+    
+    
+Answer 3: 
+
+    
+    
+Sure, just grab your "Structure" tool window button (the one on the left side, that has "7" in the title) and drag it to the bottom part of the same side.
+
+Alternatively just right click on tool window button or title bar and choose "Split Mode" -- it will move it to the opposite part of the same side (e.g. will move from Left Top to Left Bottom -- just as per your image).
+
+Official manual page.
+    
+    
+Answer 4: 
+
+    
+    
+To whom the other answers did not work:
+
+At first go to Windows menu then click Restore Default Layout
+
+Then go to View =strong/strong
+Answer 5: 
+
+    
+    
+As of version 2019.1, PHPStorm tool windows no longer behave the way the other answers say, that is, there is no explicit "split mode". Instead, it uses the location of the tab; you can no longer split tool windows if they are in the same tab group, but you can display two tool panes by putting them in different groups. So if you're looking for the standard projects half-pane at the top, and structure at the bottom, put structure in the top left group, and structure in the bottom left, and then enable them both - and the view will split.
+
+To reiterate – if you have both project and structure in top left, there is no way to split them; you must move the tab.
+    
+    
+Title: struggling with c++ IDE&#39;s on linux
+Description: 
+    
+    
+                    
+hi I'm really frustrated, First I have no idea how to code the very complex (make files), so I'm using IDE's that would ease the job for me like (netbeans , eclipse ,Kdevelop .. etc) i almost tried every thing starting with
+
+Emacs (i'm very slow on it and I need autocompletion)
+Netbeans 6.9.1 (crashes , very slow editor,but amazing and very easy in project creation)
+Eclipse (fast editor, i just hate the project configurations even in php it was so annoying) 
+Kdevelop(I couldn't even get through the Hello world , configuration and Cmake issues "no executable specified " :S :S 
+ code blocks not so many ppl recommends it 
+ anjuta the code completion really sux
+
+you might think i'm lazy or give up quickly but I swear I've searched alot and read the pooooooor tutorials of each one that is bloated with much information that no body needs for getting started.And I think we're really in lack of good documentation in the world of programming. and you can very much see that in (Boost library website) I really hope someone gives me helpful method on how to survive all this mess.
+either I'll end up reading CMAKE details that i don't need , and memorize EMACS short cuts (CTRL x CTRL bla bla) and give up the idea of the comfortable easy to use IDEs in 2010 !
+
+After thankfully very good answers , I think it's a must That I read about CMAKE , makefiles concepts. then half of my problems will go away , And I think now using IDE's that blind me from understanding the &quot;Make&quot; things isn't going to be helpful as i'm planning for long term development on linux
+thanks for the brilliant simple answers.
+p.s (Qt creator is awesome !! it's so much MAC like neat, clean and user friendly )
+
+10 days later: goin old school and using EMACS and CMAKE
+Many weeks later: Guys Eclipse Is the best ! seriously :)
+Emacs is fine but maybe fore a starter who wants to sharpen his writing skills but after a while it will be tedious work and you'll need to get things done fast !
+
+I don't know why I came back here, I guess this is my favorite question, One year now and yes I'm Still using Eclipse, I swear this is not a publicity (year period duh noway) I just really like eclipse and support it, the fact that it's free and still amazing is what makes me defend it, Eclipse now is my playground still not expert in it, anyway I shouldn't write anymore cause it's going to turn into a blog or something,
+Just like to say don't give up on things at first easily it might save you hell of a time..
+
+10 years later (2020), intellij + shell all the way, but honestly regret not learning emacs.
+    
+
+        
+Answer 1: 
+
+    
+    
+maybe you can try qt creator, it designed for developing QT application, however you can use it for other c++ program. It supports cmake. 
+    
+    
+Answer 2: 
+
+    
+    
+You are wrong about code::blocks.
+
+I've tried most of what you list, but ended up, and is now using code::blocks.
+
+[edit]
+
+If you are really interested in easy UI-development, look at Ultimate++
+    
+    
+Answer 3: 
+
+    
+    
+I found these IDE's useful on Linux:
+
+
+QtCreator
+CodeLite
+Code Blocks
+
+
+Btw, if you plan to do more Linux development in the future then understanding make files is a must. To help you get started, here's the simplest example:
+
+SOURCES=main.cpp hello.cpp
+
+all:
+    g++ $(SOURCES) -o hello
+
+
+Note: use an actual TAB instead of 4 spaces in front of the g++ .. line. 
+
+That's it.
+    
+    
+Answer 4: 
+
+    
+    
+for emacs, you can try cedet-semantic(code completion), ecb(code browser) and yasnippet.
+    
+    
+Answer 5: 
+
+    
+    
+For autocomplete in emacs, I use (in my .emacs file):
+
+(require 'completion)
+(global-set-key "\C-\\"  'complete)
+
+
+It needs at least three characters, and then searches backwards for the first similarly named token.  (You may also want to enable font-locking and C++ mode.)
+
+Emacs does have a long learning curve.  But it is quite powerful, extraordinarily customizable, and extremely useful.  You can always start with just a small subset of the commands and grow from there.  There is a built-in tutorial mode (Ctrl-h t).  And things like (Ctrl-h B) or (Ctrl-h k) will help you find out what various keys are doing.
+
+For simple test programs, to compile under TCSH, I use:
+
+alias tgcc 'g++ \!:* -o \!:1:r -Wall ; if ( $status == 0 ) ./\!:1:r'
+tgcc foo.C
+
+
+For more complex systems, makefiles are essential!  There's very good documentation on the GNU-Make system via emacs "info" under fedora (and other flavors) of linux.  Or try:
+
+http://www.gnu.org/software/make/manual/make.html
+
+By and large, makefiles become complex over time.  They don't often start out that way.  We have a set of source files.  A set of object files derived from those source files, often via a simple substitution rule.  Libraries derived from subsets of those object files.  Binaries derived from various object files and libraries.  Perhaps test programs that run on those binaries.  Perhaps test-output that we want to compare the test programs against for regression testing.  Perhaps sets of files we want to package up into a tarbar.  Perhaps sets of files that we want to remove when cleaning up.  Etc.
+
+The rules are simple.  You define sets of data (typically filenames), rules for applying sets of commands to create new data (again, typically filenames) from existing data (files), and dependencies so you know when to recreate.
+
+Seriously, read the manual, start out simple, and build from there...
+
+PS:  Try adding these rules (not as the first rule!) to your (GNU) makefile:
+
+echo-%:
+        @echo $* == "\"$($*)\""
+
+echoraw-%:
+        @echo "$($*)"
+
+
+Now you can say things like "make echo-CC" to see what the variable CC is set to.  It's useful for debugging...
+
+Always remember that the lines after the rule start with a tab!
+    
+    
+Answer 6: 
+
+    
+    
+Hmm.. Have you checked which version of the JVM you have installed? I use both Eclipse (with CDT) and Netbeans (this is a brilliant C++ IDE IMHO). I've had issues with Eclipse (typically indexing hundreds of files can sometimes cause it to run out of memory, but you can get around that using command line options to control how much memory the JVM can use).
+
+For the sake of self improvement, I suggest you read a tutorial on makefiles anyway, there's lots out there and google is your friend. Irrespective of how good an IDE is at coming up with makefiles, typically if you're contributing source to a repository, it's difficult to use the generated makefiles.
+    
+    
+Answer 7: 
+
+    
+    
+I also tried several IDEs. Including eclipse and everything. In the end I just stayed with emacs (the X version) and automake/autoconf. For me it is the fasted way to create something. Also, it works on almost every machine and is most of the time already installed or easy to install.
+
+I agree it has a steep learning curve but when you finally have a simple hello world type of application you can reuse the makefiles for bigger projects.
+
+For automake/autoconf I used the following sites to learn it:
+
+
+http://sources.redhat.com/autobook/
+http://www.gnu.org/software/autoconf/manual/
+http://www.gnu.org/software/automake/manual/
+http://www.gnu.org/software/autoconf-archive/
+
+
+For emacs I just followed the included tutorial. Besides, you do not need to remember that much key strokes to begin using the X version of emacs.
+
+(BTW: autocompletion for emacs is asked here )
+    
+    
+Answer 8: 
+
+    
+    
+Although you are looking for something related to an IDE and generating make files.. etc.. I prefer the simplicity and syntax high-lighing of "vim"
+    
+    
+Answer 9: 
+
+    
+    
+You should give kdevelop another try, it is really worth it! The 4.x versions offer a very good C++ code completion and coding assistance.
+I thing your problem is, that you have to create a 'Launch Configuration' for your 'Hello world' example first (have a look at Run-/p/div
+Answer 10: 
+
+    
+    
+the alternative is to look at using good editors and combine this with using semi automatic build systems
+
+
+the classic is autoconf / automake .... if you plan to write truly portable stuff then this is the place to be. It has a steepish learning curve but works. It is the universal build system of open source
+boost has a build system called jam, this is very good
+
+
+I am sure there are others
+
+For the record I use slickedit with auto* and plain ole gdb
+    
+    
+Answer 11: 
+
+    
+    
+I went through the same pain. I wanted to use both the windows and linux versions so I could do cross platform work.
+
+
+I could not get code blocks to work at all and got no help on their forums.
+I used eclipse for a while but the debugger never worked under windows and it was not very usable for me. Not intuitive and difficult to use.
+I finally settled on netbeans. I got the debugger working under windows but it was painful. It has many warts but at least it will compile and debug on both platforms. They are actively improving it based on user feedback
+
+
+I may end up trying to pick a better ide that can cross compile instead.
+    
+    
+Answer 12: 
+
+    
+    
+Kdevelop version 4 is still not stable enough. In version 4.0 (that comes with ubuntu 10.10) the execute button is always gray, and it crashes all the time.
+
+Try version 3 - it is very good.
+    
+    
+Title: Setting up TextMate for Haskell programming on Mac OS X
+Description: 
+    
+    
+                    
+I am new to mac, and am in the process of getting my computer setup with all the programs I need, one of them being Haskell.
+
+To my surprise, the Haskell platform for OS X is not like in Windows (where there is an GUI editor built on the platform installation - winGHiC). After looking a lot around, I found this editor TextMate which is supposed to be compatible with Haskell but am finding it quite complex to setup the Haskell Bundle for it.
+
+I have already downloaded and installed the following:
+
+
+Haskell Platform for Mac OS X
+Xcode 3.4 (Haskell Prerequisite)
+TextMate
+
+haskell.tmbundle files (mentioned above)
+
+
+
+Is anyone familiar on how to get it working? It will mean a lot to me a detailed stepwise explanation, like I said, I has been only 1 day since I used OS X for the first time.
+
+Thanks a bunch.
+    
+
+        
+Answer 1: 
+
+    
+    
+Well it's good work that you have found that the tmbundle is on Github these days.  
+
+You should be able to find the inbuilt options by clicking Bundles, then Haskell.  There are fairly few in the standard Haskell.tmbundle.  The most obviously useful one is ... load file command-shift-r or command-R.  If you have written a module with ending .hs or .lhs, it ... opens it in ghci.  
+
+(There was some talk of an integrated terminal in TextMate II, but who knows? One annoying feature of a non-integrated terminal is that one is tempted to 'reload' by clicking command-R rather than by doing :r inside ghci; in certain frenzies it will develop that I have 15 copies of Terminal open.) 
+
+Many of the nice features are just general TextMate things, determined by the language description, so it might be good to read a general description of TextMate niceties. For example, if several lines are highlighed, then command-/ comments them out with --s; or, if they are already commented, uncomments them. I had hacked together something to do this, long before I realized it was already there, not having studied the manual closely enough.  
+
+Everything has keybindings, of course, and it is very easy to add your own to run little scripts and insert little snippets, much more so than in Emacs, say.  
+
+Under Bundles click Bundle Editor and examine the text for different kinds of things. 
+
+So, for example, to make a tab trigger to start a language extension pragma {-#LANGUAGE ... #-} where the cursor is in the space ...make a copy of a Snippet and substitute
+
+{-#LANGUAGE ${1}#-}
+
+
+selecting Activation: Tab Trigger, and (say) LANG as the trigger. 
+
+One nice thing is that they are all shell scripts, or else (like this one) partial shell scripts with some TextMate variables around, and you can pretty much write them in your own preferred language. (For the Haskell bundle I don't have any Haskell ones to speak of any more, but for other bundles I do.)  
+
+The syntax highlighting is surprisingly sound, but trips over a few fancy extensions, e.g. "PackageImports" , GADT syntax, markup for the Haddock documentation system, and some other oddities. I have hacked my own, but I find the format of the syntax files pretty unintelligible, so it's no use sending you a copy.  The Haskell.tmbundle has been emended by some knowledgeable Haskellers in the last two or three years. The person who first made it was just learning Haskell, and hadn't e.g. composed Haddocked modules, but on the other hand, he seems fortunately to have been very skilled and to have had an intimate knowledge of the TextMate machinery.
+
+Notice by the way that TextMate stores the emendations you make in the Bundle Editor in a rather strange way. The bundles that come with TextMate, e.g. C, Ruby, HTML, LaTeX, etc. are in /Applications/Textmate.app/.../Bundles.  The ones you install are in /Library/Application\ Support/TextMate/Bundles.  When you make emendations through the Bundle Editor, they are stored in your local ~/Library/Application\ Support/TextMate/Bundles.  It sort of makes sense but it's a little complicated, and impedes public improvement of the Haskell bundle.  (The one bundle I share with people, not the Haskell one, I keep in the lattermost, outermost directory under git revision, so the original and my emendations are together.) 
+
+The "Lookup on Hoogle" keybinding/option acts on highlighted terms; here's a replica for the hayoo website, which can search for uses of a type-signature
+
+echo "&lt;meta http-equiv=\"refresh\" content=\"0; 
+http://holumbus.fh-wedel.de/hayoo/hayoo.html?query=${TM_SELECTED_TEXT:=$TM_CURRENT_WORD}\"&gt;"
+
+
+If you cabal install hoogle, then you can make a local call to hoogle with a script like so:
+
+ hoogle --w --n=100 '${TM_SELECTED_TEXT:=$TM_CURRENT_WORD}'
+
+
+choosing Save: Nothing, Input: Selected Text, Or: Word, Output: Show as HTML
+
+Other emendations I have made are mostly trivial, like a tab trigger snippet for `{-#LANGUAGE ... #-} or else eccentricities of my own.
+
+One thing worth mentioning that I managed to integrate is the typeof executable from Hackage, cabal install typeof, which runs to ghci for an inferred type signature.   I have a key binding to show the inferred type as displayed bit of html, but also to insert it.  It's a bit delicate but here is the text for the displayer of types
+
+#!/bin/bash
+word=${TM_SELECTED_TEXT:-$TM_CURRENT_WORD}
+module="${TM_FILEPATH}"
+echo $word | typeof $module 
+
+
+choosing Input: Selected Text, Or: Line ; Output: Show as Tool Tip, Activation : Key Equivalent  (then choose a keybinding , mine is control-option-command-j)  Similarly, for type insertion via typeof make a new C (command file) heading and include this:
+
+#!/bin/bash
+word=${TM_SELECTED_TEXT:-$TM_CURRENT_WORD}
+module="${TM_FILEPATH}"
+echo $word | typeof $module | typeof_wordorder
+
+# typeof_wordorder is the following hack compiled
+# in my local ~/bin
+# module Main where
+# main = interact reword where
+#  reword :: String -&gt; String
+#  reword xs = 
+#     xs ++  (head . words . concat . lines $ xs)
+
+
+Here typeof and typeof_worderorder are Haskell executables, the first cabal-installed, the second is the above commented idiocy, compiled in my local ~\bin to get around some escaping nonsense.  Here you should choose Output : Insert as Snippet
+
+Sorry, I'm just thinking of random things. You should keep posting questions under this heading, as I think it would be worthwhile to see how one might trip up, but also what hacks our cleverer Haskeller friends may have thought of.  I keep meaning to put a 'fork' of my tmbundle on github, but it's not too thrilling, and the organization of Bundle directories forever defeats me.  
+    
+    
+Title: Eclipse IDE: Add/change default filetypes?
+Description: 
+    
+    
+                    
+When I create a new file in Eclipse, there's a wide selection of different alternatives appearing in Eclipse.
+
+However I am missing a couple of file which I need to open the "file create wizard" to create - JS files included.
+
+How can I add my own file types as a default choice to appear in the "new files" menu?
+
+Screenshot of the menu I am referring to:
+
+    
+
+        
+Answer 1: 
+
+    
+    
+Puuh - just when I had given up I accidentally found this:
+
+
+  Try this: Right click on Eclipse's
+  toolbar and choose "Customize this
+  perspective" option. You will see a
+  dialog box, and on "Shortcuts" tab
+  choose "New" from "Submenus:"
+  droplist.
+  
+  Find "PHP" in the left pane and check
+  the checkbox next to it. It will
+  enable both "PHP File" and "PHP
+  Project" in "New" menu of your
+  perspective. You can do the same to
+  other file editors as well. (HTML,
+  CSS,....
+
+
+http://dev.eclipse.org/newslists/news.eclipse.tools.pdt/msg00228.html
+    
+    
+Answer 2: 
+
+    
+    
+Yes, from the Eclipse's toolbar, right click 
+Title: WebStorm syntax highlighting for Swig template engine
+Description: 
+    
+    
+                    
+Given:
+
+
+The Swig template engine: http://paularmstrong.github.io/swig/
+Webstorm has a plugin for it: Textmate bundles support
+A Textmate bundle for Swig is available: https://github.com/paularmstrong/Swig.tmbundle
+
+
+I expect I should be able to get Swig highlighting fixed, but I'm only getting half way.
+
+Below is the resulted highlighting I get. The Swig code is highlighted as expected, but HTML is not highlighted anymore.
+
+I've tried installing and enabling the HTML textmate bundle as well, but when both the HTML and the Swig bundle are activated, the code is highlighted as only HTML. If I disable the HTML bundle but have the Swig bundle still active, I only get Swig highlighting.
+
+My Question: How do I get Swig code and HTML code highlighted in the same file in WebStorm on Windows?
+
+Result:
+
+
+
+This is my Textmate Bundles configuration in WebStorm 9:
+
+
+
+Again, simply selecting the HTML bundle to enable it doesn't work.
+    
+
+        
+Answer 1: 
+
+    
+    
+Swig has nearly identical syntax to Twig, so we can assume they can be used interchangeably speaking of syntax highlighting and code completion.
+
+The thing is that PHPStorm it has a Twig support throught a plugin (which is awesome BTW), but sadly it is not available in the others IDEs thought the Plugins menu.
+
+This issue can be solved by:
+
+
+manually downloading the plugin from the official repo at https://plugins.jetbrains.com/plugin/7303?pr=
+then installing it manually thought the  Plugin interface,
+then or use the .twig extension on files or adding a new mapping in the File Types system menu for the type Twig, with wildcard *.html or *.swig, how you prefer.
+
+
+I'm using the *.html workaround and work like a charm, both Swig &amp; HTML syntax highlighting + code completion.
+
+Hope this helps you like it did to me :)
+    
+    
+Title: How to de-indent chunk of code quickly?
+Description: 
+    
+    
+                    
+How to do the opposit of indenting chunk of code in Netbeans?
+
+Indenting multiple lines of code, I can select and use Tab key to achieve. 
+
+How can I do the reverse of this quickly, not by doing it line by line? 
+
+Even better, is there a way to format all the code? Somewhere I used in Dreamweaver before..
+    
+
+        
+Answer 1: 
+
+    
+    
+to format all the code in NetBeans, press Alt + Shift + F
+
+If you want to indent lines, select the lines and press Alt + Shift + right arrow key
+
+and to unindent, press Alt + Shift + left arrow key
+    
+    
+Answer 2: 
+
+    
+    
+shift+tab should unindent the current line if none is selected, or multiple lines if they are.
+
+ctrl+shift+F7 will get NB to format highlighted code.
+    
+    
+Answer 3: 
+
+    
+    
+Open "Tools" -
