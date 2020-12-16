@@ -1,0 +1,55 @@
+7498217498122 URL = https://bugs.eclipse.org/bugs/show_bug.cgi?id=569716
+
+New way to fail on OSHI/HAL reading has just been reported:
+
+-------------------------------------------------------------
+
+OS=win32, ARCH=x86_64, WS=win32, NL=en
+
+-------------------------------------------------------------
+Caused by: java.lang.NullPointerException
+	at oshi.util.platform.windows.PerfDataUtil.removeAllCounters(PerfDataUtil.java:227)
+	at oshi.hardware.platform.windows.WindowsCentralProcessor.initPdhCounters(WindowsCentralProcessor.java:250)
+	at oshi.hardware.platform.windows.WindowsCentralProcessor.<init>(WindowsCentralProcessor.java:127)
+	at oshi.hardware.platform.windows.WindowsHardwareAbstractionLayer.getProcessor(WindowsHardwareAbstractionLayer.java:64)
+	at org.eclipse.passage.lic.internal.oshi.State.readHal(State.java:130)
+	at org.eclipse.passage.lic.internal.oshi.State.read(State.java:115)
+	... 81 more
+-------------------------------------------------------------
+
+
+Precise Windows version and Processor name yet are to be found out.
+
+
+
+==============================================================
+=== Relates to Passage issues
+565248: token assessor fails on Linux-based virtual machines
+569352: legalize assessing a hardware without disks
+
+=== Can relate to the floowing OSHI issues
+578: "Failed to add PDH counter" on some machines
+
+[565248]: https://bugs.eclipse.org/bugs/show_bug.cgi?id=565248
+[569352]: https://bugs.eclipse.org/bugs/show_bug.cgi?id=569352
+[578]: https://github.com/oshi/oshi/issues/578
+==============================================================
+
+7498217498122 URL = https://bugs.eclipse.org/bugs/show_bug.cgi?id=568909
+
+I believe that Genie is currently configured to run scancode on attachments when the cf_type field is set to "type_a". Since all third party review is license certification-based, the value in this field is irrelevant.
+
+Genie should run scancode on attachments when the CQ has the keyword "thirdparty".
+
+7498217498122 URL = https://bugs.eclipse.org/bugs/show_bug.cgi?id=568908
+
+With (relatively) recent changes to the IP Due Diligence process, we no longer have any notion of Type A or Type B due diligence, so the field is no longer required in the project and release content types. References to it should be removed from the IP Log Generator and CQ creation infrastructure.
+
+We have a wrinkle, I believe, that the Genie process use the IPZilla cf_type field being set to "Type A" as a cue to run scancode on attachments. That value is fed to IPZilla by the PMI. Specifically, we'd like this scancode behaviour to continue. I'll open a separate issue for this.
+
+Most of the support code is relatively straightforward and can just be deleted. There is some complexity in the CQ creation wizard, however, that may make absolute removal challenging.
+
+Removing the field will delete data that we've accumulated to-date. I haven't quite decided whether or not this is an actual problem. That is, do we want/need to retain record that some past releases were "Type B"?
+
+This field is confusing some committers, so I think that we should at least hide it from them. That is, at least for now, let's just keep the field, and make setting it accessible only to the EMO role. In cases where the value has been set, we can continue to display it.
+

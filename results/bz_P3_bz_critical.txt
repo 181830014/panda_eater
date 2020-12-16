@@ -1,0 +1,302 @@
+7498217498122 URL = https://bugs.eclipse.org/bugs/show_bug.cgi?id=569542
+
+When the description of a model element or a diagram contains broken link, the generation fails because of an NPE.
+
+Generation must continu and logs an error to infom end-user of broken links nd the concerned model elements.
+
+7498217498122 URL = https://bugs.eclipse.org/bugs/show_bug.cgi?id=568901
+
+Created attachment 284789 [details]
+eclipse workspace log
+
+After a windows 10 update eclipse can no longer deploy to tomcat 7 (server added to workspace).
+
+From what I can tell.. eclipse is trying to connect to: jope.ow2.org (no idea why) when deploying the project to tomcat.
+
+I've tried: disabling firewall, reinstalling tomcat, eclipse, workspace..
+
+I'm using jdk9 for both the workspace and tomcat server.
+
+This all started after windows 10 did the update.  The host 'jope.ow2.org' is down.. no idea why eclipse is even reaching out to this site in the first place when I try to deploy my project.
+
+For the time being going to use another ide to get work done.. spent a day on this.. I'm frustrated.
+
+If anyone could help I'd appreciate it.
+
+7498217498122 URL = https://bugs.eclipse.org/bugs/show_bug.cgi?id=568984
+
+The vertx documentation says:
+
+Keep-alive connections are not automatically closed by Vert.x by default. If you want keep-alive connections to be closed after an idle time, then you configure setIdleTimeout.
+
+But if you i.e. set the idleTimeout to 30 seconds and execute a http request wich lasts longer than these 30 seconds the request is canceled and the client gets an java.io.EOFException.
+
+FOr me it looks like the idleTimeout is acting as a request timeout but not as an idle connection timeout
+
+7498217498122 URL = https://bugs.eclipse.org/bugs/show_bug.cgi?id=569484
+
+Created attachment 284966 [details]
+Screen recording of bug
+
+This is happens during debugging of a Java program, when a new section of the source code needs to be shown.
+For example, you are single stepping through the source code, and you have reached the bottom of the visible source code. The window should scroll automatically to shown the line of code you are on in the middle of the view.
+Or when you run to a breakpoint, then the view should update to show the breakpoint in the middle of the view.
+
+It does not do that. It only draws the new line of code, not the rest of the view. You have to scroll explicitly yourself to show the rest of the view.
+
+Eclipse Version: 2020-09 (4.17.0) Build id: 20200910-1200
+MacOS: Big Sur Version 11.0.1
+
+7498217498122 URL = https://bugs.eclipse.org/bugs/show_bug.cgi?id=569524
+
+When i tried to Maven install , Lombok is throwing error with these logs
+java.lang.StackOverflowError
+	at java.lang.Class.getSimpleBinaryName(Class.java:1443)
+	at java.lang.Class.getSimpleName(Class.java:1309)
+	at lombok.javac.JavacAST.buildStatementOrExpression(JavacAST.java:384)
+	at lombok.javac.JavacAST.buildTree(JavacAST.java:196)
+	at lombok.javac.JavacAST.buildTree(JavacAST.java:1)
+
+7498217498122 URL = https://bugs.eclipse.org/bugs/show_bug.cgi?id=569042
+
+Fn+Backspace doesn't work on BigSur. This cause a issue when editing code. This was working before the BigSur update.
+
+Eclipse I-Build: I20201121-0600
+
+7498217498122 URL = https://bugs.eclipse.org/bugs/show_bug.cgi?id=569468
+
+Created attachment 284962 [details]
+Example application to reproduce the crashes
+
+We have a 24/7 application, using SWT with GTK3. After some time, opening a shell in the application leads to a hard crash of the application.
+This happens always, so we cannot use this as a 24/7 application without the user to force a restart of the application. 
+
+I attached a demo program that reproduces the the problem on this configuration:
+
+Java 11
+Linux Kernel 4.19.55
+Xfwm4 Windowmanager
+GTK 3.24.5-r0
+Nvidia Driver 396.54
+SWT Version org.eclipse.swt_3.114.100.v20200604-0951.jar
++ other plugins from Eclipse 4.16 and Orbit R20191126223242
+
+Extract the application, build with "mvn install" and start the linux application in the product-target folder.
+
+It opens a dialog to control the application. Press the top button to start opening a window rapidly. After many openings, the application will crash, sometimes after 100 openings, sometimes 800.
+
+The application uses the AWT-SWT Bridge to draw something in Swing. No clue if this might have something to do with the problem.
+
+
+Error Variant 1:
+
+Gtk:ERROR:../../gtk+-3.24.5/gtk/gtkcssinheritvalue.c:33:gtk_css_value_inherit_free: code should not be reached
+
+No Error Log.
+
+
+Error Variant 2:
+
+Attempt to unlock mutex that was not locked
+
+No Error Log.
+
+Error Variant 3:
+
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00007ff36eeb17c3, pid=13212, tid=13213
+#
+# JRE version: OpenJDK Runtime Environment (11.0.5+10) (build 11.0.5+10)
+# Java VM: OpenJDK 64-Bit Server VM (11.0.5+10, mixed mode, tiered, compressed oops, g1 gc, linux-amd64)
+# Problematic frame:
+# [thread 13442 also had an error]
+C  [libgtk-3.so.0+0x19e7c3]
+#
+# No core dump will be written. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# An error report file with more information is saved as:
+# /home/ibs/gtktest/hs_err_pid13212.log
+#
+# If you would like to submit a bug report, please visit:
+#   https://github.com/AdoptOpenJDK/openjdk-build/issues
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+
+Error Log Variant 1:
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+J 3712  org.eclipse.swt.internal.gtk.GTK.gtk_widget_get_preferred_size(JLorg/eclipse/swt/internal/gtk/GtkRequisition;Lorg/eclipse/swt/internal/gtk/GtkRequisition;)V (0 bytes) @ 0x00007ff460598939 [0x00007ff4605988c0+0x0000000000000079]
+J 6748 c2 org.eclipse.swt.custom.CTabFolder.computeControlBounds(Lorg/eclipse/swt/graphics/Point;[[Z)[Lorg/eclipse/swt/graphics/Rectangle; (1669 bytes) @ 0x00007ff46078e698 [0x00007ff46078df20+0x0000000000000778]
+J 6590 c1 org.eclipse.swt.custom.CTabFolder.getWrappedHeight(Lorg/eclipse/swt/graphics/Point;)I (94 bytes) @ 0x00007ff459def61c [0x00007ff459def500+0x000000000000011c]
+J 6125 c1 org.eclipse.swt.custom.CTabFolder.getClientArea()Lorg/eclipse/swt/graphics/Rectangle; (140 bytes) @ 0x00007ff459c9fe2c [0x00007ff459c9fa60+0x00000000000003cc]
+j  org.eclipse.swt.custom.CTabFolder.setSelection(I)V+149
+j  org.eclipse.swt.custom.CTabFolder.setSelection(Lorg/eclipse/swt/custom/CTabItem;)V+20
+j  org.eclipse.e4.ui.workbench.renderers.swt.StackRenderer.showTab(Lorg/eclipse/e4/ui/model/application/ui/MUIElement;)V+160
+J 6381 c1 org.eclipse.e4.ui.workbench.renderers.swt.LazyStackRenderer.lambda$0(Lorg/osgi/service/event/Event;)V (87 bytes) @ 0x00007ff459d48eec [0x00007ff459d481c0+0x0000000000000d2c]
+J 6380 c1 org.eclipse.e4.ui.workbench.renderers.swt.LazyStackRenderer$$Lambda$171.handleEvent(Lorg/osgi/service/event/Event;)V (9 bytes) @ 0x00007ff459d47d3c [0x00007ff459d47cc0+0x000000000000007c]
+J 5811 c2 org.eclipse.e4.ui.internal.workbench.swt.E4Application$1.syncExec(Ljava/lang/Runnable;)V (26 bytes) @ 0x00007ff460680098 [0x00007ff46067fcc0+0x00000000000003d8]
+J 4651 c1 org.eclipse.e4.ui.services.internal.events.UIEventHandler.handleEvent(Lorg/osgi/service/event/Event;)V (35 bytes) @ 0x00007ff4598384f4 [0x00007ff459837f40+0x00000000000005b4]
+J 5615 c2 org.eclipse.equinox.internal.event.EventHandlerTracker.dispatchEvent(Ljava/lang/Object;Ljava/lang/Object;ILjava/lang/Object;)V (19 bytes) @ 0x00007ff460667ba4 [0x00007ff4606679c0+0x00000000000001e4]
+J 3653 c2 org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(Ljava/util/Set;Lorg/eclipse/osgi/framework/eventmgr/EventDispatcher;ILjava/lang/Object;)V (69 bytes) @ 0x00007ff4605928f0 [0x00007ff460592640+0x00000000000002b0]
+J 6411 c2 org.eclipse.equinox.internal.event.EventAdminImpl.dispatchEvent(Lorg/osgi/service/event/Event;Z)V (219 bytes) @ 0x00007ff460715a5c [0x00007ff460714f20+0x0000000000000b3c]
+J 6610 c2 org.eclipse.e4.ui.internal.workbench.UIEventPublisher.notifyChanged(Lorg/eclipse/emf/common/notify/Notification;)V (61 bytes) @ 0x00007ff46075dba4 [0x00007ff46075c120+0x0000000000001a84]
+J 6601 c2 org.eclipse.emf.common.notify.impl.BasicNotifierImpl.eNotify(Lorg/eclipse/emf/common/notify/Notification;)V (44 bytes) @ 0x00007ff46075ba74 [0x00007ff46075b9c0+0x00000000000000b4]
+J 5403 c1 org.eclipse.e4.ui.model.application.ui.impl.ElementContainerImpl.setSelectedElementGen(Lorg/eclipse/e4/ui/model/application/ui/MUIElement;)V (38 bytes) @ 0x00007ff459a6ea2c [0x00007ff459a6e3a0+0x000000000000068c]
+J 5402 c1 org.eclipse.e4.ui.model.application.ui.impl.ElementContainerImpl.setSelectedElement(Lorg/eclipse/e4/ui/model/application/ui/MUIElement;)V (91 bytes) @ 0x00007ff459a6d8c4 [0x00007ff459a6d2c0+0x0000000000000604]
+j  org.eclipse.e4.ui.internal.workbench.ModelServiceImpl.showElementInWindow(Lorg/eclipse/e4/ui/model/application/ui/basic/MWindow;Lorg/eclipse/e4/ui/model/application/ui/MUIElement;)V+121
+j  org.eclipse.e4.ui.internal.workbench.ModelServiceImpl.bringToTop(Lorg/eclipse/e4/ui/model/application/ui/MUIElement;)V+53
+J 6131 c1 org.eclipse.e4.ui.internal.workbench.PartServiceImpl.activate(Lorg/eclipse/e4/ui/model/application/ui/basic/MPart;ZZ)V (613 bytes) @ 0x00007ff459ca831c [0x00007ff459ca3de0+0x000000000000453c]
+J 6478 c1 org.eclipse.e4.ui.internal.workbench.PartServiceImpl.activate(Lorg/eclipse/e4/ui/model/application/ui/basic/MPart;Z)V (8 bytes) @ 0x00007ff459da2ebc [0x00007ff459da2e40+0x000000000000007c]
+j  org.eclipse.e4.ui.internal.workbench.PartServiceImpl.activate(Lorg/eclipse/e4/ui/model/application/ui/basic/MPart;)V+3
+j  de.scheidtbachmann.gtktest.parts.LaunchingPart.lambda$17(Lde/scheidtbachmann/gtktest/parts/FreqencyDataContainer;Lorg/eclipse/e4/ui/model/application/ui/basic/MWindow;)V+136
+j  de.scheidtbachmann.gtktest.parts.LaunchingPart$$Lambda$182.accept(Ljava/lang/Object;)V+12
+j  java.util.Optional.ifPresent(Ljava/util/function/Consumer;)V+12 java.base@11.0.5
+j  de.scheidtbachmann.gtktest.parts.LaunchingPart.openGraphicsWindow(Lde/scheidtbachmann/gtktest/parts/FreqencyDataContainer;)V+105
+j  de.scheidtbachmann.gtktest.parts.LaunchingPart$$Lambda$168.accept(Ljava/lang/Object;)V+8
+j  de.scheidtbachmann.gtktest.parts.OpenCloserOperation.lambda$0()V+32
+j  de.scheidtbachmann.gtktest.parts.OpenCloserOperation$$Lambda$170.run()V+4
+J 6202 c1 org.eclipse.swt.widgets.RunnableLock.run(Lorg/eclipse/swt/widgets/Display;)V (50 bytes) @ 0x00007ff459cd8454 [0x00007ff459cd8300+0x0000000000000154]
+J 4456 c2 org.eclipse.swt.widgets.Display.readAndDispatch()Z (77 bytes) @ 0x00007ff4605e5000 [0x00007ff4605e4b40+0x00000000000004c0]
+
+Error Log Variant 2:
+
+Current thread (0x00007f4125d9b800):  JavaThread "AWT-EventQueue-0" [_thread_in_native, id=25899, stack(0x00007f400d137000,0x00007f400d238000)]
+
+Stack: [0x00007f400d137000,0x00007f400d238000],  sp=0x00007f400d2343b8,  free space=1012k
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+J 4966  com.sun.java.swing.plaf.gtk.GTKStyle.nativeGetColorForState(III)I java.desktop@11.0.5 (0 bytes) @ 0x00007f411460e817 [0x00007f411460e7c0+0x0000000000000057]
+J 8047 c2 javax.swing.plaf.synth.SynthLookAndFeel.updateStyle(Ljavax/swing/plaf/synth/SynthContext;Ljavax/swing/plaf/synth/SynthUI;)Ljavax/swing/plaf/synth/SynthStyle; java.desktop@11.0.5 (44 bytes) @ 0x00007f4114929290 [0x00007f4114927860+0x0000000000001a30]
+J 5617 c1 javax.swing.plaf.synth.SynthPanelUI.installUI(Ljavax/swing/JComponent;)V java.desktop@11.0.5 (16 bytes) @ 0x00007f410db805dc [0x00007f410db7fe80+0x000000000000075c]
+J 6006 c1 javax.swing.JComponent.setUI(Ljavax/swing/plaf/ComponentUI;)V java.desktop@11.0.5 (72 bytes) @ 0x00007f410dcc284c [0x00007f410dcc24c0+0x000000000000038c]
+J 7416 c1 javax.swing.JPanel.<init>()V java.desktop@11.0.5 (6 bytes) @ 0x00007f410e0aeb24 [0x00007f410e0ae0a0+0x0000000000000a84]
+j  javax.swing.JRootPane.createContentPane()Ljava/awt/Container;+4 java.desktop@11.0.5
+j  javax.swing.JRootPane.<init>()V+27 java.desktop@11.0.5
+j  javax.swing.JApplet.createRootPane()Ljavax/swing/JRootPane;+4 java.desktop@11.0.5
+j  javax.swing.JApplet.<init>()V+60 java.desktop@11.0.5
+j  de.scheidtbachmann.gp.graphics.swingintegration.SwingComposite.addRootPaneContainer(Ljava/awt/Frame;)Ljavax/swing/RootPaneContainer;+42
+j  de.scheidtbachmann.gp.graphics.swingintegration.SwingComposite$4.run()V+34
+J 7262 c2 java.awt.EventQueue$4.run()Ljava/lang/Object; java.desktop@11.0.5 (5 bytes) @ 0x00007f411480b314 [0x00007f411480ae80+0x0000000000000494]
+v  ~StubRoutines::call_stub
+J 3954  java.security.AccessController.doPrivileged(Ljava/security/PrivilegedAction;Ljava/security/AccessControlContext;)Ljava/lang/Object; java.base@11.0.5 (0 bytes) @ 0x00007f41145aa133 [0x00007f41145aa0c0+0x0000000000000073]
+J 7220 c2 java.awt.EventDispatchThread.pumpOneEventForFilters(I)V java.desktop@11.0.5 (113 bytes) @ 0x00007f4114803190 [0x00007f4114802420+0x0000000000000d70]
+j  java.awt.EventDispatchThread.pumpEventsForFilter(ILjava/awt/Conditional;Ljava/awt/EventFilter;)V+35 java.desktop@11.0.5
+j  java.awt.EventDispatchThread.pumpEventsForHierarchy(ILjava/awt/Conditional;Ljava/awt/Component;)V+11 java.desktop@11.0.5
+j  java.awt.EventDispatchThread.pumpEvents(ILjava/awt/Conditional;)V+4 java.desktop@11.0.5
+j  java.awt.EventDispatchThread.pumpEvents(Ljava/awt/Conditional;)V+3 java.desktop@11.0.5
+j  java.awt.EventDispatchThread.run()V+9 java.desktop@11.0.5
+v  ~StubRoutines::call_stub
+
+siginfo: si_signo: 11 (SIGSEGV), si_code: 1 (SEGV_MAPERR), si_addr: 0x0000000000000000
+
+7498217498122 URL = https://bugs.eclipse.org/bugs/show_bug.cgi?id=569406
+
+The original fix https://github.com/eclipse/rt.equinox.bundles/commit/9a0d95dd4a5d08977564f4ca5930b5570bccdc8d to this bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=562843 is not valid. 
+
+It does invalid logic to decode path parameter and if the path parameter contains / as encoded %2F ex:
+
+/view/%2FTABLES%2FTMP%2FZREST_SBOOK/data
+
+Would result in,
+
+Error 500 java.lang.IllegalArgumentException: URLDecoder: Incomplete trailing escape (%) pattern.
+
+This is essentially due to the fact that the logic to substring uses the decoded path parameter rather than original request URI.
+
+ex: 
+In the code:
+```
+			if (pos > -1) {
+				String newServletPath = requestURI.substring(0, pos);
+				pathInfo = decode(requestURI.substring(pos));
+				servletPath = decode(newServletPath);
+				pos = servletPath.lastIndexOf('/');
+
+				continue;
+			}
+```
+
+If first call say our requestURI is following,
+
+/view/%2FTABLES%2FTMP%2FZREST_SBOOK/data
+
+Then newServletPath uses requestURI which isn't decoded.
+
+And now we get, 
+servletPath = /view//TABLES/TMP/ZREST_SBOOK 
+pathInfo = /data
+
+However when we do servletPath.lastIndexOf it now uses decoded string and get / which results into position being wrong and we will now do for
+
+newServletPath = /view/%2FTABLES%2
+
+This will result on URLDecoder error.
+
+One option to fix this issue could be:
+
+```
+         String newServletPath = requestURI.substring(0, pos);
+         pathInfo = decode(requestURI.substring(pos));
+         requestURI = newServletPath; <- Use requestURI for processing and don't decode servlet path.
+```
+
+7498217498122 URL = https://bugs.eclipse.org/bugs/show_bug.cgi?id=569576
+
+Seems that che.eclipse.org has been moved to che.eclipseprojects.io as part of https://bugs.eclipse.org/bugs/show_bug.cgi?id=551267
+
+but I've the following error now when reaching the website:
+
+This site can’t provide a secure connectionche.eclipseprojects.io uses an unsupported protocol.
+ERR_SSL_VERSION_OR_CIPHER_MISMATCH
+
+7498217498122 URL = https://bugs.eclipse.org/bugs/show_bug.cgi?id=569709
+
+There is an issue in transformation of AMALTHEA models of versions 1.0.0
+I have the slg transformation project setup as it is mentioned in the developer guide.
+
+While doing some hands-on, I came to know that, it is not at all picking up the models with 1.0.0 version. As soon as I put any model of version lower than that, it just works.
+
+7498217498122 URL = https://bugs.eclipse.org/bugs/show_bug.cgi?id=569147
+
+Some annotation painters which is activated by entering some text into text editors such as Matching Bracket Annotation causes gives wrong visual result. (See the attachment)
+
+Steps to reproduce problem:
+
+1. Open any Java Editor.
+2. Enter several closing braces, eg: }}}
+3. Enter several opening braces before closing brace.
+4. '{' will not visible some while.
+5. Text editor shows wrong content for while, or until scroll.
+
+I could not specify the exact reason that causes this problem.
+
+However, After digging about this, 
+I realized that NSView.lockFocus() in Control#update() is related with this problem. lockFocus() / unlockFocus() are deprecated. And it seems that We can't avoid Automatic Differed Painting(ADP) mechanism anymore. Even we called lockFocus() / draw() / unlockFocus() manually, AppKit seems to draw once again for ADP.
+
+Currently Control#update(boolean) checks availability of NSGraphicsContext. If it's not available then it try to lock focus to draw, and check graphics context again. This seems to be an indirect or direct cause.
+
+When I removed this checking code, everything works fine again. I don't know these checking is still needed or not.
+
+What if some one can give me explanation about this, than I will make Gerrit for this.
+
+And I also noticed that:
+
+* All the NSView uses buffer now (It's not an option).
+* We can't avoid Automatic Differed Painting mechanism.
+* ADP will merge buffers of NSViews with direty regions just before displaying on screen.
+* So I think that the update() is pointless. 
+* The update() causes rendering synchronously, However it is rendered on it's own buffer. And it will not visible unitl the ADP merges buffers to display it. 
+* So, actually we don't have to do anything update(). Even just blank implementation works fine.
+
+7498217498122 URL = https://bugs.eclipse.org/bugs/show_bug.cgi?id=568975
+
+Created attachment 284820 [details]
+tooltip is empty
+
+when debug springboot project, variable tooltip is always empty,but Actually, the tooltip has content, you need to click on the blank space with the mouse to display it
+
+I tried eclipse 2020-06, 2020-09 and 2020-12 M2 (4.18.0 M2), all have these problems, 
+
+btw, I remembered it was fine before upgrading to macOS big sur 11.0.1
+
