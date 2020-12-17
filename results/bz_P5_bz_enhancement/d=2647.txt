@@ -1,0 +1,36 @@
+EC post: Removing Plugin from Registry, by KC on 7/26/2001:
+
+I want to have a plugin determine whether or not it is licensed to run
+during its startup sequence. If it is not licensed to run, the plugin should
+have itself removed from the Eclipse plugin registry and all extensions
+(e.g., perspectives, views, editors, actions, etc.) should also be removed
+(e.g., not visible in the user interface).
+
+I have tried creating a plugin that throws CoreException during its
+startup() method and the appropriate message appears in the .metadata/.log
+file. However, part of the plugin still appear
+to be registered. In the Perspective menu, the plugin's perspective and its
+view extensions are still available. However, when one is selected, an error
+message is generated as follows:
+
+    An internal error has occurred. Attempt to load class
+com.myplugin.PluginLayout
+    from deactivated plug-in com.myplugin. See error log for more details.
+
+I have looked at the PDE Guide and examined the IPluginRegistry and
+IPluginDescriptor interfaces but there does not appear to be any way to
+removing the plugin. Am I missing something? If the plugin cannot be loaded,
+it should not appear to be available in the user interface.
+
+TM replies:
+The problem here is that the menus are built without your plugin being
+activated. Your startup() method is only called when the user tries to actually
+select one of the menus or open your perspective. I don't know how to achieve
+what you want to do.
+
+KC says:
+I should think that failure to load a plugin should cause Eclipse to remove
+all contributions from that plugin or to disable them (removing is preferrable). 
+Could someone at OTI log a PR against this?
+
+NOTES:

@@ -1,0 +1,48 @@
+Due to recent refactoring of the EASE Core plugins, the EASE script metadata format has changed.
+
+Before, we had something like this:
+
+Code: [Select all] [Show/ hide]
+/*
+ * Menu: Examples > Modeling > UML > Show all classes (java)
+ * License: EDL 1.0
+ * VisibleWhen:[And {
+ * With activeEditor {
+ *      Equal "org.eclipse.papyrus.infra.core.papyrusEditor"
+ *   },
+ *   With selection {
+ *       Iterable {
+ *           AdaptTo "org.eclipse.emf.ecore.EObject"{
+ *               InstanceOf "org.eclipse.uml2.uml.Namespace"
+ *           }
+ *       }
+ *   }
+ * }]
+ * Description: {This script finds and prints all the UML classes contained inside the selected element, directly or indirectly.}
+ */
+...
+
+
+This old format is still used in the modeling examples.
+
+The new format is different.
+
+There is some description here: https://wiki.eclipse.org/EASE/Scripts
+
+However, it seems that we've lost a couple of things in this refactoring:
+
+1) we used to be able to specify a menu path with ">" as a path segment separator.
+
+With the new code, it seems that the intention is to use something that
+can be parsed as an Eclipse IPath -- i.e., using "/" as a path segment separator.
+
+2) The old format used the Eclipse Expression XML syntax for specifying enabling logic. The wiki page only mentions "enableFor(<metaclass>)" as an example.
+
+It is completely unclear to me what kind of things we can specify in the new tags,
+particularly 'popup', 'toolbar' and 'menu'
+
+For example, where is this "enableFor(...)" defined? I can't find it in the doc:
+
+http://help.eclipse.org/luna/index.jsp?topic=/org.eclipse.platform.doc.isv/guide/workbench_cmd_expressions.htm
+
+http://help.eclipse.org/luna/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fextension-points%2Forg_eclipse_core_expressions_definitions.html

@@ -1,0 +1,20 @@
+Created attachment 260277 [details]
+Sample project demonstrating the problem
+
+As discussed on the forum [1], the PopupNotificationSink (and possibly others) may fail with an IAE when handling AbstractNoficiations with inconsistent implementations of Comparable.compareTo(AbstractNoficiation).
+
+The attached sample project demonstrates this. Just launch it and select "Sample Menu" > "Sample Command":
+
+Caused by: java.lang.IllegalArgumentException: Comparison method violates its general contract!
+	at java.util.ComparableTimSort.mergeLo(ComparableTimSort.java:740)
+	at java.util.ComparableTimSort.mergeAt(ComparableTimSort.java:477)
+	at java.util.ComparableTimSort.mergeCollapse(ComparableTimSort.java:400)
+	at java.util.ComparableTimSort.sort(ComparableTimSort.java:209)
+	at java.util.Arrays.sort(Arrays.java:1244)
+	at java.util.Collections.sort(Collections.java:166)
+	at org.eclipse.mylyn.internal.commons.notifications.ui.popup.PopupNotificationSink.showPopup(PopupNotificationSink.java:156)
+	at org.eclipse.mylyn.internal.commons.notifications.ui.popup.PopupNotificationSink$1$1.run(PopupNotificationSink.java:84)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:182)
+
+<https://www.eclipse.org/forums/index.php/t/1075535/>

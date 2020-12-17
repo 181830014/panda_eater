@@ -1,0 +1,11 @@
+A null pointer exception can be thrown from the following block from the postInitialize method from org.eclipse.persistence.mappings.UnidirectionalOneToManyMapping.
+
+if (targetForeignKey.getType() == null) {
+  targetForeignKey.setType(getDescriptor().getObjectBuilder().getMappingForField(sourcePrimaryKey).getFieldClassification(sourcePrimaryKey));
+}
+
+If the descriptor is an aggregate descriptor and the primary key mapping is on the owning descriptor, the NPE is encountered.
+
+I had a brief discussion with Andrei this morning about this and he had some ideas on how to correct this. In the mean time I will modify the code in trunk to check that a mapping is indeed returned from the getMappingForField call and bypass setting the type if it is not. No tests seem to fail as a result of doing this. 
+
+From a JPA standpoint, the metadata processing makes every attempt to set the type on the targetForeignKey long before descriptor initialize, so all should be fine there.

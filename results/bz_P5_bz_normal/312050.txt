@@ -1,0 +1,17 @@
+- Install MoDisco and Acceleo SDK in Eclipse 3.6M7
+- Checkout all plug-ins from "https://dev.eclipse.org/svnroot/modeling/org.eclipse.gmt.modisco/plugins/branches/0_8_0".
+- Do a full clean
+
+You get several "Failed to load" errors on QuerySets, Facets and UiCustom (attached).
+
+After debugging, I found out the corresponding Resources in the MoDiscoResourceSet contained DynamicEObjectImpl objects, instead of the expected generated implementation classes.
+
+Several of the MoDisco projects that were checked-out are Acceleo projects, so have the Acceleo builder enabled.
+
+AcceleoBuilder registers all ecore files it finds in Acceleo projects and their dependencies, putting a dynamic version of the metamodel into the EPackage.Registry.
+
+After this, EClassifier#isInstance returns false when asked whether OCLModelQueryImpl is an instance of ModelQuery (it should be true of course).
+
+The reason for this is that these metaclasses now reside in two different metamodels: the one for which an implementation was generated, and the one that was loaded dynamically.
+
+And this is what is causing the aforementioned "Failed to load" errors.

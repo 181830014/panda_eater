@@ -1,0 +1,33 @@
+Build Identifier: 
+
+I use EclipseLink-2.2.0 in a JPA environment, and I have configured EclipseLink to track historical data using dedicated history tables (this has been done by configuring HistoryPolicies in the SessionCustomizer).
+
+Our application creates some very big database transactions ("big" in the sense of a lot of modified data, involving a lot of tables and database records). For most of the modified data we have configured a HistoryPolicy. Since commiting such a big transaction takes a "long" time (sometimes around 2-3 seconds), the resulting row_start/row_end values in the history tables will not be absolutely equal to each other, because EclipseLink by default uses System.currentTimeMillis() to get the timestamp for each newly created history record.
+
+The fact of non-matching row_start/row_end values in the history tables is annoying for us, because so we can not fetch the historical state of a given point in time which reflects the state either exactly BEFORE the transaction or AFTER the transaction.
+
+I already modified the HistoryPolicy to HistoryPolicy.setShouldUseDatabaseTime(true), and now it really calls "SELECT NOW()" every time to calculate the row_start/row_end values for the history tables.
+
+Unfortunately, the SQL standard does not enforce NOW() to return always the same value during one transaction, so in the end all the history records created in one single transaction still have row_start/row_end times which differ slightly (unfortunately we use MySQL - the NOW() function of PostgreSQL really returns always the same value in a single transaction).
+
+So now the question: is there a way to give EclipseLink another "source of time" to be used for the row_start/row_end values? I think about something like the following pseudo-code:
+
+EntityManager em=...;
+Date now=new Date();
+// ... create and modify a lot of entites resp. database records here
+em.setTimestampForHistoryTables(now);
+em.commit();
+
+So even if the commit() takes a lot of time and has to create a lot of history records, all the history records will use the SAME timestamp for their row_start/row_end values...
+
+See http://www.eclipse.org/forums/index.php/m/714828/
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Enable creating history records for all modified entities.
+2. Modify a lot of entities in a single database transaction, so that committing all these modifcations takes more than one second.
+3. Commit the transaction
+
+I would expect all created history records have the same values for their row_end / row_start values, which is NOT THE CASE.

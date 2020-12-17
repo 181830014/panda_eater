@@ -1,0 +1,30 @@
+First, I am using a MySql 5 DB and EL 1.0.1. 
+
+I have an entity field annotated with @Version:
+
+@Version
+private short version;
+
+If the version field exceeds the max value of 32767, it is not set to 1 as I expected. Instead, EclipseLink tries to update the version field with the value 32768 and an exception is thrown: 
+
+-----
+
+[#|2008-09-22T18:17:47.718+0200|WARNING|sun-appserver9.1|org.eclipse.persistence.session.file:/C:/Programme/Sun/SDK/domains/domain1/applications/j2ee-apps/war/war-ejb_jar/-war-ejbPU|_ThreadID=21;_ThreadName=httpSSLWorkerThread-8080-4;_RequestID=3ea1b9d1-9a96-40f1-a703-36e42817c1f4;|
+Local Exception Stack: 
+Exception [EclipseLink-4002] (Eclipse Persistence Services - 1.0.1 (Build 20080905)): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: com.mysql.jdbc.MysqlDataTruncation: Data truncation: Out of range value adjusted for column 'VERSION' at row 1
+Error Code: 0
+Call: UPDATE users SET short_description = ?, VERSION = ? WHERE ((_id = ?) AND (VERSION = ?))
+	bind => [h, 32768, 100, 32767]
+Query: UpdateObjectQuery(com.war.bus.data.entity.User@12d)
+	at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:313)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeDirectNoSelect(DatabaseAccessor.java:757)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeNoSelect(DatabaseAccessor.java:823)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:557)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeCall(DatabaseAccessor.java:500)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeCall(AbstractSession.java:855)
+//...
+
+-----
+
+I have not tested this for a version field with the data type int or long, but I assume the result stays the same.

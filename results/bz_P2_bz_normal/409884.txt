@@ -1,0 +1,46 @@
+@Entity(name="SOP_PartOrWhole")
+@Table(name="SOP_PART_OR_WHOLE")
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+public abstract class PartOrWhole implements Serializable {
+    @Id
+    @GeneratedValue(strategy=GenerationType.TABLE)
+    public long id;
+
+    public String description = "";
+
+    @OneToMany(mappedBy="owner", cascade=CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
+    @BatchFetch
+    public List<Part> parts = new ArrayList<Part>();
+}
+
+
+@Entity(name="SOP_Whole")
+@DiscriminatorValue("W")
+})
+public class Whole extends PartOrWhole {
+    @Version
+    public int version;
+}
+
+
+@Entity(name="SOP_Part")
+@DiscriminatorValue("P")
+public class Part extends PartOrWhole {
+    @ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
+    @JoinColumn(name="OWNER_ID")
+    public PartOrWhole owner;
+}
+
+
+
+Obtaining the mapping directly shows that it doesn't have batchFetchType set:
+
+        ForeignReferenceMapping partsMapping = (ForeignReferenceMapping)em.unwrap(ServerSession.class).getDescriptor(Whole.class).getMappingForAttributeName("parts");
+        if (partsMapping.getBatchFetchType() == null) {
+            System.out.println("partsMapping does not have batchFetchType, setting it to BatchFetchType.JOIN");
+            partsMapping.setBatchFetchType(BatchFetchType.JOIN);
+        }
+
+Work around: provide BatchFetchType:
+    @BatchFetch(BatchFetchType.IN)
+    public List<Part> parts = new ArrayList<Part>();

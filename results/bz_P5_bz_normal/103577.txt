@@ -1,0 +1,86 @@
+As Billy Biggs advised I'm posting this here - Platform > UI.
+
+I use an ApplicationWindow to open a modal Dialog. From that Dialog I use the 
+ApplicationWindow's run method to open another modal Dialog. When I close this 
+Dialog, my application loses focus.
+
+The reason seems to be that the ApplicationWindow's run method disables all 
+shells except for its own, thus it is unable to remember the last focus as it 
+was on a separate shell to its own. The quick fix for this is to disable all 
+shells except the active shell.
+
+This seems incorrect to me. However, should I not be using ApplicationWindow 
+this way, or is there a more correct way of achieving this behaviour?
+
+Here is a snippet demonstrating this behaviour:
+
+public class AppWinTest extends ApplicationWindow {
+    public AppWinTest(Shell shell) {
+        super(shell);
+        setBlockOnOpen(true);
+        addStatusLine();
+    }
+    
+    protected Control createContents(Composite arg0) {
+        getShell().setText("AppWinTest");
+        Button button = new Button(arg0, SWT.PUSH);
+        button.setText("Open Test...");
+        button.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent arg0) {
+                TestDialog firstDialog = new TestDialog(getShell()); 
+                firstDialog.open();
+            }
+        });
+        return arg0;
+    }
+
+    public static void main(String[] args) {
+        AppWinTest appWinTest = new AppWinTest(new Shell());
+        appWinTest.open();
+    }
+    
+    private class TestDialog extends Dialog implements IRunnableWithProgress {
+        public TestDialog(Shell shell) {
+            super(shell);
+        }
+        
+        protected Control createDialogArea(Composite arg0) {
+            getShell().setText("First");
+            Control control = super.createDialogArea(arg0);
+            Button button = new Button(arg0, SWT.PUSH);
+            button.setText("Open...");
+            button.addSelectionListener(new SelectionAdapter() {
+                public void widgetSelected(SelectionEvent arg0) {
+                    try {
+                        AppWinTest.this.run(true, false, TestDialog.this);
+                    } catch (Exception e) { e.printStackTrace(); }
+                    
+                }
+            });
+            
+            return control;
+        }
+        
+        public void run(IProgressMonitor arg0) throws 
+InvocationTargetException, InterruptedException {
+            getShell().getDisplay().syncExec(new Runnable() {
+                public void run() {
+                    SecondDialog secondDialog = new SecondDialog(getShell());
+                    secondDialog.open();
+                }
+            });
+        }
+    }
+    
+    private class SecondDialog extends Dialog {
+        public SecondDialog(Shell shell) {
+            super(shell);
+        }
+        
+        protected Control createDialogArea(Composite arg0) {
+            Control control = super.createDialogArea(arg0);
+            getShell().setText("Second");
+            return control;
+        }
+    }
+}

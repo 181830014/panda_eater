@@ -1,0 +1,9 @@
+- Do a reverse of a mid-size project such as org.eclipse.gmt.modisco.java.discoverer
+- Open the model in the MoDisco model browser
+- Select a metaclass that has between 900 and 999 elements
+- Select a dozen elements and do "Show in a new table view"
+
+The UI is frozen for 5 seconds after opening. Each editing operation freezes the UI for 5 seconds, and even resizing a column can take 5 seconds.
+
+It looks like these freezes are due to notifications when modifying the model. The browser refreshes itself (in the UI thread) each time the model is modified. And since the Table model is in the browser's ResourceSet, even resizing a column triggers a refresh of the model browser, which freezes the UI for a few seconds.
+The browser freezes for a few seconds when displaying many (but still less than 1000, because it starts partitioning after that) elements. This is because the SWT tree is slow (cf Bug 129457).

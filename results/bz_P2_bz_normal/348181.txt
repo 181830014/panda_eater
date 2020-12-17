@@ -1,0 +1,23 @@
+Build Identifier: 2.2.0.v20110202-r8913
+
+if I have for eg
+
+@Entity
+@Table(name="COREPMA")
+public class Parameter {
+	@Id
+	@Column(name=BlockDeblock.KEY, length=47)	
+	private String key ;
+	
+	@Column(name=BlockDeblock.DATA,  length=4000, insertable=false,updatable=false)
+	private String data ;
+}
+then the ddl generated uses the default length (255)
+[EL Fine]: 2011-06-03 09:05:57.021--ServerSession(16135119)--Connection(14145720)--Thread(Thread[Main Thread,5,main])--CREATE TABLE COREPMA (ORA2_KEY VARCHAR(47) NOT NULL, ORA2_DATA VARCHAR(255), PRIMARY KEY (ORA2_KEY))
+if i remove the insertable=false,updatable= false then it produces
+CREATE TABLE COREPMA (ORA2_KEY VARCHAR(47) NOT NULL, ORA2_DATA VARCHAR(4000), PRIMARY KEY (ORA2_KEY))
+nb the length is now correct.
+I can't really think of any valid reason why ?
+This means that when running tests against hsqldb 2.2.2 that we can not insert test data into that table via sql over 255 chars long.
+
+Reproducible: Always

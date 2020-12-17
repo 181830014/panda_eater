@@ -1,0 +1,16 @@
+I cannot disable binding on the coalesce operator.
+
+Symfoware does not allow input parameters in the select list, so the following test fails:
+
+org.eclipse.persistence.testing.tests.jpa.criteria.JUnitCriteriaSimpleTestSuite.simpleCoalesceInSelectTest
+
+The generated SQL is:
+
+COALESCE(t0.F_NAME,t0.L_NAME,? ) FROM CMP3_EMPLOYEE t0, CMP3_SALARY t1
+WHERE ((t0.F_NAME = ?) AND (t1.EMP_ID = t0.EMP_ID)) bind => [Bobby, Bob]
+
+I have tried calling operator.setIsBindingSupported(false); on ExpressionOperator.coalesce() before adding the operator in the Symfoware platform's initializePlatformOperators() method, but still an input parameter was used.
+
+Following James' suggestion (who said the coalesce operator can't be overridden in the database platform implementation), I added exOperator.setIsBindingSupported(false); in org.eclipse.persistence.expressions.ExpressionOperator#coalesce(), but still the argument 'Bobby' was bound.
+
+Requesting a way to allow binding to be turned off with the coalesce operator.

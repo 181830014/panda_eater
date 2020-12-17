@@ -1,0 +1,6 @@
+While implementing bug #535907 and specifically bug #535908 I ran into the problem that we do not handle focus and selection changes very well.
+
+Take the table control renderer, for example, where we support actions like addRow() and removeRow(). However, we lack a common selection and focus handling after an action has been triggered. I.e. when a row is deleted the table selection simple vanishes instead of selecting one of the remaining rows.
+On the other hand, when clicking on an action button (i.e. add row), the new row appears and is selected. However, the focus remains on the add row button instead of switching to the table viewer so the user can edit the new row.
+
+This issue is most likely affecting all our renderers. See also bug #528960.

@@ -1,0 +1,22 @@
+Build Identifier: 
+
+If you use @ReturnUpdate on a field that is a java.sql.Timestamp and the oracle datatype is Date, the timestamp portion is dropped.
+
+James Sutherland summarized the problem on the mailing list here:
+
+The issue is that the returned output parameters are retrieved using
+Statement.getObject(), but on Oracle getObject() for the DATE type returns
+java.sql.Date, getTimestamp() must be used to get the time portion.  This is
+a bug in how EclipseLink retrieves the return row, it should instead be
+using the same code used to access a ResultSet.  Please log a bug for this
+an vote for it.
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Create an oracle table with the type Date that is changed via an update trigger -- your standard modified_on column for example.
+2. Map it to an entity field with a java.sql.Timestamp or java.util.Date with @TemporalType of Timestamp
+3. Annotate it with @ReturnUpdate
+
+Notice that when the date comes back it does not have the Timestmap, only the date portin.

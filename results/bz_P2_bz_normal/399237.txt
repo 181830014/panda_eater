@@ -1,0 +1,59 @@
+The Jt400 drivers take use of the current process credentials (user and password) only if both, the user and password, are set to null.
+
+Here is a short code example for creating the EntityManager:
+
+...
+map.put("javax.persistence.jdbc.driver", "jdbc:as400://localhost;libraries=EXAMPLE");
+map.put("javax.persistence.jdbc.url", "com.ibm.as400.access.AS400JDBCDriver");
+map.put("javax.persistence.jdbc.user", null);
+map.put("javax.persistence.jdbc.password", null);
+emf = Persistence.createEntityManagerFactory("example_unit_name", map);
+emf.createEntityManager(); 
+...
+
+The JT400-driver raises an Exception while connecting to the database, 
+because the the user is not null - it is an empty String.
+
+I took a look into your source code and run it in the debbugger. 
+I found that the user is default initialized with "".
+
+package org.eclipse.persistence.sessions;
+...
+public abstract class DatasourceLogin implements ...
+...
+    public DatasourceLogin(Platform databasePlatform) {
+        this.platform = databasePlatform;
+        this.dontUseExternalConnectionPooling();
+        this.dontUseExternalTransactionController();
+        this.properties = new NonSynchronizedProperties(4);
+
+        this.properties.put("user", ""); // !!!
+
+        this.isEncryptedPasswordSet = false;
+        this.securableObjectHolder = new SecurableObjectHolder();
+    }
+...
+
+
+And I found no possibitity to set it back to null.
+
+
+package org.eclipse.persistence.internal.jpa;
+...
+public class EntityManagerSetupImpl implements...
+...
+protected void updateLogins(Map m) {
+...
+String user = getConfigPropertyAsStringLogDebug(PersistenceUnitProperties.JDBC_USER, m, this.session);
+
+String password = getConfigPropertyAsStringLogDebug(PersistenceUnitProperties.JDBC_PASSWORD, m, this.session);
+
+if(user != null) {
+ // !!!
+	login.setUserName(user);
+}
+if (password != null) {
+	login.setPassword(this.securableObjectHolder.getSecurableObject().decryptPassword(password));
+
+}
+...

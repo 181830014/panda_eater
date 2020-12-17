@@ -1,0 +1,22 @@
+When using JPQL, EclipseLink automatically sets the distinct state to "doNotUseDistinct" on the query.  If the JPQL query is one that includes the entities primary key, the query used is the default find-by-id query stored in the descriptor query manager that has its own distinct state of UNCOMPUTED_DISTINCT, causing the JPQL setting to be ignored.  
+
+This results in DISTINCT being used if there is a fetch join set on a collection mapping and unset if not - regardless of the user including Distinct or not in the query.  
+
+This is also a problem when building a ReadObjectQuery with a pk expression and setting the useDistinct() or dontUseDistinct() methods on it.  
+
+This can result in 
+Exception [EclipseLink-4002] (Eclipse Persistence Services - 
+2.4.0.v20120308-r10963): org.eclipse.persistence.exceptions.DatabaseException 
+Internal Exception: java.sql.SQLException: Columns of type 'CLOB' may not be 
+used in CREATE INDEX, ORDER BY, GROUP BY, UNION, INTERSECT, EXCEPT or 
+DISTINCT 
+statements because comparisons are not supported for that type. 
+Error Code: 30000 
+
+if it results in DISTINCT being used when it shouldn't be on a table with a clob in Oracle.  
+
+Workarounds are to set a query hint (JPQL) such as 
+query.setHint("eclipselink.jdbc.bind-parameters", "true"); 
+
+or call descriptor.getQueryManager().getReadObjectQuery().dontUseDistinct(); 
+with in a session customizer or preLogin event.

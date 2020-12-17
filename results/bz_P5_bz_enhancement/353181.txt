@@ -1,0 +1,58 @@
+In the configuration of the table, you can define a query to test if the dropped element is accepted in the table. This query has a scope. When the dropped element is not in the scope, we get a ClassCastException.
+
+Steps to reproduce : 
+	1/ We work with your example plugin : org.eclipse.emf.facet.widget.nattable.examples.ecore
+	2/ in the file _example_EcoreTableConfiguration.tableConfiguration, add the query IsInstanceofEClass to test the dropped element.
+	3/ Launch Eclipse to test with this new configuration
+	4/ Create an Ecore Model with an EPackage and an ECLass
+	5/ Select the package -> right Click -> open Ecore Tabular Editor
+		-> you get a new table which contains the EClass
+	6/ Add a EAnnotation into your Ecore model
+	7/ drop this EAnnotation in the table
+		-> you get the following exception
+		
+java.lang.ClassCastException: org.eclipse.emf.ecore.impl.EAnnotationImpl cannot be cast to org.eclipse.emf.ecore.EClassifier
+	at org.eclipse.emf.facet.widgets.nattable.examples.ecore.internal.query.eclassifier.IsInstanceOfEClass.evaluate(IsInstanceOfEClass.java:1)
+	at org.eclipse.emf.facet.infra.query.core.java.internal.JavaModelQueryAdapter.basicEvaluate(JavaModelQueryAdapter.java:52)
+	at org.eclipse.emf.facet.infra.query.core.AbstractModelQuery.basicEvaluate(AbstractModelQuery.java:247)
+	at org.eclipse.emf.facet.widgets.nattable.internal.NatTableWidgetInternalUtils.acceptsElement(NatTableWidgetInternalUtils.java:119)
+	at org.eclipse.emf.facet.widgets.nattable.internal.NatTableDropListener.dropInEmptySpace(NatTableDropListener.java:218)
+	at org.eclipse.emf.facet.widgets.nattable.internal.NatTableDropListener.drop(NatTableDropListener.java:188)
+	at org.eclipse.swt.dnd.DNDListener.handleEvent(DNDListener.java:90)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:84)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1053)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1077)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1062)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:774)
+	at org.eclipse.swt.dnd.DropTarget.Drop(DropTarget.java:456)
+	at org.eclipse.swt.dnd.DropTarget$3.method6(DropTarget.java:258)
+	at org.eclipse.swt.internal.ole.win32.COMObject.callback6(COMObject.java:119)
+	at org.eclipse.swt.internal.ole.win32.COM.DoDragDrop(Native Method)
+	at org.eclipse.swt.dnd.DragSource.drag(DragSource.java:363)
+	at org.eclipse.swt.dnd.DragSource.access$0(DragSource.java:289)
+	at org.eclipse.swt.dnd.DragSource$1.handleEvent(DragSource.java:172)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:84)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1053)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4165)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3754)
+	at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2696)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2660)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2494)
+	at org.eclipse.ui.internal.Workbench$7.run(Workbench.java:674)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:667)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:123)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:344)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:179)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:622)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:577)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1410)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1386)

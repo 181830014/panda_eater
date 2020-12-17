@@ -1,0 +1,16 @@
+My code contains an entity with four associations (all lazy). It is used in the following call sequence:
+
+Entity e = new Entity(); // all associations are initialized with empty collections.
+em.getTransaction().begin();
+em.persist(e);
+em.getTransaction().commit();
+em.lock( e, LockModeType.PESSIMISTIC_WRITE);
+...
+
+In v2.1.1 em.lock() caused one select for update.
+In v2.4 it causes four more selects - one for each association.
+This is a problem for me, because in this part of the code performance is critical.
+
+It looks like when calling lock(e) in 2.4 not only e is refreshed, but also all of the associations of e. It would be sufficient for me to just refresh e.
+
+Adding the QueryHint REFRESH_CASCADE=CascadePolicy.NoCascading to the call of em.lock() doesn't change anything.

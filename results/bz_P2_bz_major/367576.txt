@@ -1,0 +1,43 @@
+Build Identifier: 2.3.1.v20110928-r10176
+
+Exception Description: Predeployment of PersistenceUnit [mitarbeiter] failed.
+Internal Exception: Exception [EclipseLink-7151] (Eclipse Persistence Services - 2.3.1.v20110928-r10176): org.eclipse.persistence.exceptions.ValidationException
+Exception Description: The type [class data.mitarbeiter.FehlzeitType] for the attribute [fehlType] on the entity class [class mitarbeiter.dao.DBFehlzeit] is not a valid type for an enumerated mapping. The attribute must be defined as a Java enum.
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.predeploy(EntityManagerSetupImpl.java:1402)
+	at org.eclipse.persistence.internal.jpa.deployment.JPAInitializer.callPredeploy(JPAInitializer.java:98)
+	at org.eclipse.persistence.internal.jpa.deployment.JPAInitializer.initPersistenceUnits(JPAInitializer.java:306)
+	at org.eclipse.gemini.jpa.provider.GeminiOSGiInitializer.initializeFromBundle(GeminiOSGiInitializer.java:119)
+	at org.eclipse.gemini.jpa.provider.EclipseLinkOSGiProvider.assignPersistenceUnitsInBundle(EclipseLinkOSGiProvider.java:191)
+	at org.eclipse.gemini.jpa.PersistenceBundleExtender.tryAssigningPersistenceUnitsInBundle(PersistenceBundleExtender.java:172)
+	at org.eclipse.gemini.jpa.PersistenceBundleExtender.bundleChanged(PersistenceBundleExtender.java:314)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.dispatchEvent(BundleContextImpl.java:847)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:230)
+	at org.eclipse.osgi.framework.eventmgr.ListenerQueue.dispatchEventSynchronous(ListenerQueue.java:148)
+	at org.eclipse.osgi.framework.internal.core.Framework.publishBundleEventPrivileged(Framework.java:1523)
+	at org.eclipse.osgi.framework.internal.core.Framework.publishBundleEvent(Framework.java:1459)
+	at org.eclipse.osgi.framework.internal.core.Framework.publishBundleEvent(Framework.java:1454)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:487)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl$1.run(PackageAdminImpl.java:173)
+	at java.lang.Thread.run(Thread.java:662)
+
+Reproducible: Always
+
+Steps to Reproduce:
+Mappings:
+
+public class DBFehlzeit extends VersionedObject implements Fehlzeit {
+    @Temporal(TemporalType.DATE)
+    private Date         von;
+    @Temporal(TemporalType.DATE)
+    private Date         bis;
+    @Enumerated(EnumType.STRING)
+    private FehlzeitType fehlType;
+    private String       user;
+}
+
+Enum:
+public enum FehlzeitType {
+    Krankheit,
+    Urlaub;
+}

@@ -1,0 +1,10 @@
+Created attachment 118124 [details]
+java source code to reproduce the bug
+
+When setting a QueryRedirector, the method QueryRedirector#invokeQuery is executed 2 times, although the method query#setDoNotRedirect(true) is called on the DatabaseQuery to execute.
+
+This could be a problem when using custom storedProcedures or StoredFunction. The actions would be executed twice.
+
+To avoid it, i put a class variable of type boolean that is setted to true the first time of execution. So the second couldn't be fully executed.
+
+There is sample code in the attachement

@@ -1,0 +1,23 @@
+Build Identifier: 
+
+It took me a while to figure out the cause of this problem (and to see it was not my fault).
+When using EVL with validation (as described in http://www.eclipse.org/forums/index.php/mv/msg/351312/870965/#msg_870965 ) it is possible that a 'non-container' object is processed first (at least this became visible while debugging for a while).
+When looking at EvlValidator#validate() the results field is only updated when
+  eObject.eContainer() == null
+
+ie not in the described situation, as this was the first object being validated, results is null and
+  Collection<EvlUnsatisfiedConstraint> unsatisfiedConstraints = results.get(eObject);
+results in the NullPointerException.
+
+I have fixed it by changing the condition to process the results:
+
+  // If it is the root that is validated
+  // validate the whole resource and cache
+  // the results
+  if (eObject.eContainer() == null || results == null) {
+    results = validate(eObject.eResource());
+  }
+
+It seems to fix this particular problem, although I am not 100% sure that it won't break other things or that it is the correct way of fixing this problem. That's up to you guys :)
+
+Reproducible: Always

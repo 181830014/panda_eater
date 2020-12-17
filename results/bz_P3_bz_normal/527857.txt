@@ -1,0 +1,34 @@
+Groovy engine doesn't consider the default value assigned to the optional parameter. (engine id: org.eclipse.ease.engine.groovy)
+
+Example:
+In scripting perspective switch to the groovy engine. And then load the launch module as follows.
+	loadModule('/System/Launch');
+	
+After loading the module try to access the launch method in it. 
+
+launch method has two parameters in which the second one is optional. So the expectation is, even if we pass only one parameter the method should get invoked.
+
+But for the following script it throws error like No signature of method.
+	
+	loadModule('/System/Launch');
+	launch(launchConfig)
+	
+Error message:
+No signature of method: Wrapping_org_eclipse_ease_modules_platform_debug$_run_closure5.call() is applicable for argument types: (null) values: [null]
+Possible solutions: any(), any(), any(groovy.lang.Closure), each(groovy.lang.Closure), any(groovy.lang.Closure), each(groovy.lang.Closure)
+	
+It works fine if we pass two arguments.
+
+This case happens only, if we have more than one parameters in the module. 
+	
+
+In other case, if we have a method which has only one parameter, which is mandatory, it accepts the method call without any argument.  
+For Example,
+Call the install method after loading p2 module.
+ loadModule('/System/P2');
+ install()
+	
+	
+install method has one mandatory parameter. 
+But without passing any parameter that method got invoked.
+No error message was thrown.

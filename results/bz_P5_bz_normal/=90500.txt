@@ -1,0 +1,13 @@
+We need to better define the behaviour of #nodeExists for the nodes in the
+project scope.
+
+Currently we over-ride super-class impl such that the node does exist if the
+super-class says that it does or if you are at /project and you are asking about
+a single segment name and that name is the name of a project that exists in the
+workspace.
+
+The impl doesn't work for long paths though since super accesses the cache of
+children. (e.g. nodeExists("myProject/qualifier/nodeName")
+
+Investigate the interaction between #nodeExists and #getChild, #getChildren, and
+#childnames.

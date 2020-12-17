@@ -1,0 +1,32 @@
+Consider this sample code:
+
+  public void m() {
+    if (false) {
+      {
+        int i0 = 4;
+        do {
+          break;
+        } while (i0 < 9);
+      }
+    }
+  }
+
+It compiles with javac (1.8.0_40), but ecj 4.6RC4a gives:
+
+----------
+1. WARNING in /tmp/Sample/src/com/test/Main.java (at line 6)
+	if (false) {
+      {
+        int i0 = 4;
+        do {
+          break;
+        } while (i0 < 9);
+      }
+    }
+	           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Dead code
+----------
+2. ERROR in /usr/local/google/home/jmhenaff/workspace/ub-jack-2/Sample/src/com/test/Main.java (at line 11)
+	} while (i0 < 9);
+	         ^^
+The local variable i0 may not have been initialized

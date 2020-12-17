@@ -1,0 +1,80 @@
+I've run into an odd bug when eclipselink decides to perform a class-hierarchy read by switching on the dtype rather than using an outer-join across all subclasses. The bug is reproducible but not consistent, i.e., I have seen eclipselink fail for some patterns and succeed with (apparently) similar patterns.
+
+The essence of the problem is that the "select dtype" portion of the SQL string does not always use the alias. Instead, it uses a "tablespace+tablename.dtype", which causes a 'multi-part identifier "tablespace+tablename.dtype" could not be bound' SQL error.
+
+The error has appeared using both the CriteriaBuilder and JPQL.
+
+Consider the following example:
+
+	int join_pk_parameter;
+    	CriteriaQuery<A> c = cb.createQuery(A.class);
+    	Root<A> a = c.from(A.class);
+    	Root<TempJoin> t = c.from(TempJoin.class);
+    	Root<B> b = c.from(B.class);
+    	c.select(a)
+    		.where(
+    			cb.and(
+    				cb.equal(t.get("join_pk"), join_pk_parameter),
+    				cb.equal(b.get("target_fk"), t.get("join_fk")),
+        			cb.equal(b.get("a_fk"), a.get("pk"))
+    			)
+    		)
+    	;
+		
+where:
+
+class "A" is the superclass of a type hierarchy
+
+class "TempJoin" is a utility class for temporary "join" values, i.e., for use where a typical "IN" clause has a great many values.
+
+class "B" is merely being joined.
+
+SELECT a
+FROM
+	A a,
+	B b,
+	TempJoin t
+WHERE
+	t.join_pk = :join_pk_parameter AND
+	t.join_fk = b.target_fk AND
+	b.a_fk = a.pk
+	
+(Note: The above JPQL is eyeballed, so pardon me if I typed it wrong. The CriteriaBuilder code is the actual code I am using.)
+
+In English, I have a starting collection of primary keys I have inserted into table TempJoin with a join_pk_parameter primary key. I use this to join to table B via a "target_fk", then a join from table B to table A, which is my desired result.
+
+If eclipselink queries the "A" class hierarchy with an outer join, it works fine.
+
+If eclipselink decides to query the "A" class hierarchy with a "dtype" query first, then a series of subclass queries, then it fails as follows:
+
+SELECT DISTINCT dbo.A.dtype FROM dbo.B t0, dbo.TEMP_JOIN t2, dbo.A t1 WHERE ((t0.A_FK = t1.PK) AND ((t0.TARGET_fk = t2.FK) AND (t2.JOINPK = ?)))
+
+which causes a SQL exception: "The multi-part identifier "dbo.A.dtype" could not be bound."
+
+Obviously it cannot be bound. The query should actually read:
+
+SELECT DISTINCT t1.dtype FROM dbo.B t0, dbo.TEMP_JOIN t2, dbo.A t1 WHERE ((t0.A_FK = t1.PK) AND ((t0.TARGET_fk = t2.FK) AND (t2.JOINPK = ?)))
+
+Interesting, the problem is dependent on dynamic issues. For example, if I add one additional line to the where clause:
+
+	int join_pk_parameter;
+    	CriteriaQuery<A> c = cb.createQuery(A.class);
+    	Root<A> a = c.from(A.class);
+    	Root<TempJoin> t = c.from(TempJoin.class);
+    	Root<B> b = c.from(B.class);
+    	c.select(a)
+    		.where(
+    			cb.and(
+    				cb.isNotNull(a.get("pk")), //REQUIRED TO AVOID THE DTYPE BUG
+    				cb.equal(t.get("join_pk"), join_pk_parameter),
+    				cb.equal(b.get("target_fk"), t.get("join_fk")),
+        			cb.equal(b.get("a_fk"), a.get("pk"))
+    			)
+    		)
+    	;
+		
+then eclipselink actually constructs the query correctly.
+
+Further evidence of the dynamic aspect is that I actually have my own builder constructor instance on top of the CriteriaBuilder (to prevent duplicated Root objects and give me flexible ordering of the query construction). When I add the additional line to my builder, I still see the error, so slightly different construction causes different results.
+
+For now, the only reliable workaround I can find is to force an ORDER BY clause. This causes eclipselink to always choose the outer-join approach for class hierarchy queries.

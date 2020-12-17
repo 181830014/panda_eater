@@ -1,0 +1,10 @@
+The "Last modified" time for files in the RSE Properties View is filled from IHostFile.getModifiedDate(), which has semantics same as Java File.lastModified(): seconds since the Epoch, GMT.
+
+Essentially for a remote system we do not know what time zone the remote system runs in, so we need to display time information in a common format such as UTC or GMT.
+
+What's confusing for the user, is that when he types e.g. ls -l in a remote shell, times are displayed in the remote system's time zone. So they do not match what the Properties view shows.
+
+Therefore, the Properties View should indicate that the times displayed are in GMT, e.g.
+  April 6, 2006 10:40:33 AM GMT
+
+This could be accomplished by doing Date.toGMTString() instead of Date.toString(), or the equivalent from DateFormat.format().

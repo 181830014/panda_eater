@@ -1,0 +1,16 @@
+I have to entities "Employee" that have a set of projects. Projects are loaded lazily.
+
+I atempt top copy the projects from one employee to another:
+
+Employee hans = em.find(Employee.class, HANS_ID);
+Employee fred = em.find(Employee.class, FRED_ID);
+fred.setProjects(hans.getProjects());
+em.getTransaction().commit();
+
+Upon commit, eclipselink does not reflect the change on the database. I assume the change is ignored as hans.getProjects() was a pending collection before the change and is a pending pending collection after the change. But EclipseLink should detect that the owner of the pending collection has changed.
+
+The issue is reproduced by test 
+
+org.eclipse.persistence.testing.tests.wdf.jpa1.relation.TestBidirectionalManyToMany 
+
+in the eclipselink.jpa.wdf.testsuite.

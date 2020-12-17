@@ -1,0 +1,22 @@
+Build Identifier: 2.1.2 and 2.2.0
+
+When calling EntitiyManager.getCriteriaBuilder() I get a ClassCastException:
+java.lang.ClassCastException: org.eclipse.persistence.internal.jpa.metamodel.EmbeddableTyp eImpl cannot be cast to javax.persistence.metamodel.IdentifiableType
+
+I tried EclipseLink 2.1.2 and 2.2.0, both the same behaviour.
+
+I also opened a thread in the forum:
+http://www.eclipse.org/forums/index.php?t=msg&goto=662474&S=68b3ab530f3d4764ae9fdd309273ce16
+
+It may be possible that an entity is deriving from an embeddable - I haven't verified that yet.
+(Since I have a lot of entities I can't post the whole model here, sorry.)
+
+Anyway, the stacktraces (see forum) aren't very helpful.
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. emf = Persistence.createEntityManagerFactory(persistenceUnit, jpaProperties);
+2. em = emf.createEntityManager();
+3. mm = em.getMetamodel();  OR  cb = em.getCriteriaBuilder();
+-> ClassCastException

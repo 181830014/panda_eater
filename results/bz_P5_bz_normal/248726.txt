@@ -1,0 +1,11 @@
+In ObjectTypeConverterMetadata.process(DatabaseMapping, DirectAcccessor) there is a problem with the code used to specify a one-way mapping.  I have not tested this, but through code inspection I don't think the following annotations will be processed correctly in to an ObjectTypeConverter.
+
+@ObjectTypeConverter(name="foo", conversionValues {
+     @ConversionValue(dataValue="F", objectValue="female"),
+     @ConversionValue(dataValue="M", objectValue="male"),
+     @ConversionValue(dataValue="O", objectValue="male")
+}
+
+Line 208 of ObjectTypeCovnerterMetadata will never be called: converter.addToAttributeOnlyConversionValue(data, object);
+
+When there are multiple object values for one data value the Map objectToDataVales still contains the first set "male"->"M", it is not removed when the second "male" object value is found.

@@ -1,0 +1,27 @@
+I20050217-2000, KDE 3.3.2, Motif, X.Org 6.8.0, Linux 2.6.10
+
+I was trying to test the key assist dialog (Ctrl+Shift+L) on Motif, and noticed
+that in some circumstances, the dialog opens and begins to flicker -- as if it
+is changing size or location repeatedly.  My code only tries to set the initial
+position, and the sizing code is only called once.  Yet the flicker still occurs.
+
+Essentially, it is trying to size and position the dialog so it appears in the
+bottom-right of the workbench window.  To do this, it queries the workbench size
+ and scales the dialog to be proportional.  It then checks the workbench window
+and display bounds, and tries to place it in view and on the bottom right edge.
+
+This is some debugging output from when the flicker occurs.  The size is being
+set to {353,392} and the position to {897,425}.
+
+Please stop by if you need help reproducing this....
+
+
+KeyAssistDialog.configureSize()
+getSize() = Point {353, 1563}
+workbench window size = Point {1026, 784}
+maxWidth = 410
+maxHeight = 392
+setting size to Point {353, 392}
+KeyAssistDialog.configureLocation(Point)
+workbench window bounds = Rectangle {234, 43, 1026, 784}
+setting location to = Point {897, 425}

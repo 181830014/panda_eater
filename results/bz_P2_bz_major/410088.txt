@@ -1,0 +1,43 @@
+I still have the problem with @Embeddable, DISTINCT and ORDER BY (Bug 346729, it's Status: RESOLVED FIXED)
+
+EclipseLink 2.4.1 / 2.5.0
+Oracle 11g
+
+I have the following entity class and embedded-id classes:
+
+@Entity
+@Table(name="T_SCHLUESSEL")
+public class TSchluessel implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	public static final String QUERY_FIND_ORDERBY = "findeOrderBy";
+	
+	@EmbeddedId
+	private TSchluesselPK id;
+
+	private String inhalteins;
+
+	private String inhaltzwei;
+. . .
+
+@Embeddable
+public class TSchluesselPK implements Serializable {
+	//default serial version id, required for serializable classes.
+	private static final long serialVersionUID = 1L;
+
+	private long idpknummer;
+
+	private String idpkstring;
+. . .
+
+My NamedQuery:
+query="select DISTINCT a from TSchluessel a order by a.id.idpknummer"
+
+Generated SQL:
+SELECT DISTINCT VERTRAG_NR, VU_CODE, LFD_ROLLE_NR, VERTRAG_NR, VU_CODE FROM V_VERTRAGSUCHE WHERE (PARTNER_NR = ?) ORDER BY VERTRAG_NR ASC, VU_CODE ASC
+
+Exception:
+ORA-00960: In der SELECT-Liste ist eine nicht eindeutige Spalte
+
+
+Reproducible: Always

@@ -1,0 +1,27 @@
+Build: M7
+
+How to reproduce this problem:
+1. Create a new Java project.  Leave the Java Build Path settings so that
+all folders under the project are considered to be packages.
+2. Create a folder (not a package) in the Java project named "aPackage".
+Link this folder to a directory _under_ the project.  I browsed to the 
+project directory and created a new directory.  Under windows this new directory
+is called "New Folder".  If you are reproducing this bug on a non-ms platform
+call the directory "New Folder" to follow along.  This is the crux of the bug.
+3. Create a class named "Foo" in the aPackage package.  Notice that
+the class compiles fine.
+4. Close the project.
+5. Open the project.
+6. An error is added to the Problems view which states:
+The declared package does not match the expected package New Folder
+
+I assume the compiler is using the file names on the filesystem to perform
+compilation rather than using the file names in the workspace.  I would expect
+the compiler to use the filesystem model in stand-alone model, but the workspace
+model when invoked from the workbench.
+ 		
+Also the Foo.java class and the aPackage package are not decorated with 
+error markers, although the project is.
+					
+I realize this is a bizarre use case, but I can imagine a (new/confused) user
+making this mistake.

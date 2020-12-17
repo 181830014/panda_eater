@@ -1,0 +1,40 @@
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.DeclareParents;
+
+@Aspect
+public class CC {
+
+	@DeclareParents(value = "Simple", defaultImpl = Impl.class)
+	public I i;
+
+	public static void main(String[] args) {
+		new Simple().run();
+	}
+}
+
+class Simple {
+ 
+	public void run() {
+	}
+}
+
+interface I {
+	void m();
+}
+
+class Impl implements I {
+	public Impl() {
+	}
+
+	public void m() {
+	}
+}
+
+@Retention(RetentionPolicy.RUNTIME)
+@interface Anno {
+}
+
+whitespace change in Simple and save - error about it not implementing m()

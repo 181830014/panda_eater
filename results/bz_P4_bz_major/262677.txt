@@ -1,0 +1,25 @@
+Configured the web template connector for GForge AS 5.5 in Eclipse 3.4.1 (Java). Configuration is shown below.
+
+Created a task list from a tracker where all tasks are initially incomplete (status open). Task list is populated as expected.
+
+However, in the following scenario the tasks in the task list are not correctly synchronized:
+1) activate a task and set the status to closed (via edit task window)
+2) synchronize task list => task in task list correctly shows as completed
+3) set status of task back to open (via edit task window)
+4) synchronize task list => task remains completed
+
+Step 4 should have marked the task as incomplete.
+
+
+
+Configuration:
+
+Task URL: ${serverUrl}/gf/project/${project}/tracker/?action=TrackerItemEdit&tracker_item_id=${Id}
+
+New task URL: ${serverUrl}/gf/project/${project}/tracker/?action=TrackerItemAdd&tracker_id=${tracker_id}
+
+Query request URL: ${serverUrl}/gf/project/${project}/tracker/?action=TrackerItemBrowse&tracker_id=${tracker_id}
+
+Query pattern: <tr class=".".*?><td.*?><input.*?>({Id}.+?)</td><td.*?><a.*?>({Description}.+?)</a></td><td.*?>.*?</td><td.*?>({Priority}.*?)</td><td.*?>.*?</td><td.*?><a href="/gf/user/({Owner}.+?)/">.*?</a></td><td.*?>({Status}.+?)</td>
+
+Login request URL: ${serverUrl}/gf/account/?action=LoginAction&username=${userId}&password=${password}&redirect=/gf/project/${project}/tracker/?action=TrackerItemBrowse&tracker_id=${tracker_id}

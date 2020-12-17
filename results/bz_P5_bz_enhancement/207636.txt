@@ -1,0 +1,9 @@
+I'm working from HEAD.
+
+I need to remove and/or modify some of the monitors (perspectiveMonitor, activityMonitor, windowMonitor, menuMonitor, keybindingCommandMonitor) that are created by the UIUsageMonitorPlugin. I'd rather do this without forking. I think the right approach is to decouple them from the plug-in (into a more self-contained implementation based on an interface) and then contribute them through an extension point.
+
+I think the right approach is to create a new interface, say IUsageMonitor, with methods named install, uninstall, startMonitoring, stopMonitoring that can be used to add/remove listeners, etc. An implementation of the the interface for each of the existing monitors would involve moving the "install" code from the UiUsageMonitorPlugin class to the corresponding IUsageMonitor implementation.
+
+The one hang up I have is how to know when to not use a monitor. If they're contributed via extension point, we could define the extensions that contribute the monitors in a separate bundle (sort of a "configuration bundle"). If we do this, then we could leave the IUsageMonitor implementations in the existing bundle so that their implementations can be reused by other "configuration bundles".
+
+I have time to implement this if we think it's worth pursuing.

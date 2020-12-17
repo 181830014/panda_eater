@@ -1,0 +1,32 @@
+Build Identifier: Eclipselink 2.1.1.v20100817-r8050
+
+Unlike sets, lists can have duplicate members at different positions.
+
+Given a many-to-many association modelled as a list with an @OrderColumn, Eclipselink shows various sorts of incorrect behaviour when this list contains duplicate entries, e.g.
+
+[0] A
+[1] C
+[2] B 
+[3] C
+[4] D
+
+I start with an empty database.
+
+In a first transaction, I create 1 parent and 4 child entities where the parent has a list of 5 children with one duplicate as indicated. On commit, the expected database rows are inserted.
+
+In a second transaction, I use em.find() to load the parent entity I've just created. I expect to see a SELECT statement, but Eclipse seems to take the entity from its cache, and I don't know how to turn this off. em.clear() after commit does not help.
+
+On committing this second transaction, Eclipselink inserts another tuple [3] C into the join table.
+
+In a third transaction, I query my parent entity with a fetch join, like
+
+select distinct p from Parent p join fetch p.children
+
+Now the child list has 4 items (A, C, B, D), where 5 would have been correct and 6 might have been expected after the previous problem.
+
+Leaving out "distinct" from this query, I get a result set with 6 times the same parent entity containing the same list of 4 children.
+
+See also bug 325053 for the model I'm using or http://hwellmann.blogspot.com/2010/09/jpa-20-ordered-collections.html for some more background on this example.
+
+
+Reproducible: Always

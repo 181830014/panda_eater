@@ -1,0 +1,58 @@
+VERSION:   Eclipse Persistence Services - 1.1.1.v20090430-r4097
+Database: Informix Dynamic Server  Version: 11.10.TC1E
+Driver: IBM Informix JDBC Driver for IBM Informix Dynamic Server  Version: 3.10.JC1
+Test component: foundation/eclipselink.core.test
+
+---Full stack trace---
+EmployeeBasicTestModel (also AutoTableGeneratorBasicTestModel
+CustomSQLTestModel
+EmployeeChangeTrackingTestModel
+EmployeeHybridChangeTrackingTestModel
+Employee Daily Expiry Test Model
+EmployeeJoinFetchTestModel
+Employee Time To Live Expiry Test Model
+HistoryTestRunModel
+JDBCBatchUpdatesTestModel
+MappingWMIntegrationStoredProcedureTestModel
+UnidirectionalEmployeeBasicTestModel )
+ 
+TEST SUITE NAME: EmployeeReadObjectTestSuite
+TEST NAME:   ReadObjectCallTest(class org.eclipse.persistence.testing.models.employee.domain.Employee)
+
+Begin ReadObjectCallTest(class org.eclipse.persistence.testing.models.employee.domain.Employee)
+DatabaseSessionImpl(18411725)--Thread(Thread[Thread-10,6,main])--initialize identitymaps
+DatabaseSessionImpl(18411725)--Thread(Thread[Thread-10,6,main])--Execute query ReadObjectQuery(referenceClass=Employee sql="SELECT t0.VERSION, t1.EMP_ID, t0.L_NAME, t0.F_NAME, t1.SALARY, t0.EMP_ID, t0.GENDER, t0.END_DATE, t0.START_DATE, t0.MANAGER_ID, t0.END_TIME, t0.START_TIME, t0.ADDR_ID FROM EMPLOYEE t0, SALARY t1 WHERE t1.EMP_ID = t0.EMP_ID AND t0.F_NAME = 'Bob' AND t0.L_NAME = 'Smith'")
+-DatabaseSessionImpl(18411725)--Connection(18563414)--Thread(Thread[Thread-10,6,main])--SELECT t0.VERSION, t1.EMP_ID, t0.L_NAME, t0.F_NAME, t1.SALARY, t0.EMP_ID, t0.GENDER, t0.END_DATE, t0.START_DATE, t0.MANAGER_ID, t0.END_TIME, t0.START_TIME, t0.ADDR_ID FROM EMPLOYEE t0, SALARY t1 WHERE t1.EMP_ID = t0.EMP_ID AND t0.F_NAME = Bob AND t0.L_NAME = Smith
+[EL Warning]: 2009-05-15 09:16:00.36--DatabaseSessionImpl(18411725)--Thread(Thread[Thread-10,6,main])--Local Exception Stack: 
+Exception [EclipseLink-6044] (Eclipse Persistence Services - 1.1.1.v20090430-r4097): org.eclipse.persistence.exceptions.QueryException
+Exception Description: The primary key read from the row [DatabaseRecord(
+	 => 1
+	 => 2257
+	 => Smith
+	 => Bob
+	 => 35000
+	 => 2257
+	 => M
+	 => 1993-01-01
+	 => 1996-01-01
+	 => 2262
+	 => 17:00:00
+	 => 09:00:00
+	 => 1954)] during the execution of the query was detected to be null.  Primary keys must not contain null.
+Query: ReadObjectQuery(referenceClass=Employee sql="SELECT t0.VERSION, t1.EMP_ID, t0.L_NAME, t0.F_NAME, t1.SALARY, t0.EMP_ID, t0.GENDER, t0.END_DATE, t0.START_DATE, t0.MANAGER_ID, t0.END_TIME, t0.START_TIME, t0.ADDR_ID FROM EMPLOYEE t0, SALARY t1 WHERE t1.EMP_ID = t0.EMP_ID AND t0.F_NAME = 'Bob' AND t0.L_NAME = 'Smith'")
+	at org.eclipse.persistence.exceptions.QueryException.nullPrimaryKeyInBuildingObject(QueryException.java:844)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildObject(ObjectBuilder.java:464)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildObject(ObjectBuilder.java:437)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.buildObject(ObjectLevelReadQuery.java:569)
+	at org.eclipse.persistence.queries.ReadObjectQuery.executeObjectLevelReadQuery(ReadObjectQuery.java:439)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeDatabaseQuery(ObjectLevelReadQuery.java:928)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:664)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.execute(ObjectLevelReadQuery.java:889)
+	at org.eclipse.persistence.queries.ReadObjectQuery.execute(ReadObjectQuery.java:397)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.internalExecuteQuery(AbstractSession.java:2243)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1181)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1165)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1125)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.readObject(AbstractSession.java:2636)
+	at org.eclipse.persistence.testing.framework.ReadObjectCallTest.test(ReadObjectCallTest.java:71)
+	at org.eclipse.persistence.testing.framework.TestCase.executeTest(TestCase.java:543))

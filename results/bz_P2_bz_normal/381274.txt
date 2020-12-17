@@ -1,0 +1,19 @@
+Given the following 2 java classes, EclipseLink has an incorrect validation exception: "The attribute [version] of type [class java.lang.String] on the entity class [class model.MySuper] is not valid for a version property...". Interestingly it thinks the invalid type is String (not T or even Object)
+
+
+@MappedSuperclass
+public abstract class MySuper<T> {
+    @Id
+    T id;
+
+    @Version
+    T version;
+}
+
+@Entity
+public class MySub extends MySuper<Integer> {
+}
+
+Exception Description: The attribute [version] of type [class java.lang.String] on the entity class [class model.MySuper] is not valid for a version property. The following types are supported: int, Integer, short, Short, long, Long, Timestamp.
+	at org.eclipse.persistence.exceptions.ValidationException.invalidTypeForVersionAttribute(ValidationException.java:1135)
+	at org.eclipse.persistence.internal.jpa.metadata.accessors.mappings.VersionAccessor.process(VersionAccessor.java:120)

@@ -1,0 +1,26 @@
+Build Identifier: 2.3.0.v20110604-r9504
+
+We're getting a ValidationError during deployment due to trying to use an empty string with an object type converter.
+
+This is the entry in our orm.xml:
+
+<object-type-converter name="tf-boolean-converter" object-type="java.lang.Boolean" data-type="java.lang.String">
+    <conversion-value object-value="True" data-value="T" />
+    <conversion-value object-value="False" data-value="F" />
+    <conversion-value object-value="False" data-value="" />
+</object-type-converter>
+
+We get the following error:
+
+Internal Exception: Exception [EclipseLink-7257] (Eclipse Persistence Services - 2.3.0.v20110604-r9504): org.eclipse.persistence.exceptions.ValidationException
+Exception Description: Unable to instantiate data value with type [class java.lang.String] and value [null] from the object type converter named [boolean-converter]
+
+
+It could be that this is expected behavior but it would be nice if it at least converted to null for nullable types.
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Include the object type converter in an entity mapping file. 
+2. Tell persistence unit to use that mapping file
+3. Attempt to deploy

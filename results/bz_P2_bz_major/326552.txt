@@ -1,0 +1,17 @@
+The error,
+
+java.lang.IllegalArgumentException: Object: <object> is not a known entity type.
+
+is thrown when you redeploye a non-managed persistence unit on weblogic.  The error most likely occurs on other servers.
+
+The error occurs because the ServerSession is cached in the EntityManagerSetupImpl static, so on createEntityManagerFactory() the old one is used with the old descriptors/class before the redeployment.
+
+If close() is called by the application before the undeploy, it should in theory resolve the issue, but the application generally will not be able to do this.  We also have a finalize method, but this does not seem to work.
+
+If we cannot fix the issue we should at least (and probably even if we fix it)
+- improve the error message "java.lang.IllegalArgumentException: Object: <object>, of class <class> is not a known entity type. If a redeployment has occurred the session may have the wrong class loader, and need to be cleared."
+- add a clear method to our PersistenceProvider, or a destroy method to EntityManagerFactory.
+
+I have also seen issues that weaving does not occur for non-managed persistence units.
+
+We need to have tests that run in all of our application servers that use a non-managed persistence unit and verify weaving and redeployment and general usage.

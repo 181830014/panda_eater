@@ -1,0 +1,116 @@
+Using Eclipselink Version 2.4.2.v20130514-5956486
+
+Given this example EclipseLink gives the following incorrect error; it seems like the @Id annotation is not read, so the code looks for the @IdClass annotation (but I've not a composite key)
+Disabling multitenant capabilities, everythins works fine.
+
+@Entity
+@Table(name="CRS_MOMI_JOB")
+@Multitenant(value=MultitenantType.TABLE_PER_TENANT)
+@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink-tenant.id")
+public class CrsMomiJob implements Serializable {
+	@Id
+	private BigDecimal id;		
+
+	public CrsMomiJob() {
+	}
+	
+	public BigDecimal getId() {
+		return id;
+	}
+
+	public void setId(BigDecimal id) {
+		this.id = id;
+	}	
+}
+
+java.lang.IllegalArgumentException: No @IdClass attributes exist on the IdentifiableType [EntityTypeImpl@26762076:CrsMomiJob [ javaType: class com.xxxxxx.momi.model.core.CrsMomiJob descriptor: RelationalDescriptor(com.xxxxxx.momi.model.core.CrsMomiJob --> [DatabaseTable(CRS_MOMI_JOB)]), mappings: 7]].  There still may be one or more @Id or an @EmbeddedId on type.
+	at org.eclipse.persistence.internal.jpa.metamodel.IdentifiableTypeImpl.getIdClassAttributes(IdentifiableTypeImpl.java:169)
+	at org.springframework.data.jpa.repository.support.JpaMetamodelEntityInformation$IdMetadata.<init>(JpaMetamodelEntityInformation.java:170)
+	at org.springframework.data.jpa.repository.support.JpaMetamodelEntityInformation.<init>(JpaMetamodelEntityInformation.java:71)
+	at org.springframework.data.jpa.repository.support.JpaEntityInformationSupport.getMetadata(JpaEntityInformationSupport.java:65)
+	at org.springframework.data.jpa.repository.support.JpaRepositoryFactory.getEntityInformation(JpaRepositoryFactory.java:146)
+	at com.xxxxxx.momi.jpa.MultiTenantJpaRepositoryFactory.getTargetRepository(MultiTenantJpaRepositoryFactory.java:30)
+	at org.springframework.data.jpa.repository.support.JpaRepositoryFactory.getTargetRepository(JpaRepositoryFactory.java:67)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport.getRepository(RepositoryFactorySupport.java:136)
+	at org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport.getObject(RepositoryFactoryBeanSupport.java:153)
+	at org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport.getObject(RepositoryFactoryBeanSupport.java:43)
+	at org.springframework.beans.factory.support.FactoryBeanRegistrySupport.doGetObjectFromFactoryBean(FactoryBeanRegistrySupport.java:142)
+	at org.springframework.beans.factory.support.FactoryBeanRegistrySupport.getObjectFromFactoryBean(FactoryBeanRegistrySupport.java:109)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getObjectForBeanInstance(AbstractBeanFactory.java:1448)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:306)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:194)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(DefaultListableBeanFactory.java:910)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:853)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:768)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:486)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:87)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:285)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1122)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:461)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:314)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:194)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(DefaultListableBeanFactory.java:910)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:853)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:768)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:486)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:87)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:285)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1122)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:461)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:295)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:223)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:292)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:194)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:626)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:932)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:479)
+	at org.springframework.web.servlet.FrameworkServlet.configureAndRefreshWebApplicationContext(FrameworkServlet.java:651)
+	at org.springframework.web.servlet.FrameworkServlet.initWebApplicationContext(FrameworkServlet.java:505)
+	at org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:459)
+	at org.springframework.web.servlet.HttpServletBean.init(HttpServletBean.java:136)
+	at javax.servlet.GenericServlet.init(GenericServlet.java:244)
+	at org.apache.catalina.core.StandardWrapper.initServlet(StandardWrapper.java:1453)
+	at org.apache.catalina.core.StandardWrapper.load(StandardWrapper.java:1250)
+	at org.apache.catalina.core.StandardContext.loadOnStartup(StandardContext.java:5093)
+	at org.apache.catalina.core.StandardContext.start(StandardContext.java:5380)
+	at com.sun.enterprise.web.WebModule.start(WebModule.java:498)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:917)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:901)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:733)
+	at com.sun.enterprise.web.WebContainer.loadWebModule(WebContainer.java:2019)
+	at com.sun.enterprise.web.WebContainer.loadWebModule(WebContainer.java:1669)
+	at com.sun.enterprise.web.WebApplication.start(WebApplication.java:109)
+	at org.glassfish.internal.data.EngineRef.start(EngineRef.java:130)
+	at org.glassfish.internal.data.ModuleInfo.start(ModuleInfo.java:269)
+	at org.glassfish.internal.data.ApplicationInfo.start(ApplicationInfo.java:301)
+	at com.sun.enterprise.v3.server.ApplicationLifecycle.deploy(ApplicationLifecycle.java:461)
+	at com.sun.enterprise.v3.server.ApplicationLifecycle.deploy(ApplicationLifecycle.java:240)
+	at org.glassfish.deployment.admin.DeployCommand.execute(DeployCommand.java:389)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$1.execute(CommandRunnerImpl.java:348)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl.doCommand(CommandRunnerImpl.java:363)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl.doCommand(CommandRunnerImpl.java:1085)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl.access$1200(CommandRunnerImpl.java:95)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$ExecutionContext.execute(CommandRunnerImpl.java:1291)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$ExecutionContext.execute(CommandRunnerImpl.java:1259)
+	at com.sun.enterprise.v3.admin.AdminAdapter.doCommand(AdminAdapter.java:461)
+	at com.sun.enterprise.v3.admin.AdminAdapter.service(AdminAdapter.java:212)
+	at com.sun.grizzly.tcp.http11.GrizzlyAdapter.service(GrizzlyAdapter.java:179)
+	at com.sun.enterprise.v3.server.HK2Dispatcher.dispath(HK2Dispatcher.java:117)
+	at com.sun.enterprise.v3.services.impl.ContainerMapper$Hk2DispatcherCallable.call(ContainerMapper.java:354)
+	at com.sun.enterprise.v3.services.impl.ContainerMapper.service(ContainerMapper.java:195)
+	at com.sun.grizzly.http.ProcessorTask.invokeAdapter(ProcessorTask.java:860)
+	at com.sun.grizzly.http.ProcessorTask.doProcess(ProcessorTask.java:757)
+	at com.sun.grizzly.http.ProcessorTask.process(ProcessorTask.java:1056)
+	at com.sun.grizzly.http.DefaultProtocolFilter.execute(DefaultProtocolFilter.java:229)
+	at com.sun.grizzly.DefaultProtocolChain.executeProtocolFilter(DefaultProtocolChain.java:137)
+	at com.sun.grizzly.DefaultProtocolChain.execute(DefaultProtocolChain.java:104)
+	at com.sun.grizzly.DefaultProtocolChain.execute(DefaultProtocolChain.java:90)
+	at com.sun.grizzly.http.HttpProtocolChain.execute(HttpProtocolChain.java:79)
+	at com.sun.grizzly.ProtocolChainContextTask.doCall(ProtocolChainContextTask.java:54)
+	at com.sun.grizzly.SelectionKeyContextTask.call(SelectionKeyContextTask.java:59)
+	at com.sun.grizzly.ContextTask.run(ContextTask.java:71)
+	at com.sun.grizzly.util.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:532)
+	at com.sun.grizzly.util.AbstractThreadPool$Worker.run(AbstractThreadPool.java:513)
+	at java.lang.Thread.run(Thread.java:662)

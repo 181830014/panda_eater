@@ -1,0 +1,24 @@
+With this object graph:
+
+RootObject
+  -> List<OtherObj>
+
+OtherObj
+  -> List<MoreObj> FetchType.EAGER -> JOIN
+
+MoreObj
+
+Root object has a list of OtherObjs, OtherObjs has MoreObjs, the MoreObjs relationship is eagerly fetched with a join.
+
+When RootObj is queried with a batch read for OtherObjs and BatchFetchType.IN  (this may affect JOIN, and EXISTS too) CollectionMapping.executeBatchQuery throws a null pointer exception inside of: extractKeyFromTargetRow(row, session).
+
+The null items should be filtered out of what is placed in ComplexQueryResult.getData, or the null should be checked when iterating over the ComplexQueryResult.
+
+java.lang.NullPointerException
+	at org.eclipse.persistence.mappings.OneToManyMapping.extractKeyFromTargetRow(OneToManyMapping.java:327)
+	at org.eclipse.persistence.mappings.CollectionMapping.executeBatchQuery(CollectionMapping.java:918)
+	at org.eclipse.persistence.mappings.ForeignReferenceMapping.extractResultFromBatchQuery(ForeignReferenceMapping.java:579)
+	at org.eclipse.persistence.mappings.CollectionMapping.extractResultFromBatchQuery(CollectionMapping.java:864)
+	at org.eclipse.persistence.internal.indirection.BatchValueHolder.instantiate(BatchValueHolder.java:58)
+	at org.eclipse.persistence.internal.indirection.QueryBasedValueHolder.instantiate(QueryBasedValueHolder.java:88)
+	at org.eclipse.persistence.internal.indirection.DatabaseValueHolder.getValue(DatabaseValueHolder.java:88)

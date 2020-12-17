@@ -1,0 +1,18 @@
+The following snippet:
+
+package org.junit;
+public class Assert {
+  public static void assertTrue(boolean b) {}
+}
+
+package test;
+import static org.junit.Assert.assertTrue;
+public class Test {
+  void test() {
+    int i;
+    assertTrue((i = 2) == 2);
+    assertTrue(i == 2); // ERROR!
+  }
+}
+
+results in the error "The local variable i may not have been initialized" on the line marked with the inline comment "ERROR!". The same happens for assertFalse and potentially other Assert methods.

@@ -1,0 +1,9 @@
+In changing uow to not create change records for new objects I noticed several issue in our current change tracking.
+
+- agg-col, always marks everything as changed, isNew check was wrong (I fixed this, but agg-col still seems to have a lot of issues, it is still using the old commit, and change set does not compute minimal change, and will always think Sets or Maps changed, I don't think it raises events correctly either)
+- direct collection / collection mapping inserts duplicates when collection replaced (does not clear existing events, nor ignore future events, but generates duplicates when comparing the collections, however events before the replace may be relevant if made to the original collection, so needs a lot of rework)
+- direct map mapping, does not support deferred changes, class cast (I fixed the class cast but deferred collection changes does not really work)
+- direct-collection says it supports change tracking even if not using indirection
+- object-relational mapping do not seems to support change tracking correctly (nor EIS mappings), most certainly deferred collections will fail.
+- I noticed the ComplexUpdateTest never compares the clone, only the original, it should compare the clone, when I did this several tests failed, some from the above bugs, but I did not look into them all, I commented out the check, but it needs to be turned on and all issues fixed.
+- Deferred uses MergeManager default merge to merge backup clones, this will use original for targets, and cause uow to think it changed on next commit.  It needs a special merge for this, that uses the clone in targetVersionOfObject, not the original.  I fixed new objects, to just rebuild the backup clone, as this is optimal, but updates still need to be fixed.

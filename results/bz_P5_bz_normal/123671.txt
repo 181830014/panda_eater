@@ -1,0 +1,33 @@
+I would like to restrict the usage of a particular method annotation only to types that are marked with a specific annotation.
+
+More specifically, I have the method annotations @Read and @Write, and one type annotation called @Access. I want it to be an error when @Read and @Write appear on a method inside a type that is not marked with @Access.
+
+I encounter a problem when the methods marked with @Read or @Write are inside a type marked with @Access, but are declared inside an interface that is not marked with @Access.
+
+Here is an example :
+
+public aspect AccessRestrictedAspect {
+	declare error : execution(@Read public * !@Access *.*(..)) :
+	"Cannot have public @Read methods inside non @AccessClassified types."
+}
+
+public Interface TestInterface {
+  public String getName();
+}
+
+@Access
+public class Test1 {
+   @Read
+   public String getName() { return null; }     <--- ok
+}
+
+public class Test2 {
+   @Read
+   public String getName() { return null; }     <--- gives an error, and should
+}
+
+@Access
+public class Test2 implements TestInterface { //Note the "implements"
+   @Read
+   public String getName() { return null; }     <-- gives an error,but shouldn't
+}

@@ -1,0 +1,31 @@
+Build Identifier: 2.2.0
+
+The fix for Bug 327900 does not work properly if interface aliases are configured for the persistent classes. Consider e.g. the classes A and B with "B extends A" and their interface aliases IA and IB.
+
+If I make a query for IB and an instance of B is found, the following expression in IdentityMapManager evaluates to false:
+
+boolean readSubclassesOrNoInheritance = (!descriptor.hasInheritance() ||
+descriptor.getInheritancePolicy().shouldReadSubclasses());
+
+descriptor is here the class descriptor of B, with:
+
+- hasInheritance() is true, since an InheritancePolicy instance is available
+- shouldReadSubclasses() is false, since there are no further subclasses of B
+
+Later in the same method, readSubclassesOrNoInheritance is used like this:
+
+if ((object.getClass() == theClass) || (readSubclassesOrNoInheritance &&
+(theClass.isInstance(object)))) {
+
+We now have the issue that object.getClass() returns B.class, while theClass
+is IB.class. Since readSubclassesOrNoInheritance is false, the isInstance check
+(IB.class.isInstance(B.class) would have evaluated to true) does not cover the
+interface alias, as it did before this fix was applied.
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Create two inherited entities A and B, where B extends A. Let B have an interface alias IB.
+2. Create an instance of B with some data, so that it can be queried from the identity map cache. Do not persist or commit to the database.
+3. Run a query for IB with an expression matching the data of the newly created B instance. The expected behaviour is that the cached instance of B is returned, however the query does not return any results.

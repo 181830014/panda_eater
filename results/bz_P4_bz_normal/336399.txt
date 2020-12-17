@@ -1,0 +1,22 @@
+Version: 3.7.0
+Build id: I20110127-2034
+
+We should make sure the that the type of the parameter reflects what type we are expecting to get in our Ant tasks.
+
+Our Ant tasks pretty much all support the 'debug' attribute, which is a boolean, but in our source we define it like:
+
+public void setDebug(String debugValue) {
+   this.debug = Boolean.toString(true).equals(debugValue); 
+}
+
+with a string parameter. Ant - org.apache.ant that is - supports boolean here, and we should be using it in this instance. The reason being is that Ant has introspection utilities that allow it to take other values than String, and those other values can allow a variety of options. For example in the boolean case, our code checks for 'true', but Ant (apache) can accept 'yes', 'on' and 'true' to mean true.
+
+So we could change the code to:
+
+public void setDebug(boolean debugValue) {
+  this.debug = debugValue;
+}
+
+and all existing build files would still work just fine. The other added bonus is that the Eclipse Ant support can propose completions for attributes based on their type - which in our current state are all String.
+
+More information about the types Ant supports and how it translates them can be found here: http://ant.apache.org/manual/develop.html#set-magic

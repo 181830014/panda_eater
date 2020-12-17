@@ -1,0 +1,149 @@
+The @TableGenerator and @SequenceGenerator annotions attempt to create an invalid table name when there is a default schema set in Mapping-File. I expericened this issue in both 2.4 and 2.5.
+
+Eclipelink attempts to create a table with name "schemaName.schemaName.SEQUENCE"
+
+
+Small bit of my Java, both where failing when a Default schema is set.
+
+@Id
+@GeneratedValue(generator="obj_Gen", strategy=GenerationType.TABLE)
+@TableGenerator(name="obj_Gen", allocationSize=1)
+private long oid;
+
+
+@Id
+@GeneratedValue(generator="obj_Seq")
+@SequenceGenerator(allocationSize=1, name = "obj_Seq")
+private long oid;
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="mcnawerxDate">
+	<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider >
+	<mapping-file>META-INF/orm.xml</mapping-file>
+.....
+		<properties>
+ 			<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
+            <property name="eclipselink.ddl-generation.output-mode" value="database" />
+		</properties>
+	</persistence-unit>
+</persistence>
+
+
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm orm_2_0.xsd" 
+    version="2.0"> 
+    <persistence-unit-metadata> 
+        <persistence-unit-defaults> 
+            <schema>Date2</schema> 
+        </persistence-unit-defaults> 
+    </persistence-unit-metadata>    
+</entity-mappings> 
+
+
+
+EclipseLink log:
+
+Call: SELECT * FROM Date2.Date2.SEQUENCE WHERE SEQ_NAME = 'obj_Gen'
+Query: DataReadQuery(sql="SELECT * FROM Date2.Date2.SEQUENCE WHERE SEQ_NAME = 'obj_Gen'")
+[EL Warning]: 2012-06-22 14:16:41.017--ClientSession(22150794)--Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.5.0.v20120612-r11659): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "." at line 1, column 19.
+Error Code: -1
+Call: UPDATE Date2.Date2.SEQUENCE SET SEQ_COUNT = SEQ_COUNT + ? WHERE SEQ_NAME = ?
+	bind => [2 parameters bound]
+Query: DataModifyQuery(name="obj_Gen" sql="UPDATE Date2.Date2.SEQUENCE SET SEQ_COUNT = SEQ_COUNT + ? WHERE SEQ_NAME = ?")
+
+Internal Exception: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "." at line 1, column 19.
+Error Code: -1
+Call: UPDATE Date2.Date2.SEQUENCE SET SEQ_COUNT = SEQ_COUNT + ? WHERE SEQ_NAME = ?
+	bind => [2 parameters bound]
+Query: DataModifyQuery(name="obj_Gen" sql="UPDATE Date2.Date2.SEQUENCE SET SEQ_COUNT = SEQ_COUNT + ? WHERE SEQ_NAME = ?")
+Local Exception Stack: 
+Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.5.0.v20120612-r11659): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "." at line 1, column 19.
+Error Code: -1
+Call: UPDATE Date2.Date2.SEQUENCE SET SEQ_COUNT = SEQ_COUNT + ? WHERE SEQ_NAME = ?
+	bind => [2 parameters bound]
+Query: DataModifyQuery(name="obj_Gen" sql="UPDATE Date2.Date2.SEQUENCE SET SEQ_COUNT = SEQ_COUNT + ? WHERE SEQ_NAME = ?")
+	at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:333)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:646)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeCall(DatabaseAccessor.java:537)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.basicExecuteCall(AbstractSession.java:1800)
+	at org.eclipse.persistence.sessions.server.ClientSession.executeCall(ClientSession.java:286)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:207)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:193)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeNoSelectCall(DatasourceCallQueryMechanism.java:236)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeNoSelect(DatasourceCallQueryMechanism.java:216)
+	at org.eclipse.persistence.queries.DataModifyQuery.executeDatabaseQuery(DataModifyQuery.java:85)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:852)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.internalExecuteQuery(AbstractSession.java:2946)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1602)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1584)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1549)
+	at org.eclipse.persistence.sequencing.QuerySequence.update(QuerySequence.java:340)
+	at org.eclipse.persistence.sequencing.QuerySequence.updateAndSelectSequence(QuerySequence.java:277)
+	at org.eclipse.persistence.sequencing.StandardSequence.getGeneratedVector(StandardSequence.java:71)
+	at org.eclipse.persistence.sequencing.Sequence.getGeneratedVector(Sequence.java:257)
+	at org.eclipse.persistence.internal.sequencing.SequencingManager$Preallocation_Transaction_NoAccessor_State.getNextValue(SequencingManager.java:532)
+	at org.eclipse.persistence.internal.sequencing.SequencingManager.getNextValue(SequencingManager.java:1067)
+	at org.eclipse.persistence.internal.sequencing.ClientSessionSequencing.getNextValue(ClientSessionSequencing.java:70)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.assignSequenceNumber(ObjectBuilder.java:351)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.assignSequenceNumber(ObjectBuilder.java:310)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.assignSequenceNumber(UnitOfWorkImpl.java:469)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.registerNotRegisteredNewObjectForPersist(UnitOfWorkImpl.java:4238)
+	at org.eclipse.persistence.internal.sessions.RepeatableWriteUnitOfWork.registerNotRegisteredNewObjectForPersist(RepeatableWriteUnitOfWork.java:511)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.registerNewObjectForPersist(UnitOfWorkImpl.java:4183)
+	at org.eclipse.persistence.internal.jpa.EntityManagerImpl.persist(EntityManagerImpl.java:449)
+	at mcna.werx.common.database.DatabaseObjectList.addObject(DatabaseObjectList.java:245)
+	at mcna.werx.common.applicaiton.ApplicationManager.processEvent(ApplicationManager.java:49)
+	at javax.faces.event.SystemEvent.processListener(SystemEvent.java:106)
+	at com.sun.faces.application.ApplicationImpl.processListeners(ApplicationImpl.java:2168)
+	at com.sun.faces.application.ApplicationImpl.invokeListenersFor(ApplicationImpl.java:2144)
+	at com.sun.faces.application.ApplicationImpl.publishEvent(ApplicationImpl.java:302)
+	at com.sun.faces.config.ConfigManager.publishPostConfigEvent(ConfigManager.java:602)
+	at com.sun.faces.config.ConfigManager.initialize(ConfigManager.java:371)
+	at com.sun.faces.config.ConfigureListener.contextInitialized(ConfigureListener.java:225)
+	at org.apache.catalina.core.StandardContext.listenerStart(StandardContext.java:4779)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5273)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1566)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1556)
+	at java.util.concurrent.FutureTask$Sync.innerRun(Unknown Source)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+Caused by: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "." at line 1, column 19.
+	at org.apache.derby.client.am.SQLExceptionFactory40.getSQLException(Unknown Source)
+	at org.apache.derby.client.am.SqlException.getSQLException(Unknown Source)
+	at org.apache.derby.client.am.Connection.prepareStatement(Unknown Source)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.prepareStatement(DatabaseAccessor.java:1481)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.prepareStatement(DatabaseAccessor.java:1430)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseCall.prepareStatement(DatabaseCall.java:705)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:587)
+	... 46 more
+Caused by: org.apache.derby.client.am.SqlException: Syntax error: Encountered "." at line 1, column 19.
+	at org.apache.derby.client.am.Statement.completeSqlca(Unknown Source)
+	at org.apache.derby.client.net.NetStatementReply.parsePrepareError(Unknown Source)
+	at org.apache.derby.client.net.NetStatementReply.parsePRPSQLSTTreply(Unknown Source)
+	at org.apache.derby.client.net.NetStatementReply.readPrepareDescribeOutput(Unknown Source)
+	at org.apache.derby.client.net.StatementReply.readPrepareDescribeOutput(Unknown Source)
+	at org.apache.derby.client.net.NetStatement.readPrepareDescribeOutput_(Unknown Source)
+	at org.apache.derby.client.am.Statement.readPrepareDescribeOutput(Unknown Source)
+	at org.apache.derby.client.am.PreparedStatement.readPrepareDescribeInputOutput(Unknown Source)
+	at org.apache.derby.client.am.PreparedStatement.flowPrepareDescribeInputOutput(Unknown Source)
+	at org.apache.derby.client.am.PreparedStatement.prepare(Unknown Source)
+	at org.apache.derby.client.am.Connection.prepareStatementX(Unknown Source)
+	... 51 more
+
+
+I dont need a fix in a rush, if at all but im sure this is an issue for other users.
+
+regards,
+Chris McNamee

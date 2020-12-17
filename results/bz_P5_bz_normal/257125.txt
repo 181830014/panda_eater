@@ -1,0 +1,5 @@
+Many of the JPA tests are create the database in a setUp method instead of the suite setup.  This is not good because this is done for EVERY test.  There are also a few tests that read in the entire database and compare everything with the start of the test and then recreate the database if anything changed.
+
+This should not be done, unless a really good reason, perhaps the modify-all tests could do this, but other should just assume things are ok, especially the read-only tests.
+
+Suite setup method should just be a normal testSetup() test method that is run at start of suite (named tests, no auto) to be compatible with server tests.

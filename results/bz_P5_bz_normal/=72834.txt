@@ -1,0 +1,38 @@
+When two methods are introduced and one is in a sublcass and should override 
+the other but has a different access modifier (i.e. public vs. package), 
+dispatch breaks.
+
+The following program illustrates:
+
+public class Trouble {
+
+     static abstract class A {}
+     static class B extends A {}
+
+     public static void main(String[] args) {
+         System.out.println(new B());
+     }
+
+     static aspect Bang {
+         abstract String A.getName();
+         public String B.getName() { return "B"; }
+         public String A.toString() { return getName(); }
+     }
+}
+
+Unexpectedly, it throws the following exception:
+
+java.lang.AbstractMethodError: 
+trouble.Trouble$A.ajc$interMethodDispatch2$trouble$getName()Ljava/lang/String;
+                 at 
+trouble.Trouble$Bang.ajc$interMethodDispatch1
+$trouble_Trouble$Bang$trouble_Trouble$A$getName(Trouble.java)
+                 at 
+trouble.Trouble$Bang.ajc$interMethod$trouble_Trouble$Bang$trouble_Trouble$A$toS
+tring(Trouble.java:40)
+                 at trouble.Trouble$A.toString(Trouble.java)
+                 at java.lang.String.valueOf(String.java:2131)
+                 at java.io.PrintStream.print(PrintStream.java:462)
+                 at java.io.PrintStream.println(PrintStream.java:599)
+                 at trouble.Trouble.main(Trouble.java:34)
+Exception in thread "main"

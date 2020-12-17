@@ -1,0 +1,40 @@
+Build Identifier: 2.0.3.v201010191057
+
+
+The following named JP QL query:
+
+  @NamedQuery(name = "GAFAssertionTerm.TOUWithFunction", query =
+  "SELECT DISTINCT a FROM GAFAssertionTerm a, FormulaTerm ft "
+  + "WHERE (a.formula = ft) AND (ft.arg0 = :arg0) AND (ft.formulaType = :gaf) AND "
+  + "EXISTS (SELECT fe FROM FormulaEntries fe WHERE (ft.arg2 = fe.formulaItemId) AND "
+  + "(fe.arg0Term = :function))"), 
+
+Generates the following extremely inefficient SQL code:
+
+SELECT DISTINCT t0.TERM_ID AS a1, t0.ASSERTED_ARGUMENT AS a2, t0.ASSERTED_TIMESTAMP AS a3, t0.DIRECTION AS a4, t0.STRENGTH AS a5, t0.TRUTH AS a6, t0.ASSERTED_BY AS a7, t0.ASSERTED_REASON AS a8, t0.FORMULA_ID AS a9, t0.MICROTHEORY_ID AS a10 
+FROM KB.GAF_ASSERTION_TERM t0, KB.FORMULA_TERM t1 
+WHERE ((((t0.FORMULA_ID = t1.TERM_ID) AND (t1.ARG0 = 1407374883554030)) AND (t1.FORMULA_TYPE = 1)) AND 
+EXISTS (SELECT 1 
+FROM KB.ITEM t4, KB.FORMULA_TERM t3, KB.FORMULA_ENTRIES t2 
+WHERE ((((t3.ARG2 = t4.ITEM_ID) AND (t2.ARG_0_TERM = 1407374883556273)) AND (t1.TERM_ID = t3.TERM_ID)) AND (t4.ITEM_ID = t2.ITEM_ID))) ) 
+OFFSET 0 ROWS FETCH NEXT 2048 ROWS ONLY
+
+When I believe it should be generating the following, vastly most efficient code:
+
+SELECT DISTINCT t0.TERM_ID AS a1, t0.ASSERTED_ARGUMENT AS a2, t0.ASSERTED_TIMESTAMP AS a3, t0.DIRECTION AS a4, t0.STRENGTH AS a5, t0.TRUTH AS a6, t0.ASSERTED_BY AS a7, t0.ASSERTED_REASON AS a8, t0.FORMULA_ID AS a9, t0.MICROTHEORY_ID AS a10 
+FROM KB.GAF_ASSERTION_TERM t0, KB.FORMULA_TERM t1 
+WHERE ((((t0.FORMULA_ID = t1.TERM_ID) AND (t1.ARG0 = 1407374883554030)) AND (t1.FORMULA_TYPE = 1)) AND 
+EXISTS (SELECT 1 
+FROM KB.FORMULA_ENTRIES t2 
+WHERE ((t1.ARG2 = t2.ITEM_ID) AND (t2.ARG_0_TERM = 1407374883556273))))
+OFFSET 0 ROWS FETCH NEXT 2048 ROWS ONLY
+
+Note that the inefficient version is adding redundant joins to KB.ITEM t4 and KB.FORMULA_ENTRIES t2.
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+1.See details
+2.
+3.

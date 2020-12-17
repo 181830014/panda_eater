@@ -1,0 +1,25 @@
+Created attachment 145696 [details]
+Zip archive containing two java source files.
+
+Build ID: v1.1.2
+
+Steps To Reproduce:
+1. Create application that uses EclipseLink JPA
+2. Build application to use Java Web Start with <offline-allowed> specified in JNPL config file.
+3. Run application via JNLP in online mode to install on PC.
+4. Disconnect PC from network, run application again via JNLP in offline mode.  Receive MalformedURLException when EclipseLink tries to load META-INF/persistence.xml on first call to  Persistence.createEntityManagerFactory(PUnit)
+
+
+
+More information:
+When EclipseLink attempts to load META-INF/persistence.xml (e.g. in org.eclipse.persistence.internal.jpa.deployment.PersistenceUnitProcessor,  method findPersistenceArchives),  the code creates objects that implement the Archive interface via the org.eclipse.persistence.internal.jpa.deployment.ArchiveFactoryImpl class.
+
+Under Java Web Start in offline mode, references to URLs that start "http:" should be resolved via the web start classloader using getResource().
+
+However, the ArchiveFactoryImpl logic defaults to creating a URLArchive object for these resources.  This means that in online mode, the resource is retrieved from the server on every call, and in offline mode the resource cannot be retrieved as there is no network connection.  This latter case eventually results in a MalformedURLException.
+
+My solution is certainly not ideal, but hopefully helps illustrate the problem.  As a temporary measure, I added three lines to ArchiveFactoryImpl createArchive() method to detect when this situation occurs.  I also created my own class, HTTPClasspathForWebStartArchive, that implments Archive and is based on JarInputStreamURLArchive.  The new class simply loads the requested resource via the classloader and makes it available via the Archive interface.  It only deals with META-INF/persistence.xml    This class and the modifed ArchiveFactoryImpl are attached.
+
+Having EclipseLink work "out of the box" under JWS offline mode is very desirable to us and to others, based on what we read in various web forums.  I'd be happy to help test any fix.  Note that the issue occur only with persistence.xml, not with class files, so it could be addressed for that case only.
+
+I hope this helps.

@@ -1,0 +1,71 @@
+Created attachment 124457 [details]
+The patch contains a fix. 
+
+Build ID: R200812221144
+
+Steps To Reproduce:
+1. open any Ada file that contains "use type" declaration
+2. open Outline view
+3. observe error
+
+
+
+
+More information:
+Example:
+
+package Pkg is
+
+    type Enum is (E_A, E_B, E_C);
+
+end Pkg;
+
+with pkg;
+
+package p2 is
+
+    use type Pkg.Enum;
+
+end p2;
+
+
+org.eclipse.hibachi.model.internal.AdaContextContainer.hashCode(AdaContextContainer.java:364):
+
+public int hashCode()
+  {
+    return getCompilationUnit().hashCode() + 1;
+  }
+
+getCompilationUnit() returns null.
+
+Traceback:
+
+java.lang.NullPointerException
+        at
+org.eclipse.hibachi.model.internal.AdaContextContainer.hashCode(AdaContextContainer.java:364)
+        at
+org.eclipse.hibachi.model.internal.AdaContextClause.hashCode(AdaContextClause.java:160)
+        at java.util.HashMap.getEntry(HashMap.java:344)
+        at java.util.HashMap.containsKey(HashMap.java:335)
+        at java.util.HashSet.contains(HashSet.java:184)
+        at
+org.eclipse.hibachi.ui.editor.AdaContentOutlinePage.restoreState(AdaContentOutlinePage.java:529)
+        at
+org.eclipse.hibachi.ui.editor.AdaContentOutlinePage.restoreState(AdaContentOutlinePage.java:543)
+        at
+org.eclipse.hibachi.ui.editor.AdaContentOutlinePage.restoreState(AdaContentOutlinePage.java:543)
+        at
+org.eclipse.hibachi.ui.editor.AdaContentOutlinePage.access$0(AdaContentOutlinePage.java:523)
+        at
+org.eclipse.hibachi.ui.editor.AdaContentOutlinePage$InputSetter.run(AdaContentOutlinePage.java:484)
+        at org.eclipse.swt.widgets.Synchronizer.syncExec(Synchronizer.java:178)
+        at
+org.eclipse.ui.internal.UISynchronizer.syncExec(UISynchronizer.java:150)
+        at org.eclipse.swt.widgets.Display.syncExec(Display.java:4251)
+        at
+org.eclipse.hibachi.ui.editor.AdaContentOutlinePage.refresh(AdaContentOutlinePage.java:390)
+        at
+org.eclipse.hibachi.ui.editor.AdaContentOutlinePage.createControl(AdaContentOutlinePage.java:266)
+        at
+org.eclipse.ui.views.contentoutline.ContentOutline.doCreatePage(ContentOutline.java:137)
+...

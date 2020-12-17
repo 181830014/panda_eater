@@ -1,0 +1,18 @@
+See http://www.eclipse.org/forums/index.php/mv/msg/531834/
+
+I'll try to carefully explain what the problem is:
+
+Lets say that I have a Ecore/meta-model A and B and that model B makes use of elements of model A.
+I have validation rules defined for both A and B.
+These rules are split into several files and are registered to EVL using the evl.emf.validation extension with the combined attribute set to true.
+
+This correctly results in two composed validators, on for each meta-model.
+Obviously, both composed validators include the EObjectValidator.
+
+When my application wants to validate a model that is based on meta-model B, it activates both the validation rules of A and B (to cover the all possible problems of meta-model B).
+Both composite validators that are activated consist of the EObjectValidator and it is called twice!
+
+This is a wast of resources/time and it results in (wrong) errors on circular contained objects.
+The detection scheme for these type of errors cannot handle that it is called twice with the same context (which happens when there are actual circular contained objects).
+
+I have an idea how to fix this problem (in a decent manner), so I'll post a patch when I implemented it (and it seems to work).

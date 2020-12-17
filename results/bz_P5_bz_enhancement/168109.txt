@@ -1,0 +1,39 @@
+3.3 M3 testing
+
+- have a project with the following indentation settings:
+  - tab policy: mixed
+  - tab only for leading indents: yes
+  - indent: 2
+  - tab: 4
+
+- for the following code:
+
+class Bar {
+    void m() {
+        if (aaa && bbb && ccc && ddd && eee) {
+            return;
+        }
+    }
+}
+
+< expected result (note that line wraps before "eee) {":
+
+class Bar {
+--->void m() {
+--->--->if (aaa && bbb && ccc && ddd &&
+--->--->..eee) {
+--->--->--->return;
+--->--->}
+--->}
+}
+
+> actual result:
+
+class Bar {
+..void m() {
+....if (aaa && bbb && ccc && ddd &&
+......eee) {
+......return;
+....}
+..}
+}

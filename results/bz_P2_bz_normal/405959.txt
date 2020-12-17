@@ -1,0 +1,23 @@
+In the method 
+org.eclipse.persistence.internal.sessions.RepeatableWriteUnitOfWork.commitTransaction(RepeatableWriteUnitOfWork.java:647) [eclipselink-2.4.1.jar:2.4.1.v20121003-ad44345] the eclipselink internal Exception is not catched. But this is done in commitToDatabase:RepeatableWriteUnitOfWork.java:635. There is thrown a javax.persistence.OptimisticLockException.
+
+In my opinion this is the correct handling as there is furthermore the following comment in the code:
+   * Wraps the org.eclipse.persistence.exceptions.OptimisticLockException in a  
+   * javax.persistence.OptimisticLockException. This conforms to the EJB3 specs
+   * @param commitTransaction 
+
+
+Part of the stacktrace:
+at org.eclipse.persistence.exceptions.OptimisticLockException.batchStatementExecutionFailure(OptimisticLockException.java:79) [eclipselink-2.4.1.jar:2.4.1.v20121003-ad44345]
+	at org.eclipse.persistence.internal.databaseaccess.ParameterizedSQLBatchWritingMechanism.executeBatchedStatements(ParameterizedSQLBatchWritingMechanism.java:149) [eclipselink-2.4.1.jar:2.4.1.v20121003-ad44345]
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.writesCompleted(DatabaseAccessor.java:1714) [eclipselink-2.4.1.jar:2.4.1.v20121003-ad44345]
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.commitTransaction(DatabaseAccessor.java:410) [eclipselink-2.4.1.jar:2.4.1.v20121003-ad44345]
+	at org.eclipse.persistence.internal.sessions.AbstractSession.basicCommitTransaction(AbstractSession.java:603) [eclipselink-2.4.1.jar:2.4.1.v20121003-ad44345]
+	at org.eclipse.persistence.sessions.server.ClientSession.basicCommitTransaction(ClientSession.java:164) [eclipselink-2.4.1.jar:2.4.1.v20121003-ad44345]
+	at org.eclipse.persistence.internal.sessions.AbstractSession.commitTransaction(AbstractSession.java:798) [eclipselink-2.4.1.jar:2.4.1.v20121003-ad44345]
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitTransaction(UnitOfWorkImpl.java:1578) [eclipselink-2.4.1.jar:2.4.1.v20121003-ad44345]
+	at org.eclipse.persistence.internal.sessions.RepeatableWriteUnitOfWork.commitTransaction(RepeatableWriteUnitOfWork.java:647) [eclipselink-2.4.1.jar:2.4.1.v20121003-ad44345]
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitTransactionAfterWriteChanges(UnitOfWorkImpl.java:1593) [eclipselink-2.4.1.jar:2.4.1.v20121003-ad44345]
+	at org.eclipse.persistence.internal.sessions.RepeatableWriteUnitOfWork.issueSQLbeforeCompletion(RepeatableWriteUnitOfWork.java:353) [eclipselink-2.4.1.jar:2.4.1.v20121003-ad44345]
+	at org.eclipse.persistence.transaction.AbstractSynchronizationListener.beforeCompletion(AbstractSynchronizationListener.java:157) [eclipselink-2.4.1.jar:2.4.1.v20121003-ad44345]
+	at org.eclipse.persistence.transaction.JTASynchronizationListener.beforeCompletion(JTASynchronizationListener.java:68) [eclipselink-2.4.1.jar:2.4.1.v20121003-ad44345]

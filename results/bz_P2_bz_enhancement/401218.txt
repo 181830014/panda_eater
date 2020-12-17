@@ -1,0 +1,30 @@
+In bug 392702 I completed tolerance for JPA 2.1 Converter support. This bug is to complete the functionality with UI and validation support.
+
+
+1. In eclipselink orm.xml for attribute mappings that support the convert element we need to add model support so that we can tell the difference between and JPA 2.1 convert <convert> and an EclipseLink convert.
+
+2. Add java resource model support for the @Convert annotation
+
+JPA 2.1:
+
+<basic>
+    <convert converter="model.FooConverter"/> - this is a class name
+</basic>
+
+
+Eclipselink:
+<basic>
+    <convert>fooConverter</convert> - this is an eclipselink converter name
+</basic>
+
+3. UI/context model for a JPA 2.1 Convert on basic, element-collection,  mapping in both orm and java.
+ a. disableConversion check box. AutoApply default is taken from the Converter that is specified for the particular attribute type(@Converter(autoApply=true)). See section 3.8 of the spec for which mappings this is supported on.
+ b. converter class chooser
+
+4. UI/context model on embedded mapping, element collection mapping, entity and also on entities that is similar to attribute-overrides. You can specify a dot-notated attribute name on the Convert annotation.
+
+4. map-key-convert on element-collection, many-to-many, one-to-many. In java you use dot-notation with a prefix of "key." or "value." for map key converts. See section 11.1.10 for examples.
+
+5. Possible validation
+  a. @Convert attributeName - validate that the name matches an attribute, similar to what we have for attribute-overrides
+  b. @Convert converter - validate that the referenced class is specified as a @Converter in java or orm.xml.

@@ -1,0 +1,15 @@
+Steps To Reproduce:
+1. Create an entity with a multi column unique constraint, e.g.
+@Table(name = "id_counter", uniqueConstraints = @UniqueConstraint(columnNames = { "system_name", "counter_name" }))
+
+2. Generate DDL for MySQL target.
+The DDL for the unique index will look something like this:
+ALTER TABLE id_counter ADD CONSTRAINT UNQ_id_counter_0 UNIQUE (system_name, counter_name)
+ALTER TABLE id_counter DROP FOREIGN KEY UNQ_id_counter_0
+
+3. Watch as MySQL chokes on "DROP FOREIGN KEY" when you try to execute it
+
+More information:
+It seems as if the MySQL codepath handles both foreign keys and unique indexes the same when it comes to dropping them. However, when creating these keys it uses the correct "UNIQUE", "FOREIGN KEY" prefixes.
+
+The correct way to drop unique constraints in MySQL is "ALTER TABLE <table> DROP INDEX <index>"

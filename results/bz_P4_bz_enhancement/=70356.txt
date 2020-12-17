@@ -1,0 +1,18 @@
+I have a TableTreeViewer with a ComboBoxCellEditor in a column.
+The ComboBoxCellEditor contents changes depending on selection in the table 
+tree. With eclipse 3, selection change is taken into account after combo is 
+expanded, so combo is not populated with expected content - worked in eclipse 2.
+
+In eclipse 2 version of TableViewerImpl.handleMouseDown(MouseEvent event), 
+following code ensured that mouse down event were actually not processed before 
+selection ones:
+if (tableItem != items[0]) {
+	//This mouse down was a selection. Keep the selection and return;
+	tableItem = items[0];
+	return;
+}
+This piece of code is not present in eclipse 3: this makes the popup to be 
+expanded sooner (which is fine too as it is more usable: in 2 you had to make 
+two clicks: one for selection change and the other one to actually expand 
+combo) but too soon as selection change has not been taken into account.
+Possible to have both advantages: (selection change + expand) in one click ?

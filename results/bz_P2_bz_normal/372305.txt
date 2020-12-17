@@ -1,0 +1,111 @@
+Link to topic in forum: http://www.eclipse.org/forums/index.php/t/295331/
+
+I have created simple test project to reproduce NPE exception. Here is a code:
+
+public class MyProject extends Project {
+public void init() {
+setName("MyProject");
+applyLogin();
+addDescriptor(buildUserDescriptor());
+addDescriptor(buildAddressDescriptor());
+}
+private ClassDescriptor buildAddressDescriptor() {
+RelationalDescriptor addressDescriptor = new RelationalDescriptor();
+addressDescriptor.setTableName("ADDRESS");
+addressDescriptor.addPrimaryKeyFieldName("ADDRESS.ID");
+addressDescriptor.setSequenceNumberName("ADDRESS_SEQ");
+addressDescriptor.setSequenceNumberFieldName("ID");
+addressDescriptor.setAlias("Address");
+addressDescriptor.setJavaClass(Address.class);
+DirectToFieldMapping streetMapping = new DirectToFieldMapping();
+streetMapping.setAttributeName("street");
+streetMapping.setFieldName("ADDRESS.STREET");
+addressDescriptor.addMapping(streetMapping);
+DirectToFieldMapping idMapping = new DirectToFieldMapping();
+idMapping.setAttributeName("id");
+idMapping.setFieldName("ID");
+addressDescriptor.addMapping(idMapping);
+OneToOneMapping userMapping = new OneToOneMapping();
+userMapping.setReferenceClass(User.class);
+userMapping.setForeignKeyFieldName("USER_ID");
+userMapping.setAttributeName("user");
+userMapping.setUsesIndirection(false);
+addressDescriptor.addMapping(userMapping);
+return addressDescriptor;
+}
+private ClassDescriptor buildUserDescriptor() {
+RelationalDescriptor userDescriptor = new RelationalDescriptor();
+userDescriptor.setTableName("USER");
+userDescriptor.addPrimaryKeyFieldName("USER.ID");
+userDescriptor.setSequenceNumberFieldName("ID");
+userDescriptor.setSequenceNumberName("USER_SEQ");
+userDescriptor.setAlias("User");
+userDescriptor.setJavaClass(User.class);
+DirectToFieldMapping nameMapping = new DirectToFieldMapping();
+nameMapping.setAttributeName("name");
+nameMapping.setFieldName("USER.NAME");
+userDescriptor.addMapping(nameMapping);
+DirectToFieldMapping idMapping = new DirectToFieldMapping();
+idMapping.setAttributeName("id");
+idMapping.setFieldName("ID");
+userDescriptor.addMapping(idMapping);
+OneToManyMapping addressesMapping = new OneToManyMapping();
+addressesMapping.setAttributeName("addresses");
+addressesMapping.setReferenceClass(Address.class);
+addressesMapping.setTargetForeignKeyFieldName("USER_ID");
+addressesMapping.setUsesIndirection(false);
+userDescriptor.addMapping(addressesMapping);
+return userDescriptor;
+}
+public void applyLogin() {
+DatabaseLogin login = new DatabaseLogin();
+login.usePlatform(new MySQLPlatform());
+login.setDriverClassName("com.mysql.jdbc.Driver");
+login.setConnectionString("jdbc:mysql://localhost:3306/MyDB");
+login.setUserName("user");
+login.setPassword("password");
+setDatasourceLogin(login);
+}
+}
+
+public class MyClient {
+private static RMIConnection rmiConnection = null;
+public static void main(String[] args) {
+ApplicationContext ctx = new ClassPathXmlApplicationContext("my/client/rmi-client-context.xml");
+RMISessionManager rmiSessionManager = (RMISessionManager) ctx.getBean("rmiSessionManager");
+try {
+rmiConnection = new RMIConnection(rmiSessionManager.getRMIRemoteSessionController());
+} catch (RemoteException e) {
+e.printStackTrace();
+}
+testRemoteSessionRefresh();
+}
+private static void testRemoteSessionRefresh() {
+Expression expression = new ExpressionBuilder(User.class).get("name").equal("loder");
+Session session = rmiConnection.createRemoteSession();
+Vector<User> users = session.readAllObjects(User.class, expression);
+User loder = users.get(0);
+loder = (User) session.refreshObject(loder);
+}
+}
+
+
+Executing client gives NPE with following stracktrace:
+Exception in thread "main" java.lang.NullPointerException
+at org.eclipse.persistence.internal.queries.ContainerPolicy.createWrappedObjectFromExistingWrappedObject(ContainerPolicy.java:697)
+at org.eclipse.persistence.mappings.CollectionMapping.mergeIntoObject(CollectionMapping.java:1491)
+at org.eclipse.persistence.internal.descriptors.ObjectBuilder.mergeIntoObject(ObjectBuilder.java:3466)
+at org.eclipse.persistence.internal.descriptors.ObjectBuilder.mergeIntoObject(ObjectBuilder.java:3430)
+at org.eclipse.persistence.internal.sessions.MergeManager.mergeChangesForRefreshingRemoteObject(MergeManager.java:466)
+at org.eclipse.persistence.internal.sessions.MergeManager.mergeChanges(MergeManager.java:361)
+at org.eclipse.persistence.sessions.remote.RemoteSession.getObjectCorrespondingTo(RemoteSession.java:230)
+at org.eclipse.persistence.queries.ReadObjectQuery.extractRemoteResult(ReadObjectQuery.java:606)
+at org.eclipse.persistence.queries.DatabaseQuery.remoteExecute(DatabaseQuery.java:1788)
+at org.eclipse.persistence.queries.ReadObjectQuery.remoteExecute(ReadObjectQuery.java:890)
+at org.eclipse.persistence.queries.DatabaseQuery.remoteExecute(DatabaseQuery.java:1797)
+at org.eclipse.persistence.queries.ReadQuery.remoteExecute(ReadQuery.java:360)
+at org.eclipse.persistence.sessions.remote.RemoteSession.executeQuery(RemoteSession.java:129)
+at org.eclipse.persistence.internal.sessions.AbstractSession.refreshAndLockObject(AbstractSession.java:3540)
+at org.eclipse.persistence.internal.sessions.AbstractSession.refreshObject(AbstractSession.java:3551)
+at my.client.MyClient.testRemoteSessionRefresh(MyClient.java:55)
+at my.client.MyClient.main(MyClient.java:46)

@@ -1,0 +1,54 @@
+Once we added the capability to do parameter annotation matching, the first thing people want to do is grab an annotated parameter out from 'anywhere' it appears in a parameter list at an execution/call join point.  
+
+The rest of this bug poses lots of questions and has no real answers...
+
+If one your parameters is @NotNull, you might like to write something like this (we have seen people try this already, so it must be intuitive syntax):
+
+  before(): execution(* *(..,@NotNull (*),..))
+
+But we have never supported multiple uses of '..' and so the current way to achieve what you want is that you have to write multiple pointcuts for each position it might occur and each variation of surrounding parameters:
+
+  before(): execution(* *(@NotNull (*),..))
+  before(): execution(* *(*,@NotNull (*),..))
+  before(): execution(* *(*,*,@NotNull (*),..))
+  before(): execution(* *(*,*,*,@NotNull (*),..))
+etc
+
+not great and rather than doing everything in one match and advice call, you end up with a bunch of calls to the advice for a method with multiple @NotNull parameters.
+
+It would be nice to capture it in one construct.  Suppose we allowed
+
+  execution(* *(..,@NotNull (*),..))
+
+and it meant as expected 'a method with an @NotNull marked parameter anywhere' (or more than one...!).
+
+What would the user do if this did match, would they use args() and expect one parameter to be pulled out, or would they use thisJoinPoint and expect to pull out just the subset of parameters that matched?
+
+Let's look at thisJoinPoint first:
+
+  before(): execution(* *(..,@NotNull (*),..)) {
+    MatchedArg[] relevantArgs = thisJoinPoint.getMatchedArgs();
+  }
+
+getMatchedArgs() could return the @NotNull marked arguments.  The MatchedArg type is just a simple wrapper for argument position, name and actual value.
+
+Then the question would be what does getMatchedArgs() return if used at a regular match, does it just return the same as getArgs()?  Probably (but arguments wrapped in MatchedArg instances).
+
+Q. Is it intuitive that the syntax (..,@NotNull (*),..) is possibly selecting multiple possible arguments and not just one?  
+Q. Is it intuitive that 'matched args' are the ones picked out by the execution pointcut that uses double '..'?  It is probably too disconnected - and becomes even less clear if multiple pointcuts are used together: execution(* *(..,@NotNull (*),..)) && execution(* (int,..)) - what is the matchedargs?
+
+To strengthen the link between was is being matched upon and what is available in the advice, perhaps we need a new pointcut designator:
+
+  before(MatchedArg... args): @param(@NotNull) {
+  }
+
+along with a variant for non annotation related matches (because there may be other cases of wanting to subset the parameters by matching on something other than annotations):
+
+  before(MatchedArg... args): param(int *) {
+  }
+
+But then the confusion is that @param() and param() use the same form as @args/args, @target/target and so they would be getting matched dynatmically rather than statically.  When what we need here is a static match as you would get with execution()/call()... 
+
+param-execution(@NotNull (*))?
+
+I am loathe to introduce new designators unless necessary.  But I can't quite see a clean way to introduce subsetting of parameters from an execution() match.

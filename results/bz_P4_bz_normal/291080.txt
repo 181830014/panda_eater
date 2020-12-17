@@ -1,0 +1,34 @@
+From bug 287218 (see for more info):
+
+ Shaun Smith      2009-08-20 13:35:45 EDT
+
+The annotation processor work for JPA 2.0 has introduced dependencies in the
+o.e.p.jpa project on JDK 1.6 classes.  This presents a problem for deploying to
+an OSGi container running on JDK 1.5 since the o.e.p.jpa bundle now requires
+JDK 1.6 classes.  We can hand code the o.e.p.jpa manifest to not include these
+dependencies but we're moving to BND automatically generating the manifests.
+
+The o.e.p.jpa bundle also contains the ANT tasks for static weaving which are
+also problematic but we have in the past hand coded the manifest around this.  
+
+Both the APT and ANT dependent code are design time tools, not runtime and
+should not be deployed with running apps anyway.  A new project should be
+created for JPA utilities/tools, the APT and ANT code migrated over there, and
+the build updated to include the moved code in eclipselink.jar.
+
+[reply] [-] Comment 1 Doug Clarke 2009-08-23 16:17:24 EDT
+
+While these are design time utilities I do want to see them included in
+eclipselink.jar to facilitate ease of use for the average JavaSE/EE developer.
+
+They should not be part of the org.eclipse.persistence.jpa OSGi bundle and
+associated project.
+
+Bundle for ANT tasks for static weaving: These could go into a project named
+'org.eclipse.persistence.jpa.ant' within the foundation project. 
+
+Bundle for APT based canonical model generation should go into a project named
+'org.eclipse.persistence.jpa.modelgen
+
+These two bundles would be produced separately for OSGi and users wanting more
+fine grain jar files.

@@ -1,0 +1,29 @@
+Build Identifier: 2.3.0
+
+CriteriaBuilder.and() method gives wrong results for certain parameters.
+
+----------------------------------------------------
+Code snippet:
+
+CriteriaBuilder cb = this.em.getCriteriaBuilder();
+CriteriaQuery<MyEntity> query = cb.createQuery(MyEntity.class);
+
+query.where(cb.and(cb.and(), cb.or()));
+
+TypedQuery<MyEntity> typedQuery = this.em.createQuery(query);
+typedQuery.getResultList();
+
+----------------------------------------------------
+Generated SQL:
+
+SELECT ID FROM MYENTITY
+
+----------------------------------------------------
+
+The SQL shows that the where clause has been evaluated as 'true', which is wrong.
+
+However, when order of parameters is changed, it starts to work as expected. I.e. query.where(cb.and(cb.or(), cb.and())) results in a correct SQL query containing "WHERE 1=0".
+
+The same applies when disjunction() is used instead of or(). 
+
+Reproducible: Always

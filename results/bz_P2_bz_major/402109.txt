@@ -1,0 +1,15 @@
+Created attachment 227785 [details]
+Complete maven project for the test.
+
+Environment:
+  Java(TM) SE Runtime Environment (build 1.7.0_13-b20)
+  Apache Maven 3.0.4 (r1232337; 2012-01-17 14:14:56+0530) 
+
+I have an entity 'Person', with field 'name' marked as @Column(..., updatable=false). If I change the value (with setName(...), and then try to merge the object, merge returns me an object with the updated value, but no 'UPDATE' statement is executed. This is correct, merge is ignoring 'name' field, bucause of 'update=false'. The bug is in what it returns. It is returning an object which never persisted, nor will it ever persist.
+
+In this case merge needs to return me object with NO changes to 'name' field.
+
+
+Complete test-project is attached.
+
+Reproducibility : Always

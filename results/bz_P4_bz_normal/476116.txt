@@ -1,0 +1,29 @@
+Created attachment 256213 [details]
+top: OSX Terminal, bottom: TM Terminal.
+
+I've been trying TM Terminal with some unicode characters and I have a range of observations. One of them is that around wider than expected characters the terminal misbehaves.
+
+Monospaced fonts appear to have to make a choice when it comes to glyphs to wide to fit in the space chosen for the ASCII range. The few I've tried seem to take 2x the space. So it still aligns with the other chars around it.
+
+if you type this in a normal terminal:
+
+echo -e "指事hello\n1234hello"
+
+you can see that the two CJK Unified Ideographs take up the same space as the 1234 string.
+
+in TM Terminal the terminal tries to draw them on top of each other. (see attachment)
+also, trying to go trough it with a cursor breaks and using backspace/delete gives quite unpredictable behavior.
+
+It appears the character eats a part of the next character.
+
+In the attachment, the top is the standard osx terminal, the bottom is a local shell in TM Terminal.
+
+Things I've tried:
+- switching to a normal font improves the rendering a bit, but around the CJK chars the cursor position still fails, as well as delete/backspacing
+- other kinds of characters also fail: echo "←→↑↓" for example, or echo "α β γ δ ε ζ η θ ιω" 
+
+Some tools helpful for debugging:
+- "interesting" unicode characters: http://xahlee.info/comp/unicode_index.html
+- get unicode information per character: https://r12a.github.io/uniview/#title
+
+I've been reading the source a bit, and the first 128 chars are used to decide if a font is proportional or not. Perhaps if a char outside this range is observed, check the extend to perhaps give it 2 instead of 1 slot?

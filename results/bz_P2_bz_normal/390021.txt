@@ -1,0 +1,42 @@
+Andrei added this new test recently, the test failed on GlassFish only in trunk. As for latest test result, the error message is:
+
+org.eclipse.persistence.testing.models.jpa.proxyauthentication.Employee@1a61c1f0 found in the db even though JTA transaction had rolled back 
+
+junit.framework.AssertionFailedError: org.eclipse.persistence.testing.models.jpa.proxyauthentication.Employee@1a61c1f0 found in the db even though JTA transaction had rolled back
+at org.eclipse.persistence.testing.tests.jpa.proxyauthentication.ProxyAuthenticationServerTestSuite.testProxyIsInJTATransaction(ProxyAuthenticationServerTestSuite.java:382)
+at org.eclipse.persistence.testing.framework.junit.JUnitTestCase.runBareServer(JUnitTestCase.java:662)
+at org.eclipse.persistence.testing.framework.server.TestRunnerBean.runTest(TestRunnerBean.java:87)
+at org.glassfish.ejb.security.application.EJBSecurityManager.runMethod(EJBSecurityManager.java:1061)
+at org.glassfish.ejb.security.application.EJBSecurityManager.invoke(EJBSecurityManager.java:1133)
+at com.sun.ejb.containers.BaseContainer.invokeBeanMethod(BaseContainer.java:4696)
+at com.sun.ejb.EjbInvocation.invokeBeanMethod(EjbInvocation.java:624)
+at com.sun.ejb.containers.interceptors.AroundInvokeChainImpl.invokeNext(InterceptorManager.java:796)
+at com.sun.ejb.EjbInvocation.proceed(EjbInvocation.java:576)
+at com.sun.ejb.containers.interceptors.SystemInterceptorProxy.doAround(SystemInterceptorProxy.java:162)
+at com.sun.ejb.containers.interceptors.SystemInterceptorProxy.aroundInvoke(SystemInterceptorProxy.java:144)
+at com.sun.ejb.containers.interceptors.AroundInvokeInterceptor.intercept(InterceptorManager.java:857)
+at com.sun.ejb.containers.interceptors.AroundInvokeChainImpl.invokeNext(InterceptorManager.java:796)
+at com.sun.ejb.containers.interceptors.InterceptorManager.intercept(InterceptorManager.java:369)
+at com.sun.ejb.containers.BaseContainer.__intercept(BaseContainer.java:4668)
+at com.sun.ejb.containers.BaseContainer.intercept(BaseContainer.java:4656)
+at com.sun.ejb.containers.EJBObjectInvocationHandler.invoke(EJBObjectInvocationHandler.java:206)
+at com.sun.ejb.containers.EJBObjectInvocationHandlerDelegate.invoke(EJBObjectInvocationHandlerDelegate.java:79)
+at $Proxy511.runTest(Unknown Source)
+at com.sun.corba.ee.impl.presentation.rmi.ReflectiveTie.dispatchToMethod(ReflectiveTie.java:143)
+at com.sun.corba.ee.impl.presentation.rmi.ReflectiveTie._invoke(ReflectiveTie.java:173)
+at com.sun.corba.ee.impl.protocol.ServerRequestDispatcherImpl.dispatchToServant(ServerRequestDispatcherImpl.java:528)
+at com.sun.corba.ee.impl.protocol.ServerRequestDispatcherImpl.dispatch(ServerRequestDispatcherImpl.java:199)
+at com.sun.corba.ee.impl.protocol.MessageMediatorImpl.handleRequestRequest(MessageMediatorImpl.java:1596)
+at com.sun.corba.ee.impl.protocol.MessageMediatorImpl.handleRequest(MessageMediatorImpl.java:1458)
+at com.sun.corba.ee.impl.protocol.MessageMediatorImpl.handleInput(MessageMediatorImpl.java:966)
+at com.sun.corba.ee.impl.protocol.giopmsgheaders.RequestMessage_1_2.callback(RequestMessage_1_2.java:214)
+at com.sun.corba.ee.impl.protocol.MessageMediatorImpl.handleRequest(MessageMediatorImpl.java:718)
+at com.sun.corba.ee.impl.protocol.MessageMediatorImpl.dispatch(MessageMediatorImpl.java:515)
+at com.sun.corba.ee.impl.protocol.MessageMediatorImpl.doWork(MessageMediatorImpl.java:2291)
+at com.sun.corba.ee.impl.threadpool.ThreadPoolImpl$WorkerThread.performWork(ThreadPoolImpl.java:497)
+at com.sun.corba.ee.impl.threadpool.ThreadPoolImpl$WorkerThread.run(ThreadPoolImpl.java:540)
+
+
+See the detailed error message in:
+
+http://ottvm054.ca.oracle.com/eclipselink/main/2012-09-20/server-test-lrg-glassfish-4-oracle-11.2-thin.html#ProxyAuthenticationServerTestSuite

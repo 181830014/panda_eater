@@ -1,0 +1,18 @@
+To ensure API compatibility between scripts and the modules they consume it would be good to have a semantic versioning method for modules. This version could be checked either during module loading or on demand in the script.
+
+If the module's version does not meet the criteria an Exception should be thrown.
+
+All version checks should be optional and should not break existing code.
+
+Example:
+The script needs the Charting module with a version greater or equal than 1.1.0 but less than 2.0.0. Currently version 1.2.3 is installed.
+
+During module loading:
+  loadModule("/Charting", version="[1.1.0,2.0.0)"); -> works
+
+On demand:
+  module = loadModule("/Charting");
+  module.checkVersion("[2.0.0,3.0.0)"); -> Exception thrown
+
+
+Note: The plugin's version might not suffice if it defines more than 1 module. Therefore this would work better in the module itself.

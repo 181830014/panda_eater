@@ -1,0 +1,31 @@
+I am tring to create a breakpoint in StructuredTextEditor vertical rule through menu context by configuring in plugin.xml
+This is the piece of configuration I have written in xml.
+
+To have menu option in StructuredTextEditor ruler.
+
+<extension
+         point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            id="debugtest.editor.rulerActions"
+            targetID="org.eclipse.wst.sse.ui.StructuredTextEditor.RulerContext"> 
+         <action
+               class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+               id="debugtest.editor.ruler.toggleBreakpointAction"
+               menubarPath="debug"
+               label="Mapper Breakpoint"/>
+      </viewerContribution>
+   </extension>
+To make StructuredTextEditor to take my breakpoint adapter.
+
+<extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            class="com.teamcenter.datamaper.mapperengineui.debug.ui.MapperEditorAdapterFactory" 
+            adaptableType="org.eclipse.wst.sse.ui.StructuredTextEditor">
+			<adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget"/>
+      </factory>
+   </extension>
+
+I am getting the popup option but it is not able to get my MapperEditorAdapterFactory and hence not my adapter. 
+
+I have seen that StructuredTextEditor has its own implementation of breakpoint.If I want to use it what is the way to use it.

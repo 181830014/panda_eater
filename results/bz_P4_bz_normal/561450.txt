@@ -1,0 +1,10 @@
+The DAnalysisRefresher precommit listener is parametrized using the filter defined in org.eclipse.sirius.business.internal.session.danalysis.DAnalysisRefresher.DANALYSIS_REFRESHER_EVENTS
+Which only considers ADD events.
+
+This leads to a different behaviour when only one element is concerned VS many.
+
+The scenario that led me to this is the following, but there could be other (maybe more problematic):
+* when opening a diagram which as one hidden element, the aird resource of this element was not yet referenced by the DAnalysis, so the refresher added it making the session dirty
+* when opening any diagram with no or several hidden elements, the session was not dirty: the notification was an "ADD_MANY", not considered by the refresher
+
+In my case, I simply had to fix the DAnalysis creation by adding the session ressource. This way it was not resolved later by the refresher.

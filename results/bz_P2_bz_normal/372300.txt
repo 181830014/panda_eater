@@ -1,0 +1,19 @@
+Build Identifier: 2.3.1.v20110908-r10021
+
+Annotating a field with moxy's @xmlpath which is also annotated with a jpa @transient fails with:
+
+Caused by: javax.persistence.PersistenceException: Exception [EclipseLink-28018] (Eclipse Persistence Services - 2.3.1.v20110908-r10021): org.eclipse.persistence.exceptions.EntityManagerSetupException
+Exception Description: Predeployment of PersistenceUnit [pu_XXXXX] failed.
+Internal Exception: Exception [EclipseLink-7153] (Eclipse Persistence Services - 2.3.1.v20110908-r10021): org.eclipse.persistence.exceptions.ValidationException
+Exception Description: Mapping annotations cannot be applied to fields or properties that have a @Transient specified. [field XXXXXX] is in violation of this restriction.
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.predeploy(EntityManagerSetupImpl.java:1387)
+	at org.eclipse.persistence.internal.jpa.deployment.JPAInitializer.callPredeploy(JPAInitializer.java:98)
+	at org.eclipse.persistence.internal.jpa.deployment.JPAInitializer.initPersistenceUnits(JPAInitializer.java:306)
+	at org.eclipse.persistence.internal.jpa.deployment.JPAInitializer.initialize(JPAInitializer.java:265)
+	at org.eclipse.persistence.jpa.osgi.PersistenceProvider.getInitializer(PersistenceProvider.java:91)
+	at org.eclipse.persistence.jpa.PersistenceProvider.createEntityManagerFactory(PersistenceProvider.java:71)
+
+
+The inverse (that is, a jpa and @xmltransient mapped field), however, DOES work.
+
+Reproducible: Always

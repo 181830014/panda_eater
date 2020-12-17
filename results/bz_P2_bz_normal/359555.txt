@@ -1,0 +1,78 @@
+Build Identifier: 2.1.3.v20110304-r9073
+
+A derived Entity  has a compounded Primary key using either @IDClass or @EmbeddedId. The parent class has an  'JOINED'inheritance strategy . 
+e.g:
+
+Parent entity 
+-----------------
+
+@Entity
+@Table(name="BASETABLE")
+@Inheritance(strategy=JOINED)
+@DiscriminatorColumn(name="DISCRIM", discriminatorType = INTEGER)
+@DiscriminatorValue("2")
+
+public  class BaseTable {
+    @Id 
+    @Column(name="pid")
+    private int pid;
+    @Column(name="DISCRIM") 
+    private int discrim;
+    @Column(name ="BDID")
+    private int bdid;
+    ...........
+    ...........
+
+Child Entity
+-----------------
+@Entity
+@Table(name = "DERIVEDTABLE")
+@DiscriminatorValue("1")
+@IdClass(ChildTableKey.class)
+public class DerivedTable extends BaseTable {
+
+  @Id @Column( name = "BID")
+  private int Id;
+
+  @Id
+  @Column(name = "BNAME")
+  private String name;
+  .............
+  .............
+
+The following exception is thrown on deploy:
+Local Exception Stack: 
+Exception [EclipseLink-0] (Eclipse Persistence Services - 2.1.3.v20110304-r9073): org.eclipse.persistence.exceptions.DescriptorException
+Exception Description: An internal error occurred accessing the primary key object [202].
+Internal Exception: java.lang.NoSuchFieldException: pid
+Descriptor: RelationalDescriptor(myjpa.DerivedTable --> [DatabaseTable(DERIVEDTABLE), DatabaseTable(BASETABLE)])
+	at org.eclipse.persistence.exceptions.DescriptorException.errorUsingPrimaryKey(DescriptorException.java:1897)
+	at org.eclipse.persistence.internal.jpa.CMP3Policy.initializePrimaryKeyFields(CMP3Policy.java:470)
+	at org.eclipse.persistence.internal.jpa.CMP3Policy.initialize(CMP3Policy.java:663)
+	at org.eclipse.persistence.descriptors.ClassDescriptor.initialize(ClassDescriptor.java:2790)
+	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.initializeDescriptors(DatabaseSessionImpl.java:448)
+	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.initializeDescriptors(DatabaseSessionImpl.java:406)
+	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.postConnectDatasource(DatabaseSessionImpl.java:666)
+	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.loginAndDetectDatasource(DatabaseSessionImpl.java:615)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryProvider.login(EntityManagerFactoryProvider.java:228)
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.deploy(EntityManagerSetupImpl.java:389)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl.getServerSession(EntityManagerFactoryImpl.java:164)
+	at org.eclipse.persistence.internal.jpa.CacheImpl.evictAll(CacheImpl.java:178)
+	at myjpa.Main.main(Main.java:13)
+Caused by: java.lang.NoSuchFieldException: pid
+	at java.lang.Class.getDeclaredField(Unknown Source)
+	at org.eclipse.persistence.internal.security.PrivilegedAccessHelper.findDeclaredField(PrivilegedAccessHelper.java:41)
+	at org.eclipse.persistence.internal.security.PrivilegedAccessHelper.findDeclaredField(PrivilegedAccessHelper.java:47)
+	at org.eclipse.persistence.internal.security.PrivilegedAccessHelper.getField(PrivilegedAccessHelper.java:185)
+	at org.eclipse.persistence.internal.jpa.CMP3Policy.getField(CMP3Policy.java:248)
+	at org.eclipse.persistence.internal.jpa.CMP3Policy.initializePrimaryKeyFields(CMP3Policy.java:409)
+	... 11 more
+
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+1.A base entity with inheritence strategy= JOINED
+2. A derived entity with a compounded primary Key using @IDClass or @EmbeddedID
+3.compile and deploy to find the exceptions as stated .

@@ -1,0 +1,19 @@
+Created attachment 215123 [details]
+stack trace
+
+I declared a JPQL-Statement containing a UNION:
+
+@NamedQuery(name = Station.QUERY_GET_ALL_PLATFORMS, query =
+                "SELECT DISTINCT m.startPlatform AS a FROM Move m WHERE m.startStation = :" + Station.QPARAM_STATION +
+                    " UNION " +
+                "SELECT DISTINCT m.endPlatform FROM Move m WHERE m.endStation   = :" + Station.QPARAM_STATION)
+
+
+My database is a "5.6.3-m6 MySQL Community Server" running on OpenSuse 11.4.
+When executing the above query, I receive an exception (see attachment).
+
+I tried to execute the generated SQL-query manually:
+
+(SELECT DISTINCT t0.Start_Platform FROM Move t0 WHERE (t0.Start_Station = 45) UNION (SELECT DISTINCT t1.End_Platform FROM Move t1 WHERE (t1.End_Station = 45)))
+
+which gives me the same Mysql error. After removing the leading and trailing braces, the query works fine. I don't know what's it for other databases, but it seems that Mysql does not like the surrounding braces at all.

@@ -1,0 +1,3 @@
+The current infrastructure doesn't seem to report upload progress when adding an attachment to a task. Looking at AbstractTaskAttachmentSource the code seems designed for progress reporting but neither TaskAttachmentPartSource nor any of the concrete TaskAttachmentSource classes seem to make any use of it.
+
+I got some quite good results with the attached code. The only issue it has is that the monitor handed to me trough AbstractTaskAttachmentHandler seems to use only about a third of the ticks of the parent monitor. So the visual effect is that the progress bar steadily moving form 0% to 33% and the suddenly jumping to 100%. Four fifths or even nine tenths of the ticks would probably yield much better results.

@@ -1,0 +1,20 @@
+EclipseLink code uses Double Checked Locking (DCL) pattern at various place. This pattern is known to be broken if not used correctly. See [1] and [2] for more details. 
+
+The effect of broken DCL pattern shows up while running on highly concurrent systems like Sun's multicore Niagara boxes. For example, following code block from DatasourcePlatform breaks consistently 
+  public Map getPlatformOperators() {
+        if (platformOperators == null) {
+            synchronized (this) {
+                if (platformOperators == null) {
+                    initializePlatformOperators();
+                }
+            }
+        }
+        return platformOperators;
+    }
+
+While it would be great to get rid of DCL pattern as far as possible, in short term, we should fix the code to use this pattern correctly. The fix is to make sure that the variable used to check condition is declared volatile. See [3]
+
+
+[1] http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html
+[2] http://www.javaworld.com/jw-02-2001/jw-0209-double.html
+[3] http://www.cs.umd.edu/~pugh/java/memoryModel/jsr-133-faq.html#dcl

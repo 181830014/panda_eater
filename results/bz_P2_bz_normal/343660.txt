@@ -1,0 +1,38 @@
+Build Identifier: 
+
+When a connection to Informix database is broken Eclipselnik fails to recover:
+
+<pre>
+Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.1.0.v20100614-r7608): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLException: Connection not established
+Error Code: -79730
+Call: SELECT * FROM xx WHERE id=1
+Query: ReadObjectQuery(referenceClass=SlovnikImpl sql="SELECT * FROM xx WHERE id=1")
+	at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:333)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:683)
+    ...
+</pre>
+
+Eclipselink supports reconnection in such situation for databases such as Oracle, SqlServer or MySql but not for Informix. 
+
+Eclipselink supports the feature by means of a ping SQL query. 
+It is possible to add such support for Informix also by adding foloving lines into InformixPlatform.java (package org.eclipse.persistence.platform.database):
+<code>
+    public InformixPlatform() {
+    	super();
+    	super.pingSQL = "select 1 from sysusers";
+    }
+</code>
+
+
+Tested versions : 
+- Eclipselink: 2.1.0.v20100614-r7608 respective 2.2.0.v20110202-r8913;
+- IBM Informix JDBC Driver for IBM Informix Dynamic Server:  3.00.JC3 respective 3.50.JC6W1.
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Create session and connect it to database.
+2. Close the connection by DB server means (or by session.getAccessor().getConnection().close()).
+3. Execute a query against database

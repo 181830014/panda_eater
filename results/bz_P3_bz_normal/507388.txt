@@ -1,0 +1,12 @@
+Created attachment 265314 [details]
+stacktrace showing the problem
+
+(Mistakingly) executing this script (without any sleeps...) hangs eclipse completely when pressing the STOP button in the Jython console:
+
+(longrunning.py):
+while True:
+    print 'still here'
+
+Once the stop button is pressed, eclipse hangs. It seems that stopping the script wait's for a lock on it related with output. But output seems to be blocked as the stop action tries to stop the script in the UI thread (and the console does not finish with it's outputing due to synchronous drawing (just a guess...)?
+
+Seems like a deadlock. Only killing Eclipse helps

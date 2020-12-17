@@ -1,0 +1,26 @@
+I can't bind NULL as a parameter when compared to an Integer field.
+
+Exception [EclipseLink-4002] (Eclipse Persistence Services - 1.0.1 (Build 20080905)): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: org.postgresql.util.PSQLException: ERROR: operator does not exist: integer = character varying
+Error Code: 0
+Call: SELECT date, monthly_period, weekly_period, collation, dow, price, adjusted_price, volume, market_cap, lt_collation, security_serial_id, matlab_date FROM raw_price WHERE (security_serial_id = ?) ORDER BY security_serial_id DESC, matlab_date DESC
+        bind => [null]
+
+The failure is right after my code
+
+   rawPriceQuery.setParameter("secID", (Integer) null);
+
+and the named Query involved is
+
+        @NamedQuery(
+            name = "RawPrice.selectForPrice",
+            query =
+                "SELECT r FROM RawPrice r WHERE r.rawPricePK.securitySerialId= :secID" +
+                " ORDER BY r.rawPricePK.securitySerialId DESC, r.rawPricePK.matlabDate DESC"
+        )
+
+security_serial_id is an integer field.
+  
+TopLink does not complain and behaves as expected.
+If I replace the (Integer)null with an integer constant, EclipseLink
+does not complain and behaves as expected.

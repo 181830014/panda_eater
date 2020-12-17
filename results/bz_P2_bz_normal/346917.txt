@@ -1,0 +1,11 @@
+The following example query gets wrongly translated by the query engine.
+
+SELECT p FROM Program p, Channel c WHERE p.channel = c GROUP BY c ORDER BY MAX(p.start) ASC
+
+The translated query is missing the GROUP BY clause.
+
+The same query in regular sql syntax produces correct results.
+
+SELECT p.id FROM PROGRAM p, CHANNEL c WHERE p.channel_id = c.id GROUP BY c.id ORDER BY MAX(p.start) ASC
+
+If I add MAX(p.start) to the SELECT clause it works as expected. p.start is of type java.util.Date.

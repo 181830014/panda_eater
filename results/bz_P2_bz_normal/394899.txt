@@ -1,0 +1,48 @@
+Created attachment 223861 [details]
+Full stack trace of the exception
+
+Having an @ElementCollection mapping for a collection of complex type
+inside an @Embeddable object throws an exception when persisting.
+
+Here is my exact use case:
+
+   @Entity
+   public class A {
+   
+      @Id @GeneratedValue
+      public int id;
+   
+      @Embedded
+      public E1 embedded;
+   }
+   
+   @Embeddable
+   public class E1 {
+   
+      @ElementCollection
+      public Collection<E2> embeddedCollection;
+   }
+   
+   @Embeddable
+   public class E2{
+   
+      @Basic
+      public String embeddedField = "embeddedValue";
+   }
+
+When trying to persist an entity A whose E1 contains one or more E2,
+a DescriptorException is thrown: "Missing mapping for field [A.ID]".
+
+   A a = new A();
+   a.embedded = new E1();
+   a.embedded.embeddedCollection = new ArrayList<E2>();
+   a.embedded.embeddedCollection.add(new E2());
+   em.persist(a);
+
+Full stack trace attached.
+
+Doesn't happen if:
+ - the element collection is inside entity A
+ - E2 is replaced by a built-in type (String, Integer...)
+ - the element collection is replaced by an unidirectional one-to-many
+   to some other entity

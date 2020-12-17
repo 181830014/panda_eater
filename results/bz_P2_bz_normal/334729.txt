@@ -1,0 +1,47 @@
+Build Identifier: 2.1.2.v20101206-r8635
+
+I have an Entity with a List of Embeddables which have an @OrderColumn set. When I read the entity, the embeddables all have their order columns set to 0.
+
+This also causes problems when mutating the list of embeddables. As the order column is not set correctly, when deleting old values prior to inserting the new values, the old values cannot be correctly deleted as the where clause references the order column (which is incorrect) and so the delete fails.
+
+When I set eclipselink.cache.shared.default=false, the order columns are correctly populated
+
+I have attached a test case. From the log output:
+
+Inserting the entity, the sequence is correct.
+
+[EL Fine]: 2011-01-19 11:58:17.502--ClientSession(1903736395)--Connection(467120674)--Thread(Thread[main,5,main])--INSERT INTO Ent_EMBEDDABLES (Ent_ID, SEQUENCE, VALUE) VALUES (?, ?, ?)
+	bind => [1, 0, A]
+[EL Fine]: 2011-01-19 11:58:17.51--ClientSession(1903736395)--Connection(467120674)--Thread(Thread[main,5,main])--INSERT INTO Ent_EMBEDDABLES (Ent_ID, SEQUENCE, VALUE) VALUES (?, ?, ?)
+	bind => [1, 1, B]
+[EL Fine]: 2011-01-19 11:58:17.511--ClientSession(1903736395)--Connection(467120674)--Thread(Thread[main,5,main])--INSERT INTO Ent_EMBEDDABLES (Ent_ID, SEQUENCE, VALUE) VALUES (?, ?, ?)
+	bind => [1, 2, C]
+
+toString() of the Entity, which was obtained using EntityManager.find(). Note that the sequence in the embeddables = 0.
+
+example.Ent{name=1,id=1, embeddables={[example.Embed{sequence=0, value='A'}, example.Embed{sequence=0, value='B'}, example.Embed{sequence=0, value='C'}]}}
+
+Replaced the list of embeddables "A", "B", "C" with "X", "Y", "Z". Note that because the sequences are all zeros, only one of the delete statements will work.
+
+[EL Fine]: 2011-01-19 11:58:17.534--ClientSession(1257121291)--Connection(467120674)--Thread(Thread[main,5,main])--DELETE FROM Ent_EMBEDDABLES WHERE (((SEQUENCE = ?) AND (VALUE = ?)) AND (Ent_ID = ?))
+	bind => [0, A, 1]
+[EL Fine]: 2011-01-19 11:58:17.578--ClientSession(1257121291)--Connection(467120674)--Thread(Thread[main,5,main])--DELETE FROM Ent_EMBEDDABLES WHERE (((SEQUENCE = ?) AND (VALUE = ?)) AND (Ent_ID = ?))
+	bind => [0, B, 1]
+[EL Fine]: 2011-01-19 11:58:17.581--ClientSession(1257121291)--Connection(467120674)--Thread(Thread[main,5,main])--DELETE FROM Ent_EMBEDDABLES WHERE (((SEQUENCE = ?) AND (VALUE = ?)) AND (Ent_ID = ?))
+	bind => [0, C, 1]
+
+Insert of the new embeddables. The sequence is correct.
+
+[EL Fine]: 2011-01-19 11:58:17.583--ClientSession(1257121291)--Connection(467120674)--Thread(Thread[main,5,main])--INSERT INTO Ent_EMBEDDABLES (Ent_ID, SEQUENCE, VALUE) VALUES (?, ?, ?)
+	bind => [1, 1, Y]
+[EL Fine]: 2011-01-19 11:58:17.584--ClientSession(1257121291)--Connection(467120674)--Thread(Thread[main,5,main])--INSERT INTO Ent_EMBEDDABLES (Ent_ID, SEQUENCE, VALUE) VALUES (?, ?, ?)
+	bind => [1, 0, X]
+[EL Fine]: 2011-01-19 11:58:17.584--ClientSession(1257121291)--Connection(467120674)--Thread(Thread[main,5,main])--INSERT INTO Ent_EMBEDDABLES (Ent_ID, SEQUENCE, VALUE) VALUES (?, ?, ?)
+	bind => [1, 2, Z]
+
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+Run the attached test case

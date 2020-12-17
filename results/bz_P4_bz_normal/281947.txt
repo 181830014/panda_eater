@@ -1,0 +1,21 @@
+If you have an @Entity tagged class with a String field named 'user' the following SQL is issued by eclipselink
+
+In my case it was actually 
+
+CREATE TABLE HST_TEST_RUN (TEST_RUN_ID BIGINT NOT NULL, RUNUNIQUEID VARCHAR(255), SUITEUNIQUEID VARCHAR(255), MODELID VARCHAR(255), STGDOCID VARCHAR(255), COORDSERVERNAME VARCHAR(255), HOST VARCHAR(255), 
+
+USER VARCHAR(255), 
+
+STARTTIME TIMESTAMP, ENDTIME TIMESTAMP, CONFIG VARCHAR(255), RUNNAME VARCHAR(255), RUNDOC VARCHAR(255), LOADPATTERN VARCHAR(255), STEADYSTATEVUSERSPLANNED INTEGER, DURATIONPLANNED INTEGER, THINKING INTEGER, PACETRANSACTIONS INTEGER, PACETIMEINSECS INTEGER, DISTPATTERN VARCHAR(255), PRIMARY KEY (TEST_RUN_ID)) 
+
+which silently fails... the table is not created. I can see the CREATE TABLE in the log but no exception is raised.
+
+If I run this statement via DbVisualizer or an equivalent tool I see the following response from Derby 
+
+... Physical database connection acquired for: LisaReports (derby)
+ 14:53:31  [CREATE - 0 row(s), 0.000 secs]  [Error Code: -1, SQL State: 42X01]  Syntax error: Encountered "USER" at line 1, column 205.
+... 1 statement(s) executed, 0 row(s) affected, exec/fetch time: 0.000/0.000 sec  [0 successful, 0 warnings, 1 errors]
+
+If I change the field name to 'username' or use an @Column(name="username") override, everything is fine.
+
+I know you probably can't reliably check each database for reserved words but at least the table creation can be checked for errors?

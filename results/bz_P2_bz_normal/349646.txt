@@ -1,0 +1,11 @@
+Build Identifier: 
+
+When building CriteriaQueries using ParameterExpressions without a name (e.g. cb.getParameter(String.class)) on cannot access the parameters to be bound from the CriteriaQuery later on in a reliable order. I'd like to do the following:
+Iterator<Object> values = …;
+for (ParameterExpression expression : criteriaQuery.getParameters()) {
+  query.setParameter(expression, values.next());
+}
+
+This works for all other JPA providers as they hold the parameters in a LinkedHashSet. I know this is rather a black spot in the spec as it shouldn't have defined getParameters() to return a String. I'll report this to the expert group and will see what can be done…
+
+Reproducible: Always

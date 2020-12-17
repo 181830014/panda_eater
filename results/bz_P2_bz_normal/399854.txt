@@ -1,0 +1,41 @@
+Created attachment 226501 [details]
+Corrected version of Equinox weaver classes
+
+We use EL in an OSGI Equinox environment with dynamic weaving enabled (i.e. using the EquinoxInitializer). We have recently upgraded from EL 2.1.2 to EL 2.4.1. We are not using Gemini because of the restrictions it has (we need to be able to define entities in different dependent OSGI bundles, which Gemini does not support).
+
+As a consequence of the upgrade, the EquinoxWeaver started throwing NPE exceptions during weaving of some specific entities. Investingating the cause, I have found the cause of these NPE was in ComputeClassWriter, when calling getCommonSuperClass():
+
+    private ClassReader typeInfo(final String type) throws IOException {
+        InputStream is = l.getResourceAsStream(type + ".class");
+        try {
+            return new ClassReader(is);
+        } finally {
+            is.close();
+        }
+    }
+
+The reason is that l (the classLoader) is null, since the classLoader passed to the ComputeClassWriter when constructed in PersistenceWeaver.transform() is null.
+And that loader is null, because no classLoader is passed in the call to transformer.transform() by the EquinoxWeaver in its transform():
+
+   public byte[] transform(String className, byte[] classfileBuffer) {
+	try {
+		byte[] transformedBytes = transformer.transform(null, className, null, null, classfileBuffer);
+	...
+   }
+
+I have then tried the 'old' ClassWriter alternative (using the WEAVING_REFLECTIVE_INTROSPECTION flag), but that resulted in ClassNotFound exceptions for exactly the same entities for the same reasons in getCommonSuperClass(): 
+
+        try {
+            c = Class.forName(type1.replace('/', '.'));
+            d = Class.forName(type2.replace('/', '.'));
+        } catch (Exception e) {
+            throw new RuntimeException(e.toString());
+        }
+
+Class.forName() was not able to load the same classes that failed in the ComputeClassWriter. So that indicated that the base problem is a classLoader visibility problem.
+
+I have been able to solve the problem creating my own versions of EquinoxWeaver and EquinoxInitializer, where I do pass the classloader of the PersistenceUnitInfo to the EquinoxWeaver instance, which passes that loader in its call to transformer.transform(). But that requires creating a custom fragment to replace the org.eclipse.persistence.jpa.equinox fragment, and passsing the custom EquinoxInitializer to the PersistenceProvider.
+
+So, although the problem is solved for our purposes, I would like to suggest that this correction is taken into the default EquinoxWeaver & EquinoxInitializer implementations (passing null as a classloader will automatically resolve in a NPE for every call to ComputeClassWriter.typeInfo()).
+
+The corrected versions of those classes as attachments are added as attachments.

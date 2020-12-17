@@ -1,0 +1,5 @@
+There are multiple mechanisms used across Mylyn code to link various task data (taks, query, repository), e.g. TaskSelection, ILinkedTaskInfo and AbstractTaskRepositoryLinkProvider. It would be a good idea to unify all those mechanisms and came up with a standard strategy for the project. This would greatly simplify UI code for selecting project or project component based on selection and will also improve extensibility of linking project with the task repositories (i.e. provide information about project, component and other attributes).
+
+One idea is to stick to some value object (i.e. TaskSelection or RepositoryTaskData) and use IAdaptable and adapter factories to adapt other objects to selected type.
+
+By the way, TaskSelection look like a wrapper around RepositoryTaskData (and no other state), so this class is redundant in that sense and it can be replaced by the factory methods that would directly create corresponding RepositoryTaskData instances, leading to less API and less confusion.

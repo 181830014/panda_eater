@@ -1,0 +1,27 @@
+Hi,
+I have a JPA Embeddable Type as shown below.
+
+@Embeddable
+public class Address{
+ @Temporal(TemporalType.Date)
+ private Date timeSince;
+}
+
+When I parse the Embeddable type using the MetaModel API to get the java type for the field timeSince I get the type as "java.sql.Date" instead of "java.util.Date".
+
+Attribute<?,?> a; //a pointing to timeSince attribute.
+a.getJavaType( );
+
+However if I use the same API to parse an Entity Type with Date fields I get the java type as "java.util.Date".
+
+Example
+@Entity
+public class Person{
+ @Temporal(TemporalType.Date)
+ private Date birthdate;
+}
+
+Should not the MetaModel API return java.util.Date even for attributes of type Date that are part of Embeddable Type.
+
+Regards
+Chandan

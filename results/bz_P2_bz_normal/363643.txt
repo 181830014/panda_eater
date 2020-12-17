@@ -1,0 +1,12 @@
+If a seperate sequence connection pool is configured through the 'eclipselink.connection-pool.sequence.*' attribute(s) in the persistence.xml, it will not be used.
+
+It seem's that the SequenceManager use the wrong allocation strategy (Preallocation_Transaction_NoAccessor_State) also if a sequence connection pool is configured in persistence.xml.
+
+I think the origin lies in the implementation of the EntityManagerSetupImpl.updateConnectionSettings method which not set the SequencingControl.setShouldUseSeparateConnection flag to true. That causing that the connectionHandler will be set to null in the SequencingManager.onConnectInternal method. If connectionHandler is set to null the wrong strategy (Preallocation_Transaction_NoAccessor_State) will be used instead of Preallocation_Transaction_Accessor_State.
+
+
+I added a patch that sets the setShouldUseSeparateConnection flag in the EntityManagerSetupImpl.updateConnectionSettings. Iam not sure if this causing any unwanted side effects. But maybe it can be used as a starting point for a developer with more insights.
+
+Greeting Luca
+
+P.S. It seems that the old-style (deprecated as of EclipseLink 2.2) configuration 'eclipselink.jdbc.sequence-connection-pool.*' is not affected and can be used as workaround.

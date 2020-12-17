@@ -1,0 +1,41 @@
+bug 148190 was raised to cover this but turned into revisiting the interface tools use to invoke the compiler. Therefore, am raising a new enhancement to cover this request. The comment bug 148190 was raised with was:
+
+"Whilst putting the last version of AspectJ in AJDT too many changes were
+required within AJDT to cope with updates in AspectJ. This is due to problems
+on both sides. 
+
+On AJ's side the interfaces we expect AJDT to use aren't clear enough. The
+javadoc for many of the methods either isn't there or gives the wrong
+information. One has to look at the implementation to work out what should be
+returned (see IHierachy for example). Also, looking at IHierachy there are a
+lot of methods "findElementForXXX". Depending on which one you use depends on
+whether or not a file node is created if the element can't be found. This is
+generally not documented although it would be better if there was consistent
+behaviour. IRelationshipMap also needs to be looked at for example the get
+methods. For debugging the model, AJDT has a method dumpAJDEstructureModel()
+which uses the get(IProgramElement) method rather than get(String) version.
+These two methods return different things if the relationship end is in an
+injar. Consequently AJDT doesn't get hold of the end of the relationship which
+is contained in the jar file. AspectJ should also be able to change the
+implementation and not affect AJDT. This is particularly related to
+IProgramElement handles and filling in the structure model for injar aspects.
+Idealy AJDT should be able to cope with these programelements as they are
+filled in within the aspectj structure model. At the moment this is not the
+case.
+
+On AJDT's side AJDT is too reliant on specific answers from AspectJ. For
+example AJDT's AJRelationshipManager class which keeps a record of all
+relationships. Should AJDT need to have its own list of relationships? Wouldn't
+it be better for AJDT to be able to ask AspectJ for the relationships it's
+providing and then deal with those? To compound matters at the moment AJDT uses
+an array of the relationships and in the persisting of the model relies on
+particular relationships to be in a specific place within the array. As it
+turns out in the case of removing uses pointcut/pointcut used by relationship
+this was ok since they were at the end of the array, however, this is not
+ideal. Models that were created with the uses pointcut/pointcut used by
+relationship should be able to be read (since all we've done is remove a
+relationship) but it needs to be able to cope with the (all be it unlikely)
+event that a new relationship was added. Again, earlier models should be able
+to be read since they just don't include this new relationship but the hard
+requirement of the index within the array makes this hard (especially if the
+uses pointcut/pointcut used by relationship isn't returned - bug 148027)."

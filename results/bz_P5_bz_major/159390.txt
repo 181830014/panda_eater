@@ -1,0 +1,21 @@
+Hi.
+
+There is a subtle problem with how AspectJ handles around advice: Closures are always generated based on the declared type. That means that when I have a base program ...
+	
+	ArrayList a = new ArrayList();
+	List b = a;
+	a.size();
+	b.size();
+	
+... and an around advice as follows ...
+
+Object around(List l): call(* List.*(..)) && target(l) {
+
+  List other = new SomeList(l); //SomeList is *not* a subtype of ArrayList
+  return proceed(other);
+
+}
+
+... in the around advice that is generated for the match b.size(), everything works fine (the call target is substituted by the other list implementation). However for the call a.size(), I get a ClassCastException, because the type for the around body/closure etc. is ArrayList and not List.
+
+It would be great if the code generation could be changed to use the type that was used in the header of the around advice instead (here List).

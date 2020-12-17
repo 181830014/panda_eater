@@ -1,0 +1,24 @@
+Labels are still a problem when reparenting.  When moving from one container to
+another the add statement is moved, but the initialization statements are not. 
+This can cause an issue if the new parent is initialized before old one, causing
+an NPE when the label is added.  For instance, the method getPanel1() may be
+called before getPanel(), causing a problem.
+
+	private Panel getPanel() {
+		if (panel == null) {
+			panel = new Panel();
+			label = new Label();
+			panel.setSize(152, 89);
+			label.setText("Label");
+		}
+		return panel;
+	}
+
+	private Panel getPanel1() {
+		if (panel1 == null) {
+			panel1 = new Panel();
+			panel1.setSize(154, 71);
+			panel1.add(label, null);
+		}
+		return panel1;
+	}

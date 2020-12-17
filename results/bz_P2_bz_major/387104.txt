@@ -1,0 +1,63 @@
+Executing a custom defined ReadObjectQuery based on selecting by a (unique) business key does not work on an abstract entity having table per class inheritance strategy. With other inheritance strategies everything is fine.
+
+Example: Abstract Entity A with several specializations having a TABLE_PER_CLASS inheritance strategy.
+
+@NamedQueries({
+        @NamedQuery(name = "A_ReadByBusinesskey", query = "Select x from A x where x.businesskey = :businesskey")
+…
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Entity
+public abstract class A {
+  @Id
+  private Long id;
+
+  private String businesskey;
+…
+ 
+
+Creating and executing a query with ReadObject Hint:
+
+Query query = getEntityManager().createNamedQuery("A_ReadByBusinesskey");
+…
+query.setHint(QueryHints.CACHE_USAGE, CacheUsage.CheckCacheThenDatabase);
+query.setHint(QueryHints.QUERY_TYPE, QueryType.ReadObject);
+…
+A a = (A)query.getSingleResult(); // <== Exception
+
+
+Executing the named query give some exception that ID is not a valid parameter (or someting similiar).
+
+
+Having a look at the Eclipselink sources (org.eclipse.persistence.descriptors.TablePerClassPolicy) I see the problem in
+method selectOneObject:
+
+
+    protected Object selectOneObject(ReadObjectQuery query) throws DescriptorException {
+        if (this.descriptor.isAbstract()) {
+            return null;
+        }
+        // If we came from a source mapping the execute the selection query
+        // we prepared from it.
+        if (selectionQueriesForAllObjects.containsKey(query.getSourceMapping())) {
+            return query.getExecutionSession().executeQuery(selectionQueriesForAllObjects.get(query.getSourceMapping()), query.getTranslationRow());  
+        } else {
+            // Assuming we're doing a find by primary key ...
+            // We have to update the translation row to be to the correct field.
+            AbstractRecord translationRow = query.getTranslationRow().clone();
+            Vector allFields = new Vector();
+            
+            for (DatabaseField field : (Vector<DatabaseField>) translationRow.getFields()) {
+                // Remove the table and let the descriptor figure it out.
+                allFields.add(new DatabaseField(field.getName()));
+            }
+            
+            translationRow.getFields().clear();
+            translationRow.getFields().addAll(allFields);
+            return query.getSession().executeQuery(getDescriptor().getQueryManager().getReadObjectQuery(), translationRow);
+        }
+    }
+
+
+
+As noticed in the comments the implementation assumes a "find by primary key" which is not the case.
+Since I cannot find such a restriction for read-object queries in general I would state a bug here.

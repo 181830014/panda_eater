@@ -1,0 +1,40 @@
+Build Identifier: Version 2.3.2 Build id: v20111125-r10461
+
+I'm seeing intermittent, yet frequent, JPQL TypedQuery.getResultList() methods fail when multiple threads also issuing queries are executing concurrently. The TypedQuery is generated using EntityManager.createQuery method. Recreating/executing the query with the same String parameter generally is successful. The query reported in the Exception is generally malformed.
+
+For example, a String similar to the following was passed to createQuery:
+
+select DISTINCT NEW com.dbaccess.dao.PredecessorDef(c.condJobName, CASE WHEN c.type = 'g' THEN 'gvar' ELSE 'job' END , c.condJobServ) FROM JobCond c, JobStatus s WHERE c.id.joid=s.id.joid and c.id.jobVer=s.id.jobVer and c.id.overNum=s.id.overNum and c.type != 'B' and c.job.isActive=1 AND c.job.jobName = 'DEP_WSTest1339439255667_100' ORDER BY c.condJobName
+
+The corresponding exception thrown would look like:
+
+DatabaseException encountered. 
+Internal Exception: java.sql.SQLException: ORA-00907: missing right parenthesis
+
+Error Code: 907
+Call: SELECT DISTINCT t0.cond_job_name, CASE (t0.type = ?)??, t0.cond_job_serv FROM dbadmin.job_cond t0, dbadmin.job t2, dbadmin.job_status t1 WHERE (((((((t0.joid = t1.joid) AND (t0.job_ver = t1.job_ver)) AND (t0.over_num = t1.over_num)) AND (t0.type <> ?)) AND (t2.is_active = ?)) AND (t2.job_name = ?)) AND ((t2.over_num = t0.over_num) AND ((t2.job_ver = t0.job_ver) AND (t2.joid = t0.joid)))) ORDER BY t0.cond_job_name ASC
+	bind => [g, gvar, job, B, 1, DEP_WSTest1339439255667_100]
+Query: ReportQuery(referenceClass=JobCond sql="SELECT DISTINCT t0.cond_job_name, CASE (t0.type = ?)??, t0.cond_job_serv FROM dbadmin.job_cond t0, dbadmin.job t2, dbadmin.job_status t1 WHERE (((((((t0.joid = t1.joid) AND (t0.job_ver = t1.job_ver)) AND (t0.over_num = t1.over_num)) AND (t0.type <> ?)) AND (t2.is_active = ?)) AND (t2.job_name = ?)) AND ((t2.over_num = t0.over_num) AND ((t2.job_ver = t0.job_ver) AND (t2.joid = t0.joid)))) ORDER BY t0.cond_job_name ASC") DB Error Code (907) Error Code (4002)
+
+Notice that the "CASE" statement in malformed.
+
+Another exception from the same query with slightly different parameters yields a different reported query format and a different SQLException. This time the query appears to be formatted correctly yet generates a different Oracle error message.
+
+DatabaseException encountered. 
+Internal Exception: java.sql.SQLException: ORA-00920: invalid relational operator
+
+Error Code: 920
+Call: SELECT DISTINCT t0.cond_job_name, CASE  WHEN (t0.type = ?) THEN ? WHEN ? THEN , t0.cond_job_serv FROM dbadmin.job_cond t0, dbadmin.job t2, dbadmin.job_status t1 WHERE (((((((t0.joid = t1.joid) AND (t0.job_ver = t1.job_ver)) AND (t0.over_num = t1.over_num)) AND (t0.type <> ?)) AND (t2.is_active = ?)) AND (t2.job_name = ?)) AND ((t2.over_num = t0.over_num) AND ((t2.job_ver = t0.job_ver) AND (t2.joid = t0.joid)))) ORDER BY t0.cond_job_name ASC
+	bind => [g, gvar, job, B, 1, DEP_WSTest1339439255667_100]
+Query: ReportQuery(referenceClass=JobCond sql="SELECT DISTINCT t0.cond_job_name, CASE  WHEN (t0.type = ?) THEN ? WHEN ? THEN , t0.cond_job_serv FROM dbadmin.job_cond t0, dbadmin.job t2, dbadmin.job_status t1 WHERE (((((((t0.joid = t1.joid) AND (t0.job_ver = t1.job_ver)) AND (t0.over_num = t1.over_num)) AND (t0.type <> ?)) AND (t2.is_active = ?)) AND (t2.job_name = ?)) AND ((t2.over_num = t0.over_num) AND ((t2.job_ver = t0.job_ver) AND (t2.joid = t0.joid)))) ORDER BY t0.cond_job_name ASC") DB Error Code (920) Error Code (4002)
+
+The thing that both these have in common is, that without altering the input to the createQuery method, redriving the createQuery method generally resolves the problem on the first retry attempt. It's as though there is there is some code within or called by createQuery that is not thread-safe.
+
+Unless this is a known problem, I'm really looking for suggestions as to best isolate the problem.
+
+Reproducible: Sometimes
+
+Steps to Reproduce:
+1. No specific test case identified.
+2. 
+3.

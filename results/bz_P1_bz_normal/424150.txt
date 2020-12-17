@@ -1,0 +1,26 @@
+The bundle org.eclipse.modisco.java.discoverer.ui manifest [1] has the following bad Require-Bundle header
+
+ org.eclipse.modisco.kdm.source.extension;bundle-version="0.9.0";reprovide=true
+
+The issue is the attribute reprovide=true.  In luna we no longer support this interim way to reexport a required bundle.  The OSGi specification requires each arbitrary attribute on a require bundle statement to be included in the matching filter for the requirement.  If you try to install and resolve this bundle on Luna you will get the following exception which shows the bad filter (reprovide=true) being included.  You should instead use the directive visibility:="reexport".
+
+org.osgi.service.resolver.ResolutionException: Unable to resolve osgi.identity; osgi.identity="org.eclipse.modisco.java.discoverer.ui"; type="osgi.bundle"; version:Version="0.12.0.201311091050"; singleton:="true": missing requirement osgi.wiring.bundle; filter:="(&(osgi.wiring.bundle=org.eclipse.modisco.java.discoverer)(bundle-version>=0.9.0))" [caused by: Unable to resolve osgi.identity; singleton="true"; osgi.identity="org.eclipse.modisco.java.discoverer"; type="osgi.bundle"; version:Version="0.12.0.201311091050": missing requirement osgi.wiring.bundle; filter:="(&(osgi.wiring.bundle=org.eclipse.modisco.kdm.source.extension)(reprovide=true)(bundle-version>=0.9.0))"]
+	at org.apache.felix.resolver.Candidates.populateResource(Candidates.java:291)
+	at org.apache.felix.resolver.Candidates.populate(Candidates.java:154)
+	at org.apache.felix.resolver.ResolverImpl.resolve(ResolverImpl.java:146)
+	at org.eclipse.osgi.container.ModuleResolver$ResolveProcess.resolveSingleRevision(ModuleResolver.java:944)
+	at org.eclipse.osgi.container.ModuleResolver$ResolveProcess.resolve(ModuleResolver.java:875)
+	at org.eclipse.osgi.container.ModuleResolver.resolveDelta(ModuleResolver.java:109)
+	at org.eclipse.osgi.container.ModuleContainer.resolveAndApply(ModuleContainer.java:471)
+	at org.eclipse.osgi.container.ModuleContainer.resolve(ModuleContainer.java:429)
+	at org.eclipse.osgi.container.ModuleContainer.resolve(ModuleContainer.java:419)
+	at org.eclipse.osgi.container.Module.start(Module.java:406)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1551)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1530)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1502)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1445)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:230)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:340)
+
+[1] - http://dev.eclipse.org/svnroot/modeling/org.eclipse.mdt.modisco/plugins/branches/0_9/org.eclipse.gmt.modisco.java.discoverer/META-INF/MANIFEST.MF

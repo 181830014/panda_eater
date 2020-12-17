@@ -1,0 +1,30 @@
+My model is like this
+@Entity
+@Access(AccessType.FIELD)
+public class Product
+{
+	@Id
+	long id;
+	
+	@ElementCollection
+	List<Long> nums;
+}
+
+
+My Expression is like this
+ReadAllQuery query = new ReadAllQuery(Product.class);
+ExpressionBuilder qbuilder=query.getExpressionBuilder();
+Expression exp=qbuilder.size("nums").equal(2);
+query.setSelectionCriteria(exp);
+
+The generated sql is like this
+SELECT t0.ID, t0.NAME FROM PRODUCT t0 WHERE ((SELECT COUNT(t1.ID) FROM Product_NUMS t2, PRODUCT t1 WHERE (t2.Product_ID = t0.ID)) = ?)
+	bind => [2]
+
+The sub selection 
+(SELECT COUNT(t1.ID) FROM Product_NUMS t2, PRODUCT t1 WHERE (t2.Product_ID = t0.ID)) = ?
+always return the count of cross join between t1 and t2 since there is no join condition between t1 and t2.
+
+As a side effect, empty and not empty is not correct, either.
+
+-jason

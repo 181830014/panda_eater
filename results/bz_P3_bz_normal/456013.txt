@@ -1,0 +1,41 @@
+NPE occurs if an EASE script uses the Ecore, UML or Papyrus module to access the selection.
+
+For example (in Java thanks to the org.eclipse.lang.jvm.compiled plugin):
+
+{code]
+		EnvironmentModule env = new EnvironmentModule();
+		Object o = env.loadModule("/Modeling/ECore");
+		if (o instanceof EcoreModule) {
+			EcoreModule ecore = (EcoreModule) o;
+			EObject es = ecore.getSelection();
+			...
+		}
+{code}
+
+The NPE happens in the call to "ecore.getSelection()"
+
+{code}
+Execution of L/EclipseEaseJavaScripts/src/samples/umlShowAllClasses.java took 4 (ms)
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.eclipse.ease.lang.jvm.compiled.JVMCompiledScriptEngine.internalExecute(JVMCompiledScriptEngine.java:307)
+	at org.eclipse.ease.lang.jvm.compiled.JVMCompiledScriptEngine.execute(JVMCompiledScriptEngine.java:179)
+	at org.eclipse.ease.AbstractScriptEngine.inject(AbstractScriptEngine.java:182)
+	at org.eclipse.ease.AbstractScriptEngine.run(AbstractScriptEngine.java:229)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+Caused by: java.lang.NullPointerException
+	at org.eclipse.ease.modules.modeling.SelectionModule.getCustomSelectionFromSelector(SelectionModule.java:66)
+	at org.eclipse.ease.modules.modeling.EcoreModule.getSelection(EcoreModule.java:90)
+	at samples.umlShowAllClasses.doit(umlShowAllClasses.java:27)
+	... 9 more
+{code}
+
+The problem is that even though the Ecore module declares a dependency on the SelectionModule, this leaves the EcoreModule's SelectionModule variable uninitialized.
+
+As long as the EcoreModule keeps a SelectionModule object, it should explicitly intialize it.
+
+
+Despite declaring the dependency from

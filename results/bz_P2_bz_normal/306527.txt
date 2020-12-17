@@ -1,0 +1,11 @@
+Build Identifier: 
+
+We have a class Order that has an ordered list of OrderShipments mapped with the following JPA annotations:
+
+	@PrivateOwned
+	@OneToMany(mappedBy="order", cascade=CascadeType.ALL)
+	@OrderBy(value="index")
+
+We hit a case where when attempting to merge an Order that has 2 OrderShipments an ArrayIndexOutOfBoundsException is thrown from the Vector class when attempting to remove the value from the original list at line 542 of CollectionChangeRecord.  The problem doesn't happen every time and it seems to depend on whether or not we merge other objects in the session before merging the Order.  I was able to determine that the problem stems from what appears to be extra OrderedChangeObjects.  I'm going to attach a file that shows the OrderedChangeObjects that are created in the failure case.  The "extra"   OrderedChangeObjects cause the code to attempt to remove the same more objects from the original list than exist in the list.  I noticed that in the case where it works the AttributeChangeListener with owner = Order has ignoreEvents = true but in the case where it fails the ignoreEvents = false which causes the extra OrderedChangeObjects.
+
+Reproducible: Always

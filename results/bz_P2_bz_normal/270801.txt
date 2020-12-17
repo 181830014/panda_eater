@@ -1,0 +1,28 @@
+Build ID: 1.0.2
+
+Steps To Reproduce:
+1. May be difficult, because requires DB connection to be dropped at specific time
+
+More information:
+java.lang.NullPointerException
+        at org.eclipse.persistence.internal.sessions.AbstractSession.basicBeginTransaction(AbstractSession.java:394) [eclipselink-1.0.2.jar:1.0.2.20081024]
+        at org.eclipse.persistence.internal.sessions.AbstractSession.basicBeginTransaction(AbstractSession.java:370) [eclipselink-1.0.2.jar:1.0.2.20081024]
+        at org.eclipse.persistence.sessions.server.ClientSession.basicBeginTransaction(ClientSession.java:123) [eclipselink-1.0.2.jar:1.0.2.20081024]
+        at org.eclipse.persistence.internal.sessions.AbstractSession.beginTransaction(AbstractSession.java:535) [eclipselink-1.0.2.jar:1.0.2.20081024]
+        at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.beginTransaction(UnitOfWorkImpl.java:489) [eclipselink-1.0.2.jar:1.0.2.20081024]
+        at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitToDatabase(UnitOfWorkImpl.java:1205) [eclipselink-1.0.2.jar:1.0.2.20081024]
+        at org.eclipse.persistence.internal.sessions.RepeatableWriteUnitOfWork.commitToDatabase(RepeatableWriteUnitOfWork.java:478) [eclipselink-1.0.2.jar:1.0.2
+.20081024]
+        at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitToDatabaseWithPreBuiltChangeSet(UnitOfWorkImpl.java:1370) [eclipselink-1.0.2.jar:1.0.2
+.20081024]
+        at org.eclipse.persistence.internal.sessions.RepeatableWriteUnitOfWork.writeChanges(RepeatableWriteUnitOfWork.java:300) [eclipselink-1.0.2.jar:1.0.2.200
+81024]
+        at org.eclipse.persistence.internal.jpa.EntityManagerImpl.flush(EntityManagerImpl.java:384) [eclipselink-1.0.2.jar:1.0.2.20081024]
+
+
+I suspect that the accessor returned by the exception is not set, which causes the NPE (stack trace of some other error):
+    at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:298) [eclipselink-1.0.2.jar:1.0.2.2008102
+    at org.eclipse.persistence.sessions.JNDIConnector.connect(JNDIConnector.java:138) [eclipselink-1.0.2.jar:1.0.2.20081024]
+
+
+This is from 1.0.2, but I quickly checked code for trunk and it doesn't seem to have changes for this.

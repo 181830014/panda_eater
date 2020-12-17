@@ -1,0 +1,18 @@
+Build Identifier: Version: 2.3.2 Build id: 20111125-r10461
+
+I work on DB2/AS400 database and I have probleme with request with setFirstResult/setMaxResult which contains ORDER BY.
+
+The generated SQL is :
+SELECT * FROM (SELECT * FROM (SELECT EL_TEMP.*, ROWNUMBER() OVER() AS EL_ROWNM FROM (SELECT XX as x1, YY AS x2 FROM TABLE ORDER BY XX ASC) AS EL_TEMP) AS EL_TEMP2 WHERE EL_ROWNM <= ?) AS EL_TEMP3 WHERE EL_ROWNM 
+
+It should be : 
+SELECT * FROM (SELECT * FROM (SELECT EL_TEMP.*, ROWNUMBER() OVER(ORDER BY EL_TEMP.XX ASC) AS EL_ROWNM FROM (SELECT XX as x1, YY AS x2 FROM TABLE) AS EL_TEMP) AS EL_TEMP2 WHERE EL_ROWNM <= ?) AS EL_TEMP3 WHERE EL_ROWNM
+
+I corrected bug for me using regex on the request in class DB2Platform. 
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Execute query like em.createQuery("select o from Entity o order by o.id asc").setFirstResult(X).setMaxResult(Y).getResultList()
+
+2. See output which will not be ordered

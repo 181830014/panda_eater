@@ -1,0 +1,14 @@
+Hi,
+
+It should be nice if it would be possible to have an easy way to override root resource of a org.eclipse.californium.core.CoapServer.
+
+It is possible to do it, by extending org.eclipse.californium.core.CoapServer , but a setter for rootResource (that set the childs from the old one) would allow easier customisation.
+
+A workaround is to reuse the same code as constructor:
+	this.deliverer = new ServerMessageDeliverer(root);
+	CoapResource well_known = new CoapResource(".well-known");
+	well_known.setVisible(false);
+	well_known.add(new DiscoveryResource(root));
+	root.add(well_known);
+
+But this is not ideal as it doesn't override the org.eclipse.californium.core.CoapServer.root and thus the org.eclipse.californium.core.CoapServer.{add(),Remove(),GetRoot()} points to the old instance

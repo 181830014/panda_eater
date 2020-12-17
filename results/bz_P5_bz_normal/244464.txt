@@ -1,0 +1,20 @@
+In addition to the singular @Customizer, there needs to be support for multiple customizers on an Entity through an @Customizers annotation.
+
+e.g.,
+
+@Entity
+@Customizers({PostBuildCustomizer.class, AuditingCustomizer.class));
+public class Publisher implements Serializable {
+
+The EclipseLink mapping file already supports multiple customizers and there is no need for any changes:
+
+...
+  <xsd:complexType name="entity">
+...
+    <xsd:sequence>
+...
+      <xsd:element name="customizer" type="orm:customizer" minOccurs="0"/>
+...
+
+
+The order the Customizers are run must be guaranteed to be in the order in which they are declared.

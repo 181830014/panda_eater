@@ -1,0 +1,155 @@
+Having nested embeddables does not work in combination with @ElementCollection if they are used in different entities (see snippet):
+
+{code}
+package test;
+
+import java.util.Collection;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
+public class EntityA {
+	@Id
+	String id;
+
+	@ElementCollection
+	Collection<EmbeddableA> list;
+
+}
+{code}
+{code}
+package test;
+
+import java.util.Collection;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
+public class EntityB {
+	@Id
+	String id;
+
+	@ElementCollection
+	Collection<EmbeddableA> list;
+}
+{code}
+{code}
+package test;
+
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
+
+@Embeddable
+public class EmbeddableA {
+
+	@Embedded
+	EmbeddableB b;
+}
+{code}
+{code}
+package test;
+
+import javax.persistence.Embeddable;
+
+@Embeddable
+public class EmbeddableB {
+	String nestedEmbedded;
+}
+{code}
+
+
+This example leads to the following error:
+
+java.lang.reflect.UndeclaredThrowableException
+	at $Proxy5.createEntityManager(Unknown Source)
+	at com.avaloq.tools.model.test.common.SamplePersistenceTest.createEntityManager(SamplePersistenceTest.java:52)
+	at com.avaloq.tools.model.test.common.SamplePersistenceTest.persist(SamplePersistenceTest.java:62)
+	at com.avaloq.tools.model.test.common.SamplePersistenceTest.testManyToMany(SamplePersistenceTest.java:85)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)
+	at org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:236)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:467)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:683)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:390)
+	at org.eclipse.pde.internal.junit.runtime.RemotePluginTestRunner.main(RemotePluginTestRunner.java:62)
+	at org.eclipse.pde.internal.junit.runtime.CoreTestApplication.run(CoreTestApplication.java:23)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.internal.app.EclipseAppContainer.callMethodWithException(EclipseAppContainer.java:587)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:198)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:344)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:179)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:622)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:577)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1410)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1386)
+Caused by: java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.persistence.jpa.osgi.EMFServiceProxyHandler.invoke(EMFServiceProxyHandler.java:77)
+	... 47 more
+Caused by: javax.persistence.PersistenceException: Exception [EclipseLink-0] (Eclipse Persistence Services - 2.3.2.v20111125-r10461): org.eclipse.persistence.exceptions.IntegrityException
+Descriptor Exceptions: 
+---------------------------------------------------------
+
+Exception [EclipseLink-93] (Eclipse Persistence Services - 2.3.2.v20111125-r10461): org.eclipse.persistence.exceptions.DescriptorException
+Exception Description: The table [EntityA_LIST] is not present in this descriptor.
+Descriptor: RelationalDescriptor(com.avaloq.tools.model.test.common.bug.EmbeddableA --> [DatabaseTable(EntityB_LIST)])
+
+Runtime Exceptions: 
+---------------------------------------------------------
+
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.deploy(EntityManagerSetupImpl.java:517)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryDelegate.getDatabaseSession(EntityManagerFactoryDelegate.java:188)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryDelegate.createEntityManagerImpl(EntityManagerFactoryDelegate.java:277)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl.createEntityManagerImpl(EntityManagerFactoryImpl.java:294)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl.createEntityManager(EntityManagerFactoryImpl.java:272)
+	... 52 more
+Caused by: Exception [EclipseLink-0] (Eclipse Persistence Services - 2.3.2.v20111125-r10461): org.eclipse.persistence.exceptions.IntegrityException
+Descriptor Exceptions: 
+---------------------------------------------------------
+
+Exception [EclipseLink-93] (Eclipse Persistence Services - 2.3.2.v20111125-r10461): org.eclipse.persistence.exceptions.DescriptorException
+Exception Description: The table [EntityA_LIST] is not present in this descriptor.
+Descriptor: RelationalDescriptor(com.avaloq.tools.model.test.common.bug.EmbeddableA --> [DatabaseTable(EntityB_LIST)])
+
+Runtime Exceptions: 
+---------------------------------------------------------
+
+	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.initializeDescriptors(DatabaseSessionImpl.java:535)
+	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.initializeDescriptors(DatabaseSessionImpl.java:476)
+	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.initializeDescriptors(DatabaseSessionImpl.java:435)
+	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.postConnectDatasource(DatabaseSessionImpl.java:676)
+	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.loginAndDetectDatasource(DatabaseSessionImpl.java:621)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryProvider.login(EntityManagerFactoryProvider.java:206)
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.deploy(EntityManagerSetupImpl.java:488)
+	... 56 more

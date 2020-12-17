@@ -1,0 +1,13 @@
+Build Identifier: 2.2.0.v20101117-r8503
+
+Just bumped into class. It is kind of a strange class, because Serious multi-threading issue in this class:
+
+a) "singleton" field is not declared volatile, yet it is read as well as set in non-synchronized blocks, which means when some thread sets it, another thread might not see the changed value.
+
+b) The inner class "DefaultPersistenceProviderResolver" has a field named "providers" of type WekHashMap (note this class is not thread safe) which is used to cache the discovered providers discovered. It lazily populates the list of providers, but the lazy initialisation happens in a non-synchronized block, which means the Map can get corrupt if multiple threads call Persistence.createEntityManagerFactory() at the same time. 
+
+Don't rely on test cases to catch these errors. Just guard the code using synchronized block.
+
+b) 
+
+Reproducible: Always

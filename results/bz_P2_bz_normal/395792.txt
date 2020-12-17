@@ -1,0 +1,34 @@
+This code produces produces an unneccessary join:
+
+ CriteriaBuilder cb = em.getCriteriaBuilder();
+    CriteriaQuery<Company> cq = cb.createQuery(Company.class);
+    Root<Company> root = cq.from(Company.class);
+    cq.select(root);
+
+    Subquery<String> sq = cq.subquery(String.class);
+    Root<Employee> subroot = sq.from(Employee.class);
+    sq.select(subroot.get(Employee_.lastName));
+
+    Predicate typePredicate = cb.equal(subroot.get(Employee_.lastName), "Doe");
+
+    Predicate correlatePredicate = cb.equal(root.get(Company_.employees), subroot);
+    sq.where(cb.and(typePredicate, correlatePredicate));
+    cq.where(cb.exists(sq));
+
+
+    TypedQuery<Company> typedQuery = em.createQuery(cq);
+    List<Company> companies = typedQuery.getResultList();
+
+
+
+
+This results in:
+
+    SELECT t0.ID, ... FROM COMPANY t0 
+    WHERE EXISTS (SELECT t1.LASTNAME FROM EMPLOYEES t2, EMPLOYEES t1 
+                  WHERE (((t1.LASTNAME = ?) AND (t1.ID = t2.ID)) 
+                  AND (t2.COMPANY_ID = t0.ID))) 
+
+
+
+This affects all 2.3.x and 2.4.x versions.

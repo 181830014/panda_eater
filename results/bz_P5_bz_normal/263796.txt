@@ -1,0 +1,77 @@
+This is not a regression. Oracle Spatial tests have never been run with Oracle OCI driver before. 
+
+Oracle Spatial tests failed with Oracle 10.2.0.4 and 11.1.0.7 OCI driver.
+
+Statck Trace:
+=============
+Exception Description: Could not setup JGeometry test model Internal Exception: Exception [EclipseLink-4002] (Eclipse Persistence Services - 1.1.0.20090203-SNAPSHOT): org.eclipse.persistence.exceptions.DatabaseException Internal Exception: java.sql.SQLException: Cannot construct STRUCT instance, invalid connection Error Code: 0 Call: INSERT INTO SIMPLE_SPATIAL (GID, GEOMETRY) VALUES (?, ?) bind => [1009, JGeometry (gtype=0, dim=2, srid=0] Query: InsertObjectQuery(SimpleSpatial(1009, JGeometry (gtype=0, dim=2, srid=0)))
+
+Local Exception Stack:
+Exception [EclipseLink-0] (Eclipse Persistence Services - 1.1.0.20090203-SNAPSHOT): org.eclipse.persistence.testing.framework.TestProblemException
+Exception Description: Could not setup JGeometry test model
+Internal Exception: Exception [EclipseLink-4002] (Eclipse Persistence Services - 1.1.0.20090203-SNAPSHOT): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLException: Cannot construct STRUCT instance, invalid connection
+Error Code: 0
+Call: INSERT INTO SIMPLE_SPATIAL (GID, GEOMETRY) VALUES (?, ?)
+bind => [1009, JGeometry (gtype=0, dim=2, srid=0]
+Query: InsertObjectQuery(SimpleSpatial(1009, JGeometry (gtype=0, dim=2, srid=0)))
+at org.eclipse.persistence.testing.tests.spatial.jgeometry.CreateTests$1.setUp(CreateTests.java:44)
+at junit.extensions.TestSetup$1.protect(TestSetup.java:22)
+at junit.extensions.TestSetup.run(TestSetup.java:27)
+at org.eclipse.persistence.testing.framework.TestExecutor.execute(TestExecutor.java:247)
+at org.eclipse.persistence.testing.framework.TestModel.execute(TestModel.java:208)
+at org.eclipse.persistence.testing.framework.TestCollection.run(TestCollection.java:313)
+at org.eclipse.persistence.testing.framework.TestExecutor.execute(TestExecutor.java:247)
+at org.eclipse.persistence.testing.framework.TestModel.execute(TestModel.java:208)
+at org.eclipse.persistence.testing.framework.TestCollection.run(TestCollection.java:313)
+at org.eclipse.persistence.testing.framework.TestExecutor.execute(TestExecutor.java:247)
+at org.eclipse.persistence.testing.framework.TestModel.execute(TestModel.java:208)
+at org.eclipse.persistence.testing.framework.TestCollection.run(TestCollection.java:313)
+Caused by: Exception [EclipseLink-4002] (Eclipse Persistence Services - 1.1.0.20090203-SNAPSHOT): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLException: Cannot construct STRUCT instance, invalid connection
+Error Code: 0
+Call: INSERT INTO SIMPLE_SPATIAL (GID, GEOMETRY) VALUES (?, ?)
+bind => [1009, JGeometry (gtype=0, dim=2, srid=0]
+Query: InsertObjectQuery(SimpleSpatial(1009, JGeometry (gtype=0, dim=2, srid=0)))
+at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:322)
+at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:656)
+at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeCall(DatabaseAccessor.java:501)
+at org.eclipse.persistence.internal.sessions.AbstractSession.executeCall(AbstractSession.java:872)
+at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:205)
+at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:191)
+at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.insertObject(DatasourceCallQueryMechanism.java:330)
+at org.eclipse.persistence.internal.queries.StatementQueryMechanism.insertObject(StatementQueryMechanism.java:162)
+at org.eclipse.persistence.internal.queries.StatementQueryMechanism.insertObject(StatementQueryMechanism.java:177)
+at org.eclipse.persistence.internal.queries.DatabaseQueryMechanism.insertObjectForWrite(DatabaseQueryMechanism.java:461)
+at org.eclipse.persistence.queries.InsertObjectQuery.executeCommit(InsertObjectQuery.java:80)
+at org.eclipse.persistence.queries.InsertObjectQuery.executeCommitWithChangeSet(InsertObjectQuery.java:90)
+at org.eclipse.persistence.internal.queries.DatabaseQueryMechanism.executeWriteWithChangeSet(DatabaseQueryMechanism.java:286)
+at org.eclipse.persistence.queries.WriteObjectQuery.executeDatabaseQuery(WriteObjectQuery.java:58)
+at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:664)
+at org.eclipse.persistence.queries.DatabaseQuery.executeInUnitOfWork(DatabaseQuery.java:583)
+at org.eclipse.persistence.queries.ObjectLevelModifyQuery.executeInUnitOfWorkObjectLevelModifyQuery(ObjectLevelModifyQuery.java:109)
+at org.eclipse.persistence.queries.ObjectLevelModifyQuery.executeInUnitOfWork(ObjectLevelModifyQuery.java:86)
+at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.internalExecuteQuery(UnitOfWorkImpl.java:2690)
+at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1181)
+at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1165)
+at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1125)
+at org.eclipse.persistence.internal.sessions.CommitManager.commitNewObjectsForClassWithChangeSet(CommitManager.java:195)
+at org.eclipse.persistence.internal.sessions.CommitManager.commitAllObjectsWithChangeSet(CommitManager.java:103)
+at org.eclipse.persistence.internal.sessions.AbstractSession.writeAllObjectsWithChangeSet(AbstractSession.java:3175)
+at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitToDatabase(UnitOfWorkImpl.java:1271)
+at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitToDatabaseWithChangeSet(UnitOfWorkImpl.java:1366)
+at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitRootUnitOfWork(UnitOfWorkImpl.java:1202)
+at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commit(UnitOfWorkImpl.java:980)
+at org.eclipse.persistence.testing.tests.spatial.jgeometry.SimpleSpatialTestCase.repopulate(SimpleSpatialTestCase.java:115)
+at org.eclipse.persistence.testing.tests.spatial.jgeometry.CreateTests$1.setUp(CreateTests.java:42)
+Caused by: java.sql.SQLException: Cannot construct STRUCT instance, invalid connection
+at oracle.sql.STRUCT.(STRUCT.java:142)
+at oracle.spatial.geometry.JGeometry.store(JGeometry.java:1639)
+at org.eclipse.persistence.platform.database.oracle.converters.JGeometryConverter.convertToStruct(JGeometryConverter.java:54)
+at org.eclipse.persistence.internal.databaseaccess.DatabasePlatform.setParameterValueInDatabaseCall(DatabasePlatform.java:1909)
+at org.eclipse.persistence.platform.database.oracle.Oracle9Platform.setParameterValueInDatabaseCall(Oracle9Platform.java:456)
+at org.eclipse.persistence.internal.databaseaccess.BindCallCustomParameter.set(BindCallCustomParameter.java:67)
+at org.eclipse.persistence.internal.databaseaccess.DatabasePlatform.setParameterValueInDatabaseCall(DatabasePlatform.java:1906)
+at org.eclipse.persistence.platform.database.oracle.Oracle9Platform.setParameterValueInDatabaseCall(Oracle9Platform.java:456)
+at org.eclipse.persistence.internal.databaseaccess.DatabaseCall.prepareStatement(DatabaseCall.java:665)
+at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:551)

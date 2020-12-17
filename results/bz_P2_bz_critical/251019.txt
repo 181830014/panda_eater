@@ -1,0 +1,5 @@
+I found a possible resource leak that stops web application class loaders from being garbage collected. There is a class CFlowStack that creates a ThreadStack object as a ThreadLocal or a static map element depending on java version.
+
+The version that uses ThreadLocal (ThreadStackFactoryImpl) apparently does not provide a mechanism for removing the ThreadLocal.
+
+This manifests as out of PermGen memory after several redeploys.

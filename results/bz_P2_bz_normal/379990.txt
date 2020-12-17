@@ -1,0 +1,26 @@
+Created attachment 215853 [details]
+test case for the issue
+
+I have native query:
+
+SELECT *   
+FROM TEST_TABLE                         
+WHERE START_DATE > ?                     
+   AND END_DATE < ?                       
+
+Query query = entityManager.createNativeQuery(test_sql, TestEntity.class);
+...
+        query.setParameter(1, dateFrom, TemporalType.TIMESTAMP);
+        query.setParameter(2, dateTo, TemporalType.TIMESTAMP);
+...
+
+If ".. START_DATE > ?<SPACE><EOL> ..." then all works fine
+If ".. START_DATE > ?<NO SPACE><EOL> ..." then parameters are nulls
+
+Info from log:
+
+[5/17/12 13:43:11:052 EEST] 0000002b SystemOut     O [EL Fine]: 2012-05-17 13:43:11.052--ClientSession(1745119236)--Connection(62063539)--Thread(Thread[WebContainer : 0,5,main])--SELECT *
+ FROM TEST_TABLE  WHERE START_DATE > ?    AND END_DATE < ?
+        bind => [null, null]
+
+Please see attached test-case

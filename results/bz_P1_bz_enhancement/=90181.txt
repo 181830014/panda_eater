@@ -1,0 +1,38 @@
+In the development of an RCP ViewPart consider a completely empty ViewPart:
+public class View extends ViewPart {
+
+	public void createPartControl(Composite parent) {
+	}
+
+	public void setFocus() {
+	}
+}
+
+Now when someone drops a Composite on the ViewPart's composite (parent), the
+following erroneous code gets generated where the dropped composite's
+declaration cant resolve the parent:
+public class View extends ViewPart {
+	Composite composite = null;
+	public void createPartControl(Composite parent) {
+		createComposite();
+	}
+	public void createComposite(){
+		composite = new Composite(parent, SWT.NONE);
+	}
+	public void setFocus() {
+	}
+}
+
+Rather, codegen should generate the correct pattern where the parent of a
+composite is passed in as an argument to the createComposite call, like this:
+public class View extends ViewPart {
+	Composite composite = null;
+	public void createPartControl(Composite parent) {
+		createComposite(parent);
+	}
+	public void createComposite(Composite parent){
+		composite = new Composite(parent, SWT.NONE);
+	}
+	public void setFocus() {
+	}
+}

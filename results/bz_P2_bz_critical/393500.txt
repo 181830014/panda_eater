@@ -1,0 +1,16 @@
+I am using the dynamic Mapping feature of eclipselink. However, DirectionToField Mapping can not be null. null should be allowed since the value could really be null object. For example, if the type is int, I can not give a default value such as 0 if the end user does not give a value. 
+
+
+I pin down the issues to 
+org.eclipse.persistence.internal.dynamic.DynamicTypeImpl.checkSet(...)
+line 169: if (value == null) {
+            if (mapping.isCollectionMapping() || 
+                (mapping.getAttributeClassification() != null && 
+                 mapping.getAttributeClassification().isPrimitive())) {
+                throw DynamicException.invalidSetPropertyType(mapping, value);
+            }
+            return;
+line 176:        }
+
+thanks
+-jason

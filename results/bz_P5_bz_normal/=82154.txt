@@ -1,0 +1,16 @@
+Closing a JFace Window with the Shell's close button sets the 
+Window.resultCode to -1.  However, closing the Window programmatically via 
+Window.close() keeps the resultCode at the default (which I think is non-
+intuitive).  The only way to programmatically "cancel" a Window is to 
+indirectly cause the Window.canHandleShellCloseEvent() method to run by doing 
+the following:
+
+  Window w = ...
+  Shell shell = w.getShell();
+  if(shell == null)
+    w.create();
+  shell.close();
+  shell.notifyListeners(SWT.Close, new Event());
+  shell.dispose();  
+
+There should be a better way to do this.

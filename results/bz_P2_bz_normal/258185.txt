@@ -1,0 +1,32 @@
+Register a new object in a uow using uow.registerNewObject method.
+Then register another new object also through uow.registerNewObject.
+Now without committing the uow run a ReadAllQuery that looks for the first object, like:
+        ReadAllQuery query = new ReadAllQuery(Contact.class);
+        Expression exp = query.getExpressionBuilder().get("id").in(ids);
+        query.setSelectionCriteria(exp);
+        query.conformResultsInUnitOfWork();
+        result = (Vector)uow.executeQuery(query);
+
+Result: the first object not found.
+
+In general: of all the new objects (whatever the number) only the last one is found.
+
+That happens because registerNewObject doesn't create original object (it's done later, during commit). Therefore registerNewObjectClone inserts original==null into:
+        getNewObjectsCloneToOriginal().put(clone, original);
+        getNewObjectsOriginalToClone().put(original, clone);
+
+That results in getNewObjectsOriginalToClone holding just a single record: null mapped to the last registered new object.
+
+Conforming query looks first in uow cache, then in new objects - in getNewObjectsOriginalToClone().values (see UnitOfWorkImpl.getAllFromNewObjects)- of course the object is not there.
+
+I tried to fix it in a simple way:
+1) Don't insert null into getNewObjectsOriginalToClone();
+2) Search for the new objects in getNewObjectsCloneToOriginal().keys;
+that didn't work: before searching there's a check for having any new objects at all (if not - then no search performed):
+public boolean hasNewObjects() {
+    return ((newObjectsOriginalToClone != null) && !newObjectsOriginalToClone.isEmpty());
+}
+
+After I changed hasNewObjects method to use newObjectsCloneToOriginal instead, I got stackOverflowError(!) while trying to setup InterfaceWithoutTableTestModel.
+
+At that point I gave up (for now) and logged this bug.

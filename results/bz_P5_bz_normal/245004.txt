@@ -1,0 +1,6 @@
+Our current implementation of a statement cache will 'randomly' remove a statement when it gets full.  Bug 245003  showed that this can cause the last (or second last) statement added to be removed instead of ones that have been there longer, resulting in rebuilding of statements unneccessarily.
+
+This cache should be a LRU or use some other algorithm other than: 
+                          PreparedStatement removedStatement = (PreparedStatement)getStatementCache().remove(getStatementCache().keys().nextElement());
+
+To find the statement that should be removed, since this can favour some statements over others (they are cached based on the sql string).

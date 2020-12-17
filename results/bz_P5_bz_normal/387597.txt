@@ -1,0 +1,32 @@
+Steps to reproduce : 
+	1/ Create a new UML Model
+	2/ Open an empty table (using patch provided by the bug bug 387591)
+	3/ Drop a UML Element in this table
+	4/ Hide some columns
+	5/ Export as XMI 
+	6/ open the file and look for the localCustomization -> it is the customization for ecore which is used and not the customization for uml : 
+	
+	 <localCustomizations name="Column hiding customization for ecore">
+    <eClassifiers xsi:type="custom:EClassCustomization" conformanceTypedElement="//@localCustomizations.0/@eClassifiers.0/isConforming">
+      <extendedMetaclass href="http://www.eclipse.org/emf/2002/Ecore#//ETypedElement"/>
+      <facetElements xsi:type="efacet:FacetAttribute" name="isConforming" derived="true">
+        <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        <query xsi:type="query:IsOneOfQuery">
+          <expectedEObjects href="http://www.eclipse.org/uml2/4.0.0/UML#//NamedElement/name"/>
+        </query>
+      </facetElements>
+      <facetOperations name="isVisible" lowerBound="1">
+        <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
+        <eParameters name="eStructuralFeature">
+          <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//ETypedElement"/>
+        </eParameters>
+        <query xsi:type="custom:ETypedElementSwitchQuery">
+          <cases>
+            <value xsi:type="query:FalseLiteralQuery"/>
+          </cases>
+        </query>
+        <override xsi:type="efacet:FacetOperation" href="../../plugin/org.eclipse.emf.facet.custom.ui/resources/customproperties.efacet#//CustomizedEObject/isVisible"/>
+      </facetOperations>
+    </eClassifiers>
+  </localCustomizations>
+  <localCustomizations name="Column hiding customization for uml"/>

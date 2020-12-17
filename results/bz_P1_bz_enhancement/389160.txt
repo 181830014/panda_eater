@@ -1,0 +1,12 @@
+The error parser for TI's code gen tools provides links to "advice" about each error.  RTSC should have the same and provide a means for each target-content product to add advice for each of its error messages.
+
+For example, when one gets a HeapStd "heap used up" message during config, it almost always means you've configured the system to allow dynamically created instance but also specified that the heap size is 0.  The advice is to disable dynamic instance creation or allocate space for the heap.
+
+The code gen mechanism is built atop two features:
+    1.	a CDT error parser that detects and transforms console error messages from TI code gen tools before putting them into the Problems View
+    2.	the ability for the Problems View to handle embedded <a href=”..”> tags
+
+When the TI error parser detects a TI code gen error message, it post-processes the message using the information provided in dmed.xml to convert the console error message into a Problem Marker message (which is added to the Problems View).  Since the Problems View supports links, the post-processing step can add appropriate links, provided it can embed appropriate links into console messages.  The dmed.xml file provides a simple regexp-based transformation of console messages into a subset of html understood by the Problems View.
+
+
+It should be possible to do something similar for all target-content products; XDCtools and all target-content products share a custom error parser provided by XDCtools.  Since we already have a way to identify target-content product installation locations and map error messages to these products, it should be relatively easy to update the XDCtools error parser to provide a similar capability on a per-product basis.

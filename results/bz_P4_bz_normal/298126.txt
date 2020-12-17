@@ -1,0 +1,19 @@
+@Entity
+public class PropertyRecord {
+    @Id
+    int id;
+
+    @ElementCollection
+    // @MapKey(name="size")
+    @MapKeyColumn(name="size")
+    Map<Integer, PropertyInfo> parcels;
+}
+
+@Embeddable
+public class PropertyInfo {
+	Integer parcelNumber;
+	Integer size;
+	BigDecimal tax;
+}
+
+I attempted to generate tables with the above classes and got SQLSyntaxErrorException: Column name 'SIZE' appears more than once in the CREATE TABLE statement.  The proper way to specify this would be with a MapKey instead of a MapKeyColumn, but since the spec says that MapKey is not meant for Embeddable relationships someone could attempt to set the map key column in this manner.

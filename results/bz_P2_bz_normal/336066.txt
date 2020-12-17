@@ -1,0 +1,36 @@
+I have an (test) entity with @Postload method like this:
+
+@Entity
+@Cacheable
+public class Task {
+	@Transient
+	private int loadCount = 0;
+
+	@PostLoad
+	public void postLoad() {
+		loadCount++;
+	}
+}
+
+When deactivating the query cache with:
+    setHint(QueryHints.MAINTAIN_CACHE,HintValues.FALSE);
+
+I get the following effects:
+* When loading a list of Tasks using a CriteriaQuery, @PostLoad is never called, leaving my count to 0.
+* When using a refresh to view one single task, @PostLoad is called, incrementing the count for each view of the same entity (as it uses the shared cache in this case).
+
+When activating the query cache, @PostLoad is called correctly on the first load, and the count gets incremented with each subsequent query, as it now uses the shared cache also for query results.
+
+I would have expected the @PostLoad to be called always when loading from the database, as is stated in the JPA specs.
+
+I found this explanation of James Sutherland in a post:
+In EclipseLink the JPA postLoad event is translated into the native EclipseLink events.  Currently it sets the EclipseLink events, postBuild (called when a new object is built from the database), postRefresh (called when an existing object is refreshed from the database), postClone (called whenever EclipseLink clones an object, such as registering an object from the shared cache into the EntityManager persistence context, but also when merging back into the shared cache, and when copying a new object or merged object).
+
+And looking at the EclipseLink code, I see this in EntityListenerMetaData:
+    protected void setPostLoad(Method method) {
+        // bug 259404: PostClone is called for all objects when registered with the unitOfWork
+        m_listener.setPostCloneMethod(method);
+        m_listener.setPostRefreshMethod(method);
+    }
+
+I suppose what is missing here is to set the event for POST_BUILD.

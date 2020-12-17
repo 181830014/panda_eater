@@ -1,0 +1,12 @@
+The evaluation of pointcuts refering to annotations can be done statically. However the AspectJ compiler is not capable of doing so. Compiling
+@TypeLevel(2)
+public aspect Alpha {
+	void around(): (adviceexecution()
+		&& @within(TypeLevel)
+		&& if(TypeLevel.value() < 2))
+		|| execution (* *(..)) {
+			System.out.println("Test");
+		}
+	}
+
+will result in an error. However it would be desirable if the AspectJ Compiler would evaluate these pointcuts at compiletime.

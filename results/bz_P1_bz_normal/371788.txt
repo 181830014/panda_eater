@@ -1,0 +1,20 @@
+Given the following program, the updateable key column 'id2' is not being updated by the generated code.
+
+
+program prog
+	function main()
+		row TBL1;
+		ds SQLDataSource?;
+		replace row to ds;
+	end
+end
+
+record TBL1  { @Table {name="TBL1"} }
+	id1 int {@Id, @Column{updateable = false}};
+	id2 int {@Id, @Column{updateable = true}};
+end
+
+
+
+Generates:
+String stmtStr = "UPDATE TBL1 SET  WHERE id1 = ? AND id2 = ?";

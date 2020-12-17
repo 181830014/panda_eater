@@ -1,0 +1,36 @@
+This method is normally called by databaseQuery.prepare - all is good in this case.
+
+Problems arise if the original query is prepared, then cloned, then altered - for instance a new value of queryTimeOut is set.
+
+Cloned query shares the call(s) with the original one. Now there is need to create a separate call(s) for the cloned query that will receive the new queryTimeOut value.
+
+For that end there is a flag DatabaseQuery.shouldCloneCall, it's been set to true by setQueryTimeOut - it signals that prepareCall method should clone the call(s) and apply the new value of several attributes (queryTimeOut is one of them) to the cloned call(s).
+Therefore the cloned query will get a "personal" set of call(s) with correct settings - and avoid the cost of re-preparing.
+
+Problems:
+
+1. Only setQueryTimeOut and setMaxResult sets shouldCloneCall flag to true.
+All other attributes copied in prepareCall method should do that, too:
+setShouldBindAllParameters, setShouldCacheStatement - instead of unsetting isPrepared flag, setResultSetFetchSize.
+
+2. Cloning of multiple calls is not done:
+
+if (hasMultipleCalls()) {
+    if(getQuery().shouldCloneCall()){
+        //For glassFish bug2689, the call needs to be cloned when query asks to do so. 
+        calls = ((Vector)getCalls().clone());
+    }
+..
+That means currently the changes are applied to the original query's calls.
+Should clone each call instead.
+
+3. Main problem - prepareCall method is never called!
+To reproduce try pass to em.find QueryHint.JDBC_TIMEOUT with a value different from the default one.
+Result: the generated databaseQuery (a clone of ReadObjectQuery obtained from DescriptorQueryManager) will have the set value, but its DatabaseCall keeps the default value.
+
+Suggested fix:
+In the end of CallQueryMechanism.prepareCall shouldCloneCall flag should be always set to false for all clones - that means that all the calls are prepared.
+
+Otherwise - before executing the call(s) and after the query is checked for being prepared - in case databaseQuery.shouldCloneCall flag is set to true then call prepareCall method.
+
+It would be nice to rename the flag on DatabaseQuery from shouldCloneCall to shouldPrepareCall.

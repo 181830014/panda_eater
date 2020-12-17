@@ -1,0 +1,35 @@
+Build Identifier: 2.3.0.v20110604-r9504
+
+i expected below code to create table which has BIGSERIAL column type id.
+
+  @Entity
+  public class NewEntity1 implements Serializable {
+      private static final long serialVersionUID = 1L;
+      @Id
+      @GeneratedValue(strategy = GenerationType.IDENTITY)
+      private Long id;
+  ...
+
+but it created:
+  CREATE TABLE NEWENTITY1 (ID  SERIAL NOT NULL, PRIMARY KEY (ID))
+
+it caused by PostgreSQLPlatform class which hardcoded "SERIAL" Identity column type. it should specify BIGSERIAL for Long id field. below:
+
+  @Override
+      public void printFieldIdentityClause(Writer writer) throws ValidationException {
+          try {
+              writer.write(" SERIAL");
+          } catch (IOException ioException) {
+              throw ValidationException.fileError(ioException);
+          }
+      }
+
+a original question asked at stackoverflow:
+  http://stackoverflow.com/questions/9284564/eclipselink-postgresql-doesnt-use-bigserial-to-long-id
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. create entity class which have Long Identity id.
+2. create persistence.xml which includes "eclipselink.ddl-generation" property with "drop-and-create-tables" or "create-tables" value.
+3. run the application.

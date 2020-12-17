@@ -1,0 +1,11 @@
+Currently CanonicalConnectionEditPolicy contains following methods:
+
+abstract protected List getSemanticConnectionsList();
+abstract protected EObject getSourceElement(EObject relationship);
+abstract protected EObject getTargetElement(EObject relationship);
+
+getSemanticConnectionsList should return a list of semantic elements represented by the connection on diagram. getSource/TargetElement are used to determine source/target of the connection represented on diagram based on semantic element "relationship" passed as a parameter.
+
+In this implementation there is no possibility to update connections which is representer as a reference in the semantic model. For example, on ECore diagram a set of supertypes of EClass is represented as a set of "generalization" links from this EClass to it's supertypes. As a result, there is no EObject instance which could be returned from getSemanticConnectionsList for such a "generalization" link - this link is just a reference inside EClass.getESuperTypes() list.
+
+CanonicalConnectionEditPolicy should be refactored to support updating such a links.

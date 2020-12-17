@@ -1,0 +1,22 @@
+Hello,
+
+when having an advice for a pointcut expression like:
+  !execution(* *.Test.get*())
+this leads to a strange exception when running the compiled program:
+
+> java test.Test
+Exception in thread "main" java.lang.ExceptionInInitializerError
+        at test.Test.<clinit>(Test.java:1)
+Caused by: org.aspectj.lang.NoAspectBoundException: test_Aspect
+        at test.Aspect.aspectOf(Aspect.aj:1)
+        at test.Aspect.<clinit>(Aspect.aj)
+        ... 1 more
+
+It took me a while, to figure out, that such a pointcut expression does not make sense. A sensible combination like
+  !execution(* *.Test.get*()) && execution(* *.*(..))
+worked fine.
+A compiler warning (or even an error) would be desirable when encountering advices for such pointcut expressions. The exception gave me no clue to what was causing the problem.
+
+Test case follows.
+
+Regards Ben

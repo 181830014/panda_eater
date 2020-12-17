@@ -1,0 +1,53 @@
+At the moment, you need to specify the table name when using a map that uses a join table
+
+Given:
+
+@Entity
+public class EnumKeyHolder {
+    
+    @GeneratedValue
+    @Id
+    private int id;
+    
+    @OneToMany( cascade=CascadeType.ALL )
+    @MapKeyEnumerated(EnumType.STRING)
+    @MapKeyColumn(name="mymapkeycolulmn")
+    Map<MyEnum,EnumKeyProperty> properties = new HashMap<MyEnum,EnumKeyProperty>();
+
+...
+
+And
+
+public enum MyEnum{
+   
+    VALUE1( "value1" ), // default
+    VALUE2( "value2" )
+
+
+...
+
+
+@Entity
+public class EnumKeyProperty {
+
+    @Id
+    private int myKey;
+    
+    private int myValue;
+
+
+The following code will not put a value in the table for the map key:
+
+    public static void main(String[] args) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("TestEnumeratedMapKey");
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        EnumKeyHolder holder = new EnumKeyHolder();
+        EnumKeyProperty prop = new EnumKeyProperty();
+        prop.setMyKey(23);
+        prop.setMyValue(22);
+        holder.getProperties().put(MyEnum.VALUE1, prop);
+        em.persist(holder);
+        em.persist(prop);
+        em.getTransaction().commit();
+    }

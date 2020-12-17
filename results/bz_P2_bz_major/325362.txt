@@ -1,0 +1,36 @@
+Build Identifier: 20100218-1602
+
+After upgrading to aspectj 1.6.9 I get an error when aspectj try to weave code instrumented by cobertura (it works fine with aspectj 1.6.8).
+
+I have created a small Maven project with an aspect in src/main/java and a test class that is weaved. Not that the error occurs only when I use
+MethodSignature signature = (MethodSignature) jp.getSignature();
+in my aspect.
+
+Here is an extract of the error:
+[ERROR] Failed to execute goal org.codehaus.mojo:aspectj-maven-plugin:1.3:test-compile (aspectj) on project aspectj-it: Compiler errors:
+abort ABORT -- (BCException) malformed org.aspectj.weaver.EffectiveSignature attribute (length:27)org.aspectj.weaver.BCException: Bad type signature <init>
+when batch building BuildConfig[null] #Files=2 AopXmls=#0
+
+when batch building BuildConfig[null] #Files=2 AopXmls=#0
+
+malformed org.aspectj.weaver.EffectiveSignature attribute (length:27)org.aspectj.weaver.BCException: Bad type signature <init>
+when batch building BuildConfig[null] #Files=2 AopXmls=#0
+
+when batch building BuildConfig[null] #Files=2 AopXmls=#0
+
+org.aspectj.weaver.BCException: malformed org.aspectj.weaver.EffectiveSignature attribute (length:27)org.aspectj.weaver.BCException: Bad type signature <init>
+when batch building BuildConfig[null] #Files=2 AopXmls=#0
+
+when batch building BuildConfig[null] #Files=2 AopXmls=#0
+
+        at org.aspectj.weaver.AjAttribute.read(AjAttribute.java:137)
+        at org.aspectj.weaver.bcel.Utility.readAjAttributes(Utility.java:101)
+        at org.aspectj.weaver.bcel.BcelMethod.unpackAjAttributes(BcelMethod.java:184)
+        at org.aspectj.weaver.bcel.BcelMethod.<init>(BcelMethod.java:91)
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+1.Extract attached test project
+2.Run mvn clean cobertura:cobertura

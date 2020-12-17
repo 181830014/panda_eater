@@ -1,0 +1,19 @@
+Right now, OSLC4J assumes a response that contains multiple resources is an OSLC query response. Often you want to have more than one resource in a response that is not a query. This is common with TRS and LDP.
+
+Here is an example from the OSLC-CM 3.0 attachments draft spec [1]. This is difficult to model today using OSLC4J since the ChangeRequest, the top-level resource, does not have a property pointing to the ldp:Container.
+
+@prefix oslc_cm: <http://open-services.net/ns/cm#> .
+@prefix ldp: <http://w3.org/ns/ldp#> .
+
+<>
+   a oslc_cm:ChangeRequest ;
+   oslc_cm:attachment
+      <attachments/1>,
+      <attachments/2> .
+
+<attachments>
+   a ldp:Container;
+   ldp:membershipPredicate oslc_cm:attachment;
+   ldp:membershipSubject <.>.
+
+[1] http://open-services.net/wiki/change-management/Attachments-for-Change-Requests/

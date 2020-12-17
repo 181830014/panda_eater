@@ -1,0 +1,140 @@
+We have a number of PL/SQL procedures which expect records as parameter. These records may contain collections/tables/arrays. Currently, such procedures cannot be called with EclipseLInk/JPA, since the contents of the inner collection cannot be mapped (SQLException: Fail to convert to internal representation). 
+
+This has been tested with pl/sql package types and compatible schema types and also only with schema types. Both cases do not work, so type mapping is not the issue. 
+Calling such procedures with JDBC works perfectly (STRUCT for the record, with an inner ARRAY for the collection).
+
+Might be this is a bug, or we are simply not doing it the right way. 
+Any input or a fix to improve the situation would be much appreciated. Thank you.
+
+Below is an example of a procedure, which expects a VARCHAR and a record. The record contains an INTEGER and a table of VARCHARs. 
+As stated above, the VARCHARs in the table are the problem (see "ContentOfFirstArrayElement", which cannot be converted).
+
+
+DATABASE CONTENT:
+=====================
+TYPE test_collection IS TABLE OF VARCHAR2(99) INDEX BY BINARY_INTEGER; 
+       
+TYPE test_record IS RECORD(ohne_status_0 INTEGER, stich_hist_arr test_collection);
+
+PROCEDURE prc_rec_test(p_in IN VARCHAR2,p_rec IN test_record, p_out OUT VARCHAR2);
+
+
+CALLING THE PROCEDURE:
+========================
+ArrayList<String> arrayList = new ArrayList<String>();
+arrayList.add("ContentOfFirstArrayElement"); // list of strings for the TABLE OF VARCHAR2
+
+TestRecord record = new TestRecord();
+record.setOHNE_STATUS_0(0); 
+record.setSTICH_HIST_ARR(arrayList); // passing the list
+        
+InputPRC_REC_TEST0 input = new InputPRC_REC_TEST0(); // wrapper for the input parameters
+input.setP_IN("parameter1");
+input.setP_REC(record); // passing the record
+        
+PKG_TEST.PRC_REC_TEST((IJpaPersistenceService) jpaService, input);
+
+
+EXCEPTION:
+==================================
+Exception in thread "main" Local Exception Stack: 
+Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.4.1.v20121003-ad44345): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLException: Konvertierung zu interner Darstellung nicht erfolgreich: [Test2]
+Error Code: 17059
+Call: 
+...
+Query: DirectReadQuery()
+	at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:324)
+...
+Caused by: java.sql.SQLException: Fail to convert to internal representation: [ContentOfFirstArrayElement]
+	at oracle.jdbc.oracore.OracleTypeCHAR.cArrayToDatumArray(OracleTypeCHAR.java:490)
+	at oracle.jdbc.oracore.OracleTypeCHAR.toDatumArray(OracleTypeCHAR.java:173)
+	at oracle.sql.ArrayDescriptor.toOracleArray(ArrayDescriptor.java:1218)
+	at oracle.sql.ARRAY.<init>(ARRAY.java:105)
+	at oracle.jdbc.oracore.OracleTypeCOLLECTION.toDatum(OracleTypeCOLLECTION.java:113)
+	at oracle.jdbc.oracore.OracleTypeUPT.toDatum(OracleTypeUPT.java:93)
+	at oracle.sql.StructDescriptor.toOracleArray(StructDescriptor.java:664)
+	at oracle.sql.StructDescriptor.toArray(StructDescriptor.java:1239)
+	at oracle.sql.STRUCT.<init>(STRUCT.java:111)
+	at org.eclipse.persistence.platform.database.oracle.Oracle8Platform.createStruct(Oracle8Platform.java:276)
+	at org.eclipse.persistence.internal.databaseaccess.DatabasePlatform.createStruct(DatabasePlatform.java:2895)
+	at org.eclipse.persistence.mappings.structures.ObjectRelationalDataTypeDescriptor.buildStructureFromRow(ObjectRelationalDataTypeDescriptor.java:314)
+	... 28 more
+
+
+JAVA RECORD CLASS (Integer and a list of strings for the TABLE OF VARCHAR):
+===========================================================================
+
+import java.util.List;
+
+public class TestRecord {
+
+private Integer OHNE_STATUS_0;
+private List<String> STICH_HIST_ARR;
+
+public TestRecord() {
+
+public void setOHNE_STATUS_0(final Integer OHNE_STATUS_0) { this.OHNE_STATUS_0 = OHNE_STATUS_0;}
+public  Integer getOHNE_STATUS_0() {return OHNE_STATUS_0;}
+
+public void setSTICH_HIST_ARR(final List<String> STICH_HIST_ARR) {this.STICH_HIST_ARR = STICH_HIST_ARR;}
+public List<String> getSTICH_HIST_ARR() {return STICH_HIST_ARR;}
+}
+
+JAVA IMPLEMENTATION OF THE PROCEDURE / DESCRIPTOR / MAPPING:
+===========================================================================
+
+public OutputPRC_REC_TEST0 PRC_REC_TEST(final IJpaPersistenceService service, final InputPRC_REC_TEST0 input){
+
+//descriptor for the record
+final ObjectRelationalDataTypeDescriptor descriptorTestRecord= new ObjectRelationalDataTypeDescriptor();
+descriptorTestRecord.setJavaClass(TestRecord.class);
+descriptorTestRecord.setShouldOrderMappings(false);
+descriptorTestRecord.descriptorIsAggregate();
+descriptorTestRecord.setStructureName("SCHEMA_TYPE_TEST_RECORD"); //compatible type for the record in the schema
+descriptorTestRecord.addDirectMapping("OHNE_STATUS_0", "OHNE_STATUS_0");
+descriptorTestRecord.addDirectMapping("STICH_HIST_ARR", "STICH_HIST_ARR");
+service.addDescriptorToSession(descriptorTestRecord);
+
+//collection (TYPE test_collection)
+final PLSQLCollection testCollection = new PLSQLCollection();
+testCollection.setTypeName("EC_ZRV.PKG_TEST.TEST_COLLECTION");
+testCollection.setCompatibleType("SCHEMA_TYPE_TEST_COLLECTION"); //compatible type for the collection in the schema
+testCollection.setNestedType(JDBCTypes.VARCHAR_TYPE);
+
+//record (TYPE test_record)
+final PLSQLrecord testRecord = new PLSQLrecord();
+testRecord.setTypeName("EC_ZRV.PKG_TEST.TEST_RECORD");
+testRecord.setCompatibleType("SCHEMA_TYPE_TEST_RECORD"); //compatible type in schema
+testRecord.setJavaType(TestRecord.class);
+testRecord.addField("OHNE_STATUS_0", JDBCTypes.INTEGER_TYPE);
+testRecord.addField("STICH_HIST_ARR", testCollection);
+
+final PLSQLStoredProcedureCall call = new PLSQLStoredProcedureCall();
+call.setProcedureName("PKG_TEST.PRC_REC_TEST");
+call.addNamedArgument("P_IN", JDBCTypes.VARCHAR_TYPE, 4000);
+call.addNamedArgument("P_REC", testRecord);
+call.addNamedOutputArgument("P_OUT", JDBCTypes.VARCHAR_TYPE, 4000);
+for (PLSQLargument arg : call.getArguments()) {	arg.precision = 38;	arg.scale = 10;}
+
+
+final DirectReadQuery query = new DirectReadQuery();
+query.addCall(call);
+query.setResultType(DirectReadQuery.ARRAY);
+query.addArgument("P_IN", String.class);
+query.addArgument("P_REC", TestRecord.class);
+
+final List<Object> args = new ArrayList<Object>();
+args.add(input.getP_IN());
+args.add(input.getP_REC());
+final Object[] temp=((Object[])((Vector)service.processProcedure(query, args)).get(0));
+
+final OutputPRC_REC_TEST0 ret = new OutputPRC_REC_TEST0();
+ret.setP_OUT((String)temp[0]);
+return ret;
+}
+
+----
+
+Regards,
+Robert

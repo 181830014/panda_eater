@@ -1,0 +1,46 @@
+On an product that's based on Eclipse 2.1.2, I selected Help->Help Contents,
+specified a string to search on, and then selected the GO button.
+The progress bar never got beyond 50%.
+I checked the .log file and the following stack trace appeared 17 times:
+!ENTRY org.eclipse.help 4 0 Nov 10, 2003 09:10:49.291
+!MESSAGE IO exception occurred while adding 
+document /com.sun.j2ee.api.doc/javax/transaction/TransactionManager.html to 
+index D:\GUIAutomation\wsappdev511
+\returneddefects\.metadata\.plugins\org.eclipse.help\nl\en_US.
+!STACK 0
+java.io.IOException: There is not enough space on the disk.
+
+	at java.lang.Throwable.<init>(Throwable.java)
+	at java.lang.Throwable.<init>(Throwable.java)
+	at java.io.IOException.<init>(IOException.java:57)
+	at java.io.RandomAccessFile.writeBytes(Native Method)
+	at java.io.RandomAccessFile.write(RandomAccessFile.java)
+	at org.apache.lucene.store.FSOutputStream.flushBuffer(Unknown Source)
+	at org.apache.lucene.store.OutputStream.flush(Unknown Source)
+	at org.apache.lucene.store.OutputStream.close(Unknown Source)
+	at org.apache.lucene.store.FSOutputStream.close(Unknown Source)
+	at org.apache.lucene.index.SegmentMerger.mergeTerms(Unknown Source)
+	at org.apache.lucene.index.SegmentMerger.merge(Unknown Source)
+	at org.apache.lucene.index.IndexWriter.mergeSegments(Unknown Source)
+	at org.apache.lucene.index.IndexWriter.maybeMergeSegments(Unknown 
+Source)
+	at org.apache.lucene.index.IndexWriter.addDocument(Unknown Source)
+	at org.eclipse.help.internal.search.SearchIndex.addDocument
+(SearchIndex.java)
+	at org.eclipse.help.internal.search.IndexingOperation.addDocuments
+(IndexingOperation.java:107)
+	at org.eclipse.help.internal.search.IndexingOperation.execute
+(IndexingOperation.java:88)
+	at org.eclipse.help.internal.search.SearchManager.updateIndex
+(SearchManager.java:147)
+	at org.eclipse.help.internal.search.SearchManager.search
+(SearchManager.java:88)
+	at org.eclipse.help.internal.search.SearchProgressMonitor$2.run
+(SearchProgressMonitor.java:143)
+	at java.lang.Thread.run(Thread.java:795)
+
+THE PROBLEM WAS THAT I DIDN'T HAVE ENOUGH DISK SPACE ON THE DRIVE THAT
+CONTAINED MY WORKSPACE.
+
+WE SHOULD ISSUE A MESSAGE TO THE USER WHEN THIS CASE OCCURS SO THEY
+KNOW WHAT THE PROBLEM IS AND HOW TO RECOVER FROM IT.

@@ -1,0 +1,16 @@
+@CollectionTable(name= "TLG_MAPMASTER_E_BASIC_BASIC")
+    @MapKeyColumn(name="KEY")
+    @Column(name="VALUE")
+    public Map<String, Integer> eBasicBasic = new HashMap<String, Integer>();
+
+results in the following table benn generated:
+
+CREATE TABLE "GRIDTEST"."TLG_MAPMASTER_E_BASIC_BASIC" 
+    ("MAPMASTER_ID" NUMBER(10), "VALUE" NUMBER(10), "KEY" 
+    VARCHAR2(255 byte) NOT NULL, 
+    CONSTRAINT "SYS_C00203432" PRIMARY KEY("KEY") 
+    CONSTRAINT "TLGMPMSTEREBASICBASICMPMSTERID" FOREIGN 
+    KEY("MAPMASTER_ID") 
+    REFERENCES "GRIDTEST"."TLG_MAPMASTER"("ID"))
+
+This is wrong because it's impossible to insert two rows with the same KEY, even if MAPMASTER_ID are different.

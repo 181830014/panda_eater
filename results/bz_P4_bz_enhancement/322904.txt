@@ -1,0 +1,13 @@
+This is an RFE to support callout bindings for constructors.
+
+Normally, this is not needed because creating a role together with its base can be achieved by a custom role constructor invoking a base constructor.
+
+However, by supporting callout to a base class constructor a slightly different semantics can be provided: such a callout would first create the base instance and only then create the role using the regular lifting mechanism.
+
+If a base class has a custom equals method, the newly created base may actually be equal to another base for which a role already exists, thus invoking the callout bound constructor can indeed re-use an existing role.
+
+A proposed syntax would be
+
+  protected class MyRole playedBy MyBase {
+    MyRole(T arg) -> MyBase(T arg);
+  }

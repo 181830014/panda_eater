@@ -1,0 +1,18 @@
+Hi. Please have a look at the following code snippet:
+
+before(soot.PointsToSet pts): call(* java.util.Map+.put(..)) && args(pts,..) ||
+			  call(* java.util.Collection+.add(..)) && args(pts){
+  ByteArrayOutputStream bos = new ByteArrayOutputStream();
+  new Exception().printStackTrace(new PrintStream(bos));
+  String s = bos.toString();
+  s = pts.getClass() + "\n" + s;
+  if(strings.add(s)) {
+    System.err.println(s);
+  }
+}
+
+By the declared type "PointsToSet" of "pts", it should be clear that this advice can only apply when an object is put into a map or collection which can possibly be a subtype of PointsToSet. However, ajdt shows me that in the line ...
+
+  if(strings.add(s)) {
+
+... there is a match with dynamic residue. This seems wrong. AspectJ should be easily capable of detecting statically that this shadow can never match.

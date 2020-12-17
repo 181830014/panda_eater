@@ -1,0 +1,28 @@
+Build ID: I20080330-1350
+
+Steps To Reproduce:
+If a connection has been created with the existing systemTypes defined in plugin.xml and the subsystemConfiguration is changed. When re-opening the workbench, the new subsystem will not be displayed in the Remote System Explorer View for that connection type.
+
+To reproduce: 
+1. define the follow system type in the plugin.xml
+   <extension point="org.eclipse.rse.core.systemTypes">
+      <systemType
+            description="subsystem test"
+            id="com.dummy.systemtype.subsystem.test"
+            label="Test for Subsystem change"
+            name="Test for subsystem change"         subsystemConfigurationIds="ssh.shells;ssh.files;processes.shell.linux">
+      </systemType>
+   </extension> 
+2. run the workbench, create a new connection of the "Test for Subsystem change" connection type.
+3. select the newly created connection, note that there should be 3 subsystems displayed: Sftp Files, Shell Processes, Ssh Shells
+4. change the subsystemConfigurationIds to subsystemConfigurationIds="ssh.terminals;ssh.files;processes.shell.linux"
+5. run the workbench again, note that only the Sftp Files subsystem is displayed under the connection the Ssh Terminals subsystem is not displayed.
+
+The "Shell Processes" is also not displayed as well, but I will open a separate bug for it.
+
+More information:
+If I change the code in SubSystemConfiguration's getSubSystems(IHost conn, boolean force) api from returning EMPTY_SUBSYSTEM_ARRAY to return null then the terminals subsystem will shown up. It is because the caller checks if null is returned, if null is returned, then the new subsystem gets created. 
+   else if (!subsystemsRestored && !force) {
+       SystemBasePlugin.logInfo("in subSystemConfiguration.getSubSytems(conn, force) - returning empty array");  //$NON-NLS-1$
+       return null;
+   }

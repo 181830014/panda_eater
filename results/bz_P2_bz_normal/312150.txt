@@ -1,0 +1,172 @@
+Build Identifier: 2.0.2
+
+Flush is only one strategy from many to get current data. Strategy should have no impact on unrelated functionality like locking. EclipseLink/TopLink have been supporting multi-merge of locked object without getting stale data. Now, when flush and JPA come in the picture, we get this regression.
+
+Extract from: http://forums.oracle.com/forums/thread.jspa?threadID=1067536&tstart=0
+
+Cannot merge versioned instance after flush, getting OptimisticLockExceptio 
+ 
+Using EclipseLink 2.0.2 I cannot merge versioned object after flush, getting OptimisticLockException.
+
+I get this:
+
+MergeManager.mergeChangesOfCloneIntoWorkingCopy(Object) line: 490 
+MergeManager.mergeChanges(Object, ObjectChangeSet) line: 267 
+RepeatableWriteUnitOfWork(UnitOfWorkImpl).mergeCloneWithReferences(Object, MergeManager) line: 3523 
+RepeatableWriteUnitOfWork.mergeCloneWithReferences(Object, MergeManager) line: 301 
+RepeatableWriteUnitOfWork(UnitOfWorkImpl).mergeCloneWithReferences(Object, int, boolean) line: 3483 
+RepeatableWriteUnitOfWork(UnitOfWorkImpl).mergeCloneWithReferences(Object, int) line: 3457 
+RepeatableWriteUnitOfWork(UnitOfWorkImpl).mergeCloneWithReferences(Object) line: 3438 
+
+Any known workaround?
+
+After the flush the versioned object version has increase of one, then the merge code compare with the increased version; however, the original version is still available in ObjectChangeSet.initialWriteLockValue.
+
+Since flush is an automatic thing depending of states that change often, even for similiar use case, it is expected to be transparent, so should have no effect on merge. In other words, functionality should be unchanged by the trigger of flush or by the use of other technique to get the right data like by using conform in memory. 
+ 
+ 
+
+cdelahun  Re: Cannot merge versioned instance after flush, getting OptimisticLockExceptio 
+Posted: May 5, 2010 7:42 AM    in response to: user11971671           
+ 
+EclipseLink increments the version number in the object at the same time it issues update statement it issues to the database, as you have seen. The only current way to avoid this is to avoid using flush, or after a flush, return the managed object with the version incremented to remote clients rather than  
+ 
+Re: Cannot merge versioned instance after flush, getting OptimisticLockExceptio 
+Posted: May 5, 2010 10:40 AM    in response to: cdelahun           Reply  
+ 
+My understanding is that the behavior is incompatible with the old functionality of supporting multiple merges, which by definition would always give OptimisticLockException.
+
+Extract from: http://www.oracle.com/technology/products/ias/toplink/doc/1013/main/b13698/oracle/toplink/sessions/UnitOfWork.html
+
+setShouldNewObjectsBeCached
+public void setShouldNewObjectsBeCached(boolean shouldNewObjectsBeCached)ADVANCED: By default new objects are not cached until the exist on the database. Occasionally if mergeClone is used on new objects and is required to allow multiple merges on the same new object, then if the new objects are not cached, each mergeClone will be interpretted as a different new object. By setting new objects to be cached mergeClone can be performed multiple times before commit. New objects cannot be cached unless they have a valid assigned primary key before being registered. New object with non-null invalid primary keys such as 0 or '' can cause problems and should not be used with this option. 
+
+I believe the current behavior come from Hibernate that have imposed many of their sematic/anti-patterns to JPA. Since Hibernate team have pushed a lot open session pattern, the current behavior is more likeable for them.
+
+Ideally both behaviors should be supported, and supporting multiple merges and flush followed by merge should be the default. 
+ 
+A workaround without the need to modify official EclipseLink class is below. A cleaner workaround could be written if many bugs about opening framework flexibility would have been acted on:
+
+
+
+import java.lang.reflect.Field;
+import java.util.Vector;
+
+import org.eclipse.persistence.descriptors.VersionLockingPolicy;
+import org.eclipse.persistence.internal.sessions.AbstractSession;
+import org.eclipse.persistence.internal.sessions.ObjectChangeSet;
+import org.eclipse.persistence.internal.sessions.RepeatableWriteUnitOfWork;
+import org.eclipse.persistence.internal.sessions.UnitOfWorkChangeSet;
+
+
+/**
+ * Override TopLink wrong behavior with merge after flush.
+ * 
+ * @see http://forums.oracle.com/forums/thread.jspa?threadID=1067536&tstart=0
+ * 
+ * @author stardif
+ */
+public class CTVersionLockingPolicy extends VersionLockingPolicy {
+	/**
+	 * @see org.eclipse.persistence.descriptors.VersionLockingPolicy#isNewerVersion(java.lang.Object, java.lang.Object, java.util.Vector, org.eclipse.persistence.internal.sessions.AbstractSession)
+	 */
+	@Override
+	public boolean isNewerVersion(Object currentValue, Object domainObject, Vector primaryKey, AbstractSession session) {
+
+		boolean isNewerVersion = super.isNewerVersion(currentValue, domainObject, primaryKey, session);
+		if (isNewerVersion) {
+			// reevaluate because maybe false positive
+			RepeatableWriteUnitOfWork repeatableWriteUnitOfWork = (RepeatableWriteUnitOfWork) session;
+			try {
+				Field field = RepeatableWriteUnitOfWork.class.getDeclaredField("cumulativeUOWChangeSet");
+				field.setAccessible(true);
+				UnitOfWorkChangeSet unitOfWorkChangeSet = (UnitOfWorkChangeSet) field.get(repeatableWriteUnitOfWork);
+				if (unitOfWorkChangeSet != null) {
+					Object registered = session.getIdentityMapAccessorInstance().getFromIdentityMap(primaryKey, descriptor.getJavaClass(), false, descriptor);
+					ObjectChangeSet objectChangeSet = (ObjectChangeSet) unitOfWorkChangeSet.getObjectChangeSetForClone(registered);
+					if (objectChangeSet != null) {
+						Object initialWriteLockValue = objectChangeSet.getInitialWriteLockValue();
+						if (initialWriteLockValue != null) {
+							   Number writeLockFieldValue;
+							if (isStoredInCache()) {
+								writeLockFieldValue = (Number) session.getIdentityMapAccessorInstance().getWriteLockValue(primaryKey, domainObject.getClass(), getDescriptor());
+							} else {
+								writeLockFieldValue = (Number) lockValueFromObject(domainObject);
+							}
+							isNewerVersion = isNewerVersion(writeLockFieldValue, initialWriteLockValue);
+							if (isNewerVersion == false) {
+								// this could be cleaner, we are going to override RMI copy version so that next set of code merging do not override advanced
+								// version the UOW is using
+								setLockValue(currentValue, domainObject, primaryKey, session);
+							}
+						}
+					}
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		return isNewerVersion;
+	}
+
+	/**
+	 * @param currentValue
+	 *            the value already incremented to set in the rmiClone
+	 * @param domainObject
+	 *            rmiClone
+	 * @param primaryKey
+	 * @param session
+	 */
+	private void setLockValue(Object currentValue, Object domainObject, Vector primaryKey, AbstractSession session) {
+
+		if (this.lockMapping != null) {
+			this.lockMapping.setAttributeValueInObject(domainObject, currentValue);
+		} else {
+			throw new RuntimeException("Supporting version mapped using access method is not yet implemented for class " + domainObject.getClass().getName());// this.descriptor.getObjectBuilder().getBaseValueForField(this.writeLockField, domainObject);
+		}
+
+	}
+
+	public CTVersionLockingPolicy(VersionLockingPolicy original) {
+		Accessor.setMemberVariables(original, this);
+	}
+}
+
+public class Accessor {
+
+	/**
+	 * Copy states from objectSrc to objectDst
+	 * @param objectSrc source object
+	 * @param objectDst destination object
+	 */
+	static public void setMemberVariables(Object objectSrc, Object objectDst) {
+		Class currentClass = objectSrc.getClass();
+		while (!currentClass.equals(Object.class)) {
+			Field[] fields = currentClass.getDeclaredFields();
+			for (int i = 0; i < fields.length; i++) {
+				Field field = fields[i];
+	
+				if (Modifier.isFinal(field.getModifiers())) {
+					continue;
+				}
+				field.setAccessible(true);
+				try {
+					Object value = field.get(objectSrc);
+					field.set(objectDst, value);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+			currentClass = currentClass.getSuperclass();
+		}
+	}
+
+}
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. load and modified versioned object
+2. flush
+3. merge

@@ -1,0 +1,28 @@
+From users mailing list:
+
+---------------------
+
+The @BasicMap annotation with eclipselink 1.1 always generates a key column
+with the same type as the value column.  Why?  Do I need to change my
+annotation?
+
+For example:
+@BasicMap
+private Map<String, Integer> aMap = ...
+generates a key column of type int and a value column of type int.
+
+@BasicMap
+private Map<Integer, String> aMap = ...
+generates a key column of type varchar and a value column of type varchar.
+
+@BasicMap
+private Map<String, Number> aMap = ...
+generates a key column of type decimal(10,0) and a value column of type
+decimal(10,0).
+
+Thanks for any help,
+Peter
+
+-----------------------
+
+Workaround is to specify the columnDefinition on the keyColumn from BasicMap.

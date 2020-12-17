@@ -1,0 +1,73 @@
+Created attachment 282529 [details]
+cf apps output
+
+Currently I have a Cloud Foundry server connected to my workspace, there I am working with Node.js app, I am able to run the app using the Add and Remove ... from the server view, but if I try to remove the app I am getting the following exception:
+!MESSAGE Error while deleting applications: [debug-demo]. The local modules will be deleted but the applications may still remain in the Cloud target. Client error - Cloud request failure - Getting application - debug-demo - [server: Node.js on Cloud Foundry]. Second operation attempt failed after trying to reconnect. Please check your connection and retry the operation again. Cause: Error performing operation: I/O error on GET request for "https://api.run.pivotal.io/v2/spaces/981c39f3-bba3-44a6-8186-df5aaf11be92/apps?inline-relations-depth=1&q=name:debug-demo":Read timed out; nested exception is java.net.SocketTimeoutException: Read timed out - I/O error on GET request for "https://api.run.pivotal.io/v2/spaces/981c39f3-bba3-44a6-8186-df5aaf11be92/apps?inline-relations-depth=1&q=name:debug-demo":Read timed out; nested exception is java.net.SocketTimeoutException: Read timed out
+!STACK 1
+org.eclipse.core.runtime.CoreException: Client error - Cloud request failure - Getting application - debug-demo - [server: Node.js on Cloud Foundry]. Second operation attempt failed after trying to reconnect. Please check your connection and retry the operation again. Cause: Error performing operation: I/O error on GET request for "https://api.run.pivotal.io/v2/spaces/981c39f3-bba3-44a6-8186-df5aaf11be92/apps?inline-relations-depth=1&q=name:debug-demo":Read timed out; nested exception is java.net.SocketTimeoutException: Read timed out - I/O error on GET request for "https://api.run.pivotal.io/v2/spaces/981c39f3-bba3-44a6-8186-df5aaf11be92/apps?inline-relations-depth=1&q=name:debug-demo":Read timed out; nested exception is java.net.SocketTimeoutException: Read timed out
+	at org.eclipse.cft.server.core.internal.CloudErrorUtil.asCoreException(CloudErrorUtil.java:459)
+	at org.eclipse.cft.server.core.internal.client.BaseClientRequest.run(BaseClientRequest.java:91)
+	at org.eclipse.cft.server.core.internal.client.CloudFoundryServerBehaviour.getCloudApplication(CloudFoundryServerBehaviour.java:510)
+	at org.eclipse.cft.server.core.internal.client.DeleteModulesOperation.doDelete(DeleteModulesOperation.java:89)
+	at org.eclipse.cft.server.core.internal.client.DeleteModulesOperation.runOnVerifiedModule(DeleteModulesOperation.java:64)
+	at org.eclipse.cft.server.core.internal.client.ModulesOperation.run(ModulesOperation.java:93)
+	at org.eclipse.cft.server.core.internal.client.ModulesOperation.run(ModulesOperation.java:60)
+	at org.eclipse.cft.server.core.internal.CloudFoundryServer.modifyModules(CloudFoundryServer.java:594)
+	at org.eclipse.wst.server.core.internal.ServerWorkingCopy.modifyModules(ServerWorkingCopy.java:555)
+	at org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil.modifyModules(WizardTaskUtil.java:228)
+	at org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment.performFinish(ModifyModulesWizardFragment.java:143)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizard.executeTask(TaskWizard.java:270)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizard$2.run(TaskWizard.java:217)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2295)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2317)
+	at org.eclipse.wst.server.ui.internal.wizard.page.WorkspaceRunnableAdapter.run(WorkspaceRunnableAdapter.java:37)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:122)
+Caused by: org.springframework.web.client.ResourceAccessException: I/O error on GET request for "https://api.run.pivotal.io/v2/spaces/981c39f3-bba3-44a6-8186-df5aaf11be92/apps?inline-relations-depth=1&q=name:debug-demo":Read timed out; nested exception is java.net.SocketTimeoutException: Read timed out
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:558)
+	at org.cloudfoundry.client.lib.rest.LoggingRestTemplate.doExecute(LoggingRestTemplate.java:54)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:511)
+	at org.springframework.web.client.RestTemplate.getForObject(RestTemplate.java:248)
+	at org.cloudfoundry.client.lib.rest.CloudControllerClientImpl.getAllResources(CloudControllerClientImpl.java:1232)
+	at org.cloudfoundry.client.lib.rest.CloudControllerClientImpl.findApplicationResource(CloudControllerClientImpl.java:2383)
+	at org.cloudfoundry.client.lib.rest.CloudControllerClientImpl.getApplication(CloudControllerClientImpl.java:1086)
+	at org.cloudfoundry.client.lib.CloudFoundryClient.getApplication(CloudFoundryClient.java:226)
+	at org.eclipse.cft.server.core.internal.client.diego.DiegoRequestFactory$1.doRun(DiegoRequestFactory.java:70)
+	at org.eclipse.cft.server.core.internal.client.diego.DiegoRequestFactory$1.doRun(DiegoRequestFactory.java:1)
+	at org.eclipse.cft.server.core.internal.client.BaseClientRequest.runAndWait(BaseClientRequest.java:141)
+	at org.eclipse.cft.server.core.internal.client.ClientRequest.runAndWait(ClientRequest.java:102)
+	at org.eclipse.cft.server.core.internal.client.LocalServerRequest.runAndWait(LocalServerRequest.java:106)
+	at org.eclipse.cft.server.core.internal.client.BaseClientRequest.run(BaseClientRequest.java:84)
+	... 15 more
+Caused by: java.net.SocketTimeoutException: Read timed out
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.socketRead(Unknown Source)
+	at java.net.SocketInputStream.read(Unknown Source)
+	at java.net.SocketInputStream.read(Unknown Source)
+	at sun.security.ssl.InputRecord.readFully(Unknown Source)
+	at sun.security.ssl.InputRecord.read(Unknown Source)
+	at sun.security.ssl.SSLSocketImpl.readRecord(Unknown Source)
+	at sun.security.ssl.SSLSocketImpl.readDataRecord(Unknown Source)
+	at sun.security.ssl.AppInputStream.read(Unknown Source)
+	at org.apache.http.impl.io.SessionInputBufferImpl.streamRead(SessionInputBufferImpl.java:137)
+	at org.apache.http.impl.io.SessionInputBufferImpl.fillBuffer(SessionInputBufferImpl.java:153)
+	at org.apache.http.impl.io.SessionInputBufferImpl.readLine(SessionInputBufferImpl.java:282)
+	at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:138)
+	at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:56)
+	at org.apache.http.impl.io.AbstractMessageParser.parse(AbstractMessageParser.java:259)
+	at org.apache.http.impl.DefaultBHttpClientConnection.receiveResponseHeader(DefaultBHttpClientConnection.java:163)
+	at org.apache.http.impl.conn.CPoolProxy.receiveResponseHeader(CPoolProxy.java:165)
+	at org.apache.http.protocol.HttpRequestExecutor.doReceiveResponse(HttpRequestExecutor.java:273)
+	at org.apache.http.protocol.HttpRequestExecutor.execute(HttpRequestExecutor.java:125)
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:272)
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:185)
+	at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:89)
+	at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:110)
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83)
+	at org.springframework.http.client.HttpComponentsClientHttpRequest.executeInternal(HttpComponentsClientHttpRequest.java:87)
+	at org.springframework.http.client.AbstractBufferingClientHttpRequest.executeInternal(AbstractBufferingClientHttpRequest.java:48)
+	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:52)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:542)
+	... 28 more
+
+The apps is not being showed in the server view but the apps is still in the server, I think the error report needs to be improved because there is not feedback provided to the end user.

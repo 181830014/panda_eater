@@ -1,0 +1,5 @@
+EclipseLink does a shallow insert in the case of cyclic dependencies, writing out null in the foreign key column in the first write and then subsequently filling it in with the correct foreign key. However, if the foreign key has a non-null constraint on it, with integrity constraint checking set on the foreign key to be deferred until commit, there is no way to do the insertion.
+
+See http://www.eclipse.org/forums/index.php/t/298970
+
+Eclipse should have an option to force it to go ahead and write the foreign key on the first pass. It would need to assume the schema has been set with deferred constraint checking options. The best way to offer this is probably through the "nullable" element of the @JoinColumn annotation. If it is set to false for the mapping then shallow inserts should not be done.

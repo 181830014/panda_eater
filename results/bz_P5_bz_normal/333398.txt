@@ -1,0 +1,9 @@
+Reusing MetaclassInstancesAdapter class in another context than MoDisco reveals some misc bug in computing list by Elass.
+Such a bug should also occur in MoDisco (eg : with Model Browser which uses this cache).
+
+The problem occurs when some Resource update events are taken in account in MetaclassInstancesAdapter.handleChanged(...).
+
+The scenario is :
+- having a Resource with many top level objects (in Resource.contents)
+- moving one top level object to some EObject container
+-> EMF sends two events = one "REMOVE" from notifier Resource + one "ADD" from notifier EObject container. The problem is that "REMOVE" comes after "ADD" and so MetaclassInstancesAdapter consider the top level object as lost.

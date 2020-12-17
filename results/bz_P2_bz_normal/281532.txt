@@ -1,0 +1,9 @@
+session.getActiveUnitOfWork() concept is very popular in native EclipseLink code for example, in a DescriptorEventAdapter method the first line of code is often: descriptorEvent.getSession().getActiveUnitOfWork()
+
+It's broken with JPA because the new RepeatableWriteUnitOfWork is not added to AbstractTransactionController.addUnitOfWork.
+
+Consequences is that attempt to call getActiveUnitOfWork() will create a new UnitOfWorkImpl, so a new UOW and not from the right type.
+
+getActiveUnitOfWork() is also used to get a ClientSession by calling getActiveUnitOfWork().getClientSession().
+
+It's obvious that JPA public API itself is not enough for any application that is more than very simple so native EclipseLink API must be supported with less integration issues.

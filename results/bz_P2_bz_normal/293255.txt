@@ -1,0 +1,40 @@
+User-Agent:       Mozilla/5.0 (Windows; U; Windows NT 6.0; pt-BR; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 3.5.30729)
+Build Identifier: 
+
+Using a superclass with InheritanceType.Joined, then a subclass with InheritanceType.SingleTable, then in the next subclass when you try to use an Embedded class, JPA puts all it's attributes into the first class (the one with the InheritanceType.Joined).
+
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+Here an example of what i'm trying to say:
+
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Person {
+ // attributes and methods...
+}
+
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public class User extends Person {
+ // attributes and methods...
+}
+
+public class MainUser extends User {
+
+    @Embedded
+    Address adress;
+
+}
+
+@Embeddable
+public class Adress {
+
+  private String street;
+
+  private int number;  
+
+}
+
+
+Instead of putting Adress attributes (street and number) in the User table that is SINGLE_TABLE, it puts on the Person table.

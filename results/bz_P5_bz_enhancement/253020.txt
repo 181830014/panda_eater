@@ -1,0 +1,41 @@
+As a result of a code review for bug# 248748 on where WebLogic specific functionality was added to MBean services on 20081031
+
+See
+http://wiki.eclipse.org/EclipseLink/DesignDocs/248748#Code_Reviews
+
+Refactor:
+---------
+From D.M.
+
+String naming/labelling for cache type (potential confusion)
+
+For the following:
+
++    /**
++     * INTERNAL:
++     * getCacheTypeFor: Give a more UI-friendly version of the cache type
++     */
++    private String getCacheTypeFor(Class identityMapClass) {
++        if (identityMapClass == CacheIdentityMap.class) {
++            return "Cache";
++        } else if (identityMapClass == FullIdentityMap.class) {
++            return "Full";
++        } else if (identityMapClass == HardCacheWeakIdentityMap.class) {
++            return "HardWeak";
++        } else if (identityMapClass == NoIdentityMap.class) {
++            return "None";
++        } else if (identityMapClass == SoftCacheWeakIdentityMap.class) {
++            return "SoftWeak";
++        } else if (identityMapClass == WeakIdentityMap.class) {
++            return "Weak";
++        } else if (identityMapClass == SoftIdentityMap.class) {
++            return "Soft";
++        }
++        return "N/A";
++    }
+
+NoIdentityMap returns "None"
+and the else { returns "N/A"
+
+I think these could be confused and NoIdentityMap should return "NoIdentity" instead of "None".
+Just a minor thing to avoid confusion.

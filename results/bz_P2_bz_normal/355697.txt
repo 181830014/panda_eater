@@ -1,0 +1,22 @@
+Build Identifier: 2.1.2
+
+@OneToMany
+@JoinTable(name = "ISSUE_EMPLOYEE",
+    joinColumn = @JoinColumn(name = "ISSUE_ID"),
+    inverseJoinColumn = @JoinColumn("EMPLOYEE_ID"))
+@MapKeyColumn(name="EMPLOYEEPOSITION_ID") 
+private Map<EmployeePosition, Employee> namedEmployees = new Hashtable<EmployeePosition, Employee>();
+
+leads to an Exception:
+
+Internal Exception: java.sql.SQLException: ORA-00904: "EMPLOYEES": invalid identifier
+
+Error Code: 904 Call: INSERT INTO ISSUE_EMPLOYEE (ISSUE_ID, EMPLOYEES, EMPLOYEEPOSITION_ID) VALUES (?, ?, ?) bind => [27, [B@18b85d, SERVICE]
+
+More details:
+http://stackoverflow.com/questions/4955545/jpa-map-a-mapenum-entity
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Using MapKeyColumn with an Java enum as Key for a Map

@@ -1,0 +1,15 @@
+The following types (unparameterized), for example are reference types:
+Number
+Decimal
+String
+Bytes
+TimeStamp
+
+However, all of these types inherit from AnyValue. Because of this, special code is added to TypeUtils.isValueType() to handle these types. This is a kludge and needs to be fixed.
+
+One approach would be to change the definition of these types to be directly under ANY. However, since INT is substructured off of Number, this would make INT a reference type.
+
+Therefore, we will likely need to change the definition for INT to extend both
+Anyvalue and Number, and Change Number to subclass ANY.
+
+However, this is probably going to cause some problems and needs furthur design and planning.

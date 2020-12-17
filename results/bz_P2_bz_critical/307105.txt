@@ -1,0 +1,8 @@
+Created attachment 163014 [details]
+Error details and possible workaround
+
+There is an error in the org.eclipse.persistence.internal.jpa.deployment.ArchiveFactoryImpl#createArchive method causing a FileNotFoundException to be thrown. ArchiveFactoryImpl is unable to resolve .jar's on a remote Windows drive as on line 73 the path is passed into a java.io.File which results in the first backslash ('\') being ommited. See attachment the stacktrace and possible rough workaround reusing a the 'jar:' URI approach.
+
+The exact build version is: 2.0.0.v20091127-r5931
+
+BTW using a new implementation of ArchiveFactory was not an option for me due to the way spring loads it's classes via a SimpleThrowawayClassLoader resulting in ClassLoader Class missmatches.

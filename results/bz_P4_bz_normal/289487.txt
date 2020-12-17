@@ -1,0 +1,102 @@
+>This issue arose when testing BasicMap support in the Metamodel API for MapAttributeImpl when we found out that using the field.type (Class) was not working when an @ObjectTypeConverter has modified the type class to reflect the actual type on the database.  
+At this point the typeName correctly reflects the object type (Long) and the type reflects the database type (String).
+
+>Model
+org.eclipse.persistence.testing.models.jpa.advanced.Buyer
+
+    @BasicMap(
+        fetch=EAGER,
+        keyColumn=@Column(name="CARD"),
+        keyConverter=@Convert("CreditCard"),
+        valueColumn=@Column(name="NUMB"),
+        valueConverter=@Convert("Long2String")
+    )
+    @ObjectTypeConverter(
+        name="CreditCard",
+        conversionValues={
+            @ConversionValue(dataValue="VI", objectValue=VISA),
+            @ConversionValue(dataValue="AM", objectValue=AMEX),
+            @ConversionValue(dataValue="MC", objectValue=MASTERCARD),
+            @ConversionValue(dataValue="DI", objectValue=DINERS)
+        }
+    )
+    @PrivateOwned
+    // Default the collection table BUYER_CREDITCARDS
+    public Map<String, Long> getCreditCards() {
+        return creditCards;
+
+
+>Debugging
+>typeName is correct, type is not (but is the correct database type)
+mapping	DirectMapMapping  (id=143)	
+	attributeAccessor	MethodAttributeAccessor  (id=263)	
+	attributeName	"creditCards" (id=266)	
+	cascadeMerge	false	
+	cascadePersist	false	
+	cascadeRefresh	false	
+	cascadeRemove	false	
+	changeOrderTargetQuery	null	
+	changeSetDeleteQuery	DataModifyQuery  (id=267)	
+	containerPolicy	DirectMapContainerPolicy  (id=152)	
+		cloneMethod	null	
+		constructor	Constructor<T>  (id=281)	
+		containerClass	Class<T> (java.util.Hashtable) (id=284)	
+		containerClassName	"java.util.Hashtable" (id=286)	
+		elementDescriptor	RelationalDescriptor  (id=122)	
+		valueField	DatabaseField  (id=274)	
+			columnDefinition	"" (id=318)	
+			index	0	
+			isInsertable	true	
+			isNullable	true	
+			isUnique	false	
+			isUpdatable	true	
+			length	255	
+			name	"NUMB" (id=323)	
+			precision	0	
+			qualifiedName	"Buyer_CREDITCARDS.NUMB" (id=322)	
+			scale	0	
+			sqlType	-2147483648	
+			table	DatabaseTable  (id=320)	
+			type	Class<T> (java.lang.String) (id=175)	
+			typeName	"java.lang.Long" (id=324)	
+			useDelimiters	false	
+	weight	Integer  (id=338)	
+
+>this one is ok
+containerPolicy	DirectMapContainerPolicy  (id=149)	
+	cloneMethod	null	
+	constructor	Constructor<T>  (id=174)	
+	containerClass	Class<T> (org.eclipse.persistence.indirection.IndirectMap) (id=178)	
+	containerClassName	"org.eclipse.persistence.indirection.IndirectMap" (id=179)	
+	elementDescriptor	RelationalDescriptor  (id=107)	
+	keyConverter	null	
+	keyConverterClassName	null	
+	keyField	DatabaseField  (id=180)	
+	valueConverter	null	
+	valueField	DatabaseField  (id=157)	
+		columnDefinition	"" (id=183)	
+		index	0	
+		isInsertable	true	
+		isNullable	true	
+		isUnique	false	
+		isUpdatable	true	
+		length	255	
+		name	"AWARD_CODE" (id=184)	
+		precision	0	
+		qualifiedName	"NOVICE_CONSUMER_AWARDS.AWARD_CODE" (id=182)	
+		scale	0	
+		sqlType	-2147483648	
+		table	DatabaseTable  (id=185)	
+		type	Class<T> (java.lang.Integer) (id=110)	
+		typeName	"java.lang.Integer" (id=187)	
+		useDelimiters	false	
+
+>Workaround: see design issue #83 and #81
+- either use typeName and create a Class using ConversionManager, or add the attributeClassification fields to DirectCollectionMapping.
+
+http://wiki.eclipse.org/EclipseLink/Development/JPA_2.0/metamodel_api#DI_83:_20090914:_MapAttributeImpl.elementType_incorrectly_set_when_.40ObjectTypeConverter_is_present
+http://wiki.eclipse.org/EclipseLink/Development/JPA_2.0/metamodel_api#DI_81:_20090914:_Implement_.40BasicMap_DirectMapContainerPolicy_support_in_MapAttributeImpl
+
+>Note: the workaround for Metamodel processing is sufficient - this bug should be tracked and possibly fixed or enhanced - post release.
+
+>see bug# 266912

@@ -1,0 +1,59 @@
+The feature is described in the following aspectj-users conversation:
+
+-------------
+
+I agree with both of you that this feature of javac can be annoying.  I can 
+never bring myself to write the code to enforce this rule (so ajc doesn't).  
+However, we've gotten our fair share of bug reports complaining about legal 
+behavior that was different from javac's.  We usually wind up "fixing" these 
+in acknowledgement of javac's position as a de-facto standard.
+
+This rule combined with the rule that externally visible classes must be in a 
+file named ClassName.java makes it easy for compilers to find the correct 
+source file for a given class name without doing any parsing.
+This is very useful for javac's dependency-based compilation where you can 
+point it at Main.java and have all dependencies compiled automatically.  It 
+can also make implementing incremental compilation easier.
+
+In AspectJ-1.2, we should add a -warn:packageMatchesDirectory option to go 
+along with eclipse's other warning options like the one for unused local 
+variables.  I'm afraid that the default behavior will probably be to match 
+javac following the principle of least surprise.  However, I'm almost certain 
+that this will be an option that can be disabled for those who find the rule 
+silly.
+
+-Jim
+
+BTW - I've been exploring the csharp language and MS's tools are much more 
+flexible about the relationship between file structure and namespaces.  I've 
+found this to be very helpful in the early stages of a project where I often 
+want all of my classes in a single file.  However, I've found that as a 
+project grows I will break it up into the one class per file and one directory 
+per package structure enforced by javac.
+This is made easier by csharp's 'internal' modifier that roughly corresponds 
+to "within my .jar file" rather than within my package.
+
+> -----Original Message-----
+> From: aspectj-users-admin@eclipse.org [mailto:aspectj-users- 
+> admin@eclipse.org] On Behalf Of Lendvai Attila
+> Sent: Saturday, October 18, 2003 2:52 AM
+> To: aspectj-users@eclipse.org
+> Subject: RE: [aspectj-users] ajc not enforcing package - directory 
+> structure rule
+> 
+> :: > is it a feature or a bug that ajc does not complain if a
+> :: > file is not in
+> :: > a directory structure what it's package name defines?
+> ::
+> :: Feature in my view . There's no requirement that source
+> :: files be stored in the same directory structure as their
+> :: packages define. I find it very annoying when IDE's require this.
+> 
+> i kinda like it, too. btw, javac itself is the one who complains, not 
+> only the ide's.
+> 
+> i would just like to know wether this feature will remain or will be 
+> fixed, so i can have my long term package strategy...
+> 
+> i like package private stuff, but on the other hand i don't like 
+> directories with houdreds of files.

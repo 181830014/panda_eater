@@ -1,0 +1,17 @@
+Rename message that states that we are "reconnecting" to external connection pool to one that states we are only "requesting" an existing pooled connection.
+
+
+Reproduction:
+-------------
+Run against an external connection pool via a global scoped (or application scoped) JTA datasource that persists 2 or more entities on the WebLogic server.
+Any container managed app will do - for example:
+http://wiki.eclipse.org/EclipseLink/Examples/JPA/WebLogic_Web_Tutorial
+
+You will see the following message that seems to be implying that we are reconnecting to the pool.  In fact we are requesting a pooled connection back after having released it previously back to the pool.
+This is normal behaviour for DatasourceAccessor.reconnect() so we may want to reword the FINEST message to state
+
+From
+"[EL Finest]: 2009-03-13 11:30:23.27--ServerSession(28126645)--Thread(Thread[[ACTIVE] ExecuteThread: '3' for queue: 'weblogic.kernel.Default (self-tuning)',5,Pooled Threads])--reconnecting to external connection pool"
+
+To
+"[EL Finest]: 2009-03-13 11:30:23.27--ServerSession(28126645)--Thread(Thread[[ACTIVE] ExecuteThread: '3' for queue: 'weblogic.kernel.Default (self-tuning)',5,Pooled Threads])--requesting connection from external connection pool"

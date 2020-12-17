@@ -1,0 +1,16 @@
+Using Eclipse Luna and "EMF Model Comparison for EUnit" from the update site.
+
+Steps to reproduce:
+1.) Load the sample project "org.eclipse.epsilon.eunit.examples.atl"
+into the workspace
+2.) Execute eunit.xml. This should succeed.
+3.) Open models/graph-expected.model in Eclipse with the text editor
+and change the string "outgoing" to "outgoing2".
+4.) Execute eunit.xml. This fails as expected with the following exception: org.eclipse.emf.ecore.resource.Resource$IOWrappedException: Feature 'outgoing2' not found.
+5.) Change "outgoing2" back to "outgoing".
+6.) Execute eunit.xml again. The following error message is shown: "/home/workspace-luna/org.eclipse.epsilon.eunit.examples.atl/eunit.xml:19: At least one test case had a failure or an error: Internal error: Expected Graph to be equal to GraphExpected, but it is not"
+7.) When Eclipse is restarted and the eunit.xml is executed again, there is no problem any more.
+
+Expected results: Step 6 should not lead to an error message!
+
+It seems that the Cache in org.eclipse.epsilon.emc.emf.CachedResourceSet.java does not get updated (after a parse exception has occurred). A work-around would be to change the line 18 "return cache;" into "return new Cache();" in the method "public static Cache getCache() {".

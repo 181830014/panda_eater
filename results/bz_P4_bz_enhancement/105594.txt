@@ -1,0 +1,20 @@
+Currently all text in JET templates it compiled to print statements in a single
+"generate" method. I would like to be able to change the method that the print
+statements are compiled to during the template, allowing for the reuse of
+sections of JET code in the template (e.g. using java methods written with JET
+as parameterized macros from within the same template). This is VERY useful for
+complex JET templates, especially those that need be maintained by hand.
+
+For an example see below that shows how to declare a template method called
+"formatThis" that just like a macro can be called from the normal generate method.
+
+<%@ section declare %>
+<%private void formatThis(String name) {%>
+<i><%=name%></i>
+<%}%>
+
+<%@ section generate %>
+<% formatThis( "foo" ); %>
+
+Nb. This is similar to a feature called sections in the Jostraca code generator
+- see http://www.jostraca.net/doc/ref/nreftemdirall.htm#section.

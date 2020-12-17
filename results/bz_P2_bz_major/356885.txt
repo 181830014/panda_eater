@@ -1,0 +1,84 @@
+Build Identifier: 2.2.1
+
+The following code changes the root expression on the path to a batch query also to a batch query:
+
+ObjectLevelReadQuery:
+
+    /**
+     * INTERNAL:
+     * This method is used when computing the nested queries for batch read mappings.
+     * It recurses computing the nested mapping queries.
+     */
+    protected void computeNestedQueriesForBatchReadExpressions(List<Expression> batchReadExpressions) {
+        int size = batchReadExpressions.size();
+        for (int index = 0; index < size; index++) {
+            ObjectExpression objectExpression = (ObjectExpression)batchReadExpressions.get(index);
+
+            // Expression may not have been initialized.
+            ExpressionBuilder builder = objectExpression.getBuilder();
+            builder.setSession(getSession().getRootSession(null));
+            builder.setQueryClass(getReferenceClass());            
+            
+            // PERF: Cache join attribute names.
+            ObjectExpression baseExpression = objectExpression;
+            while (!baseExpression.getBaseExpression().isExpressionBuilder()) {
+                baseExpression = (ObjectExpression)baseExpression.getBaseExpression();
+            }
+            this.batchFetchPolicy.getAttributes().add(baseExpression.getName());
+            
+            // Ignore nested
+            if (objectExpression.getBaseExpression().isExpressionBuilder()) {
+                DatabaseMapping mapping = objectExpression.getMapping();
+                if ((mapping != null) && mapping.isForeignReferenceMapping()) {
+                    // A nested query must be built to pass to the descriptor that looks like the real query execution would.
+                    ReadQuery nestedQuery = ((ForeignReferenceMapping)mapping).prepareNestedBatchQuery(this);    
+                    // Register the nested query to be used by the mapping for all the objects.
+                    this.batchFetchPolicy.getMappingQueries().put(mapping, nestedQuery);
+                }
+            }
+        }
+    }
+
+Here, instead of just adding the attributes as they were passed in the QueryHint, the base expression is retrieved and the base expression name is registered.
+
+Later on, by:
+
+ForeignReferenceMapping#returnValueFromRow:
+
+        // PERF: Direct variable access.
+        // If the query uses batch reading, return a special value holder
+        // or retrieve the object from the query property.
+        if (sourceQuery.isObjectLevelReadQuery() && (((ObjectLevelReadQuery)sourceQuery).isAttributeBatchRead(this.descriptor, getAttributeName())
+                || (sourceQuery.isReadAllQuery() && shouldUseBatchReading()))) {
+            return batchedValueFromRow(row, (ObjectLevelReadQuery)sourceQuery, cacheKey);
+        }
+
+and subsequently:
+
+ObjectLevelReadQuery:
+
+    /**
+     * INTERNAL:
+     * Return if the attribute is specified for batch reading.
+     */
+    public boolean isAttributeBatchRead(ClassDescriptor mappingDescriptor, String attributeName) {
+        if (this.batchFetchPolicy == null) {
+            return false;
+        }
+        // Since aggregates share the same query as their parent, must avoid the aggregate thinking
+        // the parents mappings is for it, (queries only share if the aggregate was not joined).
+        if (mappingDescriptor.isAggregateDescriptor() && (mappingDescriptor != this.descriptor)) {
+            return false;
+        }
+        return this.batchFetchPolicy.isAttributeBatchRead(mappingDescriptor, attributeName);
+    }
+
+the base expression name is retrieved as batch-enabled. I am scratching my head as to why this would be a good idea, but maybe I am missing an important concept?
+
+Suggested patch: don't queue the base expression attribute name, instead just queue the attribute name the user registered as batch enabled - that should be it.
+
+best regards,
+
+Martin
+
+Reproducible: Always

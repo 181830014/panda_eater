@@ -1,0 +1,56 @@
+(from my stackoverflow write up of the issue at - https://stackoverflow.com/questions/56680174/buildship-java-launch-configuration-missing-jars-when-specific-version-of-glassf)
+
+Background
+==========
+I'm migrating a large project to OpenJDK 11 from 8. As such I need to include JAXB implementation. 
+
+Problem
+=======
+I've observed that applications launched from within Eclipse 
+2019-03 (4.11.0) using Buildship (3.0.1.v20181217-1554) don't contain any external JAR dependencies. 
+
+This only effects launch configurations, compilation is fine.
+
+Analysis
+========
+I've isolated the fault to when version 2.4.0-b180725.0644 of the Glassfish JAXB implementation is used. Using 2.3.1 works as expected.
+
+What am I doing wrong? How can I avoid this issue
+
+Test case
+=========
+build.gradle
+
+    apply plugin: 'java'
+    
+    dependencies {
+        compile 'log4j:log4j:1.2.17'
+    	runtime group: "org.glassfish.jaxb", name: "jaxb-runtime", version: "2.4.0-b180725.0644"
+    	// runtime group: "org.glassfish.jaxb", name: "jaxb-runtime", version: "2.3.1"
+    }
+
+Java test file
+
+    public class LaunchConfigurationIssue {
+        public static void main(String[] args) {
+            for (String each : System.getProperty("java.class.path").split(File.pathSeparator)) {
+                System.out.println(each);
+            }
+        }
+    }
+
+Output when 2.3.1 used
+
+    C:\adam\git\foo\bin\main
+    C:\Users\adam\.gradle\caches\modules-2\files-2.1\log4j\log4j\1.2.17\5af35056b4d257e4b64b9e8069c0746e8b08629f\log4j-1.2.17.jar
+    C:\Users\adam\.gradle\caches\modules-2\files-2.1\org.glassfish.jaxb\jaxb-runtime\2.3.1\dd6dda9da676a54c5b36ca2806ff95ee017d8738\jaxb-runtime-2.3.1.jar
+    C:\Users\adam\.gradle\caches\modules-2\files-2.1\javax.xml.bind\jaxb-api\2.3.1\8531ad5ac454cc2deb9d4d32c40c4d7451939b5d\jaxb-api-2.3.1.jar
+    C:\Users\adam\.gradle\caches\modules-2\files-2.1\org.glassfish.jaxb\txw2\2.3.1\a09d2c48d3285f206fafbffe0e50619284e92126\txw2-2.3.1.jar
+    C:\Users\adam\.gradle\caches\modules-2\files-2.1\com.sun.istack\istack-commons-runtime\3.0.7\c197c86ceec7318b1284bffb49b54226ca774003\istack-commons-runtime-3.0.7.jar
+    C:\Users\adam\.gradle\caches\modules-2\files-2.1\org.jvnet.staxex\stax-ex\1.8\8cc35f73da321c29973191f2cf143d29d26a1df7\stax-ex-1.8.jar
+    C:\Users\adam\.gradle\caches\modules-2\files-2.1\com.sun.xml.fastinfoset\FastInfoset\1.2.15\bb7b7ec0379982b97c62cd17465cb6d9155f68e8\FastInfoset-1.2.15.jar
+    C:\Users\adam\.gradle\caches\modules-2\files-2.1\javax.activation\javax.activation-api\1.2.0\85262acf3ca9816f9537ca47d5adeabaead7cb16\javax.activation-api-1.2.0.jar
+
+Output when 2.4.0-b180725.0644 used
+
+    C:\adam\git\foo\bin\main

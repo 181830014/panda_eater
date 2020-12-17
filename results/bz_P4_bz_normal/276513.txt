@@ -1,0 +1,68 @@
+VERSION:   Eclipse Persistence Services - 1.1.1.v20090430-r4097
+Database: Informix Dynamic Server  Version: 11.10.TC1E
+Driver: IBM Informix JDBC Driver for IBM Informix Dynamic Server  Version: 3.10.JC1
+Test component: foundation/eclipselink.core.test
+
+---Full stack trace---
+
+Test model: SimultaneousTestsModel
+TEST SUITE NAME: About to Update Multithread Test Suite
+	TEST NAME:   MultithreadTestCase
+	TEST DESCRIPTION: Runs several tests simultaneously
+	Local Exception Stack: 
+	Exception [EclipseLink-4002] (Eclipse Persistence Services - 1.1.1.v20090430-r4097): org.eclipse.persistence.exceptions.DatabaseException
+	Internal Exception: java.sql.SQLException: Could not do a physical-order read to fetch next row.
+	Error Code: -244
+	Call: UPDATE SEQUENCE SET SEQ_COUNT = SEQ_COUNT + ? WHERE SEQ_NAME = ?
+	bind => [50, SINGLE_SEQ]
+	Query: DataModifyQuery(sql="UPDATE SEQUENCE SET SEQ_COUNT = SEQ_COUNT + ? WHERE SEQ_NAME = ?")
+	at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:323)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeDirectNoSelect(DatabaseAccessor.java:767)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeNoSelect(DatabaseAccessor.java:833)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:558)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeCall(DatabaseAccessor.java:501)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeCall(AbstractSession.java:872)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:205)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:191)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeNoSelectCall(DatasourceCallQueryMechanism.java:234)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeNoSelect(DatasourceCallQueryMechanism.java:214)
+	at org.eclipse.persistence.queries.DataModifyQuery.executeDatabaseQuery(DataModifyQuery.java:85)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:664)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.internalExecuteQuery(AbstractSession.java:2243)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1181)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1165)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1139)
+	at org.eclipse.persistence.sequencing.QuerySequence.update(QuerySequence.java:330)
+	at org.eclipse.persistence.sequencing.QuerySequence.updateAndSelectSequence(QuerySequence.java:269)
+	at org.eclipse.persistence.sequencing.StandardSequence.getGeneratedVector(StandardSequence.java:71)
+	at org.eclipse.persistence.sequencing.DefaultSequence.getGeneratedVector(DefaultSequence.java:143)
+	at org.eclipse.persistence.sequencing.Sequence.getGeneratedVector(Sequence.java:246)
+	at org.eclipse.persistence.internal.sequencing.SequencingManager$Preallocation_Transaction_Accessor_State.getNextValue(SequencingManager.java:554)
+	at org.eclipse.persistence.internal.sequencing.SequencingManager.getNextValue(SequencingManager.java:905)
+	at org.eclipse.persistence.internal.sequencing.ClientSessionSequencing.getNextValue(ClientSessionSequencing.java:70)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.assignSequenceNumber(ObjectBuilder.java:277)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.assignSequenceNumbers(UnitOfWorkImpl.java:481)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.calculateChanges(UnitOfWorkImpl.java:559)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitToDatabaseWithChangeSet(UnitOfWorkImpl.java:1386)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitRootUnitOfWork(UnitOfWorkImpl.java:1229)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commit(UnitOfWorkImpl.java:1007)
+	at org.eclipse.persistence.testing.tests.events.AboutToInsertEventTest.test(AboutToInsertEventTest.java:69)
+	at org.eclipse.persistence.testing.framework.TestCase.executeTest(TestCase.java:543)
+	at org.eclipse.persistence.testing.framework.TestCase.execute(TestCase.java:154)
+	at org.eclipse.persistence.testing.framework.TestExecutor.execute(TestExecutor.java:249)
+	at org.eclipse.persistence.testing.tests.simultaneous.TestExecutorWithClientSession.runTest(TestExecutorWithClientSession.java:153)
+	at org.eclipse.persistence.testing.framework.ui.SynchronizedTestExecutor.run(SynchronizedTestExecutor.java:61)
+Caused by: java.sql.SQLException: Could not do a physical-order read to fetch next row.
+	at com.informix.jdbc.IfxSqli.a(IfxSqli.java:3243)
+	at com.informix.jdbc.IfxSqli.E(IfxSqli.java:3556)
+	at com.informix.jdbc.IfxSqli.dispatchMsg(IfxSqli.java:2382)
+	at com.informix.jdbc.IfxSqli.receiveMessage(IfxSqli.java:2298)
+	at com.informix.jdbc.IfxSqli.executeCommand(IfxSqli.java:770)
+	at com.informix.jdbc.IfxResultSet.b(IfxResultSet.java:293)
+	at com.informix.jdbc.IfxStatement.c(IfxStatement.java:1269)
+	at com.informix.jdbc.IfxPreparedStatement.executeUpdate(IfxPreparedStatement.java:410)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeDirectNoSelect(DatabaseAccessor.java:758)
+	... 34 more
+Caused by: java.sql.SQLException: ISAM error: record is locked.
+	at com.informix.util.IfxErrMsg.getSQLException(IfxErrMsg.java:398)
+	at com.informix.jdbc.IfxSqli.E(IfxSqli.java:3561)

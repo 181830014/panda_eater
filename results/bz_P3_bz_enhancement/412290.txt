@@ -1,0 +1,32 @@
+At the moment Eugenia only supports self-contained Ecore metamodels. It would be nice to have the option to split the metamodels into several files, like the following example:
+
+@namespace(
+	uri="/org.model.variability/model/pld.ecore",
+	prefix="")
+
+package pld;
+
+@gmf.diagram(onefile="true", diagram.extension="pld", model.extension="pld")
+class PL{
+
+  	unsettable attr EString name = "PL";
+}
+
+
+and hw.emf, located in another project:
+
+Code: [Select all] [Show/ hide]
+@namespace(
+	uri="/org.model.variability.hw/model/hw.ecore",
+	prefix="")
+
+package hw;
+
+import "platform:/resource/org.model.variability/model/pld.ecore";
+
+@gmf.node(label="name", label.icon="false", color="238,233,233", border.color="0,0,0", resizable="false")
+class Platform{
+  	unsettable attr EString name = "Platform";	
+  	
+  	ref pld.PL pl;
+}

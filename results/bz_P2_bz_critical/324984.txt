@@ -1,0 +1,28 @@
+Build Identifier: EclipseLink JPA 2.1.0
+
+    @OneToMany(mappedBy = "someType")
+    @OrderBy("id ASC")
+    private List<MyType> attributeDefinitions = new ArrayList<MyType>();
+
+Adding an object to this collection will add the object to the the following field in the EclipseLink class during a cache sync that uses the changeset cache sync configuration:
+
+CollectionChangeRecord.class
+
+The object is added to the following collection in CollectionChangeRecord.class:
+
+protected transient Vector orderedAddObjects;
+
+When the data in this change record are serialized (when sent to the other JVMs in the cluster), this collection is not serialized since it is declared as a transient field. When the EclipseLink OrderedListContainerPolicy merge takes place in the receiving JVMs, this transient collection is empty and the added objects to the application's collection are not added. Note that in the receiving JVMs, the collection must be instantiated an in the cache before the change takes place in order for this bug to occur. If the collection is not instantiated in the receiving JVMs, since there is no collection to add the new item in the collection to.
+
+Removing the @OrderedBy annotation fixes the issue.
+
+I'm assuming that REMOVING an item in this same collection will also fail to be cache synch'd correctly since the removed ordered list is also marked as transient.
+
+Reproducible: Always
+
+Steps to Reproduce:
+1.Set up a clustered set of JVMs using change set cache sync
+2.Declare a @OneToMany collection using an @OrderedBy annotation.
+3. In the other JVMs, make sure this collection is instantiated and the current items are in the collection.
+3.Add an object to the collection in the first JVM. 
+4. Look at this collection in the other JVMs after the cache sync and note that the newly added object is not in the collection.

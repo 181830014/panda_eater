@@ -1,0 +1,29 @@
+Created attachment 225882 [details]
+Eclipse Project containing the test cases
+
+The following test produces a duplicate key exception, because EclipseLink "forgets" the remove() call. The SQL log contains two INSERT's but no DELETE:
+
+  @Test
+  public void insertFlushDeleteInsert() {
+    MyEntity e = new MyEntity();
+    e.setId(2);
+    em.persist(e);
+    em.createQuery("select x from MyEntity x").getResultList(); // em.flush() does the same job
+    em.remove(e);
+    em.persist(e.clone());
+  }
+
+If I do not run a query (or call em.flush()), everything works as expected. The following test inserts a single row into the database:
+
+  @Test
+  public void insertDeleteInsert() {
+    MyEntity e = new MyEntity();
+    e.setId(1);
+    em.persist(e);
+    em.remove(e);
+    em.persist(e.clone());
+  }
+
+Please find attached an eclipse project, that demonstrates the bug.
+
+For us this bug is somewhat critical, because we have an EMF based persistence layer that generates stuff like that.

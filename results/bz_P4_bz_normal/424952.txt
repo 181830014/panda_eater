@@ -1,0 +1,18 @@
+Created attachment 238699 [details]
+test project showing the bug
+
+See attached minimal Maven project:
+ - class ImportNode imports "hudson.model.Node" successfully,
+ - class ImportNodeMode tries to import "hudson.model.Node.Mode", but Eclipse (4.3) can't resolved the class.
+
+Sure, this "hudson.model.Node.Mode" class (an enum actually) exists in the dependency of my test project ("jenkins-core:1.532.1"), and is valid (we use it in a Jenkins plugin which works fine, and it is used in Jenkins itself).
+
+The error can also be reproduced directly with Maven, without launching Eclipse:
+ - if maven-compiler is configured to use the Eclipse compiler (using "plexus-compiler-eclipse:2.3", and thus "org.eclipse.jdt.core-3.8.1.v20120531-0637.jar"), then "mvn compile" fails with similar error on "hudson.model.Node.Mode".
+ - otherwise (if you remove the "<compilerId>eclipse</compilerId>" option), it compiles fine.
+
+
+Note 1: unlike bug #421526, which has similar summary, this bug can be reproduced anytime with this particular "hudson.model.Node.Mode" class, and restarting Eclipse does not solve the issue.
+
+
+Note 2: I've tried recompiling the jenkins-core from sources, and managed to get a version which does not exhibit this issue in Eclipse, by disabling the "bridge-method-injector" Maven plugin.  This plugin seems to do some ASM magic to add some backward-compatibility code to the "Node.class".  The "Node$Mode.class" file itself is not modified by this plugin, only the "Node.class" is.  I will attach a working "Node.class" file that you can compare with the one shipped in the jenkins-core-1.532.1.jar dependency of my test project.

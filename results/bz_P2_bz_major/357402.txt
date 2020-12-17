@@ -1,0 +1,13 @@
+If we allow caching of tenant data as we currently are, then if I have a BankAccount of Id 1234 at BMO, then call find() for BankAccount 1234 for TD, we will get a cache hit for this, and return the TD user the BankAccount from BMO.
+As well, a query that uses a CacheUsage of CheckCacheOnly, or CheckCacheThenDatabase, will return data from other tenants.
+Also, and update-all, or delete-all query, or flush-clear will invalidate data from other tenants.
+
+We also have a primaryKey() option on TenantDiscriminatorColumn, that lets the application use the application Id even if it is not unique across tenants.  This cannot work at all.
+We do not include the tenant field on updates, deletes, or does-exist queries.  This means updating or deleting BankAccount 1234 for BMO, will also update TD.
+Also, we are not including the tenant field in the secondary tables, join tables, or collection tables.  This is not good in general, but can't work at all if the ids are not unique.
+
+We should require the tenant data to be isolated if using a shared EMF.
+We should remove the primaryKey() option on TenantDiscriminatorColumn.  If they want it to be part of the Id, then they need to map it.
+We should require the tenant field in the secondary tables, join tables, and collection tables.  This should work exactly the same as our HistoryPolicy, which also stores the start/end dates on secondary tables, and is on DirectCollection and ManyToMany mappings.  The TenantDiscriminatorColumn should be allowed to be annotated on the field/mapping as well.
+
+We should consider adding support for auto adding the tenant field to the Id.  This would allow caching of the tenant data, but would require a lot of check in a lot of places for tenant data.

@@ -1,0 +1,185 @@
+Build ID: 3.3 GA
+
+Steps To Reproduce:
+1. Have a big workspace with lots of files
+2. Activate a task
+3. Refresh workspace, with lots of changes made outside
+4. see Eclipse crawl and hear your CPU scream
+
+More information:
+Repeated thread dumps show execution coming through
+rg.eclipse.mylyn.internal.java.ui.LandmarkMarkerManager.landmarkAdde
+d(LandmarkMarkerManager.java:102)
+
+like this one:
+
+
+"main" prio=6 tid=0x00036f00 nid=0x964 runnable [0x0007c000..0x0007fc40]
+        at java.lang.StringBuffer.toString(StringBuffer.java:586)
+        - waiting to lock <0x13a4a470> (a java.lang.StringBuffer)
+        at org.eclipse.osgi.util.NLS.internalBind(NLS.java:213)
+        at org.eclipse.osgi.util.NLS.bind(NLS.java:85)
+        at org.eclipse.ui.internal.HeapStatus.convertToMegString(HeapStatus.java
+:492)
+        at org.eclipse.ui.internal.HeapStatus.updateToolTip(HeapStatus.java:478)
+
+        at org.eclipse.ui.internal.HeapStatus.access$2(HeapStatus.java:477)
+        at org.eclipse.ui.internal.HeapStatus$1.run(HeapStatus.java:74)
+        at org.eclipse.swt.widgets.Display.runTimer(Display.java:3745)
+        at org.eclipse.swt.widgets.Display.messageProc(Display.java:2967)
+        at org.eclipse.swt.internal.win32.OS.DispatchMessageW(Native Method)
+        at org.eclipse.swt.internal.win32.OS.DispatchMessage(OS.java:2264)
+        at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3291)
+        at org.eclipse.ui.internal.dialogs.EventLoopProgressMonitor.runEventLoop
+(EventLoopProgressMonitor.java:123)
+        at org.eclipse.ui.internal.dialogs.EventLoopProgressMonitor.isCanceled(E
+ventLoopProgressMonitor.java:97)
+        at org.eclipse.core.internal.jobs.ThreadJob.isCanceled(ThreadJob.java:13
+2)
+        at org.eclipse.core.internal.jobs.ThreadJob.joinRun(ThreadJob.java:167)
+        at org.eclipse.core.internal.jobs.ImplicitJobs.begin(ImplicitJobs.java:8
+7)
+        at org.eclipse.core.internal.jobs.JobManager.beginRule(JobManager.java:2
+25)
+        at org.eclipse.core.internal.resources.WorkManager.checkIn(WorkManager.j
+ava:117)
+        at org.eclipse.core.internal.resources.Workspace.prepareOperation(Worksp
+ace.java:1744)
+        at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:1792
+)
+        at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:1779
+)
+        at org.eclipse.mylyn.internal.java.ui.LandmarkMarkerManager.landmarkAdde
+d(LandmarkMarkerManager.java:102)
+        at org.eclipse.mylyn.internal.context.core.InteractionContextManager.che
+ckForLandmarkDeltaAndNotify(InteractionContextManager.java:355)
+        at org.eclipse.mylyn.internal.context.core.InteractionContextManager.pro
+pegateInterestToParents(InteractionContextManager.java:369)
+        at org.eclipse.mylyn.internal.context.core.InteractionContextManager.pro
+pegateInterestToParents(InteractionContextManager.java:413)
+        at org.eclipse.mylyn.internal.context.core.InteractionContextManager.int
+ernalProcessInteractionEvent(InteractionContextManager.java:285)
+        at org.eclipse.mylyn.internal.context.core.InteractionContextManager.pro
+cessInteractionEvent(InteractionContextManager.java:242)
+        at org.eclipse.mylyn.internal.context.core.InteractionContextManager.pro
+cessInteractionEvent(InteractionContextManager.java:220)
+        at org.eclipse.mylyn.internal.context.core.InteractionContextManager.pro
+cessInteractionEvent(InteractionContextManager.java:216)
+        at org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor.handleEle
+mentSelection(AbstractUserInteractionMonitor.java:79)
+        at org.eclipse.mylyn.internal.java.ui.JavaEditingMonitor.handleWorkbench
+PartSelection(JavaEditingMonitor.java:70)
+        at org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor.selection
+Changed(AbstractUserInteractionMonitor.java:55)
+        at org.eclipse.ui.internal.AbstractSelectionService.firePostSelection(Ab
+stractSelectionService.java:179)
+        at org.eclipse.ui.internal.AbstractSelectionService.setActivePart(Abstra
+ctSelectionService.java:289)
+        at org.eclipse.ui.internal.WWinPartService.updateActivePart(WWinPartServ
+ice.java:125)
+        at org.eclipse.ui.internal.WWinPartService.access$0(WWinPartService.java
+:115)
+        at org.eclipse.ui.internal.WWinPartService$1.partDeactivated(WWinPartSer
+vice.java:48)
+        at org.eclipse.ui.internal.PartListenerList2$4.run(PartListenerList2.jav
+a:113)
+        at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+        at org.eclipse.core.runtime.Platform.run(Platform.java:857)
+        at org.eclipse.ui.internal.PartListenerList2.fireEvent(PartListenerList2
+.java:53)
+        at org.eclipse.ui.internal.PartListenerList2.firePartDeactivated(PartLis
+tenerList2.java:111)
+        at org.eclipse.ui.internal.PartService.firePartDeactivated(PartService.j
+ava:116)
+        at org.eclipse.ui.internal.PartService.setActivePart(PartService.java:16
+5)
+        at org.eclipse.ui.internal.WorkbenchPagePartList.fireActivePartChanged(W
+orkbenchPagePartList.java:56)
+        at org.eclipse.ui.internal.PartList.setActivePart(PartList.java:126)
+        at org.eclipse.ui.internal.WorkbenchPage.setActivePart(WorkbenchPage.jav
+a:3384)
+        at org.eclipse.ui.internal.WorkbenchPage.requestActivation(WorkbenchPage
+.java:2928)
+        at org.eclipse.ui.internal.PartPane.requestActivation(PartPane.java:265)
+
+        at org.eclipse.ui.internal.PartPane.handleEvent(PartPane.java:229)
+        at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:938)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:962)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:943)
+        at org.eclipse.swt.widgets.Shell.setActiveControl(Shell.java:1273)
+        at org.eclipse.swt.widgets.Shell.WM_MOUSEACTIVATE(Shell.java:2015)
+        at org.eclipse.swt.widgets.Control.windowProc(Control.java:3713)
+        at org.eclipse.swt.widgets.Canvas.windowProc(Canvas.java:291)
+        at org.eclipse.swt.widgets.Decorations.windowProc(Decorations.java:1584)
+
+        at org.eclipse.swt.widgets.Shell.windowProc(Shell.java:1753)
+        at org.eclipse.swt.widgets.Display.windowProc(Display.java:4364)
+        at org.eclipse.swt.internal.win32.OS.DefWindowProcW(Native Method)
+        at org.eclipse.swt.internal.win32.OS.DefWindowProc(OS.java:2259)
+        at org.eclipse.swt.widgets.Scrollable.callWindowProc(Scrollable.java:77)
+
+        at org.eclipse.swt.widgets.Control.windowProc(Control.java:3760)
+        at org.eclipse.swt.widgets.Display.windowProc(Display.java:4364)
+        at org.eclipse.swt.internal.win32.OS.DefWindowProcW(Native Method)
+        at org.eclipse.swt.internal.win32.OS.DefWindowProc(OS.java:2259)
+        at org.eclipse.swt.widgets.Scrollable.callWindowProc(Scrollable.java:77)
+
+        at org.eclipse.swt.widgets.Control.windowProc(Control.java:3760)
+        at org.eclipse.swt.widgets.Display.windowProc(Display.java:4364)
+        at org.eclipse.swt.internal.win32.OS.DefWindowProcW(Native Method)
+        at org.eclipse.swt.internal.win32.OS.DefWindowProc(OS.java:2259)
+        at org.eclipse.swt.widgets.Scrollable.callWindowProc(Scrollable.java:77)
+
+        at org.eclipse.swt.widgets.Control.windowProc(Control.java:3760)
+        at org.eclipse.swt.widgets.Display.windowProc(Display.java:4364)
+        at org.eclipse.swt.internal.win32.OS.DefWindowProcW(Native Method)
+        at org.eclipse.swt.internal.win32.OS.DefWindowProc(OS.java:2259)
+        at org.eclipse.swt.widgets.Scrollable.callWindowProc(Scrollable.java:77)
+
+        at org.eclipse.swt.widgets.Control.windowProc(Control.java:3760)
+        at org.eclipse.swt.widgets.Display.windowProc(Display.java:4364)
+        at org.eclipse.swt.internal.win32.OS.DefWindowProcW(Native Method)
+        at org.eclipse.swt.internal.win32.OS.DefWindowProc(OS.java:2259)
+        at org.eclipse.swt.widgets.Scrollable.callWindowProc(Scrollable.java:77)
+
+        at org.eclipse.swt.widgets.Control.windowProc(Control.java:3760)
+        at org.eclipse.swt.widgets.Display.windowProc(Display.java:4364)
+        at org.eclipse.swt.internal.win32.OS.PeekMessageW(Native Method)
+        at org.eclipse.swt.internal.win32.OS.PeekMessage(OS.java:2768)
+        at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3288)
+        at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2389)
+        at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+        at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+        at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+        at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.ja
+va:289)
+        at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.jav
+a:461)
+        at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+        at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEAppli
+cation.java:106)
+        at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandl
+e.java:153)
+        at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runAppli
+cation(EclipseAppLauncher.java:106)
+        at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(Ec
+lipseAppLauncher.java:76)
+        at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.ja
+va:363)
+        at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.ja
+va:176)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.
+java:39)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAcces
+sorImpl.java:25)
+        at java.lang.reflect.Method.invoke(Method.java:585)
+        at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:504)
+        at org.eclipse.equinox.launcher.Main.basicRun(Main.java:443)
+        at org.eclipse.equinox.launcher.Main.run(Main.java:1169)
+        at org.eclipse.equinox.launcher.Main.main(Main.java:1144)
+
+"VM Thread" prio=10 tid=0x00317ad8 nid=0xedc runnable
+
+"VM Periodic Task Thread" prio=10 tid=0x00323f28 nid=0x293c waiting on condition

@@ -1,0 +1,29 @@
+Created attachment 232868 [details]
+Modified employees example that duplicates the bug.
+
+The attached test will often start to throw this exception:
+
+java.util.ConcurrentModificationException
+	at java.util.SubList.checkForComodification(AbstractList.java:752)
+	at java.util.SubList.listIterator(AbstractList.java:682)
+	at java.util.AbstractList.listIterator(AbstractList.java:284)
+	at java.util.SubList.iterator(AbstractList.java:678)
+	at java.util.AbstractCollection.toArray(AbstractCollection.java:120)
+	at java.util.ArrayList.<init>(ArrayList.java:131)
+	at org.eclipse.persistence.mappings.ForeignReferenceMapping.extractResultFromBatchQuery(ForeignReferenceMapping.java:630)
+	at org.eclipse.persistence.mappings.CollectionMapping.extractResultFromBatchQuery(CollectionMapping.java:898)
+	at org.eclipse.persistence.internal.indirection.BatchValueHolder.instantiate(BatchValueHolder.java:58)
+
+This can also manifest as this invalid query:
+
+Error Code: 1064
+Call: SELECT ID, CORE_ID FROM DIRECTMEMBER WHERE (ID IN ())
+Query: ReadAllQuery(name="directMember" referenceClass=DirectMember sql="SELECT ID, CORE_ID FROM DIRECTMEMBER WHERE (ID IN ?)")
+
+And as an ArrayIndexOutOfBounds, and through a NullPointerException (These are less common so I don't have a stack trace for these)
+
+The attached test is a modified version of the EclipseLink employee's example, from ant run the batch-concurrency target. To run the bug example you'll need to change the jdbc connection settings in persistence.xml. 
+
+The most common error is the invalid query (just a symptom of concurrent access to originalPolicy.getDataResults(this) in ForeignReferenceMapping I believe)
+
+Once in a while I get lucky/unlucky and the test runs successfully, just give it another try :)

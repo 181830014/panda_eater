@@ -1,0 +1,25 @@
+(this is for the paho.mqtt.golang repo, but there wasn't a category for that)
+
+I have a paho client integrated in a server and a test utility to hit the endpoints, but I only get through a few tests before the utility hangs. I traced it down to keepalive(): Calling receiveTimer.Reset(receiveInterval)
+inside the receiveTimer handler will block. I fixed it by doing the following:
+
+In
+https://github.com/eclipse/paho.mqtt.golang/blob/master/ping.go
+
+replace
+
+	case <-receiveTimer.C:
+		receiveTimer.Reset(receiveInterval)
+		sendPing(&pingTimer, &pingRespTimer, c)
+
+with
+	case <-receiveTimer.C:
+		receiveTimer.Timer.Reset(receiveInterval)
+		receiveTimer.SetRead(false)
+		sendPing(&pingTimer, &pingRespTimer, c)
+
+I'm not yet submitting a pull request because I'm confused about a couple things:
+
+* This code has been running without any problems for weeks in normal use and I don't know why these tests would expose any issues.
+
+* I'm unclear about the use of Stop() and Reset() in the Timer.C channel handler. The docs indicate neither should be used concurrently on the timer's channel, but Reset() seems fine while Stop() is blocking (actually, it's not Stop() that's blocking, but draining the channel, i.e. <-t.C). I've found some comments online that indicate both are safe. So I'm not sure what's up or if this is the right way to address it.

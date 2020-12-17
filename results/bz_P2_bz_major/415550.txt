@@ -1,0 +1,16 @@
+Created attachment 234599 [details]
+The GenericXMLWriter class
+
+Context:
+XML model transformation with an XML model as both input and output.
+XML model is loaded from an XML file, and serialized as an other XML file.
+The loaded XML file contains a tag with no content, such as <aTag></aTag>.
+
+Problem:
+NullPointerException occurs when trying to serialize the transformed XML model into a target XML file.
+Method GenericXMLWriter.getEscaped(String) [line 168] is called with a null String parameter, from the method GenericXMLWriter.serialize(final Element) [line 72].
+
+The tag with no content is represented by an XML model element containing a Text child for which the "getName" method returns null.
+If this construct is valid, this is a serialization bug.
+However, I'm not sure this construct should be considered as valid.
+In case the Text child should be null in the considered context, the problem is rather as loading problem.

@@ -1,0 +1,22 @@
+When Mylyn creates a repository from a template, it doesn't configure that repository with any of the generic attributes contained in the template.
+
+For example: here's an element from a plugin.xml file that defines a repository with a generic attribute called "repository-type".  When the enclosing plugin is loaded, Mylyn will create a RepositoryTemplate object configured with all the specified information, including the repository-type attribute, but shortly thereafter, when it creates a repository from this template, it will ignore that attribute.
+
+   <extension
+         point="org.eclipse.mylyn.tasks.core.templates">
+      <repository
+            addAutomatically="true"
+            label="My special repository"
+            repositoryKind="larryco"
+            urlRepository="https://larryco.com/tasks">
+            
+            <!-- here's the generic attribute -->
+         <attribute
+               name="repository-type"
+               value="integration-test-repository">
+               
+         </attribute>
+      </repository>
+   </extension>
+
+ As far as I can tell, template attributes are not used anywhere in Mylyn.  What we need is for TasksUiPlugin.loadTemplateRepositories() to copy them from the template to the newly-created repository.

@@ -1,0 +1,51 @@
+I have an @Embeddable with a @OneToOne relationship:
+
+@Embeddable
+public class GreenStar_ implements Serializable, IGreenStar
+{
+    private GreenStarOfficeProject officeProject;
+
+    @OneToOne(fetch= FetchType.LAZY)
+    public GreenStarOfficeProject getOfficeProject() {
+        return officeProject;
+    }
+
+Which is used as:
+
+@Entity
+public class GreenStarActivity extends Activity implements IGreenStarElement
+{
+    private GreenStar_ greenStar;
+    @Embedded
+    public GreenStar_ getGreenStar() {
+        return greenStar;
+    }
+
+   public GreenStarActivity(Element owner, GreenStarOfficeProject officeProject, String name) {
+       super(owner, officeProject, name);
+       greenStar = new GreenStar_(officeProject);
+       init();
+   }
+
+When getOfficeProject() is accessed in the following transient method in a GreenStarActivity it returns as null (although it was clearly already set):
+
+    @Transient
+    @Override
+    public boolean isPassed() {
+        String $i = "isPassed";        
+        boolean test = true;
+        resetFailures();         
+        if (getGreenStar()==null) {
+            log_error($i,"getGreenStar()==null");
+        }
+        else if (getGreenStar().getOfficeProject()==null) { 
+            log_error($i,"getGreenStar().getOfficeProject()==null");
+        }
+        BooleanValue redevelopment = getGreenStar().getOfficeProject().getV893_refurbishment_redevelopment();
+
+I get a NullPointerException on trying to access a getter within the null OfficeProject object above.
+(I can tell it is null already from the verbose logging, and the GreenStar_ object is clearly not null.)
+
+However this works fine when the default FetchType.EAGER is used, it only fails for LAZY.
+
+And it only occurs on the relationship within the @Embeddable.

@@ -1,0 +1,22 @@
+BETA_JAVA7
+
+The spec for AutoCloseable.close() says:
+
+* <p>Note that unlike the {@link java.io.Closeable#close close}
+     * method of {@link java.io.Closeable}, this {@code close} method
+     * is not required to be idempotent.  In other words,
+     * calling this {@code close} method more than once may have some
+     * visible side effect, unlike {@code Closeable.close} which is
+     * required to have no effect if called more than once.
+
+
+Hence when a user is explicitly closing a resource of type AutoCloseable, or closing it more than once in a try with resources block, we can give a warning to the user.
+
+class X{
+   void foo() throws Exception {
+       try (FileInputStream fis = new FileInputStream) {
+                fis.close();          // new warning here
+       } finally {
+       }
+   }
+}

@@ -1,0 +1,15 @@
+I have found that the model table leaks many org.eclipse.swt.graphics.Pattern:
+with the Sleak tool installed (http://www.eclipse.org/swt/tools.php), I opened a table with many elements, scrolled for a few seconds, and closed the table. I found thousands of Pattern objects that were not disposed.
+
+These objects are created in:
+net.sourceforge.nattable.painter.cell.BackgroundImagePainter.paintCell(BackgroundImagePainter.java:51)
+
+which is used in:
+org.eclipse.emf.facet.widgets.table.ui.nattable.internal.nattable.StyledColumnHeaderConfiguration
+ and 
+org.eclipse.emf.facet.widgets.table.ui.nattable.internal.nattable.StyledRowHeaderConfiguration
+
+The resource leak appears to be solved on NatTable trunk:
+https://nattable.svn.sourceforge.net/svnroot/nattable/trunk/nattable/net.sourceforge.nattable.core/src/net/sourceforge/nattable/painter/cell/BackgroundImagePainter.java
+
+So, moving to a newer version of NatTable would likely solve this resource leak.

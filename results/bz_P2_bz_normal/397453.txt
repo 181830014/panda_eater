@@ -1,0 +1,43 @@
+I am retrieving a datarow from a table with TIMESTAMPTZ from an Oracle 11g database using GlassFish 3.1.2.2.
+
+I can retrieve the data correctly, and get the timezone information into the Calendar object, however I always get this WARNING exception showing up in my glassfish logs:
+
+WARNING: java.lang.ClassNotFoundException: com.sun.gjc.spi.base.ConnectionHolder
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:423)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:356)
+	at org.eclipse.persistence.platform.server.sunas.SunAS9ServerPlatform.unwrapGlassFishConnectionHelper(SunAS9ServerPlatform.java:124)
+	at org.eclipse.persistence.platform.server.sunas.SunAS9ServerPlatform.unwrapConnection(SunAS9ServerPlatform.java:105)
+	at org.eclipse.persistence.platform.database.oracle.Oracle8Platform.getConnection(Oracle8Platform.java:104)
+	at org.eclipse.persistence.platform.database.oracle.Oracle9Platform.getTIMESTAMPTZFromResultSet(Oracle9Platform.java:199)
+	at org.eclipse.persistence.platform.database.oracle.Oracle9Platform.getObjectFromResultSet(Oracle9Platform.java:166)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.getObject(DatabaseAccessor.java:1206)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.fetchRow(DatabaseAccessor.java:999)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.processResultSet(DatabaseAccessor.java:723)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:621)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeCall(DatabaseAccessor.java:535)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.basicExecuteCall(AbstractSession.java:1717)
+	at org.eclipse.persistence.sessions.server.ServerSession.executeCall(ServerSession.java:566)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:207)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:193)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeSelectCall(DatasourceCallQueryMechanism.java:264)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.selectAllRows(DatasourceCallQueryMechanism.java:648)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectAllRowsFromTable(ExpressionQueryMechanism.java:2617)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectAllReportQueryRows(ExpressionQueryMechanism.java:2554)
+	at org.eclipse.persistence.queries.ReportQuery.executeDatabaseQuery(ReportQuery.java:846)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:844)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.execute(ObjectLevelReadQuery.java:1043)
+	at org.eclipse.persistence.queries.ReadAllQuery.execute(ReadAllQuery.java:392)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeInUnitOfWork(ObjectLevelReadQuery.java:1131)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.internalExecuteQuery(UnitOfWorkImpl.java:2871)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1516)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1498)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1463)
+	at org.eclipse.persistence.internal.jpa.EJBQueryImpl.executeReadQuery(EJBQueryImpl.java:485)
+	at org.eclipse.persistence.internal.jpa.EJBQueryImpl.getResultList(EJBQueryImpl.java:742)
+
+
+It was suggested to me on the forums to file a bug report so this can be changed to be logged at a higher log level or the method refactored so that the error is only logged and thrown if the connection cannot be unwrapped at all.

@@ -1,0 +1,29 @@
+Created attachment 217852 [details]
+maven sample project with testcase and patched 2.3.2 InheritancePolicy.java
+
+problem:
+
+ProductAAA extends AbstractProduct with InheritanceType.JOINED
+
+em.find(AbstractProduct.class, id);
+em.find(ProductAAA.class, id);
+
+do not return the same result for a given ID when AbstractProduct has more than one many-to-one, one-to-one, or a combination of those relationships of the same type, configured to be join-fetched. 
+
+
+cause:
+the query (ReadObjectQuery) passed into InheritancePolicy.selectOneRowUsingDefaultMultipleTableSubclassRead is used for determining the concreteclass, and later for processing the AbstractRow. But since the actual result is fetched using an other query object, the original one does't hold the correct joinedAttributeManager.
+
+
+possible solution 1:
+set concrete referenceClass & descriptor on original query instead of cloning.
+
+possible solution 2:
+use the joinedAttributeManager of concreteQuery and set it on the original query.
+
+
+
+note:
+1. I did't investigate selectOneRowUsingCustomMultipleTableSubclassRead as I'm not sure of the use cases, but I suppose a similar problem exists.
+
+2. selectAllRowUsingDefaultMultipleTableSubclassRead already has a mechanism for handling joinedMappingIndexes.

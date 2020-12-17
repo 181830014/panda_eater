@@ -1,0 +1,30 @@
+Build Identifier: 
+
+This bug can be reproduced with EclipseLink-2.3.0.
+
+If an Embeddable derives from an Embeddable which has an Embedded property, this Embedded property will not be mapped. It will be mapped when the superclass Embeddable is used, thus this is a problem in the implementation of bug 283028.
+
+Suppose the following constellation:
+
+An Embeddable "Primitive" defines a field "field".
+
+An Embeddable "BasicEmbeddable" has a property of type "Primitive", which is annotated with Embedded.
+
+An Embeddable "ExtendedEmbeddable" inherits from "BasicEmbeddable".
+
+An Entity "TheEntity" contains "ExtendedEmbeddable".
+
+The resulting table will NOT contain the field "field".
+
+To simplify this a bit:
+
+TheEntity refers to ExtendedEmbeddable inherits from BasicEmbeddable refers to Primitive
+
+I will attach a test case with which the problem can be reproduced.
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Extract test case and create a corresponding persistence.xml
+2. Generate tables or do whatever is necessary to inspect the mappings
+3. Notice that theentity only has a field "test", and is missing the field "field"

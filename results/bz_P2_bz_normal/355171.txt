@@ -1,0 +1,30 @@
+When invoking a JDBC statement within SessionEventListener.preReleaseConnection with an external pool the execute call on the DatabaseAccessor results in a call to the preReleaseConnection event. This results in an infinte loop.
+
+PROBLEM CODE:
+
+    @Override
+    public void preReleaseConnection(SessionEvent event) {
+        DatabaseAccessor accessor = (DatabaseAccessor) event.getResult();
+        SQLCall call = new SQLCall("CALL DBMS_SESSION.CLEAR_IDENTIFIER()");
+        call.returnNothing();
+        accessor.executeCall(call, new DatabaseRecord(), (AbstractSession) event.getSession());
+    }
+
+ 
+WORK-AROUND:
+
+    @Override
+    public void preReleaseConnection(SessionEvent event) {
+        DatabaseAccessor accessor = (DatabaseAccessor) event.getResult();
+        execute((AbstractSession) event.getSession(), accessor, "CALL DBMS_SESSION.CLEAR_IDENTIFIER()");
+    }
+
+    private void execute(AbstractSession session, DatabaseAccessor accessor, String sql) {
+        try {
+            PreparedStatement statement = accessor.getConnection().prepareStatement(sql);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("OracleVPDListener::" + sql + " FAILED", e);
+        }
+        session.log(new SessionLogEntry(SessionLog.FINE, SessionLog.SQL, session, sql, new String[0], accessor, false));
+    }

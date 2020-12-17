@@ -1,0 +1,57 @@
+The following JPQL:
+
+        em.createQuery("SELECT b FROM B b, A a WHERE (a.id = :A_ID AND b.a = a) OR b.c = a.c ORDER BY b.created").
+            setParameter("A_ID", 1).
+            getResultList();
+
+incorrectly generates:
+
+SELECT B.ID, B.CREATE_TS, B.A_ID, B.C_ID FROM B t0, C t2, A t1 WHERE ((((t1.ID = ?) AND (t0.A_ID = t1.ID)) OR (t0.C_ID = t2.ID)) AND (t2.ID = t1.C_ID)) ORDER BY t0.CREATE_TS ASC
+
+The SQL should have been generated using 't0' for the columns to select as:
+
+SELECT t0.ID, t0.CREATE_TS, t0.A_ID, t0.C_ID FROM B t0, C t2, A t1 WHERE ((((t1.ID = ?) AND (t0.A_ID = t1.ID)) OR (t0.C_ID = t2.ID)) AND (t2.ID = t1.C_ID)) ORDER BY t0.CREATE_TS ASC
+
+The domain model is simply:
+
+@Entity
+public class A {
+    
+    @Id
+    private int id;
+    
+    @OneToMany(mappedBy="a")
+    private List<B> bs = new ArrayList<B>();
+    
+    @OneToOne(fetch=FetchType.LAZY)
+    private C c;
+
+    
+...
+
+@Entity
+public class B {
+
+    @Id
+    private int id;
+    
+    @ManyToOne(fetch=FetchType.LAZY)
+    private A a;
+    
+    @ManyToOne(fetch=FetchType.LAZY)
+    private C c;
+    
+    @Column(name="CREATE_TS")
+    private Timestamp created = new Timestamp(System.currentTimeMillis());
+    
+...
+
+
+@Entity
+public class C {
+
+    @Id
+    private int id;
+    
+    @OneToMany(mappedBy="c")
+    private List<B> bs = new ArrayList<B>();

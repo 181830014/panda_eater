@@ -1,0 +1,40 @@
+EclipseLink generates a wrong primary key for the example that is listed in the JavaDoc for the @MapKeyJoinColumn annotation:
+
+@Entity
+public class Student {
+    @Id int studentId;
+    ...
+    @ManyToMany  // students and courses are also many-many
+    @JoinTable(name="ENROLLMENTS",
+        joinColumns=@JoinColumn(name="STUDENT"),
+        inverseJoinColumns=@JoinColumn(name="SEMESTER"))
+    @MapKeyJoinColumn(name="COURSE")
+    Map<Course, Semester>  enrollment;
+    ...
+}
+
+The Java data model defines:
+* Student and Course must be unique (i.e. a Student must not be registered for the same Course twice)
+* a Student may have multiple Courses in a Semester
+
+But EclipseLink generates the following join table:
+
+TABLE enrollments (
+    student_id bigint NOT NULL,
+    semester_id bigint NOT NULL,
+    course_id bigint,
+    CONSTRAINT enrollments_pkey PRIMARY KEY (student_id, semester_id)
+)
+
+which is wrong.
+
+What will happen, if there are multiple rows in the database with the same combination of student and course? How is this mapped to a single java.util.Map? Furthermore, it is not possible to enroll the same Student for multiple (different) Courses in the same Semester.
+
+The correct DDL would be:
+
+TABLE enrollments (
+    student_id bigint NOT NULL,
+    semester_id bigint,
+    course_id bigint NOT NULL,
+    CONSTRAINT enrollments_pkey PRIMARY KEY (student_id, course_id)
+)

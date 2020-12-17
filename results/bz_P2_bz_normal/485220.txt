@@ -1,0 +1,17 @@
+In order to get faster feedback on Gerrit builds, we need to build smaller components. However, the current structure does not properly support this, due to several issues:
+
+- Not all plug-ins properly implement the Papyrus architecture (e.g. some infra plug-ins depend on UML or GMF)
+- The build is split into 4 units (Main, Main Tests, Extra, Extra Tests). We should get more smaller units (e.g. Infra/Core, Views, Diagrams, Tables, UML Diagrams, UML Tables)
+- The tests should be closer to the tested components, to be able to run tests when building tested components. Currently we can only run "Main Tests" or "Extra Tests"
+- The lack of clear API doesn't provide enough confidence when changing core components, so we need to rebuild/retest everything to ensure that we don't break anyone
+
+Some components that could be improved (This list is not exhaustive):
+
+- Extract the ServicesRegistry outside infra.core (Or: separate Services from Sash Editor). This "core" plug-in includes both UI Components (Sash Editor) and core service management (Services/ServiceRegistry). Most plug-in depend on it for Services, but end up with a strong UI dependency
+- ModelExplorer (UI Trees in general): Semantic Model & Content provider. Currently, the only abstraction we have for a "Semantic Model" is the IModel interface/UmlModel implementation. When we want to retrieve the "Semantic Model" of Papyrus (And content provider), we need to depend on uml.tools.
+- Palette: The palette framework has a dependency to UML to support profiles. This means that either a) All our palettes are based on UML, or b) Our generic palette framework has a dependency to UML (For example, infra.gmfdiag.css.palette depends on UML although it simply contributes a Post-Action for the generic palette framework)
+- Remove the strong dependency on the *.uml file extension, which makes it impossible to support normative XMI in Papyrus (OMG XMI URIs, properly supported by Eclipse/UML). This extension is used in many places in Papyrus
+
+This task is not related to the build issue but still makes sense for a more modular architecture (It is also probably more complex):
+
+- Diagram Runtime: GMF is split between "GMF Runtime" and "GMF Diagram UI" (The first one doesn't depend on GEF). We don't do this distinction in Papyrus, which means that all our generic diagram components depend on GEF3.x (Making it complicated to support both GEF3 and GEF4 without duplicating code or introducing a dependency from GEF4 Editors to GMF Editors). We should have a clearer separation of the Runtime and UI components for the diagrams

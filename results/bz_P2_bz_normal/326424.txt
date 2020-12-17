@@ -1,0 +1,85 @@
+If a PESSIMISTIC_LOCK_TIMEOUT is set to 0, on MySQL a statement like 
+
+SELECT [...] FROM [...]  WHERE [...] FOR UPDATE NOWAIT
+
+is generated. However, MySQL does not seem to support NOWAIT, as this causes a syntax error: 
+
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NOWAIT' at line 1
+
+Unfortunately, this syntax error is converted to an PessimisticLockException:
+
+javax.persistence.PessimisticLockException: Exception [EclipseLink-4002] (Eclipse Persistence Services - @VERSION@.@QUALIFIER@): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NOWAIT' at line 1
+Error Code: 1064
+Call: SELECT t1.EMP_ID, t2.EMP_ID, t1.PAY_SCALE, t1.L_NAME, t1.STATUS, t1.VERSION, t1.ROOM_NUM, t1.GENDER, t2.SALARY, t1.F_NAME, t1.START_OVERTIME, t1.END_OVERTIME, t1.START_TIME, t1.END_TIME, t1.DEPT_ID, t1.MANAGER_EMP_ID, t1.ADDR_ID, t1.HUGE_PROJ_ID, t1.START_DATE, t1.END_DATE, t1.FORMER_COMPANY, t1.FORMER_START_DATE, t1.FORMER_END_DATE, t0.ID, t0.NAME, t0.DEPT_HEAD FROM CMP3_EMPLOYEE t1 LEFT OUTER JOIN CMP3_DEPT t0 ON (t0.ID = t1.DEPT_ID), CMP3_SALARY t2 WHERE ((t1.EMP_ID = ?) AND (t2.EMP_ID = t1.EMP_ID)) FOR UPDATE NOWAIT
+	bind => [3200]
+Query: ReadObjectQuery(referenceClass=Employee sql="SELECT t1.EMP_ID, t2.EMP_ID, t1.PAY_SCALE, t1.L_NAME, t1.STATUS, t1.VERSION, t1.ROOM_NUM, t1.GENDER, t2.SALARY, t1.F_NAME, t1.START_OVERTIME, t1.END_OVERTIME, t1.START_TIME, t1.END_TIME, t1.DEPT_ID, t1.MANAGER_EMP_ID, t1.ADDR_ID, t1.HUGE_PROJ_ID, t1.START_DATE, t1.END_DATE, t1.FORMER_COMPANY, t1.FORMER_START_DATE, t1.FORMER_END_DATE, t0.ID, t0.NAME, t0.DEPT_HEAD FROM CMP3_EMPLOYEE t1 LEFT OUTER JOIN CMP3_DEPT t0 ON (t0.ID = t1.DEPT_ID), CMP3_SALARY t2 WHERE ((t1.EMP_ID = ?) AND (t2.EMP_ID = t1.EMP_ID)) FOR UPDATE NOWAIT")
+	at org.eclipse.persistence.internal.jpa.EntityManagerImpl.executeQuery(EntityManagerImpl.java:795)
+	at org.eclipse.persistence.internal.jpa.EntityManagerImpl.lock(EntityManagerImpl.java:1547)
+	at org.eclipse.persistence.testing.tests.jpa.jpql.AdvancedQueryTestSuite.testQueryPESSIMISTIC_READLock(AdvancedQueryTestSuite.java:1119)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at junit.framework.TestCase.runTest(TestCase.java:168)
+	at junit.framework.TestCase.runBare(TestCase.java:134)
+	at org.eclipse.persistence.testing.framework.junit.JUnitTestCase.runBare(JUnitTestCase.java:466)
+	at junit.framework.TestResult$1.protect(TestResult.java:110)
+	at junit.framework.TestResult.runProtected(TestResult.java:128)
+	at junit.framework.TestResult.run(TestResult.java:113)
+	at junit.framework.TestCase.run(TestCase.java:124)
+	at junit.framework.TestSuite.runTest(TestSuite.java:232)
+	at junit.framework.TestSuite.run(TestSuite.java:227)
+	at org.eclipse.jdt.internal.junit.runner.junit3.JUnit3TestReference.run(JUnit3TestReference.java:130)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:467)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:683)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:390)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:197)
+Caused by: Exception [EclipseLink-4002] (Eclipse Persistence Services - @VERSION@.@QUALIFIER@): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NOWAIT' at line 1
+Error Code: 1064
+Call: SELECT t1.EMP_ID, t2.EMP_ID, t1.PAY_SCALE, t1.L_NAME, t1.STATUS, t1.VERSION, t1.ROOM_NUM, t1.GENDER, t2.SALARY, t1.F_NAME, t1.START_OVERTIME, t1.END_OVERTIME, t1.START_TIME, t1.END_TIME, t1.DEPT_ID, t1.MANAGER_EMP_ID, t1.ADDR_ID, t1.HUGE_PROJ_ID, t1.START_DATE, t1.END_DATE, t1.FORMER_COMPANY, t1.FORMER_START_DATE, t1.FORMER_END_DATE, t0.ID, t0.NAME, t0.DEPT_HEAD FROM CMP3_EMPLOYEE t1 LEFT OUTER JOIN CMP3_DEPT t0 ON (t0.ID = t1.DEPT_ID), CMP3_SALARY t2 WHERE ((t1.EMP_ID = ?) AND (t2.EMP_ID = t1.EMP_ID)) FOR UPDATE NOWAIT
+	bind => [3200]
+Query: ReadObjectQuery(referenceClass=Employee sql="SELECT t1.EMP_ID, t2.EMP_ID, t1.PAY_SCALE, t1.L_NAME, t1.STATUS, t1.VERSION, t1.ROOM_NUM, t1.GENDER, t2.SALARY, t1.F_NAME, t1.START_OVERTIME, t1.END_OVERTIME, t1.START_TIME, t1.END_TIME, t1.DEPT_ID, t1.MANAGER_EMP_ID, t1.ADDR_ID, t1.HUGE_PROJ_ID, t1.START_DATE, t1.END_DATE, t1.FORMER_COMPANY, t1.FORMER_START_DATE, t1.FORMER_END_DATE, t0.ID, t0.NAME, t0.DEPT_HEAD FROM CMP3_EMPLOYEE t1 LEFT OUTER JOIN CMP3_DEPT t0 ON (t0.ID = t1.DEPT_ID), CMP3_SALARY t2 WHERE ((t1.EMP_ID = ?) AND (t2.EMP_ID = t1.EMP_ID)) FOR UPDATE NOWAIT")
+	at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:333)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:683)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeCall(DatabaseAccessor.java:526)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeCall(AbstractSession.java:990)
+	at org.eclipse.persistence.internal.sessions.IsolatedClientSession.executeCall(IsolatedClientSession.java:131)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:206)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:192)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.selectOneRow(DatasourceCallQueryMechanism.java:664)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectOneRowFromTable(ExpressionQueryMechanism.java:2606)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectOneRow(ExpressionQueryMechanism.java:2577)
+	at org.eclipse.persistence.queries.ReadObjectQuery.executeObjectLevelReadQuery(ReadObjectQuery.java:444)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeDatabaseQuery(ObjectLevelReadQuery.java:1078)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:768)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.execute(ObjectLevelReadQuery.java:1038)
+	at org.eclipse.persistence.queries.ReadObjectQuery.execute(ReadObjectQuery.java:412)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeInUnitOfWork(ObjectLevelReadQuery.java:1116)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.internalExecuteQuery(UnitOfWorkImpl.java:2943)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1301)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1283)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1243)
+	at org.eclipse.persistence.internal.jpa.EntityManagerImpl.executeQuery(EntityManagerImpl.java:783)
+	... 21 more
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NOWAIT' at line 1
+	at sun.reflect.GeneratedConstructorAccessor56.newInstance(Unknown Source)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(Unknown Source)
+	at java.lang.reflect.Constructor.newInstance(Unknown Source)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:409)
+	at com.mysql.jdbc.Util.getInstance(Util.java:384)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1054)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3566)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3498)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:1959)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2113)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2568)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:2113)
+	at com.mysql.jdbc.PreparedStatement.executeQuery(PreparedStatement.java:2275)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeSelect(DatabaseAccessor.java:888)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:598)
+	... 40 more
+
+The issue causes the test AdvancedQueryTestSuite.testQueryPESSIMISTIC_READLock (and others) to falsely pass.

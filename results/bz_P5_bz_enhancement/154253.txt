@@ -1,0 +1,219 @@
+Shadow extraction and advice inlining in around advice weaver generate repeated methods for occurrences of an identical shadow on a same class. This is an example:
+
+public class BugExample {
+	public static void main(String[] args) {
+		new BugExample().run();
+	}
+	private void run() {
+		int x = foo(-5);
+		int y = foo(1);
+		int z = foo(2);
+		int w = foo(0);
+		System.out.println("x=" + x + " y=" + y + " z=" + z + " w=" + w);
+	}
+	private int foo(int v) {
+		return v;
+	}
+	public static aspect BugAspect {
+		pointcut fooCalls(int v): call(* BugExample.foo(int)) && args(v);
+		int around(int v): fooCalls(v) {
+			if (v > 0)
+				return proceed(v);
+			else
+				return 0;
+		}
+	}
+}
+
+The result of "javap -c -private BugExample" is at the end of this report (it's rather big). In it you may realize that there is no difference between the several proceed methods, and the only difference between the several advice inline methods is which proceed method invoked (and since those are equivalent, there is no semantic difference between the advice methods either).
+
+I have fixed this problem by applying an aspect to the AspectJ weaver, which caches shadow and advice methods and reuses them as possible. This is done by capturing calls to BcelShadow.extractShadow and avoiding such calls if a method with the same signature has already been created. The same is done for the creation of local advice methods. Of course, this only indicates a path to a (pure Java) final solution.
+
+D:\trabalho\mestrado\pesquisa\ajc-bugreport\bin>javap -c -private BugExample
+Compiled from "BugExample.java"
+public class BugExample extends java.lang.Object{
+public BugExample();
+  Code:
+   0:   aload_0
+   1:   invokespecial   #9; //Method java/lang/Object."<init>":()V
+   4:   return
+
+public static void main(java.lang.String[]);
+  Code:
+   0:   new     #2; //class BugExample
+   3:   dup
+   4:   invokespecial   #17; //Method "<init>":()V
+   7:   invokespecial   #20; //Method run:()V
+   10:  return
+
+private void run();
+  Code:
+   0:   aload_0
+   1:   bipush  -5
+   3:   istore  5
+   5:   astore  6
+   7:   aload_0
+   8:   aload   6
+   10:  iload   5
+   12:  invokestatic    #84; //Method BugExample$BugAspect.aspectOf:()LBugExample$BugAspect;
+   15:  iload   5
+   17:  aconst_null
+   18:  invokestatic    #88; //Method foo_aroundBody1$advice:(LBugExample;LBugExample;ILBugExample$BugAspect;ILorg/aspectj/runtime/internal/AroundClosure;)I
+   21:  istore_1
+   22:  aload_0
+   23:  iconst_1
+   24:  istore  7
+   26:  astore  8
+   28:  aload_0
+   29:  aload   8
+   31:  iload   7
+   33:  invokestatic    #84; //Method BugExample$BugAspect.aspectOf:()LBugExample$BugAspect;
+   36:  iload   7
+   38:  aconst_null
+   39:  invokestatic    #94; //Method foo_aroundBody3$advice:(LBugExample;LBugExample;ILBugExample$BugAspect;ILorg/aspectj/runtime/internal/AroundClosure;)I
+   42:  istore_2
+   43:  aload_0
+   44:  iconst_2
+   45:  istore  9
+   47:  astore  10
+   49:  aload_0
+   50:  aload   10
+   52:  iload   9
+   54:  invokestatic    #84; //Method BugExample$BugAspect.aspectOf:()LBugExample$BugAspect;
+   57:  iload   9
+   59:  aconst_null
+   60:  invokestatic    #100; //Method foo_aroundBody5$advice:(LBugExample;LBugExample;ILBugExample$BugAspect;ILorg/aspectj/runtime/internal/AroundClosure;)I
+   63:  istore_3
+   64:  aload_0
+   65:  iconst_0
+   66:  istore  11
+   68:  astore  12
+   70:  aload_0
+   71:  aload   12
+   73:  iload   11
+   75:  invokestatic    #84; //Method BugExample$BugAspect.aspectOf:()LBugExample$BugAspect;
+   78:  iload   11
+   80:  aconst_null
+   81:  invokestatic    #106; //Method foo_aroundBody7$advice:(LBugExample;LBugExample;ILBugExample$BugAspect;ILorg/aspectj/runtime/internal/AroundClosure;)I
+   84:  istore  4
+   86:  getstatic       #32; //Field java/lang/System.out:Ljava/io/PrintStream;
+   89:  new     #34; //class java/lang/StringBuilder
+   92:  dup
+   93:  ldc     #36; //String x=
+   95:  invokespecial   #39; //Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+   98:  iload_1
+   99:  invokevirtual   #43; //Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+   102: ldc     #45; //String  y=
+   104: invokevirtual   #48; //Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+   107: iload_2
+   108: invokevirtual   #43; //Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+   111: ldc     #50; //String  z=
+   113: invokevirtual   #48; //Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+   116: iload_3
+   117: invokevirtual   #43; //Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+   120: ldc     #52; //String  w=
+   122: invokevirtual   #48; //Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+   125: iload   4
+   127: invokevirtual   #43; //Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+   130: invokevirtual   #56; //Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+   133: invokevirtual   #61; //Method java/io/PrintStream.println:(Ljava/lang/String;)V
+   136: return
+
+private int foo(int);
+  Code:
+   0:   iload_1
+   1:   ireturn
+
+private static final int foo_aroundBody0(BugExample, BugExample, int);
+  Code:
+   0:   aload_1
+   1:   iload_2
+   2:   invokespecial   #26; //Method foo:(I)I
+   5:   ireturn
+
+private static final int foo_aroundBody1$advice(BugExample, BugExample, int, BugExample$BugAspect, int, org.aspectj.runtime.internal.AroundClosure);
+  Code:
+   0:   iload   4
+   2:   ifle    21
+   5:   iload   4
+   7:   aload   5
+   9:   astore  6
+   11:  istore  7
+   13:  aload_0
+   14:  aload_1
+   15:  iload   7
+   17:  invokestatic    #90; //Method foo_aroundBody0:(LBugExample;LBugExample;I)I
+   20:  ireturn
+   21:  iconst_0
+   22:  ireturn
+
+private static final int foo_aroundBody2(BugExample, BugExample, int);
+  Code:
+   0:   aload_1
+   1:   iload_2
+   2:   invokespecial   #26; //Method foo:(I)I
+   5:   ireturn
+
+private static final int foo_aroundBody3$advice(BugExample, BugExample, int, BugExample$BugAspect, int, org.aspectj.runtime.internal.AroundClosure);
+  Code:
+   0:   iload   4
+   2:   ifle    21
+   5:   iload   4
+   7:   aload   5
+   9:   astore  6
+   11:  istore  7
+   13:  aload_0
+   14:  aload_1
+   15:  iload   7
+   17:  invokestatic    #96; //Method foo_aroundBody2:(LBugExample;LBugExample;I)I
+   20:  ireturn
+   21:  iconst_0
+   22:  ireturn
+
+private static final int foo_aroundBody4(BugExample, BugExample, int);
+  Code:
+   0:   aload_1
+   1:   iload_2
+   2:   invokespecial   #26; //Method foo:(I)I
+   5:   ireturn
+
+private static final int foo_aroundBody5$advice(BugExample, BugExample, int, BugExample$BugAspect, int, org.aspectj.runtime.internal.AroundClosure);
+  Code:
+   0:   iload   4
+   2:   ifle    21
+   5:   iload   4
+   7:   aload   5
+   9:   astore  6
+   11:  istore  7
+   13:  aload_0
+   14:  aload_1
+   15:  iload   7
+   17:  invokestatic    #102; //Method foo_aroundBody4:(LBugExample;LBugExample;I)I
+   20:  ireturn
+   21:  iconst_0
+   22:  ireturn
+
+private static final int foo_aroundBody6(BugExample, BugExample, int);
+  Code:
+   0:   aload_1
+   1:   iload_2
+   2:   invokespecial   #26; //Method foo:(I)I
+   5:   ireturn
+
+private static final int foo_aroundBody7$advice(BugExample, BugExample, int, BugExample$BugAspect, int, org.aspectj.runtime.internal.AroundClosure);
+  Code:
+   0:   iload   4
+   2:   ifle    21
+   5:   iload   4
+   7:   aload   5
+   9:   astore  6
+   11:  istore  7
+   13:  aload_0
+   14:  aload_1
+   15:  iload   7
+   17:  invokestatic    #108; //Method foo_aroundBody6:(LBugExample;LBugExample;I)I
+   20:  ireturn
+   21:  iconst_0
+   22:  ireturn
+
+}

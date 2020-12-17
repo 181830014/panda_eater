@@ -1,0 +1,23 @@
+Attribute.getJavaMember has an explicit cast to InstanceVariableAttributeAccessor.
+However Dynamic Enties have a ValuesAccessor.
+Therefore this causes an InvalidCastException when called with a Dynamic Entity.
+
+This issue is mentioned at:
+http://www.eclipse.org/forums/index.php/t/250415/
+
+Problematic line of code:
+Member aMember = ((InstanceVariableAttributeAccessor) accessor).getAttributeField();
+
+
+Call stack:
+Exception in thread "main" java.lang.ClassCastException: org.eclipse.persistence.internal.dynamic.ValuesAccessor cannot be cast to org.eclipse.persistence.internal.descriptors.InstanceVariableAttributeAccessor
+at org.eclipse.persistence.internal.jpa.metamodel.AttributeImpl.getJavaMember(AttributeImpl.java:139)
+at org.odata4j.producer.jpa.JPAEdmGenerator.toEdmProperty(JPAEdmGenerator.java:107)
+at org.odata4j.producer.jpa.JPAEdmGenerator.getProperties(JPAEdmGenerator.java:130)
+at org.odata4j.producer.jpa.JPAEdmGenerator.buildEdm(JPAEdmGenerator.java:182)
+at org.odata4j.producer.jpa.JPAProducer.<init>(JPAProducer.java:85)
+at edu.vt.ipg.odatahandsdynamic.App.main(App.java:59)
+
+
+The body of Attribute.getJavaMember which has this bug can be seen at:
+http://wiki.eclipse.org/EclipseLink/Development/JPA_2.0/metamodel_api#DI_95:_20091017:_Attribute.getJavaMember.28.29_returns_null_for_a_BasicType_on_a_MappedSuperclass_because_of_an_uninitialized_accessor

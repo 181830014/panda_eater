@@ -1,0 +1,30 @@
+The following are exception during deployment:
+
+[3/10/09 16:58:41:796 EDT] 00000020 RoleMergeHelp W   CWMDF0009W: Methods of class org.eclipse.persistence.testing.models.nativeapitest.EmployeeServiceBean failed to load with the following exception:   java.lang.NoClassDefFoundError: org.eclipse.persistence.sessions.server.Server
+	at java.lang.Class.getVirtualMethodsImpl(Native Method)
+	at java.lang.Class.getMethods(Class.java:913)
+	at com.ibm.ws.metadata.utils.RoleMergeHelper.getAllRolesFromClass(RoleMergeHelper.java:444)
+	at com.ibm.ws.metadata.utils.RoleMergeHelper.mergeRoles(RoleMergeHelper.java:295)
+	at com.ibm.websphere.management.application.client.ArchiveDeploymentInfo.<init>(ArchiveDeploymentInfo.java:178)
+	at com.ibm.ws.management.application.client.AppInstallHelper.getAppDeploymentInfo(AppInstallHelper.java:284)
+	at com.ibm.ws.management.application.client.AppInstallHelper.getAppDeploymentInfo(AppInstallHelper.java:278)
+	at com.ibm.ws.management.application.task.ValidateAppTask.performTask(ValidateAppTask.java:109)
+	at com.ibm.ws.management.application.SchedulerImpl.run(SchedulerImpl.java:262)
+	at java.lang.Thread.run(Thread.java:810)
+
+Actually we already create Server level shared library, just like the following jython scripts:
+# Create Shared Library
+try:
+	AdminConfig.remove(AdminConfig.getid('/Node:%%hostName%%Node01/Server:server1/Library:eclipselinkjpa'))
+except:
+	print 'eclipselinkjpa was not previously installed'
+AdminConfig.save()
+
+n1 = AdminConfig.getid('/Node:%%hostName%%Node01/Server:server1/')
+print n1
+library = AdminConfig.create('Library', n1, [['name', 'eclipselinkjpa'], 
+['classPath', '%%eclipselinkLibDir%%/eclipselink.jar']])
+print library
+AdminConfig.save()
+
+If I add eclipselink.jar under %WAS_HOME%\lib\ext directory, the class org.eclipse.persistence.sessions.server.Server can be loaded, and the tests passed. This is currently workaround.

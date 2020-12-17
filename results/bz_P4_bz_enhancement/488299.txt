@@ -1,0 +1,14 @@
+The bug 481849 is the first step to have only RepresentationDescription meta-models in the scope of validation. That bug handle part of the validation aspects ensuring that meta-models are correctly declared and also that Domain class is part of the declared Meta-modes
+
+This ticket is about ensuring that the interpreted expression uses Class that are declared in the MM.
+
+Currently the interpreted expression validation uses declared MM but also MM used as VSP dependency.
+Explanations:
+The 
+org.eclipse.sirius.common.tools.api.interpreter.JavaExtensionsManager.reloadEPackages() method add EPackage found in the VSP dependencies.
+JavaExtensionsManager is instanciated by AcceleoAbstractInterpreter(AQL) and ServiceInterpreter that are IInterpreter.
+These IInterpreter are created(indirectly) by the singleton CompoundInterpreter.INSTANCE.
+
+The problem is that the CompoundInterpreter instance is used for completion and for the runtime as well.
+Finally, the question handle this ticket is perhaps how to manage the JavaExtensionsManager behavior for validation only for validation but not for run-time.
+Perhaps the solution is to change IInterpreter or IInterpretercontext API to manage a MM scope at this level and don't a fixed and non manageable implementation of JavaExtensionsManager do the job.

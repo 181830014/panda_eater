@@ -1,0 +1,44 @@
+I get the following trace when I try to connect with SetCleanSession(false). Things work fine with SetCleanSession(true).
+
+---------
+
+panic: Network Error : %!s(<nil>)
+
+goroutine 16 [running]:
+runtime.panic(0x28b820, 0xc208000d40)
+	/usr/local/go/src/pkg/runtime/panic.c:279 +0xf5
+main.main()
+	/Users/Foo/Work/Go/src/github.com/bar/rabbitmq/tutorial/mqtt_receiver.go:24 +0x24b
+
+goroutine 19 [finalizer wait]:
+runtime.park(0x14e70, 0x4910d0, 0x48fbc9)
+	/usr/local/go/src/pkg/runtime/proc.c:1369 +0x89
+runtime.parkunlock(0x4910d0, 0x48fbc9)
+	/usr/local/go/src/pkg/runtime/proc.c:1385 +0x3b
+runfinq()
+	/usr/local/go/src/pkg/runtime/mgc0.c:2644 +0xcf
+runtime.goexit()
+	/usr/local/go/src/pkg/runtime/proc.c:1445
+
+goroutine 17 [syscall]:
+runtime.goexit()
+	/usr/local/go/src/pkg/runtime/proc.c:1445
+exit status 2
+
+------------
+
+My code is:
+
+func main() {
+	opts := mqtt.NewClientOptions().AddBroker("tcp://localhost:1883/")
+	opts.SetClientID("clientB")
+	opts.SetDefaultPublishHandler(mqttFunc)
+	opts.SetCleanSession(false)
+
+	c := mqtt.NewClient(opts)
+	token := c.Connect()
+	if token.Wait() && token.Error() != nil {
+		panic(token.Error())  // *** Crashes here ***
+	}
+
+...

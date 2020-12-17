@@ -1,0 +1,56 @@
+/* This small program exhibits a bug in the type checking of around advice.
+ *  I think
+ * the type check is backwards.   You will see that ADVICE1 matches and
+ * ajc happily
+ * compiles it,  causing a silent conversion from a double to int.
+ * Conversly, ADVICE2 causes a compile-time error,  but should correctly match, 
+ * and would cause an assignment of an int to a double, which is ok.
+ */
+
+public class Main {
+
+  int f ( int i )
+    {  return(i+1);
+    }
+
+  double g (double r)
+    {  return(r + 1.0);
+    }
+
+  public static void main (String args[])
+    {  Main m = new Main();
+       int i = m.f(1);       // should match ADVICE2
+       double d = m.g(2.7);  // should cause an error when matched with ADVICE1
+    }
+}
+
+aspect Aspect {
+
+  // matches a double return value and silently converts to an an int
+  // Should trigger a compile-time error.
+
+  // ADVICE1
+  int around () : !within(Aspect) && call(double *(..))
+  {
+    int x=proceed(); //double value from proceed is getting assigned to an int, 
+                     //should be an error
+    System.out.println("AROUND1: x is " + thisJoinPointStaticPart + " " + x);
+    return(x);
+
+  }
+
+  // gives an error                
+  // Should correctly compile since an int is being assigned to a double,
+  // which is correct
+  // ADVICE2
+  /*  ---- uncomment to see error that should not happen
+  double around () : !within(Aspect) && call(int *(..))
+  {
+    double d=proceed();
+    System.out.println("AROUND2: d is " + thisJoinPointStaticPart + " " + d);
+    return(d);
+
+  }
+  --------*/
+
+}

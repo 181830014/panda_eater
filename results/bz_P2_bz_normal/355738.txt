@@ -1,0 +1,14 @@
+Using the example here: http://wiki.eclipse.org/EclipseLink/Examples/JPA/MappingSelectionCriteria
+
+OneToOneMapping mapping = (OneToOneMapping)descriptor.getMappingForAttributeName("manager");
+ExpressionBuilder builder = new ExpressionBuilder();
+        mapping.setSelectionCriteria(builder.getField("EMPLOYEE.DEPT_ID").equal(builder.getParameter("DEPARTMENT.DEPT_ID").
+and(builder.getField("EMPLOYEE.POSITION").equal("MANAGER"));
+
+A query on this mapping with an IN batch type will return incorrect results.
+
+query.setHint("eclipselink.batch.type", "IN");
+query.setHint("eclipselink.batch", "manager");
+
+They predicate should be: WHERE POSITION = 'MANAGER' AND DEPT_ID IN (...)
+They predicate is: WHERE DEPT_ID IN (...)

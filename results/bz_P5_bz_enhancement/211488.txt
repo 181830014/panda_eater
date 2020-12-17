@@ -1,0 +1,21 @@
+Currently, you cannot use the Source -> Implement/Override feature on interfaces.  Enable this feature on interfaces, because the following use cases are possible:
+
+1. Narrow return types of methods.  I believe this has been allowed since Java 1.5
+2. Add a "throws" declaration of a RuntimeException
+3. Remove declaration of Exceptions
+
+The two interfaces below demonstrate these cases:
+
+--
+import java.awt.AWTException;
+public interface Interface
+{
+    public Interface method() throws IllegalArgumentException, AWTException [3];
+}
+--
+public interface SubInterface extends Interface
+{
+    public SubInterface [1] method() throws UnsupportedOperationException [2];
+}
+
+It is arguable about how useful 2 and 3 are, but 1 is definitely useful.

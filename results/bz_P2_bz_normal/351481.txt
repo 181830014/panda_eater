@@ -1,0 +1,15 @@
+Have verified this behavior on both EclipseLink 2.0.0 and Eclipse 2.3.0.
+
+I have the following name query defined on an Entity:
+
+**********
+@NamedQuery(name = "Definition.findDefault",
+                    query = "SELECT DISTINCT d"
+                            + " FROM Category c JOIN c.definitions d"
+                            + " WHERE c.active=true AND d.active=true AND d.defaultInCategory=true",
+                    hints = {@QueryHint(name = QueryHints.CACHE_USAGE, value = CacheUsage.CheckCacheThenDatabase)})
+**********
+
+Note the use of a JOIN, and that the (single) result returned by the SELECT is from the right side of that JOIN.
+With the QueryHint in play, EclipseLink incorrectly returns 'c' (the Category).
+Without the QueryHint, EclipseLink correctly returns 'd' (the Definition).

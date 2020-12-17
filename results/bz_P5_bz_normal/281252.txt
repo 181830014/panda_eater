@@ -1,0 +1,16 @@
+Enter the following into a new .f90 file in a project with analysis and refactoring enabled.
+
+program example
+    use m
+    call s
+end program
+
+module m
+contains
+  subroutine s
+  end subroutine
+end module
+
+Save the file, then try to use Open Declaration on s in the CALL statement.  It will not work.  Modify the file and save it again; it will.
+
+The VPG is attempting to process the file in-order, so on the first save, it will not have information about the module stored until after it has already processed the main program.  When the file is modified and re-saved, there is information about the module in the database from the previous save, so it works (although the saved information may be out of date by that point).

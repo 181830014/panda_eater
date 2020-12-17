@@ -1,0 +1,21 @@
+In Unroll Loop and Align/Fuse Loops, Ashley needs to replace uses of a loop's index variable with expressions.  E.g.,
+
+DO I = 1,4
+    PRINT *, I
+END DO
+
+unrolls to
+
+DO I = 1,4,2
+    PRINT *, I
+    PRINT *, I+1    ! Use of I replaced with I+1
+END DO
+
+Replacing the variable with an expression is not legal (and thus the refactoring should fail) when
+(1) the variable is passed by reference to a subprogram
+(2) the variable is assigned via a READ or WRITE statement
+(any others?)
+
+Also it should not be replaced when it is used as the index variable in an implied DO loop, although the implied-DO index variable has its own scope, so the refactoring should still succeed.
+
+This information will be available after we have du-chains available.

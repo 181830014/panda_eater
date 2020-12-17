@@ -1,0 +1,15 @@
+Build Identifier: 
+
+Sorry for all the reports, but I found another one...
+
+EvlValidator#validate() adds possible fixes/resolutions to the EvlMarkerResolutionGenerator using the addResolution() method.
+This method 'disconnects' the resolution after adding (not sure what that means).
+
+The NullPointerException occurs when first the 'container' object is validated (and the resolution of the 'contained' object is added) and next the 'contained' object itself is validated.
+Its resolution is added again (as it was not removed from EvlValidator#results?) but it got disconnected already (eg fix.getSelf() in addResolution() returns null)
+
+I 'solved' this problem by adding a check whether fix.getSelf() returns null and just ignore if so (as the resolution already got added it does not seem to matter...)
+
+Hopefully my description is clear enough, otherwise please let me know!
+
+Reproducible: Always

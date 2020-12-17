@@ -1,0 +1,695 @@
+Created attachment 205614 [details]
+Examples
+
+Eclipse Persistence Services - 2.4.0.v20110824-r9956
+JDK build 1.6.0_27-b07 
+Windows Server 2008 SP2 win32
+
+The following program contains 3 simple Entities, A singleton from which I get Container entities which are filled with Item Entities.
+The Container owns an ordered list of items.
+In a postload handler for Container I check that the list of items never contains null as I do not intend it ever to contain null. I do not remove items from the list or create null items in this example.
+The postload handler contains an error message and exit when a problem is detected.
+The problem seems to occur when the container entities changes are being merged back into the cache after their item lists have been added to during the second transaction. 
+At the beginning of the merge the instance of container which I have just changed is fine, and the cached 'original' is fine.
+However when org.eclipse.persistence.internal.queries.OrderedListContainerPolicy#public void mergeChanges(CollectionChangeRecord changeRecord, Object valueOfTarget, boolean shouldMergeCascadeParts, MergeManager mergeManager, AbstractSession targetSession) is called 
+it fails to find the added Item eventhough it goes down the //getChangeType == add leg of the code. It seems that an IdentityHashMap is not returning the correct object. The result is that null is added into the cached 'target ' of the merge.
+Note:
+Every run of this program does NOT give rise to the error. However increasing the number of Containers to 100 almost always results in the problem on my win32 java VM ( max mem is 1024mb )
+
+The program is run with static weaving agent 
+-javaagent:C:\development\eclipselink\eclipselink-plugins-2.4.0.v20110824-r9956\org.eclipse.persistence.core_2.4.0.v20110824-r9956.jar.
+If I run it without this, i.e. using dynamic weaving, then it does not have the problem even with large numbers of containers.
+
+Here is the console output I see when running this;
+
+The Customizer has been started
+Customize a ServerSession(
+DatabaseAccessor(disconnected)
+H2Platform)
+Customize session called TestSimpleOrderedLists_memPU
+Found PersonHealth
+[EL Info]: 2011-10-13 11:27:28.675--ServerSession(23108627)--EclipseLink, version: Eclipse Persistence Services - 2.4.0.v20110824-r9956
+[EL Info]: 2011-10-13 11:27:28.849--ServerSession(23108627)--TestSimpleOrderedLists_memPU login successful
+PreInsertEvent: 0$008b1689-73f1-421c-8323-82a212c65c39
+AboutToInsertEvent: 0$008b1689-73f1-421c-8323-82a212c65c39
+PreUpdateWithChangesEvent: 0$008b1689-73f1-421c-8323-82a212c65c39
+PreUpdateWithChangesEvent: 0$008b1689-73f1-421c-8323-82a212c65c39
+PreInsertEvent: 0$ff58e277-1583-46b1-b01f-e0dd65247dbc
+PreUpdateWithChangesEvent: 0$008b1689-73f1-421c-8323-82a212c65c39
+AboutToUpdateEvent: 0$008b1689-73f1-421c-8323-82a212c65c39
+AboutToInsertEvent: 0$ff58e277-1583-46b1-b01f-e0dd65247dbc
+PreUpdateWithChangesEvent: 0$ff58e277-1583-46b1-b01f-e0dd65247dbc
+PreUpdateWithChangesEvent: 0$ff58e277-1583-46b1-b01f-e0dd65247dbc
+1: Commit it!
+PreUpdateWithChangesEvent: 0$ff58e277-1583-46b1-b01f-e0dd65247dbc
+AboutToUpdateEvent: 0$ff58e277-1583-46b1-b01f-e0dd65247dbc
+PostMergeEvent: 1$008b1689-73f1-421c-8323-82a212c65c39
+PostMergeEvent: 2$ff58e277-1583-46b1-b01f-e0dd65247dbc
+1: Committed!
+PostCloneEvent: 2$ff58e277-1583-46b1-b01f-e0dd65247dbc
+PostCloneEvent: 1$008b1689-73f1-421c-8323-82a212c65c39
+PreUpdateWithChangesEvent: 2$ff58e277-1583-46b1-b01f-e0dd65247dbc
+PreUpdateWithChangesEvent: 2$ff58e277-1583-46b1-b01f-e0dd65247dbc
+PreUpdateWithChangesEvent: 2$ff58e277-1583-46b1-b01f-e0dd65247dbc
+PreUpdateWithChangesEvent: 1$008b1689-73f1-421c-8323-82a212c65c39
+PreUpdateWithChangesEvent: 1$008b1689-73f1-421c-8323-82a212c65c39
+PreUpdateWithChangesEvent: 1$008b1689-73f1-421c-8323-82a212c65c39
+2: Commit it!
+PostMergeEvent: 2$ff58e277-1583-46b1-b01f-e0dd65247dbc
+PostMergeEvent: 1$008b1689-73f1-421c-8323-82a212c65c39
+!!!!!!!!! PostMergeEvent: 1$008b1689-73f1-421c-8323-82a212c65c39 source contains null
+2: Committed!
+PostCloneEvent: 2$ff58e277-1583-46b1-b01f-e0dd65247dbc
+PostCloneEvent: 1$008b1689-73f1-421c-8323-82a212c65c39
+!!!!!!!!! PostCloneEvent: 1$008b1689-73f1-421c-8323-82a212c65c39 original contains null
+!!!!!!!!! PostCloneEvent: 1$008b1689-73f1-421c-8323-82a212c65c39 source contains null
+FOUND IT!!!!
+
+
+Code: [Select all] [Show/ hide]
+package uk.co.his.test.simpleol;
+
+import java.io.IOException;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+public class Main {
+
+	private static final int NumItemsPerContainer = 2; //10;
+	private static final int NumContainers = 2; //100;
+	//private static final int NumContainersForStage2 = 20;
+	
+	
+	
+	
+	
+	public static void runContain2Test() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("TestSimpleOrderedLists_memPU");
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+
+		
+		Singleton singleton = Singleton.getInstance(em);
+		
+		singleton = Singleton.getInstance(em);
+		for(int i = 1; i <= NumContainers; i++) {
+			Container cont = singleton.containerAddNew(new Container(), em);
+			for(int j = 1; j <= NumItemsPerContainer; j++) {
+				cont.itemsAddNew(new Item(j), em);
+			}
+			cont.setDummyProp(i);
+		}
+		
+		System.err.flush();
+		System.out.flush();
+		System.out.println("1: Commit it!");
+		em.getTransaction().commit();
+		em.close();
+		System.out.println("1: Committed!");
+		System.err.flush();
+		System.out.flush();
+		
+		em = emf.createEntityManager();
+		em.getTransaction().begin();
+		
+
+		singleton = Singleton.getInstance(em);
+		for(Container container: singleton.getContainers()) {
+			int beginIndex = NumItemsPerContainer;
+			container.itemsAddNew(new Item(++beginIndex), em);
+			container.itemsAddNew(new Item(++beginIndex), em);
+			container.itemsAddNew(new Item(++beginIndex), em);
+			//container.setDummyProp(container.getDummyProp() * 10);
+		}
+		em.flush();
+
+		
+/*		for(int i = 1; i <= NumContainersForStage2; i++) {
+			Container cont = singleton.containerAddNew(new Container(), em);
+			for(int j = 1; j < NumItemsPerContainer; j++) {
+				cont.itemsAddNew(new Item(j), em);
+			}
+			cont.setDummyProp(NumContainers + i);
+		}
+		for(Container container: singleton.getContainers()) {
+			for(Item item: container.getItems()) {
+				item.setDummyProp(item.getDummyProp() * 10);
+			}
+		}*/
+		
+		System.out.println("2: Commit it!");
+		em.getTransaction().commit();
+		em.close();
+		System.err.flush();
+		System.out.flush();
+		System.out.println("2: Committed!");
+
+		
+		em = emf.createEntityManager();
+		em.getTransaction().begin();
+		
+		singleton = Singleton.getInstance(em);
+		for(Container container: singleton.getContainers()) {
+			for(@SuppressWarnings("unused") Item item: container.getItems()) {
+				System.out.print(".");
+			}
+		}
+
+		System.err.flush();
+		System.out.flush();
+		System.out.println("3: Commit it!");
+		em.getTransaction().commit();
+		em.close();
+		System.err.flush();
+		System.out.flush();
+		System.out.println("3: Committed!");
+		
+		
+		System.err.flush();
+		System.out.flush();
+		System.out.println("Dones!");
+	}
+	
+	
+	/**
+	 * @param args
+	 * @throws IOException 
+	 */
+	public static void main(String[] args) throws IOException {
+
+		runContain2Test();
+
+	}
+
+}
+
+package uk.co.his.test.simpleol;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.OneToMany;
+import javax.persistence.Version;
+
+@Entity
+@NamedQueries({
+})
+public class Singleton {
+
+	@Version private int version;
+	
+	@Id
+	protected String id = "1";
+
+	public static Singleton getInstance(EntityManager em) {
+		Singleton c = em.find(Singleton.class, "1");
+		if (c == null) {
+			c = new Singleton();
+			em.persist(c);
+		}
+		return c;
+	}
+	
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="singleton")
+    private java.util.Set<Container>  containers  = new java.util.HashSet<Container>();
+	
+	protected  Container containerAddNew(Container newObj, EntityManager em) {
+	    newObj.setUUID();
+	    newObj.setTimestamp(createTimestamp());
+	    em.persist(newObj);
+	    containers.add(newObj);
+	    newObj.setSingleton(this);
+	    newObj.itemsAddNew(new Item(0), em);
+	    return newObj;
+	}
+	
+	public java.util.Set<Container> getContainers() {
+		return containers;
+	}
+	
+
+	private static String createTimestamp()
+	{
+		DateFormat df = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss", Locale.UK); 
+		df.setTimeZone(TimeZone.getTimeZone("GB"));
+		return df.format(new Date());
+	}
+}
+
+
+package uk.co.his.test.simpleol;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.UUID;
+
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.PostLoad;
+import javax.persistence.PostPersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Version;
+
+
+
+@Entity
+@NamedQueries({})
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn
+public class Container {
+
+	@Id String id;
+
+    @Basic int dummyProp;
+    
+    @Version private int version;
+
+	public int getDummyProp() {
+		return dummyProp;
+	}
+
+	public void setDummyProp(int dummyProp) {
+		this.dummyProp = dummyProp;
+	}
+
+	public void setUUID() {
+		id = UUID.randomUUID().toString();
+	}
+	
+	 @Basic String timestamp;
+	    
+	    public String getTimestamp() {
+			return timestamp;
+		}
+
+		public void setTimestamp(String timestamp) {
+			this.timestamp = timestamp;
+		}
+		
+	@ManyToOne(fetch=FetchType.LAZY)
+	private Singleton singleton;
+	
+	public void setSingleton(Singleton singleton) {
+		this.singleton = singleton;
+	}
+
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="container")
+	@OrderBy("item_idx")
+    java.util.List<Item>  items  = new ArrayList<Item>();
+	
+	public java.util.List<Item> getItems() {
+		return items;
+	}
+
+	protected  Item itemsAddNew(Item newObj, EntityManager em) {
+	    newObj.setUUID();
+	    newObj.setTimestamp(createTimestamp());
+	    em.persist(newObj);
+	    items.add(newObj);
+
+		em.flush();
+	    newObj.setContainer(this);
+	    return newObj;
+	}
+	
+	@PreUpdate
+    @PostPersist
+    public void z_updateIndices() {
+		//System.out.println("z_updateIndices " + id + "^" + hashCode() + ", items=" + items.hashCode());
+		for (int i = 0; i<items.size();i++) {
+			items.get(i).setItemIndex(i);
+        }
+	}
+	
+	@PostLoad
+	public void postLoad() {
+		//System.out.println("PostLoad " + id + "^" + hashCode() + ", items=" + items.hashCode());
+		for (int i = 0; i<items.size();i++) {
+			//System.out.println("Item at " + i + " is " + items.get(i));
+			if(items.get(i) == null) {
+				System.err.println("FOUND IT!!!!");
+				System.exit(1);
+				
+			}
+        }
+	}
+	
+	private static String createTimestamp()
+	{
+		DateFormat df = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss", Locale.UK); 
+		df.setTimeZone(TimeZone.getTimeZone("GB"));
+		return df.format(new Date());
+	}
+}
+
+package uk.co.his.test.simpleol;
+
+import java.util.UUID;
+
+import javax.persistence.Basic;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.Version;
+
+
+@Entity
+@NamedQueries({
+})
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn
+public class Item {
+
+	
+	@Id
+	private String id;
+	
+	@Version private int version;
+
+    @Basic
+    private int item_idx;
+    
+    @Basic int creationOrder;
+    
+    @Basic int dummyProp;
+    
+    @Basic String timestamp;
+    
+    public String getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public int getDummyProp() {
+		return dummyProp;
+	}
+
+	public void setDummyProp(int dummyProp) {
+		this.dummyProp = dummyProp;
+	}
+
+	public Item(int creationOrder) {
+    	this.creationOrder = creationOrder;
+    }
+    
+    private Item() {}
+    
+	@ManyToOne(fetch=FetchType.LAZY)
+    private Container container;
+	
+	protected void setContainer(Container container) {
+		this.container = container;
+	}
+
+	public void setUUID() {
+		id = UUID.randomUUID().toString();
+	}
+
+	public void setItemIndex(int index) {
+		item_idx = index;
+	}
+	
+	public String toString() {
+		return "Item id=" + id + ", creationOrder=" + creationOrder + ", item_idx=" + item_idx;
+	}
+}
+
+
+package uk.co.his.test.simpleol;
+
+import org.eclipse.persistence.descriptors.ClassDescriptor;
+import org.eclipse.persistence.descriptors.DescriptorEvent;
+import org.eclipse.persistence.descriptors.DescriptorEventAdapter;
+import org.eclipse.persistence.descriptors.DescriptorEventManager;
+import org.eclipse.persistence.sessions.Session;
+
+public class Customizer implements org.eclipse.persistence.config.SessionCustomizer {
+	
+	public Customizer()
+	{
+		System.err.println("The Customizer has been started");
+	}
+
+	@Override
+	public void customize(Session session) throws Exception {
+		System.err.println("Customize a " + session);
+		System.err.println("Customize session called " + session.getName());
+		for (ClassDescriptor descriptor : session.getDescriptors().values()) {
+			if(descriptor.getJavaClass() == Container.class) {
+				System.out.println("Found PersonHealth");
+				descriptor.getEventManager().addListener(new DescriptorEventAdapter() {
+
+					private void checkObjects(Container source, Container original, String eventName) {
+						Container evtObj = original==null?source:original;
+						String evtObjStr = evtObj==null?"null":("" + evtObj.dummyProp + "$" + evtObj.id);
+						//String info = eventName + ": " + original.dummyProp + "$" + original.id + ". source " + source.dummyProp + "$" + source.id;
+						String info = eventName + ": " + evtObjStr;
+						System.out.println(info);
+						if(original != null) {
+							if(original.items.contains(null)) {
+								System.out.println("!!!!!!!!! " + info + " original contains null");
+							}
+						}if(source != null) {
+							if(source.items.contains(null)) {
+								System.out.println("!!!!!!!!! " + info + " source contains null");
+							}
+						}
+					}
+					
+					private void processEvent(DescriptorEvent event) {
+						checkObjects((Container)event.getSource(), (Container)event.getOriginalObject(), eventCodeToString(event.getEventCode()));
+					}
+					
+					private String eventCodeToString(int eventCode) {
+						switch(eventCode) {
+						case DescriptorEventManager.PreWriteEvent :
+							return "PreWriteEvent";
+						case DescriptorEventManager.PostWriteEvent :
+							return "PostWriteEvent";
+						case DescriptorEventManager.PreDeleteEvent :
+							return "PreDeleteEvent";
+						case DescriptorEventManager.PostDeleteEvent :
+							return "PostDeleteEvent";
+						case DescriptorEventManager.PreInsertEvent :
+							return "PreInsertEvent";
+						case DescriptorEventManager.PostInsertEvent :
+							return "PostInsertEvent";
+						case DescriptorEventManager.PreUpdateEvent :
+							return "PreUpdateEvent";
+						case DescriptorEventManager.PostUpdateEvent :
+							return "PostUpdateEvent";
+						case DescriptorEventManager.PostBuildEvent :
+							return "PostBuildEvent";
+						case DescriptorEventManager.PostRefreshEvent :
+							return "PostRefreshEvent";
+						case DescriptorEventManager.PostCloneEvent :
+							return "PostCloneEvent";
+						case DescriptorEventManager.PostMergeEvent :
+							return "PostMergeEvent";
+						case DescriptorEventManager.AboutToInsertEvent :
+							return "AboutToInsertEvent";
+						case DescriptorEventManager.AboutToUpdateEvent :
+							return "AboutToUpdateEvent";
+						case DescriptorEventManager.AboutToDeleteEvent :
+							return "AboutToDeleteEvent";
+						case DescriptorEventManager.PrePersistEvent :
+							return "PrePersistEvent";
+						case DescriptorEventManager.PreRemoveEvent :
+							return "PreRemoveEvent";
+						case DescriptorEventManager.PreUpdateWithChangesEvent :
+							return "PreUpdateWithChangesEvent";
+						}
+						return "Unknown event";
+					}
+
+					@SuppressWarnings("unused")
+					@Override
+					public void aboutToInsert(DescriptorEvent event) {
+						processEvent(event);
+					}
+
+					@SuppressWarnings("unused")
+					@Override
+					public void aboutToUpdate(DescriptorEvent event) {
+						processEvent(event);
+					}
+
+					@SuppressWarnings("unused")
+					@Override
+					public void postBuild(DescriptorEvent event) {
+						processEvent(event);
+					}
+
+					@SuppressWarnings("unused")
+					@Override
+					public void postClone(DescriptorEvent event) {
+						processEvent(event);
+					}
+
+					@SuppressWarnings("unused")
+					@Override
+					public void postMerge(DescriptorEvent event) {
+						processEvent(event);
+					}
+
+					@SuppressWarnings("unused")
+					@Override
+					public void postRefresh(DescriptorEvent event) {
+						processEvent(event);
+					}
+
+					@SuppressWarnings("unused")
+					@Override
+					public void preInsert(DescriptorEvent event) {
+						processEvent(event);
+					}
+
+					@SuppressWarnings("unused")
+					@Override
+					public void preUpdateWithChanges(DescriptorEvent event) {
+						processEvent(event);
+					}
+					
+				});
+			}
+		}
+	}
+
+}
+
+
+persistence.xml;
+
+Code: [Select all] [Show/ hide]
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	
+
+	
+	<persistence-unit name="TestSimpleOrderedLists_memPU">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<class> uk.co.his.test.simpleol.Singleton</class>
+		<class> uk.co.his.test.simpleol.Container</class>
+		<class> uk.co.his.test.simpleol.Item</class>
+		<properties>
+			<property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.H2Platform"/>
+			<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:TestSimpleOrderedListsmem"/>
+			<property name="eclipselink.ddl-generation" value="create-tables"/>
+			<property name="eclipselink.session.customizer" value="uk.co.his.test.simpleol.Customizer"/>
+		</properties>
+	</persistence-unit>
+
+</persistence>
+
+
+I have reimplemented this using @OrderColumn and have the same problems...
+
+
+When I run the uploaded files I get the following output
+
+The Customizer has been started
+Customize a ServerSession(
+	DatabaseAccessor(disconnected)
+	H2Platform)
+Customize session called TestSimpleOrderedLists2_memPU
+Found Container
+[EL Info]: 2011-10-19 20:05:53.627--ServerSession(33341602)--EclipseLink, version: Eclipse Persistence Services - 2.4.0.v20110824-r9956
+[EL Info]: 2011-10-19 20:05:53.782--ServerSession(33341602)--TestSimpleOrderedLists2_memPU login successful
+1: Commit it!
+PreInsertEvent: 1$045a6045-18fd-4293-89b6-f7a9177d0a2d
+PreInsertEvent: 2$2481696d-f758-4c17-94cd-4e39f37e9b47
+AboutToInsertEvent: 2$2481696d-f758-4c17-94cd-4e39f37e9b47
+AboutToInsertEvent: 1$045a6045-18fd-4293-89b6-f7a9177d0a2d
+PostMergeEvent: 2$2481696d-f758-4c17-94cd-4e39f37e9b47
+PostMergeEvent: 1$045a6045-18fd-4293-89b6-f7a9177d0a2d
+1: Committed!
+PostCloneEvent: 1$045a6045-18fd-4293-89b6-f7a9177d0a2d
+PostCloneEvent: 2$2481696d-f758-4c17-94cd-4e39f37e9b47
+PreUpdateWithChangesEvent: 1$045a6045-18fd-4293-89b6-f7a9177d0a2d
+PreUpdateWithChangesEvent: 2$2481696d-f758-4c17-94cd-4e39f37e9b47
+2: Commit it!
+PostMergeEvent: 2$2481696d-f758-4c17-94cd-4e39f37e9b47
+PostMergeEvent: 1$045a6045-18fd-4293-89b6-f7a9177d0a2d
+2: Committed!
+PostCloneEvent: 1$045a6045-18fd-4293-89b6-f7a9177d0a2d
+PostCloneEvent: 2$2481696d-f758-4c17-94cd-4e39f37e9b47
+........3: Commit it!
+3: Committed!
+PostCloneEvent: 1$045a6045-18fd-4293-89b6-f7a9177d0a2d
+PostCloneEvent: 2$2481696d-f758-4c17-94cd-4e39f37e9b47
+PreUpdateWithChangesEvent: 2$2481696d-f758-4c17-94cd-4e39f37e9b47
+Inserted One Item
+PreUpdateWithChangesEvent: 2$2481696d-f758-4c17-94cd-4e39f37e9b47
+Inserted One Item
+PreUpdateWithChangesEvent: 1$045a6045-18fd-4293-89b6-f7a9177d0a2d
+Inserted One Item
+PreUpdateWithChangesEvent: 1$045a6045-18fd-4293-89b6-f7a9177d0a2d
+Inserted One Item
+4: Commit it!
+PostMergeEvent: 1$045a6045-18fd-4293-89b6-f7a9177d0a2d
+!!!!!!!!! PostMergeEvent: 1$045a6045-18fd-4293-89b6-f7a9177d0a2d source contains null
+PostMergeEvent: 2$2481696d-f758-4c17-94cd-4e39f37e9b47
+4: Committed!
+PostCloneEvent: 1$045a6045-18fd-4293-89b6-f7a9177d0a2d
+!!!!!!!!! PostCloneEvent: 1$045a6045-18fd-4293-89b6-f7a9177d0a2d original contains null
+!!!!!!!!! PostCloneEvent: 1$045a6045-18fd-4293-89b6-f7a9177d0a2d source contains null
+PostCloneEvent: 2$2481696d-f758-4c17-94cd-4e39f37e9b47
+.......Found it!!!
+
+Here is the persistence.xml
+
+
+
+<persistence-unit name="TestSimpleOrderedLists2_memPU">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<class> uk.co.his.test.simpleol2.Singleton</class>
+		<class> uk.co.his.test.simpleol2.Container</class>
+		<class> uk.co.his.test.simpleol2.Item</class>
+		<properties>
+			<property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.H2Platform"/>
+			<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:TestSimpleOrderedLists2mem"/>
+			<property name="eclipselink.ddl-generation" value="create-tables"/>
+			<property name="eclipselink.session.customizer" value="uk.co.his.test.simpleol2.Customizer"/>
+			
+			<!-- 
+			<property name="eclipselink.logging.level" value="FINE" />
+			<property name="eclipselink.logging.session" value="true" />
+			-->
+			
+		</properties>
+	</persistence-unit>

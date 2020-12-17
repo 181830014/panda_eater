@@ -1,0 +1,32 @@
+What steps will reproduce the problem?
+1. This requires setting up Trac so that IDs can have non-numeric data (e.g., #ABC0003)
+2. Create a Trac task as above.
+3. Create a query that returns a non-empty result.
+4. Hit Finish.
+
+This appears to be possible in Trac 0.12rc1. The problem also applies to Mylyn 3.8.
+
+TracXmlRpcClient.java:701: TracTicket ticket = new TracTicket((Integer) ticketResult[0]); appears to make an assumption that is not correct, specifically that ticketResult[0] is an integer. Unfortunately, TracTicket also makes an assuption that the id is an int. The impact to changing id is obviously getId(), setId(int), INVALID_ID, and anything downstream of those.
+
+-- Error Details --
+Date: Wed Aug 01 11:12:36 EDT 2012
+Message: Unexpected server response: java.lang.String cannot be cast to java.lang.Integer
+Severity: Error
+Product: Eclipse SDK 3.7.2.v201202080800 (org.eclipse.sdk.ide)
+Plugin: org.eclipse.mylyn.trac.core
+Session Data:
+eclipse.buildId=M20120208-0800
+java.version=1.6.0_33
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_CA
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+Exception Stack Trace:
+java.lang.ClassCastException: java.lang.String cannot be cast to java.lang.Integer
+	at org.eclipse.mylyn.internal.trac.core.client.TracXmlRpcClient.parseTicket(TracXmlRpcClient.java:701)
+	at org.eclipse.mylyn.internal.trac.core.client.TracXmlRpcClient.search(TracXmlRpcClient.java:688)
+	at org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector.performQuery(TracRepositoryConnector.java:487)
+	at org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeQueriesJob.synchronizeQuery(SynchronizeQueriesJob.java:311)
+	at org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeQueriesJob.synchronizeQueries(SynchronizeQueriesJob.java:268)
+	at org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeQueriesJob.run(SynchronizeQueriesJob.java:201)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)

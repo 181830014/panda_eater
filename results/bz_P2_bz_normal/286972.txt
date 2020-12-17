@@ -1,0 +1,46 @@
+To reproduce, a subquery is created like this:
+
+    final ExpressionBuilder eb = new ExpressionBuilder();
+    
+    final ReportQuery query = new ReportQuery(Entity.class, eb);
+    
+    query.addAttribute("attribute",eb.get("attribute"));
+    
+    query.addGrouping("attribute");
+    
+    query.addDescendingOrdering("attribute");
+
+If this subquery is executed in a ReadAllQuery, then EclipseLink will at some point enter
+
+
+ExpressionQueryMechanism.buildReportQuerySelectStatement(boolean, boolean, Expression) line: 482	
+
+The variable clonedExpression is initalized to null, because this is a subselect.
+
+There is the comment "Note: subSelects are already cloned so this table is not needed.", which is obviously wrong.
+
+Next,
+
+
+ExpressionQueryMechanism.buildBaseSelectStatement(boolean, Map) line: 157
+
+is invoked, with the second argument clonedExpressions set to this variable, and thus null.
+
+But this method, in line 165, checks wether the query has ORDER BY Expressions, and if this is the case, calls
+
+
+ExpressionQueryMechanism.cloneExpressions(Vector, Map)
+
+with the second argument set to clonedExpressions, and thus null again.
+
+But in line 1448,
+
+
+Expression.copiedFrom(Map)
+
+is invoked, therefore also with null as its argument.
+
+This method though accesses its argument, and a NullPointerException is thrown.
+
+
+Because clonedExpressions is always null and should thus never be written to, it could be possible to simply use Collections.emptyMap() in ExpressionQueryMechanism.buildReportQuerySelectStatement:482 instead of null.

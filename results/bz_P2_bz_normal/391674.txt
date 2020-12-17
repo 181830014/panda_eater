@@ -1,0 +1,5 @@
+Setting  PersistenceUnitProperties.JDBC_CONNECTIONS_WAIT doesn't have any effect.
+When all connections are used, the next query still waits indefinitely until a connection is released.
+
+The problem lies in ConnectionPool.acquireConnection().
+After waiting for the timeout-interval, the method retries to acquire a connection. When this isn't successful, it is waiting again instead of throwing an exception.

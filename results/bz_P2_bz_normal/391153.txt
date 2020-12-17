@@ -1,0 +1,103 @@
+@Entity
+@Table(name="TLG_MAPMASTER")
+public class MapMaster implements Serializable, PortableObject {
+...
+    @Embedded
+    @AssociationOverrides({
+        @AssociationOverride(name="expert", joinColumns=@JoinColumn(name = "A_EXPERT_ID")),
+        @AssociationOverride(name="b.expert", joinColumns=@JoinColumn(name = "A_B_EXPERT_ID"))
+    })
+    public EmbeddedA a;
+...
+}
+
+@Embeddable
+public class EmbeddedA implements Serializable, PortableObject {
+    public Expert expert;
+    public EmbeddedB b;
+...
+}
+
+@Embeddable
+public class EmbeddedB implements Serializable, PortableObject {
+    public Expert expert;
+...
+}
+
+results in: 
+
+Exception in thread "main" javax.persistence.PersistenceException: Exception [EclipseLink-28019] (Eclipse Persistence Services - @VERSION@.@QUALIFIER@): org.eclipse.persistence.exceptions.EntityManagerSetupException
+Exception Description: Deployment of PersistenceUnit [coherence-pu] failed. Close all factories for this PersistenceUnit.
+Internal Exception: Exception [EclipseLink-0] (Eclipse Persistence Services - @VERSION@.@QUALIFIER@): org.eclipse.persistence.exceptions.IntegrityException
+Descriptor Exceptions: 
+---------------------------------------------------------
+
+Exception [EclipseLink-48] (Eclipse Persistence Services - @VERSION@.@QUALIFIER@): org.eclipse.persistence.exceptions.DescriptorException
+Exception Description: Multiple writable mappings exist for the field [TLG_MAPMASTER.EXPERT_ID].  Only one may be defined as writable, all others must be specified read-only.
+Mapping: org.eclipse.persistence.mappings.OneToOneMapping[expert]
+Descriptor: RelationalDescriptor(oracle.eclipselink.coherence.testing.models.trader.EmbeddedA --> [DatabaseTable(TLG_MAPMASTER)])
+
+Runtime Exceptions: 
+---------------------------------------------------------
+
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.createDeployFailedPersistenceException(EntityManagerSetupImpl.java:616)
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.deploy(EntityManagerSetupImpl.java:596)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryDelegate.getDatabaseSession(EntityManagerFactoryDelegate.java:186)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryDelegate.getServerSession(EntityManagerFactoryDelegate.java:220)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl.getServerSession(EntityManagerFactoryImpl.java:257)
+	at oracle.eclipselink.coherence.testing.tests.framework.JPAEnvironment.acquireEMF(JPAEnvironment.java:331)
+	at oracle.eclipselink.coherence.testing.tests.framework.JPAEnvironment.generateDatabase(JPAEnvironment.java:318)
+	at oracle.eclipselink.coherence.testing.tests.framework.JPAEnvironment.main(JPAEnvironment.java:98)
+Caused by: Exception [EclipseLink-28019] (Eclipse Persistence Services - @VERSION@.@QUALIFIER@): org.eclipse.persistence.exceptions.EntityManagerSetupException
+Exception Description: Deployment of PersistenceUnit [coherence-pu] failed. Close all factories for this PersistenceUnit.
+Internal Exception: Exception [EclipseLink-0] (Eclipse Persistence Services - @VERSION@.@QUALIFIER@): org.eclipse.persistence.exceptions.IntegrityException
+Descriptor Exceptions: 
+---------------------------------------------------------
+
+Exception [EclipseLink-48] (Eclipse Persistence Services - @VERSION@.@QUALIFIER@): org.eclipse.persistence.exceptions.DescriptorException
+Exception Description: Multiple writable mappings exist for the field [TLG_MAPMASTER.EXPERT_ID].  Only one may be defined as writable, all others must be specified read-only.
+Mapping: org.eclipse.persistence.mappings.OneToOneMapping[expert]
+Descriptor: RelationalDescriptor(oracle.eclipselink.coherence.testing.models.trader.EmbeddedA --> [DatabaseTable(TLG_MAPMASTER)])
+
+Runtime Exceptions: 
+---------------------------------------------------------
+
+	at org.eclipse.persistence.exceptions.EntityManagerSetupException.deployFailed(EntityManagerSetupException.java:229)
+	... 8 more
+Caused by: Exception [EclipseLink-0] (Eclipse Persistence Services - @VERSION@.@QUALIFIER@): org.eclipse.persistence.exceptions.IntegrityException
+Descriptor Exceptions: 
+---------------------------------------------------------
+
+Exception [EclipseLink-48] (Eclipse Persistence Services - @VERSION@.@QUALIFIER@): org.eclipse.persistence.exceptions.DescriptorException
+Exception Description: Multiple writable mappings exist for the field [TLG_MAPMASTER.EXPERT_ID].  Only one may be defined as writable, all others must be specified read-only.
+Mapping: org.eclipse.persistence.mappings.OneToOneMapping[expert]
+Descriptor: RelationalDescriptor(oracle.eclipselink.coherence.testing.models.trader.EmbeddedA --> [DatabaseTable(TLG_MAPMASTER)])
+
+Runtime Exceptions: 
+---------------------------------------------------------
+
+	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.initializeDescriptors(DatabaseSessionImpl.java:638)
+	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.initializeDescriptors(DatabaseSessionImpl.java:574)
+	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.initializeDescriptors(DatabaseSessionImpl.java:533)
+	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.postConnectDatasource(DatabaseSessionImpl.java:777)
+	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.login(DatabaseSessionImpl.java:735)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryProvider.login(EntityManagerFactoryProvider.java:217)
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.deploy(EntityManagerSetupImpl.java:542)
+	... 6 more
+
+
+
+Simple workarounds:
+
+1. Move one @AssociationOverride from entity into EmbeddedA:
+@AssociationOverride(name="expert", joinColumns=@JoinColumn(name = "A_B_EXPERT_ID"))
+    public EmbeddedB b;
+
+or alternatively
+
+2. Make reference names to be not equal to each other:
+@Embeddable
+public class EmbeddedA implements Serializable, PortableObject {
+    public Expert expert_a;
+public class EmbeddedB implements Serializable, PortableObject {
+    public Expert expert_b;

@@ -1,0 +1,15 @@
+Semantics notes: "Because advice only applies from concrete aspects, the declare
+precedence form only matters when declaring precedence with concrete aspects."
+
+The compiler should emit an error when it encounters an abstract aspect in a
+declare precedence statement, perhaps with the suggestion about using T+ for
+subaspects.  There's no good reason for the developer to be saying this, so it
+need not be an XLint message.  This error will catch (a) developers who don't
+know this rule; (b) developers who know but forget (cf "args(T)"); and (c)
+developers who generalize an aspect from concrete to abstract without updating
+corresponding clients.
+
+I suppose the same goes for a class, unless we redefine declare precedence to
+include any aspects enclosed in the class.  We probably don't want an XLint
+warning if a pattern picks out both valid concrete aspects and invalid classes
+or aspects, because it would trip on T+ or com.company..* way too often.

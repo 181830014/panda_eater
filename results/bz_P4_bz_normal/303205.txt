@@ -1,0 +1,60 @@
+Build Identifier: Eclipse Persistence Services - 2.0.0.v20091127-r5931
+
+Using EclipseLink (.0.0.v20091127-r5931) in GlassFish v3 and saw the following exception:
+
+Exception [EclipseLink-6051] (Eclipse Persistence Services - 2.0.0.v20091127-r5931): org.eclipse.persistence.exceptions.QueryException
+Exception Description: Partial object queries are not allowed to maintain the cache or be edited.  You must use dontMaintainCache().
+Query: ReadAllQuery(referenceClass=Actor )
+        at org.eclipse.persistence.exceptions.QueryException.cannotCachePartialObjects(QueryException.java:343)
+        at org.eclipse.persistence.queries.ObjectLevelReadQuery.prepareQuery(ObjectLevelReadQuery.java:1970)
+        at org.eclipse.persistence.queries.ObjectLevelReadQuery.prepare(ObjectLevelReadQuery.java:1797)
+        at org.eclipse.persistence.queries.ReadAllQuery.prepare(ReadAllQuery.java:722)
+        at org.eclipse.persistence.queries.DatabaseQuery.checkPrepare(DatabaseQuery.java:464)
+        at org.eclipse.persistence.queries.ObjectLevelReadQuery.checkPrepare(ObjectLevelReadQuery.java:732)
+        at org.eclipse.persistence.queries.DatabaseQuery.checkPrepare(DatabaseQuery.java:430)
+        at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:646)
+        at org.eclipse.persistence.queries.ObjectLevelReadQuery.execute(ObjectLevelReadQuery.java:958)
+        at org.eclipse.persistence.queries.ReadAllQuery.execute(ReadAllQuery.java:432)
+        at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeInUnitOfWork(ObjectLevelReadQuery.java:1021)
+        at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.internalExecuteQuery(UnitOfWorkImpl.java:2863)
+        at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1225)
+        at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1207)
+        at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1181)
+        at org.eclipse.persistence.internal.jpa.EJBQueryImpl.executeReadQuery(EJBQueryImpl.java:453)
+        at org.eclipse.persistence.internal.jpa.EJBQueryImpl.getResultList(EJBQueryImpl.java:669)
+
+This is reproducible every time the JPA query given below is exexcuted:
+
+-- cut here --
+EntityManager em = emf.createEntityManager();
+
+        CriteriaBuilder cb = emf.getCriteriaBuilder();
+        CriteriaQuery<Actor> criteria = cb.createQuery(Actor.class);
+
+        // FROM clause
+        Root<Actor> actor = criteria.from(Actor.class);
+
+        // SELECT clause
+        criteria.multiselect(actor.<Short>get("actorId"),
+                actor.<String>get("firstName"),
+                actor.<String>get("lastName"));
+
+        Query q = em.createQuery(criteria);
+
+        return (Actor)q.getResultList().get(0);
+-- cut here --
+
+If the query is cast:
+
+-- cut here --
+        Query q = em.createQuery(criteria);
+        ((org.eclipse.persistence.jpa.JpaQuery)q).getDatabaseQuery().dontMaintainCache();
+-- cut here --
+
+then the correct response is returned.
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+Described in Details above.

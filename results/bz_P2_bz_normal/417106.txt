@@ -1,0 +1,20 @@
+This been reported before, but I still see it happening with the latest Mylyn version. So, long running "show corresponding task" action opened from History view completely blocks workbench UI and in the end I had to kill Eclipse instance.
+
+See corresponding stack trace below.
+
+...
+at org.tigris.subversion.svnclientadapter.javahl.AbstractJhlClientAdapter.getProperties(AbstractJhlClientAdapter.java:1324)
+at org.tigris.subversion.svnclientadapter.javahl.AbstractJhlClientAdapter.getProperties(AbstractJhlClientAdapter.java:1303)
+at org.tigris.subversion.svnclientadapter.javahl.AbstractJhlClientAdapter.getProperties(AbstractJhlClientAdapter.java:1296)
+at org.tigris.subversion.subclipse.mylyn.SubclipseLinkedTaskInfo.init(SubclipseLinkedTaskInfo.java:116)
+at org.tigris.subversion.subclipse.mylyn.SubclipseLinkedTaskInfo.getRepositoryUrl(SubclipseLinkedTaskInfo.java:61)
+at org.eclipse.mylyn.internal.team.ui.actions.TaskFinder.reconcile(TaskFinder.java:118)
+at org.eclipse.mylyn.internal.team.ui.actions.TaskFinder.initialize(TaskFinder.java:241)
+at org.eclipse.mylyn.internal.team.ui.actions.TaskFinder.<init>(TaskFinder.java:217)
+at org.eclipse.mylyn.internal.team.ui.actions.OpenCorrespondingTaskAction.run(OpenCorrespondingTaskAction.java:66)
+at org.eclipse.mylyn.internal.team.ui.actions.OpenCorrespondingTaskAction.run(OpenCorrespondingTaskAction.java:58)
+at org.eclipse.ui.internal.PluginAction.runWithEvent(PluginAction.java:251)
+at org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection(ActionContributionItem.java:584)
+at org.eclipse.jface.action.ActionContributionItem.access$2(ActionContributionItem.java:501)
+at org.eclipse.jface.action.ActionContributionItem$5.handleEvent(ActionContributionItem.java:411)
+...

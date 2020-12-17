@@ -1,0 +1,97 @@
+User-Agent:       Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.14) Gecko/2009082707 Firefox/3.0.14 (.NET CLR 3.5.30729)
+Build Identifier: 
+
+Both JPA srg and avanced-field-access test suites failed, if I set <property name="eclipselink.weaving" value="true"/> in 
+  jpa\eclipselink.jpa.test\resource\eclipselink-advanced-field-access-model\osgi\persistence.xml for persistence-unit "default"
+or 
+  jpa\eclipselink.jpa.test\resource\eclipselink-annotation-model\osgi\persistence.xml for persistence-unit "fieldaccess"
+
+They both have first exception like this:
+java.lang.NullPointerException
+     [java] 	at org.eclipse.persistence.internal.security.PrivilegedAccessHelper.getMethodReturnType(PrivilegedAccessHelper.java:302)
+     [java] 	at org.eclipse.persistence.internal.descriptors.MethodAttributeAccessor.getGetMethodReturnType(MethodAttributeAccessor.java:105)
+     [java] 	at org.eclipse.persistence.mappings.ForeignReferenceMapping.validateBeforeInitialization(ForeignReferenceMapping.java:1487)
+     [java] 	at org.eclipse.persistence.descriptors.ClassDescriptor.validateBeforeInitialization(ClassDescriptor.java:5243)
+     [java] 	at org.eclipse.persistence.descriptors.ClassDescriptor.preInitialize(ClassDescriptor.java:3306)
+     [java] 	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.initializeDescriptors(DatabaseSessionImpl.java:429)
+     [java] 	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.initializeDescriptors(DatabaseSessionImpl.java:406)
+     [java] 	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.postConnectDatasource(DatabaseSessionImpl.java:671)
+     [java] 	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.login(DatabaseSessionImpl.java:633)
+     [java] 	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryProvider.login(EntityManagerFactoryProvider.java:240)
+     [java] 	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.deploy(EntityManagerSetupImpl.java:287)
+     [java] 	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl.getServerSession(EntityManagerFactoryImpl.java:146)
+     [java] 	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl.createEntityManagerImpl(EntityManagerFactoryImpl.java:202)
+     [java] 	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl.createEntityManager(EntityManagerFactoryImpl.java:190)
+     [java] 	at org.eclipse.persistence.testing.framework.junit.JUnitTestCase.getServerSession(JUnitTestCase.java:340)
+     [java] 	at org.eclipse.persistence.testing.framework.junit.JUnitTestCase.getEntityManagerFactory(JUnitTestCase.java:365)
+     [java] 	at org.eclipse.persistence.testing.framework.junit.JUnitTestCase.getEntityManagerFactory(JUnitTestCase.java:344)
+     [java] 	at org.eclipse.persistence.testing.framework.junit.JUnitTestCase.getEntityManagerFactory(JUnitTestCase.java:374)
+     [java] 	at org.eclipse.persistence.testing.framework.junit.JUnitTestCase.getServerSession(JUnitTestCase.java:336)
+     [java] 	at org.eclipse.persistence.testing.tests.jpa.advanced.EntityManagerJUnitTestSuite.testSetup(EntityManagerJUnitTestSuite.java:338)
+
+And there're other exceptions in JPA srg:
+Exception [EclipseLink-60] (Eclipse Persistence Services - 2.0.0.qualifier): org.eclipse.persistence.exceptions.DescriptorException
+     [java] Exception Description: The method [_persistence_setmanager_vh] or [_persistence_getmanager_vh] is not defined in the object [org.eclipse.persistence.testing.models.jpa.advanced.Employee].
+     [java] Internal Exception: java.lang.NoSuchMethodException: org.eclipse.persistence.testing.models.jpa.advanced.Employee._persistence_getmanager_vh()
+     [java] Mapping: org.eclipse.persistence.mappings.OneToOneMapping[manager]
+     [java] Descriptor: RelationalDescriptor(org.eclipse.persistence.testing.models.jpa.advanced.Employee --> [DatabaseTable(CMP3_EMPLOYEE), DatabaseTable(CMP3_SALARY)])
+     [java] 
+     [java] Exception [EclipseLink-60] (Eclipse Persistence Services - 2.0.0.qualifier): org.eclipse.persistence.exceptions.DescriptorException
+     [java] Exception Description: The method [_persistence_setaddress_vh] or [_persistence_getaddress_vh] is not defined in the object [org.eclipse.persistence.testing.models.jpa.advanced.Employee].
+     [java] Internal Exception: java.lang.NoSuchMethodException: org.eclipse.persistence.testing.models.jpa.advanced.Employee._persistence_getaddress_vh()
+     [java] Mapping: org.eclipse.persistence.mappings.OneToOneMapping[address]
+     [java] Descriptor: RelationalDescriptor(org.eclipse.persistence.testing.models.jpa.advanced.Employee --> [DatabaseTable(CMP3_EMPLOYEE), DatabaseTable(CMP3_SALARY)])
+
+In advanced-filed-access suite:
+ Exception [EclipseLink-60] (Eclipse Persistence Services - 2.0.0.qualifier): org.eclipse.persistence.exceptions.DescriptorException
+     [java] Exception Description: The method [_persistence_setowner_vh] or [_persistence_getowner_vh] is not defined in the object [org.eclipse.persistence.testing.models.jpa.xml.inheritance.Vehicle].
+     [java] Internal Exception: java.lang.NoSuchMethodException: org.eclipse.persistence.testing.models.jpa.xml.inheritance.Vehicle._persistence_getowner_vh()
+     [java] Mapping: org.eclipse.persistence.mappings.OneToOneMapping[owner]
+     [java] Descriptor: RelationalDescriptor(org.eclipse.persistence.testing.models.jpa.xml.inheritance.Vehicle --> [DatabaseTable(CMP3_XML_VEHICLE)])
+     [java] 
+     [java] Exception [EclipseLink-60] (Eclipse Persistence Services - 2.0.0.qualifier): org.eclipse.persistence.exceptions.DescriptorException
+     [java] Exception Description: The method [_persistence_setbusDriver_vh] or [_persistence_getbusDriver_vh] is not defined in the object [org.eclipse.persistence.testing.models.jpa.xml.inheritance.Bus].
+     [java] Internal Exception: java.lang.NoSuchMethodException: org.eclipse.persistence.testing.models.jpa.xml.inheritance.Bus._persistence_getbusDriver_vh()
+     [java] Mapping: org.eclipse.persistence.mappings.OneToOneMapping[busDriver]
+     [java] Descriptor: RelationalDescriptor(org.eclipse.persistence.testing.models.jpa.xml.inheritance.Bus --> [DatabaseTable(CMP3_XML_BUS)])
+     [java] 
+     [java] Exception [EclipseLink-60] (Eclipse Persistence Services - 2.0.0.qualifier): org.eclipse.persistence.exceptions.DescriptorException
+     [java] Exception Description: The method [_persistence_setcar_vh] or [_persistence_getcar_vh] is not defined in the object [org.eclipse.persistence.testing.models.jpa.xml.inheritance.Person].
+     [java] Internal Exception: java.lang.NoSuchMethodException: org.eclipse.persistence.testing.models.jpa.xml.inheritance.Person._persistence_getcar_vh()
+     [java] Mapping: org.eclipse.persistence.mappings.OneToOneMapping[car]
+     [java] Descriptor: RelationalDescriptor(org.eclipse.persistence.testing.models.jpa.xml.inheritance.Person --> [DatabaseTable(CMP3_XML_PERSON)])
+     [java] 
+     [java] Exception [EclipseLink-60] (Eclipse Persistence Services - 2.0.0.qualifier): org.eclipse.persistence.exceptions.DescriptorException
+     [java] Exception Description: The method [_persistence_setrepresentitive_vh] or [_persistence_getrepresentitive_vh] is not defined in the object [org.eclipse.persistence.testing.models.jpa.xml.inheritance.Person].
+     [java] Internal Exception: java.lang.NoSuchMethodException: org.eclipse.persistence.testing.models.jpa.xml.inheritance.Person._persistence_getrepresentitive_vh()
+     [java] Mapping: org.eclipse.persistence.mappings.OneToOneMapping[representitive]
+     [java] Descriptor: RelationalDescriptor(org.eclipse.persistence.testing.models.jpa.xml.inheritance.Person --> [DatabaseTable(CMP3_XML_PERSON)])
+     [java] 
+     [java] Exception [EclipseLink-60] (Eclipse Persistence Services - 2.0.0.qualifier): org.eclipse.persistence.exceptions.DescriptorException
+     [java] Exception Description: The method [_persistence_setbestFriend_vh] or [_persistence_getbestFriend_vh] is not defined in the object [org.eclipse.persistence.testing.models.jpa.xml.inheritance.Person].
+     [java] Internal Exception: java.lang.NoSuchMethodException: org.eclipse.persistence.testing.models.jpa.xml.inheritance.Person._persistence_getbestFriend_vh()
+     [java] Mapping: org.eclipse.persistence.mappings.OneToOneMapping[bestFriend]
+     [java] Descriptor: RelationalDescriptor(org.eclipse.persistence.testing.models.jpa.xml.inheritance.Person --> [DatabaseTable(CMP3_XML_PERSON)])
+     [java] 
+     [java] Exception [EclipseLink-108] (Eclipse Persistence Services - 2.0.0.qualifier): org.eclipse.persistence.exceptions.DescriptorException
+     [java] Exception Description: Cannot find value in class indicator mapping in parent descriptor [RelationalDescriptor(org.eclipse.persistence.testing.models.jpa.xml.inheritance.Car --> [DatabaseTable(CMP3_XML_FUEL_VEH)])].
+     [java] Descriptor: RelationalDescriptor(org.eclipse.persistence.testing.models.jpa.xml.inheritance.ImaginaryCar --> [DatabaseTable(CMP3_XML_FUEL_VEH)])
+     [java] 
+     [java] Exception [EclipseLink-108] (Eclipse Persistence Services - 2.0.0.qualifier): org.eclipse.persistence.exceptions.DescriptorException
+     [java] Exception Description: Cannot find value in class indicator mapping in parent descriptor [RelationalDescriptor(org.eclipse.persistence.testing.models.jpa.xml.inheritance.NonFueledVehicle --> [DatabaseTable(CMP3_XML_VEHICLE)])].
+     [java] Descriptor: RelationalDescriptor(org.eclipse.persistence.testing.models.jpa.xml.inheritance.Boat --> [DatabaseTable(CMP3_XML_BOAT)])
+     [java] 
+     [java] Exception [EclipseLink-93] (Eclipse Persistence Services - 2.0.0.qualifier): org.eclipse.persistence.exceptions.DescriptorException
+     [java] Exception Description: The table [CMP3_XML_VEHICLE] is not present in this descriptor.
+     [java] Descriptor: RelationalDescriptor(org.eclipse.persistence.testing.models.jpa.xml.inheritance.Car --> [DatabaseTable(CMP3_XML_FUEL_VEH)])
+     [java] 
+     [java] Exception [EclipseLink-108] (Eclipse Persistence Services - 2.0.0.qualifier): org.eclipse.persistence.exceptions.DescriptorException
+     [java] Exception Description: Cannot find value in class indicator mapping in parent descriptor [RelationalDescriptor(org.eclipse.persistence.testing.models.jpa.xml.inheritance.Car --> [DatabaseTable(CMP3_XML_FUEL_VEH)])].
+     [java] Descriptor: RelationalDescriptor(org.eclipse.persistence.testing.models.jpa.xml.inheritance.SportsCar --> [DatabaseTable(CMP3_XML_FUEL_VEH), DatabaseTable(CMP3_XML_SPORTS_CAR)])
+     [java] 
+     [java] Exception [EclipseLink-41] (Eclipse Persistence Services - 2.0.0.qualifier): org.eclipse.persistence.exceptions.DescriptorException
+     [java] Exception Description: A non-read-only mapping must be defined for the sequence number field.
+     [java] Descriptor: RelationalDescriptor(org.eclipse.persistence.testing.models.jpa.xml.inheritance.Person --> [DatabaseTable(CMP3_XML_PERSON)])
+
+
+Reproducible: Always

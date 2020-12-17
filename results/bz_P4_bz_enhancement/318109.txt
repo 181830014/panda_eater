@@ -1,0 +1,20 @@
+Build Identifier: 20100617-1415
+
+I have a project named "TestComp" in which I am building a JSF 2.0 custom component. TestComp defines a namespace for the taglib named "http://testcomp.com". I have another project named "TestJSF" that is a JSF 2.0 Dynamic Web 3.0 Project that depends on the TestComp project.
+
+In other words, TestComp is added as a required project to the Java Build Path of TestJSF. Also, TestComp is added to the Web Deployment Assembly of TestJSF.
+
+There's a web page in TestJSF that imports the "http://testcomp.com" namespace and uses the TestComp component. When running the project on Tomcat 7 everything works fine. However, in Eclipse a warning line is placed under xmlns:tc="http://testcomp.com" and Eclipse doesn't recognize the TestComp component in the page: <tc:testcomp... />.
+
+However had I written the classes of TestComp in the TestJSF project and added the testcomp.taglib.xml to the WEB-INF of the TestJSF project instead of the META-INF of TestComp, Eclipse had no problem recognizing the namespace.
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Create a project (Project1) that defines a JSF 2.0 custom component with a namespace like "http://foo.com"
+2. Create a Dynamic Web 3.0 Project (Project2) with JSF 2.0 Facet and Mojarra libraries
+3. Add Project1 to the build path of Project2
+4. Add Project1 to the Web Deployment Assembly of Project 2
+5. Create a Facelets XHTML page and try to import http://foo.com
+
+6. Eclipse cannot recognize http://foo.com while the project works fine when deployed to Tomcat 7

@@ -1,0 +1,18 @@
+When working on bug 109980, we should consider the following optimization.
+Considering the following code:
+C c;
+if (....) {
+  c = new C1();
+} else {
+  c = new C2();
+}
+// code when c is never used
+....
+
+C1 extends C and C2 extends C. When merging the two stack maps entries at the
+end of the if statement, we might want to put Top on the top of stack instead of
+C. This could prevent the VM from loading many classes in order to find out if
+the merge is fine.
+This needs to be investigated regarding the VM specs in order to find out if it
+is legal to do it.
+If legal, it might be worth it to implement it.

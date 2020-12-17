@@ -1,0 +1,13 @@
+User-Agent:       Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.1.4) Gecko/20091016 Firefox/3.5.4
+Build Identifier: 1.1.2
+
+After the transaction begins, there are some cases where we will execute queries against the unit of work to get back a list of clones. These objects may or may not be in the cache in the parent session. If we call UnitOfWork.getOriginalVersionOfObject() with one that is not in the cache, we are returned back an empty clone with no contents. We are currently working around it by running another query against the parent session to get the object if it comes back empty. 
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Start with an empty cache.
+2. Start transaction.
+3. With unit of work, execute a query to return some clones.
+4. Call getOriginalVersionOfObject with one of the clones.
+5. Examine contents of the returned value.

@@ -1,0 +1,265 @@
+When using relations with @BatchFetch annotated hints loading of entities fail with exception when using Postgresql as a backend. This might have something to do with the fact that postgresql jdbc driver returns the column names in lower case which has resulted in some other bugs earlier with eclipselink.
+
+How to reproduce --
+
+Runtime
+
+- glassfish v3.1.2.2 with eclipselink 2.5.0-M4
+
+	[#|2012-10-29T17:29:15.910+0200|INFO|glassfish3.1.2|org.eclipse.persistence.session.file:...|EclipseLink, version: Eclipse Persistence Services - 2.5.0.v20121016-ab08992|#]
+
+- postgresql 9.2
+
+	Database: PostgreSQL  Version: 9.2.1
+	Driver: PostgreSQL Native Driver  Version: PostgreSQL 9.2devel JDBC4 (build 1000)|#]
+
+	platform=>PostgreSQLPlatform
+
+- persistence.xml
+
+    <persistence-unit name="test" transaction-type="JTA">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <jta-data-source>jdbc/Test</jta-data-source>
+        <properties>
+            <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+            <property name="eclipselink.ddl-generation.output-mode" value="database" />
+            <property name="eclipselink.logging.level" value="FINE"/>
+
+            <property name="eclipselink.cache.shared.default" value="false"/>
+
+            <property name="eclipselink.jdbc.native-sql" value="true"/>
+            <property name="eclipselink.jdbc.batch-writing" value="JDBC"/>
+
+            <!-- this has no effect, same error on false or true -->
+            <property name="eclipselink.jpa.uppercase-column-names" value="true"/>
+        </properties>
+    </persistence-unit>
+
+- error
+
+[...|SELECT DISTINCT t1.id, t1.foo, t0.id, t0.foo, t0.a_id FROM tablea t1 LEFT OUTER JOIN tableb t0 ON (t0.a_id = t1.id) WHERE (t1.id = ?)
+	bind => [1 parameter bound]|#]
+
+[...|Local Exception Stack: 
+Exception [EclipseLink-6094] (Eclipse Persistence Services - 2.5.0.v20121016-ab08992): org.eclipse.persistence.exceptions.QueryException
+Exception Description: The parameter name [id] in the query's selection criteria does not match any parameter name defined in the query.
+Query: ReadAllQuery(name="cs" referenceClass=C sql="SELECT t0.id, t0.foo, t0.b_id FROM tablec t0, tableb t1 WHERE ((t0.b_id = t1.id) AND (t1.a_id = ?))")
+	at org.eclipse.persistence.exceptions.QueryException.parameterNameMismatch(QueryException.java:1080)
+	at org.eclipse.persistence.internal.expressions.ParameterExpression.getValue(ParameterExpression.java:275)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseCall.translate(DatabaseCall.java:1057)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:219)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:206)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeSelectCall(DatasourceCallQueryMechanism.java:277)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.selectAllRows(DatasourceCallQueryMechanism.java:672)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectAllRowsFromTable(ExpressionQueryMechanism.java:2706)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectAllRows(ExpressionQueryMechanism.java:2659)
+	at org.eclipse.persistence.queries.ReadAllQuery.executeObjectLevelReadQuery(ReadAllQuery.java:422)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeDatabaseQuery(ObjectLevelReadQuery.java:1150)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:854)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.execute(ObjectLevelReadQuery.java:1109)
+	at org.eclipse.persistence.queries.ReadAllQuery.execute(ReadAllQuery.java:394)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeInUnitOfWork(ObjectLevelReadQuery.java:1197)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.internalExecuteQuery(UnitOfWorkImpl.java:2877)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1681)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1663)
+	at org.eclipse.persistence.mappings.CollectionMapping.executeBatchQuery(CollectionMapping.java:917)
+	at org.eclipse.persistence.mappings.ForeignReferenceMapping.extractResultFromBatchQuery(ForeignReferenceMapping.java:636)
+	at org.eclipse.persistence.mappings.CollectionMapping.extractResultFromBatchQuery(CollectionMapping.java:898)
+	at org.eclipse.persistence.internal.indirection.NoIndirectionPolicy.valueFromBatchQuery(NoIndirectionPolicy.java:294)
+	at org.eclipse.persistence.mappings.ForeignReferenceMapping.batchedValueFromRow(ForeignReferenceMapping.java:272)
+	at org.eclipse.persistence.mappings.ForeignReferenceMapping.valueFromRow(ForeignReferenceMapping.java:2099)
+	at org.eclipse.persistence.mappings.ForeignReferenceMapping.buildCloneFromRow(ForeignReferenceMapping.java:333)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildAttributesIntoWorkingCopyClone(ObjectBuilder.java:1726)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildWorkingCopyCloneFromRow(ObjectBuilder.java:1873)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildObjectInUnitOfWork(ObjectBuilder.java:721)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildObject(ObjectBuilder.java:625)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildObject(ObjectBuilder.java:583)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildObject(ObjectBuilder.java:567)
+	at org.eclipse.persistence.mappings.CollectionMapping.valueFromRowInternalWithJoin(CollectionMapping.java:2542)
+	at org.eclipse.persistence.mappings.ForeignReferenceMapping.valueFromRow(ForeignReferenceMapping.java:2102)
+	at org.eclipse.persistence.mappings.ForeignReferenceMapping.buildCloneFromRow(ForeignReferenceMapping.java:333)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildAttributesIntoWorkingCopyClone(ObjectBuilder.java:1726)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildWorkingCopyCloneFromRow(ObjectBuilder.java:1873)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildObjectInUnitOfWork(ObjectBuilder.java:721)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildObject(ObjectBuilder.java:625)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildObject(ObjectBuilder.java:583)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildObject(ObjectBuilder.java:567)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.buildObject(ObjectLevelReadQuery.java:777)
+	at org.eclipse.persistence.queries.ReadObjectQuery.registerResultInUnitOfWork(ReadObjectQuery.java:787)
+	at org.eclipse.persistence.queries.ReadObjectQuery.executeObjectLevelReadQuery(ReadObjectQuery.java:460)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeDatabaseQuery(ObjectLevelReadQuery.java:1150)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:854)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.execute(ObjectLevelReadQuery.java:1109)
+	at org.eclipse.persistence.queries.ReadObjectQuery.execute(ReadObjectQuery.java:421)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeInUnitOfWork(ObjectLevelReadQuery.java:1197)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.internalExecuteQuery(UnitOfWorkImpl.java:2877)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1681)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1663)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1614)
+	at org.eclipse.persistence.internal.jpa.EntityManagerImpl.executeQuery(EntityManagerImpl.java:874)
+	at org.eclipse.persistence.internal.jpa.EntityManagerImpl.findInternal(EntityManagerImpl.java:814)
+	at org.eclipse.persistence.internal.jpa.EntityManagerImpl.find(EntityManagerImpl.java:707)
+	at org.eclipse.persistence.internal.jpa.EntityManagerImpl.find(EntityManagerImpl.java:579)
+	at com.sun.enterprise.container.common.impl.EntityManagerWrapper.find(EntityManagerWrapper.java:320)
+	at test.TestServiceEJB.doTest(TestServiceEJB.java:39)
+
+- entities
+
+package test;
+
+import org.eclipse.persistence.annotations.JoinFetch;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
+
+@Entity
+@Table(name = "tablea")
+public class A implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "foo")
+    private String foo;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "a", cascade = CascadeType.ALL)
+    @JoinFetch
+    private List<B> bs;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFoo() {
+        return foo;
+    }
+
+    public void setFoo(String foo) {
+        this.foo = foo;
+    }
+
+    public List<B> getBs() {
+        return bs;
+    }
+
+    public void setBs(List<B> bs) {
+        this.bs = bs;
+    }
+}
+
+package test;
+
+import org.eclipse.persistence.annotations.BatchFetch;
+import org.eclipse.persistence.annotations.BatchFetchType;
+import org.eclipse.persistence.annotations.JoinFetch;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
+
+@Entity
+@Table(name = "tableb")
+public class B implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "foo")
+    private String foo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "a_id")
+    private A a;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "b")
+//    @JoinFetch
+    @BatchFetch(BatchFetchType.JOIN)
+    private List<C> cs;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFoo() {
+        return foo;
+    }
+
+    public void setFoo(String foo) {
+        this.foo = foo;
+    }
+
+    public A getA() {
+        return a;
+    }
+
+    public void setA(A a) {
+        this.a = a;
+    }
+
+    public List<C> getCs() {
+        return cs;
+    }
+
+    public void setCs(List<C> cs) {
+        this.cs = cs;
+    }
+}
+
+package test;
+
+import javax.persistence.*;
+import java.io.Serializable;
+
+@Entity
+@Table(name = "tablec")
+public class C implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "foo")
+    private String foo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "b_id")
+    private B b;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFoo() {
+        return foo;
+    }
+
+    public void setFoo(String foo) {
+        this.foo = foo;
+    }
+
+    public B getB() {
+        return b;
+    }
+
+    public void setB(B b) {
+        this.b = b;
+    }
+}

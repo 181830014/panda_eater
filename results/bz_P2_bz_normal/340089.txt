@@ -1,0 +1,16 @@
+Created attachment 191246 [details]
+testapp sources with build scripts to reproduce the issue. Adjust build.properties and test.properties for your workspace and execute ant run to run the test
+
+This issue is filled as http://java.net/jira/browse/GLASSFISH-16220
+
+Attached is a test case that reproduces the issue. The root cause of the issue is ReportQuery.buildObjects has following code that ignores  RESULT_IGNORE returned from buildObject.  RESULT_IGNORE is defined as Boolean.TRUE and hence rows returning true are not returned to user.
+
+
+        for (int index = 0; index < size; index++) {
+            // GF_ISSUE_395
+            Object result = buildObject((AbstractRecord)rows.get(index), rows);
+            if (result != RESULT_IGNORED) {
+                containerPolicy.addInto(result, reportResults, this.session);
+            }
+            //end GF_ISSUE
+        }

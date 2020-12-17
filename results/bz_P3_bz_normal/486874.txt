@@ -1,0 +1,14 @@
+In the che.bat form che 4.0.0-beta-13 is probably a bug or something that could lead to issues.
+
+JAVA_VERSION=$(eval "${JAVA_HOME}"/bin/java -version 2>&1 | awk -F '"' 
+
+If JAVA_HOME is something like "C:\Program Files\Java\.." the space between "Progam Files" will lead the bash to stop. 
+
+
+This will solve the problem: 
+
+JAVA_VERSION=$(eval "'${JAVA_HOME}'"/bin/java -version 2>&1 | awk -F '"' 
+
+[Note the additional quote.]
+
+I don't know how eval handles this single and double quote, but this solved it for me.

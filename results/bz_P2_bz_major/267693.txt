@@ -1,0 +1,16 @@
+When there is a crash on startup (e.g. reading a corrupt activity context) and there is a error reporter, there can be a ClassCircularityError if the error reporter requires tasks.ui.
+
+Caused by: java.lang.ClassCircularityError: org/eclipse/mylyn/internal/tasks/ui/wizards/EditRepositoryWizard
+	at com.tasktop.client.core.TasktopErrorReporter.getPriority(TasktopErrorReporter.java:24)
+	at org.eclipse.mylyn.internal.commons.core.ErrorReporterManager.fail(ErrorReporterManager.java:61)
+	at org.eclipse.mylyn.commons.core.StatusHandler.fail(StatusHandler.java:67)
+	at org.eclipse.mylyn.internal.context.core.InteractionContextExternalizer.readContextFromXml(InteractionContextExternalizer.java:181)
+	at org.eclipse.mylyn.internal.context.core.InteractionContextExternalizer.readContextFromXml(InteractionContextExternalizer.java:151)
+	at org.eclipse.mylyn.internal.context.core.LocalContextStore.loadContext(LocalContextStore.java:94)
+	at org.eclipse.mylyn.internal.context.core.LocalContextStore.loadContext(LocalContextStore.java:78)
+	at org.eclipse.mylyn.internal.context.core.InteractionContextManager.loadActivityMetaContext(InteractionContextManager.java:746)
+	at org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin.initializeDataSources(TasksUiPlugin.java:813)
+	at org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin.start(TasksUiPlugin.java:597)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$2.run(BundleContextImpl.java:1009)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:1003)

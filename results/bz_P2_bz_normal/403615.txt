@@ -1,0 +1,32 @@
+With multiple generic types, the table-relations are all created with the last argument type. 
+With the classes below, the table of FooImpl has two foreign key relations to BImpl:
+aReference_idB
+bReference_idB
+
+I would expect the relationship aReference to be with AImpl instead. The tables I expect are:
+aReference_idA
+bReference_idB
+
+@MappedSuperclass
+abstract class AbstractFoo<A extends AType, B extends BType>{
+   A aReference;
+   B bReference;
+   @Id
+   long id;
+}
+
+@Entity
+class FooImpl extends AbstractFoo<AImpl, BImpl>{
+}
+
+@MappedSuperclass
+abstract class AType{
+   @Id
+   long idA;
+}
+
+@MappedSuperclass
+abstract class BType{
+   @Id
+   long idB;   
+}
