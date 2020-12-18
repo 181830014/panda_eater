@@ -32,7 +32,7 @@
 
 ### 4.1. 数据抓取
 
-* 数据来源 https://bugs.eclipse.org/bugs/上的每条Bug报告均具有`P1`~`P5`的等级标签，每个等级内按照Bug严重程度的不同，又细分成`critical`、`enhancement`、`major`、`normal`、`trivial`的5个子等级。为了方便后续的机器学习等，我们首先使用Node.js编写了爬虫程序，分别爬取上述5*5 = 25个细类下的报告若干，保留其中的`Description`文字作为原始数据：
+* 数据来源 https://bugs.eclipse.org/bugs/ 上的每条Bug报告均具有`P1`~`P5`的等级标签，每个等级内按照Bug严重程度的不同，又细分成`critical`、`enhancement`、`major`、`normal`、`trivial`的5个子等级。为了方便后续的机器学习等，我们首先使用Node.js编写了爬虫程序，分别爬取上述5*5 = 25个细类下的报告若干，保留其中的`Description`文字作为原始数据：
 
   
 
