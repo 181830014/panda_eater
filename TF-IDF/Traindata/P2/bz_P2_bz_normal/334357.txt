@@ -1,0 +1,31 @@
+Build Identifier: 2.2 revision 8831 - 01/14/2011 03:10 AM
+
+When defining "AttributeTransformer"/"Method attribute transformer" access to field value is through record.get(<field_name>).
+
+<field_name> can be DatabaseRecord or String (-this is used usually)
+
+record.get(<String_field_name>) - created "lookup DatabaseField" with index=-1
+it means that AbstractRecord must search every time for proper field index 'Vector.indexOf'
+
+--- Sample transformer
+
+public class TimeTransformer extends AttributeTransformerAdapter {
+@Override
+    public Object buildAttributeValue(final Record record, final Object object, final Session session) {
+        Long actionS = (Long) record.get("ACTION_S"); // new 'lookup' DatabaseField is created with index -1 - forces call AbstractRecord.fields.indexOf
+
+        Long actionF = (Long) record.get("ACTION_F"); // reused previous 'lookup' database field index again set to -1 - forces call AbstractRecord.fields.indexOf
+}
+}
+
+There is called AbstractRecord.fields.indexOf for every row and every field accessed in in 'buildAttributeValue' -> no optimalisation, Vector.indexOf has O(n)
+
+--- Expected behaviour
+fields.indexOf should be called only once/query no for every row*every_field
+ 
+--- Possible workaround - not sure it its correct - don't know if index of DatabaseField can change between different queries
+cache locally and reuse DatabaseField in AttributeTransformerAdapter
+  - not possible for method attribute transformer
+
+
+Reproducible: Always

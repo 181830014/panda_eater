@@ -1,0 +1,64 @@
+Build Identifier: 2.3.2.v20111125-r10461
+
+Bulk update does not work on entities - selecting version subquery added by EclipseLink returns more than one row
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Create project with Entity:
+
+@Entity
+@Table(name="pm_manager_cfg")
+public class PerformanceManagerDBImpl {
+  @Id
+  @GeneratedValue(strategy= GenerationType.TABLE, generator="SomeGenerator")
+  @Column(name="jdoid")
+  private int id;
+  
+  @Version
+  @Column(name="jdoversion")
+  private int version;
+  
+  //...
+  //other not important fields and methods
+}
+
+2. Fill table pm_manager_cfg with data.
+
+3. Execute the following bulk update:
+
+em.createQuery("UPDATE PerformanceManagerDBImpl m SET m.templateLayer = ?2, m.map15Id = ?3, m.map24Id = ?4, m.serie15cur0 = ?5, m.serie15cur1 = ?6, m.serie15cur2 = ?7, m.serie24cur0 = ?8, m.serie24cur1 = ?9, m.serie24cur2 = ?10, m.doPolling15 = ?11, m.doPolling24 = ?12, m.templateId = ?13, m.connectionId = ?15 WHERE m.id IN ?1"").executeUpdate();
+(of course with set parameters)
+
+4. Executing of this query throws the following exception:
+
+Local Exception Stack: Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.3.2.v20111125-r10461): 
+org.eclipse.persistence.exceptions.DatabaseExceptionInternal Exception: org.postgresql.util.PSQLException: ERROR: more than one row returned by a subquery used as an expressionError Code: 0
+Call: 
+UPDATE pm_manager_cfg SET connection_id = ?, do_polling15 = ?, do_polling24 = ?, template_id = ?, serie15_0 = ?, serie24_2 = ?, serie24_1 = ?, serie15_2 = ?, serie15_1 = ?, map15_id = ?, serie24_0 = ?, map24_id = ?, templatelayer = ?, jdoversion = (SELECT (jdoversion + ?) FROM pm_manager_cfg WHERE jdoid = pm_manager_cfg.jdoid) WHERE (jdoid IN (?,?,?,?,?,?,?,?,?,?)) 
+bind => [24 parameters bound]Query: UpdateAllQuery(referenceClass=PerformanceManagerDBImpl sql="UPDATE pm_manager_cfg SET connection_id = ?, do_polling15 = ?, do_polling24 = ?, template_id = ?, serie15_0 = ?, serie24_2 = ?, serie24_1 = ?, serie15_2 = ?, serie15_1 = ?, map15_id = ?, serie24_0 = ?, map24_id = ?, templatelayer = ?, jdoversion = (SELECT (jdoversion + ?) FROM pm_manager_cfg WHERE jdoid = pm_manager_cfg.jdoid) WHERE (jdoid IN ?)") 
+at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:333) 
+at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.processExceptionForCommError(DatabaseAccessor.java:1494) 
+at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeDirectNoSelect(DatabaseAccessor.java:838) 
+at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeNoSelect(DatabaseAccessor.java:906) 
+at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:592) 
+at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeCall(DatabaseAccessor.java:535) 
+at org.eclipse.persistence.internal.sessions.AbstractSession.basicExecuteCall(AbstractSession.java:1717) 
+at org.eclipse.persistence.sessions.server.ClientSession.executeCall(ClientSession.java:253) 
+at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:207) 
+at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:193) 
+at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeNoSelectCall(DatasourceCallQueryMechanism.java:236) 
+at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.updateAll(DatasourceCallQueryMechanism.java:787) 
+at org.eclipse.persistence.queries.UpdateAllQuery.executeDatabaseQuery(UpdateAllQuery.java:153) 
+at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:844) 
+at org.eclipse.persistence.queries.DatabaseQuery.executeInUnitOfWork(DatabaseQuery.java:743) 
+at org.eclipse.persistence.queries.ModifyAllQuery.executeInUnitOfWork(ModifyAllQuery.java:145) 
+at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.internalExecuteQuery(UnitOfWorkImpl.java:2871) 
+at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1516) 
+at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1498) 
+at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1463) 
+at org.eclipse.persistence.internal.jpa.EJBQueryImpl.executeUpdate(EJBQueryImpl.java:540) 
+
+
+
+Many rows are selected from subquery: SELECT (jdoversion + ?) FROM pm_manager_cfg WHERE jdoid = pm_manager_cfg.jdoid

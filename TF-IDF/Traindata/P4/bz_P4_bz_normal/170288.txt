@@ -1,0 +1,56 @@
+I tried to weave the action/ directory of an exploded struts jar but get an Abort. 
+
+== ajc.bat command ==:
+ajc.bat -inpath action -d actionNew -classpath <myclasspath>
+-aspectpath "C:/Core/aspects/aspects.jar" -Xlintfile "C:/Core/Xlint.properties 
+
+== PointCut in one of the aspects (there are several aj files) looks like this ==:
+pointcut strutsAction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response):
+	execution(ActionForward Action.*(ActionMapping, ActionForm,  
+                  HttpServletRequest, HttpServletResponse))
+	          && args(mapping, form, request, response);
+
+
+== error in the core dump ==: 
+abort ABORT -- (BCException) Can't find bcel delegate for org.apache.struts.action.ActionMapping type=class org.aspectj.weaver.ReferenceType
+when weaving classes 
+when weaving 
+when batch building BuildConfig[null] #Files=0
+
+Can't find bcel delegate for org.apache.struts.action.ActionMapping type=class org.aspectj.weaver.ReferenceType
+when weaving classes 
+when weaving 
+when batch building BuildConfig[null] #Files=0
+
+org.aspectj.weaver.BCException: Can't find bcel delegate for org.apache.struts.action.ActionMapping type=class org.aspectj.weaver.ReferenceType
+when weaving classes 
+when weaving 
+when batch building BuildConfig[null] #Files=0
+
+	at org.aspectj.weaver.bcel.BcelWeaver.weave(BcelWeaver.java:1111)
+	at org.aspectj.ajdt.internal.compiler.AjCompilerAdapter.weave(AjCompilerAdapter.java:311)
+	at org.aspectj.ajdt.internal.compiler.AjCompilerAdapter.afterCompiling(AjCompilerAdapter.java:183)
+	at org.aspectj.ajdt.internal.compiler.CompilerAdapter.ajc$afterReturning$org_aspectj_ajdt_internal_compiler_CompilerAdapter$2$f9cc9ca0(CompilerAdapter.aj:70)
+	at org.aspectj.org.eclipse.jdt.internal.compiler.Compiler.compile(Compiler.java:367)
+	at org.aspectj.ajdt.internal.core.builder.AjBuildManager.performCompilation(AjBuildManager.java:862)
+	at org.aspectj.ajdt.internal.core.builder.AjBuildManager.doBuild(AjBuildManager.java:242)
+	at org.aspectj.ajdt.internal.core.builder.AjBuildManager.batchBuild(AjBuildManager.java:161)
+	at org.aspectj.ajdt.ajc.AjdtCommand.doCommand(AjdtCommand.java:112)
+	at org.aspectj.ajdt.ajc.AjdtCommand.runCommand(AjdtCommand.java:60)
+	at org.aspectj.tools.ajc.Main.run(Main.java:367)
+	at org.aspectj.tools.ajc.Main.runMain(Main.java:246)
+	at org.aspectj.tools.ajc.Main.main(Main.java:86)
+
+== Alternatives that worked ==:
+If I do 
+1) each class file one at a time (per ajc call), i.e. the -inpath directory has only one class file.
+2) each aspect file at a time (per ajc call), i.e. 
+ajc.bat -inpath action -d actionNew -classpath <myclasspath>
+SampleAspect.aj -Xlintfile "C:/Core/Xlint.properties 
+
+then weaving succeeds. 
+
+1) I thought that the compiler would be doing the same thing given one file or multiple files in a directory internally. Is there some optimization for multiple files? Same question for multiple vs. one aspect. 
+ 
+ 
+Please let me know if you need any other information.

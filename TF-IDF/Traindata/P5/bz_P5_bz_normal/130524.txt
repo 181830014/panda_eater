@@ -1,0 +1,15 @@
+This is BiDi specific defect
+
+1. Start defining Derby profile
+2. Use following string for JDBC URL (capital characters stay for BiDi chars)
+    jdbc:derby:c:\derbydatabases\ABC\_123\Aa\MyDB;create=true
+
+Results: The text appear as follows:
+   jdbc:derby:c:\derbydatabases\A\123_\CBAa\MyDB;create=true
+
+Expected results: The text should appear as follows:
+   jdbc:derby:c:\derbydatabases\CBA\_123\Aa\MyDB;create=true
+
+
+  The relative order of file path components in JDBC URL field make it impossible to understand the real location of the file.
+  Notice, that the database file is created correctly in the correct path. The only problem we have is with the display of this path in the GUI.

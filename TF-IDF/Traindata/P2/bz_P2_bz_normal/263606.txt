@@ -1,0 +1,119 @@
+Build ID: 1.0.2
+
+Steps To Reproduce:
+When JOIN_EXISTING_TRANSACTION is true, all communication with the database should go through the same connection. But if an entity is loaded before a transaction is started and then some part of that entity is lazy loaded inside a transaction, it will not use the connection used by the transaction, but the one when it was initially queried.
+
+This becomes problematic when I manually place a pessimistic lock on a record (using an native update) and then the lazy load tries to select that record (through another connection); the application deadlocks.
+
+
+More information:
+Below a testcase micking my environment to reproduce the behavior:
+
+
+        System.out.println( "java.vm.version=" + System.getProperty("java.vm.version"));
+        com.informix.jdbc.Version.main(new String[]{});
+        
+        // entitymanagerfactory
+        Map<String, Object> cfg = new HashMap<String, Object>();
+        cfg.put(PersistenceUnitProperties.JDBC_DRIVER, ReindersInformixAndLoggingDriver.class.getName());        	cfg.put(PersistenceUnitProperties.JDBC_URL, ReindersInformixAndLoggingDriver.PREFIX + com.informix.jdbc.IfxDriver.class.getName() + "#" + "jdbc:informix-sqli://toeu_reinders:1527/reinders:INFORMIXSERVER=ol_ids10;DB_LOCALE=en_us.utf8");
+        cfg.put(PersistenceUnitProperties.JDBC_USER, "user");                                 cfg.put(PersistenceUnitProperties.JDBC_PASSWORD, "user");                                 cfg.put(PersistenceUnitProperties.TARGET_DATABASE, InformixPlatform.class.getName()); 
+        cfg.put(PersistenceUnitProperties.TARGET_SERVER, TargetServer.None);
+        cfg.put(PersistenceUnitProperties.WEAVING, "true");
+        cfg.put(PersistenceUnitProperties.JDBC_READ_CONNECTIONS_MIN, "0");
+        cfg.put(PersistenceUnitProperties.JDBC_READ_CONNECTIONS_MAX, "1");
+        cfg.put(PersistenceUnitProperties.JDBC_READ_CONNECTIONS_SHARED, "true");
+        cfg.put(PersistenceUnitProperties.JDBC_WRITE_CONNECTIONS_MIN, "0");
+        cfg.put(PersistenceUnitProperties.JDBC_WRITE_CONNECTIONS_MAX, "1");
+        cfg.put(PersistenceUnitProperties.CACHE_SHARED_DEFAULT, "false"); // do not use the shared cache (otherwise refresh will not update from db)                                 cfg.put(PersistenceUnitProperties.LOGGING_EXCEPTIONS, "true");
+        final EntityManagerFactory lEntityManagerFactoryFinal = Persistence.createEntityManagerFactory("reinders", cfg);
+        EntityManagerFactory lEntityManagerFactory = (EntityManagerFactory) Proxy.newProxyInstance(BM.class.getClassLoader(), new Class[] { EntityManagerFactory.class }, new InvocationHandler()
+        {
+        	@Override
+        	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+        	{
+                // invoke
+                Object lResult = method.invoke(lEntityManagerFactoryFinal, args);
+                
+                // commit
+                if ("createEntityManager".equals(method.getName()) && lResult != null)                	{
+                	((EntityManager)lResult).setFlushMode(FlushModeType.COMMIT);
+                }
+                
+                // done
+                return lResult;
+        	}
+        });
+        
+        // entitymanager
+        Map<String, String> lOptions = new HashMap<String, String>();
+        lOptions.put(org.eclipse.persistence.config.EntityManagerProperties.JOIN_EXISTING_TRANSACTION, "true");
+        EntityManager lEntityManager = lEntityManagerFactory.createEntityManager(lOptions);
+        
+        // find article
+        Query lQuery = lEntityManager.createQuery("select t from Article t where t.iArticlenr=:articlenr");
+        lQuery.setParameter("articlenr", 82);
+        Article lArticle = (Article)lQuery.getSingleResult();
+        
+        // transaction
+        lEntityManager.clear(); // prevent errors from a previous store session (not rollbacked optimistic lock increments) to screw things up
+        lEntityManager.getTransaction().begin();
+        
+        // find another article
+        Query lQuery2 = lEntityManager.createQuery("select t from Article t where t.iArticlenr=:articlenr");
+        lQuery2.setParameter("articlenr", 143);
+        Article lArticle2 = (Article)lQuery.getSingleResult();
+        
+        // now see what connections are used to lazy load
+        System.out.println("!!!!!!!!LAZYLOAD1");
+        new ArrayList(lArticle.getArticle2ArticlecatsWhereIAmArticle());
+        System.out.println("!!!!!!!!LAZYLOAD2");
+        new ArrayList(lArticle2.getArticle2ArticlecatsWhereIAmArticle());
+        
+        // and we're done
+        lEntityManager.getTransaction().commit();
+                
+        // close shop
+        lEntityManager.close();        
+        lEntityManagerFactory.close();
+
+
+The log ([C6815360] denotes the JDBC connection that is used):
+
+java.vm.version=11.0-b12-fastdebug
+IBM Informix JDBC Driver Version 3.50.JC3DE
+[EL Info]: 2009.02.04 10:28:11.842--ServerSession(8303462)--EclipseLink, version: Eclipse Persistence Services - 1.0.2 (Build 20081024)
+2009-02-04 10:28:12,483 DEBUG #16772849[C6815360]: executeUpdate(  set lock mode to wait 30  ) returns #0: 0
+2009-02-04 10:28:12,499 DEBUG #12742366[C6815360]: executeUpdate(  set isolation to committed read  ) returns #0: 0
+2009-02-04 10:28:12,499 DEBUG #6942026[C6815360]: executeUpdate(  set role javaapp1  ) returns #0: 0
+[EL Info]: 2009.02.04 10:28:13.780--ServerSession(8303462)--file:/C:/Documents%20and%20Settings/user/My%20Documents/reinders/voorraad/container/bm/build/-reinders login successful
+2009-02-04 10:28:14,967 DEBUG #13462176[C6815360]: [1] setBigDecimal=82 / java.math.BigDecimal / SELECT articlenr, articletypenr, description, sellingprice, length, width, inserted, std_reservation, haslicenses, minimalstock, is_landscape, actueel, weight, c, f, info, rolinstellingenok, rolkop, tapper, veer, lazylock, managestock, seqnr, keywords, opweb, dwhmodified, dwhby, ean, opwebdate, sale, trashcan, is_ending, artist, archive_location FROM article WHERE (articlenr =  >>>HERE<<< )
+2009-02-04 10:28:15,030 DEBUG #13462176[C6815360]: executeQuery: SELECT articlenr, articletypenr, description, sellingprice, length, width, inserted, std_reservation, haslicenses, minimalstock, is_landscape, actueel, weight, c, f, info, rolinstellingenok, rolkop, tapper, veer, lazylock, managestock, seqnr, keywords, opweb, dwhmodified, dwhby, ean, opwebdate, sale, trashcan, is_ending, artist, archive_location FROM article WHERE (articlenr = ?)
+2009-02-04 10:28:15,202 DEBUG #30638763[C6815360]: [1] setInt=3 / java.lang.Integer / SELECT articletypenr, code, description, dwhmodified, dwhby, lazylock, pricerulecode, grootboeknr FROM articletype WHERE (articletypenr =  >>>HERE<<< )
+2009-02-04 10:28:15,202 DEBUG #30638763[C6815360]: executeQuery: SELECT articletypenr, code, description, dwhmodified, dwhby, lazylock, pricerulecode, grootboeknr FROM articletype WHERE (articletypenr = ?)
+2009-02-04 10:28:15,296 DEBUG #10816932[C2056993]: executeUpdate(  set lock mode to wait 30  ) returns #0: 0
+2009-02-04 10:28:15,311 DEBUG #15312834[C2056993]: executeUpdate(  set isolation to committed read  ) returns #0: 0
+2009-02-04 10:28:15,311 DEBUG #10265083[C2056993]: executeUpdate(  set role javaapp1  ) returns #0: 0
+2009-02-04 10:28:15,311 DEBUG org.tbee.util.jdbc.Connection.invoke(Connection.java:156) #2056993[C2056993]: setAutoCommit(  false  )
+2009-02-04 10:28:15,311 DEBUG #9038937[C2056993]: executeUpdate(  set constraints all deferred  ) returns #0: 0
+2009-02-04 10:28:15,311 DEBUG #9209226[C2056993]: [1] setBigDecimal=82 / java.math.BigDecimal / SELECT articlenr, articletypenr, description, sellingprice, length, width, inserted, std_reservation, haslicenses, minimalstock, is_landscape, actueel, weight, c, f, info, rolinstellingenok, rolkop, tapper, veer, lazylock, managestock, seqnr, keywords, opweb, dwhmodified, dwhby, ean, opwebdate, sale, trashcan, is_ending, artist, archive_location FROM article WHERE (articlenr =  >>>HERE<<< )
+2009-02-04 10:28:15,358 DEBUG #9209226[C2056993]: executeQuery: SELECT articlenr, articletypenr, description, sellingprice, length, width, inserted, std_reservation, haslicenses, minimalstock, is_landscape, actueel, weight, c, f, info, rolinstellingenok, rolkop, tapper, veer, lazylock, managestock, seqnr, keywords, opweb, dwhmodified, dwhby, ean, opwebdate, sale, trashcan, is_ending, artist, archive_location FROM article WHERE (articlenr = ?)
+2009-02-04 10:28:15,374 DEBUG #23126121[C2056993]: [1] setInt=3 / java.lang.Integer / SELECT articletypenr, code, description, dwhmodified, dwhby, lazylock, pricerulecode, grootboeknr FROM articletype WHERE (articletypenr =  >>>HERE<<< )
+2009-02-04 10:28:15,389 DEBUG #23126121[C2056993]: executeQuery: SELECT articletypenr, code, description, dwhmodified, dwhby, lazylock, pricerulecode, grootboeknr FROM articletype WHERE (articletypenr = ?)
+!!!!!!!!LAZYLOAD1
+2009-02-04 10:28:15,389 DEBUG #305514[C6815360]: [1] setInt=82 / java.lang.Integer / SELECT oidnr, articlenr, categorynr, lazylock, dwhmodified, dwhby FROM article2articlecat WHERE (articlenr =  >>>HERE<<< )
+2009-02-04 10:28:15,405 DEBUG #305514[C6815360]: executeQuery: SELECT oidnr, articlenr, categorynr, lazylock, dwhmodified, dwhby FROM article2articlecat WHERE (articlenr = ?)
+2009-02-04 10:28:15,405 DEBUG #22129680[C6815360]: [1] setInt=82 / java.lang.Integer / SELECT articlenr, articletypenr, description, sellingprice, length, width, inserted, std_reservation, haslicenses, minimalstock, is_landscape, actueel, weight, c, f, info, rolinstellingenok, rolkop, tapper, veer, lazylock, managestock, seqnr, keywords, opweb, dwhmodified, dwhby, ean, opwebdate, sale, trashcan, is_ending, artist, archive_location FROM article WHERE (articlenr =  >>>HERE<<< )
+2009-02-04 10:28:15,405 DEBUG #22129680[C6815360]: executeQuery: SELECT articlenr, articletypenr, description, sellingprice, length, width, inserted, std_reservation, haslicenses, minimalstock, is_landscape, actueel, weight, c, f, info, rolinstellingenok, rolkop, tapper, veer, lazylock, managestock, seqnr, keywords, opweb, dwhmodified, dwhby, ean, opwebdate, sale, trashcan, is_ending, artist, archive_location FROM article WHERE (articlenr = ?)
+2009-02-04 10:28:15,436 DEBUG #15167987[C6815360]: [1] setInt=3 / java.lang.Integer / SELECT articletypenr, code, description, dwhmodified, dwhby, lazylock, pricerulecode, grootboeknr FROM articletype WHERE (articletypenr =  >>>HERE<<< )
+2009-02-04 10:28:15,452 DEBUG #15167987[C6815360]: executeQuery: SELECT articletypenr, code, description, dwhmodified, dwhby, lazylock, pricerulecode, grootboeknr FROM articletype WHERE (articletypenr = ?)
+2009-02-04 10:28:15,467 DEBUG #20728841[C6815360]: [1] setInt=7 / java.lang.Integer / SELECT categorynr, description, lazylock, dwhmodified, dwhby FROM articlecat WHERE (categorynr =  >>>HERE<<< )
+2009-02-04 10:28:15,467 DEBUG #20728841[C6815360]: executeQuery: SELECT categorynr, description, lazylock, dwhmodified, dwhby FROM articlecat WHERE (categorynr = ?)
+!!!!!!!!LAZYLOAD2
+2009-02-04 10:28:15,467 DEBUG #3432913[C2056993]: [1] setInt=82 / java.lang.Integer / SELECT oidnr, articlenr, categorynr, lazylock, dwhmodified, dwhby FROM article2articlecat WHERE (articlenr =  >>>HERE<<< )
+2009-02-04 10:28:15,483 DEBUG #3432913[C2056993]: executeQuery: SELECT oidnr, articlenr, categorynr, lazylock, dwhmodified, dwhby FROM article2articlecat WHERE (articlenr = ?)
+2009-02-04 10:28:15,483 DEBUG #27525999[C2056993]: [1] setInt=7 / java.lang.Integer / SELECT categorynr, description, lazylock, dwhmodified, dwhby FROM articlecat WHERE (categorynr =  >>>HERE<<< )
+2009-02-04 10:28:15,499 DEBUG #27525999[C2056993]: executeQuery: SELECT categorynr, description, lazylock, dwhmodified, dwhby FROM articlecat WHERE (categorynr = ?)
+2009-02-04 10:28:15,655 DEBUG org.tbee.util.jdbc.Connection.invoke(Connection.java:156) #2056993[C2056993]: commit()
+2009-02-04 10:28:15,655 DEBUG #12031745[C2056993]: executeUpdate(  set constraints all deferred  ) returns #0: 0
+2009-02-04 10:28:15,655 DEBUG org.tbee.util.jdbc.Connection.invoke(Connection.java:156) #2056993[C2056993]: setAutoCommit(  true  )
+[EL Info]: 2009.02.04 10:28:15.671--ServerSession(8303462)--file:/C:/Documents%20and%20Settings/user/My%20Documents/reinders/voorraad/container/bm/build/-reinders logout successful

@@ -1,0 +1,79 @@
+The following problem was reported via the automated error reporting:
+
+Message: Problems occurred when invoking code from plug-in: "org.eclipse.jface".
+java.lang.NullPointerException: null
+    at org.eclipse.eclemma.internal.ui.coverageview.CellTextConverter.getCounter(CellTextConverter.java:97)
+    at org.eclipse.eclemma.internal.ui.coverageview.CellTextConverter.getCovered(CellTextConverter.java:85)
+    at org.eclipse.eclemma.internal.ui.coverageview.CoverageView$5.update(CoverageView.java:208)
+    at org.eclipse.jface.viewers.ViewerColumn.refresh(ViewerColumn.java:141)
+    at org.eclipse.jface.viewers.AbstractTreeViewer.doUpdateItem(AbstractTreeViewer.java:946)
+    at org.eclipse.jface.viewers.AbstractTreeViewer$UpdateItemSafeRunnable.run(AbstractTreeViewer.java:117)
+    at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+    at org.eclipse.ui.internal.JFaceUtil.lambda$0(JFaceUtil.java:44)
+    at org.eclipse.jface.util.SafeRunnable.run(SafeRunnable.java:173)
+    at org.eclipse.jface.viewers.AbstractTreeViewer.doUpdateItem(AbstractTreeViewer.java:1025)
+    at org.eclipse.jface.viewers.StructuredViewer$UpdateItemSafeRunnable.run(StructuredViewer.java:475)
+    at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+    at org.eclipse.ui.internal.JFaceUtil.lambda$0(JFaceUtil.java:44)
+    at org.eclipse.jface.util.SafeRunnable.run(SafeRunnable.java:173)
+    at org.eclipse.jface.viewers.StructuredViewer.updateItem(StructuredViewer.java:2159)
+    at org.eclipse.jface.viewers.AbstractTreeViewer.createTreeItem(AbstractTreeViewer.java:840)
+    at org.eclipse.jface.viewers.AbstractTreeViewer.lambda$0(AbstractTreeViewer.java:817)
+    at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:70)
+    at org.eclipse.jface.viewers.AbstractTreeViewer.createChildren(AbstractTreeViewer.java:792)
+    at org.eclipse.jface.viewers.TreeViewer.createChildren(TreeViewer.java:595)
+    at org.eclipse.jface.viewers.AbstractTreeViewer.createChildren(AbstractTreeViewer.java:763)
+    at org.eclipse.jface.viewers.AbstractTreeViewer.internalInitializeTree(AbstractTreeViewer.java:1527)
+    at org.eclipse.jface.viewers.TreeViewer.internalInitializeTree(TreeViewer.java:771)
+    at org.eclipse.jface.viewers.AbstractTreeViewer.lambda$1(AbstractTreeViewer.java:1512)
+    at org.eclipse.jface.viewers.StructuredViewer.preservingSelection(StructuredViewer.java:1447)
+    at org.eclipse.jface.viewers.TreeViewer.preservingSelection(TreeViewer.java:354)
+    at org.eclipse.jface.viewers.StructuredViewer.preservingSelection(StructuredViewer.java:1408)
+    at org.eclipse.jface.viewers.AbstractTreeViewer.inputChanged(AbstractTreeViewer.java:1506)
+    at org.eclipse.jface.viewers.ContentViewer.setInput(ContentViewer.java:286)
+    at org.eclipse.jface.viewers.StructuredViewer.setInput(StructuredViewer.java:1685)
+    at org.eclipse.eclemma.internal.ui.coverageview.CoverageView$2$1.run(CoverageView.java:123)
+    at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:37)
+    at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:182)
+    at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4497)
+
+
+The reporter(s) left the following comment(s):
+
+--- Evgeny Mandrikov wrote on 125a: ---
+stepped on this accidentally
+
+--- Evgeny Mandrikov wrote on 0923: ---
+To reproduce:
+
+1. create and launch test with coverage
+
+import org.junit.test;
+
+public class ExampleTest {
+  @Test
+  public void test() {
+  }
+}
+
+public class Example {
+}
+
+2. in "JUnit" view click many times on "Rerun Test"
+3. during reruns - click on elements in "Coverage" view
+
+Bundles:
+| org.eclipse.core.runtime | 3.13.0.v20170207-1030 | 3.13.0.v20170207-1030 |
+| org.eclipse.eclemma.ui | 3.0.0.201706140232 | 3.0.0.201706140232 |
+| org.eclipse.jface | 3.13.0.v20170503-1507 | 3.13.0.v20170503-1507 |
+| org.eclipse.swt | 3.106.0.v20170608-0516 | 3.106.0.v20170608-0516 |
+| org.eclipse.ui | 3.109.0.v20170411-1742 | 3.109.0.v20170411-1742 |
+
+Operating Systems:
+| Linux | 4.1.15 | 4.1.15 |
+
+
+The above information is a snapshot of the collected data. Visit https://dev.eclipse.org/recommenders/committers/aeri/v2/#!/problems/595c9e80e4b0cca56f06125b for the latest data.
+
+Thank you for your assistance.
+ Your friendly error-reports-inbox.

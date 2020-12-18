@@ -1,0 +1,27 @@
+Several issues were encountered in getting JPA SRG tests running in OSGi.
+
+- weaving does not seem to work when launching Equinox using -jar
+- <exclude-unlisted-classes>false</exclude-unlisted-classes> does not work, jar is unable to be found, this requires the classes to be listed, which is very tedidious, a workaround is to list the jar in the persistence unit, which seems to work.
+- several imports are missing from the manifest
+> core
++ javax.xml.parsers;resolution:=optional,
++ javax.xml.datatype;resolution:=optional,
++ javax.xml.namespace;resolution:=optional,
++ javax.xml.transform;resolution:=optional,
++ javax.xml.transform.dom;resolution:=optional,
++ javax.xml.transform.sax;resolution:=optional,
++ org.xml.sax;resolution:=optional,
++ org.xml.sax.ext;resolution:=optional,
++ javax.xml.xpath;resolution:=optional,
++ javax.naming;resolution:=optional,
+> jpa
++ javax.xml.validation;resolution:=optional,
++ javax.xml.transform;resolution:=optional,
++ javax.xml.transform.stream;resolution:=optional,
++ javax.xml.transform.dom;resolution:=optional,
+
+> I assume there are several others as well, depending on what features are used.  Different OSGi environments, or ways of launching seem to require different imports...
+
+- variable 1-1 uses wrong class loader to init classes
+- no error was logged if osgi init failed
+- multiple persistence units in manifest did not work as spaces were not trimmed

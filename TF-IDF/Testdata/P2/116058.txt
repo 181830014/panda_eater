@@ -1,0 +1,56 @@
+In a non-Eclipse command line application that uses JEM, the detection of 
+binary inner classes appears to work fine. In particular, the code segment:
+
+        if (xmlType == null) {
+            String pkg = "";
+            if (javaType instanceof JavaClass) {
+                pkg = ((JavaClass)javaType).getJavaPackage().getName();
+
+System.out.println("djm Types about to check for nested ");
+                // Check for inner nested classes.  Warn they are unsupported.
+                if (((JavaClass)javaType).isNested()) {
+System.out.println("djm Types reportWarning being called ");
+                    emitter.getToolEnv().reportWarning(Messages.getMessage
+("J2WFoundInnerClass",
+                                                                           
+javaType.getName()));
+                }
+            }
+
+runs as expected with the isNested() call returning true. In the IDE, however,
+this appears to be returning false. The class we're testing this against is:
+
+/*
+ * Created on Aug 24, 2005
+ *
+ * TODO To change the template for this generated file go to
+ * Window - Preferences - Java - Code Style - Code Templates
+ */
+package foo;
+
+/**
+ * @author ericdp
+ *
+ * TODO To change the template for this generated type comment go to
+ * Window - Preferences - Java - Code Style - Code Templates
+ */
+public class Outer {
+	public InnerClassA aMethod(InnerClassB classB) {
+		return new InnerClassA();
+		
+	}
+	public class InnerClassA {
+		public InnerClassA() {
+		}
+		public String helloWorld() {
+			return "Hello World";
+		}
+
+	}
+	public class InnerClassB {
+		public InnerClassB() {
+			
+		}
+	}
+
+}

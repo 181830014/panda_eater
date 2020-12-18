@@ -1,0 +1,36 @@
+Found while reviewing the changes for bug 234924, in UniversalFileTransferUtility line 1807ff:
+
+   // copy using input stream
+   try {
+      InputStream inStream = ((IFile)srcFileOrFolder).getContents();
+      if (targetFS instanceof FileServiceSubSystem) {
+         IFileService fs = ((FileServiceSubSystem)targetFS).getFileService();
+	 fs.upload(inStream, ...);
+      }
+   } catch (Exception e) {
+   }
+
+
+It shouldn't be necessary to cast to a FileServiceSubSystem here, since the UniversalFileTransferUtility should also work on IRemoteFileSubSystem implementations that are not service based. We do have a method for IRemoteFileSubSystem#getOutputStream() to handle Streams.
+
+Also, catching away Exceptions without any logging is VERY BAD practice and should be fixed.
+
+One odder oddness I found is that the Supertransfer stuff assumes a Local file subsystem is available (getLocalFileSubSystem()). In an installation that doesn't have local installed, we should fail more gracefully (ok, this should likely go into a separate bug)
+
+Unit tests should be written for covering UniversalFileTransferUtility. There might 
+
+-----------Enter bugs above this line-----------
+TM 3.0RC2 testing
+installation : eclipse-SDK-3.4RC3 (I20080530-1730), cdt-5.0RC2 (200805231539), 
+     DSF-1.0rc2 (20080527), emf-2.4.0rc2, Findbugs-1.3.3, Releng.Tools-3.4RC3, 
+     RSE-3.0RC2, RXTX-2.1-7r3b, Subversive-0.7.0.v20080517, FTP_WebDav-3.2.2
+     org.tigris.MemMonitor, WR-Retriever-3.0.v20070604,
+RSE install  : RSE 3.0RC2 in workspace, TM-terminal, TM-discovery
+java.runtime : Sun 1.6.0_05-b13 -Xmx512m -XX:MaxPermSize=128m
+os.name:     : Windows XP 5.1, Service Pack 2
+------------------------------------------------
+systemtype   : Windows-local, Dstore-win, Dstore-linux
+targetos     : Red Hat Enterprise Linux WS release 4 (Nahant Update 3)
+targetuname  : Linux parser 2.6.9-34.EL #1 i686 athlon i386 GNU/Linux
+targetvm     : Sun Java HotSpot(TM) Client VM (build 1.4.2_12-b03, mixed mode)
+------------------------------------------------

@@ -1,0 +1,79 @@
+The current template creates the following:
+ublic class MyView extends ViewPart {
+
+	public static final String ID = "org.eclipse.ui.part.ViewPart.MyView"; // TODO
+Needs to be whatever is mentioned in plugin.xml
+
+	private Composite top = null;
+
+	public void createPartControl(Composite parent) {
+		// TODO Auto-generated method stub
+		top = new Composite(parent, SWT.NONE);
+	}
+
+	public void setFocus() {
+		// TODO Auto-generated method stub
+
+	}
+
+
+Proposing to create the following:
+
+
+public class MyView extends ViewPart {
+
+	public static final String ID = "org.eclipse.ui.part.ViewPart.MyView"; // TODO
+Needs to be whatever is mentioned in plugin.xml
+
+	private Composite top = null;
+
+	public void init(IViewSite site) throws PartInitException {
+		// TODO Auto-generated method stub
+		super.init(site);
+	}
+	
+	public void createPartControl(Composite parent) {
+		// TODO Auto-generated method stub
+		top = new Composite(parent, SWT.NONE);
+				
+		createToolBar();
+		createMenu();
+	}
+		
+	
+	private void createMenu() {
+		// TODO Auto-generated method stub
+		IMenuManager manager = getViewSite().getActionBars().getMenuManager();		
+	}
+
+	private void createToolBar() {
+		// TODO Auto-generated method stub
+		IToolBarManager tbm = getViewSite().getActionBars().getToolBarManager();		
+	}
+
+	public void setFocus() {
+		// TODO Auto-generated method stub
+		top.setFocus();
+	}
+
+}
+
+
+In thise case, the fact that we have a methods declaring a IToolBarManager and
+IMenuManager, they will be on the tree (and probably on the FF).
+
+We can create an (EMF) action holder, and drop (from the palette) actions on top
+of it, or just contextMenu create.  In which case we just creat a skelaton (like
+our events) 
+instanceAction = new Action("MyAction") {
+                        public void run() {
+                                // TODO: someting
+                        }
+                 };
+
+instanceAction could than be dragged on top of the menu/toolbar
+Menu should allow to drop a seperator as well.
+
+
+see more about views in
+http://www.eclipse.org/articles/viewArticle/ViewArticle2.html

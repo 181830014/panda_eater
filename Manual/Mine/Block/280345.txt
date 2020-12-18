@@ -1,0 +1,27 @@
+Use clauses not located at the top level of the unit cause a NullPointerException to be thrown, and several error dialogs to be displayed to the user.  This only happens if the use clause is located in a program unit or declare block.  
+
+
+---------------------------
+with Ada.Text_IO; use Ada.Text_IO;
+procedure main is
+begin
+    Put("Hello");
+end main;
+---------------------------
+ 
+is ok, but
+ 
+---------------------------
+with Ada.Text_IO;
+procedure main is
+    use Ada.Text_IO;         -- problem here
+begin
+    Put("Hello");
+    declare
+        use Ada.Text_IO;      -- problem here
+        X:Integer := 0;
+    begin
+        Put(" World");
+    end;
+end main;
+---------------------------

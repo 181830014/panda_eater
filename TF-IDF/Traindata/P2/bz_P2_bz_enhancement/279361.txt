@@ -1,0 +1,5 @@
+Hello,
+
+when tracking down 'overdue' problem with my connector, I found that TaskActivityManager.isOverdue() calls TaskRepositoryManager.isOwnedByUser, which only uses simple string comparison of task owner and username from repository. Unfortunately, this doesn't work for FogBugz, where repository.userName may be full name or email address, but task owner is specified as "Fullname <email>", so comparison always fails :-(
+
+I suggest to consult connector instead of simply comparing strings to decide whether task is owned by user. One way would be to add ITask.isOwnedByUser (+ setter) methods, so that connectors can explicitly specify this.

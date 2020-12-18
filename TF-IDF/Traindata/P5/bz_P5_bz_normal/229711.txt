@@ -1,0 +1,57 @@
+We are setting some sort of schema validation properties when loading the persistence.xml.  This fails on some XML parsers, so we should not valid if this fails or do this differently.
+
+ [java] Local Exception Stack:
+ [java] Exception [EclipseLink-30005] (Eclipse Persistence Services - 1.0 (Build SNAPSHOT - 20080429)): org.eclipse.persistence.exceptions.PersistenceUnitLoadingException
+ [java] Exception Description: An exception was thrown while searching for persistence archives with ClassLoader: org.apache.tools.ant.loader.AntClassLoader2@1f0aecc
+ [java] Internal Exception: Exception [EclipseLink-34002] (Eclipse Persistence Services - 1.0 (Build SNAPSHOT - 20080429)): org.eclipse.persistence.exceptions.XMLParseException
+ [java] Exception Description: An exception occurred while processing persistence.xml from URL: file:/C:/Engineering/Poleposition/poleposition-0.20/bin/. A SAXParser instance could not be created.
+ [java] Internal Exception: org.xml.sax.SAXNotRecognizedException: http://java.sun.com/xml/jaxp/properties/schemaLanguage
+ [java]     at org.eclipse.persistence.exceptions.PersistenceUnitLoadingException.exceptionSearchingForPersistenceResources(PersistenceUnitLoadingException.java:121)
+ [java]     at org.eclipse.persistence.jpa.PersistenceProvider.createEntityManagerFactory(PersistenceProvider.java:87)
+ [java]     at javax.persistence.Persistence.createEntityManagerFactory(Persistence.java:83)
+ [java]     at org.polepos.teams.jpa.JPACar.getEntityManagerFactory(JPACar.java:120)
+ [java]     at org.polepos.teams.jpa.JPACar.createEntityManager(JPACar.java:53)
+ [java]     at org.polepos.teams.jpa.JPADriver.prepare(JPADriver.java:39)
+ [java]     at org.polepos.framework.Circuit.race(Circuit.java:138)
+ [java]     at org.polepos.framework.Racer.run(Racer.java:101)
+ [java]     at org.polepos.framework.Racer.<init>(Racer.java:44)
+ [java]     at org.polepos.RunSeason.main(RunSeason.java:95)
+ [java]     at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+ [java]     at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+ [java]     at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+ [java]     at java.lang.reflect.Method.invoke(Method.java:585)
+ [java]     at org.apache.tools.ant.taskdefs.ExecuteJava.run(ExecuteJava.java:202)
+ [java]     at org.apache.tools.ant.taskdefs.ExecuteJava.execute(ExecuteJava.java:134)
+ [java]     at org.apache.tools.ant.taskdefs.Java.run(Java.java:710)
+ [java]     at org.apache.tools.ant.taskdefs.Java.executeJava(Java.java:178)
+ [java]     at org.apache.tools.ant.taskdefs.Java.execute(Java.java:84)
+ [java]     at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:275)
+ [java]     at org.apache.tools.ant.Task.perform(Task.java:364)
+ [java]     at org.apache.tools.ant.Target.execute(Target.java:341)
+ [java]     at org.apache.tools.ant.Target.performTasks(Target.java:369)
+ [java]     at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1216)
+ [java]     at org.apache.tools.ant.Project.executeTarget(Project.java:1185)
+ [java]     at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:40)
+ [java]     at org.apache.tools.ant.Project.executeTargets(Project.java:1068)
+ [java]     at org.apache.tools.ant.Main.runBuild(Main.java:668)
+ [java]     at org.apache.tools.ant.Main.startAnt(Main.java:187)
+ [java]     at org.apache.tools.ant.launch.Launcher.run(Launcher.java:246)
+ [java]     at org.apache.tools.ant.launch.Launcher.main(Launcher.java:67)
+ [java] Caused by: Exception [EclipseLink-34002] (Eclipse Persistence Services - 1.0 (Build SNAPSHOT - 20080429)): org.eclipse.persistence.exceptions.XMLParseException
+ [java] Exception Description: An exception occurred while processing persistence.xml from URL: file:/C:/Engineering/Poleposition/poleposition-0.20/bin/. A SAXParser instance could not be created.
+ [java] Internal Exception: org.xml.sax.SAXNotRecognizedException: http://java.sun.com/xml/jaxp/properties/schemaLanguage
+ [java]     at org.eclipse.persistence.exceptions.XMLParseException.getXMLParseException(XMLParseException.java:91)
+ [java]     at org.eclipse.persistence.exceptions.XMLParseException.exceptionCreatingSAXParser(XMLParseException.java:63)
+ [java]     at org.eclipse.persistence.internal.jpa.deployment.PersistenceUnitProcessor.processPersistenceXML(PersistenceUnitProcessor.java:315)
+ [java]     at org.eclipse.persistence.internal.jpa.deployment.PersistenceUnitProcessor.processPersistenceArchive(PersistenceUnitProcessor.java:289)
+ [java]     at org.eclipse.persistence.internal.jpa.deployment.PersistenceUnitProcessor.getPersistenceUnits(PersistenceUnitProcessor.java:217)
+ [java]     at org.eclipse.persistence.internal.jpa.JavaSECMPInitializer.initPersistenceUnits(JavaSECMPInitializer.java:197)
+ [java]     at org.eclipse.persistence.internal.jpa.JavaSECMPInitializer.initialize(JavaSECMPInitializer.java:215)
+ [java]     at org.eclipse.persistence.jpa.PersistenceProvider.createEntityManagerFactory(PersistenceProvider.java:73)
+ [java]     ... 29 more
+ [java] Caused by: org.xml.sax.SAXNotRecognizedException: http://java.sun.com/xml/jaxp/properties/schemaLanguage
+ [java]     at gnu.xml.aelfred2.XmlReader.getProperty(XmlReader.java:181)
+ [java]     at gnu.xml.aelfred2.XmlReader.setProperty(XmlReader.java:166)
+ [java]     at gnu.xml.aelfred2.JAXPFactory$JaxpParser.setProperty(JAXPFactory.java:147)
+ [java]     at org.eclipse.persistence.internal.jpa.deployment.PersistenceUnitProcessor.processPersistenceXML(PersistenceUnitProcessor.java:311)
+ [java]     ... 34 more

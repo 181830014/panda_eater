@@ -1,0 +1,50 @@
+I have the follwing classes:
+
+@Entity
+public class A {
+
+    @EmbeddedId
+    private final A_ID id;
+
+    @VariableOneToOne
+    @JoinColumn(name = "INTERFACE_ID", referencedColumnName = "ID")
+    private final A_Interface aInterface;
+
+    public A(A_ID id, A_Interface aInterface) {
+        super();
+        this.id = id;
+        this.aInterface = aInterface;
+    }
+
+    public A_ID getId() {
+        return id;
+    }
+
+    public A_Interface getaInterface() {
+        return aInterface;
+    }
+}
+
+@Embeddable
+public class A_ID {
+    public String a1;
+
+    public String a2;
+}
+
+public interface A_Interface {
+
+}
+
+@Entity
+public class A_Impl implements A_Interface {
+    @Id
+    @GeneratedValue
+    private long id;
+
+    public String test;
+}
+
+I get  the following lines: 
+
+The @JoinColumns on the annotated element [field aInterface] from the entity class [class A] is incomplete. When the source entity class uses a composite primary key, a @JoinColumn must be specified for each join column using the @JoinColumns. Both the name and the referencedColumnName elements must be specified in each such @JoinColumn.

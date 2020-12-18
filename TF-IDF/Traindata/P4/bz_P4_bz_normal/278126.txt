@@ -1,0 +1,16 @@
+The problem shows up with both inner and outer joins.
+1. In AggregateCollection case it happens when no primary key has been specified - in that case Eclipselink makes all the mapped fields a primary key.
+In CollectionMapping.valueFromRowInternalWithJoin method 
+targetKey = getReferenceDescriptor().getObjectBuilder().extractPrimaryKeyFromRow(targetRow, executionSession);
+is null if all the PK components are null - which means an aggregate with all fields null.
+
+2. In DirectCollection case it happens when the value is null, in this case
+in DirectCollectionMapping.valueFromRowInternalWithJoin method 
+directValue = targetRow.get(getDirectField());
+is null.
+
+In both cases this results in the method exiting immediately returning 
+getIndirectionPolicy().valueFromRow(value);
+which is the collection as it has been filled out so far. So it depends on the order of elements: all elements processed before null will be (correctly) included into the collection; all elements starting with null will be (incorrectly) left out.
+
+To fix this foreign key should be also read in - then if the foreign key not in the row, then an empty collection should be returned; otherwise the element should be added to the collection (aggregate with all null fields in AggregateCollection case, null in DirectCollection case).

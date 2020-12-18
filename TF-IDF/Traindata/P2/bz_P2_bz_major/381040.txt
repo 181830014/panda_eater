@@ -1,0 +1,85 @@
+Build Identifier: 
+
+Given the following example and attempt to deploy this you will get the attached exception. I looks like nested/inherited ElementCollections using mongodb are in fact working fine, but extending from a base class which has an (nested) ElementCollection member is prohibited.
+I'm testing with latest nightly builds (20120528) and patched glassfish v4.
+
+I know, that this exception is fired because this behaviour is not covered by the current JPA spec. However, as v2.1 doesn't cover the nosql topic at all it should be allowed at least for those non relational datasources.
+I mentioned this already in a similar case here https://bugs.eclipse.org/bugs/show_bug.cgi?id=324770.
+
+Short example to make clear what I'm talking about:
+
+/* THIS DOESN'T WORK */
+
+@Embeddable
+public class Address {    
+    protected String street;
+    protected String country;
+}
+
+@Embeddable
+public class Employee {
+    @ElementCollection
+    protected List<Address> adresses = new ArrayList<Address>();
+}
+
+@MappedSuperclass
+public class ExtensibleEmployeeBase {
+    @Id
+    @GeneratedValue
+    @Field(name="_id")
+    protected String id;
+
+    @ElementCollection
+    protected List<Employee> employees = new ArrayList<Employee>();
+}
+
+@Entity
+public class Company extends ExtensibleEmployeeBase  {
+    /* additional stuff here... */
+}
+
+
+/* THIS WORKS */
+
+@Embeddable
+public class Address {    
+    protected String street;
+    protected String country;
+}
+
+@Embeddable
+public class Employee {
+    @ElementCollection
+    protected List<Address> adresses = new ArrayList<Address>();
+}
+
+@Embeddable
+public class ExtensibleEmployeeBase {
+    @Id
+    @Field(name="_id")
+    protected String id;
+
+    @ElementCollection
+    protected List<Employee> employees = new ArrayList<Employee>();
+}
+
+@Entity
+public class Company {
+    @Id
+    @GeneratedValue
+    @Field(name="_id")
+    protected String id;
+
+    @Embedded
+    protected ExtensibleEmployeeBase employeeBase;
+
+    /* additional stuff here... */
+}
+
+So I guess this problem can be fixed by removing this exception at least for the case of an nosql datasource.
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. create sample project
+2. deploy (e.g. on glassfish) (fails)

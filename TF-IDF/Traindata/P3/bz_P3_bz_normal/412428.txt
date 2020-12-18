@@ -1,0 +1,22 @@
+VJET incorrectly filters content assist proposals.
+
+Steps to reproduce:
+
+EXECUTE: 
+- Import the attached project using Import Maven Project wizard
+- Open jboss-as-kitchensink-html5-mobile/src/main/webapp/js/app.js file with VJET Editor and scroll to registerMember(memberData) function.
+- insert a new line after the following line of text: "data: JSON.stringify(memberData)," and save the file.
+- Press Ctrl-Space due to invoke Content Assistant.
+ASSERT: See many of properties in the list of proposals (See screenshot 1)
+
+EXECUTE:
+- Close Content Assist window by pressing Esc.
+- Type letter 'd' and save the file.
+- Press Ctrl-Space due to invoke Content Assistant.
+ASSERT: See only two properties that starts with letter 'd' in the list of proposals (See screenshot 2)
+
+EXECUTE:
+- Close Content Assist window by pressing Esc.
+- Move the text cursor right before just typed letter 'd'.
+- Press Ctrl-Space due to invoke Content Assistant.
+FAILED: See only two properties that starts with letter 'd' in the list of proposals (See screenshot 3) - There should be shown all the available properties in content assistant without any filtering as they were shown at screenshot 1.

@@ -1,0 +1,70 @@
+Try to configure Native Sequence in Dynamic Type Builder to handle the auto generated primary key. (Database is SQL Server 2008, Jboss 7.1.0)
+
+For static model i used these two annotations and they work
+---------------------------------------------------------------
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+---------------------------------------------------------------
+
+For Dynamic Model, using ORM, it works
+---------------------------------------------------------------
+<entity class="Person" access="VIRTUAL">
+  <attributes>
+    <id name="pid" attribute-type="Integer">
+      <column name="pid" /> 
+      <generated-value strategy="IDENTITY" /> 
+    </id>
+    <basic name="personName" attribute-type="String">
+      <column name="personName" /> 
+    </basic>
+  </attributes>
+</entity>
+---------------------------------------------------------------
+
+For dynamic model, using DynamicTypeBuilder API, it doesn't work.
+---------------------------------------------------------------
+JPADynamicTypeBuilder personBuilder = new JPADynamicTypeBuilder(classLoader.createDynamicClass(packageName + "Person"), null, "Person");
+personBuilder.setPrimaryKeyFields("pid"); 
+personBuilder.addDirectMapping("pid",int.class, "pid");
+personBuilder.addDirectMapping("personName", String.class, "personName");
+
+NativeSequence sequence = new NativeSequence("SEQ_GEN_IDENTITY", true);//new NativeSequence();
+sequence.setPreallocationSize(1);
+personBuilder.configureSequencing(sequence, "SEQ_GEN_IDENTITY", "pid");
+
+I got the following error in case of dynamic model:
+
+Caused by: com.microsoft.sqlserver.jdbc.SQLServerException: Invalid object name 'SEQUENCE'.
+at com.microsoft.sqlserver.jdbc.SQLServerException.makeFromDatabaseError(SQLServerException.java:196) [sqljdbc4.jar:]
+at com.microsoft.sqlserver.jdbc.SQLServerStatement.getNextResult(SQLServerStatement.java:1454) [sqljdbc4.jar:]
+at com.microsoft.sqlserver.jdbc.SQLServerPreparedStatement.doExecutePreparedStatement(SQLServerPreparedStatement.java:388) [sqljdbc4.jar:]
+at com.microsoft.sqlserver.jdbc.SQLServerPreparedStatement$PrepStmtExecCmd.doExecute(SQLServerPreparedStatement.java:338) [sqljdbc4.jar:]
+at com.microsoft.sqlserver.jdbc.TDSCommand.execute(IOBuffer.java:4026) [sqljdbc4.jar:]
+ 
+I have debugged the code, it uses the NativeSequence having name ‘SEQ_GEN_IDENTITY’ in case of static model. 
+
+For Dynamic Model, I created NativeSequence with same name ‘SEQ_GEN_IDENTITY’, but I always ends with the DefaultSequence, which causes the error mentioned above. 
+And this work is done by 
+org.eclipse.persistence.internal.sequencing.SequencingManager.onConnectSequences(Collection)
+
+(it's in the process of adding dynamic types using DynamicJPAHelper)
+
+I have applied a temporary fix in this method and made it work for me, i.e.
+
+String seqName = parentDescriptor.getSequenceNumberName();
+            Sequence sequence = getSequence(seqName);
+            //Nabeel Ahmed - Temporary Squencing related fix - BEGIN
+            if(sequence == null && descriptor.getSequence() != null && descriptor.getSequence() instanceof NativeSequence){
+            	sequence = descriptor.getSequence();
+            	getOwnerSession().getDatasourcePlatform().addSequence(sequence);
+            } // END
+            if (sequence == null) {
+                sequence = new DefaultSequence(seqName);
+                getOwnerSession().getDatasourcePlatform().addSequence(sequence, isConnected);
+            }
+
+But hope to hear from you people soon.
+ 
+The following url is also about the same problem and the suggested solution is similar to what I have mentioned above( which didn’t work for me):
+ 
+http://stackoverflow.com/questions/5598728/sequences-with-dynamic-entities-in-eclipselink

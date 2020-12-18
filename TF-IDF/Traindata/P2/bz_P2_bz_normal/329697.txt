@@ -1,0 +1,11 @@
+I was looking into some bugzilla query performance on one of our instances, and started to debug the performQuery. Just for the record, here is the (I think) intended workflow of Bugzilla's performQuery:
+
+	1. getSearchHits
+	2. if no hits
+		1. logout
+		2. getSearchHits
+
+Problem is that in my case, every performQuery will have no hits for the first getSearchHits try, and thus do logout and try again.
+Of the query tested, a successful getSearchHits, taskes about 2.5sec, but the unsuccessful one plus the logout add additional 2-3sec to that. The whole peformQuery thus takes about twice as long as is should I think.
+
+Not why does it always fail on the first try? Well, if a query has not changed tasks, the getSearchHits has no hits. So the logout and retry will be useless in a whole lot of calls. It seems this retry was added due to IP changes ("// XXX: HACK in case of ip change bugzilla can return 0 hits"), but it seems like a problematic hack (well, are there non-problematic ones...) as it slows down every user on probably the majority of calls.

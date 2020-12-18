@@ -1,0 +1,65 @@
+Build Identifier: 20110916-0149
+
+EclipseLink seems to ignore selection criteria, see example to reproduce.
+
+See also discussion here: http://www.eclipse.org/forums/index.php/t/263267/
+
+Reproducible: Always
+
+Steps to Reproduce:
+Example to reproduce the error:
+
+Entities (excerpt):
+=================================
+@Entity
+@Table(name="A")
+@Customizer(ActStateFilter.class)
+public class A{
+
+@JoinTable(name = "AB", joinColumns = @JoinColumn(name = "m_id", referencedColumnName = "m_id"), inverseJoinColumns = @JoinColumn(name = "s_id", referencedColumnName = "s_id"))
+private B activeB;
+}
+
+@Entity
+@Table(name="B")
+public class B{
+
+@Id
+@Column(name="s_id", unique=true, nullable=false)
+private Integer sID;
+
+@Column(name="value", length=60)
+private String value;
+}
+
+
+DescriptorCustomizer:
+=================================
+public class ActStateFilter implements DescriptorCustomizer {
+@Override
+public void customize(ClassDescriptor descriptor) throws Exception {
+OneToOneMapping mapping = (OneToOneMapping) descriptor.getMappingForAttributeName("activeB");
+
+ExpressionBuilder eb = new ExpressionBuilder(mapping.getReferenceClass());
+Expression exp = eb.getTable("A").getField("m_id").equal(eb.getParameter("M_ID")).
+and(eb.getTable("AB").getField("m_id").equal(eb.getTable("A").getField("m_id"))).
+and(eb.getTable("AB").getField("s_id").equal(eb.getTable("B").getField("s_id")).
+and(eb.getTable("AB").getField("active").equal(true)));
+
+mapping.setSelectionCriteria(exp);
+}
+}
+
+Now if I execute the following query:
+
+TypedQuery<A> q = em.createQuery("select a from A a where a.activeB.s_id=10", A.class);
+
+I get all A where the active B's s_id is 10 as expected.
+
+But if instead I execute the following query:
+
+TypedQuery<A> q = em.createQuery("select a from A a where a.activeB=:state", A.class);
+B state = em.find(B.class, 10);
+q.setParameter("state", state);
+
+I get all A for which there is a B in history with s_id = 10 - regardeless of the active s_id.

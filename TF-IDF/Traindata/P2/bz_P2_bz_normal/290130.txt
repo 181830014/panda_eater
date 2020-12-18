@@ -1,0 +1,5 @@
+When fixing other cache synch issues I noticed that merge locks are not acquired for cache synch.
+
+The issues is the cacheSets collection is used for merge locks, but this is transient, so not serialized in cache synch, so no locks are acquired.  The correct change set list should be used to lock.
+
+Note that if invalidation is used, then locks should not be acquired as they are not required.

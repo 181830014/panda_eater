@@ -1,0 +1,10 @@
+Currently, SynchronizeRepositoriesJob just asks for
+
+bc. connector.isRepositoryConfigurationStale(repository, monitor)
+
+to determine wether to update the configuration. Also, the last updated timestamp is set afterwards, so on failure there will be no record.
+
+Necessary changes:
+* record a "last attempt" instead (or besides) a "last updated" time stamp
+* exponentially increase the period between updating stale configuration 
+* find a reasonable limit ( 1 day, 1 week?) for maximum time interval between stale configuration updates

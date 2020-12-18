@@ -1,0 +1,21 @@
+If you specify a schema for a persistence unit in orm.xml an NPE is thrown during DDL Gen when using a Table strategy.  The excerpt below illustrates the problem I'm seeing.  Taking out the schema let's the DDL Gen run to completion.
+
+<entity-mappings...>
+	<schema>A</schema>
+...
+	<entity class="model.PhoneNumber">
+		<table name="PHONE">
+		</table>
+		<attributes>
+			<id name="id">
+				<generated-value 
+                                     strategy="TABLE"
+                                     generator="PHONE_SEQ"/>
+				<table-generator 
+                                    pk-column-name="PK"
+                                    value-column-name="VALUE"
+                                    pk-column-value="PHONE" 
+                                    table="PHONE_SEQ" name="PHONE_SEQ">
+				</table-generator>
+			</id>
+...

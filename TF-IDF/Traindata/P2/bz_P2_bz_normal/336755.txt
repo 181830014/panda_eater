@@ -1,0 +1,14 @@
+the table access for inserts and updates are group by table for the most part, but deletes are not grouped as well.
+
+Deletion is processed per class, m-m are processed up front, but
+- direct/element collections are deleted after the object, so ping pong table access if deleting multiple objects of the same class
+- multiple tables an inheritance ping pong
+- unidirectional 1-m updates ping pong
+- aggregate/element collections ping pong
+- may be some issues with private/orphan deletes
+
+we should follow the same process as inserts, and delete m-m/element collection/unidirectional 1-m upfront and order by table using deferred modification events
+
+multiple tables and inheritance could also be processed upfront if not dependencies
+
+this will improve batch writing performance and reduce deadlock potential

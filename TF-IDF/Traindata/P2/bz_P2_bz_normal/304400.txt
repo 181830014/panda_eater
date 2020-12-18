@@ -1,0 +1,44 @@
+>The following tests need a databaseCall.setReturnsResultSet(true) call in order to return an expected ResultSet
+- currently the returnsResultSet flag is defaulted to false - therefore an executeDirectNoSelect() returns an int return code instead of a executeQuery() returning a resultSet.
+
+>Affecting SQLServer and likely Sybase (as they have the same overidden executeStoredProcedure() call that depends on the databaseCall.getReturnsResultSet() boolean value.
+
+>we can also set the value on the entity via annotations - thank you Andrei
+public @interface NamedStoredProcedureQuery {
+    boolean returnsResultSet() default false;
+
+>fix: Add the following annotation attribute to all test models expecint result sets from stored procedure calls
+- the ones containing all of
+@NamedStoredProcedureQueries({
+    @NamedStoredProcedureQuery(
+@SqlResultSetMappings({
+      resultSetMapping="*"
+
+    @SqlResultSetMapping(
+- like 
+package org.eclipse.persistence.testing.models.jpa.advanced.Address
+
+            returnsResultSet=true,
+
+>we now get to the 2nd part of the SQLServerPlatform.executeStoredProcedure(DatabaseCall, PreparedStatement, DatabaseAccessor, AbstractSession) line: 376	
+ function
+
+Thread [Thread-3] (Suspended (breakpoint at line 376 in SQLServerPlatform))	
+	SQLServerPlatform.executeStoredProcedure(DatabaseCall, PreparedStatement, DatabaseAccessor, AbstractSession) line: 376	
+	DatabaseAccessor.basicExecuteCall(Call, AbstractRecord, AbstractSession) line: 597	
+	DatabaseAccessor.executeCall(Call, AbstractRecord, AbstractSession) line: 530	
+	ServerSession.executeCall(Call, AbstractRecord, DatabaseQuery) line: 529	
+	CallQueryMechanism(DatasourceCallQueryMechanism).executeCall(DatasourceCall) line: 205	
+	CallQueryMechanism(DatasourceCallQueryMechanism).executeCall() line: 191	
+	CallQueryMechanism(DatasourceCallQueryMechanism).executeSelectCall() line: 262	
+	CallQueryMechanism(DatasourceCallQueryMechanism).executeSelect() line: 244	
+	ResultSetMappingQuery.executeDatabaseQuery() line: 212	
+	ResultSetMappingQuery(DatabaseQuery).execute(AbstractSession, AbstractRecord) line: 728	
+	ResultSetMappingQuery(DatabaseQuery).executeInUnitOfWork(UnitOfWorkImpl, AbstractRecord) line: 635	
+	RepeatableWriteUnitOfWork(UnitOfWorkImpl).internalExecuteQuery(DatabaseQuery, AbstractRecord) line: 2866	
+	RepeatableWriteUnitOfWork(AbstractSession).executeQuery(DatabaseQuery, AbstractRecord, int) line: 1225	
+	RepeatableWriteUnitOfWork(AbstractSession).executeQuery(DatabaseQuery, AbstractRecord) line: 1207	
+	RepeatableWriteUnitOfWork(AbstractSession).executeQuery(DatabaseQuery, List) line: 1181	
+	EJBQueryImpl<X>.executeReadQuery() line: 460	
+	EJBQueryImpl<X>.getSingleResult() line: 719	
+	AdvancedJPAJunitTest.testNamedStoredProcedureQueryWithResultSetMapping() line: 917

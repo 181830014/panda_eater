@@ -1,0 +1,63 @@
+Created attachment 232608 [details]
+Source code "order demo application", organized in packages, together with persistence.xml
+
+JPA throws ValidationException on *some* Entity classes which inherit an @Id from a @MappedSuperclass over more than one hierarchy level. The exception is thrown before the DB is connected.
+
+In the example, the class orders.persistence.entities.Item is reported to have no PK. It inherits from @MappedSuperclass NamedElement, which in turn inherits the @Id from @MappedSuperclass PersistentElement. Surprisingly, the Customer class works just fine, same inheritance.
+
+Source code for an example application is attached. Run the class orders.application.OrderApplication to reproduce the bug.
+
+Workaround: With the following workaround, deployment works just fine. Override getId() method either in NamedElement or in Item class as follows:
+	@Override
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public Integer getId() {
+		return super.getId();
+	}
+
+
+Environment:
+JPA standalone application, EclipseLink 2.5.0, javax.persistence 2.1.0, derbyclient 10.10.1.1, Java SE 1.7.0_25
+
+Stack trace:
+Exception in thread "main" Local Exception Stack: 
+Exception [EclipseLink-30005] (Eclipse Persistence Services - 2.5.0.v20130507-3faac2b): org.eclipse.persistence.exceptions.PersistenceUnitLoadingException
+Exception Description: An exception was thrown while searching for persistence archives with ClassLoader: sun.misc.Launcher$AppClassLoader@3b26456a
+Internal Exception: javax.persistence.PersistenceException: Exception [EclipseLink-28018] (Eclipse Persistence Services - 2.5.0.v20130507-3faac2b): org.eclipse.persistence.exceptions.EntityManagerSetupException
+Exception Description: Predeployment of PersistenceUnit [orders-pu] failed.
+Internal Exception: Exception [EclipseLink-7161] (Eclipse Persistence Services - 2.5.0.v20130507-3faac2b): org.eclipse.persistence.exceptions.ValidationException
+Exception Description: Entity class [class orders.persistence.entities.Item] has no primary key specified. It should define either an @Id, @EmbeddedId or an @IdClass. If you have defined PK using any of these annotations then make sure that you do not have mixed access-type (both fields and properties annotated) in your entity class hierarchy.
+	at org.eclipse.persistence.exceptions.PersistenceUnitLoadingException.exceptionSearchingForPersistenceResources(PersistenceUnitLoadingException.java:127)
+	at org.eclipse.persistence.jpa.PersistenceProvider.createEntityManagerFactoryImpl(PersistenceProvider.java:107)
+	at org.eclipse.persistence.jpa.PersistenceProvider.createEntityManagerFactory(PersistenceProvider.java:177)
+	at javax.persistence.Persistence.createEntityManagerFactory(Persistence.java:79)
+	at javax.persistence.Persistence.createEntityManagerFactory(Persistence.java:54)
+	at orders.persistence.JPAResource.getEMF(JPAResource.java:14)
+	at orders.logic.OrderLogic.getEntityManager(OrderLogic.java:21)
+	at orders.logic.OrderLogic.createCustomer(OrderLogic.java:25)
+	at orders.application.OrderApplication.main(OrderApplication.java:13)
+Caused by: javax.persistence.PersistenceException: Exception [EclipseLink-28018] (Eclipse Persistence Services - 2.5.0.v20130507-3faac2b): org.eclipse.persistence.exceptions.EntityManagerSetupException
+Exception Description: Predeployment of PersistenceUnit [orders-pu] failed.
+Internal Exception: Exception [EclipseLink-7161] (Eclipse Persistence Services - 2.5.0.v20130507-3faac2b): org.eclipse.persistence.exceptions.ValidationException
+Exception Description: Entity class [class orders.persistence.entities.Item] has no primary key specified. It should define either an @Id, @EmbeddedId or an @IdClass. If you have defined PK using any of these annotations then make sure that you do not have mixed access-type (both fields and properties annotated) in your entity class hierarchy.
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.createPredeployFailedPersistenceException(EntityManagerSetupImpl.java:1950)
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.predeploy(EntityManagerSetupImpl.java:1941)
+	at org.eclipse.persistence.internal.jpa.deployment.JPAInitializer.callPredeploy(JPAInitializer.java:98)
+	at org.eclipse.persistence.jpa.PersistenceProvider.createEntityManagerFactoryImpl(PersistenceProvider.java:96)
+	... 7 more
+Caused by: Exception [EclipseLink-28018] (Eclipse Persistence Services - 2.5.0.v20130507-3faac2b): org.eclipse.persistence.exceptions.EntityManagerSetupException
+Exception Description: Predeployment of PersistenceUnit [orders-pu] failed.
+Internal Exception: Exception [EclipseLink-7161] (Eclipse Persistence Services - 2.5.0.v20130507-3faac2b): org.eclipse.persistence.exceptions.ValidationException
+Exception Description: Entity class [class orders.persistence.entities.Item] has no primary key specified. It should define either an @Id, @EmbeddedId or an @IdClass. If you have defined PK using any of these annotations then make sure that you do not have mixed access-type (both fields and properties annotated) in your entity class hierarchy.
+	at org.eclipse.persistence.exceptions.EntityManagerSetupException.predeployFailed(EntityManagerSetupException.java:230)
+	... 11 more
+Caused by: Exception [EclipseLink-7161] (Eclipse Persistence Services - 2.5.0.v20130507-3faac2b): org.eclipse.persistence.exceptions.ValidationException
+Exception Description: Entity class [class orders.persistence.entities.Item] has no primary key specified. It should define either an @Id, @EmbeddedId or an @IdClass. If you have defined PK using any of these annotations then make sure that you do not have mixed access-type (both fields and properties annotated) in your entity class hierarchy.
+	at org.eclipse.persistence.exceptions.ValidationException.noPrimaryKeyAnnotationsFound(ValidationException.java:1422)
+	at org.eclipse.persistence.internal.jpa.metadata.accessors.classes.EntityAccessor.validatePrimaryKey(EntityAccessor.java:1536)
+	at org.eclipse.persistence.internal.jpa.metadata.accessors.classes.EntityAccessor.processMappingAccessors(EntityAccessor.java:1243)
+	at org.eclipse.persistence.internal.jpa.metadata.accessors.classes.EntityAccessor.process(EntityAccessor.java:697)
+	at org.eclipse.persistence.internal.jpa.metadata.MetadataProject.processStage2(MetadataProject.java:1791)
+	at org.eclipse.persistence.internal.jpa.metadata.MetadataProcessor.processORMMetadata(MetadataProcessor.java:576)
+	at org.eclipse.persistence.internal.jpa.deployment.PersistenceUnitProcessor.processORMetadata(PersistenceUnitProcessor.java:585)
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.predeploy(EntityManagerSetupImpl.java:1865)

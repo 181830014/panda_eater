@@ -1,0 +1,89 @@
+User-Agent:       Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.20) Gecko/20081217 Firefox/2.0.0.20
+Build Identifier: 20090621-0832
+
+Hi,
+
+In our application, there is an entity Diagnosis, with OneToMany relationship between DiagnosisSetting. I have a business requirement to replace a certain DiagnosisSetting within a Diagnosis entity in the same transaction.
+
+i.e. I wish to delete an existing DiagnosisSetting, and I wish to insert a new one.
+However, there is a DB constraint on DiagnosisSetting which allows only one instance of that type of DiagnosisSetting at a time.
+
+When I try to do the above, as eclipselink's default behaviour is to update/insert first and then delete afterwards, I get a DB constraint error.
+
+I have tried to bypass it using UnitOfWork.setShouldPerformDeletesFirst(true) setting (as explained in the documentation of eclipselink), but the code throws the following exception:
+
+java.util.ConcurrentModificationException
+	at java.util.IdentityHashMap$IdentityHashMapIterator.nextIndex(IdentityHashMap.java:715)
+	at java.util.IdentityHashMap$KeyIterator.next(IdentityHashMap.java:804)
+	at org.eclipse.persistence.internal.sessions.RepeatableWriteUnitOfWork.discoverUnregisteredNewObjects(RepeatableWriteUnitOfWork.java:225)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.discoverAllUnregisteredNewObjectsInParent(UnitOfWorkImpl.java:1703)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.acquireUnitOfWork(UnitOfWorkImpl.java:342)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.acquireUnitOfWork(UnitOfWorkImpl.java:83)
+	at com.oracle.healthinsurance.model.dao.GenericDAOJPAImpl$2.doInJpa(GenericDAOJPAImpl.java:260)
+	at org.springframework.orm.jpa.JpaTemplate.execute(JpaTemplate.java:183)
+	at org.springframework.orm.jpa.JpaTemplate.execute(JpaTemplate.java:146)
+	at com.oracle.healthinsurance.model.dao.GenericDAOJPAImpl.update(GenericDAOJPAImpl.java:255)
+	at com.oracle.healthinsurance.model.service.CrudServiceImpl.update(CrudServiceImpl.java:143)
+	at com.oracle.healthinsurance.model.service.CrudServiceImpl$$FastClassByCGLIB$$2007cb26.invoke(<generated>)
+	at net.sf.cglib.proxy.MethodProxy.invoke(MethodProxy.java:149)
+	at org.springframework.aop.framework.Cglib2AopProxy$CglibMethodInvocation.invokeJoinpoint(Cglib2AopProxy.java:692)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:150)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:107)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:172)
+	at org.springframework.aop.framework.Cglib2AopProxy$DynamicAdvisedInterceptor.intercept(Cglib2AopProxy.java:625)
+	at com.oracle.healthinsurance.model.service.CrudServiceImpl$$EnhancerByCGLIB$$32958252.update(<generated>)
+	at com.oracle.healthinsurance.ohiapi.diagnosis.DiagnosisCrudOperationResolver.execute(DiagnosisCrudOperationResolver.java:100)
+	at com.oracle.healthinsurance.orchestrator.impl.Chain$WrappedCommand.execute(Chain.java:106)
+	at com.oracle.healthinsurance.orchestrator.impl.Chain.execute(Chain.java:76)
+	at com.oracle.healthinsurance.orchestrator.impl.RouterCommand.execute(RouterCommand.java:166)
+	at com.oracle.healthinsurance.orchestrator.config.Orchestrator.execute(Orchestrator.java:83)
+	at com.oracle.healthinsurance.ohiapi.OhiApisImpl.importValue(OhiApisImpl.java:26)
+	at com.oracle.healthinsurance.ohiapi.OhiApisImpl$$FastClassByCGLIB$$497cd5b8.invoke(<generated>)
+	at net.sf.cglib.proxy.MethodProxy.invoke(MethodProxy.java:149)
+	at org.springframework.aop.framework.Cglib2AopProxy$CglibMethodInvocation.invokeJoinpoint(Cglib2AopProxy.java:692)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:150)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:107)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:172)
+	at org.springframework.aop.framework.Cglib2AopProxy$DynamicAdvisedInterceptor.intercept(Cglib2AopProxy.java:625)
+	at com.oracle.healthinsurance.ohiapi.OhiApisImpl$$EnhancerByCGLIB$$8a81e318.importValue(<generated>)
+	at com.oracle.healthinsurance.ohiapis.OhiApisTest.testOverlappingPeersSituation1(OhiApisTest.java:221)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestMethodCallbacks.evaluate(RunBeforeTestMethodCallbacks.java:74)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.springframework.test.context.junit4.statements.RunAfterTestMethodCallbacks.evaluate(RunAfterTestMethodCallbacks.java:82)
+	at org.springframework.test.context.junit4.statements.SpringRepeat.evaluate(SpringRepeat.java:72)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:239)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:44)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:180)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:41)
+	at org.junit.runners.ParentRunner$1.evaluate(ParentRunner.java:173)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:220)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:179)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:46)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:467)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:683)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:390)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:197)
+
+Please comment.
+
+Regards
+Shikha
+
+Reproducible: Always
+
+Steps to Reproduce:
+Explained above.

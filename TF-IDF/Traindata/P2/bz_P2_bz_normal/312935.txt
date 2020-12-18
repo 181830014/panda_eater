@@ -1,0 +1,49 @@
+Build Identifier: 20090619-0625 AJDT 2.0.2.e35x-20100105-0900 AspectJ 1.6.7.20100105084524
+
+I have a two project setup, project A contains some classes and aspects, project B as well but also has a linked source folder on project B. Both projects have other dependencies on inpath and aspectpath. Both projects are Maven built.
+
+Soemtimes (around once a day on a full 8 hours working day), i see that the "Building workspace" is taking forever and consuming 100% of one of my cores.
+
+I made a few thread dumps, and it seems like the following stacktrace is the one inside an endless (or many hours maybe) loop :
+
+
+"Worker-4" prio=10 tid=0x0884c000 nid=0x2014 runnable [0x8be6e000..0x8be6f0a0]
+   java.lang.Thread.State: RUNNABLE
+        at java.util.HashMap.get(HashMap.java:305)
+        at org.aspectj.asm.AsmManager$CanonicalFilePathMap.get(AsmManager.java:379)
+        at org.aspectj.asm.AsmManager.getCanonicalFilePath(AsmManager.java:287)
+        at org.aspectj.asm.internal.AspectJElementHierarchy.getCanonicalFilePath(AspectJElementHierarchy.java:635)
+        at org.aspectj.asm.internal.AspectJElementHierarchy.updateHandleMap(AspectJElementHierarchy.java:596)
+        at org.aspectj.asm.AsmManager.removeStructureModelForFiles(AsmManager.java:564)
+        at org.aspectj.asm.AsmManager.processDelta(AsmManager.java:639)
+        at org.aspectj.ajdt.internal.core.builder.AjBuildManager.performBuild(AjBuildManager.java:294)
+        at org.aspectj.ajdt.internal.core.builder.AjBuildManager.incrementalBuild(AjBuildManager.java:185)
+        at org.aspectj.ajde.core.internal.AjdeCoreBuildManager.performBuild(AjdeCoreBuildManager.java:127)
+        at org.aspectj.ajde.core.AjCompiler.build(AjCompiler.java:88)
+        at org.eclipse.ajdt.core.builder.AJBuilder.build(AJBuilder.java:245)
+        at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:627)
+        at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+        at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:170)
+        at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+        at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:253)
+        at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+        at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:256)
+        at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:309)
+        at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:341)
+        at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:140)
+        at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:238)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+   Locked ownable synchronizers:
+        - None
+
+I've seen it running and with the same stack trace for half an hour, it usually takes a few seconds to build. 
+
+I'm aware I'm not running on the latest Eclipse/AJDT/AspectJ build, but a colleague of mine had the same problem with a recent installation.
+
+When this bug manifests, there is no way of quitting eclipse, the process must be killed.
+
+Reproducible: Sometimes
+
+Steps to Reproduce:
+It seems to happen when i save a file triggering a build, and then re-modify the same file and save it again quickly, probably before the initial build has finished.

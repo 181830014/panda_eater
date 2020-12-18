@@ -1,0 +1,40 @@
+cannot aspect inner class constructor w/ annotated params
+
+To Reproduce:
+
+1.	Annotate the parameter of an inner class constructor.  i.e.,
+
+	public @interface Ann { }
+
+	public class Outer {
+	   public class Inner {
+		  Inner(@Ann String arg) { }
+	   }
+	}
+
+2.	Aspect the constructor.  i.e.,
+
+	public aspect Asp {
+	   before() : execution(new(@Ann (*), ..)){ }
+	}
+
+3.	AJDT will report "Internal Compiler Error" with details:
+
+		java.lang.IndexOutOfBoundsException
+		at java.util.ArrayList.RangeCheck(ArrayList.java:546)
+		at java.util.ArrayList.get(ArrayList.java:321)
+		at org.aspectj.apache.bcel.classfile.annotation.RuntimeParameterAnnotations.getAnnotationsOnParameter(RuntimeParameterAnnotations.java:55)
+		at org.aspectj.apache.bcel.classfile.Method.ensureParameterAnnotationsUnpacked(Method.java:294)
+		at org.aspectj.apache.bcel.classfile.Method.getParameterAnnotations( ... ETURN
+			constructor-execution(void Outer$Inner.<init>(Outer, java.lang.String))
+		  end void <init>(Outer, String)
+
+		end public class Outer$Inner
+
+This is for:
+
+Eclipse AspectJ Development Tools
+Version: 1.5.2.200804241330
+AspectJ version: 1.6.0.20080423100000
+
+Eclipse v3.3.2 M20080221-1800

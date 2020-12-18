@@ -1,0 +1,76 @@
+I have a parent class, Message, and a child class, DirectMessage. I was using TABLE_PER_CLASS.
+
+With records in the Message table but none in DirectMessage I will get zero results if I use em.setMaxResults(int).
+
+The query is:
+
+@NamedQuery(
+            name = "findUserMessagesByPosted",
+    query = "SELECT m FROM Message m WHERE m.author.id = :authorId ORDER BY m.postedOn DESC")
+
+Calling setMaxResults seems to cause EclipseLink to only return results from the (empty) child table.
+
+With setMaxResults and logging to finest I see:
+
+
+FINER: client acquired: 29169911
+FINER: TX binding to tx mgr, status=STATUS_ACTIVE
+FINER: acquire unit of work: 28457066
+FINER: begin unit of work flush
+FINER: end unit of work flush
+FINEST: Execute query ReadAllQuery(name="findUserMessagesByPosted" referenceClass=Message sql="SELECT ID, BODY, MENTIONS, POSTEDON, TAGS, VERSION, author FROM MESSAGE WHERE (author = ?) ORDER BY POSTEDON DESC")
+FINEST: Connection acquired from connection pool [read].
+FINEST: reconnecting to external connection pool
+FINE: SELECT ID AS a1, BODY AS a2, MENTIONS AS a3, POSTEDON AS a4, TAGS AS a5, VERSION AS a6, author AS a7 FROM DIRECTMESSAGE WHERE (author = ?) ORDER BY POSTEDON DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+	bind => [3 parameters bound]
+FINEST: Connection released to connection pool [read].
+FINEST: Execute query ReadAllQuery(name="findUserMessagesByPosted" referenceClass=DirectMessage sql="SELECT ID AS a1, BODY AS a2, MENTIONS AS a3, POSTEDON AS a4, TAGS AS a5, VERSION AS a6, author AS a7 FROM DIRECTMESSAGE WHERE (author = ?) ORDER BY POSTEDON DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY")
+FINEST: Connection acquired from connection pool [read].
+FINEST: reconnecting to external connection pool
+FINE: SELECT ID AS a1, BODY AS a2, MENTIONS AS a3, POSTEDON AS a4, TAGS AS a5, VERSION AS a6, author AS a7, TO_ID AS a8 FROM DIRECTMESSAGE WHERE (author = ?) ORDER BY POSTEDON DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+	bind => [3 parameters bound]
+FINEST: Connection released to connection pool [read].
+INFO: Size:0
+FINER: begin unit of work flush
+FINER: end unit of work flush
+FINER: TX beforeCompletion callback, status=STATUS_ACTIVE
+FINER: begin unit of work commit
+FINER: TX afterCompletion callback, status=COMMITTED
+FINER: end unit of work commit
+FINER: release unit of work
+FINER: client released
+
+
+Without setMaxResults and logging on finest I see:
+
+
+FINER: client acquired: 23999850
+FINER: TX binding to tx mgr, status=STATUS_ACTIVE
+FINER: acquire unit of work: 7665984
+FINER: begin unit of work flush
+FINER: end unit of work flush
+FINEST: Execute query ReadAllQuery(name="findUserMessagesByPosted" referenceClass=Message sql="SELECT ID, BODY, MENTIONS, POSTEDON, TAGS, VERSION, author FROM MESSAGE WHERE (author = ?) ORDER BY POSTEDON DESC")
+FINEST: Connection acquired from connection pool [read].
+FINEST: reconnecting to external connection pool
+FINE: SELECT ID, BODY, MENTIONS, POSTEDON, TAGS, VERSION, author FROM MESSAGE WHERE (author = ?) ORDER BY POSTEDON DESC
+	bind => [1 parameter bound]
+FINEST: Connection released to connection pool [read].
+FINEST: Register the existing object com.example.entity.Account@246d6c
+FINEST: Execute query ReadAllQuery(name="findUserMessagesByPosted" referenceClass=DirectMessage sql="SELECT ID, BODY, MENTIONS, POSTEDON, TAGS, VERSION, author FROM MESSAGE WHERE (author = ?) ORDER BY POSTEDON DESC")
+FINEST: Connection acquired from connection pool [read].
+FINEST: reconnecting to external connection pool
+FINE: SELECT ID, BODY, MENTIONS, POSTEDON, TAGS, VERSION, author, TO_ID FROM DIRECTMESSAGE WHERE (author = ?) ORDER BY POSTEDON DESC
+	bind => [1 parameter bound]
+FINEST: Connection released to connection pool [read].
+INFO: Size:1
+FINER: begin unit of work flush
+FINER: end unit of work flush
+FINER: TX beforeCompletion callback, status=STATUS_ACTIVE
+FINER: begin unit of work commit
+FINER: TX afterCompletion callback, status=COMMITTED
+FINER: end unit of work commit
+FINER: release unit of work
+FINER: client released
+
+
+I'm using Derby DB and GlassFish 3.1.2 on JDK7u5

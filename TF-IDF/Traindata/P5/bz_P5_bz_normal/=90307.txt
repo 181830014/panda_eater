@@ -1,0 +1,14 @@
+3.1M6
+
+While looking around with the SWT spy plugin, we noticed that there are many
+Composites created as parents for toolbars which seem to be there to optimize
+layout operations.  SWT now supports cached layout: can these be removed?  It
+seems that optimizations in this area should be done at the SWT level, as
+creating extra Composite widgets when they are not necessary is itself a likely
+performance issue.
+
+Examples:
+  - Every toolbar in the coolbar seems to have a composite parent
+  - There seems to be two extra cache composites surrounding the perspective
+    switcher
+  - The CBanner seems to have a parent which is there for caching purposes

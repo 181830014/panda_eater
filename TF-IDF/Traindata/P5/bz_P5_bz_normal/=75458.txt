@@ -1,0 +1,8 @@
+We use the PlatformUI.getWorkbench().getProgressService().run() API to perform 
+work in a progress dialog. Inside out runnable, we prompt for user input. On 
+the Mac, this will result in a freeze since the proper dialog parenting is not 
+done. Since there is no way to get the proper parenting with this API, it 
+should have a comment in the javdoc stating that prompting using a dialog 
+should not be done from within the runnable as this will reuslt in improper 
+behavior on some platforms and deadlock on others. The improper behavior is on 
+windows where the dialog is opened but appears in the wrong place.

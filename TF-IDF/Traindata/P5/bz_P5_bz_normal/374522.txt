@@ -1,0 +1,25 @@
+Build Identifier: 20110916-0149
+
+The present bug shows a problem with the java discoverer "org.eclipse.modisco.java.project".
+
+When the discovery process is launched several times (within the discoverer benchmark see Bug 369945), the obtained size obtained for the resulting java model increase at each iteration.
+
+The content of the model is "duplicated" in each iteration.
+ 
+There is probably a static field in the java discoverer that keeps some link to the model elements produced before.
+
+Example:
+- first iteration, 50 ko (all model elements appears once),
+- second iteration, 100 ko (all model elements appears twice),
+- third iteration, 150 ko (all model elements appears three times),...
+
+A project with a launch configuration to reproduce the bug will be attached.
+The discovery is launched on the "org.eclipse.gmt.modisco.dev.core" project
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. make sure you have the benchmark discoverer installed
+2. import the "org.eclipse.gmt.modisco.dev.core" project
+3. import the project in attachment
+4. run the launch configuration contained in the project

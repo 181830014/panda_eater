@@ -1,0 +1,16 @@
+Created attachment 232768 [details]
+proposed patch
+
+When using the VPG Browser (Refactor menu -> VPG Browser) and viewing the Annotations tab, attempting to scroll the file's text will feel slow to the user if the file has a large number of annotations.
+
+If a token has an annotation it will have a box drawn around it and the slow scrolling is due to the way those boxes are drawn.
+
+The current method of using the RectanglePainter (custom class implementing PaintListener) causes every box to be drawn around every token whenever the file's text area needs to be refreshed (this includes whenever the cursor flashes in the text area! ). Specifically, the drawRectangle method's use of StyledText.getTextBounds prevents the RectanglePainter from keeping up with any amount of scrolling if a file has a large number of annotations.
+
+Instead of re-drawing the annotation-indicating boxes each time the file's text area needs to be refreshed, the AnnotationsTab class should use the StyleRange aspect of the StyledText class.
+
+I confirm that:
+
+(a) I wrote 100% of the code without incorporating content from elsewhere or relying on the intellectual property of others
+(b) I have the right to contribute the code to Eclipse
+(c) I have included the EPL license header in all source ﬁles.

@@ -1,0 +1,24 @@
+Hello,
+
+WTP seems to validate the HTML tags and JSP tags balance at the same level.
+Consequential it can happen that WTP wrongly thinks that tags are unbalanced.
+
+You can reproduce it, using WTP 1.5.0 and create a new jsp, and paste the following:
+
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<body>
+<form>
+<jsp:forward page="">
+</form>
+</jsp:forward>
+</body>
+</html>
+
+Line 7 will be marked as an error "Missing end tag jsp:forward". However, this code is valid.
+jsp:forward can be substituted by any other tag.
+
+Best Regards,
+Patric

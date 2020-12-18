@@ -1,0 +1,19 @@
+Weaving of an around advice that captures context variables, via this(), args() or target(), produces unused, repeated parameters on its inlined implementations. This is caused by separated context capture for variables explicitly captured by the programmer in pointcuts and variables available at the shadow's environment and required for its execution. By removing these unnecessary variables, program's size, execution time (to a very small degree) and memory consumption are reduced. The following program is an example:
+
+public class BugExample {
+   public static void main(String[] args) {
+      System.out.println(new BugExample().foo(1,2,3));
+   }
+   private int foo(int x1, int x2, int x3) {
+      return x1 + x2 + x3;
+   }
+   public static aspect BugAspect {
+      pointcut fooCalls(int x1, int x2, int x3): 
+            call(* BugExample.foo(int,int,int)) && args(x1,x2,x3);
+         int around(int x1, int x2, int x3): fooCalls(x1,x2,x3) {
+         return proceed(x1,x2,x3);
+      }
+   }
+}
+
+Once compiled, the bytecode generated for the inlined implementation of this around advice contains three unused 'int' parameters. This problem also appears when the other context-capture clauses are used. It can be fixed by modifying the method org.aspectj.weaver.bcel.BcelShadow.weaveAroundInline(), and filtering out from argVarList or proceedVarList variables that have been exposed by the programmer. Other changes may be required after this, such as avoiding the creation of load instructions for removed parameters and so on.

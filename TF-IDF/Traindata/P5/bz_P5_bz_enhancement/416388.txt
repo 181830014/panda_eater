@@ -1,0 +1,91 @@
+One thing that's outstandingly annoying with templates is the need to ctrl-space, [ctrl-space,] enter to activate them, when they could apply themselves automatically, or with a more convenient binding.
+As an example, IntelliJ IDEA handles this by having tab/space bound to 'smart' tab/space, which will check for 'live templates'.
+
+In addition, some templates are moot:
+local:
+- [6] loc<ctrl-space><enter>
+- [6] local<space>
+You don't save any key presses here :(
+
+loci:
+- [10] loci<ctrl-space><enter>a<enter>1
+- [11] local a = 1
+You save one here, which isn't much considering how you have to move your hand for <ctrl-space>.
+
+If it was triggered by a less complex key binding, that didn't need a <enter> or <ctrl-space>:
+
+local:
+- [5] loc<tab>a<enter>
+- [7] local a<enter>
+Produces: local *
+
+loci:
+Let's assume this was also built into the above:
+- [8] loc<tab>a<tab>1<enter>
+- [12] local a = 1<enter>
+Produces: local a = 1
+
+
+How would this work?
+The template would branch:
+- Activated when you press <tab> when your cursor is behind loc(al), at the beginning of a line (disreguarding whitespace, anything before a semicolon, 'end', etc.)
+- After that, if you press <enter>, it will end, and put your cursor at the next line.
+- If you press <tab>, it will expand the expression, adding ' = ', etc.
+
+How would the Template look?
+I'm not sure what a good way to express this would be.
+It might be using multiple templates to accomplish one task:
+
+> Name: local
+> Trigger: loc, loca, local
+> Activated with: <tab>
+> 
+> local ${variable(s)}
+> ${cursor}
+>
+> ${variable(s)}:
+> - <enter>: Continue (to ${cursor})
+> - <tab>: Template: Assignment
+
+> Name: Assignment
+> Trigger: (none)
+> Activated with: (none)
+> 
+>  = ${value(s)}
+
+There should also (or alternatively -- it's more verbose, but should be more predictable) be a "Replace with: ":
+
+> Name: local
+> Trigger: loc, loca, local
+> Activated with: <tab>
+> 
+> local ${variable(s)}
+> ${cursor}
+>
+> ${variable(s)}:
+> - <enter>: Continue (to ${cursor})
+> - <tab>: Replace with Template: local =
+
+> Name: local =
+> Trigger: (none)
+> Activated with: (none)
+> 
+> local ${variable(s)} = ${value(s)}
+> ${cursor}
+>
+> ${value(s)}:
+> - <enter>: Continue (to ${cursor})
+> - <tab>: Replace with Template: local (double line)
+
+> Name: local (double line)
+> Trigger: locd
+> Activated with: <tab>, <space>
+>
+> local ${variable(s)} =
+>       ${value(s)}
+> ${cursor}
+>
+> ${value(s)}:
+> - Skip on replacement: false (Prevents the tab used in 'local =' from jumping to ${cursor})
+
+This hopefully conveys the idea well.

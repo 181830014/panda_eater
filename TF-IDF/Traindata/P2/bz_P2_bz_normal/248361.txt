@@ -1,0 +1,42 @@
+First, I am using EclipseLink 1.0.1 and a MYSQL 5 DB.
+
+---
+
+"User" has a OneToMany unidirectional relationship to "Message":
+
+@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+@JoinTable(name = "lkp_users_messages", joinColumns = {@JoinColumn(name = "_user_id", updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "_message_id", updatable = false)})
+private List<Message> messages;
+
+---
+
+Let´s have a look at a method "createMessage()" that adds a message:
+
+User user = em.find(User.class, userId);
+if (user == null) {
+   throw new DataNotExistentException();
+}
+Message message = new Message();
+message.setText("abc");
+
+List<Message> messages = user.getMessages();
+messages.isEmpty(); //access messages somehow. this MUST be done, else a foreign key constraint will occur -> BUG
+messages.add(message);
+
+---
+
+This method only works if the messages-collection is accessed in the method somehow. Replacing the last three lines of the method by the following code will result in a foreign key constraint:
+
+user.getMessages().add(message);
+
+--- 
+
+In this case, the exception will look like this:
+
+[#|2008-09-24T01:07:37.109+0200|WARNING|sun-appserver9.1|org.eclipse.persistence.session.file:/C:/Programme/Sun/SDK/domains/domain1/applications/j2ee-apps/war/war-ejb_jar/-war-ejbPU|_ThreadID=21;_ThreadName=httpSSLWorkerThread-8080-0;_RequestID=6f540aae-464d-4e94-8662-2c933d6bb9d5;|
+Local Exception Stack: 
+Exception [EclipseLink-4002] (Eclipse Persistence Services - 1.0.1 (Build 20080905)): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`war_db/lkp_users_messages`, CONSTRAINT `FK_lkp_users_messages__message_id` FOREIGN KEY (`_message_id`) REFERENCES `messages` (`_id`))
+Error Code: 1452
+Call: INSERT INTO lkp_users_messages (_message_id, _user_id) VALUES (?, ?)
+	bind => [0, 2]

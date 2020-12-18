@@ -1,0 +1,194 @@
+We are using WTP 3.0 in an adopter product and have discovered major problems with the introspection code for JSF tags.  The main issue is file-locking of all jars in /WEB-INF/lib, which prevents refactoring or deletion of the project(s) for the entire workbench session.  This appears to be an issue with the way JEM is being used to instantiate classes from inside project jars,which results in unclosed file handles until the Eclipse JVM process is terminated.
+
+Furthermore, after classes are loaded (and the jars therefore locked) there are a substantial number of uncaught exceptions appearing in the error log regarding missing fields/methods and also problems instantiating component classes in some cases.
+
+
+Steps to reproduce:
+
+-Create a new dynamic web project with the JSF facet (either 1.1 or 1.2)
+-Add any JSF jar file to /WEB-INF/lib in this project  (I used the MyFaces Tomahawk library jar to demonstrate these problems)
+-Open the Tag Registry view
+-Open up the tree in this view and find the taglib URI of the library just added (ex. "http://myfaces.apache.org/tomahawk")
+-Now open the node for that taglib URI and introspecting kicks in
+
+
+First, the locking issue.  This is a trace of the file access that touched the tomahawk jar:
+
+    sun.misc.URLClassPath$JarLoader.access$700(URLClassPath.java:646)
+    sun.misc.URLClassPath$JarLoader$1.run(URLClassPath.java:715)
+    java.security.AccessController.doPrivileged(AccessController.java:251)
+    sun.misc.URLClassPath$JarLoader.ensureOpen(URLClassPath.java:707)
+    sun.misc.URLClassPath$JarLoader.<init>(URLClassPath.java:691)
+    sun.misc.URLClassPath$3.run(URLClassPath.java:439)
+    java.security.AccessController.doPrivileged(AccessController.java:251)
+    sun.misc.URLClassPath.getLoader(URLClassPath.java:428)
+    sun.misc.URLClassPath.getLoader(URLClassPath.java:401)
+    sun.misc.URLClassPath.getResource(URLClassPath.java:258)
+    java.net.URLClassLoader$ClassFinder.run(URLClassLoader.java:890)
+    java.security.AccessController.doPrivileged(AccessController.java:284)
+    java.net.URLClassLoader.findClass(URLClassLoader.java:414)
+    org.eclipse.jem.internal.proxy.ide.IDEProxyFactoryRegistry$IDESpecialClassLoader.findClass(IDEProxyFactoryRegistry.java:79)
+    java.lang.ClassLoader.loadClass(ClassLoader.java:643)
+    java.lang.ClassLoader.loadClass(ClassLoader.java:609)
+    org.eclipse.jem.internal.proxy.ide.IDEProxyFactoryRegistry.loadClass(IDEProxyFactoryRegistry.java:145)
+    org.eclipse.jem.internal.proxy.ide.IDEStandardBeanTypeProxyFactory.getBeanTypeProxy(IDEStandardBeanTypeProxyFactory.java:212)
+    org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.findComponentType(TagAnalyzer.java:155)
+    org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.createComponentTagElement(TagAnalyzer.java:638)
+    org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.createTLDTagElement(TagAnalyzer.java:570)
+    org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TagIntrospectingStrategy.resolve(TagIntrospectingStrategy.java:61)
+    org.eclipse.jst.jsf.designtime.internal.view.model.jsp.JSPTagResolvingStrategy.resolve(JSPTagResolvingStrategy.java:1)
+    org.eclipse.jst.jsf.designtime.internal.view.model.jsp.AbstractTagResolvingStrategy.perform(AbstractTagResolvingStrategy.java:42)
+    org.eclipse.jst.jsf.designtime.internal.view.model.jsp.AbstractTagResolvingStrategy.perform(AbstractTagResolvingStrategy.java:1)
+    org.eclipse.jst.jsf.common.internal.strategy.StrategyComposite.perform(StrategyComposite.java:43)
+    org.eclipse.jst.jsf.designtime.internal.view.model.jsp.CompositeTagResolvingStrategy.resolve(CompositeTagResolvingStrategy.java:63)
+    org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace$DocumentTLDNamespaceData.createTagElement(TLDNamespace.java:162)
+    org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace$DocumentTLDNamespaceData.getViewElement(TLDNamespace.java:206)
+    org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace$DocumentTLDNamespaceData.getAllViewElements(TLDNamespace.java:188)
+    org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace.getViewElements(TLDNamespace.java:84)
+    org.eclipse.jst.jsf.ui.internal.tagregistry.TaglibContentProvider$1.run(TaglibContentProvider.java:168)
+    org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+
+I remember from earlier work that the URLClassLoader will not work for workspace resources since the IO streams used to access a class's bytes are never closed.  This results in the open filesystem handles.  I don't know if JEM has another way of accessing workspace classes but I did notice some comments in the "ide" package like this one in IDEProxyFactoryRegistry:
+/**
+ * This implementation runs the Beans inside the Eclipse IDE
+ * It should only be used by plugins that can guarantee their their beans do
+ * not change during the lifetime of the IDE and can run at the same JDK level
+ * that the Eclipse IDE is running
+ */
+
+That condition is certainly not true for workspace classes and it seems that this internal entry point was intended for introspecting only plugin classes (which obviously don't have any conditions on being able to delete/refactor their location while running).
+
+
+Second, after the classes have been loaded there are additional problems with the type introspection process that all flow uncaught to the error log.  For example:
+
+java.lang.NoSuchMethodException: org.apache.myfaces.custom.regexprvalidator.ValidateRegExprTag.createValidator()
+	at java.lang.Throwable.<init>(Throwable.java:67)
+	at java.lang.Class.throwNoSuchMethodException(Class.java:283)
+	at java.lang.Class.getMethod(Class.java:825)
+	at org.eclipse.jem.internal.proxy.ide.IDEBeanTypeProxy.getMethodProxy(IDEBeanTypeProxy.java:99)
+	at org.eclipse.jst.jsf.core.internal.jem.BeanProxyUtil$BeanProxyWrapper.call(BeanProxyUtil.java:120)
+	at org.eclipse.jst.jsf.core.internal.jem.BeanProxyUtil$BeanProxyWrapper.call(BeanProxyUtil.java:150)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.callSuppressExceptions(TagAnalyzer.java:460)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.findValidatorType(TagAnalyzer.java:382)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.createValidatorTagElement(TagAnalyzer.java:703)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.createTLDTagElement(TagAnalyzer.java:597)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TagIntrospectingStrategy.resolve(TagIntrospectingStrategy.java:61)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.JSPTagResolvingStrategy.resolve(JSPTagResolvingStrategy.java:1)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.AbstractTagResolvingStrategy.perform(AbstractTagResolvingStrategy.java:42)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.AbstractTagResolvingStrategy.perform(AbstractTagResolvingStrategy.java:1)
+	at org.eclipse.jst.jsf.common.internal.strategy.StrategyComposite.perform(StrategyComposite.java:43)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.CompositeTagResolvingStrategy.resolve(CompositeTagResolvingStrategy.java:63)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace$DocumentTLDNamespaceData.createTagElement(TLDNamespace.java:162)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace$DocumentTLDNamespaceData.getViewElement(TLDNamespace.java:206)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace$DocumentTLDNamespaceData.getAllViewElements(TLDNamespace.java:188)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace.getViewElements(TLDNamespace.java:84)
+	at org.eclipse.jst.jsf.ui.internal.tagregistry.TaglibContentProvider$1.run(TaglibContentProvider.java:168)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+and
+
+java.lang.NoSuchFieldException: VALIDATOR_ID
+	at java.lang.Class.getDeclaredFieldImpl(Native Method)
+	at java.lang.Class.getDeclaredField(Class.java:510)
+	at org.eclipse.jem.internal.proxy.ide.IDEBeanTypeProxy.getDeclaredFieldProxy(IDEBeanTypeProxy.java:284)
+	at org.eclipse.jst.jsf.core.internal.jem.BeanProxyUtil$BeanProxyWrapper.getFieldValue(BeanProxyUtil.java:257)
+	at org.eclipse.jst.jsf.core.internal.jem.BeanProxyUtil$BeanProxyWrapper.getStringFieldValue(BeanProxyUtil.java:234)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.getStringField(TagAnalyzer.java:445)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.findValidatorType(TagAnalyzer.java:404)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.createValidatorTagElement(TagAnalyzer.java:703)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.createTLDTagElement(TagAnalyzer.java:597)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TagIntrospectingStrategy.resolve(TagIntrospectingStrategy.java:61)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.JSPTagResolvingStrategy.resolve(JSPTagResolvingStrategy.java:1)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.AbstractTagResolvingStrategy.perform(AbstractTagResolvingStrategy.java:42)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.AbstractTagResolvingStrategy.perform(AbstractTagResolvingStrategy.java:1)
+	at org.eclipse.jst.jsf.common.internal.strategy.StrategyComposite.perform(StrategyComposite.java:43)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.CompositeTagResolvingStrategy.resolve(CompositeTagResolvingStrategy.java:63)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace$DocumentTLDNamespaceData.createTagElement(TLDNamespace.java:162)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace$DocumentTLDNamespaceData.getViewElement(TLDNamespace.java:206)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace$DocumentTLDNamespaceData.getAllViewElements(TLDNamespace.java:188)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace.getViewElements(TLDNamespace.java:84)
+	at org.eclipse.jst.jsf.ui.internal.tagregistry.TaglibContentProvider$1.run(TaglibContentProvider.java:168)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+and
+
+java.lang.NoSuchFieldException: _validatorId
+	at java.lang.Class.getDeclaredFieldImpl(Native Method)
+	at java.lang.Class.getDeclaredField(Class.java:510)
+	at org.eclipse.jem.internal.proxy.ide.IDEBeanTypeProxy.getDeclaredFieldProxy(IDEBeanTypeProxy.java:284)
+	at org.eclipse.jst.jsf.core.internal.jem.BeanProxyUtil$BeanProxyWrapper.getFieldValue(BeanProxyUtil.java:257)
+	at org.eclipse.jst.jsf.core.internal.jem.BeanProxyUtil$BeanProxyWrapper.getStringFieldValue(BeanProxyUtil.java:234)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.getStringField(TagAnalyzer.java:445)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.findValidatorType(TagAnalyzer.java:395)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.createValidatorTagElement(TagAnalyzer.java:703)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.createTLDTagElement(TagAnalyzer.java:597)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TagIntrospectingStrategy.resolve(TagIntrospectingStrategy.java:61)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.JSPTagResolvingStrategy.resolve(JSPTagResolvingStrategy.java:1)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.AbstractTagResolvingStrategy.perform(AbstractTagResolvingStrategy.java:42)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.AbstractTagResolvingStrategy.perform(AbstractTagResolvingStrategy.java:1)
+	at org.eclipse.jst.jsf.common.internal.strategy.StrategyComposite.perform(StrategyComposite.java:43)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.CompositeTagResolvingStrategy.resolve(CompositeTagResolvingStrategy.java:63)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace$DocumentTLDNamespaceData.createTagElement(TLDNamespace.java:162)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace$DocumentTLDNamespaceData.getViewElement(TLDNamespace.java:206)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace$DocumentTLDNamespaceData.getAllViewElements(TLDNamespace.java:188)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace.getViewElements(TLDNamespace.java:84)
+	at org.eclipse.jst.jsf.ui.internal.tagregistry.TaglibContentProvider$1.run(TaglibContentProvider.java:168)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+and
+
+java.lang.NullPointerException
+	at [my proprietary component class].<init>(Unknown Source)
+	at java.lang.J9VMInternals.newInstanceImpl(Native Method)
+	at java.lang.Class.newInstance(Unknown Source)
+	at org.eclipse.jem.internal.proxy.ide.IDEStandardBeanProxyFactory.createBeanProxy(Unknown Source)
+	at org.eclipse.jem.internal.proxy.ide.IDEBeanTypeProxy.newInstance(Unknown Source)
+	at org.eclipse.jst.jsf.core.internal.jem.BeanProxyUtil$BeanProxyWrapper.init(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.DTComponentIntrospector.getComponent(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.createComponentTagElement(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.analyzer.TagAnalyzer.createTLDTagElement(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TagIntrospectingStrategy.resolve(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.JSPTagResolvingStrategy.resolve(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.AbstractTagResolvingStrategy.perform(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.AbstractTagResolvingStrategy.perform(Unknown Source)
+	at org.eclipse.jst.jsf.common.internal.strategy.StrategyComposite.perform(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.CompositeTagResolvingStrategy.resolve(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace$DocumentTLDNamespaceData.createTagElement(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace$DocumentTLDNamespaceData.getViewElement(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.model.jsp.TLDNamespace.getViewElement(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.XMLViewDefnAdapter.findTagElement(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.TaglibBasedViewDefnAdapter.findTagElement(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.XMLViewDefnAdapter.createFromElement(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.XMLViewDefnAdapter.mapToViewObject(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.XMLComponentTreeConstructionStrategy.recurseDOMModel(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.XMLComponentTreeConstructionStrategy.recurseDOMModel(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.XMLComponentTreeConstructionStrategy.recurseDOMModel(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.XMLComponentTreeConstructionStrategy.recurseDOMModel(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.XMLComponentTreeConstructionStrategy.recurseDOMModel(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.XMLComponentTreeConstructionStrategy.buildComponentTree(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.XMLComponentTreeConstructionStrategy.createComponentTree(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.DefaultDTViewHandler.internalCreateView(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.internal.view.AbstractDTViewHandler.createView(Unknown Source)
+	at org.eclipse.jst.jsf.designtime.context.ViewRootHolder.updateViewRoot(Unknown Source)
+	at org.eclipse.jst.jsf.validation.internal.strategy.AttributeValidatingStrategy.maybeAddAlternativeTypes(Unknown Source)
+	at org.eclipse.jst.jsf.validation.internal.strategy.AttributeValidatingStrategy.validateELExpression(Unknown Source)
+	at org.eclipse.jst.jsf.validation.internal.strategy.AttributeValidatingStrategy.checkIfELAndValidate(Unknown Source)
+	at org.eclipse.jst.jsf.validation.internal.strategy.AttributeValidatingStrategy.access$0(Unknown Source)
+	at org.eclipse.jst.jsf.validation.internal.strategy.AttributeValidatingStrategy$1.run(Unknown Source)
+	at org.eclipse.core.runtime.SafeRunner.run(Unknown Source)
+	at org.eclipse.jst.jsf.validation.internal.strategy.AttributeValidatingStrategy.validateAttributeValue(Unknown Source)
+	at org.eclipse.jst.jsf.validation.internal.strategy.AttributeValidatingStrategy.validate(Unknown Source)
+	at org.eclipse.jst.jsf.validation.internal.XMLViewDefnValidator.validateTag(Unknown Source)
+	at org.eclipse.jst.jsf.validation.internal.XMLViewDefnValidator.validateRegions(Unknown Source)
+	at org.eclipse.jst.jsf.validation.internal.XMLViewDefnValidator.validateView(Unknown Source)
+	at org.eclipse.jst.jsf.ui.internal.validation.JSFValidator.validateFile(Unknown Source)
+	at org.eclipse.jst.jsp.core.internal.validation.JSPValidator.validate(Unknown Source)
+	at org.eclipse.jst.jsp.core.internal.validation.JSPValidator.validateInJob(Unknown Source)
+	at org.eclipse.wst.validation.internal.operations.ValidatorJob.run(Unknown Source)
+	at org.eclipse.core.internal.jobs.Worker.run(Unknown Source)
+
+
+These exceptions are a secondary issue but there are quite a lot of them for even a modest JSF tag library so there needs to be better error handling around the introspection process.
+
+Note that these problems were originally seen erratically when the JSF View Validator was running on various JSP pages but we finally discovered that the Tag Registry view was a more reliable way to recreate them.  Unchecking the "Introspecting Tag Resolver" under /Web/JavaServer Faces Tools/Views/JSP Tag Registry in Preferences appears to turn off all the failing code (including that called from the View Validator) and suppresses these problems.

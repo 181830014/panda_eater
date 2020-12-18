@@ -1,0 +1,16 @@
+When the workbench window is minimized, the shell gets resized to 0,0.  But 
+then all of the parts and editors inside the workbench get resized to 0,0 as 
+well.  This is expensive for areas in GEF such as the palette and also HTML 
+editors where wordwrapping and expensive layout calculations must be done for 
+a completely temporary and invisible state.  When the workbench is restored, 
+the parts are sized back to their previous size.  But for some reason, we 
+getting double WM_SIZE callbacks on our canvas with the sizes being 
+identical.  I'm not sure who is at fault there.
+
+This is a significant performance problem.  If the user has 5 HTML editors 
+open, then there will be 20 expensive layouts when the window is restored to 
+full size (5 editorparts X (editor + palette) X double notification of RESIZE).
+
+The workbench window should not layout its children when the shell becomes 
+minimized.  When restored, the layout could be suppressed, or optimized so 
+that setting controls to their current bounds does not notifiy RESIZE events.

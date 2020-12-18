@@ -1,0 +1,76 @@
+RCPTT 2.5.0-SNAPSHOT
+Eclipse 2019-06
+
+Hello,
+I was unable to launch my test suite using the latest RCPTT runner nightly 2.5.0 . The product is launched but it goes into a restart loop until a timeout is reached. 
+
+I have tested the RCPTT product and it works. The issue is only present in the runner.
+
+The problem seems to be a missing dependency towards arg.antlr.runtime; bundle-version="[3.2.0,3.3.0)". After some investigation I realized that arg.antlr.runtime; 4.3.0.v201502022030 was already installed in the AUT (comes from Eclipse) and I'm guessing that since a more recent version of antlr exists, RCPTT fails to install its required version.
+
+The workaround was to add an explicit dependency towards a arg.antlr.runtime 3.2.0 in our product.
+
+Bellow you can find the associated log trace.
+
+Best regards,
+Sandu
+
+>---------------------------------------------<
+
+!ENTRY org.eclipse.rcptt.core 4 0 2019-06-20 17:09:11.205
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.eclipse.rcptt.core [371]
+  Unresolved requirement: Require-Bundle: org.eclipse.rcptt.ecl.parser; bundle-version="[2.5.0,3.0.0)"; visibility:="reexport"
+    -> Bundle-SymbolicName: org.eclipse.rcptt.ecl.parser; bundle-version="2.5.0.201906100848"; singleton:="true"
+       org.eclipse.rcptt.ecl.parser [407]
+         Unresolved requirement: Require-Bundle: org.antlr.runtime; bundle-version="[3.2.0,3.3.0)"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:457)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$1.run(ModuleContainer.java:1820)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1813)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1769)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1735)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1661)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.eclipse.rcptt.core.ecl.core 4 0 2019-06-20 17:09:11.220
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.eclipse.rcptt.core.ecl.core [372]
+  Unresolved requirement: Require-Bundle: org.eclipse.rcptt.ecl.operations
+    -> Bundle-SymbolicName: org.eclipse.rcptt.ecl.operations; bundle-version="2.5.0.201906100848"; singleton:="true"
+       org.eclipse.rcptt.ecl.operations [406]
+         Unresolved requirement: Require-Bundle: org.eclipse.rcptt.ecl.parser; bundle-version="[2.5.0,3.0.0)"
+           -> Bundle-SymbolicName: org.eclipse.rcptt.ecl.parser; bundle-version="2.5.0.201906100848"; singleton:="true"
+              org.eclipse.rcptt.ecl.parser [407]
+                Unresolved requirement: Require-Bundle: org.antlr.runtime; bundle-version="[3.2.0,3.3.0)"
+  Unresolved requirement: Require-Bundle: org.eclipse.rcptt.core; bundle-version="[2.5.0,3.0.0)"; visibility:="reexport"
+    -> Bundle-SymbolicName: org.eclipse.rcptt.core; bundle-version="2.5.0.201906100848"; singleton:="true"
+       org.eclipse.rcptt.core [371]
+         Unresolved requirement: Require-Bundle: org.eclipse.rcptt.ecl.parser; bundle-version="[2.5.0,3.0.0)"; visibility:="reexport"
+           -> Bundle-SymbolicName: org.eclipse.rcptt.ecl.parser; bundle-version="2.5.0.201906100848"; singleton:="true"
+  Unresolved requirement: Require-Bundle: org.eclipse.rcptt.verifications; bundle-version="[2.5.0,3.0.0)"
+    -> Bundle-SymbolicName: org.eclipse.rcptt.verifications; bundle-version="2.5.0.201906100848"; singleton:="true"
+       org.eclipse.rcptt.verifications [480]
+         Unresolved requirement: Require-Bundle: org.eclipse.rcptt.core; bundle-version="[2.5.0,3.0.0)"
+           -> Bundle-SymbolicName: org.eclipse.rcptt.core; bundle-version="2.5.0.201906100848"; singleton:="true"
+  Unresolved requirement: Require-Bundle: org.eclipse.rcptt.reporting; bundle-version="[2.5.0,3.0.0)"; visibility:="reexport"
+    -> Bundle-SymbolicName: org.eclipse.rcptt.reporting; bundle-version="2.5.0.201906100848"; singleton:="true"
+       org.eclipse.rcptt.reporting [416]
+         Unresolved requirement: Require-Bundle: org.eclipse.rcptt.core; bundle-version="[2.5.0,3.0.0)"; visibility:="reexport"
+           -> Bundle-SymbolicName: org.eclipse.rcptt.core; bundle-version="2.5.0.201906100848"; singleton:="true"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:457)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$1.run(ModuleContainer.java:1820)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1813)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1769)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1735)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1661)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)

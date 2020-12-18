@@ -1,0 +1,48 @@
+Build Identifier: 
+
+See also thread: http://www.eclipse.org/forums/index.php/t/284666/
+
+(posting at the request of Chris Delahunt from 2/13/12)
+
+I have a web application using eclipselink as the persistence provider that is installed as an extension to a course management system (Blackboard). This CMS runs under Tomcat, and so my extension is a web app running under this Tomcat instance (Tomcat 6.0.+). The app immediately fails to load the JPA persistence unit and throws exceptions of the following type:
+-------------------------------------------------------------------
+2012-02-16 14:36:43,497 ERROR edu.northwestern.art.tester.servlets.TestServlet - Unexpected error during servlet execution: 
+Exception Description: An exception was thrown while searching for persistence archives with ClassLoader: WebappClassLoader
+  delegate: false
+  repositories:
+    /WEB-INF/classes/
+----------> Parent Classloader:
+org.apache.catalina.loader.StandardClassLoader@ac44b88
+
+Internal Exception: javax.persistence.PersistenceException: Exception [EclipseLink-28018] (Eclipse Persistence Services - 2.3.2.v20111125-r10461): org.eclipse.persistence.exceptions.EntityManagerSetupException
+Exception Description: Predeployment of PersistenceUnit [TestPersistenceUnit] failed.
+Internal Exception: Exception [EclipseLink-7203] (Eclipse Persistence Services - 2.3.2.v20111125-r10461): org.eclipse.persistence.exceptions.ValidationException
+Exception Description: The mapping element [owners] for the class [class edu.northwestern.art.test.persistence.Team] has an unsupported collection type [class java.util.List]. Only Set, List, Map and Collection are supported.
+Local Exception Stack: 
+Exception [EclipseLink-30005] (Eclipse Persistence Services - 2.3.2.v20111125-r10461): org.eclipse.persistence.exceptions.PersistenceUnitLoadingException
+Exception Description: An exception was thrown while searching for persistence archives with ClassLoader: WebappClassLoader
+  delegate: false
+  repositories:
+    /WEB-INF/classes/
+----------> Parent Classloader:
+org.apache.catalina.loader.StandardClassLoader@ac44b88
+
+... (many more lines)
+
+----------------------------------------------------------------
+
+My experimentation indicates that:
+- When running my app outside of the Blackboard system, using MySQL and h2 for storage, I did not see these errors.
+- The errors occur *every single time* when the app runs within the Blackboard system. (BTW, the Blackboard system uses Oracle 10G+ for storage)
+- The errors occur for every JPA relationship within my app in which one of the fields involved is defined as List<Entity>
+- The errors still occur if I avoid using List<Entity> and replace those occurrences instead with simply 'List', and use a 'targetEntity' attribute in the JPA annotation.
+- The errors *do not* occur if I switch from List<Entity> to Collection<Entity>
+
+More information about this (paired-down) web application is that it contains 2 entity classes (Team and Person) with a couple of relationships among them: a one-to-many unidirectional relates one team with many team 'owners'; a many-to-many relates teams with team 'members'. I am unable to include more information here due to length; but I can send if necessary. The only jar files that are explicitly used in my web app are: eclipselink-2.3.2-r10461, javax.persistence-2.0.0.jar and log4j.jar. I can provide a log of the application 'undeploy' from Tomcat if needed, and also the source. 
+
+Reproducible: Always
+
+Steps to Reproduce:
+1.Install web application in Blackboard system, running under Tomcat 6.0+
+2.Examine the logs and notice that the persistence unit could not load
+3.

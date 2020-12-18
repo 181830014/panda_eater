@@ -1,0 +1,51 @@
+I have attribute mapped by @ManyToOne with @JoinTable annotaion. Moreover type of the attribute is the same as owning class. If I try to do restriction using this attribute by entity_expression I get incorrectly generated SQL query due to @JoinTable annotation is skipped and join defined by this annotation doesn't appear in the result SQL query.
+
+
+I have this entity mapping:
+
+@Entity
+public class Organization {
+
+	@Id
+	private Long id;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinTable(name = "join_table", joinColumns = @JoinColumn(name = "id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "id_alternative", referencedColumnName = "id"))
+	private Organization alternativeOrganization;
+
+        ....
+}
+
+and query built by criteria API like this:
+
+CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+
+// FROM
+Root<Organization> root = criteriaQuery.from(Organization.class);
+
+// ! WHERE 1 - simple value expression in somparison CORRECT RESULT SQL
+Path<Object> alternativeOrganizationId = root.get("alternativeOrganization").get("id);
+Predicate restriction = criteriaBuilder.equal(alternativeOrganizationId, <SOME INTEGER>);
+criteriaQuery.where(restriction);
+
+// ! WHERE 2 - entity expression in comparison INCORRECT RESLT SQL
+Path<Object> alternativeOrganization = root.get("alternativeOrganization");
+Predicate restriction = criteriaBuilder.equal(alternativeOrganization, <SOME ENTITY>);
+criteriaQuery.where(restriction);
+	
+
+Path<Long> idPath = root.get("id");
+criteriaQuery.select(idPath);
+
+List<Long> resul = manager.createQuery(criteriaQuery).getResultList();
+
+If I use restriction like in WHERE 1 everythink works correctly and I get SQL like this where join_table is used:
+
+SELECT t0.ID FROM ORGANIZATION t0, join_table t2, ORGANIZATION t1 WHERE ((t1.ID = ?) AND ((t2.id = t0.ID) AND (t1.ID = t2.id_alternative)))
+
+but restriction like in WHERE 2 gets incorrect SQL because it skips @JoinTable annotation and I get this:
+
+SELECT ID FROM ORGANIZATION WHERE ID = ?.
+
+According to JSR 338 both should work.

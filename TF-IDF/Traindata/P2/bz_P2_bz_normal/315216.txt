@@ -1,0 +1,365 @@
+The SQL is doing both the joining and batch reading; the batch check is first so the join is only affecting the SQL.
+
+ 
+
+Looking at the code we don't have any support for combining.  Probably log a bug for this; I had thought we allowed combining at one point.
+
+ 
+
+ 
+
+ 
+
+-----Original Message-----
+From: Douglas Clarke 
+Sent: Wednesday, May 05, 2010 9:29 AM
+To: James Sutherland
+Cc: Peter Krogh
+Subject: RE: Bug in batch in?
+
+ 
+
+I also tried the native API as:
+
+Query query = em.createQuery("SELECT p FROM PhoneNumber p");
+
+// query.setHint(QueryHints.BATCH, "p.owner");
+
+// query.setHint(QueryHints.BATCH_TYPE, "IN");
+
+// query.setHint(QueryHints.FETCH, "p.owner.address");
+
+ReadAllQuery raq = JpaHelper.getReadAllQuery(query);
+
+raq.setBatchFetchType(BatchFetchType.IN);
+
+raq.addBatchReadAttribute("owner");
+
+raq.addJoinedAttribute(raq.getExpressionBuilder().get("owner").get("address"));
+
+List<PhoneNumber> phones = query.getResultList();
+
+ 
+
+for (PhoneNumber phone : phones) {
+
+phone.getOwner().getAddress();
+
+ 
+
+The result of this is a join across the 3 plus a bunch of address queries that I cannot explain.
+
+ 
+
+[EL Fine]: SELECT t2.TYPE, t2.EMP_ID, t2.AREA_CODE, t2.P_NUMBER, t0.EMP_ID, t1.E
+
+MP_ID, t0.L_NAME, t0.END_TIME, t0.VERSION, t0.START_TIME, t0.GENDER, t1.SALARY, 
+
+t0.F_NAME, t0.MANAGER_ID, t0.ADDR_ID, t0.START_DATE, t0.END_DATE, t3.ADDRESS_ID,
+
+t3.P_CODE, t3.STREET, t3.PROVINCE, t3.COUNTRY, t3.CITY FROM ADDRESS t3, PHONE t
+
+2, SALARY t1, EMPLOYEE t0 WHERE (((t0.EMP_ID = t2.EMP_ID) AND (t1.EMP_ID = t0.EM
+
+P_ID)) AND (t3.ADDRESS_ID = t0.ADDR_ID))
+
+[EL Fine]: SELECT DISTINCT t0.EMP_ID, t1.EMP_ID, t0.L_NAME, t0.END_TIME, t0.VERS
+
+ION, t0.START_TIME, t0.GENDER, t1.SALARY, t0.F_NAME, t0.MANAGER_ID, t0.ADDR_ID, 
+
+t0.START_DATE, t0.END_DATE FROM EMPLOYEE t0, SALARY t1 WHERE ((t0.EMP_ID IN (?,?
+
+,?,?,?,?,?,?,?,?,?,?)) AND (t1.EMP_ID = t0.EMP_ID))
+
+bind => [59, 73, 53, 63, 55, 71, 65, 57, 69, 67, 61, 51]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [60]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [74]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [54]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [64]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [56]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [72]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [66]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [58]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [70]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [68]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [62]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [52]
+
+-----Original Message-----
+From: James Sutherland 
+Sent: May 5, 2010 9:17 AM
+To: Douglas Clarke
+Subject: RE: Bug in batch in?
+
+Query query = em.createQuery("SELECT p FROM PhoneNumber p");
+
+query.setHint(QueryHints.BATCH, "e.owner");
+
+query.setHint(QueryHints.BATCH_TYPE, "IN"); 
+
+query.setHint(QueryHints.FETCH, "e.owner.address");
+
+ 
+
+Should work, but not certain.
+
+ 
+
+ 
+
+ 
+
+-----Original Message-----
+From: Douglas Clarke 
+Sent: Wednesday, May 05, 2010 9:13 AM
+To: James Sutherland
+Subject: RE: Bug in batch in?
+
+ 
+
+Appears I modified the wrong orm.xml. Repeating the config again I get SQL like what I expected:
+
+[EL Fine]: SELECT TYPE, EMP_ID, AREA_CODE, P_NUMBER FROM PHONE
+
+[EL Fine]: SELECT DISTINCT t1.EMP_ID, t2.EMP_ID, t1.L_NAME, t1.END_TIME, t1.VERS
+
+ION, t1.START_TIME, t1.GENDER, t2.SALARY, t1.F_NAME, t1.MANAGER_ID, t1.ADDR_ID, 
+
+t1.START_DATE, t1.END_DATE, t0.ADDRESS_ID, t0.P_CODE, t0.STREET, t0.PROVINCE, t0
+
+.COUNTRY, t0.CITY FROM ADDRESS t0, SALARY t2, EMPLOYEE t1 WHERE (((t1.EMP_ID IN 
+
+(?,?,?,?,?,?,?,?,?,?,?,?)) AND (t2.EMP_ID = t1.EMP_ID)) AND (t0.ADDRESS_ID = t1.
+
+ADDR_ID))
+
+bind => [59, 73, 53, 63, 55, 71, 65, 57, 69, 67, 61, 51]
+
+So the customer can get the (1:M)batch+(1:1)join behavior they want by putting the join-fetch on mapping. Is there anyway to configure this at the query level?
+
+ 
+
+Doug
+
+ 
+
+-----Original Message-----
+From: James Sutherland 
+Sent: May 5, 2010 8:40 AM
+To: Douglas Clarke
+Subject: RE: Bug in batch in?
+
+The mapping join does not apply to all queries, but I'm not sure why it is not being applied in this case, that would need some investigation.  i.e. if you added a join fetch of manager, the address would also not be joined, it is only applied to root queries, and not nested or recursive.  You should be able to join or batch the address in the query.
+
+ 
+
+i.e.
+
+query.setHint(QueryHints.BATCH, "e.owner.address");
+
+ 
+
+ 
+
+ 
+
+-----Original Message-----
+From: Douglas Clarke 
+Sent: Wednesday, May 05, 2010 6:00 AM
+To: James Sutherland
+Cc: Peter Krogh
+Subject: Bug in batch in?
+
+ 
+
+Query query = em.createQuery("SELECT p FROM PhoneNumber p");
+
+query.setHint(QueryHints.BATCH, "e.owner");
+
+query.setHint(QueryHints.BATCH_TYPE, "IN");
+
+List<PhoneNumber> phones = query.getResultList();
+
+for (PhoneNumber phone: phones) {
+
+phone.getOwner().getAddress();
+
+}
+
+ 
+
+SQL:
+
+ 
+
+[EL Fine]: SELECT TYPE, EMP_ID, AREA_CODE, P_NUMBER FROM PHONE
+
+[EL Fine]: SELECT DISTINCT t0.EMP_ID, t1.EMP_ID, t0.L_NAME, t0.END_TIME, t0.VERS
+
+ION, t0.START_TIME, t0.GENDER, t1.SALARY, t0.F_NAME, t0.MANAGER_ID, t0.ADDR_ID, 
+
+t0.START_DATE, t0.END_DATE FROM EMPLOYEE t0, SALARY t1 WHERE ((t0.EMP_ID IN (?,?
+
+,?,?,?,?,?,?,?,?,?,?)) AND (t1.EMP_ID = t0.EMP_ID))
+
+bind => [59, 73, 53, 63, 55, 71, 65, 57, 69, 67, 61, 51]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [60]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [74]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [54]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [64]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [56]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [72]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [66]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [58]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [70]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [68]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [62]
+
+[EL Fine]: SELECT ADDRESS_ID, P_CODE, STREET, PROVINCE, COUNTRY, CITY FROM ADDRE
+
+SS WHERE (ADDRESS_ID = ?)
+
+bind => [52]
+
+ 
+
+COnfig of Employee's address mapping:
+
+ 
+
+<one-to-one name="address" fetch="LAZY">
+
+<join-column name="ADDR_ID" />
+
+<cascade>
+
+<cascade-all />
+
+</cascade>
+
+<private-owned />
+
+<join-fetch>INNER</join-fetch>
+
+ 
+
+Why is the address not joined?
+
+ 
+
+Doug

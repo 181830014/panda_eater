@@ -1,0 +1,29 @@
+Build Identifier: 2.3.2.v20111125-r10461
+
+See this, particularly James Sutherland's answer:
+http://stackoverflow.com/questions/9770836/jpa-2-mapping-a-map-where-the-key-is-an-entity-value-is-boolean
+
+e.g. : following mapping gives BigDecimal for the map's values instead of Boolean:
+
+    @ElementCollection
+    @CollectionTable(name = "APPROVALS_PRODUCT_APPROVALS", joinColumns = @JoinColumn(name = "PRODUCT_APPROVAL_ID", referencedColumnName = "ID"))
+    @Column(name = "EXCLUDED")
+    @MapKeyJoinColumns({ @MapKeyJoinColumn(name = "CREDENTIAL_VALUE", referencedColumnName = "CREDENTIAL_VALUE"), @MapKeyJoinColumn(name = "CREDENTIAL_TYPE", referencedColumnName = "CREDENTIAL_TYPE") })
+    private Map<Approval, Boolean> approvals = new HashMap<Approval, Boolean>();
+
+"Most databases do not have a Boolean type, so booleans are normally stored as numbers, 0/1. So you may be missing a conversion somehow. You can define an @Convert with a @TypeConverter for this, although it should be getting defaulted, so you may log a bug for that."
+
+Reproducible: Always
+
+Steps to Reproduce:
+1.Define this mapping
+
+    @ElementCollection
+    @CollectionTable(name = "APPROVALS_PRODUCT_APPROVALS", joinColumns = @JoinColumn(name = "PRODUCT_APPROVAL_ID", referencedColumnName = "ID"))
+    @Column(name = "EXCLUDED")
+    @MapKeyJoinColumns({ @MapKeyJoinColumn(name = "CREDENTIAL_VALUE", referencedColumnName = "CREDENTIAL_VALUE"), @MapKeyJoinColumn(name = "CREDENTIAL_TYPE", referencedColumnName = "CREDENTIAL_TYPE") })
+    private Map<Approval, Boolean> approvals = new HashMap<Approval, Boolean>();
+
+2. Map values should be Boolean.
+
+(I guess it can be applied to other types, as Integer)

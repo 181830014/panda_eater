@@ -1,0 +1,93 @@
+I'm writing a custom PreferencePage. Part of the PreferencePage is a Composite 
+subclass that has a FormLayout. Opening a PreferenceDialog containing only 
+this PreferencePage results in an error dialog saying "The currently displayed 
+page contains invalid values" (see attachment #1 [details]).
+
+The code below demonstrates this happening. Note that if you comment out the 
+four lines in the MyComposite constructor, it works OK. It seems that the 
+PreferencePage is assuming that GridLayouts are used "all the way down" the 
+widget containment hierarchy, which is not true in this case.
+
+
+Using SWT3.1M4
+
+-----8<------
+import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.preference.PreferenceManager;
+import org.eclipse.jface.preference.PreferenceNode;
+import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+
+public class PreferenceLayoutBugDemo {
+
+    public static void main(String[] args) {
+        Display display = new Display();
+        Shell shell = new Shell(display);
+
+        PreferenceLayoutBugDemo demo = new PreferenceLayoutBugDemo();
+        PreferenceNode node1 = new PreferenceNode("node1", demo.new 
+PreferencePageOne());
+        PreferenceManager mgr = new PreferenceManager();
+        mgr.addToRoot(node1);
+        PreferenceDialog dlg = new PreferenceDialog(shell, mgr);
+        dlg.setBlockOnOpen(true);
+
+        shell.open();
+        dlg.open();
+        while (!shell.isDisposed()) {
+            if (!display.readAndDispatch())
+                display.sleep();
+        }
+        display.dispose();
+    }
+
+    public class PreferencePageOne
+        extends PreferencePage {
+
+        public PreferencePageOne() {
+            super("Page One");
+        }
+
+        protected Control createContents(Composite parent) {
+            Composite contents = new Composite(parent, SWT.NONE);
+            contents.setLayout(new FillLayout());
+            new MyComposite(contents, SWT.NONE);
+            return contents;
+        }
+
+        public boolean isValid() {
+            return true;
+        }
+    }
+
+    public class MyComposite
+        extends Composite {
+
+        public MyComposite(Composite parent, int style) {
+            super(parent, style);
+
+            this.setLayout(new FormLayout());
+
+            Text dateText = new Text(this, SWT.BORDER);
+
+            // Comment out the following four lines and it works.
+            // Otherwise the error "The currently displayed page contains
+            // invalid values" appears.
+            FormData dateTextFD = new FormData();
+            dateTextFD.top = new FormAttachment(0);
+            dateTextFD.left = new FormAttachment(0);
+            dateText.setLayoutData(dateText);
+        }
+
+    }
+}
+------8<-----

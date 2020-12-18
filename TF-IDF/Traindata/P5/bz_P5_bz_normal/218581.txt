@@ -1,0 +1,43 @@
+When lazy fetch is enabled on a @BasicMap attribute, attempts to persist an object with a non-null, non-empty map result in an java.lang.UnsupportedOperationException during commit.  Making the BasicMap eager resolves the problem.  The UnsupportedOperationException is visible in the console however the stack dump reports "java.lang.IllegalStateException: Rollback called with no active Transaction".
+
+This occurs in OC4J 11 TP 1 with JTA transactions.
+
+<persistence ...>
+    <persistence-unit name="default" transaction-type="JTA">
+        <provider>
+           org.eclipse.persistence.jpa.PersistenceProvider
+        </provider>
+        <jta-data-source>MyDataSource</jta-data-source> 
+...
+
+
+Abbreviated Console log:
+
+[EPS Finest]: 2008.02.11 06:38:20.156--UnitOfWork(6653700)--Thread(Thread[RMICal
+lHandler-5,5,HTTPThreadGroup])--assign sequence to the object (1 -> impl.DataTypesDAO@971ce3)
+[EPS Finer]: 2008.02.11 06:38:20.156--UnitOfWork(6653700)--Thread(Thread[RMICall
+Handler-5,5,HTTPThreadGroup])--TX beforeCompletion callback, status=STATUS_ACTIV
+E
+[EPS Finer]: 2008.02.11 06:38:20.156--UnitOfWork(6653700)--Thread(Thread[RMICall
+Handler-5,5,HTTPThreadGroup])--begin unit of work commit
+[EPS Finer]: 2008.02.11 06:38:20.171--ClientSession(21308426)--Thread(Thread[RMI
+CallHandler-5,5,HTTPThreadGroup])--TX beginTransaction, status=STATUS_ACTIVE
+[EPS Finest]: 2008.02.11 06:38:20.171--UnitOfWork(6653700)--Thread(Thread[RMICal
+lHandler-5,5,HTTPThreadGroup])--Execute query InsertObjectQuery(impl.DataTypesDAO@971ce4)
+[EPS Fine]: 2008.02.11 06:38:20.171--ClientSession(21308426)--Connection(2985564
+0)--Thread(Thread[RMICallHandler-5,5,HTTPThreadGroup])--INSERT INTO DataTypes
+...
+[EPS Warning]: 2008.02.11 06:38:20.234--UnitOfWork(6653700)--Thread(Thread[RMICa
+llHandler-5,5,HTTPThreadGroup])--java.lang.UnsupportedOperationException
+[EPS Warning]: 2008.02.11 06:38:20.234--UnitOfWork(6653700)--Thread(Thread[RMICa
+llHandler-5,5,HTTPThreadGroup])--java.lang.UnsupportedOperationException
+2008-02-11 18:38:20.234 WARNING J2EE JTA-00117 Error in Synchronization.beforeCo
+mpletion() java.lang.UnsupportedOperationException
+[EPS Finer]: 2008.02.11 06:38:20.234--UnitOfWork(6653700)--Thread(Thread[RMICall
+Handler-5,5,HTTPThreadGroup])--TX afterCompletion callback, status=ROLLEDBACK
+[EPS Finer]: 2008.02.11 06:38:20.234--UnitOfWork(6653700)--Thread(Thread[RMICall
+Handler-5,5,HTTPThreadGroup])--release unit of work
+[EPS Finer]: 2008.02.11 06:38:20.234--UnitOfWork(6653700)--Thread(Thread[RMICall
+Handler-5,5,HTTPThreadGroup])--initialize identitymaps
+[EPS Finer]: 2008.02.11 06:38:20.234--ClientSession(21308426)--Thread(Thread[RMI
+CallHandler-5,5,HTTPThreadGroup])--client released

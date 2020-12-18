@@ -1,0 +1,16 @@
+A simple treeviewer, such as below, created with TreeViewerSWTFactory results in drag and drop exceptions if you accidentally drag the tree elements.  I'm building in an RCP Eclipse4 environment, if that makes a difference.
+
+tv = TreeViewerSWTFactory.createTreeViewer(parent, rootElement);
+
+Creating a customization with overridden  DNDProvider, with hasDND returning false, like below, fixed the problem for me.
+
+tv = TreeViewerSWTFactory.fillDefaults(parent, rootElement).
+customizeDragAndDrop(new DNDProvider(){
+
+@Override
+public boolean hasDND() {
+// TODO Auto-generated method stub
+return false;
+}
+... the rest of the generated overrides
+}).create();

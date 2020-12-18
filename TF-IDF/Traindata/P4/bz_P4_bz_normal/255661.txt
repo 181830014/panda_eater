@@ -1,0 +1,154 @@
+Hi
+
+I was attempting to write an aspect that checks for null arguments passed to any constructors defined in our project,
+the problem i was having is that calls to constructors of nested classes have a false parameter appended to their parameter
+list, with type equal to that of the nested class, which evaluates to null.
+
+This is incorrect according to the Java language specification
+
+What follows is a test case with output, probably the easiest thing would be to copy and past this and test it out for yourself.
+
+
+Yours
+
+Piers
+
+
+First the aspect that i have created
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+package com.historicalengineering.wwii.aspect.test;
+
+import java.lang.IllegalArgumentException;
+
+public aspect EnforceContractAspect
+{
+    
+    pointcut allMethodCallsWithParameters() :
+        call(* com.historicalengineering..*(*,..));
+    
+    pointcut allConstructorCallsWithParameters() :
+        call(com.historicalengineering..new(*,..)) ||
+        call(private com.historicalengineering..new(*,..)) ||
+        call(protected com.historicalengineering..new(*,..)) ||
+        call(public com.historicalengineering..new(*,..));
+    
+    /*
+     * Select all calls to any methods or constructors defined within
+     * com.historicalengineering taking one or more parameters
+     */
+    pointcut allCallsWithParameters() :
+        allConstructorCallsWithParameters() ||
+        allMethodCallsWithParameters();
+       
+       
+    before() : allCallsWithParameters()
+    {
+
+        Object[] args = thisJoinPoint.getArgs();
+       
+        for(int i = 0; i < args.length; i++)
+        {
+            if(args[i] == null)
+            {
+
+                throw new IllegalArgumentException(
+                        thisJoinPointStaticPart.getSignature()
+                        +" passed null parameter at position "+(i+1)
+                        +" of "+args.length);
+            }
+        }
+       
+    }
+}
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+Second the test class
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+package com.historicalengineering.wwii.aspect.test;
+
+public class A
+{
+
+    public static void main(String[] args)
+    {
+        //A a = new A();
+        //InnerStatic i = new InnerStatic();
+        //a.foo();
+        //a.bar();
+       
+    }
+    
+    protected void foo()
+    {
+        InnerStatic inner = new InnerStatic();
+    }
+    
+    protected void bar()
+    {
+        Inner inner = new Inner();
+    }
+    
+    static class InnerStatic
+        {   
+               private InnerStatic()
+            {
+            }
+        }
+    
+    class Inner
+        {
+            private Inner()
+               {
+            }
+        }
+    
+}
+
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+Third some output
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+
+Output when uncommenting the line:    A a = new A();
+
+-None because this constructor really doesn't take any parameters.
+
+
+
+Output when uncommenting the line:    InnerStatic i = new InnerStatic();
+
+Exception in thread "main" java.lang.IllegalArgumentException: com.historicalengineering.wwii.aspect.test.A.InnerStatic(A.InnerStatic) passed null parameter at position 1 of 1
+    at com.historicalengineering.wwii.aspect.test.EnforceContractAspect.ajc$before$com_historicalengineering_wwii_aspect_test_EnforceContractAspect$1$f789a125(EnforceContractAspect.aj:45)
+    at com.historicalengineering.wwii.aspect.test.A.main(A.java:9)
+
+- As you can see from the trace the inner static constructor was passed an "A.InnerStatic"  type which has evaluated to null.
+
+
+
+Output when uncommenting the lines:    A a = new A();  &    a.foo();
+
+Exception in thread "main" java.lang.IllegalArgumentException: com.historicalengineering.wwii.aspect.test.A.InnerStatic(A.InnerStatic) passed null parameter at position 1 of 1
+    at com.historicalengineering.wwii.aspect.test.EnforceContractAspect.ajc$before$com_historicalengineering_wwii_aspect_test_EnforceContractAspect$1$f789a125(EnforceContractAspect.aj:40)
+    at com.historicalengineering.wwii.aspect.test.A.foo(A.java:17)
+    at com.historicalengineering.wwii.aspect.test.A.main(A.java:10)
+
+- Again the null "A.InnerStatic" type has been passed to the constructor.
+
+
+
+Output when uncommenting the lines:    A a = new A();  &    a.bar();
+
+Exception in thread "main" java.lang.IllegalArgumentException: com.historicalengineering.wwii.aspect.test.A.Inner(A, A.Inner) passed null parameter at position 2 of 2
+    at com.historicalengineering.wwii.aspect.test.EnforceContractAspect.ajc$before$com_historicalengineering_wwii_aspect_test_EnforceContractAspect$1$f789a125(EnforceContractAspect.aj:40)
+    at com.historicalengineering.wwii.aspect.test.A.bar(A.java:22)
+    at com.historicalengineering.wwii.aspect.test.A.main(A.java:11)
+
+-In the case of the non static nested class it is passed 2 hidden parameters the enclosing class "A" which does not evaluate to null and again the infuriating "A.Inner" class which is null.

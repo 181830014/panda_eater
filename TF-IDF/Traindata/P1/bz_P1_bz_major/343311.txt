@@ -1,0 +1,19 @@
+In the last weeks, it occurred many times that my eclipse consumed 200% cpu time with no apparent reason. After seeing this several times with a threaddump, I'm pretty sure this is caused by the TaskSelectionDialog jobs. Note that there are no TaskSelectionDialogs open at the time and the job still runs forever. Seems the job sometimes doesn't get canceled when I close the dialog.
+
+"Worker-7" prio=10 tid=0x08b47c00 nid=0x106e runnable [0x2935c000]
+java.lang.Thread.State: RUNNABLE
+
+	at java.util.HashMap.put(HashMap.java:405)
+	at java.util.HashSet.add(HashSet.java:200)
+	at java.util.AbstractCollection.addAll(AbstractCollection.java:305)
+	at org.eclipse.mylyn.internal.tasks.ui.actions.TaskSelectionDialog$TasksFilter.populateTasksFromWorkingSets(TaskSelectionDialog.java:357)
+	at org.eclipse.mylyn.internal.tasks.ui.actions.TaskSelectionDialog$TasksFilter.matchItem(TaskSelectionDialog.java:345)
+	at org.eclipse.ui.dialogs.FilteredItemsSelectionDialog$ContentProvider.add(FilteredItemsSelectionDialog.java:2687)
+	at org.eclipse.ui.dialogs.FilteredItemsSelectionDialog$FilterJob.filterContent(FilteredItemsSelectionDialog.java:2166)
+	at org.eclipse.ui.dialogs.FilteredItemsSelectionDialog$FilterJob.internalRun(FilteredItemsSelectionDialog.java:2130)
+	at org.eclipse.ui.dialogs.FilteredItemsSelectionDialog$FilterJob.doRun(FilteredItemsSelectionDialog.java:2102)
+	at org.eclipse.ui.dialogs.FilteredItemsSelectionDialog$FilterJob.run(FilteredItemsSelectionDialog.java:2089)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+Locked ownable synchronizers:
+- None

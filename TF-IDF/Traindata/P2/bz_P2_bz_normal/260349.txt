@@ -1,0 +1,143 @@
+Build ID: N/A
+
+Steps To Reproduce:
+I am using Tomcat, MSSQL 2000 and connection pool provided by EclipseLink in my environment.
+
+Here is my simple function which return Product details (1 row) based of the Primary Key.
+ 
+public Product findProduct(Product id) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.find(Product.class, id);
+        } finally {
+            em.close();
+        }
+    }
+
+After deploying my application when I call the funtion, EclipseLink initialize
+it's connection pool and execute the query perfectly.
+
+Now I removed the network cable of Tomcat machine and put it back after 5 seconds.
+
+If I execute the function again then I am getting the Socket write error.
+
+Interesting thing is I am getting the error within 1 second and EclipseLink log is not showing any connection retry attempt.
+
+What I have seen in the log is EclipseLink is executing the connection validation query (SELECT 1) to validate the connection but after that there was no attempt to get the new connection and simply Socket write error returned.
+
+Now I have only option restart the Tomcat.
+
+
+
+
+More information:
+The log of EclipseLink.
+
+[EL Config]: 2009.01.06
+23:53:36.438--ServerSession(942838)--Connection(14647374)--Thread(Thread[http-8080-5,5,main])--Connected:
+jdbc:microsoft:sqlserver://BANWSALAB01:1433;NETADDRESS=;HOSTPROCESS=;LOGINTIMEOUT=0;DATABASENAME=machines;SENDSTRINGPARAMETERSASUNICODE
+=true;PROGRAMNAME=;SELECTMETHOD=direct
+        User: autolab
+        Database: Microsoft SQL Server  Version: Microsoft SQL Server  2000 -
+8.00.194 (Intel X86) 
+        Aug  6 2000 00:57:48 
+        Copyright (c) 1988-2000 Microsoft Corporation
+        Developer Edition on Windows NT 5.2 (Build 3790: Service Pack 2)
+
+        Driver: SQLServer  Version: 2.2.0022
+[EL Info]: 2009.01.06
+23:53:36.953--ServerSession(942838)--Thread(Thread[http-8080-5,5,main])--file:/D:/QADRInJava/RestfulInterfaceWithEclispeLink/build/web/WEB-INF/classes/-RestfulInterfacePU
+login successful
+[EL Fine]: 2009.01.06
+23:53:37.047--ServerSession(942838)--Connection(24675665)--Thread(Thread[http-8080-5,5,main])--SELECT
+ProductID, ProductName FROM machines.dbo.Products
+[EL Fine]: 2009.01.06
+23:56:44.323--ServerSession(942838)--Connection(27416263)--Thread(Thread[http-8080-5,5,main])--SELECT
+ProductID, ProductName FROM machines.dbo.Products WHERE (ProductID = ?)
+        bind => [1]
+[EL Fine]: 2009.01.06
+23:56:44.323--ServerSession(942838)--Thread(Thread[http-8080-5,5,main])--SELECT
+1
+[EL Warning]: 2009.01.06
+23:56:46.307--UnitOfWork(28460098)--Thread(Thread[http-8080-5,5,main])--Exception
+[EclipseLink-4002] (Eclipse Persistence Services - 1.1.0 (Build 20081225)):
+org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLException: [Microsoft][SQLServer 2000 Driver
+for JDBC]Connection reset by peer: socket write error
+Error Code: 0
+Call: SELECT ProductID, ProductName FROM machines.dbo.Products WHERE (ProductID
+= ?)
+        bind => [1]
+Query: ReadAllQuery(com.autolab.db.entity.Product)
+javax.ws.rs.WebApplicationException: java.lang.Throwable: A persistence error
+occurred 
+Internal Exception: java.sql.SQLException: [Microsoft][SQLServer 2000 Driver
+for JDBC]Connection reset by peer: socket write error
+Error Code: 0
+Call: SELECT ProductID, ProductName FROM machines.dbo.Products WHERE (ProductID
+= ?)
+        bind => [1]
+Query: ReadAllQuery(com.autolab.db.entity.Product)
+        at
+com.autolab.db.rest.service.ProductResource.get(ProductResource.java:60)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at
+sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+        at
+sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+        at java.lang.reflect.Method.invoke(Method.java:597)
+        at
+com.sun.jersey.impl.model.method.dispatch.EntityParamDispatchProvider$TypeOutInvoker._dispatch(EntityParamDispatchProvider.java:136)
+        at
+com.sun.jersey.impl.model.method.dispatch.ResourceJavaMethodDispatcher.dispatch(ResourceJavaMethodDispatcher.java:85)
+        at
+com.sun.jersey.impl.uri.rules.HttpMethodRule.accept(HttpMethodRule.java:123)
+        at
+com.sun.jersey.impl.uri.rules.SubLocatorRule.accept(SubLocatorRule.java:88)
+        at
+com.sun.jersey.impl.uri.rules.RightHandPathRule.accept(RightHandPathRule.java:111)
+        at
+com.sun.jersey.impl.uri.rules.ResourceClassRule.accept(ResourceClassRule.java:71)
+        at
+com.sun.jersey.impl.uri.rules.RightHandPathRule.accept(RightHandPathRule.java:111)
+        at
+com.sun.jersey.impl.uri.rules.RootResourceClassesRule.accept(RootResourceClassesRule.java:63)
+        at
+com.sun.jersey.impl.application.WebApplicationImpl.handleRequest(WebApplicationImpl.java:722)
+        at
+com.sun.jersey.impl.application.WebApplicationImpl.handleRequest(WebApplicationImpl.java:692)
+        at
+com.sun.jersey.spi.container.servlet.ServletContainer.service(ServletContainer.java:344)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:717)
+        at
+org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)
+        at
+org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+        at
+org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:233)
+        at
+org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:191)
+        at
+org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:128)
+        at
+org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:102)
+        at
+org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)
+        at
+org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:286)
+        at
+org.apache.coyote.http11.Http11AprProcessor.process(Http11AprProcessor.java:857)
+        at
+org.apache.coyote.http11.Http11AprProtocol$Http11ConnectionHandler.process(Http11AprProtocol.java:565)
+        at
+org.apache.tomcat.util.net.AprEndpoint$Worker.run(AprEndpoint.java:1509)
+        at java.lang.Thread.run(Thread.java:619)
+Caused by: java.lang.Throwable: A persistence error occurred 
+Internal Exception: java.sql.SQLException: [Microsoft][SQLServer 2000 Driver
+for JDBC]Connection reset by peer: socket write error
+Error Code: 0
+Call: SELECT ProductID, ProductName FROM machines.dbo.Products WHERE (ProductID
+= ?)
+        bind => [1]
+Query: ReadAllQuery(com.autolab.db.entity.Product)
+        ... 29 more

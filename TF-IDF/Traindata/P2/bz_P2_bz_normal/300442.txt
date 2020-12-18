@@ -1,0 +1,25 @@
+It seems to return different answers depending upon the number of actual expressions in the predicate. For example, with the following:
+
+Predicate criteria = cb.conjunction();
+if (name != null) {
+  ParameterExpression<String> p = cb.parameter(String.class, "name");
+  criteria = cb.and(criteria, cb.equal(emp.get("name"), p));
+}
+if (deptName != null) {
+  ParameterExpression<String> p = cb.parameter(String.class, " 
+  criteria = cb.and(criteria, cb.equal(emp.get("dept").get("name"), p));
+}
+if (projectName != null) {
+  ParameterExpression<String> p = cb.parameter(String.class, "project");
+  criteria = cb.and(criteria, cb.equal(project.get("name"), p));
+}
+if (city != null) {
+  ParameterExpression<String> p = cb.parameter(String.class, "city");
+  criteria = cb.and(criteria, cb.equal(emp.get("address").get("city"), p));
+}
+System.out.println("Expression count: " + criteria.getExpressions().size());
+
+If one of the four is not null then the size will be 0.
+If two or more are not null then the size will always be 2.
+
+The spec defines getExpressions() to return the "top-level conjuncts", so there is certainly a good argument for saying that successive "and"s is always going to produce a binary set of top-level conjuncts, but the 0 part is an error, I think.

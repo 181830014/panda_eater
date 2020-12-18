@@ -1,0 +1,70 @@
+Build Identifier: 20110615-0604
+
+When executing a typed query with nested embeddables, a NullPointerException is thrown in InheritancePolicy.java:1381.
+
+Assume an object of Type "GenericEntity" with embeddable "EmbeddedObject" that contains itself another embeddable, e.g. "NestedEmbeddedObject". 
+A query for an object of type GenericEntity fails fails due to NPE in InheritancePolicy.java:1381.
+
+Code sample:
+
+    CriteriaBuilder cb = getEm().getCriteriaBuilder();
+    CriteriaQuery<ExampleEntity> cq = cb.createQuery(ExampleEntity.class);
+    Root<ExampleEntity> root = cq.from(ExampleEntity.class);
+    List<Predicate> predicates = new ArrayList<Predicate>();
+
+    Map<String, Object> attributes = new HashMap();
+    ExampleEntity   ent = new ExampleEntity();
+    //NOTE: EmbeddedObject is an embeddable that contains another embeddable, e.g. NestedEmbeddedObject
+    EmbeddedObject  emb = ent.getEmbeddedObject();
+    
+    predicates.add(cb.equal((Expression) root.get("embeddedObject"), emb));
+    
+    cq.where(predicates.toArray(new Predicate[] {}));
+    TypedQuery<ExampleEntity> q = getEm().createQuery(cq);
+
+    //fails due to NPE in InheritancePolicy.java:1381
+    List<ExampleEntity> results = q.getResultList();
+
+
+java.lang.NullPointerException
+	at org.eclipse.persistence.descriptors.InheritancePolicy.selectAllRowUsingDefaultMultipleTableSubclassRead(InheritancePolicy.java:1381)
+	at org.eclipse.persistence.descriptors.InheritancePolicy.selectAllRowUsingMultipleTableSubclassRead(InheritancePolicy.java:1422)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectAllRows(ExpressionQueryMechanism.java:2548)
+	at org.eclipse.persistence.queries.ReadAllQuery.executeObjectLevelReadQuery(ReadAllQuery.java:418)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeDatabaseQuery(ObjectLevelReadQuery.java:1097)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:829)...
+
+Reproducible: Always
+
+Steps to Reproduce:
+Assume an object of Type "GenericEntity" with embeddable "EmbeddedObject" that contains itself another embeddable, e.g. "NestedEmbeddedObject". 
+A query for an object of type GenericEntity fails fails due to NPE in InheritancePolicy.java:1381.
+
+Code sample:
+
+    CriteriaBuilder cb = getEm().getCriteriaBuilder();
+    CriteriaQuery<ExampleEntity> cq = cb.createQuery(ExampleEntity.class);
+    Root<ExampleEntity> root = cq.from(ExampleEntity.class);
+    List<Predicate> predicates = new ArrayList<Predicate>();
+
+    Map<String, Object> attributes = new HashMap();
+    ExampleEntity   ent = new ExampleEntity();
+    //NOTE: EmbeddedObject is an embeddable that contains another embeddable, e.g. NestedEmbeddedObject
+    EmbeddedObject  emb = ent.getEmbeddedObject();
+    
+    predicates.add(cb.equal((Expression) root.get("embeddedObject"), emb));
+    
+    cq.where(predicates.toArray(new Predicate[] {}));
+    TypedQuery<ExampleEntity> q = getEm().createQuery(cq);
+
+    //fails due to NPE in InheritancePolicy.java:1381
+    List<ExampleEntity> results = q.getResultList();
+
+
+java.lang.NullPointerException
+	at org.eclipse.persistence.descriptors.InheritancePolicy.selectAllRowUsingDefaultMultipleTableSubclassRead(InheritancePolicy.java:1381)
+	at org.eclipse.persistence.descriptors.InheritancePolicy.selectAllRowUsingMultipleTableSubclassRead(InheritancePolicy.java:1422)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectAllRows(ExpressionQueryMechanism.java:2548)
+	at org.eclipse.persistence.queries.ReadAllQuery.executeObjectLevelReadQuery(ReadAllQuery.java:418)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeDatabaseQuery(ObjectLevelReadQuery.java:1097)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:829)...

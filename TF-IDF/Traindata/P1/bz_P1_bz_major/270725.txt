@@ -1,0 +1,11 @@
+Type code (4 lines, first line not counted):
+<?php
+		$sPlaceholders = 'if';
+		$sTemplateSource = preg_replace("`<(({$sPlaceholders}) +\([^>]+\)) *>`", '<?php $1 { ?>', $sTemplateSource);
+		$sPlaceholders = 'foreach';
+		$sTemplateSource = preg_replace("`<(({$sPlaceholders}) +\( *([^ ]+)[^>]+\)) *>`", '--><?php if(!empty($3)) $1 { ?>', $sTemplateSource);
+
+Go to line 2 and comment it (press ctrl+slash).
+
+Actual result: string 2 commented incorrectly, but string 3 and 4 too incorrect highlighted!
+Expected result: if I comment one line - one line need to comment, and all next lines not affected!

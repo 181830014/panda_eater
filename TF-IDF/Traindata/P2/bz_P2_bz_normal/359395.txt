@@ -1,0 +1,51 @@
+Build Identifier: 2.3.0.v20110604-r9504
+
+An application configured with EclipseLink Cache Coordination using RMITransportManager runs into following exception when the server session initializes:
+
+Exception [EclipseLink-22102] (Eclipse Persistence Services - 2.3.0.v20110604-r9504): org.eclipse.persistence.exceptions.RemoteCommandManagerException
+Exception Description: Could not post connection in local naming service under name Service[EclipseLinkCommandChannel, 07b77df4-acf8-40d7-bf94-d48ee78a986c, null]
+Internal Exception: java.lang.RuntimeException: Cant copy Serializable object:
+        at org.eclipse.persistence.exceptions.RemoteCommandManagerException.errorBindingConnection(RemoteCommandManagerException.java:90)
+        at org.eclipse.persistence.sessions.coordination.rmi.RMITransportManager.createLocalConnectionInJNDI(RMITransportManager.java:153)
+        at org.eclipse.persistence.sessions.coordination.rmi.RMITransportManager.createLocalConnection(RMITransportManager.java:128)
+        at org.eclipse.persistence.sessions.coordination.DiscoveryManager.run(DiscoveryManager.java:197)
+        at java.lang.Thread.run(Thread.java:662)
+Caused by: java.lang.RuntimeException: Cant copy Serializable object:
+        at com.sun.enterprise.naming.util.NamingUtilsImpl.makeCopyOfObject(NamingUtilsImpl.java:124)
+        at com.sun.enterprise.naming.impl.LocalSerialContextProviderImpl.rebind(LocalSerialContextProviderImpl.java:113)
+        at com.sun.enterprise.naming.impl.SerialContext.rebind(SerialContext.java:707)
+        at javax.naming.InitialContext.rebind(InitialContext.java:408)
+        at javax.naming.InitialContext.rebind(InitialContext.java:408)
+        at org.eclipse.persistence.sessions.coordination.rmi.RMITransportManager.createLocalConnectionInJNDI(RMITransportManager.java:150)
+        ... 3 more
+Caused by: java.io.NotSerializableException: org.eclipse.persistence.sessions.coordination.RemoteCommandManager
+        at java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1164)
+        at java.io.ObjectOutputStream.defaultWriteFields(ObjectOutputStream.java:1518)
+        at java.io.ObjectOutputStream.writeSerialData(ObjectOutputStream.java:1483)
+        at java.io.ObjectOutputStream.writeOrdinaryObject(ObjectOutputStream.java:1400)
+        at java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1158)
+        at java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:330)
+        at com.sun.enterprise.naming.util.NamingUtilsImpl.makeCopyOfObject(NamingUtilsImpl.java:104)
+        ... 8 more
+
+
+WORKAROUND:
+- Use JMSTransportManager (testcase includes appropriate build file and persistence.xml)
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+Testcase attached:
+org.eclipse.persistence.example.jpa.server.cachecoordination.glassfish.zip
+according to cache coordination example for WebLogic Server published at
+http://wiki.eclipse.org/EclipseLink/Examples/JPA/CacheCoordination
+
+1. Configure setEnv.sh/setEnv.cmd and build files (java, ant, database, glassfish)
+2. Build cluster with "ant create-cluster"
+3. Configure cluster with "ant setup-cluster"
+4. Build application with "ant build"
+5. Deploy application with "ant deploy"
+6. Run application client with "ant example"
+-> at $GF_HOME/glassfish/nodes/instance1/logs/server.log the NotSerializableException can be found.
+3.

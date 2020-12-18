@@ -1,0 +1,14 @@
+User-Agent:       Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3
+Build Identifier: Build id: 20090619-0625
+
+Method of SPDebugModelUtil "hasDebuggingThread" convers a situation that "hasProcInDebugging" not cover, describe as follow.
+
+"hasProcInDebugging" will return all ProcIdentifier name if SPThread has stack frames while SPThread without stack frames will be ignored. This way works for proc debugging which SPThread will always have stack frames.
+
+Developer who based on DTP may want to provide a functionality to debug a "external" connection. In most situation, this debug is like to procedure debuging like add a breakpoint, step. 
+There is a case that user just "attach" a connection(this connection could be "external" connection which is not established by DTP) which will create a SPThread, then try to disconnect from server without do any more debug actions. 
+In this case there is no stackframe in SPThread, so "hasProcInDebugging" will NOT record this SPThread, then connection profile could be disconnected without "detach" the debuging. This could cause an inconsistant state.
+
+The added method "hasDebuggingThread" try to record every SPThread, even there is no stack frame. For SPThread without stack frames, it will use the name of SPThread.
+
+Reproducible: Didn't try

@@ -1,0 +1,22 @@
+Build Identifier: 2.3.0
+
+In DDL creation constraints are created in unspecified order. This is very similar to https://bugs.eclipse.org/bugs/show_bug.cgi?id=330237.
+
+Fix: Change getUniqueConstraints in org.eclipse.persistence.internal.helper.DatabaseTable to create LinkedHashMap instead of HashMap:
+    public Map<String, List<List<String>>> getUniqueConstraints() {
+        if (this.uniqueConstraints == null) {
+            this.uniqueConstraints = new HashMap<String, List<List<String>>>();
+        }
+to
+    public Map<String, List<List<String>>> getUniqueConstraints() {
+        if (this.uniqueConstraints == null) {
+            this.uniqueConstraints = new LinkedHashMap<String, List<List<String>>>();
+        }
+
+Also changing foreignKeyMap in org.eclipse.persistence.tools.schemaframework.TableDefinition to LinkedHashMap would probably make sense for consistent ordering (note that clone also creates a new instance of the map).
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+Run schema generation several times (possibly on different machines) and compare the order of constraint creation clauses in the resulting SQL.

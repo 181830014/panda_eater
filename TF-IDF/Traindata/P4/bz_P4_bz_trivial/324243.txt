@@ -1,0 +1,39 @@
+>We are logging most of the entries in VendorNameToPlatformMapping.properties 
+- we should only log the success or lack of any match in FINEST logs
+
+>We log
+[EL Finest]: 2010-09-01 16:01:57.08--Thread(Thread[main,5,main])--DBPlatform: org.eclipse.persistence.platform.database.HSQLPlatform, RegularExpression: (?i)hsql.*.
+[EL Finest]: 2010-09-01 16:01:57.08--Thread(Thread[main,5,main])--DBPlatform: org.eclipse.persistence.platform.database.InformixPlatform, RegularExpression: (?i)informix.*.
+[EL Finest]: 2010-09-01 16:01:57.08--Thread(Thread[main,5,main])--DBPlatform: org.eclipse.persistence.platform.database.PointBasePlatform, RegularExpression: (?i)pointbase.*.
+[EL Finest]: 2010-09-01 16:01:57.08--Thread(Thread[main,5,main])--DBPlatform: org.eclipse.persistence.platform.database.DB2Platform, RegularExpression: (?i).*db2.*.
+[EL Finest]: 2010-09-01 16:01:57.08--Thread(Thread[main,5,main])--DBPlatform: org.eclipse.persistence.platform.database.SQLServerPlatform, RegularExpression: (?i)microsoft.*.
+[EL Finest]: 2010-09-01 16:01:57.08--Thread(Thread[main,5,main])--DBPlatform: org.eclipse.persistence.platform.database.PostgreSQLPlatform, RegularExpression: (?i)postgresql.*.
+[EL Finest]: 2010-09-01 16:01:57.08--Thread(Thread[main,5,main])--DBPlatform: org.eclipse.persistence.platform.database.H2Platform, RegularExpression: (?i)h2.*.
+[EL Finest]: 2010-09-01 16:01:57.08--Thread(Thread[main,5,main])--DBPlatform: org.eclipse.persistence.platform.database.SybasePlatform, RegularExpression: (?i)(sybase.*)|(adaptive server enterprise.*)|(SQL Server).
+[EL Finest]: 2010-09-01 16:01:57.08--Thread(Thread[main,5,main])--DBPlatform: org.eclipse.persistence.platform.database.FirebirdPlatform, RegularExpression: (?i)firebird.*.
+[EL Finest]: 2010-09-01 16:01:57.08--Thread(Thread[main,5,main])--DBPlatform: org.eclipse.persistence.platform.database.JavaDBPlatform, RegularExpression: (?i).*derby.
+[EL Fine]: 2010-09-01 16:01:57.08--Thread(Thread[main,5,main])--Detected Vendor platform: org.eclipse.persistence.platform.database.JavaDBPlatform
+[EL Config]: 2010-09-01 16:01:57.1--ServerSession(15218962)--Connection(14372770)--Thread(Thread[main,5,main])--connecting(DatabaseLogin(
+	platform=>JavaDBPlatform
+
+>We should log
+[EL Finest]: 2010-09-01 16:01:57.08--Thread(Thread[main,5,main])--DBPlatform: org.eclipse.persistence.platform.database.JavaDBPlatform, RegularExpression: (?i).*derby.
+[EL Fine]: 2010-09-01 16:01:57.08--Thread(Thread[main,5,main])--Detected Vendor platform: org.eclipse.persistence.platform.database.JavaDBPlatform
+[EL Config]: 2010-09-01 16:01:57.1--ServerSession(15218962)--Connection(14372770)--Thread(Thread[main,5,main])--connecting(DatabaseLogin(
+	platform=>JavaDBPlatform
+
+>Change DBPlatformHelper.matchVendorNameInProperties() from
+
+            if(logger.shouldLog(SessionLog.FINEST)) {
+                logger.log(SessionLog.FINEST, "dbPlatformHelper_regExprDbPlatform", regExpr, value); // NOI18N
+            }
+            if( matchPattern(regExpr, vendorName, logger) ) {
+                dbPlatform = value;
+            }
+>to
+            if( matchPattern(regExpr, vendorName, logger) ) {
+                dbPlatform = value;
+              if(logger.shouldLog(SessionLog.FINEST)) {
+                  logger.log(SessionLog.FINEST, "dbPlatformHelper_regExprDbPlatform", regExpr, value); // NOI18N
+              }
+            }

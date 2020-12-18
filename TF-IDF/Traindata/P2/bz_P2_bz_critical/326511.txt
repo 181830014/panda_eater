@@ -1,0 +1,15 @@
+Build Identifier: 2.0.0.v20091127-r5931, also tested with current 2.1.1 build
+
+When creating a new object and registering it in a nested UnitOfWork with registerNewObject the object is not inserted into the database after commit of all (nested and top-level) UOW.
+
+Using registerObject for all registrations is no option for us because of the performance impact of unnecessary existence checks.
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. acquire a top-level UOW from the session
+2. acquire a nested UOW
+3. create a new object
+4. register the new object on the nested UOW with registerNewObject
+5. commit nested UOW
+6. commit top-level UOW

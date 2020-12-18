@@ -1,0 +1,5 @@
+The CrossReferencer.getImports(Resource) method does not return all imported resources.  It returns only resources that have already been loaded.  Thus, this API is not useful for determining which other resources are referenced by a given resource (e.g., for dependency analysis).
+
+The cause of the problem is in the the fact that the setTarget() method does not handle proxies:  their eResource() is null.
+
+In fact, proxies readily provide import information because their URIs indicate the imported resource.

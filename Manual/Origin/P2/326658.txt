@@ -1,0 +1,34 @@
+Build Identifier: v20091127-r5931
+
+I have a class Person, which could have historic data, so for one person and id, i can have more than one entry in a table PERSON (this table is mapped to the calss Person).
+
+I define a ReportQuery to a Class Person like this:
+
+ExpressionBuilder aBuilder = new ExpressionBuilder();
+ReportQuery aReportQuery = new ReportQuery(aBuilder);
+aReportQuery.setReferenceClass(Person.class);
+aReportQuery.useCursoredStream();
+...
+
+After that, i define some attributes for selection. some of them, i also define in a group-by-clause.
+
+The origin SQL is like this:
+SELECT name, id from PERSON where name like 'A%' order by name, id group by name,  id
+
+I use the group-by-clause to get only one entry for the combination name, id (a distinct clause could also do this, but i used the group-by-clause).
+
+After executing the sql
+...
+getClientSession().executeQuery(aReportQuery);
+...
+i get a CursoredStream. I get the expected size from the cursor with cursoredStream.size(), which called CursoredStream.getCursorSize();
+This method doesn't supports the group-by-clause. So, the generated SQL looks like this:
+SELECT count(id) from PERSON where name like 'A%'
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Build an expression for a ReportQuery with a group-by-clause
+2. Execute the reportQuery an log the SQLs
+3. Get the expected size from the cursored stream and have a look at the logged SQL

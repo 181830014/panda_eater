@@ -1,0 +1,110 @@
+change "interchange set" to "interchange model" per http://www.w3.org/Bugs/Public/show_bug.cgi?id=5283
+
+Ensure "XML 1.0 (Second Edition)" is what the code actually supports.  It is more likely 4th edition, which is the latest http://www.w3.org/TR/xml
+
+"used to exchange SML models between other consumers" drop 'other' or change 'between' to 'with'
+
+Terms section
+- Definition entry
+  "A definition is one of two types of documents supported by SML-IF."
+  This suffers from the common implied fallacy that a document is of one and 
+  only one type.  This ignores derivation hierarchies, for the most obvious.
+  It is probably cleaner to talk to:
+  1. change the term to "Definition document" since that is the term SMLIF
+     defines
+  2. change "types of documents" to "document roles", i.e. a document can play
+     one or more roles.
+  3. Add a final period (full stop).
+- Instance entry
+  similar changes
+- SML repository entry
+  "The Import operation creates SML document files based on the top level 
+  resources..."
+  1. it also creates a metadata file for alias info
+  2. "resource" is not defined, nor is "top level".  Perhaps clearer to talk 
+     in terms of vocabulary defined in the spec and summarized earlier in the
+     same table, i.e. 
+     from: creates     SML document files based on the top level resources
+     to  : creates one SML document file  for each definition and instance 
+           document
+- SML validation entry and following 2 entries
+  1. Add a final period (full stop).
+- Domain model entry
+  1. It may confuse readers to see a mixture of terms defined by the specs
+     and terms defined by COSMOS in one place.  Please consider adding to each
+     entry a way to distinguish them... several possibilities come to mind.  I
+     am less concerned with the mechanics of how it is done than with the reader
+     being clear on where the authoritative definition exists.  If you elect to
+     hyperlink to the specs, there is a persistent link (similar to the one
+     provided above for XML 1.0 4th Ed) in the prolog of each spec.
+  2. This term is not defined in the specs.  Ditto for SML repository.
+  3. "The root of an SML-IF document."  Neither spec defines a "root".  Any
+     given model may have 0..n possible roots (using the commonly understood CS
+     definition) if one considers only SML references as edges.  The same is
+     almost certainly true if edges include URIs not also SML refs.
+  4. "Contains a set of definition an instance documents" an -> and
+
+SML Resources section
+- "W3C Architecture domain" - W3C wgs were re-org'd 7/2008.  SML moved to the "Ubiquitous Web" domain.  This is now reflected on the wg home page.
+- submission pointers: I think it would be more appropriate to link to the current Rec drafts (persistent URL provided in each spec header).  The submissions have NO normative standing and do not represent any consensus in the W3C community.  The submission drafts are linked to from the wg home page for anyone interested in seeing them.
+
+Opening an SML-IF document in an editor section
+- "Select File > Open... from the menu bar, and choose the file from the file system"
+  This suggests to me that a file with any filename extension (e.g., PDF) would
+  open using the SMLIF editor... seems unlikely.  If it happened to be file 
+  with XML content (e.g. an XSD), would that also work?  The reader is unsure.
+
+Overview section
+- "Name field is the namespace for the SML-IF document." this explanation seems
+  to conflict with the screenshot (which shows "smlif.xml" as the value, not
+  a namespace ... I realize that technically smlif.xml COULD be a ns URI, but
+  most readers will assume it is not.
+- "Base URI" "...for identifying a resource" while this is true in the web
+  architecture sense, until 'resource' is defined it is meaningless here.
+  In the context of SMLIF, this is the base URI used (if necessary) to
+  absolutize any relative URI references at lower levels.
+
+Documents section
+- suggestion (fewer "documents" words to confuse)
+  from: an SML-IF document  's definition and instance elements
+  to  : an interchange model's definition and instance          documents
+- "selecting a resource and" again, need to define resource somewhere
+  If you mean "Eclipse resource" or "Eclipse UI resource", defining that up
+  front might be the least disruptive solution.
+- "You can also view the subset of the SML-IF file that defines a document or 
+   instance element by selecting that element "  I think you want
+  from: document   or instance element 
+  to  : definition or instance         document
+- table, Documents entry
+  from: constraints (Schematron rule ) of the model
+  to  : constraints (Schematron rules) of the model
+
+Validating an SML-IF document
+- SML model validation is the process of verifying that all documents in a model are valid with respect to this special subset. The key contribution of SML to validation lies in
+  I'm not sure if you really want to say "SML validation" here.  The tool 
+  really exposes SML-IF validation, which is a superset of SML validation.
+  Alternatives include "SML-IF validation" and just removing "SML" so it
+  becomes vanilla "validation", hiding some of the spec complexity.
+
+Importing an SML-IF document into the repository
+- editorial
+  from:     Import operation divides an
+  to  : The Import operation divides an
+- editorial
+  from: SML repository is   directory structure 
+  to  : SML repository is a directory structure 
+- "each containing an SML resource" latter term is not defined by SML
+- Especially since the figures are "somewhat distant" from the text
+  from: Select File -> Import
+  to  : Select File -> Import, expand the Service Modeling Language sub-tree,
+        and select Interchange Format
+  (or, change it to be similar to the first bit under the Export heading, which
+  is clear enough for me)
+
+Exporting SML resources from the repository
+- "Select the folders or model units" 'model units' not defined
+- Table structure of Import was clearer I think that one is dealing with 3
+  alternatives
+- It sounds like rule bindings are added during export.  I hope they are 
+  actually part of the model, retained as metadata like aliases.  SML says
+  the bindings are part of the model, and is silent on the status of aliases.

@@ -1,0 +1,5 @@
+The whitetext preceding the first token in an INCLUDE file (token.getWhiteBefore()) is used to print the INCLUDE directive, which means that whitetext at the top of the INCLUDE file is lost.  This means that, if all tokens' preprocessor directives are set to null, the resulting text is not what one would expect if Fortran INCLUDE lines were simply replaced with their respective files' contents.
+
+Instead, preprocessor directives should have their own whitetext affixes, and the whitetext preceding the INCLUDE directive should (1) become the preceding whitetext for the directive at (2) be prepended to the preceding whitetext for the first token in the INCLUDE file.
+
+This should guarantee that source reproduction works correctly for refactoring while, at the same time, removing directives produces the correct expansion.

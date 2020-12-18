@@ -1,0 +1,13 @@
+Created attachment 231183 [details]
+Stateful EJB source
+
+I'm using a ScrollableCursor for pagination of results from complex read-only queries in a stateful EJB 3.1 session bean (GlassFish 3.1.2.2). Source code for the EJB is attached. The session bean's getPage(...) runs without transaction in order to keep the entitymanager open. The @Remove method however requires a transaction (closing entityManager) and closes the cursor. After about as many invocations of getPage() as my connection pool's max size, the following exceptions is thrown:
+
+Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.4.1.v20121003-ad44345): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLException: Error in allocating a connection. Cause: In-use connections equal max-pool-size and expired max-wait-time. Cannot allocate more connections.
+
+It seems that every call to getPage(...) opens a new JDBC connection. It would however seem to me that 
+* a single JDBC connection should be used throughout the lifetime of a single cursor
+* the connection should be given back to the pool upon @Remove
+
+Other than that, the bean works OK. DB is Mysql 5.6 with latest JDBC driver

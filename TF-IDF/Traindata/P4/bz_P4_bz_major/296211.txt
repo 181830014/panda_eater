@@ -1,0 +1,18 @@
+According to the spec
+http://java.sun.com/javaee/5/docs/api/javax/persistence/EntityManager.html#createNamedQuery%28java.lang.String%29
+
+an IllegalArgumentException should be thrown if the named query does not exist. However, EL will throw this exception only when the query is executed!
+
+This is how my sample code looks like:
+
+@final Query namedQuery = em.createNamedQuery(queryName);
+			if (namedQuery != null) {
+				try {
+					return namedQuery.getResultList();
+				} catch (final IllegalArgumentException e) {
+					// This is thrown if no such query with this name exists
+				}
+			}
+@ 
+
+Since this behaviour is not like in the spec, I suspect EL only checks the validity of the named query before its executed?

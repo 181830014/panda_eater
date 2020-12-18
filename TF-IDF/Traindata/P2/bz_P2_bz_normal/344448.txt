@@ -1,0 +1,42 @@
+Build Identifier: 2.0.0
+
+In an entity called Entity1, I have following mapping :
+
+	@ManyToMany
+	@MapKeyJoinColumn(name="entity2_id")
+	@JoinTable(joinColumns=@JoinColumn(name="entity1_id"), inverseJoinColumns=@JoinColumn(name="entity3_id"))
+	private Map<Entity2, Entity3> entities;
+
+In database, a table entity1_entity_3 is generated with 
+    entity1_id integer NOT NULL,
+    entity3_id integer NOT NULL,
+    entity2_id integer,
+  CONSTRAINT entity1_entity3_pkey PRIMARY KEY (entity1_id, entity3_id), ...
+
+I was expecting : 
+    entity1_id integer NOT NULL,
+    entity3_id integer NOT NULL,
+    entity2_id integer NOT NULL,
+  CONSTRAINT entity1_entity2_entity3_pkey PRIMARY KEY (entity1_id, entity2_id, entity3_id)
+or eventually,
+  CONSTRAINT entity1_entity2_pkey PRIMARY KEY (entity1_id, entity2_id)
+
+Because of the generated schema, we can't do this : 
+
+    Map<Entity2, Entity3> map = new HashMap<Entity2, Entity3>();
+    map.put(entity2A, entity3);
+    map.put(entity2B, entity3);	
+    entity1.setEntities(map);
+    entityManager.persist(entity1);
+
+It causes following error :
+    ERROR: duplicate key value violates unique constraint "entity1_entity3_pkey"
+
+The current generated schema is not coherent with standard use of a java.util.Map
+
+
+  
+
+
+
+Reproducible: Always

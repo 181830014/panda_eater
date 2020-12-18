@@ -1,0 +1,19 @@
+Created attachment 253818 [details]
+VSM exposing the self type issue.
+
+On Node and Container creation tools: the initial inferred value of var:self for the first model operation should be the same than var:container (See TaskHelper.buildTaskFromModelOperation callers)
+
+To reproduce: 
+ . expand in ShouldBeValid section
+ . in "Check Node variables types are infered"
+   . ChangeContext var:self
+     . ChangeContext var:self -> add a ChangeContext featureOwnedInteractions (like the var:container)
+
+ . in "Check variables types with multiple self types"
+   . ChangeContext var:self
+     . ChangeContext var:self -> add a ChangeContext featureOwnedInteractions (like the var:container)
+
+ . validate the section: the inferred type for self should be Model and not Interaction/Particant with the resulting "no ownedInteractions feature" validation error  error.
+
+
+Discovered during validation of Bug 465421

@@ -1,0 +1,47 @@
+Right now oracle specfic tests are working on GlassFish 4, but testFlushRollback() in ProxyAuthenticationServerTestSuite.java failed on GlassFish 4 with following error message. Talked with James about this, he said "the proxy failure seems expected, probably just create a known bug for it, proxy connections do not work with JTA in Glassfish"
+
+The error message is:
+
+javax.transaction.SystemException: org.omg.CORBA.INTERNAL: JTS5031: Exception [org.omg.CORBA.INTERNAL: vmcid: 0x0 minor code: 0 completed: Maybe] on Resource [rollback] operation. vmcid: 0x0 minor code: 0 completed: No 
+
+java.lang.RuntimeException: javax.transaction.SystemException: org.omg.CORBA.INTERNAL: JTS5031: Exception [org.omg.CORBA.INTERNAL: vmcid: 0x0 minor code: 0 completed: Maybe] on Resource [rollback] operation. vmcid: 0x0 minor code: 0 completed: No
+at org.eclipse.persistence.testing.framework.server.JEEPlatform.rollbackTransaction(JEEPlatform.java:97)
+at org.eclipse.persistence.testing.framework.junit.JUnitTestCase.rollbackTransaction(JUnitTestCase.java:374)
+at org.eclipse.persistence.testing.tests.jpa.proxyauthentication.ProxyAuthenticationServerTestSuite.testFlushRollback(ProxyAuthenticationServerTestSuite.java:324)
+at org.eclipse.persistence.testing.framework.junit.JUnitTestCase.runBareServer(JUnitTestCase.java:662)
+at org.eclipse.persistence.testing.framework.server.TestRunnerBean.runTest(TestRunnerBean.java:87)
+at org.glassfish.ejb.security.application.EJBSecurityManager.runMethod(EJBSecurityManager.java:1052)
+at org.glassfish.ejb.security.application.EJBSecurityManager.invoke(EJBSecurityManager.java:1124)
+at com.sun.ejb.containers.BaseContainer.invokeBeanMethod(BaseContainer.java:5324)
+at com.sun.ejb.EjbInvocation.invokeBeanMethod(EjbInvocation.java:624)
+at com.sun.ejb.containers.interceptors.AroundInvokeChainImpl.invokeNext(InterceptorManager.java:790)
+at com.sun.ejb.EjbInvocation.proceed(EjbInvocation.java:576)
+at com.sun.ejb.containers.interceptors.SystemInterceptorProxy.doAround(SystemInterceptorProxy.java:162)
+at com.sun.ejb.containers.interceptors.SystemInterceptorProxy.aroundInvoke(SystemInterceptorProxy.java:144)
+at com.sun.ejb.containers.interceptors.AroundInvokeInterceptor.intercept(InterceptorManager.java:851)
+at com.sun.ejb.containers.interceptors.AroundInvokeChainImpl.invokeNext(InterceptorManager.java:790)
+at com.sun.ejb.containers.interceptors.InterceptorManager.intercept(InterceptorManager.java:361)
+at com.sun.ejb.containers.BaseContainer.__intercept(BaseContainer.java:5296)
+at com.sun.ejb.containers.BaseContainer.intercept(BaseContainer.java:5284)
+at com.sun.ejb.containers.EJBObjectInvocationHandler.invoke(EJBObjectInvocationHandler.java:206)
+at com.sun.ejb.containers.EJBObjectInvocationHandlerDelegate.invoke(EJBObjectInvocationHandlerDelegate.java:79)
+at $Proxy514.runTest(Unknown Source)
+at com.sun.corba.ee.impl.presentation.rmi.ReflectiveTie.dispatchToMethod(ReflectiveTie.java:143)
+at com.sun.corba.ee.impl.presentation.rmi.ReflectiveTie._invoke(ReflectiveTie.java:173)
+at com.sun.corba.ee.impl.protocol.ServerRequestDispatcherImpl.dispatchToServant(ServerRequestDispatcherImpl.java:528)
+at com.sun.corba.ee.impl.protocol.ServerRequestDispatcherImpl.dispatch(ServerRequestDispatcherImpl.java:199)
+at com.sun.corba.ee.impl.protocol.MessageMediatorImpl.handleRequestRequest(MessageMediatorImpl.java:1624)
+at com.sun.corba.ee.impl.protocol.MessageMediatorImpl.handleRequest(MessageMediatorImpl.java:1486)
+at com.sun.corba.ee.impl.protocol.MessageMediatorImpl.handleInput(MessageMediatorImpl.java:990)
+at com.sun.corba.ee.impl.protocol.giopmsgheaders.RequestMessage_1_2.callback(RequestMessage_1_2.java:214)
+at com.sun.corba.ee.impl.protocol.MessageMediatorImpl.handleRequest(MessageMediatorImpl.java:742)
+at com.sun.corba.ee.impl.protocol.MessageMediatorImpl.dispatch(MessageMediatorImpl.java:539)
+at com.sun.corba.ee.impl.protocol.MessageMediatorImpl.doWork(MessageMediatorImpl.java:2321)
+at com.sun.corba.ee.impl.threadpool.ThreadPoolImpl$WorkerThread.performWork(ThreadPoolImpl.java:497)
+at com.sun.corba.ee.impl.threadpool.ThreadPoolImpl$WorkerThread.run(ThreadPoolImpl.java:540)
+Caused by: javax.transaction.SystemException: org.omg.CORBA.INTERNAL: JTS5031: Exception [org.omg.CORBA.INTERNAL: vmcid: 0x0 minor code: 0 completed: Maybe] on Resource [rollback] operation. vmcid: 0x0 minor code: 0 completed: No
+at com.sun.jts.jta.TransactionManagerImpl.rollback(TransactionManagerImpl.java:373)
+at com.sun.enterprise.transaction.jts.JavaEETransactionManagerJTSDelegate.rollbackDistributedTransaction(JavaEETransactionManagerJTSDelegate.java:220)
+at com.sun.enterprise.transaction.JavaEETransactionManagerSimplified.rollback(JavaEETransactionManagerSimplified.java:901)
+at com.sun.enterprise.transaction.UserTransactionImpl.rollback(UserTransactionImpl.java:234)
+at org.eclipse.persistence.testing.framework.server.JEEPlatform.rollbackTransaction(JEEPlatform.java:95)

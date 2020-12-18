@@ -1,0 +1,35 @@
+Build Identifier: 2.3.2.v20111125-r10461
+
+When creating a criteria query that return the value of an Oracle "TIMESTAMP WITH TIME ZONE" column, a "java.lang.ClassCastException: org.eclipse.persistence.internal.platform.database.oracle.TIMESTAMPTZWrapper cannot be cast to java.util.Calendar" occurs.
+
+Example:
+	final CriteriaBuilder builder = em.getCriteriaBuilder();
+	final CriteriaQuery<Calendar> query = builder.createQuery(Calendar.class);
+	final Root<TestEntity> root = query.from(TestEntity.class);
+	query.select(builder.greatest(root.get(TestEntity_.entityDate)));
+	// returned type should a Calendar not a TIMESTAMPTZWrapper. throws exception
+	final Calendar cal = em.createQuery(query).setMaxResults(1).getSingleResult();
+
+I've tried different Java types (Calendar and Date), Oracle JDBC drivers (OJDBC 11.2.0.3.0 and 10.2.0.4.0), and databases (Oracle Database 10g Release 10.2.0.4.0 - 64bit Production and Oracle Database 10g Express Edition Release 10.2.0.1.0) but the problem keep occurring.
+
+Calendars (and TIMESTAMPTZ) work in subqueries and parameters. A workaround it to create a generic Object criteria query and create the calendar from the TIMESTAMPTZWrapper.
+
+Example workaround:
+	final CriteriaBuilder builder = em.getCriteriaBuilder();
+	final CriteriaQuery<Object> query = builder.createQuery();
+	final Root<TestEntity> root = query.from(TestEntity.class);
+	query.select(builder.greatest(root.get(TestEntity_.entityDate)));
+	// returned type should a Calendar not a TIMESTAMPTZWrapper
+	final TIMESTAMPTZWrapper wrapper = (TIMESTAMPTZWrapper) em.createQuery(query).setMaxResults(1).getSingleResult();
+	final Calendar cal = Calendar.getInstance();
+	cal.setTimeInMillis(wrapper.getTimestamp().getTime());
+	cal.setTimeZone(wrapper.getTimeZone());
+
+See attached example project.
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Download attached project, extract and import into Eclipse
+2. Update the the connection details in the "/EclipselinkBug/src/META-INF/persistence.xml" file accordingly
+3. Run the bug.eclipselink.TestBug class as a Java Application

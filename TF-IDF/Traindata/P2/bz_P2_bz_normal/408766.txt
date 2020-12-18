@@ -1,0 +1,31 @@
+When joining via a condition using the JOIN-ON syntax the query parser gives an error:  "java.lang.IllegalArgumentException: Bad Query" if the first condition after the WHERE is from the joined class rather than the selected class.
+
+Example 1:  This query works:
+
+select distinct r
+from JpaRole r
+join JpaRoleAction xref on (r.id=xref.roleId)
+where (  
+    r.id > 0 
+ and xref.actionId = 21673
+ )
+
+Example 2:  This query does not work:
+
+select distinct r
+from JpaRole r
+join JpaRoleAction xref on (r.id=xref.roleId)
+where (  
+    xref.actionId = 21673
+    and r.id > 0
+ )
+
+
+Example 3:  This query does not work:
+
+select distinct r
+from JpaRole r
+join JpaRoleAction xref on (r.id=xref.roleId)
+where (  
+    xref.actionId = 21673
+ )

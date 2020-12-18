@@ -1,0 +1,27 @@
+When running a groovy script in EASE I get a:
+NoClassDefFoundError: org/eclipse/jdt/core/IJavaProject.
+MultiClassLoader should override loadClass(String name, boolean resolve) for this to work. See explanation below. 
+
+java.lang.NoClassDefFoundError: org/eclipse/jdt/core/IJavaProject
+	at Script.getJavaProjectSelection(Script.groovy:27)
+	at Script.run(Script.groovy:16)
+	at groovy.lang.GroovyShell.evaluate(GroovyShell.java:522)
+	at org.eclipse.ease.lang.groovy.interpreter.GroovyScriptEngine.execute(GroovyScriptEngine.java:72)
+	at org.eclipse.ease.AbstractScriptEngine.inject(AbstractScriptEngine.java:239)
+	at org.eclipse.ease.AbstractScriptEngine.run(AbstractScriptEngine.java:301)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.lang.ClassNotFoundException: org.eclipse.jdt.core.IJavaProject
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at groovy.lang.GroovyClassLoader.loadClass(GroovyClassLoader.java:726)
+	at groovy.lang.GroovyClassLoader$InnerLoader.loadClass(GroovyClassLoader.java:481)
+	at groovy.lang.GroovyClassLoader.loadClass(GroovyClassLoader.java:836)
+	at groovy.lang.GroovyClassLoader.loadClass(GroovyClassLoader.java:824)
+	... 7 more
+
+The following happens:
+GroovyScriptEngine is constructing a GroovyShell with MultiClassLoader which contains the EaseClassLoader.
+
+GroovyShell is wrapping the given MultiClassLoader in a GroovyClassLoader.
+
+When GroovyClassLoader is asked to load a class with loadClass(name) it will call super.loadClass(name, resolve) on the MultiClassLoader. Because this is not overriden it will skip the additional EaseClassLoader and thus not find the classes from the running eclipse platform.

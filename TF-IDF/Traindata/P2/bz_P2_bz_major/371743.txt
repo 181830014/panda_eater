@@ -1,0 +1,92 @@
+Build Identifier: 2.1.3
+
+Assume we have an entity having 3 Basic-Mappings:
+  Address(ID, firstName, lastName, Street) --> where firstName is defined lazy
+
+1. start Transaction
+2. loading the entity results in the following SQL (loading the default fetchgroup)
+  --> SQL: select ID, LAST_NAME, STREET from ADDRESS where ID = 1
+  --> Content {1, <unloaded>, 'Shaumway', 'Anystreet'}
+3. change the lastName --> Address.setLastName("Shumway")
+  --> Content {1, <unloaded>, 'Shumway', 'Anystreet'}
+4. calling firstName --> Address.getFirstName()
+  --> SQL: select ID, FIRST_NAME, LAST_NAME, STREET from ADDRESS where ID = 1
+  --> Content {1, 'Gordon', 'Shaumway', 'Anystreet'}
+
+The in-transaction changed data was overwritten, on the first access of the lazy-field!
+
+As an example here is my fixed version of the class org.eclipse.persistence.queries.FetchGroup, that solves the problem. 
+It triggers a query on access of the first lazy field, that selects all unloaded fields at once. I think that's what the framework should do.
+This example stores an "inverse default fetchgroup" for all of the lazy-fields - not belonging to default fetchgroup. The real solution of this example should be realized in FetchgroupManager, that calculates the inverse fetchgroup at init time.
+
+ public static final String INVERSE_DEFAULT_FETCHGROUP = "_inverseDefault";
+
+ public String onUnfetchedAttribute(FetchGroupTracker entity, String attributeName) {
+        ReadObjectQuery query = new ReadObjectQuery(entity);
+        query.setShouldUseDefaultFetchGroup(false);
+        Session session = entity._persistence_getSession();
+        boolean shouldLoadResultIntoSelectionObject = false;
+        if (session.isUnitOfWork()) {
+            shouldLoadResultIntoSelectionObject = !((UnitOfWork) session).isObjectRegistered(entity);
+        } else {
+            shouldLoadResultIntoSelectionObject = !session.getIdentityMapAccessor().containsObjectInIdentityMap(entity);
+        }
+
+        boolean useInverseFG = false;
+        if (shouldLoadResultIntoSelectionObject) {
+            // entity is not in the cache.
+            // instead of updating object in the cache update entity directly.
+            query.setShouldLoadResultIntoSelectionObject(true);
+            // and ignore cache
+            query.dontCheckCache();
+            query.setShouldMaintainCache(false);
+            // To avoid infinite loop clear the fetch group right away.
+            entity._persistence_setFetchGroup(null);
+            entity._persistence_setSession(null);
+        } else if (attributeName != null) {
+            FetchGroupManager fgm = session.getClassDescriptor(entity.getClass()).getFetchGroupManager();
+            if (fgm.getDefaultEntityFetchGroup().equals(this)) {
+                fgm.getFetchGroups(); // internal bug - create Map on demand, otherwise NPE
+                FetchGroup inverseFetchGroup = fgm.getFetchGroup(INVERSE_DEFAULT_FETCHGROUP);
+                if (inverseFetchGroup == null) {
+                    Set<String> allAttributes = fgm.createFullFetchGroup().getAttributeNames();
+                    allAttributes.removeAll(getAttributeNames());
+
+                    inverseFetchGroup = new FetchGroup(INVERSE_DEFAULT_FETCHGROUP);
+                    inverseFetchGroup.addAttributes(allAttributes);
+                    fgm.addFetchGroup(inverseFetchGroup);
+                }
+
+                if (!inverseFetchGroup.getItems().isEmpty()) {
+                    query.setFetchGroup(inverseFetchGroup);
+                    useInverseFG = true;
+                }
+            }
+        }
+
+        Object result = session.executeQuery(query);
+
+        if (useInverseFG) {
+            entity._persistence_setFetchGroup(null);
+        }
+
+        if (result == null) {
+            Object[] args = {query.getSelectionId()};
+            // the object was not found in the db end exception will be thrown - restore the fetch group back.
+            if (shouldLoadResultIntoSelectionObject) {
+                entity._persistence_setFetchGroup(this);
+                entity._persistence_setSession(session);
+            }
+            return ExceptionLocalization.buildMessage("no_entities_retrieved_for_get_reference", args);
+        }
+        return null;
+    }
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. define at least one basic-mapping lazy (@Basic(fetch=FetchType.LAZY))
+2. load the entity
+3. change at least one property (basic mapping that is defined EAGER)
+4. call getter of the lazily defined attribute

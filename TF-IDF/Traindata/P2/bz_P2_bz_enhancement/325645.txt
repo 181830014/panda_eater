@@ -1,0 +1,18 @@
+I am splitting up bug 314949 into 2 bugs.
+
+EclipseLink defaults the joinColumns to id->id and id2->id2:
+
+@Entity
+@IdClass(BarIdClass.class)
+public class Bar {
+@Id
+private int id;
+@Id
+private int id2;
+
+@ElementCollection    
+@CollectionTable(name="Foo")
+private Map<String, String> foo;
+}
+
+If you are to specify any part of the CollectionTable joinColumns then you have to fully specify them, EclipseLink throws a validation error otherwise.

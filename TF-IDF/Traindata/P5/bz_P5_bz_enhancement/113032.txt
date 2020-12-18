@@ -1,0 +1,18 @@
+If a signature specifies a known method with a wrong return type for the 
+signature that's definitely worth an Xlint warning. E.g., this program compiles 
+without a complaint then produces no output. Change the void to boolean for the 
+signature in the call pointcut and it works. This should produce a compiler 
+warning by default...
+
+public aspect WarnOnWrongReturn {
+    before(Thread hook) : call(void Runtime.removeShutdownHook(*)) && args
+(hook) {
+         System.out.println("removing");
+    }
+
+    public static void main(String args[]) {
+	Thread thread = new Thread();
+	Runtime.getRuntime().addShutdownHook(thread);
+	Runtime.getRuntime().removeShutdownHook(thread);
+    }
+}

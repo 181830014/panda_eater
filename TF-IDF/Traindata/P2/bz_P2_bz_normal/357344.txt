@@ -1,0 +1,48 @@
+when using jpa query with dynamic fetch groups the cursor result does not work
+
+Steps: 
+
+1) Create a jpa query "select .... " 
+2) Add a dynamic fecth group 
+
+FetchGroup fg = new FetchGroup("default");
+fg.setShouldLoad(true);
+// add attributes
+query.setHint(QueryHints.FETCH_GROUP, fg);
+
+3) Read with cursor:
+
+query.setHint(QueryHints.CURSOR, true)
+.setHint(QueryHints.CURSOR_INITIAL_SIZE, 30)
+.setHint(QueryHints.CURSOR_PAGE_SIZE, 30)
+.setHint(QueryHints.READ_ONLY, HintValues.TRUE)
+.setFirstResult(bld.getResultStart())
+.setMaxResults(bld.getResultSize());
+			
+Cursor c = query.unwrap(JpaQuery.class).getResultCursor();		
+
+ - The cursor works if no fetch-group is specified
+ - With fetch-group works the regular .getResultList();
+
+
+
+The error log: 
+
+
+
+
+java.lang.NullPointerException 
+[2011-09-03 16:12:02.974] ERROR "http-bio-8089"-exec-2       System.err                                                        	at org.eclipse.persistence.internal.sessions.AbstractSession$1.iterate(AbstractSession.java:4530) 
+[2011-09-03 16:12:02.974] ERROR "http-bio-8089"-exec-2       System.err                                                        	at org.eclipse.persistence.internal.descriptors.DescriptorIterator.startIterationOn(DescriptorIterator.java:666) 
+[2011-09-03 16:12:02.974] ERROR "http-bio-8089"-exec-2       System.err                                                        	at org.eclipse.persistence.internal.sessions.AbstractSession.load(AbstractSession.java:4559) 
+[2011-09-03 16:12:02.974] ERROR "http-bio-8089"-exec-2       System.err                                                        	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeDatabaseQuery(ObjectLevelReadQuery.java:1114) 
+[2011-09-03 16:12:02.974] ERROR "http-bio-8089"-exec-2       System.err                                                        	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:829) 
+[2011-09-03 16:12:02.975] ERROR "http-bio-8089"-exec-2       System.err                                                        	at org.eclipse.persistence.queries.ObjectLevelReadQuery.execute(ObjectLevelReadQuery.java:1056) 
+[2011-09-03 16:12:02.975] ERROR "http-bio-8089"-exec-2       System.err                                                        	at org.eclipse.persistence.queries.ReadAllQuery.execute(ReadAllQuery.java:390) 
+[2011-09-03 16:12:02.975] ERROR "http-bio-8089"-exec-2       System.err                                                        	at org.eclipse.persistence.internal.sessions.AbstractSession.internalExecuteQuery(AbstractSession.java:2816) 
+[2011-09-03 16:12:02.975] ERROR "http-bio-8089"-exec-2       System.err                                                        	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1501) 
+[2011-09-03 16:12:02.975] ERROR "http-bio-8089"-exec-2       System.err                                                        	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1483) 
+[2011-09-03 16:12:02.975] ERROR "http-bio-8089"-exec-2       System.err                                                        	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1457) 
+[2011-09-03 16:12:02.975] ERROR "http-bio-8089"-exec-2       System.err                                                        	at org.eclipse.persistence.internal.jpa.EJBQueryImpl.executeReadQuery(EJBQueryImpl.java:485) 
+[2011-09-03 16:12:02.975] ERROR "http-bio-8089"-exec-2       System.err                                                        	at org.eclipse.persistence.internal.jpa.EJBQueryImpl.getResultCursor(EJBQueryImpl.java:661) 
+[2011-09-03 16:12:02.975] ERROR "http-bio-8089"-exec-2       System.err                                                        	at net.nan21.dnet.core.presenter.service.AbstractDsService.doExport(AbstractDsService.java:450)

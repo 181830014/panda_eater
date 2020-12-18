@@ -1,0 +1,209 @@
+Since some of our ImageData users are apparently performing block
+	image transfers in user code, we should offer them an easier solution.
+	Moreover, this would provide an elegant means of converting ImageData's
+	between data formats for easier manipulation.  For instance, transforming an
+	image loaded as a 256 color GIF into a suitable candidate for RGB-based
+	photo editing.  Doing this now is very difficult.
+
+	A sample (untested) implementation follows.  It makes use of recently
+	enhanced internal blitter functionality in ImageData and exposes only what is
+	now available.
+
+NOTES:
+
+/**
+ * Copies a portion of the receiver into the supplied
+ * destination ImageData.
+ * <p>
+ * If the absolute value of the destination width or
+ * height differs from that of the source, the image is
+ * stretched or shrunked accordingly to fit.
+ * </p><p>
+ * The top-left coordinate of the source region is at
+ * [min(srcX, srcX + srcWidth), min(srcY, srcY + srcHeight)]<br>
+ * The bottom-right coordinate of the source region is at
+ * [max(srcX - 1, srcX + srcWidth - 1), max(srcY - 1, srcY + srcWidth - 1)]<br>
+ * If either the width or height is negative, the pixels
+ * of the source region will be inverted along the
+ * associated axis before copying.<br>
+ * The same rules apply for the destination region.
+ * </p><p>
+ * If both the source width and destination width are
+ * negative, no inversion will be performed along the
+ * the vertical axis; similarly for the source height
+ * and destination height.
+ * </p><p>
+ * The blitter operation is a combination of the following
+ * flags:<ul>
+ *   <li>BLIT_SRC copy the source pixels exactly
+ *          (must be specified, there may be other
+ *          mechanisms available in the future)
+ *   <li>BLIT_ALPHA perform alpha blending or transparency
+ *          masking
+ *   <li>BLIT_DITHER perform error-diffusion dithering on
+ *          low color destinations (hint)
+ * </ul>
+ * Typically one would specify BLIT_SRC | BLIT_ALPHA.
+ * </p><p>
+ * Blitting overlapping regions on the same ImageData
+ * is supported (but may be slower).
+ * </p>
+ *
+ * @param dest the destination ImageData into which a
+ *        portion of the receiver will be copied
+ * @param blitOp the blitter operation to be performed
+ * @param srcX the X coordinate defining the source region
+ * @param srcY the Y coordinate defining the source region
+ * @param srcWidth the width of the source region, may be negative
+ * @param srcHeight the height of the source region, may be negative
+ * @param destX the X coordinate defining the destination region
+ * @param destY the Y coordinate defining the destination region
+ * @param destWidth the width of the destination region, may be negative
+ * @param destHeight the height of the destination region, may be negative
+ */
+public void blitTo(ImageData dest, int blitOp,
+	int srcX, int srcY, int srcWidth, int srcHeight,
+	int destX, int destY, int destWidth, int destHeight) {
+	boolean flipX = srcWidth < 0;
+	if (flipX) { srcX += srcWidth; srcWidth = - srcWidth; }
+	if (destWidth < 0) { flipX = ! flipX; destX += destWidth; destWidth = - destWidth; }
+
+	boolean flipY = srcHeight < 0;
+	if (flipY) { srcY += srcHeight; srcHeight = - srcHeight; }
+	if (destHeight < 0) { flipY = ! flipY; destY += destHeight; destHeight = - destHeight; }
+
+	if (dest == null) SWT.error(SWT.ERROR_NULL_ARGUMENT);
+	if ((srcX < 0) || (srcX + srcWidth > this.width) ||
+		(srcY < 0) || (srcY + srcHeight > this.height) ||
+		(destX < 0) || (destX + destWidth > dest.width) ||
+		(destY < 0) || (destY + destHeight > dest.height)) SWT.error(SWT.ERROR_INVALID_ARGUMENT);
+
+	// Handle alpha and transparency
+	int alphaOp = ALPHA_OPAQUE;
+	byte[] alphaData = null;
+	int alphaStride = 0;
+	if ((blitOp & BLIT_ALPHA) != 0) {
+		if (maskData != null) {
+			alphaOp = ALPHA_MASK_PACKED;
+			alphaData = this.maskData;
+			final int bpl = (this.width + 7) / 8;
+			alphaStride = (bpl + (this.maskPad - 1)) / this.maskPad * this.maskPad;
+		} else if (transparentPixel != -1) {
+			if (this.palette.isDirect) {
+				alphaOp = ALPHA_MASK_RGB;
+				alphaData = new byte[] {
+					getChannelField(this.transparentPixel, this.palette.redMask),
+					getChannelField(this.transparentPixel, this.palette.greenMask),
+					getChannelField(this.transparentPixel, this.palette.blueMask)
+				};
+			} else {
+				alphaOp = ALPHA_MASK_INDEX;
+				alphaData = new byte[] { (byte)this.transparentPixel };
+			}
+			alphaStride = 0;
+		} else if (alpha != -1) {
+			alphaOp = alpha;
+			alphaData = null;
+			alphaStride = 0;
+		} else if (alphaData != null) {
+			alphaOp = ALPHA_CHANNEL_SEPARATE;
+			alphaData = this.alphaData;
+			alphaStride = this.width;
+		}
+		if (alphaOp == ALPHA_OPAQUE) blitOp &= ~BLIT_ALPHA;
+		else if (alphaOp == ALPHA_TRANSPARENT) return;
+	}
+
+	// Handle overlapping regions (a bit bogus)
+	final byte[] srcData;
+	if ((srcX + srcWidth < destX) || (destX + destWidth < srcX) ||
+		(srcY + srcHeight < destY) || (destY + destHeight < srcY)) {
+		// regions are disjoint
+		srcData = this.data;
+	} else {
+		// regions overlap
+		srcData = new byte[srcHeight * this.bytesPerLine];
+		System.arraycopy(this.data, srcY * this.bytesPerLine, srcData, 0, srcData.length);
+		srcY = 0;
+	}
+	
+	// Do the blit
+	if (this.palette.isDirect) {
+		if (dest.palette.isDirect) {
+			blit(blitOp,
+				srcData, this.depth, this.bytesPerLine, this.getByteOrder(),
+				srcX, srcY, srcWidth, srcHeight,
+				this.palette.redMask, this.palette.greenMask, this.palette.blueMask,
+				alphaOp, alphaData, alphaStride,
+				dest.data, dest.depth, dest.bytesPerLine, dest.getByteOrder(),
+				destX, destY, destWidth, destHeight,
+				dest.palette.redMask, dest.palette.greenMask, dest.palette.blueMask,
+				flipX, flipY);
+		} else {
+			final int destPaletteSize = 1 << dest.depth;
+			final byte[] destReds = new byte[destPaletteSize];
+			final byte[] destGreens = new byte[destPaletteSize];
+			final byte[] destBlues = new byte[destPaletteSize];
+			for (int i = Math.min(destPaletteSize, dest.palette.colors.length) - 1; i >= 0; --i) {
+				final RGB rgb = dest.palette.colors[i];
+				destReds[i] = (byte)rgb.red; destGreens[i] = (byte)rgb.green; destBlues[i] = (byte)rgb.blue;
+			}
+			blit(blitOp,
+				srcData, this.depth, this.bytesPerLine, this.getByteOrder(),
+				srcX, srcY, srcWidth, srcHeight,
+				this.palette.redMask, this.palette.greenMask, this.palette.blueMask,
+				alphaOp, alphaData, alphaStride,
+				dest.data, dest.depth, dest.bytesPerLine, dest.getByteOrder(),
+				destX, destY, destWidth, destHeight,
+				destReds, destGreens, destBlues,
+				flipX, flipY);
+		}
+	} else {
+		final int srcPaletteSize = 1 << this.depth;
+		final byte[] srcReds = new byte[srcPaletteSize];
+		final byte[] srcGreens = new byte[srcPaletteSize];
+		final byte[] srcBlues = new byte[srcPaletteSize];
+		for (int i = Math.min(srcPaletteSize, this.palette.colors.length) - 1; i >= 0; --i) {
+			final RGB rgb = this.palette.colors[i];
+			srcReds[i] = (byte)rgb.red; srcGreens[i] = (byte)rgb.green; srcBlues[i] = (byte)rgb.blue;
+		}
+		if (dest.palette.isDirect) {
+			blit(blitOp,
+				srcData, this.depth, this.bytesPerLine, this.getByteOrder(),
+				srcX, srcY, srcWidth, srcHeight,
+				srcReds, srcGreens, srcBlues,
+				alphaOp, alphaData, alphaStride,
+				dest.data, dest.depth, dest.bytesPerLine, dest.getByteOrder(),
+				destX, destY, destWidth, destHeight,
+				dest.palette.redMask, dest.palette.greenMask, dest.palette.blueMask,
+				flipX, flipY);
+		} else {
+			final byte[] destReds;
+			final byte[] destGreens;
+			final byte[] destBlues;
+			if ((this.depth <= dest.depth) && (this.palette.colors == dest.palette.colors)) {
+				destReds = srcReds;
+				destGreens = srcGreens;
+				destBlues = srcBlues;
+			} else {		
+				final int destPaletteSize = 1 << this.depth;
+				destReds = new byte[destPaletteSize];
+				destGreens = new byte[destPaletteSize];
+				destBlues = new byte[destPaletteSize];
+				for (int i = Math.min(destPaletteSize, this.palette.colors.length) - 1; i >= 0; --i) {
+					final RGB rgb = this.palette.colors[i];
+					destReds[i] = (byte)rgb.red; destGreens[i] = (byte)rgb.green; destBlues[i] = (byte)rgb.blue;
+				}
+			}
+			blit(blitOp,
+				srcData, this.depth, this.bytesPerLine, this.getByteOrder(),
+				srcX, srcY, srcWidth, srcHeight,
+				srcReds, srcGreens, srcBlues,
+				alphaOp, alphaData, alphaStride,
+				dest.data, dest.depth, dest.bytesPerLine, dest.getByteOrder(),
+				destX, destY, destWidth, destHeight,
+				destReds, destGreens, destBlues,
+				flipX, flipY);
+		}
+	}
+}

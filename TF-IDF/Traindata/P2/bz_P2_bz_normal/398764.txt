@@ -1,0 +1,16 @@
+When an entity is annotated to use a generated id, it is possible to get the next sequence value with this call:
+
+Long id = entityManager.unwrap(Session.class).getNextSequenceNumberValue(domainClass);
+
+But EclipseLink supports also custom sequence generators as explained here:
+http://wiki.eclipse.org/EclipseLink/Examples/JPA/CustomSequencing#Using_the_Sequence
+and if a custom sequence generator is used that generates a sequence value which is not a number (for example an UUID as in the wiki example), the above method for obtaining the next sequence number value cannot be used anymore, because it forces the returned object to be a subtype of Number.
+
+The Session class should probably offer a second method for all non-number sequence values, for example: getNextSequenceValue() which returns an Object, leaving the down-cast to the caller.
+
+
+A work-around to the problem exists: 
+
+entityManager.unwrap(JpaEntityManager.class).getServerSession().getSequencing().getNextValue(domainClass);
+
+but seems to require the usage of non API classes.

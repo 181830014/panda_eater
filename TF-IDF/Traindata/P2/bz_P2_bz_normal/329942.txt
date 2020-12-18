@@ -1,0 +1,11 @@
+Build Identifier: 2.1.1
+
+ClassDescriptor.getInheritancePolicy() lazily instantiates inheritancePolicy without checking whether such a policy should in fact be created.  Ordinarily this is fine, but in extraordinary circumstances it can ruin the whole persistence context.  We're using Spring-Flex to tie a Flex frontend to an EclipseLink persistance graph.  If a org.eclipse.persistence.exceptions.DatabaseException is thrown and not caught, Spring-Flex will attempt to serialize it and return it to the client.  As part of the AMF serialization process, all the exception's properties are introspected, including inheritancePolicy, which causes a fake InheritancePolicy to be created.  Subsequent uses of the persistence graph result in a null pointer in AbstractRecord.get() because the broken InheritancePolicy has a null classIndicatorField.
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Create a "Hello world" project using Spring-Flex and Eclipselink
+2. Create a broken finder query, e.g. 'SELECT o FROM Foo o WHERE o.bar in ?' without setting the ? param
+3. Invoke the finder... you'll get a DatabaseException
+4. Try to invoke findByPrimaryKey or really any persistence operation.  They'll all fail on an NPE.

@@ -1,0 +1,20 @@
+Query query = EntitiManager.createQuery("SELECT c FROM ContactHO WHERE c.companyId = :companyId ORDER BY c.firstNameNorm, c.lastNameNorm ASC");
+
+The EclipseLink debug looks fine:
+
+19:24:54.181 10:00:52,329 FINE [org.eclipse.persistence.session.vfs:/D:/server/jboss-as-7.1.1.Final/bin/content/module-1-SNAPSHOT.war/WEB-INF/classes/_mongo.sql] (http--127.0.0.1-8180-1) Executing MappedInteraction()
+spec => null
+properties => {mongo.collection=CONTACTHO, mongo.limit=10, mongo.operation=FIND}
+input => [DatabaseRecord(
+CONTACTHO.COMPANYID => 5893435701058912613
+$sort => DatabaseRecord(
+CONTACTHO.LASTNAME => 1
+CONTACTHO.FIRSTNAME => 1))]
+
+but the the resulting sort order is mixed up:
+
+Thu Jun 27 19:24:54.186 [conn21] runQuery called siba.CONTACTHO { $query: { COMPANYID: 5894184253551005013 }, $orderby: { LASTNAMENORM: 1, FIRSTNAMENORM: 1 } }
+
+DataBaseRecord preserves ordering by using Vector's for fields and values, which MongoRecord does not care for, its just a HashMap and fields get "ordered" by their hashCode.
+
+MongoRecord hasnt changed in latest 2.5.1 or 2.6 releases/snapshots, so probably this problem still exists in these versions as well.

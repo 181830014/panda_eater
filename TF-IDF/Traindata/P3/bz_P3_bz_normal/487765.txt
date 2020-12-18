@@ -1,0 +1,41 @@
+Using latest code from: "git.eclipse.org/gitroot/paho/org.eclipse.paho.mqtt.golang.git"
+
+The example stdoutsub.go doesn't specify the PingTimeout option.  The method the ClientOptions structure is assigned does not supply default values.   Therefore, PingTimeout is 0.   That is causing random disconnects immediately after a KeepAlive packet is sent.
+
+Once it disconnects the process does not receive any more messages.
+
+Steps:
+$ mosquitto -v
+1455307666: mosquitto version 1.4.7 (build date 2015-12-27 20:21:31+0000) starting
+1455307666: Using default config.
+1455307666: Opening ipv4 listen socket on port 1883.
+1455307666: Opening ipv6 listen socket on port 1883.
+1455307671: New connection from 192.168.1.42 on port 1883.
+1455307671: New client connected from 192.168.1.42 as springhouse51 (c1, k30).
+1455307671: Sending CONNACK to springhouse51 (0, 0)
+1455307671: Received SUBSCRIBE from springhouse51
+1455307671: 	# (QoS 0)
+1455307671: springhouse51 0 #
+1455307671: Sending SUBACK to springhouse51
+1455307701: Received PINGREQ from springhouse51
+1455307701: Sending PINGRESP to springhouse51
+1455307701: Socket error on client springhouse51, disconnecting.
+
+$ ./stdoutsub 
+Connected to tcp://springhouse:1883
+[Process does not end, just does not print any more MQTT messages]
+
+This fix works for me:  (setting to default value listed in options.go)
+
+diff --git a/samples/stdoutsub.go b/samples/stdoutsub.go
+index a6b058d..5e6cb74 100644
+--- a/samples/stdoutsub.go
++++ b/samples/stdoutsub.go
+@@ -63,6 +63,7 @@ func main() {
+                Password:             *password,
+                MaxReconnectInterval: 1 * time.Second,
+                KeepAlive:            30 * time.Second,
++               PingTimeout:          10 * time.Second,
+                TLSConfig:            tls.Config{InsecureSkipVerify: true, ClientAuth: tls.NoClientCert},
+        }
+        connOpts.AddBroker(*server)

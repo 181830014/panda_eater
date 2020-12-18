@@ -1,0 +1,70 @@
+Scenario:
+
+Calling PLSQLStoredProcedure returning some record and having simple mapping for PLSQLStoredProcedureCall, i.e.
+
+@PLSQLRecord(name="FOO_TYPE", compatibileType="FOO_TYPE", ...)
+@Struct(name="FOO_TYPE",fields={"BARS"})
+class Foo {
+
+   @ARRAY(databaseType="BAR_TYPE",targetClass=Bar.class)
+   @Column(name="BARS")
+   List<Bar> bars;
+
+   ...
+}
+
+@Embeddable
+@Struct(name="BAR_TYPE", fields={"FIELD"})
+class Bar {
+
+    @Column(name="FIELD")
+    String field;
+
+}
+
+when ObjectRelationalDataTypeDescriptor receives collection of bars
+
+1: Struct@2355
+2: Struct@546
+3: null
+
+it returns empty collection, which is not proper behaviour - is it ?
+
+This is caused by method buildNestedRowsFromFieldValue:
+
+ (..)
+       Vector nestedRows = new Vector(structs.length);
+        for (int i = 0; i < structs.length; i++) {
+            Object[] struct = (Object[])structs[i];
+            if (struct == null) {
+                return null;
+            }
+   (..)
+
+Code snippet from ObjectRelationalDataTypeDescriptor: 
+
+ /**
+     * INTERNAL:
+     * Build and return the nested rows from the specified field value.
+     * The field value better be an ARRAY.
+     */
+    public Vector buildNestedRowsFromFieldValue(Object fieldValue, AbstractSession session) throws DatabaseException {
+        
+        if(fieldValue==null){
+            return null;
+        }
+        
+        Object[] structs = (Object[])fieldValue;
+
+        Vector nestedRows = new Vector(structs.length);
+        for (int i = 0; i < structs.length; i++) {
+            Object[] struct = (Object[])structs[i];
+            if (struct == null) {
+                return null;
+            }
+            nestedRows.addElement(this.buildNestedRowFromFieldValue(struct));
+        }
+        return nestedRows;
+    }
+
+{code}

@@ -1,0 +1,9 @@
+20060120
+
+We the recent change of a new option to ICompilationUnit.reconcile (recovery option) we could use the opportunity to solve a different problem we have with reconcile.
+
+Reconcile allows to specify if an AST is wanted and what level it should get (and if it should contain recovery). Many users use reconcile and don't really care for an AST. The Java editor however listens for the delta to get the AST from it (new API addeed for 3.2). But we can only use JLS3 with recovery. For all other ASTs we can use the deltas but have the request an AST again, which is of course a performance problems.
+
+So what if the Java editor could specify its preferred options?
+The API would be changed to reconcile(WorkingCopyOwner owner, IProgressMonitor monitor) (no options) and the preferred opetions can be attached e.g. to the WorkingCopyOwner (WorkingCopyOwner.getReconcileASTLevel...)
+or on the IProblemRequestor that is passed on 'becomeWorkingCopy'.

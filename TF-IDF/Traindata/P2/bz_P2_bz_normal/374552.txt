@@ -1,0 +1,74 @@
+Build Identifier: 2.3.2
+
+The following mapping causes a DescriptorException starting up:
+
+@Entity
+@Table(name = "product", schema = "ELTEST")
+public class Product
+  {
+  @Id
+  @Column(name = "product_id")
+  Integer id;
+  }
+
+@Embeddable
+public class CustomerOrder
+  {
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_id")
+  Product product;
+  }
+
+
+@Entity
+@Table(name = "customer", schema = "ELTEST")
+public class Customer
+  {
+  @Id
+  @Column(name = "cust_id")
+  Integer id;
+
+  @ElementCollection(fetch = FetchType.LAZY)
+  @CollectionTable(name = "cust_order",
+                   joinColumns = @JoinColumn(name = "cust_id"))
+  List<CustomerOrder> orders = new ArrayList<CustomerOrder>();
+  }
+
+Exception [EclipseLink-93] (Eclipse Persistence Services - 2.3.2.v20111125-r10461): org.eclipse.persistence.exceptions.DescriptorException
+Exception Description: The table [cust_order] is not present in this descriptor.
+Descriptor: RelationalDescriptor(com.vtls.domain.test.Product --> [DatabaseTable(ELTEST.product)])
+
+The local exception stack:
+Exception Description: The table [cust_order] is not present in this descriptor.
+Descriptor: RelationalDescriptor(com.vtls.domain.test.Product --> [DatabaseTable(ELTEST.product)])
+	at org.eclipse.persistence.exceptions.DescriptorException.tableNotPresent(DescriptorException.java:1628)
+	at org.eclipse.persistence.descriptors.ClassDescriptor.getTable(ClassDescriptor.java:2534)
+	at org.eclipse.persistence.descriptors.ClassDescriptor.buildField(ClassDescriptor.java:798)
+	at org.eclipse.persistence.mappings.OneToOneMapping.initializeForeignKeys(OneToOneMapping.java:1145)
+	at org.eclipse.persistence.mappings.OneToOneMapping.initialize(OneToOneMapping.java:1087)
+	at org.eclipse.persistence.descriptors.ClassDescriptor.initialize(ClassDescriptor.java:2826)
+	at org.eclipse.persistence.mappings.AggregateCollectionMapping.initializeReferenceDescriptor(AggregateCollectionMapping.java:1458)
+	at org.eclipse.persistence.mappings.ForeignReferenceMapping.initialize(ForeignReferenceMapping.java:1159)
+	at org.eclipse.persistence.mappings.CollectionMapping.initialize(CollectionMapping.java:1097)
+	at org.eclipse.persistence.mappings.AggregateCollectionMapping.initialize(AggregateCollectionMapping.java:1308)
+	at org.eclipse.persistence.descriptors.ClassDescriptor.initialize(ClassDescriptor.java:2826)
+	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.initializeDescriptors(DatabaseSessionImpl.java:512)
+
+When debugging at the exception, it appears that the target field for the ManyToOne is being set to "cust_order.cust_id", instead of "customer.cust_id", which causes it to try looking for the cust_order table descriptor in the Product mapping.
+
+If the column names for the foreign key don't match (for instance I use column="linked_customer" in the CustomerOrder) the bug doesn't occur.
+
+Also, I can work around it by explicitly setting table name in the embeddable:
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_id", table = "cust_order")
+  Product product;
+
+Reverting to the 2.2.1 build seems to resolve the problem, but 2.2.1 still fails if the embeddable is not a collection with a collection table:
+
+  @Embedded
+  @JoinColumn(name = "order_id")
+  CustomerOrder order;
+
+I can work around this the same way, by having a different join column name than the Order primary key, or by setting table="customer" in the ManyToOne's join column.
+
+Reproducible: Always

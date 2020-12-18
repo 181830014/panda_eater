@@ -1,0 +1,218 @@
+we need to review and reflect on the usage of the "*" capability for replication to ensure it meshes with everyone's understanding of its need and uses.
+
+The discussion below is copied from Bug 511831 
+
+When the replication factor of a capsule part is selected to be *, e.g. by selecting it from the drop down menu, then the fixed kind radio button should be disabled.
+
+Currently it is possible to select the fixed kind radio button, but it actually does not have any effect. 
+
+1) Create a UML-RT model based on the "UML-RT for C++" template
+2) Create a capsule in this model
+3) Create a capsule part in this capsule based on a new capsule
+4) Select the capsule part
+5) In the properties view use the drop down meny for the replication field and select '*'
+6) Observe how the capsule part automatically becomes an optional capsule part as expected
+7) Press the "Fixed" radio button for the property Kind
+8) Nothing happens, apart from the radio button (seemingly) being selected. The capsule part is still visualized as an optional capsule part in the diagram as expected.
+9) Select another model element and re-select the capsule part again.
+10) Observer how the "Optional" radio button now still is enabled (as expected).
+
+It would have been expected that the "Fixed" radio button should have been disabled already at step 7 to avoid that the user can change it into a fixed capsule part.
+[reply] [−] Comment 1 Charles Rivet CLA Friend 2017-05-25 12:49:45 EDT
+(In reply to Peter Cigehn from comment #0)
+> When the replication factor of a capsule part is selected to be *, e.g. by
+> selecting it from the drop down menu, then the fixed kind radio button
+> should be disabled.
+> 
+> Currently it is possible to select the fixed kind radio button, but it
+> actually does not have any effect. 
+> 
+> 1) Create a UML-RT model based on the "UML-RT for C++" template
+> 2) Create a capsule in this model
+> 3) Create a capsule part in this capsule based on a new capsule
+> 4) Select the capsule part
+> 5) In the properties view use the drop down meny for the replication field
+> and select '*'
+> 6) Observe how the capsule part automatically becomes an optional capsule
+> part as expected
+> 7) Press the "Fixed" radio button for the property Kind
+> 8) Nothing happens, apart from the radio button (seemingly) being selected.
+> The capsule part is still visualized as an optional capsule part in the
+> diagram as expected.
+> 9) Select another model element and re-select the capsule part again.
+> 10) Observer how the "Optional" radio button now still is enabled (as
+> expected).
+> 
+> It would have been expected that the "Fixed" radio button should have been
+> disabled already at step 7 to avoid that the user can change it into a fixed
+> capsule part.
+
+Another option, which may be better for the usability, is that on clicking the "fixed" button, the replication goes to "1". This is what we will implement for 1.0.
+[reply] [−] Comment 2 Peter Cigehn CLA Friend 2017-05-29 04:47:28 EDT
+(In reply to Charles Rivet from comment #1)
+> Another option, which may be better for the usability, is that on clicking
+> the "fixed" button, the replication goes to "1". This is what we will
+> implement for 1.0.
+
+I am not really sure that I agree on that keeping the fixed radio button enabled, and changing the replication to 1 is better if the user changes to a fixed capsule part. I think that would actually would make this more confusing to the user.
+
+It must then also be considered whether the replication shall be reverted back to default, i.e. where lower and upper are left unset, or if it shall explicitly be set to 1. I am just afraid that fiddling around with the behavior of this at this point so close to 1.0, will cause regressions in this area.
+
+So far toggling the kind button have *only* altered the lower multiplicity, and never really changed the upper multiplicity (which this case then will do).
+
+Keep in mind that the * replication is a very special case, actually only applicable to non-code generating models (since code generator always needs a defined replication factor and cannot leave it "open ended" as a *).
+
+Personally I would really like this to be as proposed, i.e. the fixed radio button shall be disabled/greyed out for the case with * replication factor.
+
+One other alternative could even be to remove the support for the * case as replication factor, since it is only applicable to special cases with documentation (non-code generating) kind of models, to avoid issues like this.
+[reply] [−] Comment 3 Charles Rivet CLA Friend 2017-06-05 10:35:51 EDT
+(In reply to Peter Cigehn from comment #2)
+> (In reply to Charles Rivet from comment #1)
+> > Another option, which may be better for the usability, is that on clicking
+> > the "fixed" button, the replication goes to "1". This is what we will
+> > implement for 1.0.
+> 
+> I am not really sure that I agree on that keeping the fixed radio button
+> enabled, and changing the replication to 1 is better if the user changes to
+> a fixed capsule part. I think that would actually would make this more
+> confusing to the user.
+
+I do not see why this would be confusing. My expectation would be that clicking on a "fixed" button would change the part to fixed. I believe I would be more confused if I saw that button disabled, wondering why I could not simply make it fixed (whether the replication was "*" or an actual value.
+
+In the particular case of applying this to a "*" multiplicity, going to "1" would be reasonable (or perhaps "0"?) In the case of an already set replication, it should be kept to the upper bound.
+
+> 
+> It must then also be considered whether the replication shall be reverted
+> back to default, i.e. where lower and upper are left unset, or if it shall
+> explicitly be set to 1. I am just afraid that fiddling around with the
+> behavior of this at this point so close to 1.0, will cause regressions in
+> this area.
+
+Reverting to default would also work in the case of "*".
+
+> 
+> So far toggling the kind button have *only* altered the lower multiplicity,
+> and never really changed the upper multiplicity (which this case then will
+> do).
+
+This was not my intent, I'm sorry if it was not clear. The intent was to change the upper bound _only_ for the "*" case.
+
+> 
+> Keep in mind that the * replication is a very special case, actually only
+> applicable to non-code generating models (since code generator always needs
+> a defined replication factor and cannot leave it "open ended" as a *).
+
+Cannot or should not? The code generator should generate an error in such a case.
+
+If this is not already done, we also need to consider when this "*" capability is enabled - how do we distinguish "code-generating" from "documentation" models (or parts thereof)? Having a clear statement would help in creating proper documentation for Papyrus-RT, and would help clarify the needs for addressing this bug.
+
+> 
+> Personally I would really like this to be as proposed, i.e. the fixed radio
+> button shall be disabled/greyed out for the case with * replication factor.
+
+I am OK with this as an _interim_ solution, although I still believe we need a more in-depth conversation with regards to the UX aspects. Plus, it would be the easiest solution to implement in the context of v1.
+
+> 
+> One other alternative could even be to remove the support for the * case as
+> replication factor, since it is only applicable to special cases with
+> documentation (non-code generating) kind of models, to avoid issues like
+> this.
+
+I would not necessarily go that far. I can see a use for the "*" capability not only for documentation, but also when going doing early exploration and architecture/design analysis, especially as part of an existing system.
+[reply] [−] Comment 4 Eclipse Genie CLA Friend 2017-06-06 15:23:36 EDT
+New Gerrit change created: https://git.eclipse.org/r/98726
+[reply] [−] Comment 5 Eclipse Genie CLA Friend 2017-06-06 15:27:29 EDT
+New Gerrit change created: https://git.eclipse.org/r/98727
+[reply] [−] Comment 6 Eclipse Genie CLA Friend 2017-06-06 22:40:54 EDT
+Gerrit change https://git.eclipse.org/r/98727 was merged to [master].
+Commit: http://git.eclipse.org/c/papyrus-rt/org.eclipse.papyrus-rt.git/commit/?id=7125226550a3d90fa52457c2579fe39c19a8300b
+[reply] [−] Comment 7 Peter Cigehn CLA Friend 2017-06-07 10:38:54 EDT
+(In reply to Charles Rivet from comment #3)
+> (In reply to Peter Cigehn from comment #2)
+> > (In reply to Charles Rivet from comment #1)
+> > > Another option, which may be better for the usability, is that on clicking
+> > > the "fixed" button, the replication goes to "1". This is what we will
+> > > implement for 1.0.
+> > 
+> > I am not really sure that I agree on that keeping the fixed radio button
+> > enabled, and changing the replication to 1 is better if the user changes to
+> > a fixed capsule part. I think that would actually would make this more
+> > confusing to the user.
+> 
+> I do not see why this would be confusing. My expectation would be that
+> clicking on a "fixed" button would change the part to fixed. I believe I
+> would be more confused if I saw that button disabled, wondering why I could
+> not simply make it fixed (whether the replication was "*" or an actual value.
+
+Yes, sure it can probably be questioned which is more confusing. I was basing this on the fact that *if* the user switched to * multiplicity it would be a feedback that the fixed radio button now becomes disabled. We have similar cases also for the port kind where certain cases also gets disabled. And I can agree that it probably can be confusing also to have the radio button disabled, as well as I can see that it will be confusing for anyone that wants to have a fixed capsule part with multiplicity *, but as soon as the user presses the fixed radio button the users intention of * gets "removed". So the question is which intention is "stronger": To have multiplicity * or a fixed capsule part? Anyway, since you seem to have a much stronger opinion about this I let you decide. I don't have enough arguments for one or the other. 
+
+I originally wrote this bug based on that it would make more sense for me to see the fixed radio button become disabled the moment I selected the * replication factor.
+
+> > Keep in mind that the * replication is a very special case, actually only
+> > applicable to non-code generating models (since code generator always needs
+> > a defined replication factor and cannot leave it "open ended" as a *).
+> 
+> Cannot or should not? The code generator should generate an error in such a
+> case.
+
+I would say "cannot". It would of course be good if it could, and looking back at the legacy, the code-generator back in ObjecTime did support * as replication factor for some cases where it could deduce the value if * based on other replication factors, since the code-generation was done on the complete model at once. Going to RoseRT this changed since the code-generator had to support code-generation per capsule, which makes it harder (and maybe even impossible) to conclude what the value of a * replication factor should be. And this probably becomes even more true with the latest changes when true make driven code generation, with support for parallell build using Electric Accelerator and similar build systems. Then I guess we never assume that the code-generator can deduce the actual value of * replication factor. This is the same discussion about symbolic constants as discussed in Bug 482923 where it was discussed that the code generator needs to know the value of such a symbolic constant during code-generation time and that it cannot be deferred to compile time. But it would also for this case be good if it could be deferred to compile time to ensure that you a replication factor be specified by an ordinary #define and maybe even control it with compile time options. But all this is of course "good to have", so for now one could settle with that the code-generator simply cannot handle it and should generate a code-generation error if it bumps into a "unspecified" replication factor (which should cover both the symbolic constants case and the * case). But stating a requirement that it "should not" is not right...
+[reply] [−] Comment 8 Peter Cigehn CLA Friend 2017-06-07 10:41:23 EDT
+(In reply to Eclipse Genie from comment #6)
+> Gerrit change https://git.eclipse.org/r/98727 was merged to [master].
+> Commit:
+> http://git.eclipse.org/c/papyrus-rt/org.eclipse.papyrus-rt.git/commit/
+> ?id=7125226550a3d90fa52457c2579fe39c19a8300b
+
+I have tested this in the latest Papyrus-RT build (#762) and it now behaves as I originally was expecting it, i.e. the fixed radio button becomes disabled as soon as the user selects * as a replication factor.
+
+But since Charles disagrees with this solution, I let it over to Charles to decide whether this bug can be considered resolved/verified or not. I really don't have enough strong opinion about in which direction to go.
+[reply] [−] Comment 9 Charles Rivet CLA Friend 2017-06-07 11:01:13 EDT
+(In reply to Peter Cigehn from comment #8)
+> (In reply to Eclipse Genie from comment #6)
+> > Gerrit change https://git.eclipse.org/r/98727 was merged to [master].
+> > Commit:
+> > http://git.eclipse.org/c/papyrus-rt/org.eclipse.papyrus-rt.git/commit/
+> > ?id=7125226550a3d90fa52457c2579fe39c19a8300b
+> 
+> I have tested this in the latest Papyrus-RT build (#762) and it now behaves
+> as I originally was expecting it, i.e. the fixed radio button becomes
+> disabled as soon as the user selects * as a replication factor.
+> 
+> But since Charles disagrees with this solution, I let it over to Charles to
+> decide whether this bug can be considered resolved/verified or not. I really
+> don't have enough strong opinion about in which direction to go.
+
+It's not that I completely disagree with your approach, it's more that I want to ensure all aspects of the UI are discussed, especially when I perceive a potential UX problem. I try to be as open-minded as possible about these thingsand I place a lot weight to your opinions in the matter as you have the experience with a large set of UML-RT developers, which is why Young-Soo has implemented your solution. I still believe that we need to review and reflect on the usage of the "*" capability post 1.0 to ensure it meshes with everyone's understanding of its need and uses.
+
+Please feel free to set it as verified once it is marked as fixed. I will close it once that is done and create a task (bug) to breview and better document the "*" functionality.
+[reply] [−] Comment 10 Peter Cigehn CLA Friend 2017-06-07 11:20:22 EDT
+(In reply to Charles Rivet from comment #9)
+> (In reply to Peter Cigehn from comment #8)
+> > (In reply to Eclipse Genie from comment #6)
+> > > Gerrit change https://git.eclipse.org/r/98727 was merged to [master].
+> > > Commit:
+> > > http://git.eclipse.org/c/papyrus-rt/org.eclipse.papyrus-rt.git/commit/
+> > > ?id=7125226550a3d90fa52457c2579fe39c19a8300b
+> > 
+> > I have tested this in the latest Papyrus-RT build (#762) and it now behaves
+> > as I originally was expecting it, i.e. the fixed radio button becomes
+> > disabled as soon as the user selects * as a replication factor.
+> > 
+> > But since Charles disagrees with this solution, I let it over to Charles to
+> > decide whether this bug can be considered resolved/verified or not. I really
+> > don't have enough strong opinion about in which direction to go.
+> 
+> It's not that I completely disagree with your approach, it's more that I
+> want to ensure all aspects of the UI are discussed, especially when I
+> perceive a potential UX problem. I try to be as open-minded as possible
+> about these thingsand I place a lot weight to your opinions in the matter as
+> you have the experience with a large set of UML-RT developers, which is why
+> Young-Soo has implemented your solution. I still believe that we need to
+> review and reflect on the usage of the "*" capability post 1.0 to ensure it
+> meshes with everyone's understanding of its need and uses.
+> 
+> Please feel free to set it as verified once it is marked as fixed. I will
+> close it once that is done and create a task (bug) to breview and better
+> document the "*" functionality.
+
+What we should keep in mind regarding the * replication factor also, is that it is not *explicitly* supported in the legacy tooling (at least not that it is available on the drop-down menu where only "None (1)", "0..1" (since it basically is the multiplicity field and not the simplified replication field as in Papyrus-RT) and "1" exist) but it can only be entered manually. And when you do, the behavior when pressing the fixed radio button is that nothing happens, i.e. in the legacy tooling you neither have the solution were the radio button is disabled, nor changing the replication to something that can be fixed. So we cannot really base neither of the approaches on any experience from the legacy tooling (all I can say that the solution of having a non-disabled radio button which does nothing is the worse of the three alternatives).

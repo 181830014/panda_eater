@@ -1,0 +1,33 @@
+Our current code that weaves the clone method imposes some restrictions on the users.
+
+Namely, they are required to explicitly implement clone on any Entity or MappedSuperClass that has LAZY 1-1 or M-1 mapping. 
+
+Users could get unexpected errors if they attempt to use clone on hierarchies that do not follow those restrictions. (i.e. they have either a superclass or a subclass with a LAZY 1-1 or M-1 that inherits it's "Cloneabililty" but does not implement it's own clone method)
+
+This restriction needs to be removed so users will not get unexpected errors.  
+
+Here is some additional explanation of this issue from:
+
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=226299
+
+---
+1. A clone method will be written for each class in a hierarchy that has LAZY
+1-1 and M-1 mappings variables.  If that clone method is not written, the
+attributes covered by those mappings will not be properly cloned.  This is an
+improvment from the previous version which would throw an exeption in this
+case.
+
+2. The only calls to a clone method in your hierarchy will be this.clone in
+most methods or super.clone() within this.clone().   i.e. in a hierarcy with A
+superclass of B and B superclass of C:
+
+- Most methods of C may not explicitly call a.clone() or b.clone.  The clone
+method of C may call super.clone() which will indirectly call up the hierarchy.
+
+This assumption is slightly wider than the previous version which would only
+make that restriction up one level (e.g. from C to B - i.e. a.clone was ok in
+that case)
+
+This assumption has been added as a necessary condition of figuring out when
+super.clone is called in ASM.  
+----

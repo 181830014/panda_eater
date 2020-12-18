@@ -1,0 +1,131 @@
+It is expected that pointcut C(): A() && B() is the intersection of the set of join points matched by pointcut A() and the set of join points matched by B().
+
+This does not work for calls to private methods within inner classes.
+
+
+Here is a simple example:
+
+public class Test {
+    public static class InnerA {
+        private static void runPrivate(int a) {
+            System.out.println("InnerA private: " + a);
+        }
+        public static void runPublic(int a) {
+            System.out.println("InnerA public: " + a);
+        }
+    }
+
+
+    public static class InnerB {
+        public void run() {
+            InnerA.runPrivate(1);
+            InnerA.runPublic(1);
+        }
+    }
+
+
+    public static void main(String[] args) {
+        InnerB innerb = new InnerB();
+        innerb.run();
+    }
+}
+
+
+
+privileged aspect TestAspect {
+    pointcut callPrivate(): call(void Test.InnerA.runPrivate(..)) ;
+    pointcut callPublic(): call(void Test.InnerA.runPublic(..)) ;
+    pointcut withinInnerRun(): withincode(* Test.InnerB.run()) ;
+
+
+/* These two warning appear correctly on the call. */
+    declare warning: callPublic() : "Call to runPublic(..)";
+    declare warning: callPublic() && withinInnerRun() : "Call to runPublic(..) from run() in inner class B";
+
+/*
+ * Only the warning that is not restricted with "withincode" appears,
+ * and it appears on the called method itself.
+ */
+    declare warning: callPrivate() : "Call to runPrivate(..)";
+    declare warning: callPrivate() && withinInnerRun() : "Call to runPrivate(..) from run() in inner class B";
+
+    before(): callPublic() {
+       System.err.println("Call to runPublic(..)");
+    }
+    before(): callPublic() && withinInnerRun() {
+       System.err.println("Call to runPublic(..) from run() in inner class B");
+    }
+    before(): callPrivate() {
+       System.err.println("Call to runPrivate(..)");
+    }
+    before(): callPrivate() && withinInnerRun() {
+       System.err
+.println("Call to runPrivate(..) from run() in inner class B");
+    }
+}
+
+
+
+
+Here is the output of the compiler:
+
+/home/bruno/Test.aj:3 [warning] Call to runPrivate(..)
+private static void runPrivate(int a) {
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        method-call(void Test$InnerA.runPrivate(int))
+        see also: /home/bruno/Test.aj:42::0
+/home/bruno/Test.aj:15 [warning] Call to runPublic(..)
+InnerA.runPublic(1);
+^^^^^^^^^^^^^^^^^^^
+        method-call(void Test$InnerA.runPublic(int))
+        see also: /home/bruno/Test.aj:35::0
+/home/bruno/Test.aj:15 [warning] Call to runPublic(..) from run() in inner class B
+InnerA.runPublic(1);
+^^^^^^^^^^^^^^^^^^^
+        method-call(void Test$InnerA.runPublic(int))
+        see also: /home/bruno/Test.aj:36::0
+
+3 warnings
+
+
+
+Here is the output of the program:
+
+Call to runPrivate(..)
+InnerA private: 1
+Call to runPublic(..)
+Call to runPublic(..) from run() in inner class B
+InnerA public: 1
+
+
+One would expect that callPrivate() && withinInnerRun() should match join points that are matched by both callPrivate() and withinInnerRun(), but this is not the case.
+As Matthew Webster pointed out on the AspectJ user mailing list <http://dev.eclipse.org/mhonarc/lists/aspectj-users/msg03811.html>, this is due to an accessor method inserted by the compiler so that the visibility can be bypassed (InnerA and InnerB are two different classes, and couldn't otherwise access their private methods).
+
+In InnerB, the call to runPrivate() is in fact a call to access$000:
+public void run();
+  Code:
+   0:   iconst_1
+   1:   invokestatic    #2; //Method Test$InnerA.access$000:(I)V
+   4:   iconst_1
+   5:   invokestatic    #3; //Method Test$InnerA.runPublic:(I)V
+   8:   return
+
+In InnerA, access$000 is clearly an accessor to runPrivate:
+static void access$000(int);
+  Code:
+   0:   iload_0
+   1:   invokestatic    #1; //Method runPrivate:(I)V
+   4:   return
+
+
+
+
+This bug has similarities with Bug 71377. It is however much harder to fix, in my opinion. I think there could be two approaches:
+  1. trying to find methods that only call a private method in the same class, and treat them as accessors;
+  2. employing a strategy similar to the fix in Bug 71377, which, if I understand it properly, consists of marking the accessor with attributes so that the weaver can keep track of them and consider them as the original methods;
+
+The problem with the first approach is that there may be some cases where the accessors have been introduced on purpose by the programmer. The problem with the second approach is that it only works if the base code has been compiled by the aspect compiler (or a compiler that is aware of the weaving stage, and may leave the appropriate attributes).
+
+I think this is a bug that cannot really be fixed and that is a direct consequence of choosing to weave in the bytecode (in AspectJ 1.1).
+From the point of view of usability (i.e. how many times this case happens in pieces of software that are actually used), this is probably not a major problem; this may however be a fundamental flaw from the theoretical point of view.
+(I don't think this is a bad design decision, but I think this consequence deserves an entry in the bug database. The closest bug that I found was Bug 71377).

@@ -1,0 +1,23 @@
+Implement a process to tag stable versions of TestSuite.  The primary reason for tagging stable versions, is to allow:
+- End users to download and use only stable versions
+- Different end users to be able to identify, download, and use the same versions
+- Track issues based on specific versions of the TestSuite
+
+The nature of developing TestSuite is continuous (test cases will be added and updated continuously), and in general a consumer is likely to download the latest versions.  Also, it is unlikely that the community will require maintenance of older streams.
+
+Therefore, one of the following proposed techniques could be used for managing (tagging) releases.  
+
+Common to both techniques:
+- Adopt a release identifier as follows:
+  <current year>.<major release>.<minor release>
+- On a yearly basis, the first new tag created in a year would look like <year>.0.0, e.g. 2013.0.0.
+
+Technique 1:
+- Evaluate whether a tag is needed at regular intervals (e.g. monthly): create a new tag only if any new test cases were added, or any new fixes were added.
+- When tagging, increment the <major release> and set the <minor release> to "0" if any new test cases were added since the last time the TestSuite was tagged.
+- When tagging, if only fixes were made, then increment the <minor release> tag.
+
+Technique 2:
+- Tag the most current version when any new change is contributed.
+- When fixes to existing TestCases are contributed since the last time they were tagged, then increment the <minor release> in the release identifier.
+- When new TestCases are contributed since the last time they were tagged, then increment the <major release>, and reset the <minor release> "0" in the release identifier.

@@ -1,0 +1,16 @@
+Acceleo	3.4.2.201401221203	org.eclipse.acceleo.feature.group	Eclipse Modeling Project
+
+code: 
+
+[query public q1( e : EModelElement ) :  EClass = 
+    e.eContents()->selectByKind(EClass)
+/]
+[query public q2(e : EModelElement) :  EClass = 
+   e.eContents()->selectByKind(EClass)->select(name<>null)
+/]
+
+
+EXPECTED: ERROR - return type is Class, expression type is Collection(Class)
+OBSERVED:
+- NO ERROR at compile time
+- Query results in OclInvalid at runtime

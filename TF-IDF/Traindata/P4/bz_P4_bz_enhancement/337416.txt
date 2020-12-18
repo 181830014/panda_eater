@@ -1,0 +1,65 @@
+Build Identifier: 20100917-0705
+
+We are running a Hudson instance behind IBM WebSeal (that gives us single sign on functionality), and I cannot get the server setup to work 
+
+I have added server, label, user & password, but the error message is (most often):
+
+!ENTRY org.eclipse.mylyn.builds.ui 4 0 2011-02-17 08:42:21.493
+!MESSAGE Server validation failed: Unexpected error: Unexpected response from Hudson server for '/midas_ci/hudson/': Service Unavailable
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unexpected error: Unexpected response from Hudson server for '/midas_ci/hudson/': Service Unavailable
+	at org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin.toCoreException(HudsonCorePlugin.java:61)
+	at org.eclipse.mylyn.internal.hudson.core.HudsonServerBehaviour.validate(HudsonServerBehaviour.java:852)
+	at org.eclipse.mylyn.builds.internal.core.BuildServer.validate(BuildServer.java:450)
+	at org.eclipse.mylyn.builds.ui.spi.BuildServerPart$Validator.run(BuildServerPart.java:113)
+	at org.eclipse.mylyn.commons.ui.team.RepositoryLocationPart$2.run(RepositoryLocationPart.java:582)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
+Caused by: org.eclipse.mylyn.internal.hudson.core.client.HudsonException: Unexpected response from Hudson server for '/midas_ci/hudson/': Service Unavailable
+	at org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.checkResponse(RestfulHudsonClient.java:124)
+	at org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.checkResponse(RestfulHudsonClient.java:114)
+	at org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient$8.execute(RestfulHudsonClient.java:414)
+	at org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient$8.execute(RestfulHudsonClient.java:1)
+	at org.eclipse.mylyn.internal.hudson.core.client.HudsonOperation.run(HudsonOperation.java:32)
+	at org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.validate(RestfulHudsonClient.java:426)
+	at org.eclipse.mylyn.internal.hudson.core.HudsonServerBehaviour.validate(HudsonServerBehaviour.java:846)
+	... 4 more
+
+Sometimes i get this exception instead:
+
+!ENTRY org.eclipse.mylyn.builds.core 4 0 2011-02-17 08:45:29.822
+!MESSAGE Refresh of server 'Nordea Hudson' failed
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unexpected error: Proxy Authentication Required
+	at org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin.toCoreException(HudsonCorePlugin.java:61)
+	at org.eclipse.mylyn.internal.hudson.core.HudsonServerBehaviour.getPlans(HudsonServerBehaviour.java:243)
+	at org.eclipse.mylyn.builds.internal.core.operations.RefreshSession$4.run(RefreshSession.java:172)
+	at org.eclipse.mylyn.builds.internal.core.operations.RefreshSession$4.run(RefreshSession.java:1)
+	at org.eclipse.mylyn.builds.internal.core.util.BuildRunner.run(BuildRunner.java:72)
+	at org.eclipse.mylyn.builds.internal.core.operations.RefreshSession.refreshPlans(RefreshSession.java:168)
+	at org.eclipse.mylyn.builds.internal.core.operations.RefreshSession.refresh(RefreshSession.java:89)
+	at org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation$RefreshJob.doExecute(RefreshOperation.java:74)
+	at org.eclipse.mylyn.builds.internal.core.operations.BuildJob.run(BuildJob.java:79)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+Caused by: org.eclipse.mylyn.internal.hudson.core.client.HudsonException: Proxy Authentication Required
+	at org.eclipse.mylyn.internal.hudson.core.client.HudsonOperation.run(HudsonOperation.java:34)
+	at org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.getJobs(RestfulHudsonClient.java:293)
+	at org.eclipse.mylyn.internal.hudson.core.HudsonServerBehaviour.getPlans(HudsonServerBehaviour.java:221)
+	... 8 more
+Caused by: java.io.IOException: Proxy Authentication Required
+	at org.eclipse.mylyn.commons.http.CommonHttpClient.needsReauthentication(CommonHttpClient.java:103)
+	at org.eclipse.mylyn.commons.http.HttpOperation.needsReauthentication(HttpOperation.java:102)
+	at org.eclipse.mylyn.commons.http.HttpOperation.execute(HttpOperation.java:76)
+	at org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient$5.execute(RestfulHudsonClient.java:260)
+	at org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient$5.execute(RestfulHudsonClient.java:1)
+	at org.eclipse.mylyn.internal.hudson.core.client.HudsonOperation.run(HudsonOperation.java:32)
+	... 10 more
+Caused by: java.lang.UnsupportedOperationException
+	at org.eclipse.mylyn.internal.commons.repositories.LocationService.requestCredentials(LocationService.java:93)
+	at org.eclipse.mylyn.builds.internal.core.util.RepositoryWebLocation.requestCredentials(RepositoryWebLocation.java:53)
+	at org.eclipse.mylyn.commons.http.CommonHttpClient.needsReauthentication(CommonHttpClient.java:97)
+	... 15 more
+
+even though i have added user/password.
+What more information can i provide you with?
+
+Reproducible: Always

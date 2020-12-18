@@ -1,0 +1,31 @@
+public class Test {
+	final static private int constant = 1;
+
+	public static void main(String[] args) {
+		T();
+	}
+	
+	public static void T(){}
+}
+
+
+public privileged aspect TestAspect {
+	
+	before():
+		call(public void Test.T()){
+		switch(1){
+		   case Test.constant:
+		   	  System.out.println("hello");
+		   default:
+		 
+		}
+	}
+}
+
+When compiling the above code, I will get "case expression must be constant 
+expressions" error at the case statement of the switch block. The aspect class 
+is already declared as privileged, so it should be able to access the static 
+private field, constant, of the Test class
+
+
+Dapeng Gao

@@ -1,0 +1,38 @@
+I think there is something wrong with the <selection> element usage in the 
+org.elipse.ui.newWizards.
+
+Let's say I created a NewTagWizard() described below. Obviously I want this 
+wizard to be started only when current selection is set to SomeThing since a 
+tag can not be attached to anything but a SomeThing.
+
+<extension
+    point="org.eclipse.ui.newWizards">
+   <wizard
+       name="%newWizard.name"
+       class="com.abc.ui.NewTagWizard"
+       id="com.abc.ui.NewTagWizard"
+       category="com.abc.wizards.tag"
+      <description>
+         %newWizard.description
+      </description>
+      <selection class="com.abc.SomeThing"/>
+   </wizard>
+</extension>
+
+In reality, after calling NewWizardAction.run() the NewWizardNewPage() is 
+created, which does not care about the current selection and shows all existing 
+wizards under the "com.abc.wizards.tag" category. At this point user may see 
+wizards that are not suitable for the current selection. User does not suspect 
+anything and selects one of the "wrong" wizards and clicks "Next". Only at this 
+point selection is verified. Moreover, the verification itself does not do any 
+good. If the selection is valid it is passed to the NewTagWizard.init() method 
+as is or replaced with null otherwise. The best what NewTagWizard can do upon 
+receiving null selection is to make an empty page with a warning. I think it is 
+little bit too late for this. After running a few times to such a page user has 
+a full rights to be little disappointed. Even worse if the NewTagWizard does 
+nothing. In this case user keeps pressing the "Next", but nothing happens at 
+all.
+
+I think that situation can be improved by obtaining correspondent 
+SelectionEnabler() before calling NewWizardNewPage() and adding an appropriate 
+filter to the page.

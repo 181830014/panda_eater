@@ -1,0 +1,30 @@
+Build ID: 1.0.2
+
+Steps To Reproduce:
+Oracle 10.2
+
+1.  For my example, the field is a nullable VARCHAR2(1).  The possible values for the field should be "Y" or NULL, mapping to true, or "N" for false.
+
+2.  Declaration:
+@Column(name = "INACTIVE_IND")
+    @ObjectTypeConverter(
+        name="booleanConverter_N-false",
+        dataType=java.lang.String.class,
+        objectType=java.lang.Boolean.class,
+        conversionValues={
+            @ConversionValue(dataValue="N", objectValue="false")
+        },
+        defaultObjectValue="true")
+    @Convert("booleanConverter_N-false")
+    private boolean active;
+
+3.  always returns false for null values
+
+
+More information:
+james.sutherland@oracle.com told me in the eclipse.rt.eclipselink newsgroup to submit this bug, with this note:
+
+This is occurring as the ObjectTypeConverter has special handling for null values.
+
+The defaultObjectValue does not handle null values.  But perhaps it should so feel free to log a bug for this. "defaultObjectValue" is only for if you have legacy data that has other values than you have set, and want to default these.  The mapping has a nullValue that can be set for the value for null, but there does not seem to be a way to set this through annotations (please log a bug), you can set it using a DescriptorCustomizer.
+For null, the converter allows the conversion value for null to be set, i.e. null=true, but there does not seem to be a way to set null through annotations, maybe log a bug for this.  You can set the conversion for null in code.

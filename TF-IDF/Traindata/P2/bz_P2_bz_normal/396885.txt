@@ -1,0 +1,27 @@
+The org.eclipse.persistence.internal.jpa.deployment.JPAInitializer
+
+    protected SEPersistenceUnitInfo findPersistenceUnitInfoInArchive(String puName, Archive archive, Map m){
+        Iterator<SEPersistenceUnitInfo> persistenceUnits = PersistenceUnitProcessor.getPersistenceUnits(archive, initializationClassloader).iterator();
+        while (persistenceUnits.hasNext()) {
+            SEPersistenceUnitInfo persistenceUnitInfo = persistenceUnits.next();
+            if(isPersistenceProviderSupported(persistenceUnitInfo.getPersistenceProviderClassName()) &&  persistenceUnitInfo.getPersistenceUnitName().equals(puName)) {
+                return persistenceUnitInfo;
+            }
+        }
+        return null;
+    }
+
+This method should allow the javax.persistence.provider property in the map to override the value specified in the persistence.xml.
+
+Within the while loop the code should look like:
+
+SEPersistenceUnitInfo persistenceUnitInfo = persistenceUnits.next();
+
+String providerClassName = persistenceUnitInfo.getPersistenceProviderClassName();
+
+if (m.containsKey("javax.persistence.provider")) {
+    providerClassName  = (String) m.get("javax.persistence.provider");
+}
+ 
+           if(isPersistenceProviderSupported(providerClassName ) &&  persistenceUnitInfo.getPersistenceUnitName().equals(puName)) {
+                return persistenceUnitInfo;

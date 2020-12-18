@@ -1,0 +1,17 @@
+Hi,
+
+I'm trying to add build Repository as a Mylyn build repository, using our Jenkins server URL and my normal username and single-sign-on password (We have our Jenkins instance integrated with Single Sign-On login).
+
+From browser let me explain this process, We use CAS for authentication.
+
+When user login to our portal it will be redirect to another (SSL secured) server with an HTML page. If you enter your correct credentials there you are redirected to the original portal with a token appended to the URL like ?ticket=ST-547-uMsCT01Q5mJhnOih0O1e-cas.
+
+From there we facilitate user to go to his/her Jenkins job, here when user clicks on the same, browser redirect it to cas login page, but since we have valid session id cookies and ticket it's append this to url and redirect to Jenkins with successful login.
+
+Now problem here is when I tried to give Jenkins URL directly in Mylyn Jenkins Connector, it's give Forbidden error and it's return 403 error internally.
+
+I done some workaround on this by taking class org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient outside and adding managing redirection internally and setting valid cookies, session id to CommonHttpClient#httpClient.
+
+It works fine but since when tried to add that server and job to build view and refresh connector. It's called internal instance of  RestfulHudsonClient which outsource don't have valid cookies and it's fails.
+
+so is there any way i can handle that.

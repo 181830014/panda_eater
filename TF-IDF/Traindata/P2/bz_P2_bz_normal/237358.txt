@@ -1,0 +1,16 @@
+EclipseLink enables the access to the lazy relationships after the end of the transaction/entity manager, but does not enable the access to the lazy basics consistently.
+
+For example, if the DataTypes entity has a BLOB attribute:
+    @Basic(fetch=FetchType.LAZY) @Lob private byte[] blobData; 
+
+With the following test code in JavaEE container:
+    UserTransaction ut = getTransaction();
+    ut.begin();
+    EntityManager em = getEntityManager();
+    Query query = em.createNamedQuery("DataTypes.findDataTypesById"); 
+    query.setParameter("id", "dt1");
+    DataTypes dataTypes = (DataTypes)query.getSingleResult();
+    ut.commit();
+    assertTrue("Blob is null", dataTypes.getBlobData() != null);
+
+The dataTypes.getBlobData() in the last statement returns null(for throws exception with EclipseLink nightly build 20080611).

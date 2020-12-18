@@ -1,0 +1,15 @@
+Resolving a proxy could be a very expensive operation. Depending on the type of the model used and how the references are actually made, a more efficient algorithm can be implemented. The current possibility to come with an algorithm by using the  (deprecated) ProxyHelper might not be sufficient as it have access only to the proxyURI.
+
+For example, in the context of Artop, if a proxy is already checked and not resolved and if the resourcesSet has not been changed in the meantime, is not necessary to try again to resolve the proxy.
+
+I propose to move the entire logic to the ProxyHelper or similar. A pseudocode of eResolveProxyInResourceSet could look like:
+
+if(proxyHelper != null){
+  return proxyHelper.resolveProxy(resourceSet, contextObject, proxy)
+} else {
+  // Delegate to conventional EMF proxy resolution;
+  // it may be able to do the job
+  return resourceSet.getEObject(proxyURI, true);
+}
+
+All the logic regarding black list and ScopingResourceSet will be moved to the Sphinx implementation of ProxyHelper.

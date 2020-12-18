@@ -1,0 +1,105 @@
+WSDL Editor does not use an existing WSDL emf model but create a new one. The 
+problem is if any other editor/viewer opens the emf model and updates, the 
+WSDL editor does not synch the updates (because it refers to a different in 
+memery emf model). 
+In this particula case, when WSDL visualizer opens a WSDL model and then WSDL 
+editor opens the same model, any updates on the model from the visualizer does 
+not get reflected in the WSDL editor. But when WSDL editor opens the model 
+first and then the visualizer opens the same model, since visualizer uses same 
+in memory model, any updates from the visualizer gets reflected in the WSDL 
+editor. 
+Here how WSDL editor opens WSDL emf model:
+
+  public Definition createDefinition(Element element)
+  {     
+    try
+    {
+      IDOMNode domNode = (IDOMNode)element;
+      String baseLocation = domNode.getModel().getBaseLocation();
+          
+      definition = WSDLFactory.eINSTANCE.createDefinition();
+               
+      resourceSet = new ResourceSetImpl();
+      resourceSet.getAdapterFactories().add(new WSDLModelLocatorAdapterFactory
+());
+      resourceSet.getAdapterFactories().add(new 
+XSDSchemaLocationResolverAdapterFactory());
+                     
+      // TODO.. .revist the best approach to obtain a URI from the SSE model
+      //
+      URI uri = null;
+      if (baseLocation.startsWith("/"))
+      {
+        uri = URI.createPlatformResourceURI(baseLocation);
+      }
+      else
+      {
+        uri = URI.createFileURI(baseLocation);
+      }            
+      
+      definition = WSDLFactory.eINSTANCE.createDefinition();
+      definition.setDocumentBaseURI(uri.toString());
+      definition.setElement(element);
+      
+      WSDLResourceFactoryImpl resourceFactory = new WSDLResourceFactoryImpl();
+      Resource resource = resourceFactory.createResource(uri);
+      resourceSet.getResources().add(resource);       
+      resource.getContents().add(definition);
+      resource.setModified(false);    
+      ((DefinitionImpl)definition).reconcileReferences(true);    
+                 
+      // attach an adapter to keep the WSDL model and DOM in sync
+      //
+      new WSDLModelReconcileAdapter(element.getOwnerDocument(), definition);
+
+      // TODO... CS : revisit this line
+      // currently this is used to associate a 'type' system with the 
+definition      
+      // I suspect that this could be made a whole lot more simple
+      //
+      WSDLEditorUtil.getInstance().setTypeSystemProvider(definition, new 
+ExtensibleTypeSystemProvider());
+    }
+    catch (Exception ex)
+    {
+      ex.printStackTrace();
+    }
+    return definition;
+  }
+
+Here resourceSet is created everytime when the emf model is opened, instead 
+EMFWorkbenchContextFactory.INSTANCE.createEMFContext(project, 
+null).getResourceSet() should be used.
+
+Some other minor points:
+- definition = WSDLFactory.eINSTANCE.createDefinition(); is called twice from 
+this function.
+- DefinitionImpl is used from the client instead of Definition
+
+Another version of crate Definition...
+
+public Definition getDefinition(IFile file, IProject project) {
+		EMFWorkbenchContextBase context = 
+EMFWorkbenchContextFactory.INSTANCE.getEMFContext(project); 
+		if(context==null){
+			context = 
+EMFWorkbenchContextFactory.INSTANCE.createEMFContext(project, null);
+		}
+		ResourceSet resourceSet = context.getResourceSet
+();//nature.getResourceSet();
+		Document document = StructuredModelManager.getModelManager
+().getModelForEdit(file).getDocument();
+		def = createDefinition(resourceSet, file, document);
+		new SEDDocumentAdapter(((DocumentImpl)document).getModel(), 
+def); //we need this so that any modifition of dom element (thru wsdl edit 
+wizard) can be adapted to wsdl ecore model
+		Definition definition = WSDLFactory.eINSTANCE.createDefinition
+();
+		URI baseURI = URI.createPlatformResourceURI(file.getFullPath
+().toString());
+		baseURI = baseURI.appendFragment("/"); 
+		Definition definition = (Definition)resourceSet.getEObject
+(baseURI, true);
+                        ...... 
+		return definition ;
+	}

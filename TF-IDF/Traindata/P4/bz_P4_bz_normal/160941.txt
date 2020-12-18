@@ -1,0 +1,111 @@
+In a product based on WTP with a lot of plugins, we built a medium/large workspace of j2ee projects (30-40) at once , project clean all,  
+
+because the way the validation framework works is, build completes and validation is scheduled to begin, one job per validator per project is scheduled to run at the end of build, we found nearly 130 odd jobs waiting to begin and this caused UI to hang for 2-3 minutes IF the Progress View was open, we have profiled it and included the profiled screenshot
+
+See notes below and see thread stack trace when I suspended the product
+
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=159913#c37
+I just tried the patch posted here on a large workspace (project clean all)
+I found one problem/behavior that I want to report
+
+So earlier when I would perform a project clean the build would go on and
+validation would go on side by side
+
+Now after this patch I find build goes from 0 to 100 % (during which no
+validation occurs), validation begins after that. This works really well.
+
+However one thing to note,
+
+If I have progress view open, then UI hangs/ CPU is at 100% for at least 2-3
+minutes (this is at the stageu when build ends at 100 % and validation has not
+begun yet) I am assuming its because so many validation jobs are to be run that
+the progress view cannot report progress without taking a lot of cpu cycles
+
+This was the code that the main thread was executing during the 2-3 minute
+phase
+
+Thread [main] (Suspended)       
+        OS.CreateWindowExW(int, char[], char[], int, int, int, int, int, int,
+int, int, CREATESTRUCT) line: not available [native method]       
+        OS.CreateWindowEx(int, TCHAR, TCHAR, int, int, int, int, int, int, int,
+int, CREATESTRUCT) line: 1903   
+        Label(Control).createHandle() line: 498 
+        Label.createHandle() line: 178  
+        Label(Control).createWidget() line: 523 
+        Label(Control).<init>(Composite, int) line: 98  
+        Label.<init>(Composite, int) line: 91   
+        ProgressInfoItem.createChildren() line: 202     
+        ProgressInfoItem.<init>(Composite, int, JobTreeElement) line: 186       
+        DetailedProgressViewer.createNewItem(JobTreeElement) line: 144  
+        DetailedProgressViewer.add(Object[]) line: 118  
+        DetailedProgressViewer.internalRefresh(Object) line: 329        
+        DetailedProgressViewer(StructuredViewer).internalRefresh(Object,
+boolean) line: 1211    
+        StructuredViewer$8.run() line: 1415     
+        DetailedProgressViewer(StructuredViewer).preservingSelection(Runnable)
+line: 1323       
+        DetailedProgressViewer(StructuredViewer).refresh(Object, boolean) line:
+1413    
+        ProgressViewerContentProvider.refresh(Object[]) line: 137       
+        ProgressViewUpdater$1.runInUIThread(IProgressMonitor) line: 274 
+        UIJob$1.run() line: 94  
+        RunnableLock.run() line: 35     
+        UISynchronizer(Synchronizer).runAsyncMessages(boolean) line: 123        
+        Display.runAsyncMessages(boolean) line: 3325    
+        Display.readAndDispatch() line: 2971    
+        Workbench.runEventLoop(Window$IExceptionHandler, Display) line: 1914    
+        Workbench.runUI() line: 1878    
+        Workbench.createAndRunWorkbench(Display, WorkbenchAdvisor) line: 419    
+        PlatformUI.createAndRunWorkbench(Display, WorkbenchAdvisor) line: 149   
+        IDEApplication.run(Object) line: 95     
+        PlatformActivator$1.run(Object) line: 78        
+        EclipseAppLauncher.runApplication(Object) line: 92      
+        EclipseAppLauncher.start(Object) line: 68       
+        EclipseStarter.run(Object) line: 400    
+        EclipseStarter.run(String[], Runnable) line: 177        
+        NativeMethodAccessorImpl.invoke0(Method, Object, Object[]) line: not
+available [native method]  
+        NativeMethodAccessorImpl.invoke(Object, Object[]) line: 39      
+        DelegatingMethodAccessorImpl.invoke(Object, Object[]) line: 25  
+        Method.invoke(Object, Object...) line: 585      
+        Main.invokeFramework(String[], URL[]) line: 336 
+        Main.basicRun(String[]) line: 280       
+        Main.run(String[]) line: 977    
+        Main.main(String[]) line: 952   
+
+After the 2-3 mins of UI getting locked up/CPU at 100% validation runs and
+I see everything end.
+Clearly there is something in progress view that maybe causing it.
+
+If I have the progress view closed, then everything works fine (ie build ends,
+validation runs seamlessly)
+
+-------------------------------------------------
+
+
+	Re: [Bug 159913] [hotbug] [validation] Validation builder launches a job that causes build to cancel
+	
+	
+	
+	
+
+Hi Chris,
+
+   As I had earlier reported I tried out the  validation patch for bug 159913, now the build runs and then validation begins, for a large workspace and clean all scenario,  if the progress view is open during that stage (ie build ends validation begins), UI gets locked/ CPU is busy for minutes, 
+I profiled it in yourkit. I just thought if this is something you guys might know
+
+
+John Arthorne/Ottawa/IBM@IBMCA
+10/13/2006 05:44 PM	
+	To
+	Rajasimhan A Mandayam/Raleigh/IBM@IBMUS
+	cc
+	Chris Laffra/Durham/IBM@IBMUS
+	Subject
+	Re: [Bug 159913] [hotbug] [validation] Validation builder launches a job that causes build to cancel
+	
+	
+	
+	
+
+It looks like the sheer number of jobs being started is overwhelming the refresh algorithm in the progress view.  I tried a quick test of schedule 100 jobs simultaneously, and while there was definitely some sluggishness in the UI, it didn't freeze for very long. I suggest entering a bug against Eclipse Platform UI so this can be investigated further

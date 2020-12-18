@@ -1,0 +1,70 @@
+Build Identifier: 2.1.0
+
+EclipseLink 2.1.0
+OracleDB 11R2
+OJDBC 11.2.0.1.0
+
+Mapping:
+@Column(columnDefinition = "BINARY_DOUBLE")
+private double weight;
+
+Storing Double.NaN into the Property "weight' will fail with a driver exception:
+
+Caused by: Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.1.0.v20100614-r7608): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLException: Interner Fehler: Overflow Exception trying to bind NaN
+Error Code: 17001
+Call: UPDATE PERSON SET WEIGHT = ? WHERE (ID = ?)
+	bind => [NaN, 4051]
+Query: UpdateObjectQuery(Person(4051) name: Test, weight: NaN)
+	at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:324)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeDirectNoSelect(DatabaseAccessor.java:797)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeNoSelect(DatabaseAccessor.java:863)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:583)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeCall(DatabaseAccessor.java:526)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeCall(AbstractSession.java:980)
+	at org.eclipse.persistence.internal.sessions.IsolatedClientSession.executeCall(IsolatedClientSession.java:131)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:206)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:192)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.updateObject(DatasourceCallQueryMechanism.java:747)
+	at org.eclipse.persistence.internal.queries.StatementQueryMechanism.updateObject(StatementQueryMechanism.java:430)
+	at org.eclipse.persistence.internal.queries.DatabaseQueryMechanism.updateObjectForWriteWithChangeSet(DatabaseQueryMechanism.java:1144)
+	at org.eclipse.persistence.queries.UpdateObjectQuery.executeCommitWithChangeSet(UpdateObjectQuery.java:84)
+	at org.eclipse.persistence.internal.queries.DatabaseQueryMechanism.executeWriteWithChangeSet(DatabaseQueryMechanism.java:290)
+	at org.eclipse.persistence.queries.WriteObjectQuery.executeDatabaseQuery(WriteObjectQuery.java:58)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:736)
+	at org.eclipse.persistence.queries.DatabaseQuery.executeInUnitOfWork(DatabaseQuery.java:643)
+	at org.eclipse.persistence.queries.ObjectLevelModifyQuery.executeInUnitOfWorkObjectLevelModifyQuery(ObjectLevelModifyQuery.java:108)
+	at org.eclipse.persistence.queries.ObjectLevelModifyQuery.executeInUnitOfWork(ObjectLevelModifyQuery.java:85)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.internalExecuteQuery(UnitOfWorkImpl.java:2909)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1291)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1273)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1233)
+	at org.eclipse.persistence.internal.sessions.CommitManager.commitChangedObjectsForClassWithChangeSet(CommitManager.java:265)
+	at org.eclipse.persistence.internal.sessions.CommitManager.commitAllObjectsWithChangeSet(CommitManager.java:128)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.writeAllObjectsWithChangeSet(AbstractSession.java:3348)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitToDatabase(UnitOfWorkImpl.java:1422)
+	at org.eclipse.persistence.internal.sessions.RepeatableWriteUnitOfWork.commitToDatabase(RepeatableWriteUnitOfWork.java:546)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitToDatabaseWithChangeSet(UnitOfWorkImpl.java:1527)
+	at org.eclipse.persistence.internal.sessions.RepeatableWriteUnitOfWork.commitRootUnitOfWork(RepeatableWriteUnitOfWork.java:200)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitAndResume(UnitOfWorkImpl.java:1148)
+	at org.eclipse.persistence.internal.jpa.transaction.EntityTransactionImpl.commitInternal(EntityTransactionImpl.java:84)
+	... 3 more
+Caused by: java.sql.SQLException: Interner Fehler: Overflow Exception trying to bind NaN
+	at oracle.jdbc.driver.DoubleBinder.bind(OraclePreparedStatement.java:16802)
+	at oracle.jdbc.driver.OraclePreparedStatement.setupBindBuffers(OraclePreparedStatement.java:3014)
+	at oracle.jdbc.driver.OraclePreparedStatement.processCompletedBindRow(OraclePreparedStatement.java:2247)
+	at oracle.jdbc.driver.OraclePreparedStatement.executeInternal(OraclePreparedStatement.java:3444)
+	at oracle.jdbc.driver.OraclePreparedStatement.executeUpdate(OraclePreparedStatement.java:3530)
+	at oracle.jdbc.driver.OraclePreparedStatementWrapper.executeUpdate(OraclePreparedStatementWrapper.java:1350)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeDirectNoSelect(DatabaseAccessor.java:788)
+	... 33 more
+
+
+Plain JDBC/SQL will work though:
+
+UPDATE PERSON SET weight = 'NaN'
+(Please note the quotes around 'NaN'.)
+
+This seems to be database-specific as it will work out-of-the-box with H2.
+
+Reproducible: Always

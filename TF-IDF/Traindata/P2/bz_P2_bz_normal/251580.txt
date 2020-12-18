@@ -1,0 +1,24 @@
+The quick fix to Bug 247735 was to turn off validation when reading persistence xml.  There are better more correct solutions listed in that bug that should be explored.
+
+-----
+An error can occur reading Persistence XML when the enviroment is configured to
+use a JAXP SAX parser that does not support the
+"http://java.sun.com/xml/jaxp/properties/schemaLanguage" property, the
+following exception occurs:
+
+Caused by: org.xml.sax.SAXNotRecognizedException:
+http://java.sun.com/xml/jaxp/properties/schemaLanguage
+    at org.apache.xerces.framework.XMLParser.setProperty(XMLParser.java:1626)
+    at org.apache.xerces.parsers.SAXParser.setProperty(SAXParser.java:770)
+    at org.apache.xerces.jaxp.SAXParserImpl.setProperty(SAXParserImpl.java:183)
+    at
+PersistenceUnitProcessor.processPersistenceXML(PersistenceUnitProcessor.java:121)
+
+Currently for reading Persistence XML schema validation is enabled using JDK
+1.4 style APIs, a fix could involve the following options:
+
+1.  Continue to use JDK 1.4 APIs, but enable user to turn validation off.
+2.  Continue to use JDK 1.4 APIs, but log a message when schema validation
+cannot be enabled.
+3.  Switch to use JDK 1.5 APIs, this has been the approach in other areas of
+EclipseLink.

@@ -1,0 +1,14 @@
+As per the title, removing an Entity from a uni-directional OneToMany does not removed the Entity from the database.  It only results in the deletion of the relationship from the join table.
+
+E.g.,
+
+    @OneToMany
+    @PrivateOwned
+    java.util.List<Child> children = new ArrayList<Child>();
+
+children.remove(0) will result in something like:
+
+DELETE FROM Parent_Child WHERE ((parent_id = ?) AND (child_id = ?))
+	bind => [302, 301]
+
+But no DELETE from the CHILD table is generated.

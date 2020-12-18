@@ -1,0 +1,20 @@
+The following SDO server platform specific functions "may" be merged and/or replaced by using the server platform generic functions new to JMXServerPlatformBase in core.
+>We will then have a single place where MBean API is called in the EclipseLink stack.
+This will likely involve making SDO some sort of pseudo server platform or by subclassing off of NoServerPLatform as soon as JMX SE support is enabled there for 265540
+In addition we now lookup the MBeanServer using the static JMX API MBeanServerFactory.findMBeanServer(null) - which returns a List<MBeanServer> instead of using JNDI.
+
+>SDO : WebLogic and JBoss
+SDOHelperContext.java
+    private static MBeanServer wlsMBeanServer = null;
+    private static MBeanServer jbossMBeanServer = null;
+    private static Object getExecuteThread() {
+    private static MBeanServer getWLSMBeanServer()
+
+>Core : WebLogic, JBoss, WebSphere and Glassfish
+JMXServerPlatformBase.java
+    private MBeanServer mBeanServer = null;
+    public MBeanServer getMBeanServer()
+
+>Core : WebLogic only
+WebLogic_10_Platform.java
+    private Object getExecuteThreadFromMBean()

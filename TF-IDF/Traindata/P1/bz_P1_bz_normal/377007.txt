@@ -1,0 +1,19 @@
+In class org.eclipse.edt.ide.rui.utils.Util:
+
+	public static boolean isVESupportType(IFile file){
+		return isVESupportType((IEGLFile)EGLCore.create(file), null);
+	}
+	
+	public static boolean isVESupportType(IFile file, IEGLDocument currentDocument){
+		return isVESupportType((IEGLFile)EGLCore.create(file), currentDocument);
+	}
+	
+	public static boolean isRUIWidget(IFile file){
+		return isRUIWidget((IEGLFile)EGLCore.create(file));
+	}
+	
+	public static String getRUIWidgetId(IFile file){
+		return getRUIWidgetId((IEGLFile)EGLCore.create(file));
+	}
+
+These all assume an IFile is going to be a .egl file, but this is not always true (especially once eglar support is added). For example give focus to a *.eglxml file (in a text editor), then hover over the "Debug" icon in the main toolbar. In this case it creates an IClassFile, not an IEGLFile, so it throws a ClassCastException. These methods should all support IClassFile, and also handle the case where it's an unsupported type (like a "foo.bar" file).

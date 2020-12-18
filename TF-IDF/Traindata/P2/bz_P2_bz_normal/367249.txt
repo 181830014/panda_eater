@@ -1,0 +1,28 @@
+Using EclipseLink version 2.4.0.v20111209-r10529
+
+Given this JOINED inheritance example with a primaryKey TenantDiscriminatorColumn I hit the following NPE while EclipseLink is processing the metadata.
+
+@Entity
+@Inheritance(strategy=InheritanceType.JOINED)
+@Multitenant(value=MultitenantType.SINGLE_TABLE)
+@TenantDiscriminatorColumn(name="TENANT_ID", primaryKey=true)
+public class Foo {
+    @Id
+    private int id;
+}
+
+@Entity
+public class SubFoo extends Foo {
+
+}
+
+
+Caused by: java.lang.NullPointerException
+	at org.eclipse.persistence.internal.jpa.metadata.MetadataDescriptor.setPKClass(MetadataDescriptor.java:1738)
+	at org.eclipse.persistence.internal.jpa.metadata.inheritance.InheritanceMetadata.process(InheritanceMetadata.java:237)
+	at org.eclipse.persistence.internal.jpa.metadata.accessors.classes.EntityAccessor.processTableAndInheritance(EntityAccessor.java:1202)
+	at org.eclipse.persistence.internal.jpa.metadata.accessors.classes.EntityAccessor.process(EntityAccessor.java:618)
+	at org.eclipse.persistence.internal.jpa.metadata.MetadataProject.processStage2(MetadataProject.java:1645)
+	at org.eclipse.persistence.internal.jpa.metadata.MetadataProcessor.processORMMetadata(MetadataProcessor.java:532)
+	at org.eclipse.persistence.internal.jpa.deployment.PersistenceUnitProcessor.processORMetadata(PersistenceUnitProcessor.java:546)
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.predeploy(EntityManagerSetupImpl.java:1356)

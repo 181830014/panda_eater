@@ -1,0 +1,29 @@
+Everything is in the title, when I use Koneki LDT to open file which is not in the workspace, the change I make in the file are not handled.
+Here how to reproduce the behavior:
+1. Create a file with a .lua extension on your file system
+2. Open Koneki LDT
+3. Drag your fresh empty file in LDT
+4. Edit the file, here is what I entered:
+    ---
+    -- @module modname
+    return nil
+5. Save the file
+6. Nothing appears on outline and an exception in thrown:
+!ENTRY org.eclipse.koneki.ldt 4 0 2012-07-31 11:50:32.658
+!MESSAGE Unable to find module: global.
+!STACK 1
+org.eclipse.dltk.core.ModelException:   does not exist
+	at org.eclipse.dltk.internal.core.ModelElement.newNotPresentException(ModelElement.java:258)
+	at org.eclipse.dltk.internal.core.ModelManager.getPerProjectInfoCheckExistence(ModelManager.java:800)
+	at org.eclipse.dltk.internal.core.ScriptProject.getPerProjectInfo(ScriptProject.java:735)
+	at org.eclipse.dltk.internal.core.ScriptProject.getResolvedBuildpath(ScriptProject.java:302)
+	at org.eclipse.dltk.internal.core.ScriptProject.getAllProjectFragments(ScriptProject.java:3192)
+	at org.eclipse.dltk.internal.core.ScriptProject.getAllProjectFragments(ScriptProject.java:3185)
+	at org.eclipse.koneki.ldt.core.LuaUtils.getModuleSource(LuaUtils.java:149)
+	at org.eclipse.koneki.ldt.core.LuaUtils.getSourceModule(LuaUtils.java:186)
+	at org.eclipse.koneki.ldt.core.internal.ast.models.LuaASTUtils.getPreloadSourceModule(LuaASTUtils.java:426)
+	at org.eclipse.koneki.ldt.core.internal.ast.models.LuaASTUtils.getAllGlobalVarsDefinition(LuaASTUtils.java:386)
+	at org.eclipse.koneki.ldt.ui.internal.editor.completion.LuaCompletionEngine.addGlobalDeclarations(LuaCompletionEngine.java:75)
+	at org.eclipse.koneki.ldt.ui.internal.editor.completion.LuaCompletionEngine.complete(LuaCompletionEngine.java:66)
+	at org.eclipse.dltk.internal.core.Openable$CompletionThread.run(Openable.java:502)
+	at org.eclipse.dltk.internal.core.Openable$CompletionThread.run(Openable.java:483)

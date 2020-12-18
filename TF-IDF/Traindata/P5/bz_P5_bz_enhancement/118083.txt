@@ -1,0 +1,8 @@
+The standard err and out streams are captured in several places in the harness to reduce the verbosity of output and allow validation of testcase behavior. Unfortunately this is implemented by switching redirection on and off at the beginning and end of each test which has a number of drawbacks:
+1.	Certain AspectJ classes store a static reference to err/out e.g. IMessageHandler.SYSTER_ERR. They may store a reference to a redirected version rendering them useless in later tests
+2.	All uses of  System.err/out for debugging are redirected making this debug mechanism largely useless
+3.	Using System.err/out can cause tests to fail by changing expected output
+4.	Redirected output does not go the screen immediately which means it does not appear while stepping through the code, even in verbose mode, making it largely useless
+5.	Redirected output is often not show automatically when a test fails
+
+The answer is to redirect the streams once when the harness starts but leave them permanently connected to their original destinations. To reduces verbosity the destination streams can be switched on and off during test execution. To capture output a second stream is connected and disconnected to/form the redirected. Because the verbose mode decides what goes to the screen not the redirection text will appear while stepping through the code. Finally the original err/out are stored in a public final static to be used when output needs to go to the screen.

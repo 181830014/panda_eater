@@ -1,0 +1,18 @@
+You can't use "standard" validation (jsr303) when composite persistence units are used.
+
+the reason is this code in EntityManagerSetupImpl:
+
+[code]
+if (!isCompositeMember()) {
+    addBeanValidationListeners(deployProperties, realClassLoader);
+}
+[/code]
+
+
+in lines 431-433
+
+which basically means: if the pu in question is composite member then now validation listeners is added.
+
+On the other hand the "master" no validation listener is added too: one can see that several lines above.
+
+I had a look at the source code versions 2.3.3 and 2.4.0 and the problem seems to remain there as well.

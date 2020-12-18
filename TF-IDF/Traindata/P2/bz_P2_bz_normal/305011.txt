@@ -1,0 +1,7 @@
+When an entity is loaded with a dynamic or named FetchGroup (not default) and subsequent calls on the same persistence context are made to find it using:
+
+entityManager.find(MyEntity.class, idValue);
+
+The entire entity is fetched. At present the find is performed with an ObjectLevelReadQuery that will not have a FetchGroup configured on it and if there is no default FetchGroup or the default FetchGroup is not a subset of the one used to load the entity the infrastructure decides to load more.
+
+The find operation should do a lookup in the Persistence Context for the ID and return it if no explicit FetchGroup or FetchGroup name is set on the find operation (through JPA 2.0 hints). The default FG or lack of a default FG should not cause the find to perform additional operations. In the case of a find the default FG should only be used if the entity does not exist in the persistence context and no FG or FG name has been specified for use by the find's query.

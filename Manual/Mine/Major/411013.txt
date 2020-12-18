@@ -1,0 +1,27 @@
+In the following code all entity objects returned from the query will be validated by bean validation on transaction commit:
+
+    entityManager.getTransaction().begin();
+    List<Fragebogen> frageboegen = entityManager.createQuery("select f from Fragebogen f", Fragebogen.class).getResultList();
+    entityManager.getTransaction().commit();
+
+If any of these are not valid the commkt faies with an exception:
+
+Exception in thread "main" javax.persistence.RollbackException: javax.validation.ConstraintViolationException: Bean Validation constraint(s) violated while executing Automatic Bean Validation on callback event:'preUpdate'. Please refer to embedded ConstraintViolations for details.
+	at org.eclipse.persistence.internal.jpa.transaction.EntityTransactionImpl.commit(EntityTransactionImpl.java:157)
+	at de.gedoplan.buch.eedemos.bv.validation.entity.JpaValidationTester2.main(JpaValidationTester2.java:35)
+Caused by: javax.validation.ConstraintViolationException: Bean Validation constraint(s) violated while executing Automatic Bean Validation on callback event:'preUpdate'. Please refer to embedded ConstraintViolations for details.
+	at org.eclipse.persistence.internal.jpa.metadata.listeners.BeanValidationListener.validateOnCallbackEvent(BeanValidationListener.java:90)
+	at org.eclipse.persistence.internal.jpa.metadata.listeners.BeanValidationListener.preUpdate(BeanValidationListener.java:72)
+	at org.eclipse.persistence.descriptors.DescriptorEventManager.notifyListener(DescriptorEventManager.java:721)
+	at org.eclipse.persistence.descriptors.DescriptorEventManager.notifyEJB30Listeners(DescriptorEventManager.java:691)
+	at org.eclipse.persistence.descriptors.DescriptorEventManager.executeEvent(DescriptorEventManager.java:229)
+	at org.eclipse.persistence.descriptors.changetracking.DeferredChangeDetectionPolicy.calculateChanges(DeferredChangeDetectionPolicy.java:87)
+	at org.eclipse.persistence.descriptors.changetracking.DeferredChangeDetectionPolicy.calculateChangesForExistingObject(DeferredChangeDetectionPolicy.java:56)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.calculateChanges(UnitOfWorkImpl.java:662)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitToDatabaseWithChangeSet(UnitOfWorkImpl.java:1514)
+	at org.eclipse.persistence.internal.sessions.RepeatableWriteUnitOfWork.commitRootUnitOfWork(RepeatableWriteUnitOfWork.java:277)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitAndResume(UnitOfWorkImpl.java:1167)
+	at org.eclipse.persistence.internal.jpa.transaction.EntityTransactionImpl.commit(EntityTransactionImpl.java:132)
+	... 1 more
+
+It seems, that UnitOfWorkImpl.calculateChanges triggers the unwanted validation when calculating the changes to be pushed to the database.

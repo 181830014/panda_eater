@@ -1,0 +1,46 @@
+From cmvc defect 246691:
+    <Note by myersdj (MYERS, JEFFREY D.), 2003/05/07 10:08:07, seq: 1 rel: 0  
+action: open>
+GridBagConstraints variables name should reflect associated component.
+
+For instance, instead of having
+
+java.awt.GridBagConstraints consGridBagConstraints1 = new 
+java.awt.GridBagConstraints();
+java.awt.GridBagConstraints consGridBagConstraints3 = new 
+java.awt.GridBagConstraints();
+java.awt.GridBagConstraints consGridBagConstraints2 = new 
+java.awt.GridBagConstraints();
+consGridBagConstraints1.gridy = 0;
+consGridBagConstraints1.gridx = 0;
+consGridBagConstraints3.gridy = 0;
+consGridBagConstraints3.gridx = 2;
+consGridBagConstraints2.gridy = 0;
+consGridBagConstraints2.gridx = 1;
+jPanel.setLayout(new java.awt.GridBagLayout());
+jPanel.add(getJButton(), consGridBagConstraints1);
+jPanel.add(getJLabel(), consGridBagConstraints2);
+jPanel.add(getFrog(), consGridBagConstraints3);
+jPanel.setSize(314, 194);
+
+we should use local variable names like this
+
+java.awt.GridBagConstraints jButtonConstraints = new java.awt.GridBagConstraints
+();
+java.awt.GridBagConstraints frogConstraints = new java.awt.GridBagConstraints();
+java.awt.GridBagConstraints jLabelConstraints = new java.awt.GridBagConstraints
+();
+jButtonConstraints.gridy = 0;
+jButtonConstraints.gridx = 0;
+frogConstraints.gridy = 0;
+frogConstraints.gridx = 2;
+jLabelConstraints.gridy = 0;
+jLabelConstraints.gridx = 1;
+jPanel.setLayout(new java.awt.GridBagLayout());
+jPanel.add(getJButton(), jButtonConstraints);
+jPanel.add(getJLabel(), jLabelConstraints);
+jPanel.add(getFrog(), frogConstraints);
+
+Would make it much easier from the source to determine which constraints are 
+for which components,
+and the local variable names should always be unique.

@@ -1,0 +1,36 @@
+Whenever I connect to my dstore-windows daemon, I see an exception printed in the Daemon's console. The exception seems to be noncritical since the connection works just fine.
+
+Looking at the code in ProcessBuilder of JDK 1.6.0_05, it seems that one of the arguments in the cmdarray is null. Looking at the ServerLauncher code, I have no idea how this could ever happen.
+
+Need to assign this to somebody else since I have no idea how to debug the dstore daemon. Here is the commandline from the daemon.bat script along with its output:
+
+D:\RSETest\3.0RC2\server>set CLASSPATH=.\dstore_core.jar;.\dstore_miners.jar;;;.
+\clientserver.jar;.\dstore_extra_server.jar;.;C:\Program Files\Java\jre1.6.0_05\
+lib\ext\QTJava.zip
+
+D:\RSETest\3.0RC2\server>java -DA_PLUGIN_PATH=. org.eclipse.dstore.core.server.S
+erverLauncher 4075
+Daemon running on: szg-mober-l1, port: 4075
+Exception in thread "Thread-1" java.lang.NullPointerException
+        at java.lang.ProcessBuilder.start(Unknown Source)
+        at java.lang.Runtime.exec(Unknown Source)
+        at java.lang.Runtime.exec(Unknown Source)
+        at org.eclipse.dstore.core.server.ServerLauncher$ConnectionListener.list
+en(ServerLauncher.java:321)
+        at org.eclipse.dstore.core.server.ServerLauncher$ConnectionListener.run(
+ServerLauncher.java:118)
+launched new server on 7525
+
+
+-----------Enter bugs above this line-----------
+TM 3.0RC2 testing
+installation : eclipse-SDK-3.4RC3 (I20080530-1730), cdt-5.0RC2 (200805231539), 
+     DSF-1.0rc2 (20080527), emf-2.4.0rc2, Findbugs-1.3.3, Releng.Tools-3.4RC3, 
+     RSE-3.0RC2, RXTX-2.1-7r3b, Subversive-0.7.0.v20080517, FTP_WebDav-3.2.2
+     org.tigris.MemMonitor, WR-Retriever-3.0.v20070604,
+RSE install  : RSE 3.0RC2 in workspace, TM-terminal, TM-discovery
+java.runtime : Sun 1.6.0_05-b13 -Xmx512m -XX:MaxPermSize=128m
+os.name:     : Windows XP 5.1, Service Pack 2
+------------------------------------------------
+systemtype   : Dstore-windoes (to local host, see above)
+------------------------------------------------

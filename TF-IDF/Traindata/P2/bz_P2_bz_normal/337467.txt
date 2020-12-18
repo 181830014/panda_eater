@@ -1,0 +1,22 @@
+Build Identifier: 2.1.2.v20101206-r8635
+
+There are 2 binary types in PotgreSQL: bytea and Blob. bytea is correctly supported in EclipseLink JPA, but Blob is not correctly implemented.
+
+Blobs in PostgreSQL are linked into table columns as blob's OID number, so column type is OID. PostgreSQL driver returns for this column:
+TYPE_NAME="oid"
+DATA_TYPE=java.sql.Types.BIGINT
+But it is possible to obtain Blob using ResultSet.getBlob() method.
+
+EclipseLink thinks that blob column should be a java.lang.Long and can't read the blob. The result is that correctly annotated by @Lob PostgreSQL's blob columns can't be read.
+
+I think that EclipseLink should read oid columns as Blob if they are annotated as @Lob.
+
+I would like to add, that when I tested Hibernate JPA some time ago, Hibernate expected serializable fields annotated with @Lob to be oids in PostgreSQL, and serializable fields without @Lob annotation to be bytea (java.sql.Types.BINARY). I think that this approach to PostgreSQL binary types should be treated as the correct one.
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Create table with BLOB's in PostgreSQL: "create table test (id serial primary key, data oid);"
+2. Import some blob using psql: "\lo_import a_file_name"
+3. Insert into table blob oid returned by \lo_import, eg: "insert into test values (1, 36253);"
+4. Create @Entity with @Lob field and try to read the database row.

@@ -1,0 +1,22 @@
+Created attachment 227486 [details]
+Demonstration of bug.
+
+When querying for objects with composite primary keys using an in clause the in clause is generated using TABLE.FIELD instead of t0.FIELD or t1.FIELD as required.
+
+So far I've found 3 separate ways to trigger this bug. 
+
+Querying for an object with a composite PK that uses JoinFetch to another object.
+
+Using BatchFetchType.IN to batch query for a related object that has a JoinFetch relationship.
+
+Using BatchFetchType.IN to load a ManyToMany relationship (aliases are required because of the join table)
+
+The SQL generated looks similar to this:
+
+SELECT t1.ID2, t1.ID1, t1.TEST, t1.DEGREE_DEGREE_ID, t0.DEGREE_ID, t0.NAME FROM BUG t1 LEFT OUTER JOIN DEGREE t0 ON (t0.DEGREE_ID = t1.DEGREE_DEGREE_ID) WHERE ((BUG.ID2, BUG.ID1) IN ('id2','id1'))
+
+Notice that the IN clause is built with BUG.ID2 and BUG.ID1 instead of t1.ID2, and t2.ID1
+
+I've attached a modified copy of the Eclipselink-Employees project, example.BatchInBug#main demonstrates the first two methods of replicating the bug. (just modify persistence.xml's jdbc settings)
+
+This bug makes BatchFetchType.IN very unreliable as it can generate invalid SQL.

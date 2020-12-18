@@ -1,0 +1,40 @@
+Build ID: I20070625-1500
+
+Steps To Reproduce:
+1.
+New php file
+with code
+	private function ShowExportButton()
+	{
+		$d=new CDiv('xmlexport');
+			//TODO - predelat to podle Rebe45L - raw
+			$l=new CAppLink('raw'.$this->m_action,"xexp",$_GET['data'], $GLOBALS['str_XmlExport'], "", "", "", true);
+				$GLOBALS['app']->ShowImage('images/xml_export.gif', 32, 10, $GLOBALS['str_XmlExport']);
+			$l->Fin();
+			/*$l=new CAppLink('raw'.$this->m_action,"xexp",$_GET['data']);
+				echo $GLOBALS['str_XmlExport'];
+			$l->Fin();*/
+		$d->Fin();
+	}
+2. paste this to next line from TODO
+					$l=new CAppLink(array(apModule=>$this->m_moduleId, apMethod=>'edit', apParam=>$aRecord[$this->m_tbl->m_idname]));
+
+3. wrong result is
+	private function ShowExportButton()
+	{
+		$d=new CDiv('xmlexport');
+			//TODO - predelat to podle Rebe45L - raw
+					$l=new CAppLink(array(apModule=>$this->m_moduleId, apMethod=>'edit', apParam=>$aRecord[$this->m_tbl->m_idname]));
+		$l=new CAppLink('raw'.$this->m_action,"xexp",$_GET['data'], $GLOBALS['str_XmlExport'], "", "", "", true);
+				$GLOBALS['app']->ShowImage('images/xml_export.gif', 32, 10, $GLOBALS['str_XmlExport']);
+			$l->Fin();
+			/*$l=new CAppLink('raw'.$this->m_action,"xexp",$_GET['data']);
+				echo $GLOBALS['str_XmlExport'];
+			$l->Fin();*/
+		$d->Fin();
+	}
+
+line $l=new CAppLink('raw'.$this->.... is idented to front without reason
+
+More information:
+i have night build org.eclipse.php_feature-incubation-N20070830.zip

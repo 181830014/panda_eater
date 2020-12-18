@@ -1,0 +1,80 @@
+Build Identifier: 20100617-1415
+
+Assume an entity class A which contained an aggregate set of class B.
+
+Classes:
+
+class A {
+    private Set<B> bees;
+
+    public Set<B> getBees() {
+		List<B> bList = new ArrayList<B>(bees);     //
+		Collections.reverse(bList);                 // <- useless, but pictures the error
+		return new HashSet<B>(bList);
+    }
+
+    public void setNicknames(final Set<B> bees) {
+        this.bees = bees;
+    }
+}
+
+class B {
+    ...
+}
+
+orm.xml:
+
+<entity-mappings>
+	<entity class="A" access="PROPERTY">
+		<table name="A"></table>
+		<attributes>
+			<element-collection name="bees" target-class="B">
+				<collection-table name="B">
+					<join-column name="a" />
+				</collection-table>
+			</element-collection>
+		</attributes>
+	</entity>
+	<embeddable class="B">
+		<attributes>
+            ...
+		</attributes>
+	</embeddable>
+</entity-mappings>
+
+Test-Run:
+
+entityManager.getTransaction().begin();
+Query query = entityManager.createQuery("SELECT a FROM A a");
+A a = query.getSingleResult();
+entityManager.getTransaction().commit();
+
+
+Enable full query logging (ALL) and you will see UpdateObjectQuerys for every element in Set<B>. This shouldn't happen, because nothing has changed.
+Since sets have no explicid order, the set bees and its reversed version (see the getter of bee) have to be equal in mathematical sense.
+
+After we debugging this issue, we found where the invalid set comparison take place. This comparison is valid for ordered collections but not for unordered collections.
+
+org.eclipse.persistence.mappings.AggregateCollectionMapping.compareForChange(Object clone, Object backUp, ObjectChangeSet owner, AbstractSession session):
+...
+            while (cp.hasNext(cloneIterator)) {
+                Object cloneObject = cp.next(cloneIterator, session);
+
+                // For CR#2285 assume that if null is added the collection has changed.
+                if (cloneObject == null) {
+                    change = true;
+                    break;
+                }
+                Object backUpObject = null;
+                if (cp.hasNext(backUpIterator)) {
+                    backUpObject = cp.next(backUpIterator, session);
+                } else {
+                    change = true;
+                    break;
+                }
+                if (cloneObject.getClass().equals(backUpObject.getClass())) {
+...
+
+
+
+Reproducible: Always

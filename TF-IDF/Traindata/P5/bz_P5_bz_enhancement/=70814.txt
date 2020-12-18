@@ -1,0 +1,23 @@
+We didn't manage to include images in the 3.0 theme work although the intention
+was there.  The original idea was to provide add <imageDefinition> and
+<imageOverride> elements to the themes extension point, along with an
+ImageRegistry that mirrored the existing support for colours and fonts.  Whether
+the existing JFace ImageRegistry can be used for this is a question that needs
+to be answered - the javadoc states that images cannot be replaced.  In order to
+be in line with the other theme registries this can't be the case.
+
+In addition to the explicitly declared images, it would be good if we could
+override ANY image that is accessable via some central authority (such as the
+plugin ImageRegistry or imageDescriptorFromPlugin on AbstractUIPlugin). 
+imageOverride elements could be specified by key (referring to imageDefinition
+elements), by plugin/key combinations (referring to plugin ImageRegistry
+objects) or by platform URL (available from imageDescriptorFromPlugin).  This
+would allow themes to customize all workbench and plugin images.
+
+In addition to specific overrides, we could allow themes to specify an
+<imageTransformer> element.  When accessing images in a given theme, the
+transformer would be run over all images as appropriate.  These transformers
+could apply color/sizing transformations on the entire image set.  The initial
+cost of this would be quite high, but the results could be cached.
+
+Opinions?

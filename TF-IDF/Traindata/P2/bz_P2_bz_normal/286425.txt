@@ -1,0 +1,34 @@
+The issue was originally entered in Oracle MetaLink SR 6407869.992 since 05-JUL-07
+
+The Oracle MetaLink bug is 6202422
+
+The problem is that if I map an attribute that is of type java.util.Date lot of kind of conversions will occur for me transparently, but the most basic conversion which is to support custom derived class of java.util.Date will throw an error.
+
+This is not right and not expected in O-O language like Java.
+
+The problem is that method below use instanceof for java.sql.Time, String, java.sql.Timestamp, Calendar, and Long, but == for java.util.Date!
+
+The fix is to check for instanceof for java.util.Date at the end of the many if/else statements.
+
+protected java.util.Date convertObjectToUtilDate(Object sourceObject) throws ConversionException {
+        java.util.Date date = null;
+
+        if (sourceObject.getClass() == java.util.Date.class) {
+            date = (java.util.Date)sourceObject;//used when converting util.Date to Calendar
+        } else if (sourceObject instanceof java.sql.Date) {
+            date = Helper.utilDateFromSQLDate((java.sql.Date)sourceObject);
+        } else if (sourceObject instanceof java.sql.Time) {
+            date = Helper.utilDateFromTime((java.sql.Time)sourceObject);
+        } else if (sourceObject instanceof String) {
+            date = Helper.utilDateFromTimestamp(Helper.timestampFromString((String)sourceObject));
+        } else if (sourceObject instanceof java.sql.Timestamp) {
+            date = Helper.utilDateFromTimestamp((java.sql.Timestamp)sourceObject);
+        } else if (sourceObject instanceof Calendar) {
+            return ((Calendar)sourceObject).getTime();
+        } else if (sourceObject instanceof Long) {
+            date = Helper.utilDateFromLong((Long)sourceObject);
+        } else {
+            throw ConversionException.couldNotBeConverted(sourceObject, ClassConstants.UTILDATE);
+        }
+        return date;
+    }

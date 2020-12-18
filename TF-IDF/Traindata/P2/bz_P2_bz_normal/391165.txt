@@ -1,0 +1,77 @@
+It looks a lot like bug 391153 - but for @AttributeOverride.
+
+@Entity
+@Table(name="TLG_MAPMASTER")
+public class MapMaster implements Serializable, PortableObject {
+    public Integer id;
+    public String name;
+...
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name="name", column=@Column(name="A_NAME")),
+        @AttributeOverride(name="one.id", column=@Column(name="A_ONE_ID")),
+        @AttributeOverride(name="one.id2", column=@Column(name="A_ONE_ID2")),
+        @AttributeOverride(name="two.id", column=@Column(name="A_TWO_ID")),
+        @AttributeOverride(name="b.name", column=@Column(name="A_B_NAME")),
+        @AttributeOverride(name="b.one.id", column=@Column(name="A_B_ONE_ID")),
+        @AttributeOverride(name="b.one.id2", column=@Column(name="A_B_ONE_ID2")),
+        @AttributeOverride(name="b.two.id", column=@Column(name="A_B_TWO_ID"))
+    })
+    public EmbeddedA a;
+...
+}
+
+@Embeddable
+public class EmbeddedA implements Serializable, PortableObject {
+    public String name;
+    public EmbeddedOne one;
+    public EmbeddedTwo two;
+...
+}
+
+@Embeddable
+public class EmbeddedB implements Serializable, PortableObject {
+    public String name;
+    public EmbeddedOne one;
+    public EmbeddedTwo two;
+...
+}
+
+@Embeddable
+public class EmbeddedOne implements Serializable, PortableObject{    
+    public int id;    
+    public int id2;
+...
+}
+
+public class EmbeddedTwo implements Serializable, PortableObject{
+    public int id;
+...
+}
+
+
+DefaultTableGenerator generated none of the fields mapped by EmbeddedTwo, nor any name field for EmbeddedB, etc.:
+
+CREATE TABLE TLG_MAPMASTER (ID NUMBER(10) NOT NULL, NAME VARCHAR2(255) NULL, A_NAME VARCHAR2(255) NULL, A_B_ONE_ID NUMBER(10) NULL, A_B_ONE_ID2 NUMBER(10) NULL, A_B_EXPERT_ID NUMBER(10) NULL, A_EXPERT_ID NUMBER(10) NULL, PRIMARY KEY (ID))
+
+
+as attempt to workaround I changed the names so that they are unique:
+
+@Embeddable
+public class EmbeddedB implements Serializable, PortableObject {
+    public String b_name;
+    public EmbeddedOne b_one;
+    public EmbeddedTwo b_two;
+...
+}
+
+public class EmbeddedTwo implements Serializable, PortableObject{
+    public int two_id;
+...
+}
+
+that produces a table with more expected fields (A_B_NAME, A_B_TWO_ID):
+
+CREATE TABLE TLG_MAPMASTER (ID NUMBER(10) NOT NULL, NAME VARCHAR2(255) NULL, A_NAME VARCHAR2(255) NULL, A_B_NAME VARCHAR2(255) NULL, A_B_ONE_ID NUMBER(10) NULL, A_B_ONE_ID2 NUMBER(10) NULL, A_B_TWO_ID NUMBER(10) NULL, A_B_EXPERT_ID NUMBER(10) NULL, A_EXPERT_ID NUMBER(10) NULL, PRIMARY KEY (ID))
+
+Still A_ONE_ID1, A_ONE_ID2, A_TWO_ID fields are missing.

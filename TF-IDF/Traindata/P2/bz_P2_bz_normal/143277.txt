@@ -1,0 +1,51 @@
+Well we are profiling validation of this project with 200 jsp's on WTP 1.5 RC3
+
+Noticed that 
+
+JSPModelQueryImpl.getCMElementDeclaration(..) was taking nearly 21 seconds out of 67 seconds taken in validating a project
+
+This method is called from
+
+1. CMNodeUtil.getDeclaration (ElementImpl.getDeclaration)
+
+and
+
+2. CMUtil.getDeclaration
+
+
+
+Found out that most of the cases the value returned by these methods don't change per ElementImpl, 
+
+so it should be cached or stored in an instance variable of ElementImpl
+
+I did that by adding an instance variable in ElementImpl.java
+
+	protected CMElementDeclaration getDeclaration() {
+		if (fCMElementDeclaration == null) {
+			Document document = getOwnerDocument();
+			if (document == null)
+				fCMElementDeclaration =  null;
+			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(document);
+			if (modelQuery == null)
+				fCMElementDeclaration =  null;
+			fCMElementDeclaration = modelQuery.getCMElementDeclaration(this);
+			
+		}
+		return fCMElementDeclaration;
+		
+	}
+
+
+then made CMUtil.getDeclaration
+
+call CMNodeUtil.getDeclaration
+
+which calls ElementImpl.getDeclaration
+
+by lazy initializing it and storing it
+
+now time taken by the method  JSPModelQueryImpl.getCMElementDeclaration(..)
+
+went down to 3.6 seconds
+
+and validation went down to 39 seconds.

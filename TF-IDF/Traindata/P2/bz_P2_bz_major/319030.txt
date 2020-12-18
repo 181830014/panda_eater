@@ -1,0 +1,10 @@
+Build Identifier: 2.1.0
+
+When org.eclipse.persistence.internal.helper.compareBigDecimals is called the values are cast to a double if the scales are not identical and then compared.  This is kills the precision causing a false positive if the number is large as the double casting causes the value to lose precision.
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Send value one as 12345678901234567890123456789012345
+2. Send value two as 12345678901234567890123456789012300
+3. Result is that the values are equal and this is not true

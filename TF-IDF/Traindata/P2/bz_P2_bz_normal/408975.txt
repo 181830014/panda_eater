@@ -1,0 +1,20 @@
+If you have the following mapping:
+    
+    @ElementCollection
+    @CollectionTable(name = "JPARS_CERTIFICATION", joinColumns = {@JoinColumn(name="EMP_ID")})
+    private List<Certification> certifications = new ArrayList<Certification>();
+
+That maps the following object
+
+@Embeddable
+public class Certification {
+    @Column(name = "NAME")
+    private String name;
+    
+    @Temporal(TemporalType.DATE)
+    @Column(name = "ISSUE_DATE")
+    private Calendar issueDate;
+
+...
+
+The DDL for the issueDate will create a column of type VARCHAR instead of a temporal type. (If a similar Temporal mapping is mapped directly on an Entity everything works)   This incorrect DDL eventually results in exceptions when reading objects with these mappings.

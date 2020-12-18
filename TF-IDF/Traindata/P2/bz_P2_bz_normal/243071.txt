@@ -1,0 +1,38 @@
+I noticed that if I run either TestMainValidator or TestMainValidatorLC, and I'm not connected to the internet, that all the tests fail.  
+
+Note that the tests for the individual validators don't seem to be impacted by connectivity, as the results don't change when offline.
+
+Here's a sample stack trace:
+
+junit.framework.AssertionFailedError: The content of the generated file is different than the expected file: expectedPattern: Severity: warning The acyclic constraint set on the element declaration "Course" will be ignored.  Acyclic constraints are only expected on complex type declarations but was: Line number: 223 Severity: error src-resolve: Cannot resolve the name 'xml:lang' to a(n) 'attribute declaration' component.
+	at junit.framework.Assert.fail(Assert.java:47)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at org.eclipse.cosmos.common.tests.CommonTestUtility.compareFiles(CommonTestUtility.java:80)
+	at org.eclipse.cosmos.common.tests.CommonTestUtility.compareFiles(CommonTestUtility.java:58)
+	at org.eclipse.cosmos.common.tests.CommonTestUtility.compareFiles(CommonTestUtility.java:52)
+	at org.eclipse.cosmos.common.tests.CommonTestUtility.compareFiles(CommonTestUtility.java:38)
+	at org.eclipse.cosmos.rm.internal.validation.core.AbstractMainValidator.startValidation(AbstractMainValidator.java:72)
+	at org.eclipse.cosmos.rm.internal.validation.core.AbstractMainValidator.startValidation(AbstractMainValidator.java:48)
+	at org.eclipse.cosmos.rm.internal.validation.core.TestMainValidatorLC.testAcyclicValidateDefinition(TestMainValidatorLC.java:115)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:79)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:618)
+	at junit.framework.TestCase.runTest(TestCase.java:164)
+	at junit.framework.TestCase.runBare(TestCase.java:130)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:120)
+	at org.eclipse.hyades.test.common.junit.HyadesTestCase.run(HyadesTestCase.java:172)
+	at junit.framework.TestSuite.runTest(TestSuite.java:230)
+	at org.eclipse.hyades.test.common.junit.HyadesTestSuite.runTest(HyadesTestSuite.java:457)
+	at junit.framework.TestSuite.run(TestSuite.java:225)
+	at org.eclipse.hyades.test.common.junit.HyadesTestSuite.doRun(HyadesTestSuite.java:425)
+	at org.eclipse.hyades.test.common.junit.HyadesTestSuite.run(HyadesTestSuite.java:338)
+	at org.eclipse.jdt.internal.junit.runner.junit3.JUnit3TestReference.run(JUnit3TestReference.java:130)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:460)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:673)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:386)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:196)

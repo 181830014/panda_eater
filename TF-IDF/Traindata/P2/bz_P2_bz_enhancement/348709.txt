@@ -1,0 +1,22 @@
+Bug 348700 fixed a severe regression late in the game. This bug is for following-up with more investigation and probably a cleaner solution.
+
+Particularly, in VT100TerminalControl#disconnectTerminal(),
+
+- The Connector should likely be disconnected BEFORE terminating the reader job
+  (otherwise with high data volume, the connector can write into a pipe that's
+  no longer being read from, or even closed)
+
+- The Reader should have a more clean method of terminating fast (other than
+  interrupting the entire Thread, which may cause InterruptedException at a
+  time where it's not desired, for instance while processing characters - 
+  see bug 333613 comment 2)
+
+- Revisit whether it makes sense to keep the PipedInputStream alive and 
+  open for the entire lifetime of the VT100TerminalControl, even when 
+  different connections read/write to it.
+
+Test cases for these improvement include
+- disconnect / reconnect terminals
+   - both from the Terminal (pressing button)
+   - and from the remote side (pull network cable, connection-lost, EOF)
+- Terminate Eclipse with multiple terminals open.

@@ -1,0 +1,95 @@
+Build Identifier:  2.3.2.v20111125-r10461
+
+We have an application that is using eclipselink, java-odbc driver with a foxpro database. There are other applications which access the database concurrently. This application and another concurrently access one of the tables in the database. Occasionally they will access the same record. This concurrent access is being protected against in both the applications. However, sometimes due to timing the Java application and the Foxpro application will receive Internal Exception: java.sql.SQLException: [Microsoft][ODBC Visual FoxPro Driver]Record is not locked. during commit(). The problem is that The eclipselink end up holding the table exclusively and does not release it till the server process is killed and restarted.  Following is the stack trace -
+
+[EL Warning]: 2012-07-10 02:46:55.587--UnitOfWork(7043258)--Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.3.2.v20111125-r10461): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLException: [Microsoft][ODBC Visual FoxPro Driver]Record is not locked.
+Error Code: 703
+Call: UPDATE pellet_order SET plo_actual_amount = ?, plo_challenge = ?, eqp_id_destination = ?, plo_hold = ?, itm_density_uom = ?, plo_run_number = ?, plo_sequence = ? WHERE (plo_id = ?)
+bind => [8 parameters bound]
+Query: UpdateObjectQuery(2500)
+javax.persistence.RollbackException: Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.3.2.v20111125-r10461): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLException: [Microsoft][ODBC Visual FoxPro Driver]Record is not locked.
+Error Code: 703
+Call: UPDATE pellet_order SET plo_actual_amount = ?, plo_challenge = ?, eqp_id_destination = ?, plo_hold = ?, itm_density_uom = ?, plo_run_number = ?, plo_sequence = ? WHERE (plo_id = ?)
+	bind => [8 parameters bound]
+Query: UpdateObjectQuery(2500)
+	at org.eclipse.persistence.internal.jpa.transaction.EntityTransactionImpl.commitInternal(EntityTransactionImpl.java:102)
+	at org.eclipse.persistence.internal.jpa.transaction.EntityTransactionImpl.commit(EntityTransactionImpl.java:63)
+	at com..feedpelletpro.db.UserTransaction.commit(UserTransaction.java:43)
+	at com..feedpelletpro.comm.PelletOrderRequest.processPelletOrderRelease(PelletOrderRequest.java:108)
+	at com..feedpelletpro.comm.PelletOrderRequest.doServerProcessing(PelletOrderRequest.java:46)
+	at com..net.SocketWorker.processMessage(SocketWorker.java:94)
+	at com..net.SocketWorker.queueMessages(SocketWorker.java:87)
+	at com..MessageProcessor.processMessages(MessageProcessor.java:34)
+	at com..feedpelletpro.web.FPPSocketWorker.handleSocketEvent(FPPSocketWorker.java:24)
+	at com..net.SocketWorker.run(SocketWorker.java:55)
+	at java.lang.Thread.run(Unknown Source)
+Caused by: Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.3.2.v20111125-r10461): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLException: [Microsoft][ODBC Visual FoxPro Driver]Record is not locked.
+Error Code: 703
+Call: UPDATE pellet_order SET plo_actual_amount = ?, plo_challenge = ?, eqp_id_destination = ?, plo_hold = ?, itm_density_uom = ?, plo_run_number = ?, plo_sequence = ? WHERE (plo_id = ?)
+	bind => [8 parameters bound]
+Query: UpdateObjectQuery(2500)
+	at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:324)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeDirectNoSelect(DatabaseAccessor.java:840)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeNoSelect(DatabaseAccessor.java:906)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:592)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeCall(DatabaseAccessor.java:535)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.basicExecuteCall(AbstractSession.java:1717)
+	at org.eclipse.persistence.sessions.server.ClientSession.executeCall(ClientSession.java:253)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:207)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:193)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.updateObject(DatasourceCallQueryMechanism.java:749)
+	at org.eclipse.persistence.internal.queries.StatementQueryMechanism.updateObject(StatementQueryMechanism.java:432)
+	at org.eclipse.persistence.internal.queries.DatabaseQueryMechanism.updateObjectForWriteWithChangeSet(DatabaseQueryMechanism.java:1042)
+	at org.eclipse.persistence.queries.UpdateObjectQuery.executeCommitWithChangeSet(UpdateObjectQuery.java:84)
+	at org.eclipse.persistence.internal.queries.DatabaseQueryMechanism.executeWriteWithChangeSet(DatabaseQueryMechanism.java:287)
+	at org.eclipse.persistence.queries.WriteObjectQuery.executeDatabaseQuery(WriteObjectQuery.java:58)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:844)
+	at org.eclipse.persistence.queries.DatabaseQuery.executeInUnitOfWork(DatabaseQuery.java:743)
+	at org.eclipse.persistence.queries.ObjectLevelModifyQuery.executeInUnitOfWorkObjectLevelModifyQuery(ObjectLevelModifyQuery.java:108)
+	at org.eclipse.persistence.queries.ObjectLevelModifyQuery.executeInUnitOfWork(ObjectLevelModifyQuery.java:85)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.internalExecuteQuery(UnitOfWorkImpl.java:2871)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1516)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1498)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1449)
+	at org.eclipse.persistence.internal.sessions.CommitManager.commitChangedObjectsForClassWithChangeSet(CommitManager.java:265)
+	at org.eclipse.persistence.internal.sessions.CommitManager.commitAllObjectsWithChangeSet(CommitManager.java:128)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.writeAllObjectsWithChangeSet(AbstractSession.java:3799)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitToDatabase(UnitOfWorkImpl.java:1415)
+	at org.eclipse.persistence.internal.sessions.RepeatableWriteUnitOfWork.commitToDatabase(RepeatableWriteUnitOfWork.java:636)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitToDatabaseWithChangeSet(UnitOfWorkImpl.java:1505)
+	at org.eclipse.persistence.internal.sessions.RepeatableWriteUnitOfWork.commitRootUnitOfWork(RepeatableWriteUnitOfWork.java:267)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitAndResume(UnitOfWorkImpl.java:1143)
+	at org.eclipse.persistence.internal.jpa.transaction.EntityTransactionImpl.commitInternal(EntityTransactionImpl.java:84)
+	... 10 more
+Caused by: java.sql.SQLException: [Microsoft][ODBC Visual FoxPro Driver]Record is not locked.
+	at sun.jdbc.odbc.JdbcOdbc.createSQLException(Unknown Source)
+	at sun.jdbc.odbc.JdbcOdbc.standardError(Unknown Source)
+	at sun.jdbc.odbc.JdbcOdbc.SQLExecute(Unknown Source)
+	at sun.jdbc.odbc.JdbcOdbcPreparedStatement.execute(Unknown Source)
+	at sun.jdbc.odbc.JdbcOdbcPreparedStatement.executeUpdate(Unknown Source)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeDirectNoSelect(DatabaseAccessor.java:831)
+	... 40 more
+Jul 10, 2012 2:46:55 AM com..feedpelletpro.db.UserTransaction rollback
+WARNING: Attempted to rollback transaction that wasn't active.
+java.lang.IllegalArgumentException: Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.3.2.v20111125-r10461): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLException: [Microsoft][ODBC Visual FoxPro Driver]Record is not locked.
+Error Code: 703
+Call: UPDATE pellet_order SET plo_actual_amount = ?, plo_challenge = ?, eqp_id_destination = ?, plo_hold = ?, itm_density_uom = ?, plo_run_number = ?, plo_sequence = ? WHERE (plo_id = ?)
+	bind => [8 parameters bound]
+Query: UpdateObjectQuery(2500)
+	at com..feedpelletpro.comm.PelletOrderRequest.processPelletOrderRelease(PelletOrderRequest.java:116)
+	at com..feedpelletpro.comm.PelletOrderRequest.doServerProcessing(PelletOrderRequest.java:46)
+	at com..net.SocketWorker.processMessage(SocketWorker.java:94)
+	at com..net.SocketWorker.queueMessages(SocketWorker.java:87)
+	at com..MessageProcessor.processMessages(MessageProcessor.java:34)
+	at com..feedpelletpro.web.FPPSocketWorker.handleSocketEvent(FPPSocketWorker.java:24)
+	at com..net.SocketWorker.run(SocketWorker.java:55)
+	at java.lang.Thread.run(Unknown Source)
+
+Any help or info is appreciated.
+Thanks
+
+Reproducible: Always

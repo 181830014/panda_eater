@@ -1,0 +1,44 @@
+hi
+
+Daniel Megert forced me in https://bugs.eclipse.org/bugs/show_bug.cgi?id=78455 to issue a new bug for this.
+
+Primary Issue:
+We have BIG troubles with non-existing BOM in UTF-8 files.
+
+Cause of Problem:
+We come from Dreamweaver and are developing ColdFusion Apps... All old
+development is done in Homesite <=5 and Dreamweaver <=6.1 and therefor file encoding is "windows 1252".
+
+Problem description:
+So we tryed to change the workspace to UTF8 for creating new files only in UTF8 for getting the apps internationalized in future. After we change this setting all files in the workspace are going to be destroyed if it comes to german umlauts like ö ä ü and others non windows 1252 chars.
+
+if i change the workspace back to windows-1251 and create new files, they are not UTF8 what results in destroyed chars the coldfusion web app (website).
+
+
+What we expect and will solve the problem for future:
+1. we must create new files only in UTF-8 *with* BOM (ColdFusion requires this - Dreamweaver and others, too). 
+
+2. encoding autodetection should be in place for older windows-1252 files and they should be opened/saved as windows 1252 whatever the workspace config says and should inherit.
+ 
+If this is not possible in this way to detect, we must change the workspace to windows 1252 until all files are converted and new files must be created in UTF8 and detected as UTF8 if opened/saved and not like the workspace encoding (win1252).
+
+(*Critical* - eclipse destroyes all our files without our knowledge if workspace is currently UTF8).
+
+
+3. Additional feature should be a converter message popup, if the opened file does not have similar encoding then the current workspace and convert the file after a choice to the current workspace encoding.
+
+4. new files must saved as UTF8 and add a BOM by default, everytime! Specification (http://publib.boulder.ibm.com/infocenter/wasinfo/v6r0/index.jsp?topic=/com.ibm.websphere.base.doc/info/aes/ae/cwbs_wsiprofile.html) tells us BOM in UTF8 is optional, but we can see with this problems BOM is a must have and should be inside the files everytime. Marking UTF8 only "optional" with BOM looks to me like a backward compatibility issue for Java and nothing more, so we should go forward for future and save it everytime. Who likes to use 10 years old software - i don't!?
+
+
+5. additional i found there is the same problem with UTF16 in eclipse. IBM
+wrote in http://publib.boulder.ibm.com/infocenter/wasinfo/v6r0/index.jsp?topic=/com.ibm.websphere.base.doc/info/aes/ae/cwbs_wsiprofile.html
+there must be BOM in UTF-16, but eclipse do not write this everytime. Only the
+UTF-16 setting saves a BOM to the files the UTF-16LE and UTF-16BE not!
+
+
+What we must do today:
+Wait until this Bug is fixed and go back to Dreamweaver what is supporting BOM's in UTF8 by default.
+
+
+Regards
+Marc

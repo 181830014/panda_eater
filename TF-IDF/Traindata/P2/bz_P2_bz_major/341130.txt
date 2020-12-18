@@ -1,0 +1,26 @@
+This has happened due to the refactoring/improvement work in 1.6.7 that introduced fast matching.
+
+This program:
+
+
+@MXBean
+interface Intface {
+ void m();
+}
+
+class C implements Intface {
+ public void m() {}
+}
+
+aspect X {
+ before():execution(* (@MXBean *).*(..)) {}
+}
+
+shows a match for the advice against method m() with < 1.6.7 but it is not a match with more recent compilers.  This is due to the fast match implementation for declaring type in an execution pointcut.  It is more strictly following the rule that annotations are not inherited down the interface chain.  However, it is clearly a nice use case, and by the rule of multiple signatures, the joinpoint for m() has two signatures:
+
+void C.m()
+void Intface.m()
+
+And in the case of that second one, the Intface is annotated.  So should the advice match?  When used at other positions (e.g. execution(@Foo * *(..))) we clearly indicate that these annotations match on the subject of the joinpoint (i.e. the main joinpoint signature) and no other signatures.  It is not clearly spelled out for annotations used in the declaring type position.
+
+bug 292239 surfaced this problem.

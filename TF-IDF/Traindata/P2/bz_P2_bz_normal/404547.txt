@@ -1,0 +1,21 @@
+Created attachment 229144 [details]
+Code that reproduces the bug
+
+I have a simple bidirectional one-to-many association like this:
+
+EntityA (1)<-(*) EntityB
+
+I'm using the following query to find all EntityA instances that have one or more EntityB instances with status "closed":
+
+SELECT DISTINCT a				
+FROM EntityA a 
+JOIN a.entityBList b
+WHERE b.status = 'closed'
+
+I also use QueryHints.FETCH to fetch "a.entityBList". 
+
+In my data, there is an instance of EntityA that has one EntityB with status "open" and one with status "closed". With the above-mentioned query hint the EntityA instance is wrongly populated only with the closed EntityB instance. The cause can be seen in the generated SQL where the where clause and join-fetch hint use the same table:
+
+SELECT DISTINCT t1.ID, t0.ID, t0.STATUS, t0.ENTITYA_ID FROM ENTITYB t0, ENTITYA t1 WHERE ((t0.STATUS = ?) AND (t0.ENTITYA_ID = t1.ID))
+
+Using a batch fetch hint or rewriting the where clause to an exists clause (or leaving the hint out) produces the expected result.

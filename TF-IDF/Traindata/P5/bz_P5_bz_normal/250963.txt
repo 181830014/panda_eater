@@ -1,0 +1,15 @@
+org.eclipse.persistence.platform.xml.XMLComparer
+
+During some testing, two DOM documents were created using
+different implementations - the control document from the
+internal (xerces) JAXP DocumentBuilder and the SOAP message
+from the JAX-WS Soap MessageFactory.
+
+In one case, attributes that are namespace declarations do
+not count as attributes while in the other they did, so
+'identical' documents failed their comparison using
+XMLComparer due to a difference in the number of
+attributes for a certain element.
+
+An option 'relaxAttributeXMLNSComparison' would solve
+this problem

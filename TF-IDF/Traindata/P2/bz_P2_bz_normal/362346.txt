@@ -1,0 +1,56 @@
+Version Information:
+
+Oracle 10.2.0.4
+Eclipselink 2.1.0
+
+Background:
+I am retrieving data from a TIMESTAMP WITH TIME ZONE column within a database table and storing it in a java.util.Calendar object within my code.
+
+I am annotating the field using:
+  @TypeConverter(name="TimeStampTZ", dataType=TIMESTAMPTZ.class)
+  @Convert(value="TimeStampTZ")
+  private Calendar timeIncidentObserved;
+
+I have specified the Oracle10Platform for Eclipselink using the following property within my persistence.xml:
+  <property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.oracle.Oracle10Platform"/>
+
+Results:
+The TIMESTAMPTZ object is converted seemingly successfully.
+
+For a DB value of: 22-OCT-11 03.47.00.000000000 PM EUROPE/PARIS
+
+The Calendar fields report as:
+  Time Zone: Europe/Paris
+  Year: 2011
+  Month: 9
+  Day_of_Month: 22
+  Hour_of_Day: 15
+  Minute: 47
+
+All seems correct.  However, when formatting the date for printing using the following code:
+
+  SimpleDateFormat sdfTime = new SimpleDateFormat("yyyy-MM-dd hh:mma z");
+  Calendar dateTime = i.getTimeIncidentObserved();
+  sdfTime.setTimeZone(dateTime.getTimeZone());
+
+  String result = sdfTime.format(dateTime.getTime());
+
+ I receive the following: 2011-10-22 09:47PM Europe/Paris
+
+A closer look at the Calendar object shows that the Zone_Offset field is set to the default (America/New_York) value of -18000000 instead of the proper CEST value of 3600000.
+
+Cause:
+I have perused the EclipseLink source code and believe that I have identified the problem within org.eclipse.persistence.internal.platform.database.oracle.TIMESTAMPHelper.
+
+The following code (from method buildCalendar(TIMESTAMPTZWrapper) is not correct:
+
+            gCal = Calendar.getInstance();
+            gCal.setTime(ts);
+            gCal.getTimeZone().setID(tz.getID());
+            gCal.getTimeZone().setRawOffset(tz.getRawOffset());
+
+When working with Calendars, it is important to set the TimeZone before applying the time information in order to have all of the TimeZone data applied properly.
+
+This code should likely be altered to:
+            gCal = Calendar.getInstance(tz);
+            gCal.setTime(ts);

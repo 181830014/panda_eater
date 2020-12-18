@@ -1,0 +1,10 @@
+Repository connectors often need to react when the state of the repository changes. The only possibility when using public API is org.eclipse.mylyn.tasks.core.IRepositoryListener which is too coarse-grained since it only exposes repositorySettingsChanged and repositoryUrlChanged . This leaves the repository connectors with the only possibility of dropping all local caches when receiving a repositorySettingsChanged event.
+
+This can be damaging to the overall user experience as query synchronisation triggers additional repository configuration refreshes:
+
+* query sync is performed
+* task repository last synchronised date is updated
+* task repository connector is notified of a repositorySettingsChanged event and flushes its local cache
+* on the next operation, a repository configuration update is performed.
+
+With IRepositoryChangeListener repository connectors are able to decide whether a cache flush is needed. As a further refinement, it would be useful to javadoc that 'synthetic' properties like the last synchronisation date are also sent through this mechanism.

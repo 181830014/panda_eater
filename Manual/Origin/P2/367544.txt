@@ -1,0 +1,18 @@
+assume you have book which has many to one  publisher  and many to one author
+
+BookPK is the embeddedId which has to 2 int columns 
+
+if i try the following:
+ EntityManagerFactory emf = Persistence.createEntityManagerFactory("elTest");
+    EntityManager em = emf.createEntityManager();
+    Metamodel metamodel = em.getMetamodel();
+    EntityType<Book> entity = metamodel.entity(Book.class);
+    Type<?> idType = entity.getIdType();
+    Class<?> javaType = idType.getJavaType();    
+    SingularAttribute<? super Book, ?> id = entity.getId(javaType); // problem here!
+    org.junit.Assert.assertNotNull(id);
+   
+   i will always get IAE exception no matter what java type i send in.
+   this is becuase the loop inside getId tries to compare ALL idAttributes so if passes the first one, the next one will fail, the only thing that works is sending in a null or Object class
+   
+   this DOES work in hibernate, and an embedded id that is not mapped to derived keys

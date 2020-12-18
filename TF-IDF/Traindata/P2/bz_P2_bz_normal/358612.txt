@@ -1,0 +1,16 @@
+Build Identifier: 2.3.1 Nightly
+
+I get a DataAccessor not connected exception when using cursors in a transaction context repeatedly.
+My write connection is closed after 2 queries and I get said DataAccessor disconnected exception. I also think I found the bug in the code, in ClientSession.java, method releaseReadConnection.
+
+        // If the cursor's connection is the write connection, then do not release it.
+        if ((this.writeConnections != null) && this.writeConnections.containsKey(connection)) {
+
+However, the last containsKey should probably be containsValue - I changed it and the bug disappears here.
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. use cursors in a transaction-environment
+2. query several times, the third fails, maybe depending on the number of setup write connections
+3.

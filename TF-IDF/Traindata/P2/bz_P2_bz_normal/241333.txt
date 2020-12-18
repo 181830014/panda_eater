@@ -1,0 +1,16 @@
+Created attachment 107784 [details]
+File for repro
+
+Build ID: 3.0.0.v20080609
+
+Steps To Reproduce:
+I hope this is the correct component...I started it with you based on the fact the problem is in the delta listing.
+
+To be clear, I am not sure exactly how the projects get _into_ the state required to reproduce the problem, however our adopter test team hit this, and I was able to repro by setting up my project with the same setup. It is definitely related to having artifact classes pulled in via an import as well as then having them put in a non-default output directory.
+
+Basically the problem is this. When importing we can get artifacts in an ImportedClasses directory. These same artifacts can then be re-generated in the output directory for the project. The problem occurs if the EJB is updated. The artifacts are regenerated, but the delta shows two entries for the same artifacts....one for the class in the output directory and another for the ImportedClasses version. However hte ImportedClasses version is not updated, and therefore shouldn't get put in the delta list.
+
+The reason this causes our adopter product problems is we package the classes into a zip file for remote publishing, we get duplicate entries and it is possible we can actually package the wrong version of the class.
+
+
+More information:

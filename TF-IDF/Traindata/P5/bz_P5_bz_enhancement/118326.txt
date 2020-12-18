@@ -1,0 +1,22 @@
+With the AspectJ 1.5.0M5 compiler, an inter-type field declaration of type int with an initializer is not type-checked to prevent an attempt to assign null into the field by default.  The result is a VerifyError at runtime.
+
+Is this the intended behavior?  I couldn't find any evidence in the AspectJ documentation that initializers on inter-type field declarations should not be type checked, but I can't admit to being particularly experienced with AspectJ.
+
+Here is code that reproduces the problem:
+
+------------------
+// Foo.java
+public class Foo {
+    public static void main(String[] args) {
+        Foo f = new Foo();
+    }
+}
+------------------
+// Bar.java
+public aspect Bar {
+    public int Foo.x = null;
+}
+------------------
+I compiled the code with the following command:
+
+    ajc -1.5 -source 1.5 Foo.java Bar.java

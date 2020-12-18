@@ -1,0 +1,32 @@
+Build Identifier: 2.3.0.v20110604-r9504
+
+DescriptorException occurs when attempting to use query results cache with an aggregate query.  Full stack trace and a small test case will be attached.  Issue was discussed on eclipselink-users mailing list in Oct 2010 with James Sutherland who provided some insight into the problem:
+http://dev.eclipse.org/mhonarc/lists/eclipselink-users/msg05373.html
+http://dev.eclipse.org/mhonarc/lists/eclipselink-users/msg05374.html
+http://dev.eclipse.org/mhonarc/lists/eclipselink-users/msg05392.html
+http://dev.eclipse.org/mhonarc/lists/eclipselink-users/msg05398.html
+
+Just getting around a year later to filing the issue which still exists in latest final release of eclipselink (2.3.0).
+
+I've tried by using a query built in code as well as a named query.  The named query defined in annotations is as follows:
+@NamedQuery(name="Purchase.findTotalPurchaseCount", query="select count(p) from Purchase p")
+
+The initial query returns the result but subsequent invocations fail with a DescriptorException as follows (abbreviated):
+
+[java] Local Exception Stack: 
+     [java] Exception [EclipseLink-26] (Eclipse Persistence Services - 2.3.0.v20110604-r9504): org.eclipse.persistence.exceptions.DescriptorException
+     [java] Exception Description: Trying to get value for instance variable [id] of type [long] from the object [java.lang.Long].  The specified object is not an instance of the class or interface declaring the underlying field.
+     [java] Internal Exception: java.lang.IllegalArgumentException: Can not set long field testcase1.Purchase.id to java.lang.Long
+     [java] Mapping: org.eclipse.persistence.mappings.DirectToFieldMapping[id-->PURCHASE.ID]
+     [java] Descriptor: RelationalDescriptor(testcase1.Purchase --> [DatabaseTable(PURCHASE)])
+     [java] 	at org.eclipse.persistence.exceptions.DescriptorException.illegalArgumentWhileGettingValueThruInstanceVariableAccessor(DescriptorException.java:645)
+     [java] 	at org.eclipse.persistence.internal.descriptors.InstanceVariableAttributeAccessor.getAttributeValueFromObject(InstanceVariableAttributeAccessor.java:79)
+     [java] 	at org.eclipse.persistence.mappings.DatabaseMapping.getAttributeValueFromObject(DatabaseMapping.java:516)
+
+Reproducible: Always
+
+Steps to Reproduce:
+1.  Acquire apache ant (test case verified with apache-ant-1.8.2 but should work on earlier versions)
+2.  Uncompress test case attachment file.
+3.  Enter test case directory
+4.  Execute ant command to invoke the clean target and the test target: "ant clean test" (without quotes)

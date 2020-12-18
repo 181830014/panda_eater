@@ -1,0 +1,28 @@
+Build Identifier: 2.3.0
+
+The code below defines the ManyToMany relationship of the parents of node within a directed graph, where a node, X, has parents which are the "from" nodes of the edges which have X as the too node.
+
+@ManyToMany(cascade = CascadeType.REFRESH)
+@JoinTable(name = "hierarchy_detail_rel", catalog = "dbo", 
+   joinColumns = { @JoinColumn(insertable = false, updatable = false, name = "hierarchy_detail_rel_child") }, 
+   inverseJoinColumns = { @JoinColumn(insertable = false, updatable = false, name = "hierarchy_detail_rel_parent") })
+private final List<HierarchyDetail> parents;
+ 
+This is included in the class representing the nodes of the graph and the edges are represented by a separate class. The edges cannot be managed automatically (through a class synthesized by eclipselink) as I need to use the HistoryPolicy features within eclipselink. As the edges are managed externally to this relationship, it needs to be read only. It is my understanding that using the "insertable = false, updatable = false" statement on both the join columns should produce the read only behaviour. This appears to work on insert by if the class is part of a cascade merge (potentially a direct JPA merge but not sure) these attributes are ignored.
+
+The only way round it was to use a DescriptorCustomizer with the below :
+   @Override
+    public void customize(ClassDescriptor descriptor) {
+     
+        ManyToManyMapping parentMapping = (ManyToManyMapping) descriptor.getMappingForAttributeName("parents");
+        parentMapping.setIsReadOnly(true);
+ 
+    }
+
+Reproducible: Always
+
+Steps to Reproduce:
+1.Create a manytomany relationship with a separate relationship class which has cascade merge on the two foreign keys
+2.Persist two elements to be related
+3.Persist the relationship object 
+4.Merge the relationship object

@@ -1,0 +1,21 @@
+CriteriaBuilder cb = MinutisManager.getInstance().getCriteriaBuilder();
+CriteriaQuery criteriaQuery = cb.createQuery(minutis.Preke.class);
+Root<minutis.Preke> from = criteriaQuery.from(minutis.Preke.class);
+typedQuery.setHint(QueryHints.LEFT_FETCH, "Preke.tiekejai");
+typedQuery.setHint(QueryHints.LEFT_FETCH, "Preke.tiekejai.tiekejas");
+
+TypedQuery<minutis.Preke> typedQuery = MinutisManager.getInstance().createQuery(criteriaQuery);
+typedQuery.setFirstResult(0);
+
+Two cases:
+typedQuery.setMaxResults(100);
+System.out.println(typedQuery.getResultList().size()); //prints 73
+
+typedQuery.setMaxResults(500);
+System.out.println(typedQuery.getResultList().size()); //prints 413
+
+"Preke.tiekejai" is OneToMany relation;
+"Preke.tiekejai.tiekejas" is OneToOne relation;
+
+StackOverflow thread:
+http://stackoverflow.com/questions/14501589/eclipselink-group-by-is-not-working

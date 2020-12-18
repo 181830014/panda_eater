@@ -1,0 +1,49 @@
+If ApplicationWindow.showTopSeperator() returns false, the contents (as 
+returned by createContents()) are reduced to a thin strip at the top of the 
+shell.  Here's what I mean:
+
+
+import org.eclipse.jface.window.ApplicationWindow;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+
+
+public class DemonstrateAppWindowTopSeparatorProblem {
+
+	public static void main(String[] args) {
+		ApplicationWindow appWindow = new ApplicationWindow(null) {
+			protected Control createContents(Composite parent) {
+				Composite mainPanel = new Composite(parent, 
+SWT.NONE);
+				mainPanel.setLayout(new GridLayout(1, true));
+				mainPanel.setBackground(new Color
+(mainPanel.getDisplay(), 0, 0, 255));
+				mainPanel.setLayoutData(new GridData
+(GridData.FILL_BOTH));
+				return mainPanel;
+			}
+
+			protected boolean showTopSeperator() {
+				return false;
+			}
+			
+			protected Point getInitialSize() {
+				return new Point(400, 300);
+			}
+		};
+		appWindow.setBlockOnOpen(true);
+		appWindow.open();
+		Display.getCurrent().dispose();
+	}
+}
+
+
+It appears that the layout() method in ApplicationWindowLayout assumes the 
+first child control of the shell will be the 'top separator', which isn't the 
+case if showTopSeperator() return false.

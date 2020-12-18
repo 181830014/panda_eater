@@ -1,0 +1,12 @@
+If two calls appear on a single line to an advised method, the corresponding advise lists only a single method call being advised. This probably isn't very severe for normal users, but it may be troublesome for developers coding against the AJDT (like myself). Consider the following example:
+
+class A {
+	void x() {}
+	void y() { x();x();}
+}
+
+aspect B {
+	before() : call(* A.x()) {}
+}
+
+If you right-clicked on the above advice declaration it would only show a single method being advised when there is in fact two.

@@ -1,0 +1,27 @@
+If I set conjunction to where clause, it is completely ignored, i.e. nothing is in the generated sql. Example:
+
+  CriteriaBuilder builder = em.getCriteriaBuilder();
+  CriteriaQuery<MyEntity> query = builder.createQuery(MyEntity.class);
+  Root<MyEntity> root = query.from(MyEntity.class);
+  Predicate conjunction = builder.conjunction();
+  conjunction.getExpressions().add(builder.equal(root.get("identifier"), 1));
+  query.where(conjunction);
+  TypedQuery<MyEntity> typedQuery = em.createQuery(query);
+  List<MyEntity> result = typedQuery.getResultList();
+
+After running this code, the result contains all entities from MyEntity, not only the one with identifier=1.
+
+In this case could add the equal predicate to the where clause directly, but my case is more general, as actual predicates are generated outside of this code and there may be many of them.
+
+If I use the where(Predicate ... predicates) version of the where method, it works, but my predicates are of type Expression<Boolean>, since I use boolean functions (CriteriaBuilder.function("my_func", Boolean.class)), which returns Expression<Boolean>.
+
+WORKAROUND
+
+Instead of conjunction, use the following:
+	Expression<Boolean> expr = whereClause.get(0);
+	for (int i = 1; i < whereClause.size(); ++i)
+		expr = builder.and(expr, whereClause.get(i));
+
+
+
+Reproduces on JDK 7, Postgresql and hsqldb, if that matters.

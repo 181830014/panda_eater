@@ -1,0 +1,11 @@
+I am manipulating two different resources with cross references. Both
+resources are included in the same ResourceSet which is being used by a
+TransactionalEditingDomain.
+
+In my model, I have container references that are persisted. So that, when you load a resource that has a root element that is the cross-resource-contained child of some other, this root element is actually contained in a proxy.
+
+Resolving the proxy actually *removes* the contained element from it, which
+looks to the transaction API like a structural modification, even though it
+isn't really because this is a proxy.
+
+The Transaction API should be able to detect and handle this case.

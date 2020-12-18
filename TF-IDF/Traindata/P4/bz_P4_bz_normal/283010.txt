@@ -1,0 +1,60 @@
+Created attachment 141197 [details]
+NTLoginModule  exception log
+
+Build ID: 20090621-0832
+
+Steps To Reproduce:
+1. Replace CentralSecurity with NTLoginModule
+2. declare
+WIN32 {
+    com.sun.security.auth.module.NTLoginModule required;
+};
+in jaas.config on the server
+
+3. Use it instead of CentralSecurity : 
+this.remoteLoginProxy = new RemoteLoginProxy("WIN32",subject); 
+
+
+More information:
+After discussion with Stefan Liebig, it seems  that the problem comes from Hessian when it tries to de-serialize the NTSid. Hessians &#180;default&#180; mechanism is not able to do this, so it should be defined custom de-serializer
+for Hessian that can handle this case.
+
+
+The server log is:
+Thu Jul 02 12:08:17 EEST 2009 DEBUG [16927124@qtp-30487154-0] org.eclipse.riena.internal.security.server.SecurityServiceHook before Service ssoid = null
+An attempt was made to reference a token that does not exist.
+getting access token
+  [getToken] OpenThreadToken error [1008]:   [getToken] got user access token
+getting user info
+  [getUser] Got TokenUser info
+  [getUser] userName: ro1v02c1, domainName = WW300
+  [getUser] userSid: S-1-5-21-1454471165-527237240-682003330-426315
+  [getUser] domainSid: S-1-5-21-1454471165-527237240-682003330
+getting primary group
+  [getPrimaryGroup] Got TokenPrimaryGroup info
+  [getPrimaryGroup] primaryGroup: S-1-5-21-1454471165-527237240-682003330-513
+getting supplementary groups
+  [getGroups] Got TokenGroups info
+  [getGroups] group 0: S-1-5-21-1454471165-527237240-682003330-513
+  [getGroups] group 1: S-1-1-0
+...
+  [g  [NTLoginModule] succeeded importing info:
+   user name = ro1v02c1
+   user SID = S-1-5-21-1454471165-527237240-682003330-426315
+   user domain = WW300
+   user domain SID = S-1-5-21-1454471165-527237240-682003330
+   user primary group = S-1-5-21-1454471165-527237240-682003330-513
+   user group = S-1-1-0
+...
+impersonation token = 3048
+Thu Jul 02 12:08:17 EEST 2009 DEBUG [16927124@qtp-30487154-0] org.eclipse.riena.internal.security.server.SecurityServiceHook afterService compare session instance before=null after=org.eclipse.riena.security.common.session.Session@1ef3ccd
+Thu Jul 02 12:08:17 EEST 2009 DEBUG [16927124@qtp-30487154-0] org.eclipse.riena.internal.security.server.SecurityServiceHook setting cookie to 'ssoid##6207126768363156227##'
+
+
+On the client side the output is:
+Thu Jul 02 12:02:50 EEST 2009 DEBUG [main] org.eclipse.riena.internal.example.client.security.authentication.RemoteLoginModule initialize
+Thu Jul 02 12:02:50 EEST 2009 DEBUG [main] org.eclipse.riena.internal.example.client.security.authentication.RemoteLoginModule login
+Thu Jul 02 12:02:50 EEST 2009 DEBUG [main] org.eclipse.riena.internal.example.client.security.authentication.RemoteLoginModule abort
+
+
+Debugging the login process on client application I could retrieve exception that is not logged to sysout, exception log is attached.

@@ -1,0 +1,60 @@
+Build Identifier: 2.2.0v20100819r8063
+
+Key in a @OneToMany Mapping of a java.util.Map maybe null if the map is fetchtype eager and the property being used as key is not loaded before the OneToMany map. This will result in a org.eclipse.persistence.exceptions.ValidationException.
+
+James Sutherland recommends having Embedded properties loaded first. 
+
+Details: http://old.nabble.com/A-null-value-can-not-be-used-as-a-key-in-a-container-of-type--class-java.util.Hashtable--td29586424.html
+
+Workarounds include:
+
+1. try moving the ManyToOne below the @ManyToOne attribute that has been designated as the key for the OneToMany map.
+2. Change fetch type to LAZY.
+3. Implement DescriptorCustomizer that retrieves AggregateObjectMapping for the property that as the map key and set it's weight to #2
+
+Reproducible: Always
+
+Steps to Reproduce:
+<p>The entity is a class in a hierarchy that has a map as one of it's properties.</p>
+
+<p>Here's the entity code:</p>
+
+<pre>
+@Entity(name="MyEntity")
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="MYENTITY_TYPE")
+@Table(name="myentity")
+public class MyEntity extends OtherEntity {
+   [...]
+
+   @JoinColumn(nullable=false)
+   @OneToMany(mappedBy="myentity", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+   @MapKey(name="mappedPropertyKey")
+   private Map<KeyClass, MappedPropertyClass> mappedProperties;
+
+   [...]
+
+
+} </pre>
+
+Here's the mapped entity. Note that the property that serves as the key is an embedded object. The "value" property of that object is what is stored in the database (an int). 
+
+<pre>
+
+@Entity(name="MappedEntity")
+@Table(name="mappedentity")
+public class MappedEntity extends BaseEntity {
+
+	@JoinColumn(nullable=false)
+	@ManyToOne
+	private MyEntity myentity;
+
+	@Column(nullable=false)
+	@Embedded
+	@AttributeOverride(name="value", column=@Column(name="MAPPEDPROPERTY"))
+	private MappedProperty mappedPropertyKey;
+
+        [...]
+}
+
+</pre>

@@ -1,0 +1,58 @@
+Tests that uses outerjoint in foundation\eclipselink.core.test\OrderListTestModel failed with SQL syntax exceptions, similar to following:
+
+DB: TimesTen 11.2.1.30
+JDK:1.6.0_14
+TEST MODEL NAME:  NO_INDIRECTION DEFERRED OUTER_JOIN
+MODEL DESCRIPTION: This model tests ordered list
+VERSION:   Eclipse Persistence Services - 1.2.0.qualifier
+TEST NAME:   CreateTest
+--
+Local Exception Stack: 
+			Exception [EclipseLink-4002] (Eclipse Persistence Services - 1.2.0.qualifier): org.eclipse.persistence.exceptions.DatabaseException
+			Internal Exception: java.sql.SQLException: [TimesTen][TimesTen 11.2.1.3.0 ODBC Driver][TimesTen]TT1001: Syntax error in SQL statement before or at: "T9", character position: 569 -- file "ptSqlY.y", lineno 7936, procedure "reserved_word_or_syntax_error"
+			Error Code: 1001
+			Call: SELECT DISTINCT t0.EMP_ID, t1.OWNER_EMP_ID, t0.F_NAME, t0.L_NAME, t1.SALARY, t0.MANAGER_ID, t0.VERSION, t9.DESCRIP, t2.EMP_ID, t3.OWNER_EMP_ID, t2.F_NAME, t2.L_NAME, t3.SALARY, t2.MANAGER_ID, t2.VERSION, t4.CHILD_ID, t5.OWNER_CHILD_ID, t4.F_NAME, t4.L_NAME, t5.ALLOWANCE, t6.AREA_CODE, t6.P_NUMBER, t6.TYPE, t7.PROJ_ID, t7.PROJ_TYPE, t7.DESCRIP, t7.PROJ_NAME, t7.LEADER_ID, t7.VERSION, t8.PROJ_ID, t8.BUDGET, t8.MILESTONE, t9.RESPONS_ORDER, t2.MANAGED_ORDER, t4.CHILDREN_ORDER, t6.PHONE_ORDER, t10.PROJ_ORDER FROM {oj OL_EMPLOYEE t0 LEFT OUTER JOIN OL_RESPONS t9 ON (t9.EMP_ID = t0.EMP_ID) LEFT OUTER JOIN (OL_EMPLOYEE t2 JOIN OL_SALARY t3 ON (t3.OWNER_EMP_ID = t2.EMP_ID)) ON (t2.MANAGER_ID = t0.EMP_ID) LEFT OUTER JOIN (OL_CHILD t4 JOIN OL_ALLOWANCE t5 ON (t5.OWNER_CHILD_ID = t4.CHILD_ID)) ON (t4.PARENT_ID = t0.EMP_ID) LEFT OUTER JOIN OL_PHONE t6 ON (t6.OWNER_ID = t0.EMP_ID) LEFT OUTER JOIN (OL_PROJ_EMP t10 JOIN OL_PROJECT t7 ON (t7.PROJ_ID = t10.PROJ_ID) LEFT OUTER JOIN OL_LPROJECT t8 ON (t8.PROJ_ID = t7.PROJ_ID)) ON (t10.EMP_ID = t0.EMP_ID)}, OL_SALARY t1 WHERE ((t0.EMP_ID = ?) AND (t1.OWNER_EMP_ID = t0.EMP_ID))
+	bind => [152]
+			Query: ReadObjectQuery(referenceClass=Employee )
+	at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:333)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:685)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeCall(DatabaseAccessor.java:528)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeCall(AbstractSession.java:914)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:205)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:191)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeSelectCall(DatasourceCallQueryMechanism.java:262)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.selectAllRows(DatasourceCallQueryMechanism.java:599)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectAllRowsFromTable(ExpressionQueryMechanism.java:2518)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectAllRows(ExpressionQueryMechanism.java:2477)
+	at org.eclipse.persistence.queries.ReadObjectQuery.executeObjectLevelReadQuery(ReadObjectQuery.java:425)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeDatabaseQuery(ObjectLevelReadQuery.java:997)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:670)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.execute(ObjectLevelReadQuery.java:958)
+	at org.eclipse.persistence.queries.ReadObjectQuery.execute(ReadObjectQuery.java:399)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.internalExecuteQuery(AbstractSession.java:2322)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1225)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1207)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1167)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.readObject(AbstractSession.java:2743)
+	at org.eclipse.persistence.testing.tests.orderedlist.OrderListTestModel$BaseManagerTest.verify(OrderListTestModel.java:1164)
+	at org.eclipse.persistence.testing.framework.TestCase.execute(TestCase.java:155)
+	at org.eclipse.persistence.testing.framework.TestExecutor.execute(TestExecutor.java:250)
+	at org.eclipse.persistence.testing.framework.TestModel.execute(TestModel.java:208)
+	at org.eclipse.persistence.testing.framework.TestExecutor.execute(TestExecutor.java:250)
+	at org.eclipse.persistence.testing.framework.TestModel.execute(TestModel.java:208)
+	at org.eclipse.persistence.testing.framework.TestExecutor.execute(TestExecutor.java:250)
+	at org.eclipse.persistence.testing.framework.TestModel.execute(TestModel.java:208)
+	at org.eclipse.persistence.testing.framework.TestExecutor.execute(TestExecutor.java:250)
+	at org.eclipse.persistence.testing.framework.TestExecutor.runTest(TestExecutor.java:671)
+	at org.eclipse.persistence.testing.framework.ui.SynchronizedTestExecutor.run(SynchronizedTestExecutor.java:61)
+Caused by: java.sql.SQLException: [TimesTen][TimesTen 11.2.1.3.0 ODBC Driver][TimesTen]TT1001: Syntax error in SQL statement before or at: "T9", character position: 569 -- file "ptSqlY.y", lineno 7936, procedure "reserved_word_or_syntax_error"
+	at com.timesten.jdbc.JdbcOdbc.createSQLException(JdbcOdbc.java:3261)
+	at com.timesten.jdbc.JdbcOdbc.standardError(JdbcOdbc.java:3410)
+	at com.timesten.jdbc.JdbcOdbc.standardError(JdbcOdbc.java:3375)
+	at com.timesten.jdbc.JdbcOdbc.SQLGetStmtOption(JdbcOdbc.java:1974)
+	at com.timesten.jdbc.JdbcOdbcPreparedStatement.<init>(JdbcOdbcPreparedStatement.java:185)
+	at com.timesten.jdbc.JdbcOdbcConnection.prepareStatement(JdbcOdbcConnection.java:336)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.prepareStatement(DatabaseAccessor.java:1393)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.prepareStatement(DatabaseAccessor.java:1342)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseCall.prepareStatement(DatabaseCall.java:646)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:578)

@@ -1,0 +1,23 @@
+Build Identifier: 2.0.0
+
+I have two entities (EntityA and EntityB) that map an ElementCollection with CollectionTable. The embeddable type (EmbeddableType) is the same for both entities (but with different discriminator value).
+
+Using automatic DDL generation via
+<property name="eclipselink.ddl-generation" value="create-tables" /> 
+in my persistence.xml creates DDL where the column definition for the embeddable type (EmbeddableType) DDL is contained twice (I assume once for EntityA and erroneously once for EntityB):
+CREATE TABLE EmbeddableType (
+  Data VARCHAR(255), Id VARCHAR, OwningEntity VARCHAR, 
+  Data VARCHAR(255), Id VARCHAR, OwningEntity VARCHAR
+)
+
+This results in an EL error (code: -27):
+[EclipseLink-4002] (Eclipse Persistence Services - 2.0.0.v20091127-r5931): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLException: Column already exists in statement [CREATE TABLE EmbeddableType (Data VARCHAR
+(255), Id VARCHAR, OwningEntity VARCHAR, Data VARCHAR(255)]
+Error Code: -27
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+See attached source files, test case and DDL output (file testcase-EL-generated-DDL-statements.sql in root)

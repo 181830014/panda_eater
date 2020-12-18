@@ -1,0 +1,14 @@
+Created attachment 266697 [details]
+Example project showing the ambiguity
+
+Duplicate query detection does not detect duplicate operations that originate from meta-models.
+
+In the following template I think the definition of isSuperTypeOf should have been flagged as an error because the same operation exists in the meta-model of ecore already
+
+[module generate('http://www.eclipse.org/emf/2002/Ecore')]
+[query public isSuperTypeOf(someClass : EClass) : EBoolean = false /]
+[template public generateElement(anEClass : EClass)]
+[file (anEClass.name, false, 'UTF-8')]
+[anEClass.isSuperTypeOf(anEClass) /]
+[/file]
+[/template]

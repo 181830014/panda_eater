@@ -1,0 +1,39 @@
+The program below compiles fine with ajc (dev version of Wednesday Sep 8, 2004
+at 19:18:04 GMT), but at runtime we get
+
+Exception in thread "main" java.lang.NoSuchMethodError: A$B.access$0(LA$B;)LA;
+        at Aspect$1$C.bar(MissingAccessor.java:12)
+        at Aspect.ajc$interMethod$Aspect$A$B$foo(MissingAccessor.java:14)
+        at A$B.ajc$interMethodDispatch2$$foo(MissingAccessor.java)
+        at Aspect.ajc$interMethodDispatch1$Aspect$A$B$foo(MissingAccessor.java)
+        at MissingAccessor.main(MissingAccessor.java:22)
+
+It should print 1024.
+
+
+-------------------------------------------------------------
+
+class A {
+        int x = 1;
+        class B { int x = 10; }
+        B b = new B();
+}
+aspect Aspect {
+        static int x = 100;
+        static int y = 3;
+        int A.B.foo() {
+                class C {
+                        int x = 1000;
+                        int bar() {return x + A.this.x;}
+                }
+                return this.x + (new C()).bar() + y;
+        }
+}
+
+public class MissingAccessor {
+
+    public static void main(String[] args) {
+        A a = new A();
+        System.out.println(a.b.foo());
+    }
+}

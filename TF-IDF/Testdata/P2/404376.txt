@@ -1,0 +1,27 @@
+Issueing a delete query with history policy enabled results in the following exception:
+
+java.lang.ClassCastException: org.eclipse.persistence.queries.DeleteObjectQuery cannot be cast to org.eclipse.persistence.queries.WriteObjectQuery
+	at org.eclipse.persistence.internal.queries.DatabaseQueryMechanism.getWriteObjectQuery(DatabaseQueryMechanism.java:371)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.insertObject(DatasourceCallQueryMechanism.java:313)
+	at org.eclipse.persistence.internal.queries.StatementQueryMechanism.insertObject(StatementQueryMechanism.java:162)
+	at org.eclipse.persistence.history.HistoryPolicy.logicalInsert(HistoryPolicy.java:773)
+	at org.eclipse.persistence.history.HistoryPolicy.postUpdate(HistoryPolicy.java:725)
+	at org.eclipse.persistence.history.HistoryPolicy.postUpdate(HistoryPolicy.java:717)
+	at org.eclipse.persistence.queries.DeleteObjectQuery.executeDatabaseQuery(DeleteObjectQuery.java:149)
+
+
+The reason seems to be the call to HistoryPolicy.postUpdate() in org.eclipse.persistence.queries.DeleteObjectQuery.executeDatabaseQuery():
+
+            if (commitManager.isCommitInPreModify(object)) {
+                if (!commitManager.isShallowCommitted(object)) {
+                    getQueryMechanism().updateForeignKeyFieldBeforeDelete();
+                    if ((descriptor.getHistoryPolicy() != null) && 
+                         descriptor.getHistoryPolicy().shouldHandleWrites()) {
+                        descriptor.getHistoryPolicy().postUpdate(this);
+                    }
+                    commitManager.markShallowCommit(object);
+                }
+                return object;
+            }
+			
+Maybe the HistoryPolicy.postUpdate() call is wrong at this place and should rather be a HistoryPolicy.postDelete() call?

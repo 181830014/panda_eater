@@ -1,0 +1,33 @@
+Build Identifier: 2.1.0
+
+The call to JGeometry.store is not thread safe, you should be using the store method that has a StructDescriptor as a parameter.
+
+Something like:
+
+public Struct convertToStruct(Object geometry, Connection connection) throws SQLException {
+        if (geometry == null){
+            return null;
+        }
+        StructDescriptor structDescriptor = StructDescriptor.createDescriptor(this.getStructName(), connection);
+
+        try {
+            return JGeometry.store(connection, geometry, structDescriptor);
+        } catch (Exception e) {
+            throw new SQLException("JGeometry.store(..) failed", e);
+        }
+    }
+
+instead of the current
+
+public Struct convertToStruct(Object geometry, Connection connection) throws SQLException {
+        if (geometry == null){
+            return null;
+        }
+        return JGeometry.store((JGeometry)geometry, connection);
+    }
+
+If you don't do this, the call to store will use a static cached StructDescriptor that, in a multithreaded app, might come from some other thread being associated some other connection.
+
+AFAIK the new store(..) signature is available starting with oracle 10.2
+
+Reproducible: Always

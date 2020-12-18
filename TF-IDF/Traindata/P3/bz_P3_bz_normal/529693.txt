@@ -1,0 +1,53 @@
+Created attachment 272224 [details]
+1 normal layout：project+code; 2 custom layout：project, code.
+
+When I put the gradle project build file and the java source code in the project directory, buildship can generate the classpath file correctly, the file have src/main/java as a kind of src classpathentry.
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="bin/main" path="src/main/java">
+		<attributes>
+			<attribute name="gradle_scope" value="main"/>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
+	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>
+------------------------------------------------------
+
+But when I changed the java source layout, eg put the source code in another fold, and setting the sourceSets as following:
+        sourceSets.main.java.srcDirs = ["${project.codeDir}/src/main/java"]
+        sourceSets.main.resources.srcDirs = ["${project.codeDir}/src/main/resources"]
+        sourceSets.test.java.srcDirs = ["${project.codeDir}/src/test/java"]
+        sourceSets.test.resources.srcDirs = ["${project.codeDir}/src/test/resources"]
+Then buildship generate the classpath file lost the "src/main/java", the file content as following:
+--
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
+	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>
+------------------------------------------------------
+
+
+And at last, I tried just use the gradle eclipse plugin to generate the .classpath file, add the following config:
+eclipse {
+    classpath {
+        file {
+            whenMerged { classpath ->
+                def srcs = classpath.entries.findAll { entry -> entry.kind == 'src' && !entry.path.startsWith('/') && entry.dir != null }
+                srcs.each { src ->
+                    if (src instanceof org.gradle.plugins.ide.eclipse.model.SourceFolder) {
+                        src.path = src.dir.absolutePath.substring(gradleProject.codeDir.absolutePath.length() + 1).replaceAll('\\\\', '/')
+                        src.output = null
+                    }
+                }
+            }
+        }
+    }
+}
+
+Attachments are my project file, project+code directory is normal layout, and project directory only gradle config script file, and code directory are custom java source layout.

@@ -1,0 +1,51 @@
+Environment:
+Eclipselink 2.3.2
+Static weaving turned on
+
+@MappedSuperclass
+public abstract class A {
+
+    @Column(name = "CREATED_AT")
+    @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
+    private Date createdAt = new Date();
+
+(...) getters, setters...
+}
+
+public class B extends A {
+    @Column(name = "CREATED_AT")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+
+(...) getters, setters...
+}
+
+public class C extends A {
+
+// note: no createdAt attribute defined here!
+}
+
+
+Now the following lines sometimes fail and sometimes don't:
+
+C c = new C();
+entityManager.persist(c)
+
+with "com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Column 'CREATED_AT' cannot be null" even though {{@NotNull}} annotation was used and new Date() was applied.
+
+
+Please note, I am NOT persisting B here at all but the sole existence of B interferes with persisting of C!
+
+
+
+== Root cause ==
+
+Now, after having debugged eclipselink we found out that ((PersistenceObject) c)._persistence_get("createdAt") return null even if one uses interned String.
+That obviously makes eclipselink believe that createdAt is null even if it is not.
+
+== Solution ? ==
+Now, we should either fix this in {{ClassWeaver.addPersistenceGetSet()}} method. 
+
+An alternative would be to make such a setting (overriding class attribute) forbidden and failing on startup time.
+It took us several days to figure out what actually goes wrong here...

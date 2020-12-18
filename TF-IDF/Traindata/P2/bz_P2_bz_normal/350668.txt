@@ -1,0 +1,20 @@
+Build Identifier: 2.3.0.v20110604-r9504
+
+During some transition scenario that I cannot reproduce, I found that EclipseLink creates the default discriminator column "DTYPE" as nullable.
+
+I cannot imagine that there is a case where an entity would be persisted that contains null in this value.
+
+In my case, it prevented discovery of the scenario in which one such entity with null in "DTYPE" was created - it was creating problems later.
+
+The attached testcase is a NetBeans project that needs some configuration of its libraries.
+
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Extract the attached testcase and open in NetBeans
+2. Configure persistence.xml
+3. Configure libraries
+4. Run JUnit test - should create table
+5. Inspect table layout - column "DTYPE" should NOT be nullable

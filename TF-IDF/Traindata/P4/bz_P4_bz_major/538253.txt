@@ -1,0 +1,53 @@
+Created attachment 275529 [details]
+The java files with the example from description.
+
+Trying to override a method with an argument which is a generic array of ? extends SomeGenericRawType leads to the following errors:
+
+1.
+Name clash: The method method(Class<? extends List>...) of type SubClass has the same erasure as method(Class<? extends List>...) of type BaseClass but does not override it
+
+2.
+The method method(Class<? extends List>...) of type SubClass must override or implement a supertype method
+
+------
+Here a small example:
+
+public class BaseClass {
+
+    public String method(Class<? extends List>... classes) {
+        return null;
+    }
+}
+
+public class SubClass extends BaseClass {
+
+    @Override
+    public String method(Class<? extends List>... classes) {
+        return null;
+    }
+}
+
+------
+The compile errors would not apprear if the argument is not an array, so the <? extends RawType> seems to be allowed and considered, but not for arrays.
+
+------
+The oracle compiler has no problem with the example above.
+
+------
+When changing the example the following way (make List not being a raw type, List<?>), the .class file looks the same, but there are no compile errors:
+
+
+public class BaseClass {
+
+    public String method(Class<? extends List<?>>... classes) {
+        return null;
+    }
+}
+
+public class SubClass extends BaseClass {
+
+    @Override
+    public String method(Class<? extends List<?>>... classes) {
+        return null;
+    }
+}

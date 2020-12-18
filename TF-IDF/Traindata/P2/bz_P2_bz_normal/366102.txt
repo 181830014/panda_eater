@@ -1,0 +1,21 @@
+Build Identifier: 2.2.1.v20110722-r9776
+
+I've just run some stress-tests with our application inside GlassFish 3.1.
+
+The application uses completely container-managed JPA EntityManagers inside stateless EJBs. Usually we don't see this, but under a real stress test we saw this:
+
+A potential connection leak detected for connection pool pgXXXPool.
+
+From the documentation for GlassFish, the stacktrace (attached) points to the source of the connection leak.
+
+Looking into the EclipseLink code, the DatasourceAccessor.connectInternal method looks suspicious to me. Also within the attached stacktrace I couldn't find any code that returns the connection back to the pool of the container.
+
+The initial reason for this was, that the underlying physical connection has been invalidated by the container (option for connection reuse limit), which resulted in this message:
+
+"Communication failure detected when attempting to perform read query outside of a transaction. Attempting to retry query."
+
+The retry than works and the application is not affected (apart from the delay).
+
+
+
+Reproducible: Always

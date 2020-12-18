@@ -1,0 +1,30 @@
+Within the properties passed to Persistence.createEntityManagerFactory we need to add support for passing in a functioning DataSource instance for either the JTA or NON-JTA data source properties. At present we only support passing in a name to look up the data source by.
+
+EXAMPLE:
+
+	public static Map javaSEProperties() {
+		Map properties = new HashMap();
+
+		properties.put(NON_JTA_DATASOURCE, createDataSource());
+		properties.put(LOGGING_LEVEL, "FINE");
+
+		return properties;
+	}
+	
+	private static DataSource createDataSource() {
+		OracleDataSource ods;
+		try {
+			ods = new OracleDataSource();
+		} catch (SQLException ex) {
+			throw new RuntimeException("Failed creating OracleDataSource", ex);
+		}
+		ods.setURL("jdbc:oracle:thin:@localhost:1521:ORCL");
+		ods.setUser("scott");
+		ods.setPassword("tiger");
+
+		return ods;
+	}
+
+	
+				emf = Persistence.createEntityManagerFactory("proxy-employee",
+					javaSEProperties());

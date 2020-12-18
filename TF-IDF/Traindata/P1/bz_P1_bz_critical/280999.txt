@@ -1,0 +1,39 @@
+Build ID: M20090211-1700
+
+Steps To Reproduce:
+1.  Create Linux symbolic link to folder
+2.  Create project with root in subfolder of linked folder
+3.  Use navigator to open a PHP file
+
+Error 1:  Eclipse ignores the fact that it's a symbolic link and insists on using the absolute canonical realpath (displayed in title bar)
+
+This is wrong.  When I moved my files to another location I expected to be able to only change the (linux symbolic link) and have everything else be the same.  Instead I had to recreate all of my projects because the absolute path was hardcoded in them.
+
+But there is an even worse problem which is driving me nuts.
+
+
+Suppose you have two files:  a.php  and b.php  and that file a.php invokes a function that is defined in b.php
+
+Open both of the files in the edit window.  Confirm that both files show the full path in the title bar.
+
+In file a.php right click on an instance of the function and select "Open Definition".
+
+Error 2:
+You now get a new edit window for b.php  and this window has the symbolic path instead of the absolute path.
+
+Eclipse now treats these files as separate. Make a change to one file and the other file complains about losing sync.
+
+There seem to be several ways to get into this state.  This is especially a problem when debugging and stepping through the code.
+
+Sometimes Eclipse references the file by it's symbolic path and most of the time by it's absolute path.  When both versions of the same file are open it causes a great deal of trouble including *loss of code*.
+
+Expected behavior is that if I tell a project to use a path which includes a symbolic link to a folder the it should not resolve it to an absolute realpath.
+
+Beyond that I would hope that it would compare inodes or something to decide when it's the same file.  
+
+
+
+More information:
+I am only using the PDT version of Eclipse.
+
+These links were created using the linux shell.

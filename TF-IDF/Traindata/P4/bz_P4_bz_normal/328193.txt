@@ -1,0 +1,6 @@
+There is currently a class FunctionUtils with static entry points to inference. It is used from classes that are not created by the guice injector. This class has a type inference instance separate from the one used by the evaluator.
+
+All calls in the evaluator except one have been replaced with use of the injected type inference instance.
+But the call in "prepare call" (See note in source with reference to this bug) - when replaced will cause some b3 tests to fail.
+
+The reason is somewhat mysterious - but may relate to the specific functions (the system function Inject) doing something in a bad way. Or it could be caused by caching (the other instance has a separate cache).

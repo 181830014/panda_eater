@@ -1,0 +1,14 @@
+When trying to 'SELECT FOR UPDATE NOWAIT' using JPA on an Oracle DB, if the lock wasn't acquired then a PessimisticLockException is thrown instead of a LockTimeoutException, which is the expected exception (thrown in any other case where the timeout is larger than 0).
+
+This causes the JTA transaction to be marked for rollback (as written in the PessimisticLockException's documentation), but it really shouldn't do that.
+
+Code example:
+props.put("javax.persistence.lock.timeout", 0);
+em.find(MyEntity.class, id, LockModeType.PESSIMISTIC_READ, props);
+
+It also happens when running a native query.
+
+The following code will produce the expected behavior, but it requires invoking EclipseLink's specific classes:
+em.unwrap(Session.class).executeQuery(((JpaQuery)query).getDatabaseQuery())
+
+btw, I'm not 100% sure about my EclipseLink version. I'm using the default EclipseLink which comes with Weblogic 12.1, and in the logs it says it's version 2.3.2.

@@ -1,0 +1,21 @@
+Created attachment 170817 [details]
+example JPA project
+
+In bug 315292 we removed the validation for a join-column referenced-column-name that is defaulted.
+
+We need to sort out what the default referenced-column-name is for EclipseLink and for Generic. Also what column choices do we give the user when selecting a referenced-column-name using code-assist or a drop-down.
+
+
+Here is an email from Doug:
+
+When a user is creating a relationship mapping into an inheritance hierarchy I believe the most intuitive configuration is to map to the PK column(s) of the target class. In the case described where the 1:1 is from Employee to Address I would expect to specify column names as mapped in Address. The fact that the runtime translates this into the corresponding PK column should not matter to the user.
+
+It is very odd to setup a mapping where the target is Address and then reference a column in ContactPoint without having to more specifically indicate the table. I guess this is more of a spec issue then anything we have to handle at the moment.
+
+Some ideas to address the current issue in Dali.
+
+1. In the case of a single column FK/PK we should not do any validation in the case where the join-column does not have a referenced-column-name specified. Currently Dali makes an assumption about what the value defaults to and then compares it with the target and decides there is an issue. 
+
+2. In the case where the referenced-column-name is specified Dali should accept the PK column name(s) of the inheritance root or the corresponding values specified in <primary-key-join-column> which maps a sub-class PK column to the parent/root.
+
+For Helios I would simply like to see us address #1 so at least I can have AllState remove the unnecessary referenced-column-name configuration in their single PK column model and avoid the unnecessary warning. Scenario #2 and additionally more complex scenarios involving multiple level inheritance using primary-key-join-column and multi-column PK can be deferred until the next release.

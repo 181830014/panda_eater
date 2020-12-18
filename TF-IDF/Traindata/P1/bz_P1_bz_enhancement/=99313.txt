@@ -1,0 +1,140 @@
+It's not possible to use the combination of a base class (inheriting Composite) 
+and a final class inheriting the base class. The final class is not viewed 
+correct in VE. The base class is viewed correct and also the Shell class that 
+include the final Composite class. I have tested several ways to organize the 
+code and the problem seems to be that the VE don't look into the base class to 
+find any members that are visual controls. This is a not good since it reduce 
+the possibility to adopt a OO design of the visual classes. I have tested it on 
+the latest release of 3.0.2 and on the stable build 1.1M1.
+
+/Robert
+
+The test code:
+BasePanel.java
+==============
+import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.layout.*;
+
+/**
+ * Abstract class to be used as the common base for different implementations
+ */
+public class BasePanel extends Composite {
+  private Composite top = null;
+  private Composite bottom = null;
+  public BasePanel(Composite parent, int style) {
+    super(parent, style);
+    initialize();
+  }
+  public Composite getBottom() {
+    return bottom;
+  }
+  public Composite getTop() {
+    return top;
+  }
+  private void initialize() {
+    FormLayout layout1 = new FormLayout();
+    layout1.marginHeight = 3;
+    layout1.marginWidth = 3;
+    layout1.spacing = 3;
+    setBackground(new Color(Display.getDefault(), 128, 128, 255));
+    createBottom();
+    createTop();
+    setSize(new Point(300,200));
+    setLayout(layout1);
+  }
+  private void createTop() {
+    top = new Composite(this, SWT.NONE);
+    FillLayout layout2 = new FillLayout();
+    FormData formData1 = new FormData();
+    FormAttachment l = new FormAttachment(0);
+    FormAttachment r = new FormAttachment(100);
+    FormAttachment t = new FormAttachment(0);
+    FormAttachment b = new FormAttachment(bottom);
+    formData1.left = l;
+    formData1.right = r;
+    formData1.top = t;
+    formData1.bottom = b;
+    layout2.marginHeight = 3;
+    layout2.marginWidth = 3;
+    layout2.spacing = 3;
+    top.setBackground(new Color(Display.getDefault(), 255, 128, 128));
+    top.setLayoutData(formData1);
+    top.setLayout(layout2);
+  }
+  private void createBottom() {
+    bottom = new Composite(this, SWT.NONE);
+    FillLayout layout3 = new FillLayout();
+    FormData formData2 = new FormData();
+    FormAttachment l = new FormAttachment(0);
+    FormAttachment r = new FormAttachment(100);
+    FormAttachment b = new FormAttachment(100);
+    formData2.left = l;
+    formData2.right = r;
+    formData2.bottom = b;
+    formData2.height = 50;
+    layout3.marginHeight = 3;
+    layout3.marginWidth = 3;
+    layout3.spacing = 3;
+    bottom.setBackground(new Color(Display.getDefault(), 128, 255, 128));
+    bottom.setLayoutData(formData2);
+    bottom.setLayout(layout3);
+  }
+}
+
+FooPanel.java
+=============
+import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.SWT;
+/**
+ * An implementation of BasePanel
+ */
+public class FooPanel extends BasePanel {
+  private Button button = null;
+  private Text text = null;
+  public FooPanel(Composite parent, int style) {
+    super(parent, style);
+    initialize();
+  }
+  private void initialize() {
+    button = new Button(getBottom(), SWT.NONE);
+    text = new Text(getTop(), SWT.BORDER);
+    button.setText("Push");
+  }
+}
+
+Simple.java
+===========
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.SWT;
+/**
+ * A simple window for testing VE using inheritage
+ */
+public class Simple {
+  private Shell sShell = null;
+  private Composite fooPanel = null;
+  private void createSShell() {
+    sShell = new Shell(SWT.DIALOG_TRIM | SWT.RESIZE);
+    createComposite();
+    sShell.setText("Simple test of VE");
+    sShell.setLayout(new FillLayout());
+    sShell.setSize(new Point(300,200));
+  }
+  private void createComposite() {
+    fooPanel = new FooPanel(sShell, SWT.NONE);
+  }
+  public static void main(String[] args) {
+    Simple simple = new Simple();
+    Display display = new Display();
+    simple.createSShell();
+    simple.sShell.open();
+    while (!simple.sShell.isDisposed()) {
+      if (!display.readAndDispatch())
+        display.sleep();
+    }
+    display.dispose();
+  }
+}

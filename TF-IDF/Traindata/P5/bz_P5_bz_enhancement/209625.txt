@@ -1,0 +1,29 @@
+Fine grained search (see bug 155013) may be addressed using several ways.
+
+One of this possible was described by Philippe in bug 155013 comment 14:
+> If finegrain flags are passed to a search pattern to better discriminate;
+> it should be possible to ask a search match for the same information.
+> Like if you search for all refs to a given type, you could be interested
+> to know that certain matches were located inside annotations, without doing
+> a separate query.
+>
+> Taking some distance a little, scopes are usually used for narrowing the
+> location of a match (i.e. look for type refs inside type X). Shouldn't
+> thus scope be enhanced to express more sophisticated locations ?
+> Like inside annotations ? I could imagine an approach where a scope could
+> be even given some search patterns (declaration patterns), so you could
+> search for reference to type IOException inside #main(*) methods.
+> So it would only take the addition of a pattern for representing an 
+> annotation, so as to be able to combine it in the scope:
+> search for type ref X inside annotations
+
+In fact this way seems to be the most reasonable approach to address easily the requirement 3) expressed by Ernest in bug 155013 comment 8...
+
+So, after having discussed with Jerome, we decided to split the fine grained search work into 2 separated bugs:
+ - bug 155013 will address requirement 1) of bug 155013 comment 8 and also
+   most of the Martin's initial requirements using an  additional flag on 
+   SearchPattern#createPattern(...) methods as described in bug 155013
+   comment 11
+ - this bug will address requirement 3) of bug 155013 comment 8
+
+Note that requirement 2) of bug 155013 comment 8 is already addressed by search engine using a method reference query...

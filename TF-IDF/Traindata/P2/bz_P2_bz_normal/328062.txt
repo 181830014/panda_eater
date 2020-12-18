@@ -1,0 +1,25 @@
+Build Identifier: Trunk
+
+Object model is:
+
+Abteilung (department) ->* Mitarbeiter (employee) -> * Projekt (projekt) ->* Standort (location)
+
+TypedQuery<Abteilung> query = em.createQuery("SELECT a FROM Abteilung a", Abteilung.class);
+query.setHint(QueryHints.BATCH, "a.mitarbeiter.projekte");
+
+
+will result in
+Exception Description: The expression has not been initialized correctly.  Only a single ExpressionBuilder should be used for a query. 
+For parallel expressions, the query class must be provided to the ExpressionBuilder constructor, and the query's ExpressionBuilder must 
+always be on the left side of the expression. 
+Expression: [
+Base jpatage.fetchplans.model.Abteilung]
+Query: ReadAllQuery(referenceClass=Abteilung sql="SELECT ID, NAME FROM ABTEILUNG")
+
+
+This query will work though with above query hint:
+
+"SELECT distinct a FROM Abteilung a join a.mitarbeiter m join m.projekte p where p.name is not null
+
+
+Reproducible: Always

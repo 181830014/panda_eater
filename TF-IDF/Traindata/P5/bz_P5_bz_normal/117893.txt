@@ -1,0 +1,56 @@
+Using an aspect that extracts an annotation as context fails with an AccessControlException when run under a Java 2 security manager i.e. -Djava.secuirty.manager.
+
+Using this aspect
+
+public aspect SecuritySupport {
+
+	before (Permission p) : execution(@Permission * *(..)) && @annotation(p) {
+		SecurityManager sm = System.getSecurityManager();
+		if (sm != null) {
+			sm.checkPermission(new HelloPermission(p.value()));
+		}
+	}
+	
+}
+
+with this program
+
+public class HelloWorld {
+
+	private String text = "Hello World!";
+	
+	@Permission("print")
+	public void println() {
+		SecurityManager sm = System.getSecurityManager();
+		if (sm != null) {
+			sm.checkPermission(new HelloPermission("print"));
+		}
+
+		System.out.println(getText());
+	}
+ 	...
+
+caused this exception
+
+Exception in thread "main" java.security.AccessControlException: access denied (java.lang.RuntimePermission accessDeclaredMembers)
+	at java.security.AccessControlContext.checkPermission(AccessControlContext.java:264)
+	at java.security.AccessController.checkPermission(AccessController.java:427)
+	at java.lang.SecurityManager.checkPermission(SecurityManager.java:532)
+	at java.lang.SecurityManager.checkMemberAccess(SecurityManager.java:1662)
+	at java.lang.Class.checkMemberAccess(Class.java:2125)
+	at java.lang.Class.getDeclaredMethods(Class.java:1762)
+	at sun.reflect.annotation.AnnotationType.<init>(AnnotationType.java:81)
+	at sun.reflect.annotation.AnnotationType.getInstance(AnnotationType.java:64)
+	at sun.reflect.annotation.AnnotationParser.parseAnnotation(AnnotationParser.java:186)
+	at sun.reflect.annotation.AnnotationParser.parseAnnotations2(AnnotationParser.java:69)
+	at sun.reflect.annotation.AnnotationParser.parseAnnotations(AnnotationParser.java:52)
+	at java.lang.reflect.Method.declaredAnnotations(Method.java:676)
+	at java.lang.reflect.Method.getAnnotation(Method.java:663)
+	at hello.HelloWorld.println(HelloWorld.java)
+	at hello.HelloWorld.main(HelloWorld.java:52)
+
+unless I added this my security policy:
+
+grant { 
+	permission java.lang.RuntimePermission "accessDeclaredMembers";
+};

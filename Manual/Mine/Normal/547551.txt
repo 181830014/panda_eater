@@ -1,0 +1,34 @@
+I'm trying out CodeReady Workspaces, and am having an issue importing a project from a zip file.  I created a node workspace, and then went to import from a zip file.  The zip file location is https://drive.google.com/file/d/1CDLGLpnG7RKNL6bBAKslBr4gkMQpCZAE/view?usp=sharing
+
+I get the following exceptions.  I've tried this with both a java workspace and a node workspace.
+
+2019/05/22 12:30:38 Start new terminal.
+2019-05-22 12:31:01,187[uestProcessor-2]  [ERROR] [oggingUncaughtExceptionHandler 32]   - Runtime exception caught in thread ServerSideRequestProcessor-2. Message: null
+	at org.eclipse.che.api.fs.server.impl.ValidatingFsManager.unzip(ValidatingFsManager.java:115)
+	at org.eclipse.che.api.project.server.impl.ZipProjectImporter.doImport(ZipProjectImporter.java:96)
+	at org.eclipse.che.api.fs.server.impl.ExecutiveFsManager.unzip(ExecutiveFsManager.java:103)
+	at org.eclipse.che.api.project.server.impl.ExecutiveProjectManager.doImport(ExecutiveProjectManager.java:390)
+	at org.eclipse.che.api.project.server.impl.ProjectImportManager.doImportInternally(ProjectImportManager.java:303)
+	at org.eclipse.che.api.project.server.impl.ProjectJsonRpcServiceBackEnd.doImport(ProjectJsonRpcServiceBackEnd.java:99)
+	at org.eclipse.che.api.project.server.impl.ValidatingProjectManager.doImport(ValidatingProjectManager.java:289)
+	at org.eclipse.che.api.project.server.impl.SynchronizingProjectManager.doImport(SynchronizingProjectManager.java:230)
+java.lang.NullPointerException: null
+	at org.eclipse.che.api.fs.server.FsManager.unzip(FsManager.java:356)
+	at org.eclipse.che.api.fs.server.impl.ZipArchiver.unzip(ZipArchiver.java:90)
+	at org.eclipse.che.api.project.server.impl.ProjectImportManager.doImport(ProjectImportManager.java:279)
+	at org.eclipse.che.api.core.jsonrpc.commons.RequestHandlerManager.handle(RequestHandlerManager.java:224)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.eclipse.che.api.project.server.impl.ProjectJsonRpcServiceBackEnd.doImportInternally(ProjectJsonRpcServiceBackEnd.java:245)
+	at org.eclipse.che.api.core.jsonrpc.commons.RequestHandlerManager$OneToOneHandler.handle(RequestHandlerManager.java:351)
+	at java.lang.Thread.run(Thread.java:748)
+	at org.eclipse.che.api.project.server.impl.ProjectJsonRpcServiceBackEnd.perform(ProjectJsonRpcServiceBackEnd.java:318)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at org.eclipse.che.api.core.jsonrpc.commons.RequestHandlerManager$OneToOneHandler.access$1000(RequestHandlerManager.java:335)
+	at org.eclipse.che.commons.lang.concurrent.CopyThreadLocalRunnable.run(CopyThreadLocalRunnable.java:38)
+	at org.eclipse.che.api.core.jsonrpc.commons.JsonRpcMessageReceiver$ProcessRequestTask.run(JsonRpcMessageReceiver.java:109)
+	at org.eclipse.che.api.core.jsonrpc.commons.RequestDispatcher.dispatch(RequestDispatcher.java:52)
+
+
+
+Build information (running on OpenShift 3.11 minishift)
+1.1.0.GA :: crw_stable-branch/137 :: che-dev @ ea65 (20) :: che-parent @ e12b (6.19.0) :: che-lib @ e717 (6.19.0) :: che-ls-jdt @ 288b (0.0.3) :: che @ c4075 (6.19.2)

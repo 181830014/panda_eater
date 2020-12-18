@@ -1,0 +1,21 @@
+Build Identifier: 2.1.1
+
+An attribute in an Entity is of the type Map<Primitive, @Embeddable>.
+It contains two elements where the values are equal.
+The map is in sync with the DB (Oracle in this case), so the collection table contains two rows.
+
+One of the two existing map-values is changed or replaced by the program.
+When flushing the changes to DB, EclipseLink issues just one insert-command, instead of an update or a delete/insert-sequence.
+
+As a result the collection contains two elements, which is correct, but the collection table contains three rows.
+
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. unzip the Attachment.
+2. adjust src/META-INF/persistence.xml.
+3. run maven.
+4. run Test.class
+5. inspect the DB.

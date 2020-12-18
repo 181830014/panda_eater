@@ -1,0 +1,164 @@
+Created attachment 194349 [details]
+a minimal project
+
+I am having trouble discovering a java model from a java project. Everything works fine when there are no annotations used in the project, but when there are annotations, some exceptions are thrown.
+
+I have tried this with following configurations, which gave all the same results :
+    - Modisco 0.7 on eclipse Galileo
+    - Modisco 0.8 on eclipse Helios
+    - Modisco 0.9 on eclipse Indigo (M6)
+
+There are 3 different kinds of exceptions thrown :
+    - classcast exception from AnnotationTypeMemberDeclarationImpl to AbstractMethodDeclaration
+    - classcast exception from TypeParameterImpl to UnresolvedItem
+    - IOWrappedException stating that TypeAccessImpl is not contained by a resource
+
+The result is that I do not get a result from the discoverer (i.e. DiscoveryParameters.get(discoverer.PARAMETER_TARGET_RESOURCE) returns null). Also, if I use the modisco context menu on the project to discover the model, no editor is opened.
+
+For my project I get several of these exceptions. At the end of this message, a stack trace for each one of these types of exceptions is given.
+
+Note that I only get these exception when doing a full java analysis. I do not get any exceptions when setting following value in the DiscoveryParametersBean :
+    this.discoveryParametersBean.setFullJavaLevel(false);
+
+
+I was unable to create a minimal project reproducing all these exceptions and I am unable to post the project here publicly due to some restrictions at work. I did manage to create a minimal project, showing the first exception described (i.e. the classcast exception from AnnotationTypeMemberDeclarationImpl to AbstractMethodDeclaration). This minimal eclipse project is in attachment. To reproduce the error, just right click the project and choose discover java model from java project. The errors will be logged in the error log view. Note that with this project, there is an editor which is opened, while this is not the case for my real-life projects, so the other exceptions might be unrelated.
+
+
+----------------------------------------------------------------------
+STACKTRACES
+---------------------------------------------------------------------
+
+
+---------------------------- classcastexception1.txt ------------------
+
+eclipse.buildId=M20110210-1200
+java.version=1.6.0_24
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os linux -ws gtk -arch x86 -product org.eclipse.epp.package.java.product
+
+
+Error
+Thu Apr 28 16:59:48 CEST 2011
+org.eclipse.gmt.modisco.java.emf.impl.AnnotationTypeMemberDeclarationImpl cannot be cast to org.eclipse.gmt.modisco.java.AbstractMethodDeclaration (org.eclipse.gmt.modisco.java.discoverer_0.8.0.v201006150543)
+
+java.lang.ClassCastException: org.eclipse.gmt.modisco.java.emf.impl.AnnotationTypeMemberDeclarationImpl cannot be cast to org.eclipse.gmt.modisco.java.AbstractMethodDeclaration
+	at org.eclipse.gmt.modisco.java.io.java.JDTVisitor.endVisit(JDTVisitor.java:1698)
+	at org.eclipse.jdt.core.dom.MethodInvocation.accept0(MethodInvocation.java:247)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2480)
+	at org.eclipse.jdt.core.dom.ASTNode.acceptChild(ASTNode.java:2528)
+	at org.eclipse.jdt.core.dom.ReturnStatement.accept0(ReturnStatement.java:136)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2480)
+	at org.eclipse.jdt.core.dom.ASTNode.acceptChild(ASTNode.java:2528)
+	at org.eclipse.jdt.core.dom.IfStatement.accept0(IfStatement.java:190)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2480)
+	at org.eclipse.jdt.core.dom.ASTNode.acceptChildren(ASTNode.java:2551)
+	at org.eclipse.jdt.core.dom.Block.accept0(Block.java:136)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2480)
+	at org.eclipse.jdt.core.dom.ASTNode.acceptChild(ASTNode.java:2528)
+	at org.eclipse.jdt.core.dom.MethodDeclaration.accept0(MethodDeclaration.java:504)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2480)
+	at org.eclipse.jdt.core.dom.ASTNode.acceptChildren(ASTNode.java:2551)
+	at org.eclipse.jdt.core.dom.TypeDeclaration.accept0(TypeDeclaration.java:484)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2480)
+	at org.eclipse.jdt.core.dom.ASTNode.acceptChildren(ASTNode.java:2551)
+	at org.eclipse.jdt.core.dom.CompilationUnit.accept0(CompilationUnit.java:219)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2480)
+	at org.eclipse.gmt.modisco.java.io.java.JavaReader.visitCompilationUnit(JavaReader.java:266)
+	at org.eclipse.gmt.modisco.java.io.java.JavaReader.parseTypeRoot(JavaReader.java:225)
+	at org.eclipse.gmt.modisco.java.io.java.JavaReader.parsePackage(JavaReader.java:246)
+	at org.eclipse.gmt.modisco.java.io.java.JavaReader.readModel(JavaReader.java:175)
+	at org.eclipse.gmt.modisco.java.actions.DiscoverJavaModelFromJavaProject$2.run(DiscoverJavaModelFromJavaProject.java:194)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+
+
+
+------------------ classcastexception2.txt ------------------
+
+eclipse.buildId=M20110210-1200
+java.version=1.6.0_24
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os linux -ws gtk -arch x86 -product org.eclipse.epp.package.java.product
+
+
+Error
+Thu Apr 28 16:59:48 CEST 2011
+org.eclipse.gmt.modisco.java.emf.impl.TypeParameterImpl cannot be cast to org.eclipse.gmt.modisco.java.UnresolvedItem
+
+java.lang.ClassCastException: org.eclipse.gmt.modisco.java.emf.impl.TypeParameterImpl cannot be cast to org.eclipse.gmt.modisco.java.UnresolvedItem
+	at org.eclipse.gmt.modisco.java.emf.impl.UnresolvedItemAccessImpl.eSet(UnresolvedItemAccessImpl.java:212)
+	at org.eclipse.emf.ecore.impl.BasicEObjectImpl.eSet(BasicEObjectImpl.java:1081)
+	at org.eclipse.gmt.modisco.java.io.java.binding.PendingElement.affectTarget0(PendingElement.java:172)
+	at org.eclipse.gmt.modisco.java.io.java.binding.PendingElement.affectTarget(PendingElement.java:152)
+	at org.eclipse.gmt.modisco.java.io.java.binding.BindingManager.resolveBindings(BindingManager.java:312)
+	at org.eclipse.gmt.modisco.java.io.java.JavaReader.finalResolveBindings(JavaReader.java:285)
+	at org.eclipse.gmt.modisco.java.io.java.JavaReader.terminate(JavaReader.java:337)
+	at org.eclipse.gmt.modisco.java.actions.DiscoverJavaModelFromJavaProject$2.run(DiscoverJavaModelFromJavaProject.java:202)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+
+
+
+-----------------typeaccessimpl_not_contained.txt--------------
+
+eclipse.buildId=M20110210-1200
+java.version=1.6.0_24
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os linux -ws gtk -arch x86 -product org.eclipse.epp.package.java.product
+
+
+Error
+Thu Apr 28 16:59:48 CEST 2011
+Unkown error.
+
+org.eclipse.emf.ecore.resource.Resource$IOWrappedException: The object 'org.eclipse.gmt.modisco.java.emf.impl.TypeAccessImpl@63f8ce' is not contained in a resource.
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.endSave(XMLSaveImpl.java:306)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.save(XMLSaveImpl.java:270)
+	at org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl.doSave(XMLResourceImpl.java:206)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.save(ResourceImpl.java:1406)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.save(ResourceImpl.java:993)
+	at org.eclipse.gmt.modisco.java.actions.DefaultDiscoverer.saveResource(DefaultDiscoverer.java:125)
+	at org.eclipse.gmt.modisco.java.actions.DiscoverJavaModelFromJavaProject$2.run(DiscoverJavaModelFromJavaProject.java:205)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+Caused by: org.eclipse.emf.ecore.xmi.DanglingHREFException: The object 'org.eclipse.gmt.modisco.java.emf.impl.TypeAccessImpl@63f8ce' is not contained in a resource.
+	at org.eclipse.emf.ecore.xmi.impl.XMLHelperImpl.handleDanglingHREF(XMLHelperImpl.java:760)
+	at org.eclipse.emf.ecore.xmi.impl.XMLHelperImpl.getURIFragment(XMLHelperImpl.java:731)
+	at org.eclipse.emf.ecore.xmi.impl.XMLHelperImpl.getIDREF(XMLHelperImpl.java:753)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveIDRefMany(XMLSaveImpl.java:2003)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveFeatures(XMLSaveImpl.java:1355)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveElementID(XMLSaveImpl.java:2685)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveElement(XMLSaveImpl.java:1174)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveElement(XMLSaveImpl.java:1035)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveContainedMany(XMLSaveImpl.java:2386)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveFeatures(XMLSaveImpl.java:1533)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveElementID(XMLSaveImpl.java:2685)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveElement(XMLSaveImpl.java:1174)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveElement(XMLSaveImpl.java:1035)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveContainedMany(XMLSaveImpl.java:2386)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveFeatures(XMLSaveImpl.java:1533)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveElementID(XMLSaveImpl.java:2685)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveElement(XMLSaveImpl.java:1174)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveElement(XMLSaveImpl.java:1035)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveContainedMany(XMLSaveImpl.java:2386)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveFeatures(XMLSaveImpl.java:1533)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveElementID(XMLSaveImpl.java:2685)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveElement(XMLSaveImpl.java:1174)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveElement(XMLSaveImpl.java:1035)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveContainedMany(XMLSaveImpl.java:2386)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveFeatures(XMLSaveImpl.java:1533)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveElementID(XMLSaveImpl.java:2685)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveElement(XMLSaveImpl.java:1174)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveElement(XMLSaveImpl.java:1035)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveContainedMany(XMLSaveImpl.java:2386)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveFeatures(XMLSaveImpl.java:1533)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.saveElementID(XMLSaveImpl.java:2685)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.writeTopObject(XMLSaveImpl.java:680)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.traverse(XMLSaveImpl.java:588)
+	at org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl.save(XMLSaveImpl.java:256)
+	... 6 more

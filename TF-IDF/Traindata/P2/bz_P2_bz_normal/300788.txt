@@ -1,0 +1,54 @@
+Build Identifier: 2.0.0
+
+This is a complex problem, but it is reproducible.
+- there are two entities in a master detail relation
+- on the child relation an eclipse "postDelete" event is present
+- this event gets there by adding a listener to the event manager of the class descriptor and that routes the event to the entity (emulating JPA @events)
+- the jdbc connection runs in a delayed constrained mode, checking the on commit. 
+- In order to do this, a custom jdbc driver and connection implementation is used that executes a "set constraints all deferred" on the appropriate moments
+
+When the master is deleted, the foreign key of the child results in an exception upon commit. However, if the postDelete method executes a native query the commit is never called! All connections are just closed.
+
+In the attached zip a totally stripped example is present. This is the output without the event method:
+
+Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.0.0.v20091127-r5931): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLException: Key value for constraint (informix.u208_344) is still being referenced.
+Error Code: -692
+    at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:324)
+    at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicCommitTransaction(DatabaseAccessor.java:420)
+...
+[EL Finest]: 2010-01-15 16:55:10.281--ServerSession(14008569)--Thread(Thread[main,5,main])--Begin undeploying Persistence Unit reinders; session reinders_url=jdbc:reinders:com.informix.jdbc.IfxDriver#jdbc:informix-sqli://toeu_reinders:9088/reinders:INFORMIXSERVER=ol_ids_1150_1;DB_LOCALE=en_us.utf8_user=user; state Deployed; factoryCount 1
+[EL Config]: 2010-01-15 16:55:10.281--ServerSession(14008569)--Connection(9703298)--Thread(Thread[main,5,main])--disconnect
+[EL Finest]: 2010-01-15 16:55:10.281--ServerSession(14008569)--Thread(Thread[main,5,main])--sequencing disconnected
+[EL Config]: 2010-01-15 16:55:10.281--ServerSession(14008569)--Connection(23953814)--Thread(Thread[main,5,main])--disconnect
+[EL Finer]: 2010-01-15 16:55:10.281--ServerSession(14008569)--Thread(Thread[main,5,main])--initialize identitymaps
+[EL Info]: 2010-01-15 16:55:10.281--ServerSession(14008569)--Thread(Thread[main,5,main])--reinders_url=jdbc:reinders:com.informix.jdbc.IfxDriver#jdbc:informix-sqli://toeu_reinders:9088/reinders:INFORMIXSERVER=ol_ids_1150_1;DB_LOCALE=en_us.utf8_user=user logout successful
+[EL Config]: 2010-01-15 16:55:10.281--ServerSession(14008569)--Connection(17605128)--Thread(Thread[main,5,main])--disconnect
+[EL Config]: 2010-01-15 16:55:10.281--ServerSession(14008569)--Connection(5910186)--Thread(Thread[main,5,main])--disconnect
+[EL Finest]: 2010-01-15 16:55:10.281--ServerSession(14008569)--Thread(Thread[main,5,main])--End undeploying Persistence Unit reinders; session reinders_url=jdbc:reinders:com.informix.jdbc.IfxDriver#jdbc:informix-sqli://toeu_reinders:9088/reinders:INFORMIXSERVER=ol_ids_1150_1;DB_LOCALE=en_us.utf8_user=user; state Undeployed; factoryCount 
+
+
+and this with the event method:
+
+[EL Fine]: 2010-01-15 16:52:32.125--ClientSession(6767312)--Connection(5910186)--Thread(Thread[main,5,main])--DELETE FROM batchtransfer WHERE ((batchtransfernr = ?) AND (lazylock = ?))
+    bind => [18, 1]
+[EL Finer]: 2010-01-15 16:52:32.171--UnitOfWork(23747954)--Thread(Thread[main,5,main])--end unit of work commit
+[EL Finer]: 2010-01-15 16:52:32.171--UnitOfWork(23747954)--Thread(Thread[main,5,main])--resume unit of work
+[EL Finer]: 2010-01-15 16:52:32.171--UnitOfWork(23747954)--Thread(Thread[main,5,main])--release unit of work
+[EL Finer]: 2010-01-15 16:52:32.171--ClientSession(6767312)--Thread(Thread[main,5,main])--client released
+[EL Finest]: 2010-01-15 16:52:32.171--ServerSession(14008569)--Thread(Thread[main,5,main])--Begin undeploying Persistence Unit reinders; session reinders_url=jdbc:reinders:com.informix.jdbc.IfxDriver#jdbc:informix-sqli://toeu_reinders:9088/reinders:INFORMIXSERVER=ol_ids_1150_1;DB_LOCALE=en_us.utf8_user=user; state Deployed; factoryCount 1
+[EL Config]: 2010-01-15 16:52:32.171--ServerSession(14008569)--Connection(9703298)--Thread(Thread[main,5,main])--disconnect
+[EL Finest]: 2010-01-15 16:52:32.171--ServerSession(14008569)--Thread(Thread[main,5,main])--sequencing disconnected
+[EL Config]: 2010-01-15 16:52:32.171--ServerSession(14008569)--Connection(23953814)--Thread(Thread[main,5,main])--disconnect
+[EL Finer]: 2010-01-15 16:52:32.171--ServerSession(14008569)--Thread(Thread[main,5,main])--initialize identitymaps
+[EL Info]: 2010-01-15 16:52:32.171--ServerSession(14008569)--Thread(Thread[main,5,main])--reinders_url=jdbc:reinders:com.informix.jdbc.IfxDriver#jdbc:informix-sqli://toeu_reinders:9088/reinders:INFORMIXSERVER=ol_ids_1150_1;DB_LOCALE=en_us.utf8_user=user logout successful
+[EL Config]: 2010-01-15 16:52:32.171--ServerSession(14008569)--Connection(17605128)--Thread(Thread[main,5,main])--disconnect
+[EL Config]: 2010-01-15 16:52:32.171--ServerSession(14008569)--Connection(5910186)--Thread(Thread[main,5,main])--disconnect
+[EL Finest]: 2010-01-15 16:52:32.203--ServerSession(14008569)--Thread(Thread[main,5,main])--End undeploying Persistence Unit reinders; session reinders_url=jdbc:reinders:com.informix.jdbc.IfxDriver#jdbc:informix-sqli://toeu_reinders:9088/reinders:INFORMIXSERVER=ol_ids_1150_1;DB_LOCALE=en_us.utf8_user=user; state Undeployed; factoryCount 0 
+
+
+There is a thread in the newsgroup titled "2.0.0: where did the commit go?"
+
+
+
+Reproducible: Always

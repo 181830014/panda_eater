@@ -1,0 +1,44 @@
+Hi, I am using Eclipse 3 M9 build I200405211200 and I have problems with
+connecting swt with swing. 
+I wrote a plugin for eclipse with swing components,
+most of the time it works fine but there seem to be errors in the event handling
+of the SWT_AWT class, 
+the added eventlistener are not removed on dispose of the AWT Frame, 
+so eclipse continues sending events to the frame, this produce errors like this:
+
+java.lang.NullPointerException
+	at org.eclipse.ui.internal.EditorManager$7.run(EditorManager.java:801)
+	at
+org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java:608)
+	at org.eclipse.core.runtime.Platform.run(Platform.java:758)
+	at org.eclipse.ui.internal.EditorManager.busyRestoreEditor(EditorManager.java:775)
+	at org.eclipse.ui.internal.EditorManager$6.run(EditorManager.java:768)
+	(...)
+!ENTRY org.eclipse.ui 4 4 Sep 27, 2004 12:58:50.515
+!MESSAGE Unhandled event loop exception
+!ENTRY org.eclipse.ui 4 0 Sep 27, 2004 12:58:50.531
+!MESSAGE java.lang.NullPointerException
+!STACK 0
+java.lang.NullPointerException
+	at
+org.eclipse.ui.internal.WorkbenchWindow$5.shellDeactivated(WorkbenchWindow.java:1861)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:167)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:82)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:796)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:820)
+	(...)
+erException
+!STACK 0
+java.lang.NullPointerException
+	at
+org.eclipse.ui.internal.WorkbenchWindow$5.shellActivated(WorkbenchWindow.java:1844)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:163)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:82)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:796)
+	(...)
+
+and sometimes eclipse crashes completely. With Eclipse version 3.1 M1 the errors
+dont occur in the error log, 
+but eclipse sometimes crashes too.
+
+-johannes

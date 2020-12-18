@@ -1,0 +1,43 @@
+If the AppConfigValidator is run on a faces-config.xml file that's open in an editor, the read count doesn't decrement properly when the validator exits.  This is best reproducable when saving the file from an open XML Editor in the Java perspective without the Project Explorer open and triggering validation.  See bug 205733 for the originally reported case.
+
+Thread [Worker-6] (Suspended (breakpoint at line 402 in ModelManagerImpl))      
+        ModelManagerImpl._incrCount(ModelManagerImpl$SharedObject,
+ModelManagerImpl$ReadEditType) line: 402     
+        ModelManagerImpl.getExistingModelForRead(Object) line: 985      
+       
+FacesRendererFactory$MyRenderer(EMF2DOMSSERenderer).initializeXMLModel(IFile,
+boolean) line: 379        
+       
+FacesRendererFactory$MyRenderer(EMF2DOMSSERenderer).loadDocument(InputStream,
+Map) line: 433    
+        FacesRendererFactory$MyRenderer(EMF2DOMRenderer).doLoad(InputStream,
+Map) line: 62      
+       
+FacesConfigResourceImpl(TranslatorResourceImpl).basicDoLoad(InputStream, Map)
+line: 144 
+       
+FacesConfigResourceImpl(CompatibilityXMIResourceImpl).doLoad(InputStream, Map)
+line: 175        
+        FacesConfigResourceImpl(ResourceImpl).load(InputStream, Map<?,?>) line:
+1354    
+        FacesConfigResourceImpl(TranslatorResourceImpl).load(Map) line: 393     
+        ProjectResourceSetEditImpl(ResourceSetImpl).demandLoad(Resource) line:
+256      
+        ProjectResourceSetEditImpl(ProjectResourceSetImpl).demandLoad(Resource)
+line: 143       
+        ProjectResourceSetEditImpl(ResourceSetImpl).demandLoadHelper(Resource)
+line: 271        
+        ProjectResourceSetEditImpl(ProjectResourceSetImpl).getResource(URI,
+boolean) line: 390  
+        WorkbenchResourceHelper.getOrCreateResource(URI, ResourceSet) line: 384 
+        JavaArtifactEditModel(EditModel).getResource(URI) line: 684     
+        JavaArtifactEditModel(ArtifactEditModel).getResource(URI) line: 174     
+        FacesConfigArtifactEdit.getDeploymentDescriptorResource() line: 167     
+        FacesConfigArtifactEdit.getDeploymentDescriptorRoot() line: 149 
+        FacesConfigArtifactEdit.getFacesConfig() line: 133      
+        AppConfigValidator.validateFile(IFile, IReporter) line: 148     
+        AppConfigValidator.validate(IValidationContext, IReporter) line: 100    
+        AppConfigValidator.validateInJob(IValidationContext, IReporter) line:
+69        
+        ValidatorJob.run(IProgressMonitor) line: 75     
+        Worker.run() line: 55

@@ -1,0 +1,15 @@
+I found the same problem as discussed in this thread http://dev.eclipse.org/mhonarc/lists/eclipselink-users/msg04712.html.
+
+My entity model is pretty simple and straightforward:
+
+@Entity
+@Table(name = "WORKITEM")
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class WorkItem
+
+@Entity
+@Table(name = "WORKORDER")
+public class WorkOrder extends WorkItem
+
+Now, when any field of the parent entity (WorkItem) had changed and no field of child (WorkOrder) had changed, the update statement is prepared for both entities, WorkItem and WorkOrder as well. It's because the org.eclipse.persistence.internal.queries.StatementQueryMechanism detects two statements for WorkOrder entity. When preparing UPDATE statements, method setCallFromStatement() is called which causes getDescriptor().buildCallFromStatement() twice in the loop over the statements.
+The first statement is prepared correctly, but the second throws NullPointerException. It's because the org.eclipse.persistence.internal.expressions.SQLUpdateStatement.buildCallWithoutReturning() detects there is no change for the child entity (WorkOrder) and returns null. But enclosed code in org.eclipse.persistence.descriptors.ClassDescriptor.buildCallFromStatement() does not handle returned null value and throws the NPE.

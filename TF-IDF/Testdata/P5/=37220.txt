@@ -1,0 +1,65 @@
+Eclipse 3.0
+
+In the past, Eclipse has retrieved the data from the Clipboard in order to 
+determine whether or not to enable the paste menu item or toolitem.  This is 
+done quite frequently and can be quite slow.  Also, getting the data indicates 
+to the source that the data has been transferred which in the case of a Cut 
+operation may cause the source to delete the original data.
+
+In the 3.0, there is new API on Clipboard called getAvailableTypes() which 
+will indicate what types of data are available on the Clipoard without 
+actually downloading the data itself.  
+
+Here are the places in the UI that the data is being dowloaded unneccessarily 
+(there may be more):
+
+org.eclispe.ui.views.bookmarkexplorer.BookmarkNavigator.updatePasteEnablement
+org.eclispe.ui.views.tasklist.TaskList.updatePasteEnablement
+org.eclispe.ui.views.UpdatesView.canPaste
+
+Here is an example of how to use the new API:
+
+public static void main(String[] args) {
+	Display display = new Display();
+	final Clipboard c = new Clipboard(display);
+	Shell shell = new Shell(display);
+	shell.setLayout(new FillLayout());
+	final StyledText text = new StyledText(shell, SWT.BORDER);
+	
+	final Menu menu = new Menu (shell, SWT.POP_UP);
+	final MenuItem pasteItem = new MenuItem (menu, SWT.PUSH);
+	pasteItem.setText ("Paste");
+	pasteItem.addSelectionListener(new SelectionAdapter() {
+		public void widgetSelected(SelectionEvent e) {
+			text.paste();
+		}
+	});
+	menu.addMenuListener(new MenuAdapter() {
+		public void menuShown(MenuEvent e) {
+			TransferData[] types = c.getAvailableTypes();
+			Transfer[] transfers = new Transfer[] 
+{TextTransfer.getInstance(), RTFTransfer.getInstance()};
+			boolean enable = false;
+			for (int i = 0; i < types.length; i++) {
+				for (int j = 0; j < transfers.length; j++) {
+					if (transfers[j].isSupportedType(types
+[i])) {
+						enable = true;
+						break;
+					}	
+				}
+				if (enable) break;
+			}
+			pasteItem.setEnabled(enable);
+		}
+	});
+	text.setMenu(menu);
+	shell.setSize(200, 200);
+	shell.open();
+	while (!shell.isDisposed()) {
+		if (!display.readAndDispatch())
+			display.sleep();
+	}
+	c.dispose();
+	display.dispose();
+}

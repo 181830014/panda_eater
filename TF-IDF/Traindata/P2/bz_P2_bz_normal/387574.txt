@@ -1,0 +1,28 @@
+In a subclass an additional Mapping to a direct collection is included.
+Reading subclass instances fail with a NullpointerException in DirectCollectionMapping.prepareNestedBatchQuery()
+
+...
+  if (descriptorToUse.getQueryManager().getAdditionalJoinExpression() != null) {
+=>                batchSelectionCriteria =  batchSelectionCriteria.and(query.getDescriptor().getQueryManager().getAdditionalJoinExpression().rebuildOn(builder));
+...
+
+The additional join expression is not null for the inherited subclass, but it is null for the base class.
+
+At the Begin of the method, the descriptorInUse is changed for the inheritance case. It is used in the null test of the if statement, but not in the following code.
+        // For CR#2646-S.M.  In case of inheritance the descriptor to use may not be that
+        // of the source query (the base class descriptor), but that of the subclass, if the
+        // attribute is only of the subclass.  Thus in this case use the descriptor from the mapping.
+        // Also: for Bug 5478648 - Do not switch the descriptor if the query's descriptor is an aggregate
+        ClassDescriptor descriptorToUse = query.getDescriptor();
+        if ((descriptorToUse != this.descriptor) && (!descriptorToUse.getMappings().contains(this)) && (!this.descriptor.isDescriptorTypeAggregate())) {
+            descriptorToUse = this.descriptor;
+        }
+
+
+Looks like the code should be changed to:
+batchSelectionCriteria =  batchSelectionCriteria.and(descriptorToUse.getQueryManager().getAdditionalJoinExpression().rebuildOn(builder));
+
+A Workaround is using a different BatchFetchTyp.
+The mapping is done via workbench, non-JPA project.
+
+We have had a look on the source code of version 2.4, no changes here.

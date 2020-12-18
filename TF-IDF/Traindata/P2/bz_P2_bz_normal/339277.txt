@@ -1,0 +1,39 @@
+Build Identifier: EclipseLink, version: Eclipse Persistence Services - 2.1.1.v20100817-r8050
+
+Hi,
+
+I am trying to collect all insert, update and delete queries within a transaction. I have extended the DescriptorEventAdapter
+and try to capute the queries through overriding the postInsert, postUpdate and postDelete method. I am interested in the SQL + the parameters.
+My goal is some kind of transaction capture. So I am able to replay the transaction on another machine with writes exactly the same data into another 
+database (schema is going to be the same).
+
+After a few tests I could see the following behaviour:
+
+First Call is: SQLCall(INSERT INTO HASHNODE (LEAF, VERSIONSNUMMER, HASH_DOKUMENT, HASH_TREENODE, HASH_ZEITSTEMPELKETTE, ZAEHLER, UUID, PARENT_UUID, DOKINFO_UUID, BAUM_UUID, ZEITSTEMPEL_UUID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?))
+which seems ok. 
+Second call is according to
+	event->query->queryMechanism->call:
+		SQLCall(INSERT INTO HASHBAUM (ERSTELLT, HASHVERFAHREN, FINALISIERT, KARDINALITAET, VERSIONSNUMMER, UUID, RETIMESTAMP_UUID, ROOT_UUID, STAMTGRUPPE_UUID, REHASH_UUID, HASHBAUM_TYP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?))
+		with a event->query->modifyRow of
+			DatabaseRecord(
+			HASHBAUM.KARDINALITAET 		=> 	100
+			HASHBAUM.FINALISIERT 		=> 	2011-03-08 20:27:10.814
+			HASHBAUM.ERSTELLT 			=> 	2011-03-08 20:27:09.539
+			HASHBAUM.ROOT_UUID 			=> 	100f55a0-49ba-11e0-8234-00247e1610fe
+			HASHBAUM.VERSIONSNUMMER 	=> 	1
+			HASHBAUM.HASHVERFAHREN 		=> 	2.16.840.1.101.3.4.2.1
+			HASHBAUM.STAMTGRUPPE_UUID 	=> 	3c2ed210-4969-11e0-a827-00247e1610fe)
+	whereas the issued query on the database is
+		EL Fine]: ClientSession(21702188)--Connection(12003823)--UPDATE HASHBAUM SET KARDINALITAET = ?, FINALISIERT = ?, ERSTELLT = ?, ROOT_UUID = ?, VERSIONSNUMMER = ?, HASHVERFAHREN = ?, STAMTGRUPPE_UUID = ? WHERE (UUID = ?)
+	bind => [100, 2011-03-08 20:27:10.814, 2011-03-08 20:27:09.539, 100f55a0-49ba-11e0-8234-00247e1610fe, 1, 2.16.840.1.101.3.4.2.1, 3c2ed210-4969-11e0-a827-00247e1610fe, 0f96a330-49ba-11e0-8234-00247e1610fe]
+
+	In effect this means that the executed call is another than the carried on in the queryMechanism object. But what I am not able to understand is why are the parameters right (the given parameters are not working with the INSERT query)
+	
+	Is this the right behaviour? Shouldn't event->query->queryMechanism->call be 
+		"UPDATE HASHBAUM SET KARDINALITAET = ?, FINALISIERT = ?, ERSTELLT = ?, ROOT_UUID = ?, VERSIONSNUMMER = ?, HASHVERFAHREN = ?, STAMTGRUPPE_UUID = ? WHERE (UUID = ?)"?
+		
+		
+I am using EclipseLink 2.1.1 (JPA) with Oracle WebLogic 10.3.3		
+
+
+Reproducible: Always

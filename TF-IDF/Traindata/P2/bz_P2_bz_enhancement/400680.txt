@@ -1,0 +1,60 @@
+Created attachment 227010 [details]
+Modified file in eclipselink source as a proposed solution is attached
+
+Problem statement:
+------------------
+Instead of persisting enum with its ordinal or string name, we want to persist value of enum (possible through enum constructor) i.e either "C" or "A" (in below example).
+
+Example:
+---------
+public enum Status {
+
+	CLOSED("C"),
+	ACTIVE("A");
+	private String value = null;
+	private Status(String value) {
+	  this.value = value;
+	}
+
+	public String toString() {
+	  return value;
+	}
+}
+
+We have found similar issue reported earlier (Bug 303144) for which usage of ObjectTypeConverter was recommended.
+As explained below, it is not feasible to create converter per enum as number of enumerations in the system is very large leading to major maintainance issues.
+
+Use case:
+----------
+
+We have thousands of enumerations exist in our system and it is not feasible to create a separate object type converter per enum for below reasons.
+
+1) one separate converter per enum strategy would lead us to have thousands of converters.
+2) Addition/Updation of constant or value in any enumeration will have an impact on object type converter definition, which is a major maintainance issue. There is an extra work of making enums and its type converter in synch.
+
+Expected support:
+------------------
+
+There is a need to introduce an extra support to store enum with VALUE like the same way ORDINAL and STRING is being supported.
+
+<entity class="Example">
+  <table name="table_example" />
+  <attributes>
+	  .. 
+	  .. 
+	<basic attribute-type="Status" name="status">
+	<column name="STATUS" />
+
+	<enumerated>VALUE</enumerated>   <!-- Added new expected support -->
+
+	</basic>
+  </attributes>
+</entity>
+
+Impact in source code:
+----------------------
+
+Files Modified in EL source are :
+org.eclipse.persistence.internal.jpa.metadata.MetadataConstants
+org.eclipse.persistence.internal.jpa.metadata.converters.EnumeratedMetadata
+org.eclipse.persistence.mappings.converters.EnumTypeConverter

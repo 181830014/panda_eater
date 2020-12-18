@@ -1,0 +1,140 @@
+Code: 
+
+CriteriaBuilder cb = em.getCriteriaBuilder();
+CriteriaQuery<Company> cq = cb.createQuery(Company.class);
+Root<Company> root = cq.from(Company.class);
+root.join(Company_.sites, JoinType.LEFT);
+cq.select(root);
+List<? extends Company> all = em.createQuery(cq).getResultList();
+
+
+Output:
+
+INFO: 2013-02-12 00:54:43,364  http-thread-pool-808  DEBUG  eclipselink.sql                                     SELECT DISTINCT TYPE FROM company
+INFO: 2013-02-12 00:54:43,371  http-thread-pool-808  WARN   eclipselink                                         java.lang.NullPointerException: null
+	at java.util.concurrent.ConcurrentHashMap.put(ConcurrentHashMap.java:1123) ~[na:1.7.0_13]
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectAllRowsFromConcreteTable(ExpressionQueryMechanism.java:2685) ~[org.eclipse.persistence.core_2.4.1.v20121003-ad44345.jar:na]
+	at org.eclipse.persistence.descriptors.InheritancePolicy.selectAllRowUsingDefaultMultipleTableSubclassRead(InheritancePolicy.java:1371) ~[org.eclipse.persistence.core_2.4.1.v20121003-ad44345.jar:na]
+	at org.eclipse.persistence.descriptors.InheritancePolicy.selectAllRowUsingMultipleTableSubclassRead(InheritancePolicy.java:1417) ~[org.eclipse.persistence.core_2.4.1.v20121003-ad44345.jar:na]
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectAllRows(ExpressionQueryMechanism.java:2656) ~[org.eclipse.persistence.core_2.4.1.v20121003-ad44345.jar:na]
+	at org.eclipse.persistence.queries.ReadAllQuery.executeObjectLevelReadQuery(ReadAllQuery.java:421) ~[org.eclipse.persistence.core_2.4.1.v20121003-ad44345.jar:na]
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeDatabaseQuery(ObjectLevelReadQuery.java:1150) ~[org.eclipse.persistence.core_2.4.1.v20121003-ad44345.jar:na]
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:852) ~[org.eclipse.persistence.core_2.4.1.v20121003-ad44345.jar:na]
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.execute(ObjectLevelReadQuery.java:1109) ~[org.eclipse.persistence.core_2.4.1.v20121003-ad44345.jar:na]
+	at org.eclipse.persistence.queries.ReadAllQuery.execute(ReadAllQuery.java:393) ~[org.eclipse.persistence.core_2.4.1.v20121003-ad44345.jar:na]
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeInUnitOfWork(ObjectLevelReadQuery.java:1197) ~[org.eclipse.persistence.core_2.4.1.v20121003-ad44345.jar:na]
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.internalExecuteQuery(UnitOfWorkImpl.java:2875) ~[org.eclipse.persistence.core_2.4.1.v20121003-ad44345.jar:na]
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1602) [org.eclipse.persistence.core_2.4.1.v20121003-ad44345.jar:na]
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1584) [org.eclipse.persistence.core_2.4.1.v20121003-ad44345.jar:na]
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1549) [org.eclipse.persistence.core_2.4.1.v20121003-ad44345.jar:na]
+	at org.eclipse.persistence.internal.jpa.QueryImpl.executeReadQuery(QueryImpl.java:231) [org.eclipse.persistence.jpa_2.4.1.v20121003-ad44345.jar:na]
+	at org.eclipse.persistence.internal.jpa.QueryImpl.getResultList(QueryImpl.java:411) [org.eclipse.persistence.jpa_2.4.1.v20121003-ad44345.jar:na]
+	at com.anahata.jobtracking.service.CompanyServiceImpl.foo(CompanyServiceImpl.java:55) [classes/:na]
+	at com.anahata.jobtracking.service.CompanyServiceImpl.searchCustomer(CompanyServiceImpl.java:64) [classes/:na]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.7.0_13]
+ 
+Entities:
+
+@Entity
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="TYPE", discriminatorType=DiscriminatorType.STRING,length=20)
+@Table(name = "company")
+public abstract class Company implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    @GeneratedValue()
+    @Id
+    @Column(name = "ID")
+    @Setter(AccessLevel.NONE)
+    private Long id;
+    
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "NAME")
+    private String name;
+    
+    @Column(name = "ABN")
+    @Converter(name = "abnConverter", converterClass = AbnConverter.class)
+    @Convert("abnConverter")
+    private Abn abn;
+    
+    // TODO This probably needs to go, does it go at site level?
+    @Lob
+    @Column(name = "LOGO")
+    private byte[] logo;
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ACTIVE")
+    private boolean active;
+
+    @ExpandSearch
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
+    private List<Site> sites = new ArrayList<>();
+}
+
+@Entity
+@DiscriminatorValue("CUSTOMER")
+@PrimaryKeyJoinColumn(name="CUSTOMER_ID", referencedColumnName="ID")
+@Table(name = "customer")
+@Getter
+@Setter
+public class Customer extends Company {
+    private BigDecimal discountLabour;
+    private BigDecimal discountParts;
+    private BigDecimal discountSystems;
+}
+
+
+@Entity
+@Table(name = "site")
+@EqualsAndHashCode(of = "id")
+@ToString(exclude = "contacts")
+@Getter
+@Setter
+public class Site implements Serializable, ISite {
+    private static final long serialVersionUID = 1L;
+
+    @GeneratedValue()
+    @Id
+    @Basic(optional = false)
+    @Column(name = "ID")
+    @Setter(AccessLevel.NONE)
+    private Long id;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TYPE")
+    private SiteType type;
+
+    @Size(max = 255)
+    @Column(name = "OLDCODE")
+    private String oldCode;
+    
+    @NotNull
+    @Size(max = 255)
+    @Column(name = "NAME")
+    private String name;
+    
+    @Embedded
+    private Address address;
+    
+    @Size(max = 255)
+    @Column(name = "STANDARDSFOLDERID")
+    private String standardsfolderid;
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ACTIVE")
+    private boolean active;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "site")
+    @ExpandSearch
+    private List<Contact> contacts = new ArrayList<>();
+
+    @NotNull
+    @JoinColumn(name = "COMPANY_ID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private Company company;
+}

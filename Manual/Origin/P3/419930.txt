@@ -1,0 +1,28 @@
+Created attachment 236692 [details]
+MQTT Client for Java ME + Demo App
+
+Finally I have found some time to work on the MQTT client for the Java ME. 
+In my implementation I have been using the recent version of Paho Java SE MQTT client and the changes for Java ME posted in bug 411981.
+
+The zip file attached contains two eclipse projects and the binary of the demo app
+- PahoClientMqttV3JME - MQTT Java ME client
+- CBdemoApp - Demo App
+- Binary CBdemoApp.jar, CBdemoApp.jad (the app is preconfigured to be used with German Telekom SIM card)
+You would need to unzip the MQTT_Client_GTO_EHSx_v1.zip file and import the containing zip files one by one into your pre-configured eclipse environment (File-->Import-->Archive File).
+
+On the MQTT Client I have customized the TCP and SSL connection modules to work with the Gemalto/Cinterion 3G Module EHS5 and EHS6. 
+The modules are featuring the Java ME v3.2 (CLDC-1.1/IMP-NG). Gemalto is going to release an easy to use Concept Board which is based on the EHS6 and which allows to plug the Arduino shields on it. The Arduino shields can be accessed with Java.
+
+In addition I have written a small demo app which is handling the cellular connection and using the MQTT client for sending the data to the internet. 
+The app is monitoring the free available RAM and the AD-converter. As soon as some new values available, they will be sent to the MQTT broker 
+powered by M2MGO (broker.m2mgo.com). 
+The broker is linked with the free accessible display page also 
+powered by M2MGO (display.m2mgo.com) where the values can be seen.
+
+The configuration of the demo app can be done in the JAD file. You will be able to configure the cellular data connection 
+(APN, APN-User, APN-Password and the SIM-PIN) as well as the MQTT broker.
+In case the APN field is not available or empty in the JAD file, the app will use the apncfg.txt file (also attached). 
+In this file the APN can be configured dynamically. The APN will be determined accordingly to the home MCCMNC. 
+(Note: only 5 digits MCCMNC will be recognized). Default APN can be defined under dummy APN 00000. 
+
+Please feel free to provide your feedback and submit the improvements.

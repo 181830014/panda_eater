@@ -1,0 +1,36 @@
+Posting a new bug per request from James:
+
+In this context: We have an app with a bunch of TopLink 9 annotations that we're migrating to EclipseLink.  We're trying to support using the old TopLink mappings from project.xml with new JPA annotations.
+
+Here's my original forum question:
+
+Thanks - I think I'm getting close - I setup the SessionCustomizer to add the descriptors from the Workbench project but when I try to use the EntityManager find method to read an object that was mapped in the Workbench project, I get a NullPointerException:
+
+java.lang.NullPointerException
+        at org.eclipse.persistence.internal.jpa.EntityManagerImpl.findInternal(EntityManagerImpl.java:477)
+        at org.eclipse.persistence.internal.jpa.EntityManagerImpl.find(EntityManagerImpl.java:428)
+        at org.eclipse.persistence.internal.jpa.EntityManagerImpl.find(EntityManagerImpl.java:336)
+
+
+Somehow, the cmpPolicy is being set automatically for the JPA annotated classes to: org.eclipse.persistence.internal.jpa.CMP3Policy
+
+but it is null on the descriptor from the Workbench project.
+
+Is there something else I have to define in the Workbench Project or persistence defaults etc to get this to work? 
+
+Here is James' response:
+
+You can assign a CMP3Policy using the following code in your SessionCustomizer,
+
+        Project project = session.getProject();
+        for (Iterator iterator = project.getDescriptors().values().iterator(); iterator.hasNext();){
+            ClassDescriptor descriptor = (ClassDescriptor)iterator.next();            
+            if (descriptor.getCMPPolicy() == null) {
+                descriptor.setCMPPolicy(new CMP3Policy());
+            }
+        }
+
+EclipseLink does assign this to all descriptors during JPA deployment, however the customizers are the last thing to run during deployment, so any descriptors added need to have this set.  EclipseLink could probably do this check after the customizers run, so feel free to log a bug for that. 
+
+From forum discussion:
+http://www.nabble.com/project.xml-and-JPA-annotations-tc23262131.html

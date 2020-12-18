@@ -1,0 +1,47 @@
+Build Identifier: 
+
+Reading Bug 299552 which was released with 1.6.9, I was excited to see that I could keep visibility of woven fields _in_ the targets.  I am having a problem right now, because I have some fields that are being woven into targets that are also JAXB @XmlRootElements.  As the woven fields are public, JAXB is picking them up (with the mangled names).  I can't seem to find a way to supress this.  (Annotations on the ITD field, don't seem to make their way into the target, although this seems like a useful feature.  I haven't tried the declare @annotation functionality-- that might be an option.
+
+Anyways if I create an aspect as:
+
+public aspect TestAspect {
+    private interface HasAnotherInt {};
+    private int HasAnotherInt.anotherInt = 5;
+    declare parents: sma.sample.TestTarget implements HasAnotherInt;
+}
+
+and a target type:
+
+public class TestTarget {
+    private static int thisStaticFieldInTheClass = 84;
+    private int thisFieldIsInTheClass = 42;
+    
+    public static void main(String[] args) {
+        System.out.println("There are " + TestTarget.class.getDeclaredFields().length + " fields");
+        for (Field f : TestTarget.class.getDeclaredFields())
+            System.out.println("--> " + f.getName() + ", " + Modifier.toString(f.getModifiers()));
+    }
+}
+
+Then I get:
+
+There are 3 fields
+--> thisStaticFieldInTheClass, private static
+--> thisFieldIsInTheClass, private
+--> ajc$interField$sma_sample_TestAspect$sma_sample_TestAspect$HasAnotherInt$anotherInt, public
+
+which I don't expect.  I expected to get three private fields as described in Bug 299552.  I have tried this within Eclipse using the compiler bundled with AJDT, which reports itself as:
+
+Version: 2.1.0.e35x-release-20100630-1500
+AspectJ version: 1.6.9.20100629172100
+
+and I've tried it with the command line ajc, which reports itself as:
+
+AspectJ Compiler 1.6.9 (1.6.9 - Built: Monday Jul 5, 2010 at 15:28:35 GMT) - Eclipse Compiler 0.785_R33x, 3.3
+
+Thoughts?
+
+Reproducible: Always
+
+Steps to Reproduce:
+Described above via the submitted test case.

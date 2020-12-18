@@ -1,0 +1,77 @@
+The following example reproduces the bug:
+
+  ExpressionBuilder eb = new ExpressionBuilder();
+  
+  Expression rel = eb.value(true).equal(true);
+  
+  ReportQuery query =
+    new ReportQuery(someClass, eb);
+
+  query.addAttribute("id");
+  query.addAttribute("rel", rel);
+  
+  JpaHelper.getEntityManager(em).getActiveSession().executeQuery(query);
+
+
+This should be translated to a SQL statement like the following:
+
+  SELECT id, true = true FROM someClass;
+
+But is actually only translated to
+
+  SELECT id FROM someClass;
+
+
+The Expression rel is obviously just an example for any valid SQL expression that does not directly reference a field. Using a more complex SQL expression instead of a simple column name is common usage; I wonder why nobody has reported this bug yet.
+
+
+Executing the code above leads to this:
+
+java.lang.ArrayIndexOutOfBoundsException: Array index out of range: 1
+	org.eclipse.persistence.internal.helper.NonSynchronizedVector.get(NonSynchronizedVector.java:262)
+	org.eclipse.persistence.queries.ReportQueryResult.processItem(ReportQueryResult.java:196)
+	org.eclipse.persistence.queries.ReportQueryResult.buildResult(ReportQueryResult.java:130)
+	org.eclipse.persistence.queries.ReportQueryResult.<init>(ReportQueryResult.java:74)
+	org.eclipse.persistence.queries.ReportQuery.buildObject(ReportQuery.java:585)
+	org.eclipse.persistence.queries.ReportQuery.buildObjects(ReportQuery.java:634)
+	org.eclipse.persistence.queries.ReportQuery.executeDatabaseQuery(ReportQuery.java:821)
+	org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:653)
+	org.eclipse.persistence.queries.ObjectLevelReadQuery.execute(ObjectLevelReadQuery.java:846)
+	org.eclipse.persistence.queries.ReadAllQuery.execute(ReadAllQuery.java:456)
+	org.eclipse.persistence.queries.ObjectLevelReadQuery.executeInUnitOfWork(ObjectLevelReadQuery.java:910)
+	org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.internalExecuteQuery(UnitOfWorkImpl.java:2575)
+	org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1159)
+	org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1143)
+	org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1089)
+
+
+It is apparent that ReportQueryResult expects to read the values of both items, yet the query contained only one item and simply ignored the RelationExpression.
+
+When stepping through the code, it seems that the problem lies in Expression.writeFields(Expression.java:4044). The loop in this method returns without adding anything to the ExpressionSQLPrinter.
+
+
+The following Eclipse stack trace shows the call stack:
+
+LogicalExpression(Expression).writeFields(ExpressionSQLPrinter, Vector, SQLSelectStatement) line: 4050	
+SQLSelectStatement.writeFieldsFromExpression(ExpressionSQLPrinter, Expression, Vector) line: 1765	
+SQLSelectStatement.writeFieldsIn(ExpressionSQLPrinter) line: 1781	
+SQLSelectStatement.printSQL(ExpressionSQLPrinter) line: 1417	
+PostgreSQLPlatform(DatabasePlatform).printSQLSelectStatement(DatabaseCall, ExpressionSQLPrinter, SQLSelectStatement) line: 2508	
+SQLSelectStatement.buildCall(AbstractSession) line: 742	
+RelationalDescriptor(ClassDescriptor).buildCallFromStatement(SQLStatement, AbstractSession) line: 570	
+ExpressionQueryMechanism(StatementQueryMechanism).setCallFromStatement() line: 387	
+ExpressionQueryMechanism.prepareReportQuerySelectAllRows() line: 1499	
+ReportQuery.prepareSelectAllRows() line: 1212	
+ReportQuery(ReadAllQuery).prepare() line: 778	
+ReportQuery.prepare() line: 984	
+ReportQuery(DatabaseQuery).checkPrepare(AbstractSession, AbstractRecord, boolean) line: 454	
+ReportQuery(ObjectLevelReadQuery).checkPrepare(AbstractSession, AbstractRecord, boolean) line: 618	
+ReportQuery(DatabaseQuery).checkPrepare(AbstractSession, AbstractRecord) line: 420	
+ReportQuery(DatabaseQuery).execute(AbstractSession, AbstractRecord) line: 634	
+ReportQuery(ObjectLevelReadQuery).execute(AbstractSession, AbstractRecord) line: 846	
+ReportQuery(ReadAllQuery).execute(AbstractSession, AbstractRecord) line: 456	
+ReportQuery(ObjectLevelReadQuery).executeInUnitOfWork(UnitOfWorkImpl, AbstractRecord) line: 910	
+RepeatableWriteUnitOfWork(UnitOfWorkImpl).internalExecuteQuery(DatabaseQuery, AbstractRecord) line: 2575	
+RepeatableWriteUnitOfWork(AbstractSession).executeQuery(DatabaseQuery, AbstractRecord, int) line: 1159	
+RepeatableWriteUnitOfWork(AbstractSession).executeQuery(DatabaseQuery, AbstractRecord) line: 1143	
+RepeatableWriteUnitOfWork(AbstractSession).executeQuery(DatabaseQuery) line: 1089

@@ -1,0 +1,46 @@
+With the following model:
+
+@Entity
+public class Emp {
+    @Id
+    private int id;
+    
+    @ManyToOne
+    private Addr address;    
+    
+   @ManyToOne
+    private Addr anotherAddress;
+}
+
+@Entity
+public class Addr {
+    @EmbeddedId
+    private AddrPK pk;
+}
+
+@Embeddable
+public class AddrPK {
+    private int id;
+}
+
+The defaulting of the join column for both address and anotheraddress is as follows (we assume both sides have the exact same fk and pk names):
+
+name=ID
+referencedColumnName=ID
+
+Which of course does not work in this case. However, the spec states the following:
+
+"Section 9.1.7
+
+Composite foreign keys are supported by means of the JoinColumns annotation. The JoinColumns
+annotation groups JoinColumn annotations for the same relationship.
+
+When the JoinColumns annotation is used, both the name and the referencedColumnName
+elements must be specified in each such JoinColumn annotation."
+
+Note: if addr did not use the embeddedid, that is defined the id directly, our defaulting is as follows and there are no errors.
+
+name=ADDRESS_ID
+referencedColumnName=ID
+
+So the question is: Do we take the processing a little further? In that, when a composite primary key has only one part, we apply the same defaulting rules as the single primary key specification.

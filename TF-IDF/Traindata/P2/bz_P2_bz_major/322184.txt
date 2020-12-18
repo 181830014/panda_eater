@@ -1,0 +1,47 @@
+>during Metamodel.initalize() we process MappedSuperclasses before entities
+>however, in the case where a MappedSuperclass inherits from an Entity we will not have be able to set the superType on the mappedSuperclass
+
+>reproduction
+- get the metamodel early
+>        initialize(); // here
+>        ServerSession session = JUnitTestCase.getServerSession(PERSISTENCE_UNIT_NAME); // instead of here
+
+aClass	Class<T> (org.eclipse.persistence.testing.models.jpa.metamodel.CoordinateMS) (id=187)	
+potentialIdentifiableType	MappedSuperclassTypeImpl<X>  (id=188)	
+MappedSuperclassTypeImpl@26281197:CoordinateMS [ javaType: class org.eclipse.persistence.testing.models.jpa.metamodel.CoordinateMS descriptor: RelationalDescriptor(org.eclipse.persistence.testing.models.jpa.metamodel.CoordinateMS --> [DatabaseTable(__METAMODEL_RESERVED_IN_MEM_ONLY_TABLE_NAME)]), mappings: 3]
+superclass	Class<T> (org.eclipse.persistence.testing.models.jpa.metamodel.GalacticPosition) (id=189)	
+identifiableTypeSuperclass	null	
+
+
+this	MetamodelImpl  (id=63)	
+	embeddables	LinkedHashMap<K,V>  (id=201)	
+	entities	LinkedHashMap<K,V>  (id=203)	
+		size	0	
+	managedTypes	LinkedHashMap<K,V>  (id=204)	
+		size	9	
+		table	HashMap$Entry<K,V>[16]  (id=219)	
+					key	Class<T> (org.eclipse.persistence.testing.models.jpa.metamodel.CoordinateMS) (id=187)	
+	mappedSuperclasses	LinkedHashSet<E>  (id=205)	
+		map	LinkedHashMap<K,V>  (id=259)	
+			size	8	
+	session	ServerSession  (id=159)	
+	types	LinkedHashMap<K,V>  (id=209)	
+
+Thread [Thread-3] (Suspended)	
+	MetamodelImpl.initialize() line: 414	
+	MetamodelImpl.<init>(DatabaseSession) line: 109	
+	MetamodelImpl.<init>(EntityManagerSetupImpl) line: 128	
+	EntityManagerSetupImpl.getMetamodel() line: 2003	
+	EntityManagerFactoryImpl.getMetamodel() line: 495	
+	JUnitTestCase.getEntityManagerFactory(String, Map) line: 406	
+	JUnitTestCase.getEntityManagerFactory(String) line: 386	
+	MetamodelMetamodelTest(MetamodelTest).initialize(boolean) line: 84	
+	MetamodelMetamodelTest(MetamodelTest).initialize() line: 65	
+	MetamodelMetamodelTest(MetamodelTest).setUp(boolean) line: 54	
+	MetamodelMetamodelTest(MetamodelTest).setUp() line: 49	
+	MetamodelMetamodelTest.setUp() line: 303	
+
+
+>fix
+- store MappedSuperclass types (in a List) that are in the state where their java superClass is known but their metamodel superType is not yet processed (missing from managedTypes)
+- defer superType processing until after the next step where all non-mappedSuperclasses are processed

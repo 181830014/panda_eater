@@ -1,0 +1,19 @@
+Say I have the following artificial hierarchy of files:
+
+/root
+  /main.egl
+  /includes
+    /someInclude.egl
+    /someOtherInclude.egl
+  /newVersion
+    /newMain.egl
+
+Say the entrypoint is main.egl which loads ./includes/someInclude.egl, which in turn tries to load ./someOtherInclude.egl, which is located in the same directory. This will fail with a java.io.FileNotFoundException, as the root is now set to /root/ and not to /root/includes/. When the include is 'fixed' to say ./includes/someOtherInclude.egl, consider the case that the newMain.egl (located in a different base) is another entrypoint which also tries to include ../includes/someInclude.egl: the initial directory is now different again and the imports will fail again.
+
+I believe this behavior limits the practical re-usability of the templates.
+
+The best case IMHO would be for the loaded template to be agnostic about the template that it is loaded by; i.e. create a stack of load-commands, where each load sets the root to the 'current directory', and each pop of the stack sets it back to the previous 'current directory'.
+
+The original behavior has been changed in the solution provided for Bug #355820. It is obviously a tricky thing to change something like this, as this may break the functionality where the templateRoot may be changed programmatically. Perhaps the programmatically set templateRoot should be used just for the currently active template.
+
+Of course, it is a workaround to change the template root programmatically before loading the templates to include.

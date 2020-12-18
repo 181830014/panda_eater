@@ -1,0 +1,65 @@
+When using JPQL to traverse a relationship between entities where the target entity is a subclass, the generated SQL may omit the necessary discrimination clause.
+
+The generated SQL is correct for Oracle 10g, but not Postgres 8.x.
+
+For example, given the following entity classes:
+
+@Entity
+@Inheritance
+@DiscriminatorColumn(name="VEHICLE_TYPE", discriminatorType=DiscriminatorType.CHAR, length=1)
+public class Vehicle implements Serializable {
+    @Id
+    private long id;
+
+    @Column(name="VEHICLE_TYPE")
+    private String vehicleType;
+
+    private String colour;
+
+    @OneToOne
+    @JoinColumn(name="OWNER_ID")
+    private Person owner;
+}
+
+@Entity
+@DiscriminatorValue("C")
+public class Car extends Vehicle {
+    @Column(name="REGO")
+    private String registration;
+}
+
+@Entity
+public class Person implements Serializable {
+    @Id
+    private long id;
+
+    @Column(name="FULL_NAME")
+    private String fullName;
+
+    @OneToOne(mappedBy="owner", optional=true)
+    private Car car;
+}
+
+A simple query on the subclass yields the correct SQL:
+
+JPQL: select c from Car c
+Log extract:
+  Execute query ReadAllQuery(sandbox.entity.Car)
+  SELECT ID, VEHICLE_TYPE, COLOUR, OWNER_ID, REGO FROM VEHICLE WHERE (VEHICLE_TYPE = ?)
+	bind => [C]
+
+However, attempting to traverse the "car" relationship from Person omits the "VEHICLE_TYPE" restriction from the join under Postgres:
+
+JPQL: select p.car from Person p
+Log extract (Postgres 8.x):
+  Execute query ReportQuery(sandbox.entity.Person)
+  SELECT t0.ID, t0.VEHICLE_TYPE, t0.COLOUR, t0.OWNER_ID, t0.REGO FROM PERSON t1 LEFT OUTER JOIN VEHICLE t0 ON (t0.OWNER_ID = t1.ID)
+
+The SQL generated for the same query for Oracle correctly includes the necessary restriction clause:
+
+Log extract (Oracle 10g):
+  Execute query ReportQuery(sandbox.entity.Person)
+  SELECT t0.ID, t0.VEHICLE_TYPE, t0.COLOUR, t0.OWNER_ID, t0.REGO FROM VEHICLE t0, PERSON t1 WHERE ((t0.OWNER_ID (+) = t1.ID) AND (t0.VEHICLE_TYPE = ?))
+	bind => [C]
+
+Using EclipseLink 1.1.0.r2926-M5

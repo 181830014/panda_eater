@@ -1,0 +1,25 @@
+This is a critical problem for BIDI countries.
+Follow these steps to recreate the problem:
+
+1. Create a new Visual Class based on the 'SWT Application' style
+2. Add a Composite to the Shell
+3. Pass the style SWT.RIGHT_TO_LEFT to the Composite, like this:
+
+public class Demo {
+...
+  private void createComposite() {
+    composite = new Composite(sShell, SWT.RIGHT_TO_LEFT);		   
+    ...
+
+4. Now place a Button widget anywhere on the Composite
+5. Note that the generated X coordinate of the Button widget is a negative
+number, like this:
+
+public class Demo {
+...
+  private void createComposite() {
+    sComposite = new Composite(sShell, SWT.RIGHT_TO_LEFT);	 	   
+    button = new Button(sComposite, SWT.NONE);
+    button.setBounds( new Rectangle(-190,55,68,27));
+    button.setText("test");
+    ...

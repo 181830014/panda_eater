@@ -1,0 +1,27 @@
+Hi guys,
+
+I got a strange behavior. It seems that only the compile time type is taken into account when calling queries. It is a different behavior than the one with templates. Here is a sample:
+
+[template public gen(e : EStructuralFeature)]
+// [eType.q()/]
+[if (eType.oclIsKindOf(EDataType))]
+// [eType.oclAsType(EDataType).q()/] <-- MUST be the same as the first call to q(), but it is NOT.
+[/if]
+
+// --
+
+// [eType.t()/]
+[if (eType.oclIsKindOf(EDataType))]
+// [eType.oclAsType(EDataType).t()/] <-- MUST be the same as the first call to t(), and it IS.
+[/if]	
+[/template]
+
+
+[template public t(e : EDataType)]t(EDataType)[/template]
+[template public t(e : EClass)]t(EClass)[/template]
+
+[query public q(e : EDataType) : String =  'q(EDataType)' /]
+[query public q(e : EClass) : String = 'q(EClass)' /]
+
+Regards,
+Mikael

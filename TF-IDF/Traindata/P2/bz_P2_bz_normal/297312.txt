@@ -1,0 +1,51 @@
+User-Agent:       Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_2; en-us) AppleWebKit/531.21.8 (KHTML, like Gecko) Version/4.0.4 Safari/531.21.10
+Build Identifier: 2.0.0-RC1
+
+Many times after deployment of JEE application which fails due to issues in Persistence Unit definitions (e.g. Accessing objects as entities which actually are not specified as them, errors in queries etc.) lives EL in the state which does not allow to deploy fixed app. For some reason persistence unit is left on GF (v3 b74) even if application which defines it does not exists on GF (deployment failed). These errors could be like this:
+
+Caused by: Exception [EclipseLink-7250] (Eclipse Persistence Services - 2.0.0.v20091121-r5847): org.eclipse.persistence.exceptions.ValidationException
+Exception Description: [<Some Class Name>] uses a non-entity [class <Some Class Name>] as target entity in the relationship attribute [field suppliers].
+        at org.eclipse.persistence.exceptions.ValidationException.nonEntityTargetInRelationship(ValidationException.java:1320)
+        at org.eclipse.persistence.internal.jpa.metadata.accessors.mappings.RelationshipAccessor.getReferenceDescriptor(RelationshipAccessor.java:329)
+        at org.eclipse.persistence.internal.jpa.metadata.accessors.mappings.RelationshipAccessor.getOwningMapping(RelationshipAccessor.java:292)
+        at org.eclipse.persistence.internal.jpa.metadata.accessors.mappings.OneToManyAccessor.processOneToManyMapping(OneToManyAccessor.java:168)
+        at org.eclipse.persistence.internal.jpa.metadata.accessors.mappings.OneToManyAccessor.process(OneToManyAccessor.java:111)
+        at org.eclipse.persistence.internal.jpa.metadata.accessors.mappings.RelationshipAccessor.processRelationship(RelationshipAccessor.java:546)
+        at org.eclipse.persistence.internal.jpa.metadata.MetadataProject.processRelationshipAccessors(MetadataProject.java:1085)
+        at org.eclipse.persistence.internal.jpa.metadata.MetadataProject.processStage3(MetadataProject.java:1364)
+        at org.eclipse.persistence.internal.jpa.metadata.MetadataProcessor.processORMMetadata(MetadataProcessor.java:462)
+        at org.eclipse.persistence.internal.jpa.deployment.PersistenceUnitProcessor.processORMetadata(PersistenceUnitProcessor.java:392)
+        at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.predeploy(EntityManagerSetupImpl.java:934)
+        ... 33 more
+
+OR:
+
+Caused by: java.lang.IllegalArgumentException: Object: [<SOME OBJECT>] is not a known entity type.
+        at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.registerNewObjectForPersist(UnitOfWorkImpl.java:4147)
+        at org.eclipse.persistence.internal.jpa.EntityManagerImpl.persist(EntityManagerImpl.java:368)
+        at com.sun.enterprise.container.common.impl.EntityManagerWrapper.persist(EntityManagerWrapper.java:258)
+        at com.phorest.memento.server.master.service.BootstrapService.insertBoostrapData(BootstrapService.java:83)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+        at java.lang.reflect.Method.invoke(Method.java:597)
+        at com.sun.ejb.containers.interceptors.BeanCallbackInterceptor.intercept(InterceptorManager.java:1006)
+        at com.sun.ejb.containers.interceptors.CallbackChainImpl.invokeNext(CallbackChainImpl.java:61)
+        at com.sun.ejb.containers.interceptors.CallbackInvocationContext.proceed(CallbackInvocationContext.java:109)
+        at com.sun.ejb.containers.interceptors.SystemInterceptorProxy.doCallback(SystemInterceptorProxy.java:133)
+        at com.sun.ejb.containers.interceptors.SystemInterceptorProxy.init(SystemInterceptorProxy.java:115)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+        at java.lang.reflect.Method.invoke(Method.java:597)
+        at com.sun.ejb.containers.interceptors.CallbackInterceptor.intercept(InterceptorManager.java:961)
+        at com.sun.ejb.containers.interceptors.CallbackChainImpl.invokeNext(CallbackChainImpl.java:61)
+        at com.sun.ejb.containers.interceptors.InterceptorManager.intercept(InterceptorManager.java:390)
+        at com.sun.ejb.containers.interceptors.InterceptorManager.intercept(InterceptorManager.java:373)
+        at com.sun.ejb.containers.AbstractSingletonContainer.createSingletonEJB(AbstractSingletonContainer.java:518)
+        ... 38 more
+
+<SOME OBJECT> is actually value of basic entity property
+
+
+Reproducible: Always

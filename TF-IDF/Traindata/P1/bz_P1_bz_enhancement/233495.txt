@@ -1,0 +1,139 @@
+Hi Simon,
+
+I suggest that you enter a feature request to discuss the details there.
+Please describe where you intend to create instances of such a new EMap.
+
+Cheers
+/Eike
+
+
+Simon McDuff schrieb:
+> OK.. basically to provide our own implementation of EMap !!
+>
+> So we can handle any cases!!
+>
+>
+>
+>
+> "Eike Stepper" <stepper@sympedia.de> a écrit dans le message de news: 
+> g145fg$mtc$1@build.eclipse.org...
+>   
+>> Simon McDuff schrieb:
+>>     
+>>> (I`m just describing the current implementation)
+>>>
+>>> But by knowing that,
+>>>   Estore doesn`t to know anything about EMap. Doesn`t need to since 
+>>> EBasicMap will only sent the following message to the Estore (not 
+>>> directly). Lookup calls are kept internally, so the Estore never know 
+>>> about it.. since EBasicMap built is hashmap at the initialization.
+>>>
+>>> Object get(InternalEObject object, EStructuralFeature feature, int 
+>>> index);
+>>>
+>>> Object set(InternalEObject object, EStructuralFeature feature, int index, 
+>>> Object value);
+>>>
+>>> int size(InternalEObject object, EStructuralFeature feature);
+>>>
+>>> etc....
+>>>
+>>>       
+>> Then I wonder how a (CDO-based) solution might look like that solves the 
+>> problem you initially described?
+>>
+>>
+>> Cheers
+>> /Eike
+>>
+>>     
+>>> "Eike Stepper" <stepper@sympedia.de> a écrit dans le message de news: 
+>>> g13mpg$1pa$4@build.eclipse.org...
+>>>
+>>>       
+>>>> Simon McDuff schrieb:
+>>>>
+>>>>         
+>>>>> EMAP is a list of a class that only have a key and a value.
+>>>>>
+>>>>> EMap always add at the end of the list.
+>>>>>
+>>>>> The estore only knows index of a list!!
+>>>>>
+>>>>>
+>>>>>           
+>>>> That's known. But what about the important part: EStore?
+>>>>
+>>>>
+>>>>         
+>>>>> "Eike Stepper" <stepper@sympedia.de> a écrit dans le message de news: 
+>>>>> g12v36$ik7$1@build.eclipse.org...
+>>>>>
+>>>>>
+>>>>>           
+>>>>>> Simon,
+>>>>>>
+>>>>>> Conceptually I think both approaches can be useful and I know a third 
+>>>>>> one which is like a combination of the existing HashMap based 
+>>>>>> implementation and your remote lookup. We could first look into the 
+>>>>>> HashMap and do the remote lookup (plus caching in the map) only if the 
+>>>>>> key is not present. With all three apporaches we'd have to evaluate 
+>>>>>> how the other EMap API (other than lookup) fits into the approach.
+>>>>>>
+>>>>>> Btw. I never used an EMap but I know that EMap extends EList and I 
+>>>>>> thought EMap is implemented by subclassing an EList implementation 
+>>>>>> plus linear scanning for the lookup. Ok, I just verified that my last 
+>>>>>> assumption was wrong (does it apply to EFeatureMaps?). BasicEMap is a 
+>>>>>> subclass of java.lang.Object but delegates Entry storage to an EList 
+>>>>>> which uses a BasicEList[] (is it clever to have both delegations in 
+>>>>>> one EMap implementation, how to implement a different delegateEList 
+>>>>>> without the existing entryData?).
+>>>>>>
+>>>>>> From a CDO client point of view I wonder how an EStore "gets a sense" 
+>>>>>> for an EMap typed attribute? I can't find the lookup API in EStore.
+>>>>>>
+>>>>>> Cheers
+>>>>>> /Eike
+>>>>>>
+>>>>>>
+>>>>>> Simon McDuff schrieb:
+>>>>>>
+>>>>>>
+>>>>>>             
+>>>>>>> Hi Eike and Ed (Ed, you are more than welcome to add anything to this 
+>>>>>>> thread),
+>>>>>>>
+>>>>>>> the current implementation of Emap is using a hashmap. Unfortunately, 
+>>>>>>> to use a hashmap we need to load all the elements of the collection. 
+>>>>>>> This kill the point of proxying objects (when we are using EStore). 
+>>>>>>> We have cases where a collection reach millions of objects.... I 
+>>>>>>> don`t want to load all of them.
+>>>>>>>
+>>>>>>> I tought that an implementation using TreeMap would be better (It is 
+>>>>>>> an ordered collection). In this case, I can do dichotomic search... 
+>>>>>>> so I will not load all of them!
+>>>>>>> Do you think it make sense ?
+>>>>>>>
+>>>>>>> The other solution I can think of its to catch the lookup and always 
+>>>>>>> go to the server to lookup objects. In the server side , IStoreReader 
+>>>>>>> will need to provide some functionnality to handle this 
+>>>>>>> (lookup(CDOFeature, Object key) return index).
+>>>>>>>
+>>>>>>> Maybe have both?!?!?!?
+>>>>>>>
+>>>>>>> Do you have others ideas to solve that kind of problem ?
+>>>>>>>
+>>>>>>> Thank you
+>>>>>>>
+>>>>>>> Simon
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>               
+>>>>>           
+>>>
+>>>       
+>
+>
+>

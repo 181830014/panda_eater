@@ -1,0 +1,79 @@
+I suspect a recent commit used:
+ c.pingTimer.Reset(c.options.PingTimeout)
+When it should be:
+ c.pingTimer.Reset(c.options.KeepAlive)
+
+PingTimeout is the timeout when waiting for a ping response.  KeepAlive is the timeout between keepalive packets.  pingTimer is the Timer between keepalive packets.  pingRespTimer is the Timer that waits for ping responses.
+Let me know if that is an incorrect understanding.
+
+
+Steps to duplicate:
+Using latest code from: "git.eclipse.org/gitroot/paho/org.eclipse.paho.mqtt.golang.git"
+
+1)
+Set PingTimeout higher than KeepAlive in stdoutsub.go:  (Example)
+
+diff --git a/samples/stdoutsub.go b/samples/stdoutsub.go
+index a6b058d..5ffc47a 100644
+--- a/samples/stdoutsub.go
++++ b/samples/stdoutsub.go
+@@ -62,7 +62,8 @@ func main() {
+                Username:             *username,
+                Password:             *password,
+                MaxReconnectInterval: 1 * time.Second,
+-               KeepAlive:            30 * time.Second,
++               KeepAlive:            10 * time.Second,
++               PingTimeout:          15 * time.Second,
+                TLSConfig:            tls.Config{InsecureSkipVerify: true, ClientAuth: tls.NoClientCert},
+        }
+        connOpts.AddBroker(*server)
+
+
+2)
+Run Mosquitto and stdoutsub:
+
+$ mosquitto -v
+1455309633: mosquitto version 1.4.7 (build date 2015-12-27 20:21:31+0000) starting
+1455309633: Using default config.
+1455309633: Opening ipv4 listen socket on port 1883.
+1455309633: Opening ipv6 listen socket on port 1883.
+1455309638: New connection from 192.168.1.42 on port 1883.
+1455309638: New client connected from 192.168.1.42 as springhouse38 (c1, k10).
+1455309638: Sending CONNACK to springhouse38 (0, 0)
+1455309638: Received SUBSCRIBE from springhouse38
+1455309638: 	# (QoS 0)
+1455309638: springhouse38 0 #
+1455309638: Sending SUBACK to springhouse38
+1455309648: Received PINGREQ from springhouse38
+1455309648: Sending PINGRESP to springhouse38
+1455309662: Client springhouse38 has exceeded timeout, disconnecting.
+1455309662: Socket error on client springhouse38, disconnecting.
+
+$ ./stdoutsub 
+Connected to tcp://springhouse:1883
+[Process does not end, just does not print any more MQTT messages]       
+
+
+Fix:
+This fix works for me, and I think is the correct value that should be set.  A recent commit (5687bf80a7457da62ca420c1854300b54e4b92d6) seems to have created this line:
+
+diff --git a/net.go b/net.go
+index 8da1854..db8f568 100644
+--- a/net.go
++++ b/net.go
+@@ -179,7 +179,7 @@ func alllogic(c *Client) {
+                        case *packets.PingrespPacket:
+                                DEBUG.Println(NET, "received pingresp")
+                                c.pingRespTimer.Stop()
+-                               c.pingTimer.Reset(c.options.PingTimeout)
++                               c.pingTimer.Reset(c.options.KeepAlive)
+                        case *packets.SubackPacket:
+                                sa := msg.(*packets.SubackPacket)
+                                DEBUG.Println(NET, "received suback, id:", sa.MessageID)
+
+If that is not the case, and I misunderstand PingTimeout vs. KeepAlive, feel free to delete this bug since I don't know if people would normally set the PingTimeout higher than KeepAlive.  Although, there is no warning that would break things.  I happened to run into this while debugging Bug 487765.
+
+Incidentally, Bugzilla doesn't have a MQTT-Go Component listed, so I put these in MQTT.
+
+Thanks,
+Mike

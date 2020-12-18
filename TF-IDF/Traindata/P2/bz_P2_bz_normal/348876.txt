@@ -1,0 +1,259 @@
+Build Identifier: 2.0.0.v20091127-r5931 (the same problem for 2.2.0)
+
+The exception generated is:
+
+Exception [EclipseLink-6121] (Eclipse Persistence Services - 2.0.0.v20091127-r5931): org.eclipse.persistence.exceptions.QueryException
+Exception Description: The query has not been defined correctly, the expression builder is missing.  For sub and parallel queries ensure the queries builder is always on the left.
+
+The problem seems to be related to a bug reported before:
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=297331
+
+Which was not actually fixed, so I put extra information:
+
+The subquery is built using the following code:
+
+		AbstractQuery<?> cq = queryAccessor.getIntermediateQuery();
+		CriteriaBuilder cb = queryAccessor.getCriteriaBuilder();
+		Join<?, Message> message = queryAccessor.getJoin();
+		
+		Subquery<String> sq = cq.subquery( String.class );
+		Join<?, Message> sqMessage = sq.correlate( message );
+		MapJoin<Message, Locale, LocalizedMessage> locMsg = sqMessage.join( Message_.localizations );
+		sq.where( cb.equal( locMsg.get( LocalizedMessage_.locale ).get( Locale_.id ), cb.parameter( Long.class, localeParam ) ) );
+		parametersCreated = true;
+
+		return sq.select( locMsg.get( LocalizedMessage_.text ) );
+
+The whole SQL that gets generated before the exception is thrown:
+
+SELECT * FROM (SELECT /*+ FIRST_ROWS */ a.*, ROWNUM rnum  FROM (
+SELECT t2.ITEM_ID AS ITEM_ID1, t2.ARMOR_SLOT_MSG AS ARMOR_SLOT_MSG2, t2.ARMOR_SPEC_MSG AS ARMOR_SPEC_MSG3, t2.DELETE_DATE AS DELETE_DATE4, t2.CREATE_DATE AS CREATE_DATE5, t2.UPDATE_DATE AS UPDATE_DATE6
+FROM MESSAGE t0, ITEM_ARMOR t2, ITEM t1
+WHERE ((t1.ITEM_ID = t2.ITEM_ID) AND (t0.msg_id (+) = t1.NAME_MSG))
+ORDER BY CASE WHEN EXISTS (SELECT t3.TEXT
+
+The tables involved are the following:
+
+
+CREATE TABLE message 
+  ( 
+     msg_id      NUMBER(10) NOT NULL, 
+     NAME        VARCHAR2(255), 
+
+    //...
+
+     primary key (msg_id) 
+  ); 
+
+CREATE TABLE localized_message 
+  ( 
+     msg_id      NUMBER(10) NOT NULL, 
+     locale_id   NUMBER(10) NOT NULL, 
+     text        VARCHAR2(2000) NOT NULL, 
+
+     //...
+
+     primary key (msg_id, locale_id) 
+  ); 
+
+CREATE TABLE locale 
+  ( 
+     locale_id   NUMBER(10) NOT NULL, 
+     NAME        VARCHAR2(255) NOT NULL, 
+
+     //...
+
+     primary key (locale_id) 
+  ); 
+
+CREATE UNIQUE INDEX LOCALE_NAME ON LOCALE (NAME);
+
+ALTER TABLE LOCALIZED_MESSAGE ADD CONSTRAINT FKLOCALIZED_794781 FOREIGN KEY (MSG_ID) REFERENCES MESSAGE (MSG_ID);
+ALTER TABLE LOCALIZED_MESSAGE ADD CONSTRAINT FKLOCALIZED_936165 FOREIGN KEY (LOCALE_ID) REFERENCES LOCALE (LOCALE_ID);
+
+The code generating the exception:
+
+        // If there are no table aliases it means the query was malformed,
+        // most likely the wrong builder was used, or wrong builder on the left in a sub-query.
+        if (getTableAliases().isEmpty()) {
+            throw QueryException.invalidBuilderInQuery(null);// Query is set in execute.
+
+
+The field has been correctly prefixed with the alias (t3), but the table list of the statement is not correct (ITEM_ARMOR instead of LOCALIZED_MESSAGE correlated with the MESSAGE of the outer query):
+
+this	SQLSelectStatement  (id=7629)	
+	builder	ExpressionBuilder  (id=7631)	
+	connectByExpression	null	
+	currentAlias	null	
+	currentAliasNumber	8	
+	descriptorsForMultitableInheritanceOnly	null	
+	distinctState	2	
+	fieldCounter	0	
+	fields	NonSynchronizedVector  (id=7632)	
+	forUpdateClause	ForUpdateClause  (id=7006)	
+	groupByExpressions	null	
+	havingExpression	null	
+	hintString	null	
+	isAggregateSelect	false	
+	lastTable	null	
+	maximumAliasLength	null	
+	nonSelectFields	ArrayList<E>  (id=7634)	
+	orderByExpressions	null	
+	orderSiblingsByExpressions	null	
+	outerJoinedAdditionalJoinCriteria	null	
+	outerJoinedExpressions	null	
+	outerJoinedMappingCriteria	null	
+	parentStatement	SQLSelectStatement  (id=7615)	
+	query	ReportQuery  (id=7635)	
+	requiresAliases	true	
+	startWithExpression	null	
+	tableAliases	Hashtable<K,V>  (id=7636)	
+		count	0	
+		entrySet	null	
+		keySet	null	
+		loadFactor	0.75	
+		modCount	0	
+		table	Hashtable$Entry<K,V>[5]  (id=7848)	
+		threshold	3	
+		values	null	
+	tables	NonSynchronizedVector  (id=7637)	
+		capacityIncrement	0	
+		elementCount	1	
+		elementData	Object[1]  (id=7839)	
+			[0]	DatabaseTable  (id=7840)	
+				name	"ITEM_ARMOR" (id=7842)	
+				qualifiedName	"ITEM_ARMOR" (id=7842)	
+				tableQualifier	"" (id=642)	
+				uniqueConstraints	HashMap<K,V>  (id=7844)	
+				useDelimiters	false	
+		modCount	0	
+	translationRow	null	
+	useUniqueFieldAliases	false	
+	whereClause	null	
+
+
+
+INFO: [EL Warning]: 2011-06-09 15:13:12.917--UnitOfWork(23831545)--Thread(Thread[httpSSLWorkerThread-8080-0,10,Grizzly])--Local Exception Stack: 
+Exception [EclipseLink-6121] (Eclipse Persistence Services - 2.0.0.v20091127-r5931): org.eclipse.persistence.exceptions.QueryException
+Exception Description: The query has not been defined correctly, the expression builder is missing.  For sub and parallel queries ensure the queries builder is always on the left.
+Query: ReadAllQuery(referenceClass=Armor )
+	at org.eclipse.persistence.exceptions.QueryException.invalidBuilderInQuery(QueryException.java:630)
+	at org.eclipse.persistence.internal.expressions.SQLSelectStatement.appendFromClauseToWriter(SQLSelectStatement.java:510)
+	at org.eclipse.persistence.internal.expressions.SQLSelectStatement.printSQL(SQLSelectStatement.java:1444)
+	at org.eclipse.persistence.internal.expressions.SubSelectExpression.printSQL(SubSelectExpression.java:193)
+	at org.eclipse.persistence.expressions.Expression.printSQLWithoutConversion(Expression.java:3574)
+	at org.eclipse.persistence.expressions.ExpressionOperator.printCollection(ExpressionOperator.java:1894)
+	at org.eclipse.persistence.internal.expressions.FunctionExpression.printSQL(FunctionExpression.java:425)
+	at org.eclipse.persistence.expressions.Expression.printSQLWithoutConversion(Expression.java:3574)
+	at org.eclipse.persistence.expressions.ExpressionOperator.printCollection(ExpressionOperator.java:1894)
+	at org.eclipse.persistence.internal.expressions.FunctionExpression.printSQL(FunctionExpression.java:425)
+	at org.eclipse.persistence.expressions.ExpressionOperator.printCollection(ExpressionOperator.java:1896)
+	at org.eclipse.persistence.internal.expressions.FunctionExpression.printSQL(FunctionExpression.java:425)
+	at org.eclipse.persistence.internal.expressions.SQLSelectStatement.appendOrderClauseToWriter(SQLSelectStatement.java:699)
+	at org.eclipse.persistence.internal.expressions.SQLSelectStatement.printSQL(SQLSelectStatement.java:1465)
+	at org.eclipse.persistence.platform.database.OraclePlatform.printSQLSelectStatement(OraclePlatform.java:710)
+	at org.eclipse.persistence.internal.expressions.SQLSelectStatement.buildCall(SQLSelectStatement.java:752)
+	at org.eclipse.persistence.internal.expressions.SQLSelectStatement.buildCall(SQLSelectStatement.java:762)
+	at org.eclipse.persistence.descriptors.ClassDescriptor.buildCallFromStatement(ClassDescriptor.java:658)
+	at org.eclipse.persistence.internal.queries.StatementQueryMechanism.setCallFromStatement(StatementQueryMechanism.java:386)
+	at org.eclipse.persistence.internal.queries.StatementQueryMechanism.prepareSelectAllRows(StatementQueryMechanism.java:312)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.prepareSelectAllRows(ExpressionQueryMechanism.java:1554)
+	at org.eclipse.persistence.queries.ReadAllQuery.prepareSelectAllRows(ReadAllQuery.java:793)
+	at org.eclipse.persistence.queries.ReadAllQuery.prepare(ReadAllQuery.java:734)
+	at org.eclipse.persistence.queries.DatabaseQuery.checkPrepare(DatabaseQuery.java:464)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.checkPrepare(ObjectLevelReadQuery.java:732)
+	at org.eclipse.persistence.queries.DatabaseQuery.checkPrepare(DatabaseQuery.java:430)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:646)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.execute(ObjectLevelReadQuery.java:958)
+	at org.eclipse.persistence.queries.ReadAllQuery.execute(ReadAllQuery.java:432)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeInUnitOfWork(ObjectLevelReadQuery.java:1021)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.internalExecuteQuery(UnitOfWorkImpl.java:2863)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1225)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1207)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1181)
+	at org.eclipse.persistence.internal.jpa.EJBQueryImpl.executeReadQuery(EJBQueryImpl.java:453)
+	at org.eclipse.persistence.internal.jpa.EJBQueryImpl.getResultList(EJBQueryImpl.java:669)
+
+@Entity
+public class Message implements StateTrackable
+{
+	/** The identifier should be auto-generated. **/
+	@Id
+	@Column(name = "msg_id")
+	private Long id;
+	
+	/** Allows to distinguish messages. Optional. */
+	private String name;
+	
+	/** Locale to Localized message mapping. */
+	@OneToMany(mappedBy = "message")
+	@MapKey(name = "locale")
+	private Map<Locale, LocalizedMessage> localizations;
+
+
+@Entity
+@Table(name = "LOCALIZED_MESSAGE")
+public class LocalizedMessage implements StateTrackable
+{
+	/** The id. */
+	@EmbeddedId
+	private LocalizedMessageId id;
+	
+	/** The foreign key reference to the message. */
+	@MapsId("messageId")
+	@ManyToOne
+	@JoinColumn(name = "MSG_ID")
+	private Message message;
+
+	/** The foreign key reference to the locale. */
+	@MapsId("localeId")
+	@ManyToOne
+	@JoinColumn(name = "LOCALE_ID")
+	private Locale locale;
+	
+	/** The localized text. */
+	private String text;
+
+
+
+@Embeddable
+public class LocalizedMessageId implements Serializable
+{
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
+
+	/** The Constant HASH_CODE_PRIME. */
+	private static final int HASH_CODE_PRIME = 31;
+	
+	/** The Constant HASH_CODE_INIT. */
+	private static final int HASH_CODE_INIT = 17;
+	
+	/** The message id. */
+	private Long messageId;
+	
+	/** The locale id. */
+	private Long localeId;
+
+
+@Entity
+public class Locale
+{
+	/** "Find by Name" JPQL query name. */
+	public static final String GET_ALL_QUERY = "Locale.getAll";
+	
+	/** The id. */
+	@Id
+	@Column(name = "locale_id")
+	private Long id;
+	
+	/** The name. */
+	private String name;
+
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Use the entities defined in the description
+2. Use text based or criteria based JPQL query
+3. Execute the query

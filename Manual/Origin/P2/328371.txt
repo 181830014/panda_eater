@@ -1,0 +1,43 @@
+Build Identifier: 2.1.0
+
+@Entity
+public class Person {
+	public enum Enum1 { VALUE1, VALUE2 }
+
+	@Id
+	private int id;
+
+	@ElementCollection
+	private Map<String, Integer> str2int = new Hashtable<String, Integer>();
+
+	@ElementCollection
+	private Map<String, Enum1> str2enum = new Hashtable<String, Enum1>();
+}
+
+Next query will work (because no converter needed for Integer):
+TypedQuery<Person> q = em.createQuery("select p from Person p JOIN p.str2int me where key(me) = ?1", Person.class);
+q.setParameter(1, "test");
+List<Person> persons = q.getResultList();
+
+
+This query will fail (because EL will incorrectly use the value converter (enum) for the key (string)):
+TypedQuery<Person> q = em.createQuery("select p from Person p JOIN p.str2enum me where key(me) = ?1", Person.class);
+q.setParameter(1, "test");
+List<Person> persons = q.getResultList();
+
+Exception: 
+Exception in thread "main" java.lang.ClassCastException: java.lang.String cannot be cast to java.lang.Enum
+	at org.eclipse.persistence.mappings.converters.EnumTypeConverter.convertObjectValueToDataValue(EnumTypeConverter.java:137)
+	at org.eclipse.persistence.mappings.DirectCollectionMapping.getFieldValue(DirectCollectionMapping.java:2132)
+	at org.eclipse.persistence.internal.expressions.QueryKeyExpression.getFieldValue(QueryKeyExpression.java:374)
+	at org.eclipse.persistence.internal.expressions.ParameterExpression.getValue(ParameterExpression.java:256)
+
+
+Possible solution: the converter for the key-type should be used with KEY() function.
+
+Thanks.
+
+Reproducible: Always
+
+Steps to Reproduce:
+see description

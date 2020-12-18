@@ -1,0 +1,24 @@
+Build Identifier: 2.1.2.v20101206-r8635
+
+The list of references objects contain entries not matching the foreign key. This occurs when complex primary key containing other entity and
+JOINED inheritance is used. Also to enable work in this case (see bug 337293) the duplicated column definition was add in derived classes. For inheritance SINGLE TABLE work fine. As can be see in logs problems probably is cause by not full join (only part of foreign key is used).
+
+Reproducible: Always
+
+Steps to Reproduce:
+Steps to Reproduce:
+1. Create entity A
+2. Create entity Parent with key based on A and int fields
+3. Create entity Child with key based on A and int fields and referencing
+Parent
+4. Create entities ChildX and ChildY extends the Child
+5. Add duplicated reference to entity A in ChildX and ChildY
+6. Insert data in such structure with the same id and different A.
+7. In new run read data from structure
+
+or
+
+1. Create DB using test.sql from the attached project (tested on PostgreSQL
+9.0)
+2. Run Test class in attached project
+3. Rerun the test without the call of create method

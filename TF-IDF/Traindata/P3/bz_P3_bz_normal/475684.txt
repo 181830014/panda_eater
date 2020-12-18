@@ -1,0 +1,31 @@
+When running the Rhino Debugger and having an Error/Exception in a function that is called from inside a catch block, the Stacktrace is incomplete.
+
+Steps to reproduce:
+ * run code below in debugger
+ * observe output
+
+Code to reproduce:
+	function printException(e) {
+		var s = ''
+		s += name
+	}
+	
+	try {
+		var l = new java.util.LinkedList()
+		l.get(100)
+	} catch(e) {
+		printException(e)
+	}
+
+Expected output:
+org.eclipse.ease.ScriptExecutionException: ReferenceError: "name" is not defined.
+	at trace_fault.js:printException:3
+	at trace_fault.js:14
+
+Actual output:
+org.eclipse.ease.ScriptExecutionException: ReferenceError: "name" is not defined.
+	at trace_fault.js:14
+
+This behaviour does not change if the stacktrace would be deeper, it always only gives the line of the call inside the catch block.
+
+Bug appears in ease 0.3.0

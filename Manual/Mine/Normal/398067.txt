@@ -1,0 +1,37 @@
+Created attachment 225560 [details]
+Testcase to reproduce the problem (Maven project)
+
+A JPQL query query which uses both a constructor expression and a JOIN FETCH returns stale data, but only for an associated entity (an entity pulled in via a relationship).
+
+*** Testcase ***
+
+Entities:
+
+* MyInnerEntity(Long id, String name)
+* MyEntity(Long id, String name, MyInnerEntity myInnerEntity)
+
+DTO:
+
+* MyDTO (contains just a field MyEntity)
+
+If I run the query:
+
+SELECT new testsl.MyDTO(me) FROM MyEntity me JOIN FETCH me.myInnerEntity 
+
+then update the values for the fields "name" externally (e.g. via JDBC), then re-run the query, the old value for MyInnerEntity.name is returned (however, MyEntity.name is correct).
+
+Interestingly, the queries
+
+SELECT new testsl.MyDTO(me) FROM MyEntity me
+
+and
+
+SELECT me FROM MyEntity me JOIN FETCH me.myInnerEntity
+
+work correctly - so the problem seems to be caused by the combination of constructor expression and JOIN FETCH.
+
+Attached is a test case to reproduce the problem. It is a Maven project; to run:
+
+* unzip the el-bug.zip
+* cd to directory el-bug
+* run "mvn"

@@ -1,0 +1,19 @@
+The way ReturningPolicy is implemented limits the utility of the @ReturnInsert and @ReturnUpdate to the Oracle DB (which has a RETURNING clause that can be appended to an INSERT and UPDATE).  
+
+On databases lacking the equivalent of an Oracle RETURNING clause we should SELECT the updated fields identified by @ReturnInsert and @ReturnUpdate in a separate statement.
+
+That would allow the following to work with any database platform:
+
+@Entity
+public class Employee implements Serializable {
+	   
+	@Id
+	@GeneratedValue
+	private int id;
+	@ReturnInsert
+	@ReturnUpdate
+	private String firstName;
+	@ReturnInsert
+	@ReturnUpdate
+	private String lastName;
+...

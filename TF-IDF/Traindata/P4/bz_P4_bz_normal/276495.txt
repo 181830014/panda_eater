@@ -1,0 +1,74 @@
+VERSION:   Eclipse Persistence Services - 1.1.1.v20090430-r4097
+Database: Informix Dynamic Server  Version: 11.10.TC1E
+Driver: IBM Informix JDBC Driver for IBM Informix Dynamic Server  Version: 3.10.JC1
+Test component: foundation/eclipselink.core.test
+
+
+TestModel: FeatureTestModel
+ (also 	 ComplexUpdateAndUnitOfWorkTestModel
+EmployeeWithSpacesTestModel
+FeatureTestModelWithoutBinding
+MappingTestModel
+MappingWorkbenchIntegrationTestModel
+ReadOnlyTestModel
+UnitOfWorkClientSessionTestModel
+UnitOfWorkIsolatedAlwaysTestModel
+UnitOfWorkIsolatedClientSessionTestModel
+ValidationModel)
+
+There were some test failures in HistoryTestRunModel and JPQLTestModel with same SQL syntax errors.
+
+---Full stack trace---
+
+Exception [EclipseLink-4002] (Eclipse Persistence Services - 1.1.1.v20090430-r4097): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLException: A syntax error has occurred.
+Error Code: -201
+Call: CREATE TABLE MUL2_EMP (EMP_ID NUMERIC(10) NOT NULL, EMP_NUM NUMERIC(10) UNIQUE NOT NULL, FNAME VARCHAR(30), PRIMARY KEY (EMP_ID, EMP_NUM))
+Query: DataModifyQuery(sql="CREATE TABLE MUL2_EMP (EMP_ID NUMERIC(10) NOT NULL, EMP_NUM NUMERIC(10) UNIQUE NOT NULL, FNAME VARCHAR(30), PRIMARY KEY (EMP_ID, EMP_NUM))")
+	at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:332)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:656)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeCall(DatabaseAccessor.java:501)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeCall(AbstractSession.java:872)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:205)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:191)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeNoSelectCall(DatasourceCallQueryMechanism.java:234)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeNoSelect(DatasourceCallQueryMechanism.java:214)
+	at org.eclipse.persistence.queries.DataModifyQuery.executeDatabaseQuery(DataModifyQuery.java:85)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:664)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.internalExecuteQuery(AbstractSession.java:2243)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1181)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1165)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1125)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeNonSelectingCall(AbstractSession.java:894)
+	at org.eclipse.persistence.tools.schemaframework.DatabaseObjectDefinition.createOnDatabase(DatabaseObjectDefinition.java:81)
+	at org.eclipse.persistence.tools.schemaframework.SchemaManager.createObject(SchemaManager.java:187)
+	at org.eclipse.persistence.tools.schemaframework.SchemaManager.replaceObject(SchemaManager.java:882)
+	at org.eclipse.persistence.tools.schemaframework.TableCreator.replaceTablesAndConstraints(TableCreator.java:297)
+	at org.eclipse.persistence.tools.schemaframework.TableCreator.replaceTables(TableCreator.java:248)
+	at org.eclipse.persistence.tools.schemaframework.TableCreator.replaceTables(TableCreator.java:240)
+	at org.eclipse.persistence.testing.models.mapping.MappingSystem.createTables(MappingSystem.java:82)
+	at org.eclipse.persistence.testing.framework.TestSystem.run(TestSystem.java:169)
+	at org.eclipse.persistence.testing.framework.TestExecutor.forceConfigureSystem(TestExecutor.java:275)
+	at org.eclipse.persistence.testing.framework.TestModel.configure(TestModel.java:178)
+	at org.eclipse.persistence.testing.framework.TestModel.setupEntity(TestModel.java:413)
+	at org.eclipse.persistence.testing.framework.ui.SynchronizedTestExecutor.run(SynchronizedTestExecutor.java:59)
+Caused by: java.sql.SQLException: A syntax error has occurred.
+	at com.informix.util.IfxErrMsg.getSQLException(IfxErrMsg.java:398)
+	at com.informix.jdbc.IfxSqli.a(IfxSqli.java:3247)
+	at com.informix.jdbc.IfxSqli.E(IfxSqli.java:3556)
+	at com.informix.jdbc.IfxSqli.dispatchMsg(IfxSqli.java:2382)
+	at com.informix.jdbc.IfxSqli.receiveMessage(IfxSqli.java:2298)
+	at com.informix.jdbc.IfxSqli.executePrepare(IfxSqli.java:1180)
+	at com.informix.jdbc.IfxPreparedStatement.e(IfxPreparedStatement.java:320)
+	at com.informix.jdbc.IfxPreparedStatement.a(IfxPreparedStatement.java:300)
+	at com.informix.jdbc.IfxPreparedStatement.<init>(IfxPreparedStatement.java:170)
+	at com.informix.jdbc.IfxSqliConnect.h(IfxSqliConnect.java:6046)
+	at com.informix.jdbc.IfxSqliConnect.prepareStatement(IfxSqliConnect.java:2071)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.prepareStatement(DatabaseAccessor.java:1354)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.prepareStatement(DatabaseAccessor.java:1303)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseCall.prepareStatement(DatabaseCall.java:646)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:551)
+	... 25 more
+Caused by: java.sql.SQLException
+	at com.informix.util.IfxErrMsg.getSQLException(IfxErrMsg.java:398)
+	at com.informix.jdbc.IfxSqli.E(IfxSqli.java:3561)

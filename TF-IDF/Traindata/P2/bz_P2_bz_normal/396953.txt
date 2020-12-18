@@ -1,0 +1,41 @@
+The JPA 2.1 spec does not clarify whether it is allowed to annotate a class with both @Converter and @Entity/@MappedSuperclass/@Embeddable. I am not sure what EclipseLink's official support is going to be for this, but currently it is inconsistent between java and orm.xml
+
+1. In Java, if you specify both @Entity and @Converter and then reference the converter in an @Convert, you get the following validation exception:
+
+@Entity
+@Converter
+public class MyEntityAndConverter implements AttributeConverter<String, String> {
+	@Id
+	private int id;
+	
+	@Convert(converter=MyEntityAndConverter.class)
+	private String name;
+
+	@Override
+	public String convertToDatabaseColumn(String arg0) {return null;}
+	@Override
+	public String convertToEntityAttribute(String arg0) {return null;}
+}
+
+
+Exception Description: The converter class [model.MyEntityAndConverter] specified on the mapping attribute [name] from the class [model.MyEntityAndConverter] was not found. Please ensure the converter class name is correct and exists with the persistence unit definition.
+	at org.eclipse.persistence.exceptions.ValidationException.converterClassNotFound(ValidationException.java:2316)
+	at org.eclipse.persistence.internal.jpa.metadata.converters.ConvertMetadata.process(ConvertMetadata.java:243)
+
+
+2. If you specify it in orm.xml, no validation exception is given.
+<entity class="model.MyEntityAndConverter">
+    <attributes>
+	<id name="id">
+	</id>
+	<basic name="name">
+	    <convert converter="model.MyEntityAndConverter"></convert>
+	</basic>
+    </attributes>
+</entity>
+<converter class="model.MyEntityAndConverter">
+</converter>
+
+3. If you specify @Converter in java and the entity in orm.xml, no validation exception is given.
+
+4. If you specify @Entity in java and the converter in orm.xml, no validation exception is given.

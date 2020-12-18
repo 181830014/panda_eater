@@ -1,0 +1,45 @@
+Build Identifier: 2.3.0.v20110604-r9504
+
+The JPQL query
+
+select
+    object(emp)
+from
+    Employee emp
+where
+    emp.illnesses is empty
+
+creates a a native query that joins the table illness which is not good.
+
+The generated SQL is:
+
+SELECT
+    t0.ID
+    , t0.NAME
+FROM
+    EMPLOYEE t0
+WHERE (
+          (
+    SELECT
+        COUNT(t1.ID) -- should be count(t2.employee_id)
+    FROM
+        employee_illness t2
+        , ILLNESS t1 -- ############ unnecessary inner join
+    WHERE (
+            (
+        t2.employee_id = t0.ID
+             )
+        AND (
+            t1.ID = t2.illness_id -- ############# unnecessary inner join
+            )
+           )
+          )
+       = ?
+      )
+bind => [0]
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+Please refer to the attached testcase.

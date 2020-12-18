@@ -1,0 +1,41 @@
+The original JSDT Parser issue Bug Bug 356446 could be reproduced in Eclipse VJET's JSDT fork.
+
+In my case the following exception is constantly appearing in Error Log when I'm doing clean & rebuild of ticket-monster project imported into my workspace 
+(see: https://github.com/jboss-jdf/ticket-monster).
+
+
+!ENTRY org.eclipse.core.resources 4 2 2013-05-08 23:03:45.941
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.ArrayIndexOutOfBoundsException: -2
+	at org.eclipse.mod.wst.jsdt.internal.compiler.parser.Parser.consumeEmptyStatement(Parser.java:1914)
+	at org.eclipse.mod.wst.jsdt.internal.compiler.parser.Parser.consumeRule(Parser.java:2931)
+	at org.eclipse.mod.wst.jsdt.internal.compiler.parser.Parser.parse(Parser.java:5802)
+	at org.eclipse.mod.wst.jsdt.internal.compiler.parser.Parser.parse(Parser.java:6059)
+	at org.eclipse.mod.wst.jsdt.internal.compiler.parser.Parser.parse(Parser.java:6011)
+	at org.eclipse.vjet.dsf.jstojava.parser.SyntaxTreeFactory2.createASTCompilationResult(SyntaxTreeFactory2.java:71)
+	at org.eclipse.vjet.dsf.jstojava.parser.VjoParser.parseInternal(VjoParser.java:154)
+	at org.eclipse.vjet.dsf.jstojava.parser.VjoParser.parse(VjoParser.java:74)
+	at org.eclipse.vjet.dsf.jstojava.controller.JstParseController.parseAndResolve(JstParseController.java:76)
+	at org.eclipse.vjet.dsf.jstojava.controller.JstParseController.parseAndResolve(JstParseController.java:102)
+	at org.eclipse.vjet.eclipse.core.builder.VjetScriptBuilder$ResourceVisitor.visit(VjetScriptBuilder.java:171)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:69)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:80)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:80)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:80)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:49)
+	at org.eclipse.vjet.eclipse.core.builder.VjetScriptBuilder.getResourcesFrom(VjetScriptBuilder.java:772)
+	at org.eclipse.vjet.eclipse.core.builder.VjetScriptBuilder.incrementalBuild(VjetScriptBuilder.java:850)
+	at org.eclipse.vjet.eclipse.core.builder.VjetScriptBuilder.build(VjetScriptBuilder.java:438)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:726)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:199)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:239)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:292)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:295)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:351)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:374)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:143)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:53)

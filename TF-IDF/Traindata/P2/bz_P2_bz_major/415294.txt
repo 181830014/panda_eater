@@ -1,0 +1,19 @@
+Created attachment 234511 [details]
+Example Eclipse Project
+
+When discovering code containing labeled statements, e.g. within continue statements,  the reference to the labeled statement is not resolved.
+
+In the code example below, the continue statement references the labeled statement "outside" to jump to the outer for loop.
+When discovering this code with either the Java Model discoverer or the Java and Inventory discoverer, the LabeledStatement is not resolved and an UnresolvedLabaledStatement element is produced.
+
+        outside: 
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                if (i % 3 == 0) {
+                    continue outside;
+                }
+                System.out.println("i: "+i+ "|j: "+j);
+            }
+        }
+
+The error exists in the latest Kepler (0.11) as well as in the previous Juno Releases (0.10.x)

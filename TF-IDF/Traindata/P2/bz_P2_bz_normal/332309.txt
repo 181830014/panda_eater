@@ -1,0 +1,36 @@
+Build Identifier: 2.2.0-M5
+
+Having a relation like:
+
+@ManyToMany
+@JoinTable(name = "JoinTable", joinColumns = @JoinColumn(name = "EntityA_Id", referencedColumnName = "referenceId"),
+inverseJoinColumns = @JoinColumn(name = "EntityB_Id", referencedColumnName = "id"))
+public List<EntityB> getEntityBs(){...}
+
+class A {
+int id; // primary key
+int referenceId; // This is the id of a EntityB
+}
+class B {
+int id; //primary key
+}
+// Hope the above is correct as it created from my mind.
+
+works during adding of an object but for deleting an object from the list.
+In the later case the resulting SQL is something like this:
+DELETE FROM JoinTable WHERE ((EntityB_Id = 40) AND (EntityA_Id= null))
+The problem is the 'null' value which is because in
+foundation/org.eclipse.persistence.core/src/org/eclipse/persistence/mappings/ManyToManyMapping.java in method 
+ protected void objectRemovedDuringUpdate(ObjectLevelModifyQuery query, Object objectDeleted, Map extraData) throws DatabaseException, OptimisticLockException
+
+the call of 
+prepareTranslationRow(query.getTranslationRow(), query.getObject(), query.getSession())
+is missing just before  
+AbstractRecord databaseRow = this.mechanism.buildRelationTableSourceAndTargetRow(query.getTranslationRow(), unwrappedObjectDeleted, query.getSession(), this);
+
+In all other cases (methods objectOrderChanged...(), insertAddedObject...()) this call is present and at least for the addition I know that it works.
+
+I added the mentioned call, compiled a new version, run test (ant test-core-srg, test-core, test-srg, test-lrg) and tested in my application and it works with my application so far (table is empty and SQL statement is correct). No idea about any side-effects etc.
+
+
+Reproducible: Always

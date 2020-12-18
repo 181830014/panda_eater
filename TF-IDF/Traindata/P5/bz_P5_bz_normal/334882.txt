@@ -1,0 +1,27 @@
+The following program:
+
+#define GREAT(X) "X is the greatest!"
+
+program test
+
+	print *, GREAT(Photran)
+
+end program
+
+produces the following when preprocessed by Photran/GCC/NAG
+
+program test
+
+ print *, "X is the greatest!"
+
+end program
+
+but gfortran produces
+
+program test
+
+	print *, "Photran is the greatest!"
+
+end program
+
+Another strange thing is if I run `cpp`, the gnu c preprocessor, the output matches gfortran's, no matter which standard(c89, c99, c++98, etc.) I use with the -std option.  gcc and cpp both have the same version "i686-apple-darwin10-gcc-4.2.1 (GCC) 4.2.1 (Apple Inc. build 5664)", so it's odd that gcc isn't using cpp.

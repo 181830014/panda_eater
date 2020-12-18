@@ -1,0 +1,23 @@
+We are using Eclipse rcp with OSGI.
+Eclipse Build id: I20080617-2000
+
+Our proprietary code depends on org.apache.commons.collections. This jar file is available from platform.
+When we attempt to serialize a collection of objects where the collection class comes from the commons-collections bundle while the class of the objects which are contained within the collection class comes from the proprietary bundle, the JVM will attempt to serialize the inner objects using the classloader of the commons-collections bundle. Since the classloader for the commons-collections bundle cannot load a class from the proprietary  bundle, we get a ClassNotFound exception.
+The classes getting serialized are exported from our bundle.
+
+To resolve this issue we have two solutions
+one is eclipse/Equinox based 'EclipseBuddy'
+and other is OSGI based 'DynamicImport-Package'
+We would like to go with former OSGI based solution. 
+
+From OSGI specification
+"Dynamic imports are matched to export definitions (to form package wirings)
+during class loading, and therefore do not affect module resolution.
+Dynamic imports apply only to packages for which no wire has been established
+and no definition could be found in any other way. Dynamic import
+is used as last resort."
+
+
+For that we will need to modify Manifest.mf file of commons.collections jar.
+The problem will get resolved if we add
+DynamicImport-Package: *

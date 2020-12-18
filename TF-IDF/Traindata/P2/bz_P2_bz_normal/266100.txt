@@ -1,0 +1,12 @@
+Build ID: 1.0.2 (Build 20081024)
+
+When executing a query which has had setMaxResults set on it, sql column names are
+aliased and when the column name is embedded in quotes (e.g. @Column(name = "\"NAME\"")) the alias will contain also the quotes, causing the ORA-00923 error.
+
+Exceuting the JPQL: SELECT entity FROM X1 entity results in
+
+Internal Exception: java.sql.SQLSyntaxErrorException: ORA-00923: FROM keyword not found where expected
+
+Error Code: 923
+Call: SELECT * FROM (SELECT /*+ FIRST_ROWS / a., ROWNUM rnum FROM (SELECT DISTINCT ID AS ID1, CREATE_USER AS CREATE_USER2, CREATE_TIMESTAMP AS CREATE_TIMESTAMP3, UPDATE_USER AS UPDATE_USER4, UPDATE_TIMESTAMP AS UPDATE_TIMESTAMP5, "NAME" AS "NAME"6, HIST_A_ID AS HIST_A_ID7, HIST_A_VALID_FROM AS HIST_A_VALID_FROM8, HIST_A_VERSION AS HIST_A_VERSION9 FROM T_X1) a WHERE ROWNUM <= ?) WHERE rnum > ?
+bind => 100, 0

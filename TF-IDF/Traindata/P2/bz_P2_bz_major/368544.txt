@@ -1,0 +1,37 @@
+Build Identifier: org.eclipse.persistence 2.3.1-M8
+
+
+If coalesce is used on a single table (eg. for localization) then the resulting sql query is correct.
+However, if the coalesce is used on a table that is joined to an other table, then the sql is incorrect.
+
+Here is the example of an sql that is generated:
+
+SELECT 
+	t0.DVD_DATA_ID, 
+	COALESCE(
+		(SELECT t3.LOC_VALUE FROM DVD_CASING t5 LEFT OUTER JOIN TEST_DVD_DATA t4 ON (t4.DVD_DATA_ID = t5.DVD), TEST_LOCALIZED_DATA t3 WHERE ((t3.LOC_KEY = t4.FILM_NAME) AND (t3.LOC_LOCALE = 'hu'))),
+		(SELECT t6.LOC_VALUE FROM TEST_LOCALIZED_DATA t6 WHERE ((t6.LOC_KEY = t4.FILM_NAME) AND (t6.LOC_LOCALE = 'en'))),
+		t0.FILM_NAME ), 
+	COALESCE(
+		(SELECT t7.LOC_VALUE FROM TEST_DVD_DATA t4 LEFT OUTER JOIN TEST_DVD_PROPERTY t8 ON (t8.DVD = t4.DVD_DATA_ID), TEST_LOCALIZED_DATA t7 WHERE ((t7.LOC_KEY = t8.PROPERTY_NAME) AND (t7.LOC_LOCALE = 'hu'))),
+		(SELECT t9.LOC_VALUE FROM TEST_LOCALIZED_DATA t9 WHERE ((t9.LOC_KEY = t8.PROPERTY_NAME) AND (t9.LOC_LOCALE = 'en'))),
+		t2.PROPERTY_NAME ), 
+	COALESCE(
+		(SELECT t10.LOC_VALUE FROM TEST_LOCALIZED_DATA t10 WHERE ((t10.LOC_KEY = t1.CASING_TITLE) AND (t10.LOC_LOCALE = 'hu'))),
+		(SELECT t11.LOC_VALUE FROM TEST_LOCALIZED_DATA t11 WHERE ((t11.LOC_KEY = t1.CASING_TITLE) AND (t11.LOC_LOCALE = 'en'))),
+		t1.CASING_TITLE ) 
+FROM DVD_CASING t1 LEFT OUTER JOIN TEST_DVD_DATA t0 ON (t0.DVD_DATA_ID = t1.DVD) LEFT OUTER JOIN TEST_DVD_PROPERTY t2 ON (t2.DVD = t0.DVD_DATA_ID) 
+ORDER BY t0.FILM_NAME ASC
+
+The problems are in the first two coalesces, the third is OK. 
+For example instead of 
+SELECT t9.LOC_VALUE FROM TEST_LOCALIZED_DATA t9 WHERE ((t9.LOC_KEY = t8.PROPERTY_NAME) AND (t9.LOC_LOCALE = 'en'))
+
+SELECT t9.LOC_VALUE FROM TEST_LOCALIZED_DATA t9 WHERE ((t9.LOC_KEY = t2.PROPERTY_NAME) AND (t9.LOC_LOCALE = 'en')) should be used, to reference the outermost table that is relevant, and not the table that is in the FROM section in on the previous coalesce tag.
+
+You find a maven project attached to reproduce this bug.
+
+Reproducible: Always
+
+Steps to Reproduce:
+use coalesce on any attribute of a left joined entity

@@ -1,0 +1,25 @@
+The new JPA 2.0 cache query hints, retrieveMode and storeMode are confusing, and their implementation seem incorrect or inefficient in places.
+
+Not sure if these are suppose to affect the 1st and 2nd level caches, or just the 2nd level cache?  What are their affect on relationships and object identity?  Should they return managed or detached objects?
+
+From Gord, our interpretation is that they should only affect the 2nd level cache, and should have no affect on the 1st level cache.  So should allow cache hits on the uow, always return managed objects.
+
+- setting are in DatabaseQuery, but should probably be in ObjectBuildingQuery
+- Update/DeleteAllQuery already has the cacheUsage option that can be set to not invalidate, so another option is not required, the hints can just set this.
+- storeMode of bypass will still perform cache lookup and lock, but not put anything in the cachekey, it should avoid the lookup the same as shouldMainCache
+- also seems that bypassing store will always build from row in uow, so will never get into this method unless was a read-only query?
+- check in buildWorkingCopyCloneFromRow of no longer using original seems wrong?
+- is refresh meant to refresh 1st level (uow) cache as well?  Doesn't seem like it should, but this is what our refresh option does.
+- setting retrieveMode to bypass will cause a new instance to be created and put into the cache unless the store is also bypassed, this will violate object identity
+- also cache will still be looked up/used?
+- also primary key query/find will still get a cache hit?
+- checks in buildWorkingCopyCloneNormally, buildWorkingCopyCloneFromRow don't make sense
+- retrieveMode bypass should probably just always build from row
+- store seems like it should get a cache hit if in the cache, but otherwise build from the row
+- uow store bypass seems to be checked in the wrong place, we first get all the locks, then don't merge, then release all the locks.  It should not get any locks, the same as an isolated project does.  Also the updateAll check for bypass seems wrong, if all isolated or bypass, no point in invalidating update-alls.
+
+What should happen,
+- checkEarlyReturn should ignore session cache (but not uow) if retrieve is bypassed, (but not if store is refresh or bypass).
+- retrieve bypass should build normally if not in the cache, otherwise should build from the row in uow (or build new instance for read-only query, unless store was refresh)
+- store bypass should build normally if in the cache, otherwise build from the row in uow (or build new instance for read-only query)
+- store refresh should refresh the session cache, but not the uow cache

@@ -1,0 +1,12 @@
+Build Identifier: Eclipse Persistence Services - 2.1.2.v20101206-r8635
+
+With eclipselink.jdbc.batch-writing=Oracle-JDBC specified, but without eclipselink.jdbc.batch-writing.size=nnn specified in persistence.xml, and if the EntityManager.flush() and clear() are invoked periodically within the transaction, the performance of 50,000 inserts dropped from 7.2 seconds to 92.6 seconds.  If we add eclipselink.jdbc.batch-writing.size=100, or if we remove EntityManager.flush() and clear(), then the performance was back to 7.2 seconds for 50,000 inserts.
+
+See http://myforums.oracle.com/jive3/thread.jspa?threadID=746003&tstart=0 for more information.
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. persistence.xml contains eclipselink.jdbc.batch-writing=Oracle-JDBC but without eclipselink.jdbc.batch-writing.size=nnn 
+2. persist 50,000 entities in a loop
+3. invoke EntityManager.flush() and clear() after every 10 inserts

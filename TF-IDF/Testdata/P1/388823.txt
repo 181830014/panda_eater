@@ -1,0 +1,29 @@
+Created attachment 220723 [details]
+Sample log
+
+Well I wish I would not have to open a bug like this, but I feel like I have to.
+
+So the main problem that I was trying to fix is block System.exit calls from all bundles. The idea I had (working and tested) is to override the Equinox Security Manager that is provided by Virgo.
+
+My first problem is lack of documentation on the Virgo side on this issue. Googling did not help too much and I could not find one single good link on the problem in case. May be it is just me(I really hope so), but you need to update the documentation on this problem, or in case it is present and I am blind, please attach the link to this bug.
+
+On the Virgo forum I have been advised not to override the default Security Manager, since all the "extra" facilities that are given by OSGi with Security manager (BundlePermission, ConditionalPermissionAdmin, etc) will not be available. This makes sense. So I had to use the ConditionalPermissionsAdmin. Here is my simplified code for it:
+
+ConditionalPermissionInfo info = admin.newConditionalPermissionInfo("ExitBlocker",
+				null,
+				new PermissionInfo[]{new PermissionInfo(RuntimePermission.class.getName(), "exitVM", "*")},
+				ConditionalPermissionInfo.DENY);
+		
+		ConditionalPermissionUpdate update = admin.newConditionalPermissionUpdate();
+		update.getConditionalPermissionInfos().add(0, info);
+		System.out.println("===== Before Commiting =====");
+		boolean commited = update.commit();
+		System.out.println("===== After commiting " + commited + " =====");
+
+
+Unfortunately this does not work. First problem that after deploy, the logs are filled with errors:
+
+[2012-09-04 21:11:13.570] ERROR iLogServiceListener@2aa937cd System.err                                                        java.security.AccessControlException: access denied (java.lang.RuntimePermiss
+ion getClassLoader) 
+
+you can find the logs attached.

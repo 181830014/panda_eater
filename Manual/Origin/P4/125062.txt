@@ -1,0 +1,46 @@
+Hi all,
+
+I've encountered a slightly odd thing with generic abstract aspects
+packaged in Jar files and I'm not sure whether it's a bug or just
+incorrect syntax on my part.
+
+The code in question is:
+
+File AbstractAspect.aj:
+
+> public abstract aspect AbstractAspect<T> { 
+>  interface target<C> {
+>   public C get();  
+>  }
+>
+>  declare parents: T implements target; 
+>
+>  private int target<C>.aField;
+>  public C target<C>.get() { return null; } }
+
+File TestAspect.aj:
+
+> aspect TestAspect extends AbstractAspect<Student> {}
+
+ (details of the Student class are not important here)
+
+There are two scenarios:
+
+1) Compile AbstractAspect.aj, TestAspect.aj and Student.java statically
+using ajc.  This works fine.
+
+2) Compile AbstractAspect.aj separately and put into Jar file.  Then
+compile TestAspect.aj and Student.java using ajc, with the Jar file on
+the classpath.  This does not work.  The error message reported is:
+
+> Inconsistent classfile encountered: The undefined type parameter C is
+>   referenced from within AbstractAspect<T> public aspect TestAspect
+>   extends AbstractAspect<Student> { } ...
+
+I have observed that removing <C> from "target<C>.aField" and "Target<C> get()" makes it work.  I also tried using <D> instead of <C> in "target<C>.aField" and "Target<C> get()", but this didn't make any difference.  Curiously, though the error message still referred to the "C" (which was still present in the interface definition).  
+
+Anyway, I have attached the complete example as a tarball.  
+
+Cheers,
+
+David Pearce

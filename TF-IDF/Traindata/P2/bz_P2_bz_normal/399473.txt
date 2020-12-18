@@ -1,0 +1,29 @@
+When the entity contains a transient dateformatter that is used in the toString() a NPE is thown for whatever reason. My Entity looks like this:
+
+public class SomeEntity  {
+
+	.
+	.
+
+	@Transient
+	private DateFormat dateFormatter = new SimpleDateFormat();
+	
+	.
+	.	
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("datum=");
+		builder.append(datum != null ? 
+                   dateFormatter.format(datum.getTime()) : datum);
+		return builder.toString();
+	}
+	
+}
+
+I use Eclipselink in a OSGI-Environment, but I gues that does not make a difference. Stack Trace just says:
+
+[EL Warning]: weaver: 2013-01-30 12:04:46.551--Weaver encountered an exception while trying to weave class XY.  The exception was: java.lang.NullPointerException
+
+I wish the stack trace would contain a line number of the NPE.

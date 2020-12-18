@@ -1,0 +1,37 @@
+AspectJ Development and 1.2.1 both do not advise join points that occur in an 
+if pointcut descriptor. I believe that they should. E.g., compiling the 
+following program should produce a warning but it produces no output.
+
+public aspect Trivial {
+    before() : if(foo()) {
+    }
+    public static boolean foo() {
+        return true;
+    }
+    declare warning: call(* foo()): "calling foo";
+}
+
+The use case that motivated this is allowing dynamic enabling of aspects:
+public abstract aspect Base {
+  protected static final boolean isEnabled() {
+      return false;
+  }
+    
+  protected static aspect AspectControl
+    pertypewithin(Base+) {
+      public boolean enabled = true;
+      boolean around() : 
+        call(boolean Base.isEnabled()) {
+          return enabled;            
+      }
+  }
+
+  public static void main(String args[]) {
+  } 
+}
+
+aspect Derived extends Base {
+   before() : execution(* main(..)) && if(isEnabled()) {
+	System.out.println("if true");
+   }    
+}

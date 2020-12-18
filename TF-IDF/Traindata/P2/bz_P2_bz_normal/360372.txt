@@ -1,0 +1,27 @@
+Build Identifier: 2.2.0.v20110202-r8913
+
+Iterating over @Embeddable objects (@ElementCollection mapped as Set) who holds an entity relation (many-to-one) can cause duplicate-key exceptions. 
+Under certain circumstances eclipselink try to insert also persistent 'relation objects' from the embeddable again (triggers duplicate-key exception).
+
+Sample Model:
+EntityParent 1-n > EmbeddableChild n-1 > EntityChildRelation
+
+Sample code that causes a duplicate exception:
+List<Parent> parents = em.createNamedQuery( "findAllParents", Parent.class ).getResultList();
+for ( Parent parent : parents ) {
+   for ( Child child : parent.getChildren() ) {
+      child.getEntityRelation();
+   }
+   em.flush();
+}
+
+I attached a simple maven project, that contains entity classes and a unit-test (runnable in a se environment) with that the problem can be reproduced.
+
+There still exists a more detailed forum thread about the issue: http://www.eclipse.org/forums/index.php/t/242755/.
+
+Please note that the problem seemed to be non-deterministic (the test fails only 'most' of the time).
+
+Reproducible: Sometimes
+
+Steps to Reproduce:
+1. Run the attached unit-test.

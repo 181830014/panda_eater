@@ -1,0 +1,17 @@
+Properties view allows only valid css value. However, in content type css jsp, expression language is be used in general. 
+I think you might need to give proper/valid primitive type to the CSS node.
+
+One more thing, 
+you need to delete JSPedCSSPropertySource.setPropertyValue() method after this feature is supported. In the method, expression language is rejected to avoid DOMException. DOMException happens in CSSPrimitiveValueImpl.setStringValue() method if specified value does not have valid primitive type.
+
+*How to setup
+1. Start workbench.
+2. Create a web project.
+3. Create a content type CSS JSP file.
+4. Set the jsp file as CSS JSP content type with "General - Content Types" Preference page.
+5. Open it with CSS JSP Editor and add a CSS declaration like below.
+.selectorName {
+ background-color: blue;
+}
+6. Edit CSS property value with Properties view.
+--> If you specify ${aaa}, warning dialog appears. This is correct behavior at wtp 1.5.2. However, expression language should be inserted with future release if possible.

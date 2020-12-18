@@ -1,0 +1,3 @@
+This is a post 1.5.2 refinement of Bug 114083 after then implementation of Bug 140695 "Use LTWWorld not BcelWorld for load-time weaving".
+
+It should be possible to resolve non-bootstrap classes using reflection without needing weaver re-entrancy for non-locally defined classes. Simplistically one could use ClassLoader.getParent() for the application class loader (which was used to create the World) however this will break with non-delegating Java EE class loaders and have no benefit under OSGi (which had a different delegation model). One approach would be to use environment-specific IWeavingContext implementations which safely abstracted the delegation model.

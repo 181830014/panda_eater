@@ -1,0 +1,18 @@
+1. Misspelled type name: In this case, the type won't exist
+    anywhere in the system. This also includes case of fully
+    specified type name with missed/misspelled packages.
+ 2. Correctly spelled type name but missed package statement
+    (and type not in the same package as the aspect): In
+    essense the type isn't visible to the aspect.
+ 3. Type name specified as wildcarded package: This would be
+    case when pointcut say something like call(com..MyTypeName.*(..)).
+    In this case, you don't even need a package statement and
+    the program will still compile fine.
+    (This situation is actually covered by a different XLint
+     warning, which is turned off by default).
+
+why does an absolute type name needs an import when a wildcarded type name does 
+not?
+
+If the lack of a wildcard combined with the lack of an import makes a type 
+invisible to an aspect, why is this not an error? When is this correct?

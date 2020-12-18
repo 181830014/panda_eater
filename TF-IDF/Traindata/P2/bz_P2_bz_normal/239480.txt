@@ -1,0 +1,39 @@
+Tried to run package renamer under Windows.
+
+Unzipped eclipselink-1.0M11.zip into C:\eclipselink_release\1.0M11
+
+Opened cmd.exe in 
+C:\eclipselink_release\1.0M11\eclipselink\utils\rename directory;
+ran packageRenamer.cmd.
+
+First problem - JAVA_HOME specified on my machine happens to be C:\Program Files\Java\jdk1.5.0_10.
+
+Result:
+'C:\Program' is not recognized as an internal or external command,
+operable program or batch file.
+
+This was easy to correct:
+JAVA_HOME="C:\Program Files\Java\jdk1.5.0_10"
+
+Now I got:
+
+C:\eclipselink_release\1.0M11\eclipselink\utils\rename>"C:\Program Files\Java\jdk1.5.0_10"\bin\java -Xmx256M -classpath C:\ECLIPS~4\13A55~1.0M1\ECLIPS~1\utils\rename\ename\package-rename.jar org.eclipse.persistence.utils.rename.MigrateTopLinkToEclipseLink ~1 ~1 C:\ECLIPS~4\13A55~1.0M1\ECLIPS~1\utils\rename\ename\packag
+e-rename.properties
+Exception in thread "main" java.lang.NoClassDefFoundError: org/eclipse/persistence/utils/rename/MigrateTopLinkToEclipseLink
+
+Apparently the problem is the wrong classpath:
+C:\ECLIPS~4\13A55~1.0M1\ECLIPS~1\utils\rename\ename\package-rename.jar 
+should have been:
+C:\eclipselink_release\1.0M11\eclipselink\utils\rename\package-rename.jar
+
+The problem went away when eclipselink-1.0M11.zip was unzipped into
+C:\Temp\eclipselink_test:
+
+C:\Temp\eclipselink_test\eclipselink\utils\rename>set JAVA_HOME="C:\Program Files\Java\jdk1.5.0_10"
+
+C:\Temp\eclipselink_test\eclipselink\utils\rename>packageRename.cmd
+The system cannot find the path specified.
+
+C:\Temp\eclipselink_test\eclipselink\utils\rename>"C:\Program Files\Java\jdk1.5.
+0_10"\bin\java -Xmx256M -classpath C:\Temp\ECLIPS~1\ECLIPS~1\utils\rename\package-rename.jar org.eclipse.persistence.utils.rename.MigrateTopLinkToEclipseLink ~1
+ ~1 C:\Temp\ECLIPS~1\ECLIPS~1\utils\rename\package-rename.properties

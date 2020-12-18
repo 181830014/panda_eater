@@ -1,0 +1,16 @@
+This isn't the packagers fault, per se, but it is a problem for packages, if they end up packaging extra bundles. I noticed in both the javascript and Java EE package, the following bundle pairs. 
+
+This implies some "feature" being installed is using an old version of Orbit to construct itself, so some features end up saying they need (include) exactly the old versions. Since they are not singletons, there is no compliant during install/resolution ... but in the best case, it is "extra" bytes. I am assuming that at runtime, only the latest one is used ... but that is an assumption and in the general case, having multiple versions could cause runtime problems. 
+
+My guess is it is the market place client, or data collector that is using old version of Orbit ... just guessing, since most the other features I'm pretty familiar with and know it doesn't come from them.  
+
+org.apache.commons.codec_1.3.0.v20100106-1700.jar
+org.apache.commons.codec_1.3.0.v20100518-1140.jar
+
+org.apache.commons.httpclient_3.1.0.v20080605-1935.jar
+org.apache.commons.httpclient_3.1.0.v201005080502.jar
+
+org.apache.commons.logging_1.0.4.v200904062259.jar
+org.apache.commons.logging_1.0.4.v201005080501.jar
+
+Once tracked down, we can move this bug to appropriate place ... just wanted to get it entered, now.

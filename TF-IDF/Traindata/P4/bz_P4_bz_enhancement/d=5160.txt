@@ -1,0 +1,40 @@
+GridLayout is the most powerful layout manager in SWT and is used for most
+nontrivial layouts. It is generic and therefore applicable to many situations,
+but there are cases where it does not work well. Its main problem is that
+it assumes that controls can always compute their width and their height
+independently. This is not the case in text control (Label, Text) that are
+allowed to be multi-line and where WRAP flag is set. There is
+no 'right' width and height for such a control - its height depends on 
+the width it can use.
+
+When wrappable controls are layed out using GridLayout, it will ask them
+for their size. Such a control always returns the size that will allow it 
+show all of its text in a single line. GridLayout will allocate just one
+line for its height. If for any reason the container's width turns out
+to be smaller than expected, the label will wrap, but the text will be
+cut off because the layout manager didn't allocate space for the required
+height.
+
+The proposed new layout would work as specified in W3C HTML 4.01 specification
+related to HTML table layout (HTML 4.01 spec, Appendix B.5: Notes on Tables:
+ http://www.w3.org/TR/html4/appendix/notes.html#h-B.5 ).
+This algorithm calculates column widths first, and does it recursively
+for all the children that are themselves tables. This calculation pass
+establishes minimum and maximum column widths. Based on widths, it calculate
+row heights. Layout portion works top-down, left-to-right, and again
+assigns widths first (for one whole row). Once all the widths for the row
+are assigned, it is possible to calculate row height because wrappable
+controls are now able to tell their height. 
+
+The advantage of this algorithm is that it is capable of 'pushing' controls
+down when the container is resized and text reflowed (similarly content
+in the Web browser). The disadvantage is that it typically has to work
+with a composite capable of scrolling (ScrolledComposite) because
+reducing the width of the container may increase the height of the content
+beyond container's height.
+
+For an incomplete yet working implementation of the algorithm, please
+check HTMLTableLayout.java in package org.eclipse.update.ui.forms,
+project org.eclipse.update.ui.forms in the 2.0 stream. 
+There is a runnable test class TableLayoutTest that can be used for
+quick evaluation.

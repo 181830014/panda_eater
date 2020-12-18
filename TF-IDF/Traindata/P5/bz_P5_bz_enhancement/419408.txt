@@ -1,0 +1,28 @@
+* The gist of it: 
+
+I'd like to be able to configure Koneki to treat my custom (global) function like it handles 'require'. It'd greatly improve my productivity. 
+
+While the more generic the more potentially useful, all I need is to put something like this in the settings:
+
+**START OF EXAMPLE**
+________________________
+Custom module loaders:
+------------------------
+return {
+    import = function(str)
+         ... rules for translating the constant 'str' to a file path ...
+    end
+}
+------------------------
+**END OF EXAMPLE**
+
+This of course is the simplest way I could achieve my use-case. There are of course many many other possibilities, such as returning a module out of synthesized Lua code, etc etc. A link to a lua file to execute is not necessary as one can always use 'dofile'. (One can even interact with their source tree this way!)
+
+* More notes:
+
+Right now, autocomplete is unusable for me for my actual source tree because I import modules in a non-standard way. Specifically, I use a function called 'import' and optional special characters at the beginning to indicate whether its a relative or absolute import, from the parent folder, etc. The trait that require always resolves absolutely was quite undesirable for me.
+
+I checked out the implicit modules of 1.1M1 and its -almost- what I've been hoping for for a while, but it could definitely be more flexible (Eclipse philosophy, aint it?). Lots of little Lua hooks would be greatly appreciated.
+
+Happy hacking and thanks in advance,
+-Adam Domurad

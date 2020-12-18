@@ -1,0 +1,6 @@
+The task list has sophisticated rules for guranteed visibility, grouping of subtasks and propagation of incoming indicators. In addition the task list supports different modes (e.g. categorizes vs. scheduled) that display different hierarchies resulting in different rules. Some of the rules are dependent on each other but the logik is distributed over the extensible content provider, decorators and filter implementations. This makes the code fragile, expensive to maintain (bug 208089) and has a noticeable perfomance impact when the task list is refreshed (bug 235853).
+
+To address these problems the current architecture needs to be reviewed and refactored. Suggestions for improvement:
+ * Encapsulate rules for guranteed visibility in a single place
+ * Make decorators aware of the structure displayed by the content provider
+ * Cache information for decorators to avoid repeated traversal of hierarchies

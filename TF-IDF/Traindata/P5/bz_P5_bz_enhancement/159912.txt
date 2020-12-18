@@ -1,0 +1,23 @@
+Consider static(pc()) and/or shadow(pc()) defined as the staticly-determinable form of a pointcut and the shadows picked out by the pointcut.
+
+Why:
+
+declare error/warning support only staticly-determinable pointcuts.  It's sort of a pain to manually reduce them for the purposes of debugging pointcuts, especially where the pointcut is named and composed.  It would be nice to have the function static(pc()) which, given a pointcut, returns the staticly-determinable portion of it.  This is essential when one is debugging pointcuts for which one has no source.
+
+For this use-case, it would be used only in declare error or warning.
+
+The second use-case for static(pc()) is when a pointcut is defined to bind variables, but someone wants to use the same pointcut without doing any runtime checking.  (It's already possible to supply the types to check but not bind.)  This would make it possible to find join points that would be matched but for the variable binding.  Again, this might be helpful to reuse binary pointcuts.
+
+The difference between static(pc()) and shadow(pc()) is determined by implementation-specific optimizations.  For DEOW we've defined this(SpecificType) to not be staticly-determinable because we like the bright-line rule based on primitive pointcut designators.  The simplest implementation would follow this rule, and it would be cleanest for DEOW use.
+
+However, it might be helpful to surface implementation-specific optimizations, i.e., the actual join point shadow.  Assuming an implementation does determine staticly that this(SpecificType) can be rewritten as 
+
+  within(SpecificType)  && !within(SpecificType..*)
+
+then shadow(pc()) would produce the same optimizations rather than pruning out this(SpecificType) entirely.  It would be permitted for an implementation to return the infinite pointcut (this(Foo) || !this(Foo)), but not to return a pointcut that picks out any join point that would never be picked out at runtime.
+
+I think it would be quite helpful for comparing implementations to have a way to test their differences on this point; that includes comparing old and new versions of AspectJ.
+
+Naming: my initial thoughts were "static(pc)" and "shadow(pc())".  "static" is bad because it's already used in too many ways.  "staticlyDeterminable(pc())" is just bad, and "determinable  "shadow" and "woven" is bad because we don't want people thinking in terms of shadows (except perhaps when we do).  "structure(pc())" is not bad for shadows, and perhaps "implementation(pc())" or "implemented(pc())" is even more obvious. 
+
+(Of course, these are just some of the pointcut-rewriting functions that could be useful.  E.g., at the user level, I can imagine abstract aspects being extended by aspects rewriting their pointcuts rather than redefining them.  For that we'd end up defining a canonical representation and API's for traversal and modification.)

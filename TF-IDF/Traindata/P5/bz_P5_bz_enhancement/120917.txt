@@ -1,0 +1,38 @@
+From Gail:
+
+I think you might be overestimating edits in your usage statistics because the code below will (I believe) include selections made in the "ResourceNavigator" because of the contains source...
+ 
+Gail.
+ 
+ private boolean isEdit(InteractionEvent event) {
+  return event.getKind().equals(InteractionEvent.Kind.EDIT)
+   || (event.getKind().equals(InteractionEvent.Kind.SELECTION) && isSelectionInEditor(event));
+ }
+
+ private boolean isSelectionInEditor(InteractionEvent event) {
+  return event.getOriginId().contains("Editor")
+     || event.getOriginId().contains("editor")
+     || event.getOriginId().contains("source");
+ }
+ 
+ ---------------------
+
+Helpful to document in InteractionEvent what delta, etc. can be and why
+
+In MylarUsageAnalysisCollector.consumeEvent, there is the following code - what does mylarTotalEditsCounted represent? Why is it only incremented if the numSelectionsBeforeEdit is non-zero? Same is true for baseline.
+
+                        if (mylarCurrentNumSelectionsBeforeEdit.containsKey((userId))) {
+                                int num = mylarCurrentNumSelectionsBeforeEdit.get(userId);
+                                if (num > 0) {
+                                        incrementCount(userId, mylarTotalEditsCounted);
+                                        incrementCount(userId, mylarTotalSelectionsBeforeEdit, num);
+                                        mylarCurrentNumSelectionsBeforeEdit.put(userId, 0);
+                                }
+                        }
+
+Also worthwhile to document why source is in:
+ private boolean isSelectionInEditor(InteractionEvent event) {
+  return event.getOriginId().contains("Editor")
+     || event.getOriginId().contains("editor")
+     || event.getOriginId().contains("source");
+ }

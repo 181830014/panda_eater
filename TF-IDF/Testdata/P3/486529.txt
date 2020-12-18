@@ -1,0 +1,10 @@
+After creating a Client with ClientOptions, there's no way to retrieve the ClientOptions from the Client.  I want to implement a single ConnectionLostHandler to be used by all my connections (I have more than one), but when the handler is invoked, there's no way to tell from the *Client passed in which connection was lost.
+
+Obviously, after a Client has been created, no further changes should be allowed to the ClientOptions, so the Client.options field should not be exported.  However, a method could be added that returns a *copy* of the ClientOptions struct used to create the Client:
+
+
+// Options returns a copy of the ClientOptions used to create this client.
+func (c *Client) Options() ClientOptions {
+	optionsCopy := c.options
+	return optionsCopy
+}

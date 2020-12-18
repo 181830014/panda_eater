@@ -1,0 +1,82 @@
+(Although it may be the tip of an iceberg, I am experiencing this particularly 
+with the Members View and Java Text Editor in the Java Browsing perspective.)
+
+Comments adjacent to a member declaration (before and after) are sometimes 
+considered as belonging to it and sometimes not. I have studied the affects of 
+Cut and Delete commands in the Members View in the Java Browsing perspective, 
+drag & drop from the Members View to the Type View, and the Show Source of 
+Selected Element Only mode of the Java Text Editor, and they apply complex and 
+differing heuristics. 
+
+I think it would be reasonable that: 
+
+(Basic requirement) The member declaration source code is regarded by the 
+Members View as being exactly the source code shown by the Java Text Editor in 
+Show Source of Selected Element Only mode. Editing commands including drag & 
+drop must only affect the source code of the involved members.
+
+To fix this, the heuristics for associating comments with member declarations 
+must be unified. As input to this work, I would like to propose a couple of 
+principles to make editing using the Member View commands safer and more 
+profitable:
+
+(1) Given one version of the code, the heuristics clearly must associate each 
+comment to either zero or one member declaration.
+
+(2) There must be a well defined means of avoiding that a file-related comment 
+(like a header for a sequence of declarations) is associated with any member 
+declaration. This is the reason for the word zero above.
+
+The second principle (2) is particularly important to me as it was while trying 
+to figure out the (currently not so well defined) means for keeping heading-
+like comments out of harms way that I discovered how broken this was. And it 
+does appear that at present there exists no such means.
+ 
+Findings in 3.0 M3:
+
+(a) The Cut and Delete commands in the Members View removes all preceding 
+comments not separated from the deleted member declaration with at least on 
+blank line, and all succeeding comments separated from the next member with at 
+least on blank line. Javadoc comments are treated differently. However if the 
+member is a method and the only member of the class, all preceding comments are 
+removed but no succeeding ones.
+ 
+(b) The Show Source of Selected Element Only text editor mode will show all 
+comments preceding the selected member in addition to the member declaration.
+
+(c) Drag & drop move of a member into classes and interfaces copies all 
+preceding comments to the receiver but removes some preceding ones and some 
+succeeding ones from the provider. Exactly which comments that are thereby lost 
+or duplicated is dependent on style (/**, /*, //) and the use of blank lines. 
+The behavior gives an impression of a mix of (a) and (b) above.
+
+Playing around with code like the following has proven educational:
+
+public class Test2 {
+
+///////////////////////////////////////////////////
+//            METHODS
+///////////////////////////////////////////////////
+
+	public void preceding () {}
+
+	// moveTest before
+		 
+	/** 
+	 * moveTest doc 
+	 */
+	
+	public void moveTest () {}
+	
+	// moveTest after
+	
+	/** 
+	 * succeeding doc 
+	 */
+	
+	public void succeeding () {}
+
+///////////////////////////////////////////////////
+//            -----
+///////////////////////////////////////////////////
+}

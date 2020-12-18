@@ -1,0 +1,8 @@
+Created attachment 284666 [details]
+Minimal Example
+
+The equals method of VABModelMap is returning true if one MapEntry is equal but the others don't.
+
+This for example affects the AASBundle. As two SubModels with the same parent (AAS) are considered equal, which isn't necessarily the case because AASBundle expects a Set.
+
+The equals method of VABModelMap contains fast return cases with "true" if the first element is equal, but we have to compare the complete map until we find a "false" case or all are equal.

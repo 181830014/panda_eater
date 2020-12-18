@@ -1,0 +1,83 @@
+$ java -version
+java version "1.6.0_31"
+Java(TM) SE Runtime Environment (build 1.6.0_31-b04)
+Java HotSpot(TM) 64-Bit Server VM (build 20.6-b01, mixed mode)
+
+$ uname -a 
+Linux qs-app-03.rally.prod 2.6.18-274.17.1.el5 #1 SMP Tue Jan 10 17:25:58 EST 2012 x86_64 x86_64 x86_64 GNU/Linux
+
+[EL Info]: 2012-11-19 10:01:38.482--ServerSession(1855303843)--EclipseLink, version: Eclipse Persistence Services - 2.4.0.v20120608-r11652
+
+In production, multiple times per week, sometimes multiple time per day we see the following:
+
+One thread is stuck in ConcurrencyManager.acquire, in wait(). That thread is upstream IndirectList.getDelegate which is synchronized. Multiple other threads are BLOCKED waiting on this same IndirectList. The first thread will never be released from the ConcurrencyManager.
+
+As other threads attempt to read this same collection, they will be captured trying to acquire the same lock. This causes leaks in our connection pool resulting in a bounce of the JVM.
+
+It would appear from ConcurrencyManager.acquire() that numberOfReaders is > 0:
+
+  while (((this.activeThread != null) || (this.numberOfReaders > 0)) && (this.activeThread != Thread.currentThread())) {
+
+We have attempted collecting stack traces and using IdentityMapManager.printLocks to diagnose this issue, but there are no ConcurrencyManagers with depth > 0.
+
+Looking for help to diagnose this problem. Stack traces below.
+
+"qs-app-0412581124" prio=10 tid=0x00007fbf48017000 nid=0x38db in Object.wait() [0x00007fbd2fc24000]
+   java.lang.Thread.State: WAITING (on object monitor)
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at org.eclipse.persistence.internal.helper.ConcurrencyManager.acquire(ConcurrencyManager.java:94)
+	- locked <0x0000000558a28718> (a org.eclipse.persistence.internal.helper.ConcurrencyManager)
+	at org.eclipse.persistence.internal.identitymaps.CacheKey.acquire(CacheKey.java:126)
+	at org.eclipse.persistence.internal.identitymaps.AbstractIdentityMap.acquireLock(AbstractIdentityMap.java:122)
+	at org.eclipse.persistence.internal.identitymaps.IdentityMapManager.acquireLock(IdentityMapManager.java:135)
+	at org.eclipse.persistence.internal.sessions.IdentityMapAccessor.acquireLock(IdentityMapAccessor.java:92)
+	at org.eclipse.persistence.internal.sessions.IdentityMapAccessor.acquireLock(IdentityMapAccessor.java:83)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.retrieveCacheKey(AbstractSession.java:4688)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildObject(ObjectBuilder.java:773)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildObject(ObjectBuilder.java:604)
+	at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildObjectsInto(ObjectBuilder.java:1082)
+	at org.eclipse.persistence.queries.ReadAllQuery.executeObjectLevelReadQuery(ReadAllQuery.java:436)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeDatabaseQuery(ObjectLevelReadQuery.java:1084)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:844)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.execute(ObjectLevelReadQuery.java:1043)
+	at org.eclipse.persistence.queries.ReadAllQuery.execute(ReadAllQuery.java:392)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.internalExecuteQuery(AbstractSession.java:2831)
+	at com.f4tech.fcl.application.BasicRequestQueryMonitor.monitor(BasicRequestQueryMonitor.java:33)
+	at com.f4tech.fcl.application.ProxyRequestQueryMonitor.monitor(ProxyRequestQueryMonitor.java:15)
+	at com.f4tech.fcl.persistence.EclipseLinkPerformanceProfiler.profileExecutionOfQuery(EclipseLinkPerformanceProfiler.java:80)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1514)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1498)
+	at org.eclipse.persistence.internal.indirection.QueryBasedValueHolder.instantiate(QueryBasedValueHolder.java:98)
+	at org.eclipse.persistence.internal.indirection.QueryBasedValueHolder.instantiate(QueryBasedValueHolder.java:88)
+	at org.eclipse.persistence.internal.indirection.DatabaseValueHolder.getValue(DatabaseValueHolder.java:88)
+	- locked <0x00000005a1e49388> (a org.eclipse.persistence.internal.indirection.QueryBasedValueHolder)
+	at org.eclipse.persistence.indirection.IndirectList.buildDelegate(IndirectList.java:244)
+	at org.eclipse.persistence.indirection.IndirectList.getDelegate(IndirectList.java:414)
+	- locked <0x0000000552426918> (a org.eclipse.persistence.indirection.IndirectList)
+	at org.eclipse.persistence.indirection.IndirectList$1. (IndirectList.java:542)
+	at org.eclipse.persistence.indirection.IndirectList.listIterator(IndirectList.java:541)
+	at org.eclipse.persistence.indirection.IndirectList.iterator(IndirectList.java:505)
+	at com.rallydev.io.object.renderers.attribute.CollectionAttributeRenderer.renderCollectionToElement(CollectionAttributeRenderer.java:87)
+
+---------------------
+
+"qs-app-0412608826" prio=10 tid=0x00007fbf48011800 nid=0x1063 waiting for monitor entry [0x00007fbd2f119000]
+   java.lang.Thread.State: BLOCKED (on object monitor)
+	at org.eclipse.persistence.indirection.IndirectList.getDelegate(IndirectList.java:412)
+	- waiting to lock <0x0000000552426918> (a org.eclipse.persistence.indirection.IndirectList)
+	at org.eclipse.persistence.indirection.IndirectList$1. (IndirectList.java:542)
+	at org.eclipse.persistence.indirection.IndirectList.listIterator(IndirectList.java:541)
+	at org.eclipse.persistence.indirection.IndirectList.iterator(IndirectList.java:505)
+	at com.rallydev.io.object.renderers.attribute.CollectionAttributeRenderer.renderCollectionToElement(CollectionAttributeRenderer.java:87)
+
+--------------------
+
+"qs-app-0412618611" prio=10 tid=0x00007fbf4c029000 nid=0x2a32 waiting for monitor entry [0x00007fbc726e2000]
+   java.lang.Thread.State: BLOCKED (on object monitor)
+	at org.eclipse.persistence.indirection.IndirectList.getDelegate(IndirectList.java:412)
+	- waiting to lock <0x0000000552426918> (a org.eclipse.persistence.indirection.IndirectList)
+	at org.eclipse.persistence.indirection.IndirectList$1. (IndirectList.java:542)
+	at org.eclipse.persistence.indirection.IndirectList.listIterator(IndirectList.java:541)
+	at org.eclipse.persistence.indirection.IndirectList.iterator(IndirectList.java:505)
+	at com.rallydev.io.object.renderers.attribute.CollectionAttributeRenderer.renderCollectionToElement(CollectionAttributeRenderer.java:87)

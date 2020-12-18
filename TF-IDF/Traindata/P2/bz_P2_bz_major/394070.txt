@@ -1,0 +1,26 @@
+Created attachment 223443 [details]
+EclipseProject to reproduce bug on DerbyDB
+
+Possibly related to bug 326511
+
+This bug did not happen in old TopLink 9.0.3 and 9.0.4.8 but it did in TopLink 10.1.3.0 and 10.1.3.3 and EclipseLink 2.4.0 
+
+Attached below is working example of this bug.
+
+One-To-Many relationships (e.g. Person-To-PhoneNumber )
+Person is mapped to PhoneNumber as One-To-Many, and PhoneNumber is mapped to Person as One-To-One. 
+
+Reproducible: Always, if ID of the new PhoneNumber is null.
+
+Steps to Reproduce:
+1. acquire a top-level UOW from the session
+2. read and register Person object with this UOW
+3. acquire a nested UOW and register Person with this nested UOW 
+4. create new PhoneNumber object, and set references to Person clone from nested UOW
+5. commit nested uow to parent - (listing Person from parent shows new PhoneNumber)
+7. repeat step 3.: acquire a nested UOW and register Person with this nested UOW 
+8. via nested Person clone get the recently created PhoneNumber, and change its state (change some value)
+9. commit nested uow to parent
+10. Listing Person from parent will show old state of the new PhoneNumber
+
+It did worked on all versions (including EclipseLink) when I set an id !=null while creating new PhoneNumber object. But those old applications I am migrating are expecting to have id == null until commit.

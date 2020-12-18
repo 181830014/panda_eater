@@ -1,0 +1,70 @@
+We are just having a deadlock situation in production. I've identified following two threads that seem to be at the root of it.
+
+
+Id / Name / Prio / State
+895 / 07:53:29 system newProcessExtendedForMember  / 5 / BLOCKED
+
+Waiting on: org.eclipse.persistence.indirection.IndirectList@3ab33ab3 owner id: 962 owner name: 07:53:29 rheinu getDeskWorkload
+
+    at org.eclipse.persistence.indirection.IndirectList.getDelegate(IndirectList.java:406)
+    at org.eclipse.persistence.indirection.IndirectList.size(IndirectList.java:737)
+    at org.eclipse.persistence.internal.queries.CollectionContainerPolicy.sizeFor(CollectionContainerPolicy.java:177)
+    at org.eclipse.persistence.mappings.CollectionMapping.mergeIntoObject(CollectionMapping.java:1395)
+    at org.eclipse.persistence.internal.descriptors.ObjectBuilder.mergeIntoObject(ObjectBuilder.java:3444)
+    at org.eclipse.persistence.internal.descriptors.ObjectBuilder.mergeChangesIntoObject(ObjectBuilder.java:3381)
+    at org.eclipse.persistence.internal.sessions.MergeManager.mergeChangesOfWorkingCopyIntoOriginal(MergeManager.java:748)
+    at org.eclipse.persistence.internal.sessions.MergeManager.mergeChangesOfWorkingCopyIntoOriginal(MergeManager.java:623)
+    at org.eclipse.persistence.internal.sessions.MergeManager.mergeChanges(MergeManager.java:267)
+    at org.eclipse.persistence.mappings.CollectionMapping.mergeIntoObject(CollectionMapping.java:1462)
+    at org.eclipse.persistence.internal.descriptors.ObjectBuilder.mergeIntoObject(ObjectBuilder.java:3444)
+    at org.eclipse.persistence.internal.descriptors.ObjectBuilder.mergeChangesIntoObject(ObjectBuilder.java:3381)
+    at org.eclipse.persistence.internal.sessions.MergeManager.mergeChangesOfWorkingCopyIntoOriginal(MergeManager.java:748)
+    at org.eclipse.persistence.internal.sessions.MergeManager.mergeChangesOfWorkingCopyIntoOriginal(MergeManager.java:623)
+    at org.eclipse.persistence.internal.sessions.MergeManager.mergeChanges(MergeManager.java:267)
+    at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.mergeChangesIntoParent(UnitOfWorkImpl.java:3246)
+    at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commitRootUnitOfWork(UnitOfWorkImpl.java:1319)
+    at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.commit(UnitOfWorkImpl.java:1079)
+    at de.bkm.wfms.server.WFWriteRequest.commitUow(WFWriteRequest.java:268)
+    at de.bkm.wfms.server.WFWriteRequest.commit(WFWriteRequest.java:90)
+    at de.bkm.wfms.engine.manager.WFEngineImpl.newProcessExtendedForMember(WFEngineImpl.java:2296)
+
+
+Id / Name / Prio / State
+962 / 07:53:29 rheinu getDeskWorkload  / 5 / TIMED_WAITING
+
+    at java.lang.Thread.sleep(Native Method)
+    at java.lang.Thread.sleep(Thread.java:851)
+    at org.eclipse.persistence.internal.helper.ConcurrencyManager.releaseDeferredLock(ConcurrencyManager.java:466)
+    at org.eclipse.persistence.internal.identitymaps.CacheKey.releaseDeferredLock(CacheKey.java:379)
+    at org.eclipse.persistence.internal.sessions.AbstractSession.retrieveCacheKey(AbstractSession.java:4580)
+    at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildObject(ObjectBuilder.java:780)
+    at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildObject(ObjectBuilder.java:611)
+    at org.eclipse.persistence.internal.descriptors.ObjectBuilder.buildObjectsInto(ObjectBuilder.java:1089)
+    at org.eclipse.persistence.queries.ReadAllQuery.executeObjectLevelReadQuery(ReadAllQuery.java:434)
+    at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeDatabaseQuery(ObjectLevelReadQuery.java:1097)
+    at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:829)
+    at org.eclipse.persistence.queries.ObjectLevelReadQuery.execute(ObjectLevelReadQuery.java:1056)
+    at org.eclipse.persistence.queries.ReadAllQuery.execute(ReadAllQuery.java:390)
+    at org.eclipse.persistence.internal.sessions.AbstractSession.internalExecuteQuery(AbstractSession.java:2816)
+    at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1501)
+    at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1483)
+    at org.eclipse.persistence.mappings.CollectionMapping.executeBatchQuery(CollectionMapping.java:881)
+    at org.eclipse.persistence.mappings.ForeignReferenceMapping.extractResultFromBatchQuery(ForeignReferenceMapping.java:575)
+    at org.eclipse.persistence.mappings.CollectionMapping.extractResultFromBatchQuery(CollectionMapping.java:862)
+    at org.eclipse.persistence.internal.indirection.BatchValueHolder.instantiate(BatchValueHolder.java:58)
+    at org.eclipse.persistence.internal.indirection.QueryBasedValueHolder.instantiate(QueryBasedValueHolder.java:88)
+    at org.eclipse.persistence.internal.indirection.DatabaseValueHolder.getValue(DatabaseValueHolder.java:88)
+    at org.eclipse.persistence.indirection.IndirectList.buildDelegate(IndirectList.java:238)
+    at org.eclipse.persistence.indirection.IndirectList.getDelegate(IndirectList.java:408)
+    at org.eclipse.persistence.indirection.IndirectList$1.(IndirectList.java:536)
+    at org.eclipse.persistence.indirection.IndirectList.listIterator(IndirectList.java:535)
+    at org.eclipse.persistence.indirection.IndirectList.iterator(IndirectList.java:499)
+    at de.bkm.wfms.engine.persistent.variable.WFListVariable.listToLightweight(WFListVariable.java:70)
+    at de.bkm.wfms.engine.persistent.variable.WFListVariable.toLightweight(WFListVariable.java:241)
+    at de.bkm.wfms.engine.persistent.WFContainer.toLightweight(WFContainer.java:133)
+    at de.bkm.wfms.engine.persistent.WFActivity.getLightweightInContainer(WFActivity.java:2350)
+    at de.bkm.wfms.engine.persistent.WFActivity.toLightweightWithVariables(WFActivity.java:2293)
+    at de.bkm.wfms.engine.persistent.WFActivity.toLightweightWithVariables(WFActivity.java:2278)
+    at de.bkm.wfms.engine.persistent.WFGroup.toDeskParticipant(WFGroup.java:833)
+    at de.bkm.wfms.engine.manager.WFEngineImpl.getOrganisation(WFEngineImpl.java:1215)
+    at de.bkm.wfms.engine.manager.WFEngineImpl.getDeskWorkload(WFEngineImpl.java:1197)

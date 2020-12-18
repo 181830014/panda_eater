@@ -1,0 +1,3 @@
+One of the bottlenecks I have found in performance profiling is JpaProject.getJavaResourceType(String). This is called a lot during updates, AbstractJavaPersistentType.resolveSuperPersistentType being one of the culprits.
+
+We could potentially fix this issue by building a Map of JavaResourceTypes during update, similar to another performance hook AbstractPersistenceUnit.persistentTypeMap. This is more complicated since java resource types include source, jars, and an external resource cache where types are built on-demand.

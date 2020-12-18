@@ -1,0 +1,63 @@
+Created attachment 225182 [details]
+Patch with recommended bug fix.
+
+##' Environment
+Eclipse Modelling Package SR1
+MoDisco installed from Juno Update Site v10.1
+Discover Java and inventory model from java project
+
+### Problem Description
+The java project of a legacy application discovered contains an empty java file.
+The Eclipse IDE does not report this as an error and the application builds successfully.
+However, the java and inventory discoverer fails due to a nullpointer exception and the error logging does not provide enought information to find the source of this error in a reasonable way.
+
+The stack trace is provided at the end of this bug report.
+
+The reason for the NullpointerException is that the AbstractDiscoverKDMSourceAndJavaModel tries to get a package for this compilation unit in the method "private static Package getPackageFromCU(final CompilationUnit compilationUnit)" in line 523, which is called inside the method "weaveCompilationUnit()" line 445.
+
+In case of an empty compilation unit, getPackageFromCU() returns null. The following call to getJava2DirectoryFromPackage(pck) also returns null. Finally, the method manageJava2DirectoryCreation(compilationUnit,pck) is invoked with a null package, too.
+As a reuslt, this method creates a Java2Directory element with a null package which later on leads to the null pointer exception as shown in the stack trace at the end.
+
+
+### Recommended solution
+
+While empty java files should not exist, it might happen in legacy applications which should be modernized. Furthermore, a package might not exist for a compilation unit because of other reasons. MoDisco should be robust against such issues which could be reached with the recommendations described below and attached as a patch to this bug report.
+
+Inside getJava2DirectoryFromPackage(), there is already a warning logged about the missing package element
+MoDiscoLogger.logWarning("No Package Found", Activator.getDefault()); //$NON-NLS-1$
+However, this logging provides not enough information for a user to understand the reason and fix the issue in his project.
+
+To make the processing more robust:
+The method manageJava2DirectoryCreation(compilationUnit,pck) should return null if a null pck was submitted. When it returns null, the compilationUnit loop in weaveCompilationUnit() should continue with the next iteration.
+
+I tested inserting the following lines from line 454 on:
+// skip further processing if the package is null because it would make no sense
+if(java2Directory == null || java2Directory.getJavaPackage() == null){
+	MoDiscoLogger.logWarning("No Package Found for Java2Directory: "+java2Directory, Activator.getDefault()); //$NON-NLS-1$
+	continue;
+}
+
+Add the following lines at the begining of method manageJava2DirectoryCreation():
+	// check for null package
+	if(pck == null){
+		return null;
+	}
+
+And extended the package check inside getJava2DirectoryFromPackage():
+	if (((Java2Directory) object).getJavaPackage() != null || ((Java2Directory) object).getJavaPackage().equals(pck)) {
+
+### Error Message and StackTrace:
+
+!ENTRY org.eclipse.core.jobs 4 2 2013-01-03 15:25:05.185
+!MESSAGE An internal error occurred during: "MoDisco discoverer "org.eclipse.modisco.java.composition.discoverer.fromProject" in progress...".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.modisco.java.composition.discoverer.AbstractDiscoverKDMSourceAndJavaModel.getJava2DirectoryFromPackage(AbstractDiscoverKDMSourceAndJavaModel.java:514)
+	at org.eclipse.modisco.java.composition.discoverer.AbstractDiscoverKDMSourceAndJavaModel.weaveCompilationUnit(AbstractDiscoverKDMSourceAndJavaModel.java:447)
+	at org.eclipse.modisco.java.composition.discoverer.AbstractDiscoverKDMSourceAndJavaModel.finishBuildingModel(AbstractDiscoverKDMSourceAndJavaModel.java:224)
+	at org.eclipse.modisco.kdm.source.extension.discovery.AbstractComposedKDMSourceDiscoverer2.basicDiscoverElement(AbstractComposedKDMSourceDiscoverer2.java:89)
+	at org.eclipse.modisco.infra.discovery.core.AbstractDiscoverer.discoverElement(AbstractDiscoverer.java:93)
+	at org.eclipse.modisco.infra.discovery.core.AbstractModelDiscoverer.discoverElement(AbstractModelDiscoverer.java:183)
+	at org.eclipse.modisco.infra.discovery.ui.internal.actions.MoDiscoMenuSelectionListener.discovererElement(MoDiscoMenuSelectionListener.java:229)
+	at org.eclipse.modisco.infra.discovery.ui.internal.actions.MoDiscoMenuSelectionListener$1.run(MoDiscoMenuSelectionListener.java:168)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:53)

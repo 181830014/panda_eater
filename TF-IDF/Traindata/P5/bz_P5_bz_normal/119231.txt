@@ -1,0 +1,3 @@
+The interface used by the WeavingAdaptor to weave classes is BcelWeaver.weave(IClassFileProvider). An IClassFileProvider supplies instances of UnwovenClass which can be created using either "." or "/" as the package separator. However in the WeavingAdaptor we assume names use "/" and frequently convert eventhough weaveClass() can be called using either "." (when called directly from a class loader e.g. WeavingURLClassLoader.defineClass()) or "/" (when called from an agent).
+
+We should settle on one form. We can use "." in the adaptor and ensure callers who use "/" conver first.

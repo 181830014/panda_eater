@@ -1,0 +1,43 @@
+DDL Generation values are following the naming conventions of the property names instead of the property values:
+    String CREATE_ONLY      = "create-tables";
+    String DROP_AND_CREATE  = "drop-and-create-tables";
+    String NONE             = "none";
+
+I would instead expect to see:
+
+    String CreateOnly = "CreateOnly";
+    String DropAndCreateTables = "DropAndCreateTables";
+    String None= "None";
+
+Though the NONE option is inconsistent elsewhere:
+
+Cache Type   
+  String  NONE = "NONE";
+BatchWriting   
+  String  None = "None";
+
+
+Same problem here for the DDL output mode values:
+
+    String DDL_SQL_SCRIPT_GENERATION = "sql-script";
+    String DDL_DATABASE_GENERATION = "database";
+    String DDL_BOTH_GENERATION = "both";
+    String DEFAULT_DDL_GENERATION_MODE = DDL_DATABASE_GENERATION;
+
+Would expect to see:
+
+    String SqlScript = "SqlScript";
+    String Database = "Database";
+    String Both = "Both";
+    String DEFAULT = Database;
+
+And the other issues is that the above DDL value strings need to be in a separate interface (bug 228456)
+
+
+public static final String OracleJDBC = "Oracle-JDBC";
+This String also looks inconsistent to me since the String does not match the static variable name and it includes a '-' which the other value Strings do not.
+
+
+Finally, logging looks completely different, but not much we can do about that since that is from java.util.logging.Level class.  I really bring this up because I wonder if maybe all of the values should follow this pattern.  This is also the pattern used for annotation values and orm.xml throughout JPA and EclipseLink extensions.
+<property name="eclipselink.logging.level" value="SEVERE"/>
+public static final String SEVERE = "SEVERE"

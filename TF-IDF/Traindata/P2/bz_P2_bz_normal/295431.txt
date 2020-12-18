@@ -1,0 +1,33 @@
+User-Agent:       Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)
+Build Identifier: 1.1.1.v20090430-r4097
+
+If i use inheritance i can map an attribut only in a super class.
+Eg. SuperClass AClass 
+         Attribute aAttribute
+    Class B extends AClass
+Mapping
+	descriptor.getInheritancePolicy().setParentClass(AClass.class);
+
+If i make a query to uow, QueryKeyExpression.valuesFromCollection is called and
+for bug 2780817  the mapping is assigned to the mapping of the subclass.
+But this mapping does not exists. 
+A NullpointerException is the  effect 
+
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+1.Make a class structure like described
+
+2. Set the mapping only in the super class. Set in 
+   subclass the setParantClass method with the superClass as parameter
+   Make a third class which has Class B as Referenz =referenceb. 
+    Class ThirdClass
+       B referenceb;
+3. Open a uow; Make a ReadAllQuery againts the third class and set 
+   an Expression 
+   Expression exp = eb.get("referenceb").equal(objectB);
+
+   where obejctB is an Object of ClassB 
+   Than the error occurs.

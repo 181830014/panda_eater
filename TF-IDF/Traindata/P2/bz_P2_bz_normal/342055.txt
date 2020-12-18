@@ -1,0 +1,19 @@
+Build Identifier: 2.1.2.v20101206-r8635
+
+An abstract class annotated with @Entity that does not (in a given situation) have any concrete subclasses is treated as concrete by EclipseLink, resulting in an IntegrityException( caused by InstantiationException) being thrown out of DatabaseSessionImpl.initializeDescriptors.
+
+An abstract class may need to be annotated with @Entity if there is polymorphic query logic that targets/specifies the abstract class.
+
+An abstract Entity may not have concrete subclasses in a given situation if that class is an optional part of a framework.
+
+Adding a concrete subclass prevents the exception.
+
+See http://www.eclipse.org/forums/index.php?t=msg&th=206726 for full scenario and stack trace.
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Apply @Entity annotation to an abstract class
+2. Do no create any concrete subclasses of the abstract entity
+3. Attempt to obtain an entity manager for the persistence unit containing the abstract entity

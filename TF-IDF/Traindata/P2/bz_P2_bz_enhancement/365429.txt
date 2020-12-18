@@ -1,0 +1,20 @@
+When the IDerivedTypedElementManager interface was simplified, the implementation was broken. I have fixed the evaluation on single elements, but I have disabled the batch evaluation for now since it does not have priority.
+
+What's more, there is a problem with IDerivedTypedElementManager#batchEvaluate :
+It is not possible to assign the result to a typed list, so we get a warning from the compiler:
+
+List<DerivedTypedElementPrimitiveTypeResult> result = IDerivedTypedElementManager.INSTANCE.batchEvaluate(
+  derivedTypedElement, sourceCollection, null, 
+  DerivedTypedElementPrimitiveTypeResult.class);
+
+=> DerivedTypedElementPrimitiveTypeResult is a raw type. References to generic type DerivedTypedElementPrimitiveTypeResult<T> should be parameterized
+
+And if we try to use a wildcard, we get an error this time, because the lvalue is not a subtype of AbstractDerivedTypedElementResult anymore, because AbstractDerivedTypedElementResult is not parameterized with a generic type:
+
+List<DerivedTypedElementPrimitiveTypeResult<?>> result = IDerivedTypedElementManager.INSTANCE.batchEvaluate(
+  derivedTypedElement, sourceCollection, null,
+  derivedTypedElementPrimitiveTypeResult.class);
+
+=> Type mismatch: cannot convert from List<DerivedTypedElementPrimitiveTypeResult> to List<DerivedTypedElementPrimitiveTypeResult<?>>
+
+I think we should add a type parameter to AbstractDerivedTypedElementResult in the metamodel.

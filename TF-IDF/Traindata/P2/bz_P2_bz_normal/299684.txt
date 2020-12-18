@@ -1,0 +1,17 @@
+Build Identifier: N/A
+
+There are two types of releases possible with maven: SNAPSHOT releases and NON-SNAPSHOT releases. A SNAPSHOT release is a peek into the current development process. A dependency on a SNAPSHOT allows to get the bleeding edge of development, typically asked for by team members to align with each other. A NON-SNAPSHOT release is a stable and tested publication. This is what end users typically want to get. Both kinds of artifacts are to be published using repositories, but Maven distinguishes two kinds of them: SNAPSHOT repositories, keeping solely the bleeding edge, and NON-SNAPSHOT repositories, keeping only stable and tested releases intended for end users. Content of these should not get mixed up. Maven's best practice is to never have any SNAPSHOTs in a NON-SNAPSHOT repository.
+
+The reason is that typically no user will do a hard link on a dependency to exactly one version (like "<version>[1.0.0]</version>") but instead provide a weak link (like "<version>1.0.0</version>") to allow selection of ANY other release if that one cannot get found, or even better (and more safe) a version range indication a group of versions that is acceptable (like "<version>[1.0,2.0)<version>").
+
+The idea of weak links is that in case of an unreachable repository, Maven can pick an old version of the same product from the local repository hopefully found on the PC's HDD.
+
+The idea of version ranges is to allow Maven to automatically pick the latest bug fixes inside a given range (typically the range is set in a way that will guarantee that no API changes will get picked according to the pattern "major.minor" are API changes, "bugfix-build" are bug fixes only).
+
+The problem with keeping both, SNAPSHOTs and NON-SNAPSHOTs in the same repository is that weak links and version ranges will pick SNAPSHOTs! The programmer of a dependent project CANNOT specify that no SNAPSHOTs shall get taken into account. This is a known deficiency of Maven 2 and is currently under discussion to get improved in Maven 3, but there is yet NO OTHER SOLUTION that to follow Maven's best practice to separate repositories!
+
+Obviously a SNAPSHOT will virtually always contain an API different from the actually indicated version range: E. g. "<version>[1.1,1.2)</version>" actually means that 1.0.0 to 1.1.999 are valid bug fixes sharing the same API, but a 1.2-SNAPSHOT actually will get picked (!) since it is INSIDE of the described range, but will not have an 1.1 API but already a preliminary 1.2 API - which might be incompatible!
+
+To sum up, to make Maven work correctly under all conditions, SNAPSHOTs must not be found in the "normal" repository but have to be separated.
+
+Reproducible: Always

@@ -1,0 +1,6 @@
+Right now, the repository settings page does the client probing in Trac. While this works fine for end-users, this leads to problems when using Trac in headless scenarios (eg. tests). Is there a reason why the probing is not happening in the core? It seems @TracClientFactory#probeClient@ is only used in tests but not by the connector core plugin. Doing this as part of the connector would relieve API consumers from setting custom properties on the TaskRepository (version=XML_RPC which are internal as well).
+
+Test sketch to reproduce
+* new TaskRepository
+* performQuery
+* getTaskData - returns partial taskdata as it doesn't use XML_RPC even though available.

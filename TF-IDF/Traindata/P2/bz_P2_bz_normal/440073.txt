@@ -1,0 +1,20 @@
+I recently had the following scenario:
+For checking, whether an application is registered, I used the getProperties-Method of the IApplicationManager. The javadoc claims, that null will be returned, if the requested application isn't existing.
+
+This however isn't what's happening. The implementation uses this block here:
+
+final Preferences appNode = getAppsNode().node(applicationId);
+if (!appNode.nodeExists(""))
+	return null;
+
+for ensuring that, but the node(String)-Method creates a new node and the implementation of nodeExists won't return false on new nodes, thus a local empty node without properties or sub elements is created.
+If I now have a look at the Gyrex-Admin page of web applications I get an error, since the previously checked application is lacking all data (since it's an empty node).
+I guess, there is a couple of thing going wrong here:
+* The IApplicationManager might need some more methods like isRegistered(String) and isMounted(String) since frequently, it is directly casted to the ApplicationManager-Implementation
+* The check-for-node-existence-block from getProperties and getApplicationRegistration should be fixed.
+
+Additionally, we noticed several times a similar behaviour on other data hold hold within the ZK-Prefs (especially on jobs) where suddenly empty nodes re-appeared, after they have been removed before.
+So we should check for further misleading usages of
+org.eclipse.core.runtime.preferences.IEclipsePreferences.node(String).
+
+Any thoughts on that?

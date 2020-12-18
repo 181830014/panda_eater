@@ -1,0 +1,25 @@
+Given the following scenario:
+
+@Entity 
+class A {
+  B originalB;
+  B currentB;
+  ..
+}
+@Entity
+class B {
+  ..
+}
+
+in the case of A.currentB == A.originalB Eclipseling2.1.1 executes following selects for a find(A.class):
+select from a...
+select from b...
+
+Eclipselink2.4 executes one more select:
+select from a...
+select from b...
+select from b...
+
+Eclipseling2.1.1 seems to realize, that originalB==currentB and that it only has to query for one B, which can be assigned to both originalB and currentB.
+
+Eclipselink2.4 always seems to execute a distinct query for each relationship.

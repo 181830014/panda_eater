@@ -1,0 +1,118 @@
+Build Identifier: EclipseLink JPA (1.2.0.v20091016-r5565)
+
+The following configuration does not work when deployed on Apache Felix Karaf 1.2.0 (using Felix 2.0.1).
+
+Spring Config File
+
+	<tx:annotation-driven transaction-manager="transactionManager"	proxy-target-class="false" />
+
+	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+
+
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="report" />
+		<property name="jpaVendorAdapter" ref="jpaAdapter" />
+	</bean>
+
+	<!-- TransactionManager -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- EclipseLink adapter -->
+	<bean id="jpaAdapter" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
+		<property name="databasePlatform" value="org.eclipse.persistence.platform.database.DerbyPlatform" />
+	</bean>
+
+	<bean id="reportIncidentDao"
+		class="org.apache.camel.example.reportincident.service.impl.ReportIncidentDaoImpl" />
+
+	<!-- HSQLDB Datasource -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+		<property name="url" value="jdbc:hsqldb:file:data/report" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+	</bean>
+
+Error reported :
+
+Caused by: Exception [EclipseLink-4021] (Eclipse Persistence Services - 1.2.0.v20091016-r5565): org.eclipse.persistence.exceptions.DatabaseException
+Exception Description: Unable to acquire a connection from driver [null], user [null] and URL [null].  Verify that you have set the expected driver class and URL.  Check your login, persistence.xml or sessions.xml resource.  The jdbc.driver property should be set to a class that is compatible with your database platform
+	at org.eclipse.persistence.exceptions.DatabaseException.unableToAcquireConnectionFromDriverException(DatabaseException.java:376)
+	at org.eclipse.persistence.sessions.DefaultConnector.connect(DefaultConnector.java:90)
+	at org.eclipse.persistence.sessions.DatasourceLogin.connectToDatasource(DatasourceLogin.java:162)
+	at org.eclipse.persistence.internal.databaseaccess.DatasourceAccessor.connectInternal(DatasourceAccessor.java:327)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.connectInternal(DatabaseAccessor.java:293)
+	at org.eclipse.persistence.internal.databaseaccess.DatasourceAccessor.connect(DatasourceAccessor.java:415)
+	at org.eclipse.persistence.sessions.server.ConnectionPool.buildConnection(ConnectionPool.java:155)
+	at org.eclipse.persistence.sessions.server.ConnectionPool.startUp(ConnectionPool.java:433)
+	at org.eclipse.persistence.sessions.server.ServerSession.connect(ServerSession.java:495)
+	at org.eclipse.persistence.internal.sessions.DatabaseSessionImpl.login(DatabaseSessionImpl.java:632)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryProvider.login(EntityManagerFactoryProvider.java:233)
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.deploy(EntityManagerSetupImpl.java:269)
+
+FOR YOUR INFO, THE FOLLOWING CONFIG WORKS :
+
+	<tx:annotation-driven transaction-manager="transactionManager"	proxy-target-class="false" />
+
+	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+
+
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="report" />
+		<!--
+			<property name="persistenceXmlLocation"
+			value="classpath:META-INF/persistence.xml" />
+		-->
+		<!-- <property name="dataSource" ref="dataSource" /> -->
+		<property name="jpaVendorAdapter" ref="jpaAdapter" />
+	</bean>
+
+	<!-- TransactionManager -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<!-- EclipseLink adapter -->
+	<bean id="jpaAdapter" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
+		<property name="databasePlatform" value="org.eclipse.persistence.platform.database.DerbyPlatform" />
+	</bean>
+
+and
+
+	<persistence-unit name="report" transaction-type="RESOURCE_LOCAL">
+	
+ 		<class>org.apache.camel.example.reportincident.model.ReportIncident</class>
+		<class>org.apache.camel.example.reportincident.model.Detail</class>
+
+		<!-- Eclipse -->
+		<properties>
+			<!-- HSQLDB --> 
+			<property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />
+			<property name="javax.persistence.jdbc.url"	value="jdbc:hsqldb:file:data/report" />
+			<property name="javax.persistence.jdbc.user" value="sa" />
+			<property name="javax.persistence.jdbc.password" value="" />
+			 
+			<property name="eclipselink.logging.file" value="data/eclipsejpa/camel-example-report.log" />
+			<property name="eclipselink.logging.level" value="ALL" />
+			<property name="eclipselink.ddl-generation"	value="drop-and-create-tables" />
+			<property name="eclipselink.ddl-generation.output-mode"	value="database" />
+			<property name="eclipselink.logging.thread" value="true" />
+			<property name="eclipselink.logging.session" value="true" />
+			<property name="eclipselink.logging.exceptions" value="true" />
+		</properties>
+	</persistence-unit>
+
+
+
+
+
+Reproducible: Always

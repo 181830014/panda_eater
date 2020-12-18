@@ -1,0 +1,39 @@
+When validating interaction.odesign I have 270 errors markers, 1 info marker and a warning in error log :
+
+About the error markers, there are a lot of ones about "Feature XXX not found in ...", about "Couldn't find the XXX variable" and "Always true: Nothing inferred when ...".
+
+The info marker is :
+
+The constraint "Invalid Interpreted Expression" is disabled.  It will not be evaluated.
+
+The warning in error log :
+
+The constraint "org.eclipse.sirius.constraints.ValidInterpretedExpressionConstraint" is disabled.  It will not be evaluated.
+
+because of following exception :
+
+java.lang.IllegalStateException: Ambiguous classifier request. At least two classifiers matches Constraint : interactions.Constraint and validation.Constraint
+	at org.eclipse.acceleo.query.runtime.impl.EPackageProvider.getType(EPackageProvider.java:483)
+	at org.eclipse.sirius.common.acceleo.aql.business.api.TypesUtil.searchEClassifierType(TypesUtil.java:90)
+	at org.eclipse.sirius.common.acceleo.aql.business.api.TypesUtil.createAQLVariableTypesFromInterpreterContext(TypesUtil.java:55)
+	at org.eclipse.sirius.common.acceleo.aql.business.internal.AQLSiriusInterpreter.analyzeExpression(AQLSiriusInterpreter.java:267)
+	at org.eclipse.sirius.common.tools.api.interpreter.CompoundInterpreter.analyzeExpression(CompoundInterpreter.java:1025)
+	at org.eclipse.sirius.business.api.dialect.description.MultiLanguagesValidator.validateExpression(MultiLanguagesValidator.java:52)
+	at org.eclipse.sirius.tools.internal.validation.description.constraints.ValidInterpretedExpressionConstraint.checkExpression(ValidInterpretedExpressionConstraint.java:81)
+	at org.eclipse.sirius.tools.internal.validation.description.constraints.ValidInterpretedExpressionConstraint.validate(ValidInterpretedExpressionConstraint.java:56)
+	at org.eclipse.emf.validation.internal.util.JavaConstraintParser$ConstraintAdapter.validate(JavaConstraintParser.java:80)
+	at org.eclipse.emf.validation.internal.service.AbstractValidator.evaluateConstraints(AbstractValidator.java:241)
+	at org.eclipse.emf.validation.internal.service.BatchValidator.validate(BatchValidator.java:264)
+	at org.eclipse.emf.validation.internal.service.BatchValidator.validate(BatchValidator.java:211)
+	at org.eclipse.emf.validation.internal.service.BatchValidator.doValidate(BatchValidator.java:149)
+	at org.eclipse.emf.validation.internal.service.AbstractValidator.validate(AbstractValidator.java:147)
+	at org.eclipse.emf.validation.internal.service.AbstractValidator.validate(AbstractValidator.java:126)
+	at org.eclipse.emf.validation.internal.service.BatchValidator.validate(BatchValidator.java:117)
+	at org.eclipse.sirius.tools.internal.validation.EValidatorAdapter.validate(EValidatorAdapter.java:80)
+	at org.eclipse.emf.ecore.util.Diagnostician.doValidate(Diagnostician.java:171)
+	at org.eclipse.emf.edit.ui.action.ValidateAction$3.doValidate(ValidateAction.java:309)
+	at org.eclipse.emf.ecore.util.Diagnostician.validate(Diagnostician.java:158)
+	at org.eclipse.emf.ecore.util.Diagnostician.validate(Diagnostician.java:137)
+	at org.eclipse.emf.edit.ui.action.ValidateAction.validate(ValidateAction.java:264)
+	at org.eclipse.emf.edit.ui.action.ValidateAction$1.run(ValidateAction.java:176)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)

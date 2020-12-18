@@ -1,0 +1,46 @@
+A ClassCastException occurs when initializing the org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser class via org.apache.batik.dom.svg.SAXSVGDocumentFactory#createDocument when using the IBM JRE (1.5 or 1.6) with org.apache.xerces_2.9.0.v200801282000.jar in the target environment
+
+The exception does not occur if you:
+1. use the Sun JRE, or
+2. use the IBM JRE, but remove org.apache.xerces_2.9.0.v200801282000.jar from the target environment.
+
+I have attached a unit test that demonstrates the problem.  Use the IBM JRE, and the target environemnt should consist of:
+
+a) Eclipse full SDK 3.4M5 (win32), and 
+b) the following bundles from Orbit build S20080209163815:
+
+javax.xml_1.3.4.v200801282000.jar
+org.apache.batik.css_1.6.0.v200802090005.jar
+org.apache.batik.dom.svg_1.6.0.v200802090005.jar
+org.apache.batik.dom_1.6.0.v200802090005.jar
+org.apache.batik.ext.awt_1.6.0.v200802090005.jar
+org.apache.batik.parser_1.6.0.v200802090005.jar
+org.apache.batik.util.gui_1.6.0.v200711021015.jar
+org.apache.batik.util_1.6.0.v200802090005.jar
+org.apache.batik.xml_1.6.0.v200802090005.jar
+org.apache.xerces_2.9.0.v200801282000.jar
+org.apache.xml.resolver_1.2.0.v200801282000.jar
+org.apache.xml.serializer_2.7.1.v200801282000.jar
+org.w3c.css.sac_1.3.0.v200711021015.jar
+org.w3c.dom.smil_1.0.0.v200711021015.jar
+org.w3c.dom.svg_1.1.0.v200802090005.jar
+
+To run the unit test, import the attached xercesTest.zip and select Debug As > JUnit Plug-in Test from the XercesTest context menu.  
+
+Note that the exception that's thrown is an IOException with the message "SAX2 driver class org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser does not implement XMLReader," which is misleading.  The XMLReader#createXMLReader interprets all ClassCastExceptions to mean the parser doesn't implement XMLReader.   However, the the JAXPSAXParser does implement XMLReader, but there's a ClassCastException during initialization, as per the following stack trace, which can be seen if you set a breakpoint for all ClassCastExceptions:
+
+Thread [main] (Suspended (exception ClassCastException))
+SAXParserImpl$JAXPSAXParser(SAXParser).<init>(SymbolTable, XMLGrammarPool) line: not available	
+SAXParserImpl$JAXPSAXParser(SAXParser).<init>() line: not available	
+SAXParserImpl$JAXPSAXParser.<init>() line: not available	
+Class<T>.newInstanceImpl() line: not available [native method]	
+Class<T>.newInstance() line: 1243	
+NewInstance.newInstance(ClassLoader, String) line: not available	
+XMLReaderFactory.loadClass(ClassLoader, String) line: not available	
+XMLReaderFactory.createXMLReader(String) line: not available	
+SAXSVGDocumentFactory(SAXDocumentFactory).createDocument(InputSource) line: not available	
+SAXSVGDocumentFactory(SAXDocumentFactory).createDocument(String, String, String, InputSource) line: not available	
+SAXSVGDocumentFactory.createDocument(String, InputStream) line: not available	
+XercesTest.test(String) line: 34	
+XercesTest.testJAXPSAXParser() line: 23	
+...

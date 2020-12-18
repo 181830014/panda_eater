@@ -1,0 +1,22 @@
+Currently, a web app has these entries in the .wtpmodules:
+
+<wb-resource deploy-path="/WEB-INF/classes" source-path="/JavaSource"/>
+<wb-resource deploy-path="/" source-path="/WebContent"/>
+
+Should this instead be changed to:
+
+<wb-resource deploy-path="/WEB-INF/classes" source-path="/bin"/>
+<wb-resource deploy-path="/" source-path="/WebContent"/>
+
+This might come out naturally as part of making StructureBuilder be part of 
+deployment, but I want to track the "src vs. bin" issue separately.
+
+One usecase that this comes up in is in being able to "co-locate" the web 
+content and the java source. To do this currently, would require a mapping like 
+this (which is not supported):
+
+<wb-resource deploy-path="/WEB-INF/classes" source-path="/WebContent"/>
+<wb-resource deploy-path="/" source-path="/WebContent"/>
+
+If the java bin directory is mapped in instead of the java source directory, 
+the necessary mappings would avoid this problem.
